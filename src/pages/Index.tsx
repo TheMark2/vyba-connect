@@ -11,6 +11,7 @@ const Index = () => {
   const headingRef = useRef<HTMLHeadingElement>(null);
   const heroRef = useRef<HTMLDivElement>(null);
   const searchRef = useRef<HTMLDivElement>(null);
+  const contentRef = useRef<HTMLDivElement>(null);
   
   // Function to handle scroll events
   const handleScroll = () => {
@@ -25,39 +26,38 @@ const Index = () => {
       window.addEventListener("scroll", handleScroll);
       
       // Apply animations based on scroll position
-      if (heroRef.current && imageRef.current) {
+      if (heroRef.current && imageRef.current && contentRef.current) {
         // Maximum scroll value for animation
         const maxScroll = 500;
         const scrollProgress = Math.min(scrollY / maxScroll, 1);
         
-        // Expand image to full width (100%)
-        heroRef.current.style.height = scrollProgress >= 1 ? "auto" : "100vh";
-        
         // Adjust the image container to expand from right to left
-        const startWidth = 60; // Starting width percentage
+        const startWidth = 50; // Starting width percentage
         const finalWidth = 100; // Final width percentage
         const currentWidth = startWidth + ((finalWidth - startWidth) * scrollProgress);
         
+        // Update image width
         imageRef.current.style.width = `${currentWidth}%`;
-        imageRef.current.style.height = "100%";
-        imageRef.current.style.objectFit = "cover";
-        imageRef.current.style.position = "absolute";
-        imageRef.current.style.top = "0";
-        imageRef.current.style.right = "0";
-        imageRef.current.style.zIndex = "0";
         
-        // Move text over the image
-        if (headingRef.current) {
-          headingRef.current.style.color = "white";
-          headingRef.current.style.position = "relative";
-          headingRef.current.style.zIndex = "10";
-          headingRef.current.style.textShadow = "0px 2px 4px rgba(0, 0, 0, 0.5)";
-        }
+        // Update image border radius
+        const startRadius = 20; // Starting border radius
+        const endRadius = 0; // End border radius
+        const currentRadius = startRadius - (startRadius * scrollProgress);
+        imageRef.current.style.borderRadius = `${currentRadius}px`;
         
-        // Adjust search bar position
-        if (searchRef.current) {
-          searchRef.current.style.position = "relative";
-          searchRef.current.style.zIndex = "10";
+        // Move text and search box over the image as it expands
+        if (headingRef.current && searchRef.current) {
+          // Adjust text container width as the image expands
+          contentRef.current.style.zIndex = "10";
+          
+          // Change heading text color to white
+          if (scrollProgress > 0.3) {
+            headingRef.current.style.color = "white";
+            headingRef.current.style.textShadow = "0px 2px 4px rgba(0, 0, 0, 0.5)";
+          } else {
+            headingRef.current.style.color = "black";
+            headingRef.current.style.textShadow = "none";
+          }
         }
       }
     }
@@ -79,26 +79,31 @@ const Index = () => {
           ref={heroRef}
           className="relative w-full h-screen overflow-hidden"
         >
-          {/* Background image */}
+          {/* Background image with initial styling */}
           <img 
             ref={imageRef} 
             src="/lovable-uploads/d79d697f-5c21-443c-bc75-d988a2dbc770.png" 
             alt="DJ performing at a concert" 
-            className="transition-all duration-300 ease-out"
+            className="transition-all duration-300 ease-out shadow-lg"
             style={{
-              width: "60%",
+              width: "50%",
               height: "100%",
               objectFit: "cover",
               position: "absolute",
               top: 0,
-              right: 0
+              right: 0,
+              borderTopLeftRadius: "20px",
+              borderBottomLeftRadius: "20px"
             }}
           />
           
-          {/* Content container with overlay styling */}
-          <div className="container relative mx-auto px-8 md:px-16 lg:px-24 xl:px-32 2xl:max-w-[1800px] py-16 h-full flex items-center">
+          {/* Content container */}
+          <div 
+            ref={contentRef}
+            className="container relative mx-auto px-8 md:px-16 lg:px-24 xl:px-32 2xl:max-w-[1800px] py-16 h-full flex items-center"
+          >
             {/* Left column with text and search */}
-            <div className="max-w-2xl space-y-16">
+            <div className="max-w-2xl space-y-16 relative z-10">
               <h1 
                 ref={headingRef} 
                 className="text-5xl md:text-7xl font-black leading-tight transition-colors duration-300"
@@ -107,12 +112,15 @@ const Index = () => {
               </h1>
               
               {/* Search bar */}
-              <div ref={searchRef} className="flex items-center max-w-xl">
+              <div 
+                ref={searchRef} 
+                className="flex items-center max-w-xl transition-all duration-300"
+              >
                 <div className="relative w-full flex items-center">
                   <input 
                     type="text" 
                     placeholder="Buscar artistas" 
-                    className="w-full pl-6 pr-14 py-4 rounded-full text-black font-medium bg-white"
+                    className="w-full pl-6 pr-14 py-4 rounded-full text-black font-medium bg-white shadow-md"
                   />
                   <Button variant="secondary" className="absolute right-1 rounded-full aspect-square p-2">
                     <Search className="size-5" />
