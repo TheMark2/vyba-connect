@@ -1,3 +1,4 @@
+
 import { Button } from "@/components/ui/button";
 import { Search } from "lucide-react";
 import Navbar from "@/components/Navbar";
@@ -8,7 +9,8 @@ const Index = () => {
   const [scrollY, setScrollY] = useState(0);
   const imageRef = useRef<HTMLImageElement>(null);
   const headingRef = useRef<HTMLHeadingElement>(null);
-  const imageContainerRef = useRef<HTMLDivElement>(null);
+  const heroRef = useRef<HTMLDivElement>(null);
+  const searchRef = useRef<HTMLDivElement>(null);
   
   // Function to handle scroll events
   const handleScroll = () => {
@@ -23,29 +25,40 @@ const Index = () => {
       window.addEventListener("scroll", handleScroll);
       
       // Apply animations based on scroll position
-      if (imageContainerRef.current && imageRef.current) {
-        // Expand container width based on scroll (0-500px)
-        const widthProgress = Math.min(scrollY / 500, 1);
-        // Start from flex-1 (50%) to full width
-        const widthPercentage = 50 + (50 * widthProgress);
-        imageContainerRef.current.style.flex = `0 0 ${widthPercentage}%`;
+      if (heroRef.current && imageRef.current) {
+        // Maximum scroll value for animation
+        const maxScroll = 500;
+        const scrollProgress = Math.min(scrollY / maxScroll, 1);
         
-        // Keep image filling the container
-        imageRef.current.style.width = "100%";
+        // Expand image to full width (100%)
+        heroRef.current.style.height = scrollProgress >= 1 ? "auto" : "100vh";
+        
+        // Adjust the image container to expand from right to left
+        const startWidth = 60; // Starting width percentage
+        const finalWidth = 100; // Final width percentage
+        const currentWidth = startWidth + ((finalWidth - startWidth) * scrollProgress);
+        
+        imageRef.current.style.width = `${currentWidth}%`;
         imageRef.current.style.height = "100%";
         imageRef.current.style.objectFit = "cover";
+        imageRef.current.style.position = "absolute";
+        imageRef.current.style.top = "0";
+        imageRef.current.style.right = "0";
+        imageRef.current.style.zIndex = "0";
         
-        // Slight parallax effect
-        const offsetY = -scrollY * 0.1;
-        imageRef.current.style.transform = `translateY(${offsetY}px)`;
-      }
-      
-      if (headingRef.current) {
-        // Calculate color transition - from black to white
-        const scrollProgress = Math.min(scrollY / 300, 1);
-        // Start with black (0,0,0) and transition to white (255,255,255)
-        const colorValue = Math.floor(255 * scrollProgress);
-        headingRef.current.style.color = `rgb(${colorValue}, ${colorValue}, ${colorValue})`;
+        // Move text over the image
+        if (headingRef.current) {
+          headingRef.current.style.color = "white";
+          headingRef.current.style.position = "relative";
+          headingRef.current.style.zIndex = "10";
+          headingRef.current.style.textShadow = "0px 2px 4px rgba(0, 0, 0, 0.5)";
+        }
+        
+        // Adjust search bar position
+        if (searchRef.current) {
+          searchRef.current.style.position = "relative";
+          searchRef.current.style.zIndex = "10";
+        }
       }
     }
     
@@ -62,38 +75,50 @@ const Index = () => {
 
       <main className="flex-1">
         {/* Hero section */}
-        <div className="container mx-auto px-8 md:px-16 lg:px-24 xl:px-32 2xl:max-w-[1800px] py-16 flex flex-col lg:flex-row items-center gap-12">
-          {/* Left column with text and search */}
-          <div className="flex-1 space-y-16">
-            <h1 
-              ref={headingRef} 
-              className="text-5xl md:text-7xl font-black leading-tight text-black transition-colors duration-300"
-            >
-              El portal perfecto para encontrar tu dj
-            </h1>
-            
-            {/* Search bar */}
-            <div className="flex items-center max-w-xl">
-              <Button variant="secondary" className="w-full relative flex items-center justify-start gap-3 px-6 py-7 text-lg font-normal hover:bg-secondary-hover">
-                <Search className="size-5 text-black/60" />
-                <span className="text-black font-bold">Buscar artistas</span>
-              </Button>
-            </div>
-          </div>
-
-          {/* Right column with image - now with transition styles */}
-          <div 
-            ref={imageContainerRef} 
-            className="flex-1 overflow-hidden rounded-3xl transition-all duration-300"
-            style={{ flex: "1" }}
-          >
-            <div className="rounded-3xl overflow-hidden h-[500px]">
-              <img 
-                ref={imageRef} 
-                src="/lovable-uploads/d79d697f-5c21-443c-bc75-d988a2dbc770.png" 
-                alt="DJ performing at a concert" 
-                className="w-full h-full object-cover transition-all duration-300 ease-out"
-              />
+        <div 
+          ref={heroRef}
+          className="relative w-full h-screen overflow-hidden"
+        >
+          {/* Background image */}
+          <img 
+            ref={imageRef} 
+            src="/lovable-uploads/d79d697f-5c21-443c-bc75-d988a2dbc770.png" 
+            alt="DJ performing at a concert" 
+            className="transition-all duration-300 ease-out"
+            style={{
+              width: "60%",
+              height: "100%",
+              objectFit: "cover",
+              position: "absolute",
+              top: 0,
+              right: 0
+            }}
+          />
+          
+          {/* Content container with overlay styling */}
+          <div className="container relative mx-auto px-8 md:px-16 lg:px-24 xl:px-32 2xl:max-w-[1800px] py-16 h-full flex items-center">
+            {/* Left column with text and search */}
+            <div className="max-w-2xl space-y-16">
+              <h1 
+                ref={headingRef} 
+                className="text-5xl md:text-7xl font-black leading-tight transition-colors duration-300"
+              >
+                El portal perfecto para encontrar tu dj
+              </h1>
+              
+              {/* Search bar */}
+              <div ref={searchRef} className="flex items-center max-w-xl">
+                <div className="relative w-full flex items-center">
+                  <input 
+                    type="text" 
+                    placeholder="Buscar artistas" 
+                    className="w-full pl-6 pr-14 py-4 rounded-full text-black font-medium bg-white"
+                  />
+                  <Button variant="secondary" className="absolute right-1 rounded-full aspect-square p-2">
+                    <Search className="size-5" />
+                  </Button>
+                </div>
+              </div>
             </div>
           </div>
         </div>
