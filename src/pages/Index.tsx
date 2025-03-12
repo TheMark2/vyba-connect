@@ -1,3 +1,4 @@
+
 import { Button } from "@/components/ui/button";
 import { Search } from "lucide-react";
 import Navbar from "@/components/Navbar";
@@ -8,7 +9,7 @@ const Index = () => {
       <Navbar />
 
       <main className="flex-1">
-        <div className="container mx-auto px-32 md:px-24 lg:px-16 xl:px-8 py-16 flex items-center gap-12">
+        <div className="container mx-auto px-40 md:px-32 lg:px-24 xl:px-4 py-16 flex items-center gap-12">
           {/* Left column with text and search */}
           <div className="flex-1 space-y-8">
             <h1 className="text-7xl font-black leading-tight">
