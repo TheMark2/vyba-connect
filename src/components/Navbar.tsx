@@ -19,23 +19,15 @@ const Navbar = () => {
 
   // Calculate position for the hover background
   const getHoverStyles = () => {
-    const buttonWidth = 100; // Width of each button
-    
     if (hoverIndex === null) {
       return {
-        left: `${activeIndex * buttonWidth}px`,
-        opacity: 1,
-        width: `${buttonWidth}px`,
-        height: '40px',
-        transform: 'translateX(0)',
+        opacity: 0,
+        transform: 'translateX(-100%)',
       };
     }
     
     return {
-      left: `${hoverIndex * buttonWidth}px`,
       opacity: 1,
-      width: `${buttonWidth}px`,
-      height: '40px',
       transform: 'translateX(0)',
     };
   };
@@ -45,46 +37,64 @@ const Navbar = () => {
       <div className="container mx-auto px-4 h-24 flex items-center justify-between">
         <div className="flex items-center space-x-8">
           <h1 className="text-2xl font-bold">VYBA</h1>
-          <div className="hidden md:flex items-center space-x-1 relative">
-            <div className="absolute inset-0 pointer-events-none">
-              <div 
-                className="nav-background"
-                style={getHoverStyles()}
-              />
-            </div>
+          <div className="hidden md:flex items-center space-x-1">
             <Button
               variant="ghost"
               asChild
-              className="relative z-10"
+              className="relative z-10 overflow-hidden"
               onMouseEnter={() => setHoverIndex(0)}
               onMouseLeave={() => setHoverIndex(null)}
             >
-              <Link to="/">Inicio</Link>
+              <Link to="/" className="relative">
+                <div
+                  className="absolute inset-0 bg-secondary rounded-full transition-all duration-300 ease-in-out -z-10"
+                  style={hoverIndex === 0 ? getHoverStyles() : { opacity: activeIndex === 0 ? 1 : 0 }}
+                />
+                Inicio
+              </Link>
             </Button>
             <Button
               variant="ghost"
               asChild
-              className="relative z-10"
+              className="relative z-10 overflow-hidden"
               onMouseEnter={() => setHoverIndex(1)}
               onMouseLeave={() => setHoverIndex(null)}
             >
-              <Link to="/artistas">Artistas</Link>
+              <Link to="/artistas" className="relative">
+                <div
+                  className="absolute inset-0 bg-secondary rounded-full transition-all duration-300 ease-in-out -z-10"
+                  style={hoverIndex === 1 ? getHoverStyles() : { opacity: activeIndex === 1 ? 1 : 0 }}
+                />
+                Artistas
+              </Link>
             </Button>
             <Button 
               variant="ghost"
-              className="relative z-10"
+              className="relative z-10 overflow-hidden"
               onMouseEnter={() => setHoverIndex(2)} 
               onMouseLeave={() => setHoverIndex(null)}
             >
-              Todos los artistas
+              <span className="relative">
+                <div
+                  className="absolute inset-0 bg-secondary rounded-full transition-all duration-300 ease-in-out -z-10"
+                  style={hoverIndex === 2 ? getHoverStyles() : { opacity: 0 }}
+                />
+                Todos los artistas
+              </span>
             </Button>
             <Button 
               variant="ghost"
-              className="relative z-10"
+              className="relative z-10 overflow-hidden"
               onMouseEnter={() => setHoverIndex(3)} 
               onMouseLeave={() => setHoverIndex(null)}
             >
-              Todos los géneros
+              <span className="relative">
+                <div
+                  className="absolute inset-0 bg-secondary rounded-full transition-all duration-300 ease-in-out -z-10"
+                  style={hoverIndex === 3 ? getHoverStyles() : { opacity: 0 }}
+                />
+                Todos los géneros
+              </span>
             </Button>
           </div>
         </div>
