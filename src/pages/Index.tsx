@@ -8,9 +8,9 @@ const Index = () => {
       <Navbar />
 
       <main className="flex-1">
-        <div className="container mx-auto px-8 md:px-16 lg:px-24 xl:px-32 2xl:max-w-[1800px] py-16 flex items-center gap-24">
+        <div className="container mx-auto px-8 md:px-16 lg:px-24 xl:px-32 2xl:max-w-[1800px] py-16 flex items-center gap-12">
           {/* Left column with text and search */}
-          <div className="flex-1 space-y-8">
+          <div className="flex-1 space-y-15">
             <h1 className="text-7xl font-black leading-tight">
               El portal perfecto para encontrar tu dj
             </h1>
