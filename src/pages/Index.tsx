@@ -1,15 +1,13 @@
-
 import { Button } from "@/components/ui/button";
 import { Search } from "lucide-react";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
-
 const Index = () => {
   return <div className="min-h-screen flex flex-col">
       <Navbar />
 
       <main className="flex-1">
-        <div className="container mx-auto px-56 md:px-40 lg:px-20 xl:px-2 py-16 flex items-center gap-12">
+        <div className="container mx-auto px-8 md:px-16 py-16 flex items-center gap-12">
           {/* Left column with text and search */}
           <div className="flex-1 space-y-8">
             <h1 className="text-7xl font-black leading-tight">
