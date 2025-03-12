@@ -1,36 +1,52 @@
 
 import { Button } from "@/components/ui/button";
+import { Search } from "lucide-react";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 
 const Index = () => {
   return (
     <div className="min-h-screen flex flex-col">
-      {/* Navigation */}
       <Navbar />
 
-      {/* Hero Section */}
-      <main className="flex-1 container mx-auto px-4 py-16">
-        <div className="max-w 3xl mx-auto text-center space-y-8">
-          <h1 className="text-5xl md:text-6xl font-bold leading-tight text-black">
-            Conecta con los mejores artistas musicales
-          </h1>
-          <p className="text-xl text-black/80 max-w-2xl mx-auto">
-            Encuentra el artista perfecto para tu evento o promociona tus servicios musicales
-            de manera profesional.
-          </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Button className="btn-primary">
-              Buscar Artistas
-            </Button>
-            <Button className="btn-secondary">
-              Registrarse como Artista
-            </Button>
+      <main className="flex-1">
+        <div className="container mx-auto px-4 py-16 flex items-center gap-8">
+          {/* Left column with text and search */}
+          <div className="flex-1 space-y-8">
+            <h1 className="text-7xl font-black leading-tight">
+              El portal perfecto para encontrar tu dj
+            </h1>
+            
+            {/* Search bar */}
+            <div className="flex items-center max-w-xl">
+              <div className="relative flex-1">
+                <input
+                  type="text"
+                  placeholder="Buscar artistas"
+                  className="w-full px-6 py-4 bg-[#FAF8F6] rounded-full pr-12 text-lg"
+                />
+                <Button
+                  className="absolute right-2 top-1/2 -translate-y-1/2 rounded-full size-10 p-0 bg-primary hover:bg-primary-hover"
+                >
+                  <Search className="size-5" />
+                </Button>
+              </div>
+            </div>
+          </div>
+
+          {/* Right column with image */}
+          <div className="flex-1">
+            <div className="rounded-3xl overflow-hidden">
+              <img 
+                src="/lovable-uploads/a3c6b43a-dd61-4889-ae77-cb1016e65371.png"
+                alt="DJ performing at a concert"
+                className="w-full h-[500px] object-cover"
+              />
+            </div>
           </div>
         </div>
       </main>
 
-      {/* Footer */}
       <Footer />
     </div>
   );
