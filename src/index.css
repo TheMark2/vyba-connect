@@ -46,6 +46,11 @@
   body {
     @apply bg-vyba-cream text-black antialiased;
   }
+  
+  /* Add smooth scrolling for the entire page */
+  html {
+    scroll-behavior: smooth;
+  }
 }
 
 @layer components {
@@ -70,5 +75,14 @@
   .input-field {
     @apply w-full px-4 py-3 rounded-lg border border-gray-200 focus:border-primary focus:ring-2 
     focus:ring-primary/20 outline-none transition-all duration-200;
+  }
+  
+  /* Add animation classes */
+  .scroll-animate-image {
+    @apply transition-transform duration-300 ease-out;
+  }
+  
+  .scroll-animate-text {
+    @apply transition-colors duration-300 ease-out;
   }
 }
