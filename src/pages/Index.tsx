@@ -87,11 +87,11 @@ const Index = () => {
             className="transition-all duration-300 ease-out shadow-lg"
             style={{
               width: "50%",
-              height: "100%",
+              height: "calc(100% - 48px)", // Add top spacing
               objectFit: "cover",
               position: "absolute",
-              top: 0,
-              right: 0,
+              top: "24px", // Add top spacing
+              right: "24px", // Add left spacing (from right side)
               borderTopLeftRadius: "20px",
               borderBottomLeftRadius: "20px"
             }}
