@@ -10,7 +10,7 @@ const Index = () => {
       <Navbar />
 
       <main className="flex-1">
-        <div className="container mx-auto px-4 py-16 flex items-center gap-8">
+        <div className="container mx-auto px-8 md:px-16 py-16 flex items-center gap-12">
           {/* Left column with text and search */}
           <div className="flex-1 space-y-8">
             <h1 className="text-7xl font-black leading-tight">
@@ -19,18 +19,13 @@ const Index = () => {
             
             {/* Search bar */}
             <div className="flex items-center max-w-xl">
-              <div className="relative flex-1">
-                <input
-                  type="text"
-                  placeholder="Buscar artistas"
-                  className="w-full px-6 py-4 bg-[#FAF8F6] rounded-full pr-12 text-lg"
-                />
-                <Button
-                  className="absolute right-2 top-1/2 -translate-y-1/2 rounded-full size-10 p-0 bg-primary hover:bg-primary-hover"
-                >
-                  <Search className="size-5" />
-                </Button>
-              </div>
+              <Button
+                variant="secondary"
+                className="w-full relative flex items-center justify-start gap-3 px-6 py-7 text-lg font-normal hover:bg-secondary-hover"
+              >
+                <Search className="size-5 text-black/60" />
+                <span className="text-black/60">Buscar artistas</span>
+              </Button>
             </div>
           </div>
 
@@ -38,7 +33,7 @@ const Index = () => {
           <div className="flex-1">
             <div className="rounded-3xl overflow-hidden">
               <img 
-                src="/lovable-uploads/a3c6b43a-dd61-4889-ae77-cb1016e65371.png"
+                src="/lovable-uploads/d79d697f-5c21-443c-bc75-d988a2dbc770.png"
                 alt="DJ performing at a concert"
                 className="w-full h-[500px] object-cover"
               />

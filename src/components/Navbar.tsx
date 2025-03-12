@@ -1,4 +1,3 @@
-
 import { Button } from "@/components/ui/button";
 import { Link, useLocation } from "react-router-dom";
 import { useState, useEffect } from "react";
@@ -8,7 +7,6 @@ const Navbar = () => {
   const [hoverIndex, setHoverIndex] = useState<number | null>(null);
   const [activeIndex, setActiveIndex] = useState<number>(0);
 
-  // Set active index based on current path
   useEffect(() => {
     if (location.pathname === "/") {
       setActiveIndex(0);
@@ -17,7 +15,6 @@ const Navbar = () => {
     }
   }, [location.pathname]);
 
-  // Calculate position for the hover background
   const getHoverStyles = () => {
     if (hoverIndex === null) {
       return {
@@ -34,7 +31,7 @@ const Navbar = () => {
 
   return (
     <nav className="bg-vyba-cream backdrop-blur-xl">
-      <div className="container mx-auto px-4 h-24 flex items-center justify-between">
+      <div className="container mx-auto px-8 md:px-16 h-24 flex items-center justify-between">
         <div className="flex items-center space-x-8">
           <h1 className="text-2xl font-bold">VYBA</h1>
           <div className="hidden md:flex items-center space-x-1">
