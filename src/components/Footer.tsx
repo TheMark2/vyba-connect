@@ -5,7 +5,7 @@ import { Link } from "react-router-dom";
 const Footer = () => {
   return (
     <footer className="bg-vyba-cream">
-      <div className="container mx-auto px-40 md:px-32 lg:px-24 xl:px-4 py-8">
+      <div className="container mx-auto px-56 md:px-40 lg:px-20 xl:px-2 py-8">
         <div className="flex flex-col md:flex-row justify-between items-start md:items-center">
           <div className="mb-8 md:mb-0">
             <h2 className="text-2xl font-bold">VYBA</h2>
