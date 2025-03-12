@@ -75,4 +75,8 @@
   .nav-hover-effect {
     @apply transition-all duration-300 ease-in-out;
   }
+  
+  .nav-background {
+    @apply absolute bg-secondary rounded-full transition-all duration-300 ease-in-out;
+  }
 }
