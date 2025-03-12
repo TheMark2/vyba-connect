@@ -1,30 +1,13 @@
 
 import { Button } from "@/components/ui/button";
+import Navbar from "@/components/Navbar";
+import Footer from "@/components/Footer";
 
 const Index = () => {
   return (
     <div className="min-h-screen flex flex-col">
       {/* Navigation */}
-      <nav className="border-b bg-white/50 backdrop-blur-xl">
-        <div className="container mx-auto px-4 h-16 flex items-center justify-between">
-          <div className="flex items-center space-x-8">
-            <h1 className="text-2xl font-bold">VYBA</h1>
-            <div className="hidden md:flex items-center space-x-1">
-              <a href="#" className="nav-link">Inicio</a>
-              <a href="#" className="nav-link">Artistas</a>
-              <div className="relative group">
-                <button className="nav-link">Todos los artistas</button>
-              </div>
-              <div className="relative group">
-                <button className="nav-link">Todos los géneros</button>
-              </div>
-            </div>
-          </div>
-          <Button className="btn-primary">
-            Entrar/Registrarse
-          </Button>
-        </div>
-      </nav>
+      <Navbar />
 
       {/* Hero Section */}
       <main className="flex-1 container mx-auto px-4 py-16">
@@ -48,33 +31,7 @@ const Index = () => {
       </main>
 
       {/* Footer */}
-      <footer className="border-t bg-white/50">
-        <div className="container mx-auto px-4 py-8">
-          <div className="flex flex-col md:flex-row justify-between items-start md:items-center">
-            <div className="mb-8 md:mb-0">
-              <h2 className="text-2xl font-bold">VYBA</h2>
-            </div>
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
-              <div className="space-y-4">
-                <a href="#" className="block text-black/80 hover:text-black">Blog</a>
-                <a href="#" className="block text-black/80 hover:text-black">Ayuda</a>
-              </div>
-              <div className="space-y-4">
-                <a href="#" className="block text-black/80 hover:text-black">Precios</a>
-                <a href="#" className="block text-black/80 hover:text-black">Buscar</a>
-              </div>
-              <div className="space-y-4">
-                <a href="#" className="block text-black/80 hover:text-black">Ver artistas</a>
-              </div>
-              <div className="space-y-4">
-                <button className="btn-secondary text-sm">
-                  Español
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
-      </footer>
+      <Footer />
     </div>
   );
 };
