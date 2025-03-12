@@ -44,18 +44,18 @@
     @apply border-border font-satoshi;
   }
   body {
-    @apply bg-vyba-cream text-vyba-navy antialiased;
+    @apply bg-vyba-cream text-black antialiased;
   }
 }
 
 @layer components {
   .btn-primary {
-    @apply bg-primary hover:bg-primary-hover text-primary-foreground px-6 py-3 rounded-lg transition-colors 
+    @apply bg-primary hover:bg-primary-hover text-primary-foreground px-6 py-3 rounded-full transition-colors 
     duration-200 inline-flex items-center justify-center font-medium;
   }
   
   .btn-secondary {
-    @apply bg-secondary hover:bg-secondary-hover text-secondary-foreground px-6 py-3 rounded-lg 
+    @apply bg-secondary hover:bg-secondary-hover text-secondary-foreground px-6 py-3 rounded-full 
     transition-colors duration-200 inline-flex items-center justify-center font-medium;
   }
 
@@ -64,7 +64,7 @@
   }
 
   .nav-link {
-    @apply text-vyba-navy/80 hover:text-vyba-navy transition-colors duration-200 px-4 py-2 rounded-lg;
+    @apply text-black/80 hover:text-black transition-colors duration-200 px-4 py-2 rounded-lg font-medium;
   }
 
   .input-field {

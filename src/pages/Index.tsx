@@ -29,10 +29,10 @@ const Index = () => {
       {/* Hero Section */}
       <main className="flex-1 container mx-auto px-4 py-16">
         <div className="max-w 3xl mx-auto text-center space-y-8">
-          <h1 className="text-5xl md:text-6xl font-bold leading-tight">
+          <h1 className="text-5xl md:text-6xl font-bold leading-tight text-black">
             Conecta con los mejores artistas musicales
           </h1>
-          <p className="text-xl text-vyba-navy/80 max-w-2xl mx-auto">
+          <p className="text-xl text-black/80 max-w-2xl mx-auto">
             Encuentra el artista perfecto para tu evento o promociona tus servicios musicales
             de manera profesional.
           </p>
@@ -56,15 +56,15 @@ const Index = () => {
             </div>
             <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
               <div className="space-y-4">
-                <a href="#" className="block text-vyba-navy/80 hover:text-vyba-navy">Blog</a>
-                <a href="#" className="block text-vyba-navy/80 hover:text-vyba-navy">Ayuda</a>
+                <a href="#" className="block text-black/80 hover:text-black">Blog</a>
+                <a href="#" className="block text-black/80 hover:text-black">Ayuda</a>
               </div>
               <div className="space-y-4">
-                <a href="#" className="block text-vyba-navy/80 hover:text-vyba-navy">Precios</a>
-                <a href="#" className="block text-vyba-navy/80 hover:text-vyba-navy">Buscar</a>
+                <a href="#" className="block text-black/80 hover:text-black">Precios</a>
+                <a href="#" className="block text-black/80 hover:text-black">Buscar</a>
               </div>
               <div className="space-y-4">
-                <a href="#" className="block text-vyba-navy/80 hover:text-vyba-navy">Ver artistas</a>
+                <a href="#" className="block text-black/80 hover:text-black">Ver artistas</a>
               </div>
               <div className="space-y-4">
                 <button className="btn-secondary text-sm">
