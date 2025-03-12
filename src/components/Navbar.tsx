@@ -19,20 +19,24 @@ const Navbar = () => {
 
   // Calculate position for the hover background
   const getHoverStyles = () => {
+    const buttonWidth = 100; // Width of each button
+    
     if (hoverIndex === null) {
       return {
-        left: `${activeIndex * 100}px`,
+        left: `${activeIndex * buttonWidth}px`,
         opacity: 1,
-        width: '100px',
+        width: `${buttonWidth}px`,
         height: '40px',
+        transform: 'translateX(0)',
       };
     }
     
     return {
-      left: `${hoverIndex * 100}px`,
+      left: `${hoverIndex * buttonWidth}px`,
       opacity: 1,
-      width: '100px',
+      width: `${buttonWidth}px`,
       height: '40px',
+      transform: 'translateX(0)',
     };
   };
 
@@ -44,7 +48,7 @@ const Navbar = () => {
           <div className="hidden md:flex items-center space-x-1 relative">
             <div className="absolute inset-0 pointer-events-none">
               <div 
-                className="absolute bg-secondary transition-all duration-300 ease-in-out rounded-full"
+                className="nav-background"
                 style={getHoverStyles()}
               />
             </div>
