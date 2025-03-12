@@ -1,10 +1,11 @@
+
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
 
 const Footer = () => {
   return (
     <footer className="bg-vyba-cream">
-      <div className="container mx-auto px-8 md:px-16 py-8">
+      <div className="container mx-auto px-8 md:px-16 lg:px-24 xl:px-32 py-8">
         <div className="flex flex-col md:flex-row justify-between items-start md:items-center">
           <div className="mb-8 md:mb-0">
             <h2 className="text-2xl font-bold">VYBA</h2>
