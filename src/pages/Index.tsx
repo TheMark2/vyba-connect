@@ -23,14 +23,21 @@ const Index = () => {
       window.addEventListener("scroll", handleScroll);
       
       // Apply animations based on scroll position
-      if (imageRef.current && imageContainerRef.current) {
-        // Scale image to fill container based on scroll (0-300px)
-        const scaleProgress = Math.min(scrollY / 500, 0.3);
-        const scale = 1.0 + scaleProgress;
+      if (imageContainerRef.current && imageRef.current) {
+        // Expand container width based on scroll (0-500px)
+        const widthProgress = Math.min(scrollY / 500, 1);
+        // Start from flex-1 (50%) to full width
+        const widthPercentage = 50 + (50 * widthProgress);
+        imageContainerRef.current.style.flex = `0 0 ${widthPercentage}%`;
         
-        // Adjust image position to keep it centered as it scales
-        const offsetY = -scrollY * 0.1; // Slight parallax effect
-        imageRef.current.style.transform = `scale(${scale}) translateY(${offsetY}px)`;
+        // Keep image filling the container
+        imageRef.current.style.width = "100%";
+        imageRef.current.style.height = "100%";
+        imageRef.current.style.objectFit = "cover";
+        
+        // Slight parallax effect
+        const offsetY = -scrollY * 0.1;
+        imageRef.current.style.transform = `translateY(${offsetY}px)`;
       }
       
       if (headingRef.current) {
@@ -74,14 +81,18 @@ const Index = () => {
             </div>
           </div>
 
-          {/* Right column with image */}
-          <div className="flex-1 overflow-hidden rounded-3xl" ref={imageContainerRef}>
+          {/* Right column with image - now with transition styles */}
+          <div 
+            ref={imageContainerRef} 
+            className="flex-1 overflow-hidden rounded-3xl transition-all duration-300"
+            style={{ flex: "1" }}
+          >
             <div className="rounded-3xl overflow-hidden h-[500px]">
               <img 
                 ref={imageRef} 
                 src="/lovable-uploads/d79d697f-5c21-443c-bc75-d988a2dbc770.png" 
                 alt="DJ performing at a concert" 
-                className="w-full h-full object-cover transition-transform duration-300 ease-out origin-center"
+                className="w-full h-full object-cover transition-all duration-300 ease-out"
               />
             </div>
           </div>
