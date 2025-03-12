@@ -1,4 +1,3 @@
-
 import { Button } from "@/components/ui/button";
 import { Search } from "lucide-react";
 import Navbar from "@/components/Navbar";
@@ -9,6 +8,7 @@ const Index = () => {
   const [scrollY, setScrollY] = useState(0);
   const imageRef = useRef<HTMLImageElement>(null);
   const headingRef = useRef<HTMLHeadingElement>(null);
+  const imageContainerRef = useRef<HTMLDivElement>(null);
   
   // Function to handle scroll events
   const handleScroll = () => {
@@ -23,10 +23,15 @@ const Index = () => {
       window.addEventListener("scroll", handleScroll);
       
       // Apply animations based on scroll position
-      if (imageRef.current) {
-        // Scale from 1 to 1.1 based on scroll position (0-300px)
-        const scale = 1.0 + Math.min(scrollY / 1000, 0.1);
+      if (imageRef.current && imageContainerRef.current) {
+        // Scale image to fill container based on scroll (0-300px)
+        const scaleProgress = Math.min(scrollY / 500, 0.3);
+        const scale = 1.0 + scaleProgress;
         imageRef.current.style.transform = `scale(${scale})`;
+        
+        // Adjust image position to keep it centered as it scales
+        const offsetY = -scrollY * 0.1; // Slight parallax effect
+        imageRef.current.style.transform = `scale(${scale}) translateY(${offsetY}px)`;
       }
       
       if (headingRef.current) {
@@ -70,13 +75,13 @@ const Index = () => {
           </div>
 
           {/* Right column with image */}
-          <div className="flex-1 overflow-hidden rounded-3xl">
-            <div className="rounded-3xl overflow-hidden">
+          <div className="flex-1 overflow-hidden rounded-3xl" ref={imageContainerRef}>
+            <div className="rounded-3xl overflow-hidden h-[500px]">
               <img 
                 ref={imageRef} 
                 src="/lovable-uploads/d79d697f-5c21-443c-bc75-d988a2dbc770.png" 
                 alt="DJ performing at a concert" 
-                className="w-full h-[500px] object-cover transition-transform duration-300"
+                className="w-full h-full object-cover transition-transform duration-300 ease-out origin-center"
               />
             </div>
           </div>
