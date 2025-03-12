@@ -8,7 +8,6 @@ const Navbar = () => {
   const [hoverIndex, setHoverIndex] = useState<number | null>(null);
   const [activeIndex, setActiveIndex] = useState<number>(0);
 
-  // Set active index based on current path
   useEffect(() => {
     if (location.pathname === "/") {
       setActiveIndex(0);
@@ -17,18 +16,19 @@ const Navbar = () => {
     }
   }, [location.pathname]);
 
-  // Calculate position for the hover background
   const getHoverStyles = () => {
     if (hoverIndex === null) {
       return {
         opacity: 0,
         transform: 'translateX(-100%)',
+        transition: 'all 0.3s ease-in-out',
       };
     }
     
     return {
       opacity: 1,
       transform: 'translateX(0)',
+      transition: 'all 0.3s ease-in-out',
     };
   };
 
@@ -45,7 +45,7 @@ const Navbar = () => {
               onMouseEnter={() => setHoverIndex(0)}
               onMouseLeave={() => setHoverIndex(null)}
             >
-              <Link to="/" className="relative">
+              <Link to="/" className="relative px-4 py-2">
                 <div
                   className="absolute inset-0 bg-secondary rounded-full transition-all duration-300 ease-in-out -z-10"
                   style={hoverIndex === 0 ? getHoverStyles() : { opacity: activeIndex === 0 ? 1 : 0 }}
@@ -60,7 +60,7 @@ const Navbar = () => {
               onMouseEnter={() => setHoverIndex(1)}
               onMouseLeave={() => setHoverIndex(null)}
             >
-              <Link to="/artistas" className="relative">
+              <Link to="/artistas" className="relative px-4 py-2">
                 <div
                   className="absolute inset-0 bg-secondary rounded-full transition-all duration-300 ease-in-out -z-10"
                   style={hoverIndex === 1 ? getHoverStyles() : { opacity: activeIndex === 1 ? 1 : 0 }}
@@ -74,7 +74,7 @@ const Navbar = () => {
               onMouseEnter={() => setHoverIndex(2)} 
               onMouseLeave={() => setHoverIndex(null)}
             >
-              <span className="relative">
+              <span className="relative px-4 py-2">
                 <div
                   className="absolute inset-0 bg-secondary rounded-full transition-all duration-300 ease-in-out -z-10"
                   style={hoverIndex === 2 ? getHoverStyles() : { opacity: 0 }}
@@ -88,7 +88,7 @@ const Navbar = () => {
               onMouseEnter={() => setHoverIndex(3)} 
               onMouseLeave={() => setHoverIndex(null)}
             >
-              <span className="relative">
+              <span className="relative px-4 py-2">
                 <div
                   className="absolute inset-0 bg-secondary rounded-full transition-all duration-300 ease-in-out -z-10"
                   style={hoverIndex === 3 ? getHoverStyles() : { opacity: 0 }}
