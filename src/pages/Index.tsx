@@ -25,19 +25,16 @@ const Index = () => {
       // Apply animations based on scroll position
       if (imageRef.current) {
         // Scale from 1 to 1.1 based on scroll position (0-300px)
-        const scale = 1 + Math.min(scrollY / 1000, 0.1);
+        const scale = 1.0 + Math.min(scrollY / 1000, 0.1);
         imageRef.current.style.transform = `scale(${scale})`;
-        imageRef.current.style.transition = "transform 0.3s ease-out";
       }
       
       if (headingRef.current) {
-        // Calculate color transition - from black to purple
+        // Calculate color transition - from black to white
         const scrollProgress = Math.min(scrollY / 300, 1);
-        const r = Math.floor(155 - (155 * scrollProgress));
-        const g = Math.floor(155 - (155 * scrollProgress));
-        const b = Math.floor(155 + (90 * scrollProgress));
-        headingRef.current.style.color = `rgb(${r}, ${g}, ${b})`;
-        headingRef.current.style.transition = "color 0.3s ease-out";
+        // Start with black (0,0,0) and transition to white (255,255,255)
+        const colorValue = Math.floor(255 * scrollProgress);
+        headingRef.current.style.color = `rgb(${colorValue}, ${colorValue}, ${colorValue})`;
       }
     }
     
@@ -58,7 +55,7 @@ const Index = () => {
           <div className="flex-1 space-y-16">
             <h1 
               ref={headingRef} 
-              className="text-7xl font-black leading-tight transition-colors duration-300"
+              className="text-7xl font-black leading-tight text-black transition-colors duration-300"
             >
               El portal perfecto para encontrar tu dj
             </h1>
