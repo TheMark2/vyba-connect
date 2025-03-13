@@ -1,9 +1,15 @@
+
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
+import { cn } from "@/lib/utils";
 
-const Navbar = () => {
+interface NavbarProps {
+  className?: string;
+}
+
+const Navbar = ({ className }: NavbarProps) => {
   return (
-    <div className="mx-auto px-6 md:px-10 lg:px-14 xl:px-16 h-24 flex items-center justify-between">
+    <div className={cn("mx-auto px-6 md:px-10 lg:px-14 xl:px-16 h-24 flex items-center justify-between", className)}>
       <div className="flex items-center space-x-12">
         <h1 className="text-3xl font-bold">VYBA</h1>
         <div className="hidden md:flex items-center space-x-8">
