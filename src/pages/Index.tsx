@@ -16,7 +16,7 @@ const Index = () => {
         <div className="relative w-full h-screen overflow-hidden">          
           {/* Background image */}
           <div className="absolute inset-0 z-0 px-6 md:px-10 lg:px-14 xl:px-16 pb-32">
-            <div className="rounded-[2vw] absolute inset-0 bg-black opacity-50 z-10"></div>
+            <div className="rounded-[2vw] absolute bg-black opacity-50 z-10"></div>
             <motion.img 
               initial={{ opacity: 0, scale: 1.05 }}
               animate={{ opacity: 1, scale: 1 }}
