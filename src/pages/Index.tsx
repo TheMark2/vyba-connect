@@ -1,3 +1,4 @@
+
 import { Button } from "@/components/ui/button";
 import { Search } from "lucide-react";
 import Navbar from "@/components/Navbar";
@@ -10,7 +11,7 @@ const Index = () => {
   // Referencias para el contenedor de animación
   const scrollRef = useRef(null);
   
-  // Configuración de la animación de scroll
+  // Configuración de la animación de scroll - ajustamos para que sea más rápida
   const { scrollYProgress } = useScroll({
     target: scrollRef,
     offset: ["start start", "end start"]
@@ -35,7 +36,7 @@ const Index = () => {
     }
   ];
 
-  // Transformaciones basadas en el progreso del scroll
+  // Transformaciones basadas en el progreso del scroll - ajustamos para animación más rápida
   const opacity1 = useTransform(
     scrollYProgress,
     [0, 0.25, 0.3, 1],
@@ -63,22 +64,21 @@ const Index = () => {
 
   return (
     <div className="min-h-screen flex flex-col p-0 m-0">
-      {/* Navbar mantiene su estructura original */}
+      {/* Navbar */}
       <div className="w-full">
         <Navbar className="mx-auto" />
       </div>
 
       <main className="flex-1">
-        {/* Sección de animación con scroll - ahora incluye el espacio de la navbar en el scroll */}
+        {/* Sección de animación con scroll */}
         <div 
           ref={scrollRef}
-          className="h-[300vh] relative -mt-[--navbar-height]" // Compensamos la altura del navbar
-          style={{ "--navbar-height": "var(--navbar-height, 76px)" }} // Variable CSS para altura de navbar
+          className="h-[300vh] relative"
         >
-          {/* Contenedor sticky ahora empieza desde la parte superior, coincidiendo con la navbar */}
-          <div className="sticky top-0 h-screen overflow-hidden pt-[--navbar-height]">
+          {/* Contenedor sticky que permanece desde el inicio */}
+          <div className="sticky top-0 h-screen overflow-hidden">
             {/* Imagen de fondo con transición */}
-            <div className="relative w-full h-full overflow-hidden">
+            <div className="relative w-full h-screen overflow-hidden">
               <div className="absolute inset-0 px-6 md:px-10 lg:px-14 xl:px-16">
                 <div className="relative w-full h-full rounded-[2vw] overflow-hidden">
                   {/* Primera imagen (DJ) */}
