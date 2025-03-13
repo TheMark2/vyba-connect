@@ -1,3 +1,4 @@
+
 import { Button } from "@/components/ui/button";
 import { Search } from "lucide-react";
 import Navbar from "@/components/Navbar";
@@ -24,39 +25,46 @@ const Index = () => {
     },
     {
       type: "Saxofonista",
-      image: "/api/placeholder/1200/800",
+      image: "https://images.unsplash.com/photo-1619983081563-430f63602796?w=1200&h=800&auto=format&fit=crop",
       description: "Encuentra al saxofonista ideal para tu evento"
     },
     {
       type: "Guitarrista",
-      image: "/api/placeholder/1200/800",
+      image: "https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?w=1200&h=800&auto=format&fit=crop",
       description: "Conecta con talentosos guitarristas"
     }
   ];
 
-  // Transformaciones basadas en el progreso del scroll
+  // Transformaciones basadas en el progreso del scroll - Haciendo la animación más rápida
   const opacity1 = useTransform(
     scrollYProgress,
-    [0, 0.3, 0.35, 1],
+    [0, 0.2, 0.25, 1],  // Acelerado (antes era [0, 0.3, 0.35, 1])
     [1, 1, 0, 0]
   );
   
   const opacity2 = useTransform(
     scrollYProgress,
-    [0, 0.3, 0.35, 0.65, 0.7, 1],
+    [0, 0.2, 0.25, 0.45, 0.5, 1],  // Acelerado (antes era [0, 0.3, 0.35, 0.65, 0.7, 1])
     [0, 0, 1, 1, 0, 0]
   );
   
   const opacity3 = useTransform(
     scrollYProgress,
-    [0, 0.65, 0.7, 1],
+    [0, 0.45, 0.5, 1],  // Acelerado (antes era [0, 0.65, 0.7, 1])
     [0, 0, 1, 1]
   );
   
-  // Placeholder de búsqueda dinámico con arrays iguales
+  // Transformaciones para los márgenes superior e inferior (para centrar la imagen)
+  const marginTopBottom = useTransform(
+    scrollYProgress,
+    [0, 0.5, 1],
+    ["0%", "10%", "20%"]
+  );
+  
+  // Placeholder de búsqueda dinámico
   const searchPlaceholder = useTransform(
     scrollYProgress,
-    [0, 0.33, 0.66, 1],
+    [0, 0.25, 0.5, 1],
     ["Buscar DJs", "Buscar saxofonistas", "Buscar guitarristas", "Buscar guitarristas"]
   );
 
@@ -77,8 +85,14 @@ const Index = () => {
           <div className="sticky top-0 h-screen overflow-hidden">
             {/* Imagen de fondo con transición */}
             <div className="relative w-full h-screen overflow-hidden">
-              <div className="absolute inset-0 px-6 md:px-10 lg:px-14 xl:px-16 pb-32">
-                <div className="relative w-full h-full rounded-[2vw] overflow-hidden">
+              <div className="absolute inset-0 px-6 md:px-10 lg:px-14 xl:px-16">
+                <motion.div 
+                  className="relative w-full h-full rounded-[2vw] overflow-hidden"
+                  style={{ 
+                    marginTop: marginTopBottom,
+                    marginBottom: marginTopBottom
+                  }}
+                >
                   {/* Primera imagen (DJ) */}
                   <motion.div
                     className="absolute inset-0"
@@ -117,11 +131,11 @@ const Index = () => {
 
                   {/* Degradado */}
                   <div className="absolute inset-0 bg-black opacity-50"></div>
-                </div>
+                </motion.div>
               </div>
 
               {/* Contenido principal sobre la imagen */}
-              <div className="relative z-20 container mx-auto px-8 md:px-16 lg:px-24 xl:px-32 2xl:max-w-[1800px] h-full flex flex-col justify-center pb-32">
+              <div className="relative z-20 container mx-auto px-8 md:px-16 lg:px-24 xl:px-32 2xl:max-w-[1800px] h-full flex flex-col justify-center">
                 <div className="max-w-2xl space-y-10 p-4">
                   {/* Textos con animación de crossfade */}
                   <div className="h-[120px] md:h-[160px] relative">
@@ -153,13 +167,10 @@ const Index = () => {
                   {/* Barra de búsqueda */}
                   <div className="flex items-center max-w-xl">
                     <div className="relative w-full flex items-center">
-                      <motion.input
+                      <input
                         type="text"
                         className="w-full pl-6 pr-14 py-4 rounded-full text-black font-medium bg-white"
-                        style={{ 
-                          placeholderText: searchPlaceholder 
-                        }}
-                        placeholder="Buscar artistas"            
+                        placeholder={searchPlaceholder.get()}            
                       />
                       <Button
                         variant="secondary"
