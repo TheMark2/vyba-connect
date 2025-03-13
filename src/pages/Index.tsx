@@ -21,7 +21,7 @@ const Index = () => {
               transition={{ duration: 0.8, ease: "easeOut" }}
               src="/lovable-uploads/d79d697f-5c21-443c-bc75-d988a2dbc770.png" 
               alt="DJ performing at a concert" 
-              className="rounded-[3vw] w-full h-full brightness-75 object-cover"
+              className="rounded-[2vw] w-full h-full brightness-75 object-cover"
             />
           </div>
           
