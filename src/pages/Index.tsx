@@ -14,7 +14,7 @@ const Index = () => {
         {/* Hero section with full-width background image */}
         <div className="relative w-full h-screen overflow-hidden">
           {/* Background image */}
-          <div className="absolute inset-0 z-0 px-8 md:px-16 lg:px-24 xl:px-32 my-16">
+          <div className="absolute inset-0 z-0 px-8 md:px-16 lg:px-24 xl:px-32 mby-16">
             <motion.img 
               initial={{ opacity: 0, scale: 1.05 }}
               animate={{ opacity: 1, scale: 1 }}
