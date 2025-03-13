@@ -8,7 +8,9 @@ import { motion } from "framer-motion";
 const Index = () => {
   return (
     <div className="min-h-screen flex flex-col p-0 m-0">
-      <Navbar className="w-full"/>
+      <div className="w-full">
+        <Navbar className="container mx-auto" />
+      </div>
 
       <main className="flex-1">
         {/* Hero section with full-width background image */}
