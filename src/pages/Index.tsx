@@ -1,10 +1,13 @@
+
 import { Button } from "@/components/ui/button";
 import { Search } from "lucide-react";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { useEffect, useState, useRef } from "react";
+
 const Index = () => {
   const [scrollY, setScrollY] = useState(0);
+  const [animationComplete, setAnimationComplete] = useState(false);
   const imageRef = useRef<HTMLImageElement>(null);
   const headingRef = useRef<HTMLHeadingElement>(null);
   const heroRef = useRef<HTMLDivElement>(null);
@@ -15,6 +18,7 @@ const Index = () => {
   const handleScroll = () => {
     setScrollY(window.scrollY);
   };
+
   useEffect(() => {
     // Only add scroll listener on large screens (min-width: 1024px)
     const isLargeScreen = window.matchMedia("(min-width: 1024px)").matches;
@@ -26,6 +30,11 @@ const Index = () => {
         // Maximum scroll value for animation
         const maxScroll = 500;
         const scrollProgress = Math.min(scrollY / maxScroll, 1);
+
+        // Mark animation as complete when we reach the end
+        if (scrollProgress >= 1 && !animationComplete) {
+          setAnimationComplete(true);
+        }
 
         // Adjust the image container to expand from right to left
         const startWidth = 50; // Starting width percentage
@@ -57,46 +66,76 @@ const Index = () => {
         }
       }
     }
+
     return () => {
       if (isLargeScreen) {
         window.removeEventListener("scroll", handleScroll);
       }
     };
-  }, [scrollY]);
-  return <div className="min-h-screen flex flex-col">
+  }, [scrollY, animationComplete]);
+
+  return (
+    <div className="min-h-screen flex flex-col">
       <Navbar />
 
       <main className="flex-1">
-        {/* Hero section */}
-        <div ref={heroRef} className="relative w-full h-screen overflow-hidden">
+        {/* Hero section with sticky position until animation completes */}
+        <div 
+          ref={heroRef} 
+          className="relative w-full h-screen overflow-hidden"
+          style={{
+            position: animationComplete ? 'relative' : 'sticky',
+            top: 0,
+            zIndex: 10
+          }}
+        >
           {/* Background image with initial styling */}
-          <img ref={imageRef} src="/lovable-uploads/d79d697f-5c21-443c-bc75-d988a2dbc770.png" alt="DJ performing at a concert" className="transition-all duration-300 ease-out shadow-lg" style={{
-          width: "50%",
-          height: "calc(100% - 48px)",
-          // Add top spacing
-          objectFit: "cover",
-          position: "absolute",
-          top: "24px",
-          // Add top spacing
-          right: "24px",
-          // Add left spacing (from right side)
-          borderTopLeftRadius: "20px",
-          borderBottomLeftRadius: "20px"
-        }} />
+          <img 
+            ref={imageRef} 
+            src="/lovable-uploads/d79d697f-5c21-443c-bc75-d988a2dbc770.png" 
+            alt="DJ performing at a concert" 
+            className="transition-all duration-300 ease-out shadow-lg" 
+            style={{
+              width: "50%",
+              height: "calc(100% - 48px)",
+              objectFit: "cover",
+              position: "absolute",
+              top: "24px",
+              right: "24px",
+              borderTopLeftRadius: "20px",
+              borderBottomLeftRadius: "20px"
+            }} 
+          />
           
           {/* Content container */}
-          <div ref={contentRef} className="container relative mx-auto px-8 md:px-16 lg:px-24 xl:px-32 2xl:max-w-[1800px] py-16 h-full flex items-center">
+          <div 
+            ref={contentRef} 
+            className="container relative mx-auto px-8 md:px-16 lg:px-24 xl:px-32 2xl:max-w-[1800px] py-16 h-full flex items-center"
+          >
             {/* Left column with text and search */}
             <div className="max-w-2xl space-y-16 relative z-10">
-              <h1 ref={headingRef} className="text-5xl md:text-7xl font-black leading-tight transition-colors duration-300">
+              <h1 
+                ref={headingRef} 
+                className="text-5xl md:text-7xl font-black leading-tight transition-colors duration-300"
+              >
                 El portal perfecto para encontrar tu dj
               </h1>
               
               {/* Search bar */}
-              <div ref={searchRef} className="flex items-center max-w-xl transition-all duration-300">
+              <div 
+                ref={searchRef} 
+                className="flex items-center max-w-xl transition-all duration-300"
+              >
                 <div className="relative w-full flex items-center">
-                  <input type="text" placeholder="Buscar artistas" className="w-full pl-6 pr-14 py-4 rounded-full text-black font-medium bg-white" />
-                  <Button variant="secondary" className="absolute right-1 rounded-full aspect-square p-2">
+                  <input 
+                    type="text" 
+                    placeholder="Buscar artistas" 
+                    className="w-full pl-6 pr-14 py-4 rounded-full text-black font-medium bg-white" 
+                  />
+                  <Button 
+                    variant="secondary" 
+                    className="absolute right-1 rounded-full aspect-square p-2"
+                  >
                     <Search className="size-5" />
                   </Button>
                 </div>
@@ -159,6 +198,8 @@ const Index = () => {
       </main>
 
       <Footer />
-    </div>;
+    </div>
+  );
 };
+
 export default Index;
