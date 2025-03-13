@@ -1,23 +1,21 @@
-
 import { Button } from "@/components/ui/button";
 import { Search } from "lucide-react";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { motion, useScroll, useTransform } from "framer-motion";
 import { useRef } from "react";
-import { Input } from "@/components/ui/input";
 
 const Index = () => {
   // Referencias para el contenedor de animación
   const scrollRef = useRef(null);
   
-  // Configuración de la animación de scroll - ajustamos para que sea más rápida
+  // Configuración de la animación de scroll
   const { scrollYProgress } = useScroll({
     target: scrollRef,
     offset: ["start start", "end start"]
   });
   
-  // Artistas para la animación con imágenes reales
+  // Artistas para la animación
   const artists = [
     {
       type: "DJ",
@@ -26,36 +24,36 @@ const Index = () => {
     },
     {
       type: "Saxofonista",
-      image: "https://images.unsplash.com/photo-1566913485826-611f780e1a44?q=80&w=1200&auto=format",
+      image: "/api/placeholder/1200/800",
       description: "Encuentra al saxofonista ideal para tu evento"
     },
     {
       type: "Guitarrista",
-      image: "https://images.unsplash.com/photo-1510915361894-db8b60106cb1?q=80&w=1200&auto=format",
+      image: "/api/placeholder/1200/800",
       description: "Conecta con talentosos guitarristas"
     }
   ];
 
-  // Transformaciones basadas en el progreso del scroll - ajustamos para animación más rápida
+  // Transformaciones basadas en el progreso del scroll
   const opacity1 = useTransform(
     scrollYProgress,
-    [0, 0.25, 0.3, 1],
+    [0, 0.3, 0.35, 1],
     [1, 1, 0, 0]
   );
   
   const opacity2 = useTransform(
     scrollYProgress,
-    [0, 0.25, 0.3, 0.55, 0.6, 1],
+    [0, 0.3, 0.35, 0.65, 0.7, 1],
     [0, 0, 1, 1, 0, 0]
   );
   
   const opacity3 = useTransform(
     scrollYProgress,
-    [0, 0.55, 0.6, 1],
+    [0, 0.65, 0.7, 1],
     [0, 0, 1, 1]
   );
   
-  // Placeholder de búsqueda dinámico con arrays iguales en longitud
+  // Placeholder de búsqueda dinámico con arrays iguales
   const searchPlaceholder = useTransform(
     scrollYProgress,
     [0, 0.33, 0.66, 1],
@@ -79,7 +77,7 @@ const Index = () => {
           <div className="sticky top-0 h-screen overflow-hidden">
             {/* Imagen de fondo con transición */}
             <div className="relative w-full h-screen overflow-hidden">
-              <div className="absolute inset-0 px-6 md:px-10 lg:px-14 xl:px-16">
+              <div className="absolute inset-0 px-6 md:px-10 lg:px-14 xl:px-16 pb-32">
                 <div className="relative w-full h-full rounded-[2vw] overflow-hidden">
                   {/* Primera imagen (DJ) */}
                   <motion.div
@@ -123,7 +121,7 @@ const Index = () => {
               </div>
 
               {/* Contenido principal sobre la imagen */}
-              <div className="relative z-20 container mx-auto px-8 md:px-16 lg:px-24 xl:px-32 2xl:max-w-[1800px] h-full flex flex-col justify-center">
+              <div className="relative z-20 container mx-auto px-8 md:px-16 lg:px-24 xl:px-32 2xl:max-w-[1800px] h-full flex flex-col justify-center pb-32">
                 <div className="max-w-2xl space-y-10 p-4">
                   {/* Textos con animación de crossfade */}
                   <div className="h-[120px] md:h-[160px] relative">
@@ -155,10 +153,13 @@ const Index = () => {
                   {/* Barra de búsqueda */}
                   <div className="flex items-center max-w-xl">
                     <div className="relative w-full flex items-center">
-                      <Input
+                      <motion.input
                         type="text"
-                        className="w-full pl-6 pr-14 py-7 rounded-full text-black font-medium bg-white text-lg"
-                        placeholder={searchPlaceholder.get()}
+                        className="w-full pl-6 pr-14 py-4 rounded-full text-black font-medium bg-white"
+                        style={{ 
+                          placeholderText: searchPlaceholder 
+                        }}
+                        placeholder="Buscar artistas"            
                       />
                       <Button
                         variant="secondary"
@@ -174,8 +175,8 @@ const Index = () => {
           </div>
         </div>
 
-        {/* Sección de Artistas con mayor espaciado */}
-        <div className="bg-white py-40">
+        {/* Sección de Artistas */}
+        <div className="bg-white py-32">
           <div className="container mx-auto px-8 md:px-16 lg:px-24 xl:px-32 2xl:max-w-[1800px]">
             <h2 className="text-4xl md:text-5xl font-bold mb-12 text-center">
               Descubre los mejores artistas
@@ -207,8 +208,8 @@ const Index = () => {
           </div>
         </div>
 
-        {/* Sección de Beneficios con mayor espaciado */}
-        <div className="bg-vyba-cream py-40">
+        {/* Sección de Beneficios */}
+        <div className="bg-vyba-cream py-32">
           <div className="container mx-auto px-8 md:px-16 lg:px-24 xl:px-32 2xl:max-w-[1800px] text-center">
             <h2 className="text-4xl md:text-5xl font-bold mb-8">¿Por qué elegirnos?</h2>
             <p className="text-xl max-w-3xl mx-auto mb-16">
