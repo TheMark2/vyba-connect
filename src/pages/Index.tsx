@@ -29,8 +29,6 @@ const Index = () => {
             {/* Degradado sobre la imagen */}
             <div className="absolute inset-0 rounded-[2vw] bg-gradient-to-t from-black via-transparent to-transparent"></div>
           </div>
-        </div>
-
           
           {/* Content with text and search */}
           <div className="relative z-20 container mx-auto px-8 md:px-16 lg:px-24 xl:px-32 2xl:max-w-[1800px] h-full flex flex-col justify-center pb-32">
