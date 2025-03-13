@@ -19,7 +19,7 @@ const Index = () => {
   const artists = [
     {
       type: "DJ",
-      image: "/lovable-uploads/d79d697f-5c21-443c-bc75-d988a2dbc770,png",
+      image: "/lovable-uploads/d79d697f-5c21-443c-bc75-d988a2dbc770.png",
       description: "El portal perfecto para encontrar tu DJ"
     },
     {
@@ -35,36 +35,29 @@ const Index = () => {
   ];
 
   // Transformaciones basadas en el progreso del scroll
-  const artistIndex = useTransform(
-    scrollYProgress,
-    [0, 0.33, 0.66, 1],
-    [0, 1, 2, 2]
-  );
-  
-  // Opacidad para cada artista basada en el progreso del scroll
   const opacity1 = useTransform(
     scrollYProgress,
-    [0, 0.3, 0.35],
-    [1, 1, 0]
+    [0, 0.3, 0.35, 1],
+    [1, 1, 0, 0]
   );
   
   const opacity2 = useTransform(
     scrollYProgress,
-    [0.3, 0.35, 0.65, 0.7],
-    [0, 1, 1, 0]
+    [0, 0.3, 0.35, 0.65, 0.7, 1],
+    [0, 0, 1, 1, 0, 0]
   );
   
   const opacity3 = useTransform(
     scrollYProgress,
-    [0.65, 0.7, 1],
-    [0, 1, 1]
+    [0, 0.65, 0.7, 1],
+    [0, 0, 1, 1]
   );
   
-  // Placeholder de búsqueda dinámico
+  // Placeholder de búsqueda dinámico con arrays iguales
   const searchPlaceholder = useTransform(
     scrollYProgress,
     [0, 0.33, 0.66, 1],
-    ["Buscar DJs", "Buscar saxofonistas", "Buscar guitarristas"]
+    ["Buscar DJs", "Buscar saxofonistas", "Buscar guitarristas", "Buscar guitarristas"]
   );
 
   return (
