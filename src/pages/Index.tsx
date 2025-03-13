@@ -1,4 +1,3 @@
-
 import { Button } from "@/components/ui/button";
 import { Search } from "lucide-react";
 import Navbar from "@/components/Navbar";
@@ -49,18 +48,16 @@ const Index = () => {
     [0, 0, 1, 1]
   );
 
-  // Configuramos el padding superior para que aumente progresivamente de 0 a 16
   const paddingTop = useTransform(
     scrollYProgress,
     [0, 0.5, 1],
-    ["0px", "32px", "16px"]
+    ["0px", "120px", "80px"]
   );
 
-  // Configuramos el padding inferior para que disminuya progresivamente de 32 a 16
   const paddingBottom = useTransform(
     scrollYProgress,
     [0, 0.5, 1],
-    ["32px", "16px", "16px"]
+    ["120px", "80px", "80px"]
   );
 
   const searchPlaceholder = useTransform(
