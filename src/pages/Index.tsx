@@ -12,11 +12,9 @@ const Index = () => {
       </div>
 
       <main className="flex-1">
-        {/* Hero section with full-width background image */}
-        <div className="relative w-full h-screen overflow-hidden">
-          {/* Contenedor de la imagen con degradado */}
-          <div className="absolute inset-0 px-6 md:px-10 lg:px-14 xl:px-16 pb-32">
-            {/* Imagen de fondo */}
+        <div className="absolute inset-0 px-6 md:px-10 lg:px-14 xl:px-16 pb-32">
+          <div className="relative w-full h-full">
+            {/* Imagen */}
             <motion.img 
               initial={{ opacity: 0, scale: 1.05 }}
               animate={{ opacity: 1, scale: 1 }}
@@ -26,8 +24,8 @@ const Index = () => {
               className="rounded-[2vw] w-full h-full brightness-75 object-cover"
             />
             
-            {/* Degradado sobre la imagen */}
-            <div className="absolute inset-0 rounded-[2vw] bg-gradient-to-t from-black via-transparent to-transparent"></div>
+            {/* Degradado con padding y border-radius */}
+            <div className="absolute inset-0 rounded-[2vw] bg-gradient-to-t from-black via-transparent to-transparent pointer-events-none"></div>
           </div>
           
           {/* Content with text and search */}
