@@ -1,9 +1,9 @@
+
 import { Button } from "@/components/ui/button";
 import { Search } from "lucide-react";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { motion } from "framer-motion";
-import { Input } from "@/components/ui/input";
 
 const Index = () => {
   return (
@@ -20,37 +20,37 @@ const Index = () => {
             <motion.img 
               initial={{ opacity: 0, scale: 1.05 }}
               animate={{ opacity: 1, scale: 1 }}
-              transition={{ duration: 0.5, ease: "easeOut" }}
+              transition={{ duration: 0.8, ease: "easeOut" }}
               src="/lovable-uploads/d79d697f-5c21-443c-bc75-d988a2dbc770.png" 
               alt="DJ performing at a concert" 
               className="rounded-[2vw] w-full h-full brightness-75 object-cover"
             />
           </div>
           
-          {/* Content with text and search - Centered vertically */}
+          {/* Content with text and search */}
           <div className="relative z-10 container mx-auto px-8 md:px-16 lg:px-24 xl:px-32 2xl:max-w-[1800px] h-full flex flex-col justify-center">
             <motion.div 
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.4, ease: "easeOut" }}
-              className="max-w-2xl space-y-12 p-6">
-              <h1 className="text-5xl md:text-6xl font-black leading-tight text-white">
+              transition={{ duration: 0.6, delay: 0.3 }}
+              className="max-w-2xl space-y-12 p-4">
+              <h1 className="text-5xl md:text-6xl font-black leading-tight text-white pb-32">
                 El portal perfecto<br />para encontrar tu dj
               </h1>
               
-              {/* Search bar - Styled to match the image */}
+              {/* Search bar */}
               <div className="flex items-center max-w-xl">
                 <div className="relative w-full flex items-center">
-                  <Input 
+                  <input 
                     type="text" 
                     placeholder="Buscar artistas" 
-                    className="w-full pl-6 pr-14 py-6 rounded-full text-black font-medium bg-[#F1F1F1] border-none h-auto text-base"
+                    className="w-full pl-6 pr-14 py-4 rounded-full text-black font-medium bg-white" 
                   />
                   <Button 
                     variant="secondary" 
-                    className="absolute right-1 rounded-full aspect-square p-2 bg-[#E4E5FF] hover:bg-[#D4DDFF]"
+                    className="absolute right-1 rounded-full aspect-square p-2 bg-gray-100"
                   >
-                    <Search className="size-5 text-black" />
+                    <Search className="size-5 text-gray-500" />
                   </Button>
                 </div>
               </div>
@@ -59,9 +59,9 @@ const Index = () => {
         </div>
         
         {/* Additional content to make page scrollable */}
-        <div className="bg-white py-40">
+        <div className="bg-white py-32">
           <div className="container mx-auto px-8 md:px-16 lg:px-24 xl:px-32 2xl:max-w-[1800px]">
-            <h2 className="text-4xl md:text-5xl font-bold mb-16 text-center">Descubre los mejores DJs</h2>
+            <h2 className="text-4xl md:text-5xl font-bold mb-12 text-center">Descubre los mejores DJs</h2>
             
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
               {[1, 2, 3, 4, 5, 6].map(item => <div key={item} className="bg-vyba-beige rounded-2xl overflow-hidden shadow-sm hover:shadow-md transition-all">
@@ -77,10 +77,10 @@ const Index = () => {
         </div>
         
         {/* Another section for more scroll space */}
-        <div className="bg-vyba-cream py-40">
+        <div className="bg-vyba-cream py-32">
           <div className="container mx-auto px-8 md:px-16 lg:px-24 xl:px-32 2xl:max-w-[1800px] text-center">
-            <h2 className="text-4xl md:text-5xl font-bold mb-12">¿Por qué elegirnos?</h2>
-            <p className="text-xl max-w-3xl mx-auto mb-20">Conectamos a los mejores DJs con clientes que buscan experiencias musicales inolvidables.</p>
+            <h2 className="text-4xl md:text-5xl font-bold mb-8">¿Por qué elegirnos?</h2>
+            <p className="text-xl max-w-3xl mx-auto mb-16">Conectamos a los mejores DJs con clientes que buscan experiencias musicales inolvidables.</p>
             
             <div className="grid grid-cols-1 md:grid-cols-3 gap-12">
               <div className="space-y-4">
