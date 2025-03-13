@@ -9,7 +9,7 @@ const Index = () => {
   return (
     <div className="min-h-screen flex flex-col p-0 m-0">
       <div className="w-full">
-        <Navbar className="container mx-auto" />
+        <Navbar className="mx-auto" />
       </div>
 
       <main className="flex-1">
