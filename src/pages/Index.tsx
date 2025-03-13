@@ -11,13 +11,13 @@ const Index = () => {
   // Referencias para el contenedor de animación
   const scrollRef = useRef(null);
   
-  // Configuración de la animación de scroll
+  // Configuración de la animación de scroll - ajustamos para que sea más rápida
   const { scrollYProgress } = useScroll({
     target: scrollRef,
     offset: ["start start", "end start"]
   });
   
-  // Artistas para la animación
+  // Artistas para la animación con imágenes reales
   const artists = [
     {
       type: "DJ",
@@ -26,36 +26,36 @@ const Index = () => {
     },
     {
       type: "Saxofonista",
-      image: "/lovable-uploads/a3c6b43a-dd61-4889-ae77-cb1016e65371.png",
+      image: "https://images.unsplash.com/photo-1566913485826-611f780e1a44?q=80&w=1200&auto=format",
       description: "Encuentra al saxofonista ideal para tu evento"
     },
     {
       type: "Guitarrista",
-      image: "/lovable-uploads/a3c6b43a-dd61-4889-ae77-cb1016e65371.png",
+      image: "https://images.unsplash.com/photo-1510915361894-db8b60106cb1?q=80&w=1200&auto=format",
       description: "Conecta con talentosos guitarristas"
     }
   ];
 
-  // Transformaciones basadas en el progreso del scroll
+  // Transformaciones basadas en el progreso del scroll - ajustamos para animación más rápida
   const opacity1 = useTransform(
     scrollYProgress,
-    [0, 0.3, 0.35, 1],
+    [0, 0.25, 0.3, 1],
     [1, 1, 0, 0]
   );
   
   const opacity2 = useTransform(
     scrollYProgress,
-    [0, 0.3, 0.35, 0.65, 0.7, 1],
+    [0, 0.25, 0.3, 0.55, 0.6, 1],
     [0, 0, 1, 1, 0, 0]
   );
   
   const opacity3 = useTransform(
     scrollYProgress,
-    [0, 0.65, 0.7, 1],
+    [0, 0.55, 0.6, 1],
     [0, 0, 1, 1]
   );
   
-  // Placeholder de búsqueda dinámico
+  // Placeholder de búsqueda dinámico con arrays iguales en longitud
   const searchPlaceholder = useTransform(
     scrollYProgress,
     [0, 0.33, 0.66, 1],
@@ -70,18 +70,15 @@ const Index = () => {
       </div>
 
       <main className="flex-1">
-        {/* Sección de animación con scroll - Añadimos un espacio antes del sticky */}
+        {/* Sección de animación con scroll */}
         <div 
           ref={scrollRef}
           className="h-[300vh] relative"
         >
-          {/* Espacio de margen antes del contenido sticky */}
-          <div className="h-24"></div>
-          
-          {/* Contenedor sticky que comienza después del margen */}
-          <div className="sticky top-24 h-[calc(100vh-6rem)] overflow-hidden">
+          {/* Contenedor sticky que permanece desde el inicio */}
+          <div className="sticky top-0 h-screen overflow-hidden">
             {/* Imagen de fondo con transición */}
-            <div className="relative w-full h-full overflow-hidden">
+            <div className="relative w-full h-screen overflow-hidden">
               <div className="absolute inset-0 px-6 md:px-10 lg:px-14 xl:px-16">
                 <div className="relative w-full h-full rounded-[2vw] overflow-hidden">
                   {/* Primera imagen (DJ) */}
@@ -160,8 +157,8 @@ const Index = () => {
                     <div className="relative w-full flex items-center">
                       <Input
                         type="text"
-                        className="w-full pl-6 pr-14 py-6 rounded-full text-black font-medium bg-white text-lg"
-                        placeholder={searchPlaceholder.get()}            
+                        className="w-full pl-6 pr-14 py-7 rounded-full text-black font-medium bg-white text-lg"
+                        placeholder={searchPlaceholder.get()}
                       />
                       <Button
                         variant="secondary"
@@ -177,8 +174,8 @@ const Index = () => {
           </div>
         </div>
 
-        {/* Sección de Artistas */}
-        <div className="bg-white py-32">
+        {/* Sección de Artistas con mayor espaciado */}
+        <div className="bg-white py-40">
           <div className="container mx-auto px-8 md:px-16 lg:px-24 xl:px-32 2xl:max-w-[1800px]">
             <h2 className="text-4xl md:text-5xl font-bold mb-12 text-center">
               Descubre los mejores artistas
@@ -210,8 +207,8 @@ const Index = () => {
           </div>
         </div>
 
-        {/* Sección de Beneficios */}
-        <div className="bg-vyba-cream py-32">
+        {/* Sección de Beneficios con mayor espaciado */}
+        <div className="bg-vyba-cream py-40">
           <div className="container mx-auto px-8 md:px-16 lg:px-24 xl:px-32 2xl:max-w-[1800px] text-center">
             <h2 className="text-4xl md:text-5xl font-bold mb-8">¿Por qué elegirnos?</h2>
             <p className="text-xl max-w-3xl mx-auto mb-16">
