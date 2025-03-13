@@ -28,7 +28,7 @@ const Index = () => {
               />
 
               {/* Degradado */}
-              <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent"></div>
+              <div className="absolute inset-0 bg-black opacity-50"></div>
             </div>
           </div>
 
