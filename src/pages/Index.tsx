@@ -1,4 +1,3 @@
-
 import { Button } from "@/components/ui/button";
 import { Search } from "lucide-react";
 import Navbar from "@/components/Navbar";
@@ -15,6 +14,9 @@ const Index = () => {
       <main className="flex-1">
         {/* Hero section with full-width background image */}
         <div className="relative w-full h-screen overflow-hidden">
+          {/* Overlay */}
+          <div className="absolute inset-0 bg-black opacity-50 z-10"></div>
+          
           {/* Background image */}
           <div className="absolute inset-0 z-0 px-6 md:px-10 lg:px-14 xl:px-16 pb-32">
             <motion.img 
@@ -28,7 +30,7 @@ const Index = () => {
           </div>
           
           {/* Content with text and search */}
-          <div className="relative z-10 container mx-auto px-8 md:px-16 lg:px-24 xl:px-32 2xl:max-w-[1800px] h-full flex flex-col justify-center pb-32">
+          <div className="relative z-20 container mx-auto px-8 md:px-16 lg:px-24 xl:px-32 2xl:max-w-[1800px] h-full flex flex-col justify-center pb-32">
             <motion.div 
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
