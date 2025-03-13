@@ -1,12 +1,16 @@
+
 import { Button } from "@/components/ui/button";
 import { Search } from "lucide-react";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { motion, useScroll, useTransform } from "framer-motion";
-import { useRef } from "react";
+import { useRef, useState } from "react";
+import { Input } from "@/components/ui/input";
 
 const Index = () => {
   const scrollRef = useRef(null);
+  const [searchQuery, setSearchQuery] = useState("");
+  
   const { scrollYProgress } = useScroll({
     target: scrollRef,
     offset: ["start start", "end start"]
@@ -51,19 +55,43 @@ const Index = () => {
   const paddingTop = useTransform(
     scrollYProgress,
     [0, 0.5, 1],
-    ["0px", "120px", "80px"]
+    ["0px", "200px", "120px"]
   );
 
   const paddingBottom = useTransform(
     scrollYProgress,
     [0, 0.5, 1],
-    ["120px", "80px", "80px"]
+    ["200px", "120px", "120px"]
+  );
+
+  const textTranslateY = useTransform(
+    scrollYProgress,
+    [0, 0.2, 0.4, 0.6, 0.8, 1],
+    [0, -20, -40, -60, -80, -100]
+  );
+
+  const searchScale = useTransform(
+    scrollYProgress,
+    [0, 0.3, 0.6, 1],
+    [1, 1.05, 1.1, 1.15]
   );
 
   const searchPlaceholder = useTransform(
     scrollYProgress,
     [0, 0.25, 0.5, 1],
     ["Buscar DJs", "Buscar saxofonistas", "Buscar guitarristas", "Buscar guitarristas"]
+  );
+
+  const headingText = useTransform(
+    scrollYProgress,
+    [0, 0.25, 0.5],
+    ["Encuentra el mejor DJ para tu evento", "Descubre saxofonistas profesionales", "Conecta con guitarristas talentosos"]
+  );
+
+  const descriptionText = useTransform(
+    scrollYProgress,
+    [0, 0.25, 0.5],
+    [artists[0].description, artists[1].description, artists[2].description]
   );
 
   return (
@@ -123,6 +151,45 @@ const Index = () => {
                   </motion.div>
 
                   <div className="absolute inset-0 bg-black opacity-50"></div>
+                  
+                  {/* Contenido central con texto y buscador */}
+                  <motion.div 
+                    className="absolute inset-0 flex flex-col items-center justify-center text-white px-6 md:px-12"
+                    style={{ y: textTranslateY }}
+                  >
+                    <motion.h1 
+                      className="text-4xl md:text-5xl lg:text-6xl font-bold mb-4 text-center"
+                      style={{ opacity: 1 }}
+                    >
+                      {headingText}
+                    </motion.h1>
+                    
+                    <motion.p 
+                      className="text-xl md:text-2xl text-center mb-8 max-w-2xl"
+                      style={{ opacity: 1 }}
+                    >
+                      {descriptionText}
+                    </motion.p>
+                    
+                    <motion.div 
+                      className="flex w-full max-w-xl mx-auto relative"
+                      style={{ scale: searchScale }}
+                    >
+                      <Input
+                        type="text"
+                        placeholder={String(searchPlaceholder)}
+                        className="pr-10 bg-white/90 text-black placeholder:text-gray-500 h-12 text-lg rounded-l-full"
+                        value={searchQuery}
+                        onChange={(e) => setSearchQuery(e.target.value)}
+                      />
+                      <Button 
+                        className="rounded-r-full h-12" 
+                        type="submit"
+                      >
+                        <Search className="h-5 w-5 mr-2" /> Buscar
+                      </Button>
+                    </motion.div>
+                  </motion.div>
                 </motion.div>
               </motion.div>
             </div>
