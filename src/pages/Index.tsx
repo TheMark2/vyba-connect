@@ -1,9 +1,11 @@
+
 import { Button } from "@/components/ui/button";
 import { Search } from "lucide-react";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { motion, useScroll, useTransform } from "framer-motion";
 import { useRef } from "react";
+import { Input } from "@/components/ui/input";
 
 const Index = () => {
   // Referencias para el contenedor de animación
@@ -24,12 +26,12 @@ const Index = () => {
     },
     {
       type: "Saxofonista",
-      image: "/api/placeholder/1200/800",
+      image: "/lovable-uploads/a3c6b43a-dd61-4889-ae77-cb1016e65371.png",
       description: "Encuentra al saxofonista ideal para tu evento"
     },
     {
       type: "Guitarrista",
-      image: "/api/placeholder/1200/800",
+      image: "/lovable-uploads/a3c6b43a-dd61-4889-ae77-cb1016e65371.png",
       description: "Conecta con talentosos guitarristas"
     }
   ];
@@ -53,7 +55,7 @@ const Index = () => {
     [0, 0, 1, 1]
   );
   
-  // Placeholder de búsqueda dinámico con arrays iguales
+  // Placeholder de búsqueda dinámico
   const searchPlaceholder = useTransform(
     scrollYProgress,
     [0, 0.33, 0.66, 1],
@@ -68,16 +70,19 @@ const Index = () => {
       </div>
 
       <main className="flex-1">
-        {/* Sección de animación con scroll */}
+        {/* Sección de animación con scroll - Añadimos un espacio antes del sticky */}
         <div 
           ref={scrollRef}
           className="h-[300vh] relative"
         >
-          {/* Contenedor sticky que permanece desde el inicio */}
-          <div className="sticky top-0 h-screen overflow-hidden">
+          {/* Espacio de margen antes del contenido sticky */}
+          <div className="h-24"></div>
+          
+          {/* Contenedor sticky que comienza después del margen */}
+          <div className="sticky top-24 h-[calc(100vh-6rem)] overflow-hidden">
             {/* Imagen de fondo con transición */}
-            <div className="relative w-full h-screen overflow-hidden">
-              <div className="absolute inset-0 px-6 md:px-10 lg:px-14 xl:px-16 pb-32">
+            <div className="relative w-full h-full overflow-hidden">
+              <div className="absolute inset-0 px-6 md:px-10 lg:px-14 xl:px-16">
                 <div className="relative w-full h-full rounded-[2vw] overflow-hidden">
                   {/* Primera imagen (DJ) */}
                   <motion.div
@@ -121,7 +126,7 @@ const Index = () => {
               </div>
 
               {/* Contenido principal sobre la imagen */}
-              <div className="relative z-20 container mx-auto px-8 md:px-16 lg:px-24 xl:px-32 2xl:max-w-[1800px] h-full flex flex-col justify-center pb-32">
+              <div className="relative z-20 container mx-auto px-8 md:px-16 lg:px-24 xl:px-32 2xl:max-w-[1800px] h-full flex flex-col justify-center">
                 <div className="max-w-2xl space-y-10 p-4">
                   {/* Textos con animación de crossfade */}
                   <div className="h-[120px] md:h-[160px] relative">
@@ -153,13 +158,10 @@ const Index = () => {
                   {/* Barra de búsqueda */}
                   <div className="flex items-center max-w-xl">
                     <div className="relative w-full flex items-center">
-                      <motion.input
+                      <Input
                         type="text"
-                        className="w-full pl-6 pr-14 py-4 rounded-full text-black font-medium bg-white"
-                        style={{ 
-                          placeholderText: searchPlaceholder 
-                        }}
-                        placeholder="Buscar artistas"            
+                        className="w-full pl-6 pr-14 py-6 rounded-full text-black font-medium bg-white text-lg"
+                        placeholder={searchPlaceholder.get()}            
                       />
                       <Button
                         variant="secondary"
