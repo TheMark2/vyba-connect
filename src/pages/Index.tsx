@@ -3,20 +3,23 @@ import { Search } from "lucide-react";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { motion, useScroll, useTransform } from "framer-motion";
-import { useRef, useState, useEffect } from "react";
+import { useRef } from "react";
 
 const Index = () => {
   // Referencias para el contenedor de animación
   const scrollRef = useRef(null);
   
-  // Estado para rastrear el artista actual
-  const [currentArtist, setCurrentArtist] = useState(0);
+  // Configuración de la animación de scroll
+  const { scrollYProgress } = useScroll({
+    target: scrollRef,
+    offset: ["start start", "end start"]
+  });
   
-  // Datos de artistas para la animación
+  // Artistas para la animación
   const artists = [
     {
       type: "DJ",
-      image: "/lovable-uploads/d79d697f-5c21-443c-bc75-d988a2dbc770.png",
+      image: "/lovable-uploads/d79d697f-5c21-443c-bc75-d988a2dbc770,png",
       description: "El portal perfecto para encontrar tu DJ"
     },
     {
@@ -31,26 +34,38 @@ const Index = () => {
     }
   ];
 
-  // Configuración de la animación de scroll
-  const { scrollYProgress } = useScroll({
-    target: scrollRef,
-    offset: ["start start", "end start"]
-  });
+  // Transformaciones basadas en el progreso del scroll
+  const artistIndex = useTransform(
+    scrollYProgress,
+    [0, 0.33, 0.66, 1],
+    [0, 1, 2, 2]
+  );
   
-  // Efecto para cambiar el artista basado en el progreso del scroll
-  useEffect(() => {
-    const unsubscribe = scrollYProgress.onChange(value => {
-      // Mapear el progreso del scroll a los índices de artistas
-      // Dividimos el rango de 0-1 en partes iguales basadas en el número de artistas
-      const artistIndex = Math.min(
-        Math.floor(value * artists.length),
-        artists.length - 1
-      );
-      setCurrentArtist(artistIndex);
-    });
-    
-    return () => unsubscribe();
-  }, [scrollYProgress]);
+  // Opacidad para cada artista basada en el progreso del scroll
+  const opacity1 = useTransform(
+    scrollYProgress,
+    [0, 0.3, 0.35],
+    [1, 1, 0]
+  );
+  
+  const opacity2 = useTransform(
+    scrollYProgress,
+    [0.3, 0.35, 0.65, 0.7],
+    [0, 1, 1, 0]
+  );
+  
+  const opacity3 = useTransform(
+    scrollYProgress,
+    [0.65, 0.7, 1],
+    [0, 1, 1]
+  );
+  
+  // Placeholder de búsqueda dinámico
+  const searchPlaceholder = useTransform(
+    scrollYProgress,
+    [0, 0.33, 0.66, 1],
+    ["Buscar DJs", "Buscar saxofonistas", "Buscar guitarristas"]
+  );
 
   return (
     <div className="min-h-screen flex flex-col p-0 m-0">
@@ -65,27 +80,47 @@ const Index = () => {
           ref={scrollRef}
           className="h-[300vh] relative"
         >
-          {/* Contenedor sticky que permanece hasta terminar la animación */}
+          {/* Contenedor sticky que permanece desde el inicio */}
           <div className="sticky top-0 h-screen overflow-hidden">
             {/* Imagen de fondo con transición */}
             <div className="relative w-full h-screen overflow-hidden">
               <div className="absolute inset-0 px-6 md:px-10 lg:px-14 xl:px-16 pb-32">
                 <div className="relative w-full h-full rounded-[2vw] overflow-hidden">
-                  {/* Mapeamos todas las imágenes y animamos su opacidad */}
-                  {artists.map((artist, index) => (
-                    <motion.img
-                      key={index}
-                      initial={{ opacity: 0 }}
-                      animate={{ 
-                        opacity: currentArtist === index ? 1 : 0,
-                        scale: currentArtist === index ? 1 : 1.05
-                      }}
-                      transition={{ duration: 0.8, ease: "easeOut" }}
-                      src={artist.image}
-                      alt={`${artist.type} performing`}
-                      className="absolute inset-0 w-full h-full brightness-75 object-cover"
+                  {/* Primera imagen (DJ) */}
+                  <motion.div
+                    className="absolute inset-0"
+                    style={{ opacity: opacity1 }}
+                  >
+                    <img 
+                      src={artists[0].image}
+                      alt="DJ performing" 
+                      className="w-full h-full brightness-75 object-cover"
                     />
-                  ))}
+                  </motion.div>
+                  
+                  {/* Segunda imagen (Saxofonista) */}
+                  <motion.div
+                    className="absolute inset-0"
+                    style={{ opacity: opacity2 }}
+                  >
+                    <img 
+                      src={artists[1].image}
+                      alt="Saxofonista performing" 
+                      className="w-full h-full brightness-75 object-cover"
+                    />
+                  </motion.div>
+                  
+                  {/* Tercera imagen (Guitarrista) */}
+                  <motion.div
+                    className="absolute inset-0"
+                    style={{ opacity: opacity3 }}
+                  >
+                    <img 
+                      src={artists[2].image}
+                      alt="Guitarrista performing" 
+                      className="w-full h-full brightness-75 object-cover"
+                    />
+                  </motion.div>
 
                   {/* Degradado */}
                   <div className="absolute inset-0 bg-black opacity-50"></div>
@@ -94,34 +129,44 @@ const Index = () => {
 
               {/* Contenido principal sobre la imagen */}
               <div className="relative z-20 container mx-auto px-8 md:px-16 lg:px-24 xl:px-32 2xl:max-w-[1800px] h-full flex flex-col justify-center pb-32">
-                <motion.div
-                  className="max-w-2xl space-y-10 p-4"
-                >
-                  {/* Título con animación */}
+                <div className="max-w-2xl space-y-10 p-4">
+                  {/* Textos con animación de crossfade */}
                   <div className="h-[120px] md:h-[160px] relative">
-                    {artists.map((artist, index) => (
-                      <motion.h1
-                        key={index}
-                        initial={{ opacity: 0, y: 20 }}
-                        animate={{ 
-                          opacity: currentArtist === index ? 1 : 0,
-                          y: currentArtist === index ? 0 : 20
-                        }}
-                        transition={{ duration: 0.6 }}
-                        className="text-5xl md:text-6xl font-black leading-tight text-white absolute"
-                      >
-                        {artist.description}
-                      </motion.h1>
-                    ))}
+                    {/* Texto para DJ */}
+                    <motion.h1
+                      style={{ opacity: opacity1 }}
+                      className="text-5xl md:text-6xl font-black leading-tight text-white absolute"
+                    >
+                      {artists[0].description}
+                    </motion.h1>
+                    
+                    {/* Texto para Saxofonista */}
+                    <motion.h1
+                      style={{ opacity: opacity2 }}
+                      className="text-5xl md:text-6xl font-black leading-tight text-white absolute"
+                    >
+                      {artists[1].description}
+                    </motion.h1>
+                    
+                    {/* Texto para Guitarrista */}
+                    <motion.h1
+                      style={{ opacity: opacity3 }}
+                      className="text-5xl md:text-6xl font-black leading-tight text-white absolute"
+                    >
+                      {artists[2].description}
+                    </motion.h1>
                   </div>
 
                   {/* Barra de búsqueda */}
                   <div className="flex items-center max-w-xl">
                     <div className="relative w-full flex items-center">
-                      <input
+                      <motion.input
                         type="text"
-                        placeholder={`Buscar ${artists[currentArtist].type.toLowerCase()}s`}
                         className="w-full pl-6 pr-14 py-4 rounded-full text-black font-medium bg-white"
+                        style={{ 
+                          placeholderText: searchPlaceholder 
+                        }}
+                        placeholder="Buscar artistas"            
                       />
                       <Button
                         variant="secondary"
@@ -131,7 +176,7 @@ const Index = () => {
                       </Button>
                     </div>
                   </div>
-                </motion.div>
+                </div>
               </div>
             </div>
           </div>
