@@ -1,4 +1,3 @@
-
 import { Button } from "@/components/ui/button";
 import { Search } from "lucide-react";
 import Navbar from "@/components/Navbar";
@@ -54,13 +53,6 @@ const Index = () => {
     [0, 0, 1, 1]
   );
   
-  // Transformaciones para los márgenes superior e inferior (para centrar la imagen)
-  const marginTopBottom = useTransform(
-    scrollYProgress,
-    [0, 0.5, 1],
-    ["0%", "10%", "20%"]
-  );
-  
   // Placeholder de búsqueda dinámico
   const searchPlaceholder = useTransform(
     scrollYProgress,
@@ -86,11 +78,11 @@ const Index = () => {
             {/* Imagen de fondo con transición */}
             <div className="relative w-full h-screen overflow-hidden">
               <div className="absolute inset-0 px-6 md:px-10 lg:px-14 xl:px-16">
-                <motion.div 
+                <div 
                   className="relative w-full h-full rounded-[2vw] overflow-hidden"
                   style={{ 
-                    marginTop: marginTopBottom,
-                    marginBottom: marginTopBottom
+                    marginTop: "32px",
+                    marginBottom: "32px"
                   }}
                 >
                   {/* Primera imagen (DJ) */}
@@ -131,7 +123,7 @@ const Index = () => {
 
                   {/* Degradado */}
                   <div className="absolute inset-0 bg-black opacity-50"></div>
-                </motion.div>
+                </div>
               </div>
 
               {/* Contenido principal sobre la imagen */}
