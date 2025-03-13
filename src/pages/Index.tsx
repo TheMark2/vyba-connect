@@ -13,11 +13,11 @@ const Index = () => {
         {/* Hero section with full-width background image */}
         <div className="relative w-full h-screen overflow-hidden">
           {/* Background image */}
-          <div className="absolute inset-0 z-0">
+          <div className="absolute rounded-2xl inset-0 z-0 px-8 md:px-16 lg:px-24 xl:px-32">
             <img 
               src="/lovable-uploads/d79d697f-5c21-443c-bc75-d988a2dbc770.png" 
               alt="DJ performing at a concert" 
-              className="px-8 md:px-16 lg:px-24 xl:px-32 rounded-xl w-full h-full object-cover brightness-75"
+              className="w-full h-full object-cover brightness-75"
             />
           </div>
           
