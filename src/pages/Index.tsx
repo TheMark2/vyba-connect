@@ -1,10 +1,8 @@
-
 import { Button } from "@/components/ui/button";
 import { Search } from "lucide-react";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { useEffect, useState, useRef } from "react";
-
 const Index = () => {
   const [scrollY, setScrollY] = useState(0);
   const imageRef = useRef<HTMLImageElement>(null);
@@ -12,44 +10,42 @@ const Index = () => {
   const heroRef = useRef<HTMLDivElement>(null);
   const searchRef = useRef<HTMLDivElement>(null);
   const contentRef = useRef<HTMLDivElement>(null);
-  
+
   // Function to handle scroll events
   const handleScroll = () => {
     setScrollY(window.scrollY);
   };
-  
   useEffect(() => {
     // Only add scroll listener on large screens (min-width: 1024px)
     const isLargeScreen = window.matchMedia("(min-width: 1024px)").matches;
-    
     if (isLargeScreen) {
       window.addEventListener("scroll", handleScroll);
-      
+
       // Apply animations based on scroll position
       if (heroRef.current && imageRef.current && contentRef.current) {
         // Maximum scroll value for animation
         const maxScroll = 500;
         const scrollProgress = Math.min(scrollY / maxScroll, 1);
-        
+
         // Adjust the image container to expand from right to left
         const startWidth = 50; // Starting width percentage
         const finalWidth = 100; // Final width percentage
-        const currentWidth = startWidth + ((finalWidth - startWidth) * scrollProgress);
-        
+        const currentWidth = startWidth + (finalWidth - startWidth) * scrollProgress;
+
         // Update image width
         imageRef.current.style.width = `${currentWidth}%`;
-        
+
         // Update image border radius
         const startRadius = 20; // Starting border radius
         const endRadius = 0; // End border radius
-        const currentRadius = startRadius - (startRadius * scrollProgress);
+        const currentRadius = startRadius - startRadius * scrollProgress;
         imageRef.current.style.borderRadius = `${currentRadius}px`;
-        
+
         // Move text and search box over the image as it expands
         if (headingRef.current && searchRef.current) {
           // Adjust text container width as the image expands
           contentRef.current.style.zIndex = "10";
-          
+
           // Change heading text color to white
           if (scrollProgress > 0.3) {
             headingRef.current.style.color = "white";
@@ -61,67 +57,45 @@ const Index = () => {
         }
       }
     }
-    
     return () => {
       if (isLargeScreen) {
         window.removeEventListener("scroll", handleScroll);
       }
     };
   }, [scrollY]);
-  
-  return (
-    <div className="min-h-screen flex flex-col">
+  return <div className="min-h-screen flex flex-col">
       <Navbar />
 
       <main className="flex-1">
         {/* Hero section */}
-        <div 
-          ref={heroRef}
-          className="relative w-full h-screen overflow-hidden"
-        >
+        <div ref={heroRef} className="relative w-full h-screen overflow-hidden">
           {/* Background image with initial styling */}
-          <img 
-            ref={imageRef} 
-            src="/lovable-uploads/d79d697f-5c21-443c-bc75-d988a2dbc770.png" 
-            alt="DJ performing at a concert" 
-            className="transition-all duration-300 ease-out shadow-lg"
-            style={{
-              width: "50%",
-              height: "calc(100% - 48px)", // Add top spacing
-              objectFit: "cover",
-              position: "absolute",
-              top: "24px", // Add top spacing
-              right: "24px", // Add left spacing (from right side)
-              borderTopLeftRadius: "20px",
-              borderBottomLeftRadius: "20px"
-            }}
-          />
+          <img ref={imageRef} src="/lovable-uploads/d79d697f-5c21-443c-bc75-d988a2dbc770.png" alt="DJ performing at a concert" className="transition-all duration-300 ease-out shadow-lg" style={{
+          width: "50%",
+          height: "calc(100% - 48px)",
+          // Add top spacing
+          objectFit: "cover",
+          position: "absolute",
+          top: "24px",
+          // Add top spacing
+          right: "24px",
+          // Add left spacing (from right side)
+          borderTopLeftRadius: "20px",
+          borderBottomLeftRadius: "20px"
+        }} />
           
           {/* Content container */}
-          <div 
-            ref={contentRef}
-            className="container relative mx-auto px-8 md:px-16 lg:px-24 xl:px-32 2xl:max-w-[1800px] py-16 h-full flex items-center"
-          >
+          <div ref={contentRef} className="container relative mx-auto px-8 md:px-16 lg:px-24 xl:px-32 2xl:max-w-[1800px] py-16 h-full flex items-center">
             {/* Left column with text and search */}
             <div className="max-w-2xl space-y-16 relative z-10">
-              <h1 
-                ref={headingRef} 
-                className="text-5xl md:text-7xl font-black leading-tight transition-colors duration-300"
-              >
+              <h1 ref={headingRef} className="text-5xl md:text-7xl font-black leading-tight transition-colors duration-300">
                 El portal perfecto para encontrar tu dj
               </h1>
               
               {/* Search bar */}
-              <div 
-                ref={searchRef} 
-                className="flex items-center max-w-xl transition-all duration-300"
-              >
+              <div ref={searchRef} className="flex items-center max-w-xl transition-all duration-300">
                 <div className="relative w-full flex items-center">
-                  <input 
-                    type="text" 
-                    placeholder="Buscar artistas" 
-                    className="w-full pl-6 pr-14 py-4 rounded-full text-black font-medium bg-white shadow-md"
-                  />
+                  <input type="text" placeholder="Buscar artistas" className="w-full pl-6 pr-14 py-4 rounded-full text-black font-medium bg-white" />
                   <Button variant="secondary" className="absolute right-1 rounded-full aspect-square p-2">
                     <Search className="size-5" />
                   </Button>
@@ -137,16 +111,14 @@ const Index = () => {
             <h2 className="text-4xl md:text-5xl font-bold mb-12 text-center">Descubre los mejores DJs</h2>
             
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-              {[1, 2, 3, 4, 5, 6].map((item) => (
-                <div key={item} className="bg-vyba-beige rounded-2xl overflow-hidden shadow-sm hover:shadow-md transition-all">
+              {[1, 2, 3, 4, 5, 6].map(item => <div key={item} className="bg-vyba-beige rounded-2xl overflow-hidden shadow-sm hover:shadow-md transition-all">
                   <div className="h-64 bg-vyba-cream"></div>
                   <div className="p-6">
                     <h3 className="text-xl font-bold mb-2">DJ Ejemplo {item}</h3>
                     <p className="text-gray-600 mb-4">Especializado en música electrónica</p>
                     <Button variant="secondary" className="w-full">Ver perfil</Button>
                   </div>
-                </div>
-              ))}
+                </div>)}
             </div>
           </div>
         </div>
@@ -187,8 +159,6 @@ const Index = () => {
       </main>
 
       <Footer />
-    </div>
-  );
+    </div>;
 };
-
 export default Index;
