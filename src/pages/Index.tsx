@@ -82,13 +82,15 @@ const Index = () => {
         >
           <div className="sticky top-0 h-screen overflow-hidden">
             <div className="relative w-full h-screen overflow-hidden">
-              <div className="absolute inset-0 px-6 md:px-10 lg:px-14 xl:px-16">
+              <motion.div 
+                className="absolute inset-0 px-6 md:px-10 lg:px-14 xl:px-16"
+                style={{ 
+                  paddingTop, 
+                  paddingBottom 
+                }}
+              >
                 <motion.div 
                   className="relative w-full h-full rounded-[2vw] overflow-hidden"
-                  style={{ 
-                    paddingTop: paddingTop,
-                    paddingBottom: paddingBottom
-                  }}
                 >
                   <motion.div
                     className="absolute inset-0"
@@ -125,7 +127,7 @@ const Index = () => {
 
                   <div className="absolute inset-0 bg-black opacity-50"></div>
                 </motion.div>
-              </div>
+              </motion.div>
             </div>
           </div>
         </div>
