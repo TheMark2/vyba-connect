@@ -43,7 +43,7 @@ const Index = () => {
           }} transition={{
             duration: 0.6,
             delay: 0.3
-          }} className="max-w-2xl space-y-12 p-4">
+          }} className="max-w-2xl space-y-16 p-4">
               <h1 className="text-5xl md:text-6xl font-black leading-tight text-white">
                 El portal perfecto<br />para encontrar tu DJ
               </h1>
