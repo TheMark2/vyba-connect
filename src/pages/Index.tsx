@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Search } from "lucide-react";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
+import { motion } from "framer-motion";
 
 const Index = () => {
   return (
@@ -13,8 +14,11 @@ const Index = () => {
         {/* Hero section with full-width background image */}
         <div className="relative w-full h-screen overflow-hidden">
           {/* Background image */}
-          <div className="absolute inset-0 z-0 px-8 md:px-16 lg:px-24 xl:px-32">
-            <img 
+          <div className="absolute inset-0 z-0 px-8 md:px-16 lg:px-24 xl:px-32 my-4">
+            <motion.img 
+              initial={{ opacity: 0, scale: 1.05 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 0.8, ease: "easeOut" }}
               src="/lovable-uploads/d79d697f-5c21-443c-bc75-d988a2dbc770.png" 
               alt="DJ performing at a concert" 
               className="rounded-3xl w-full h-full brightness-75"
@@ -23,7 +27,11 @@ const Index = () => {
           
           {/* Content with text and search */}
           <div className="relative z-10 container mx-auto px-8 md:px-16 lg:px-24 xl:px-32 2xl:max-w-[1800px] h-full flex flex-col justify-center">
-            <div className="max-w-2xl space-y-8">
+            <motion.div 
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.3 }}
+              className="max-w-2xl space-y-8 p-4">
               <h1 className="text-5xl md:text-6xl font-black leading-tight text-white">
                 El portal perfecto<br />para encontrar tu dj
               </h1>
@@ -44,7 +52,7 @@ const Index = () => {
                   </Button>
                 </div>
               </div>
-            </div>
+            </motion.div>
           </div>
         </div>
         
