@@ -49,15 +49,15 @@ const Index = () => {
     [0, 0, 1, 1]
   );
 
-  // Configuramos el margen superior para que aumente progresivamente de 0 a 16
-  const marginTop = useTransform(
+  // Configuramos el padding superior para que aumente progresivamente de 0 a 16
+  const paddingTop = useTransform(
     scrollYProgress,
     [0, 0.5, 1],
     ["0px", "32px", "16px"]
   );
 
-  // Configuramos el margen inferior para que disminuya progresivamente de 32 a 16
-  const marginBottom = useTransform(
+  // Configuramos el padding inferior para que disminuya progresivamente de 32 a 16
+  const paddingBottom = useTransform(
     scrollYProgress,
     [0, 0.5, 1],
     ["32px", "16px", "16px"]
@@ -86,8 +86,8 @@ const Index = () => {
                 <motion.div 
                   className="relative w-full h-full rounded-[2vw] overflow-hidden"
                   style={{ 
-                    marginTop: marginTop,
-                    marginBottom: marginBottom
+                    paddingTop: paddingTop,
+                    paddingBottom: paddingBottom
                   }}
                 >
                   <motion.div
