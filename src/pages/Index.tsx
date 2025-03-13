@@ -7,7 +7,7 @@ import { motion } from "framer-motion";
 
 const Index = () => {
   return (
-    <div className="min-h-screen flex flex-col">
+    <div className="min-h-screen flex flex-col p-0 m-0">
       <Navbar className="w-full"/>
 
       <main className="flex-1">
