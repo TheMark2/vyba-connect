@@ -3,129 +3,33 @@ import { Button } from "@/components/ui/button";
 import { Search } from "lucide-react";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
-import { useEffect, useState, useRef } from "react";
 
 const Index = () => {
-  const [scrollY, setScrollY] = useState(0);
-  const [animationComplete, setAnimationComplete] = useState(false);
-  const imageRef = useRef<HTMLImageElement>(null);
-  const headingRef = useRef<HTMLHeadingElement>(null);
-  const heroRef = useRef<HTMLDivElement>(null);
-  const searchRef = useRef<HTMLDivElement>(null);
-  const contentRef = useRef<HTMLDivElement>(null);
-
-  // Function to handle scroll events
-  const handleScroll = () => {
-    setScrollY(window.scrollY);
-  };
-
-  useEffect(() => {
-    // Only add scroll listener on large screens (min-width: 1024px)
-    const isLargeScreen = window.matchMedia("(min-width: 1024px)").matches;
-    if (isLargeScreen) {
-      window.addEventListener("scroll", handleScroll);
-
-      // Apply animations based on scroll position
-      if (heroRef.current && imageRef.current && contentRef.current) {
-        // Maximum scroll value for animation
-        const maxScroll = 500;
-        const scrollProgress = Math.min(scrollY / maxScroll, 1);
-
-        // Mark animation as complete when we reach the end
-        if (scrollProgress >= 1 && !animationComplete) {
-          setAnimationComplete(true);
-        }
-
-        // Adjust the image container to expand from right to left
-        const startWidth = 50; // Starting width percentage
-        const finalWidth = 100; // Final width percentage
-        const currentWidth = startWidth + (finalWidth - startWidth) * scrollProgress;
-
-        // Update image width
-        imageRef.current.style.width = `${currentWidth}%`;
-
-        // Update image border radius
-        const startRadius = 20; // Starting border radius
-        const endRadius = 0; // End border radius
-        const currentRadius = startRadius - startRadius * scrollProgress;
-        imageRef.current.style.borderRadius = `${currentRadius}px`;
-
-        // Move text and search box over the image as it expands
-        if (headingRef.current && searchRef.current) {
-          // Adjust text container width as the image expands
-          contentRef.current.style.zIndex = "10";
-
-          // Change heading text color to white
-          if (scrollProgress > 0.3) {
-            headingRef.current.style.color = "white";
-            headingRef.current.style.textShadow = "0px 2px 4px rgba(0, 0, 0, 0.5)";
-          } else {
-            headingRef.current.style.color = "black";
-            headingRef.current.style.textShadow = "none";
-          }
-        }
-      }
-    }
-
-    return () => {
-      if (isLargeScreen) {
-        window.removeEventListener("scroll", handleScroll);
-      }
-    };
-  }, [scrollY, animationComplete]);
-
   return (
     <div className="min-h-screen flex flex-col">
       <Navbar />
 
       <main className="flex-1">
-        {/* Hero section with sticky position until animation completes */}
-        <div 
-          ref={heroRef} 
-          className="relative w-full h-screen overflow-hidden"
-          style={{
-            position: animationComplete ? 'relative' : 'sticky',
-            top: 0,
-            zIndex: 10
-          }}
-        >
-          {/* Background image with initial styling */}
-          <img 
-            ref={imageRef} 
-            src="/lovable-uploads/d79d697f-5c21-443c-bc75-d988a2dbc770.png" 
-            alt="DJ performing at a concert" 
-            className="transition-all duration-300 ease-out shadow-lg" 
-            style={{
-              width: "50%",
-              height: "calc(100% - 48px)",
-              objectFit: "cover",
-              position: "absolute",
-              top: "24px",
-              right: "24px",
-              borderTopLeftRadius: "20px",
-              borderBottomLeftRadius: "20px"
-            }} 
-          />
+        {/* Hero section with full-width background image */}
+        <div className="relative w-full h-screen overflow-hidden">
+          {/* Background image */}
+          <div className="absolute inset-0 z-0">
+            <img 
+              src="/lovable-uploads/d79d697f-5c21-443c-bc75-d988a2dbc770.png" 
+              alt="DJ performing at a concert" 
+              className="w-full h-full object-cover brightness-75"
+            />
+          </div>
           
-          {/* Content container */}
-          <div 
-            ref={contentRef} 
-            className="container relative mx-auto px-8 md:px-16 lg:px-24 xl:px-32 2xl:max-w-[1800px] py-16 h-full flex items-center"
-          >
-            {/* Left column with text and search */}
-            <div className="max-w-2xl space-y-16 relative z-10">
-              <h1 
-                ref={headingRef} 
-                className="text-5xl md:text-7xl font-black leading-tight transition-colors duration-300"
-              >
-                El portal perfecto para encontrar tu dj
+          {/* Content with text and search */}
+          <div className="relative z-10 container mx-auto px-8 md:px-16 lg:px-24 xl:px-32 2xl:max-w-[1800px] h-full flex flex-col justify-center">
+            <div className="max-w-2xl space-y-8">
+              <h1 className="text-5xl md:text-6xl font-black leading-tight text-white">
+                El portal perfecto<br />para encontrar tu dj
               </h1>
               
               {/* Search bar */}
-              <div 
-                ref={searchRef} 
-                className="flex items-center max-w-xl transition-all duration-300"
-              >
+              <div className="flex items-center max-w-xl">
                 <div className="relative w-full flex items-center">
                   <input 
                     type="text" 
@@ -134,9 +38,9 @@ const Index = () => {
                   />
                   <Button 
                     variant="secondary" 
-                    className="absolute right-1 rounded-full aspect-square p-2"
+                    className="absolute right-1 rounded-full aspect-square p-2 bg-gray-100"
                   >
-                    <Search className="size-5" />
+                    <Search className="size-5 text-gray-500" />
                   </Button>
                 </div>
               </div>
