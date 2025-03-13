@@ -17,7 +17,7 @@ const Index = () => {
             <img 
               src="/lovable-uploads/d79d697f-5c21-443c-bc75-d988a2dbc770.png" 
               alt="DJ performing at a concert" 
-              className="px-8 w-full h-full object-cover brightness-75"
+              className="px-8 md:px-16 lg:px-24 xl:px-32 rounded-2xl w-full h-full object-cover brightness-75"
             />
           </div>
           
