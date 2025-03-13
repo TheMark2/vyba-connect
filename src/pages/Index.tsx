@@ -28,13 +28,13 @@ const Index = () => {
           </div>
           
           {/* Content with text and search */}
-          <div className="relative z-10 container mx-auto px-8 md:px-16 lg:px-24 xl:px-32 2xl:max-w-[1800px] h-full flex flex-col justify-center">
+          <div className="relative z-10 container mx-auto px-8 md:px-16 lg:px-24 xl:px-32 2xl:max-w-[1800px] h-full flex flex-col justify-center pb-32">
             <motion.div 
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.3 }}
-              className="max-w-2xl space-y-12 p-4">
-              <h1 className="text-5xl md:text-6xl font-black leading-tight text-white pb-32">
+              className="max-w-2xl space-y-10 p-4">
+              <h1 className="text-5xl md:text-6xl font-black leading-tight text-white">
                 El portal perfecto<br />para encontrar tu dj
               </h1>
               
