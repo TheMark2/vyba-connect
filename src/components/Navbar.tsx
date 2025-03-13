@@ -1,7 +1,9 @@
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
+
 const Navbar = () => {
-  return <nav className="bg-transparent p-0">
+  return (
+    <div className="bg-transparent p-0">
       <div className="container mx-auto px-6 md:px-10 lg:px-14 xl:px-16 h-24 flex items-center justify-between">
         <div className="flex items-center space-x-12">
           <h1 className="text-3xl font-bold">VYBA</h1>
@@ -30,6 +32,8 @@ const Navbar = () => {
           Entrar/Registrarse
         </Button>
       </div>
-    </nav>;
+    </div>
+  );
 };
+
 export default Navbar;
