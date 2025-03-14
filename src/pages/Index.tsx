@@ -1,4 +1,3 @@
-
 import { Button } from "@/components/ui/button";
 import { Search } from "lucide-react";
 import Navbar from "@/components/Navbar";
@@ -99,7 +98,7 @@ const Index = () => {
                   
                   {/* Content */}
                   <motion.div className="absolute inset-0 flex flex-col justify-center text-white px-6 md:px-12 lg:px-16">
-                    <div className="max-w-xl mx-0">
+                    <div className="max-w-2xl mx-0 space-y-10">
                       <motion.h1 className="text-4xl md:text-5xl lg:text-7xl font-black mb-8 text-white leading-tight">
                         {headingText}
                       </motion.h1>
