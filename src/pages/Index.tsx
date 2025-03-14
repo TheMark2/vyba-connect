@@ -1,3 +1,4 @@
+
 import { Button } from "@/components/ui/button";
 import { Search } from "lucide-react";
 import Navbar from "@/components/Navbar";
@@ -52,9 +53,6 @@ const Index = () => {
   const searchPlaceholder = useTransform(scrollYProgress, [0, 0.25, 0.5, 1], ["Buscar artistas", "Buscar saxofonistas", "Buscar guitarristas", "Buscar guitarristas"]);
   const headingText = useTransform(scrollYProgress, [0, 0.25, 0.5], ["El portal perfecto para encontrar tu dj", "Descubre saxofonistas profesionales", "Conecta con guitarristas talentosos"]);
   
-  // VALOR FIJO para el padding de la última imagen (sin animación)
-  const lastImagePaddingLeft = 500;
-  
   return (
     <div className="min-h-screen flex flex-col p-0 m-0">
       <div className="w-full">
@@ -62,6 +60,7 @@ const Index = () => {
       </div>
 
       <main className="flex-1">
+        {/* Sección de scroll animado */}
         <div ref={scrollRef} className="h-[300vh] relative">
           <div className="sticky top-0 h-screen overflow-hidden">
             <div className="relative w-full h-screen overflow-hidden">
@@ -101,37 +100,25 @@ const Index = () => {
                     />
                   </motion.div>
                   
-                  {/* Guitarrista image layer con padding fijo */}
-                  <div 
+                  {/* Guitarrista image layer - SIN PADDING */}
+                  <motion.div 
                     className="absolute inset-0 origin-center" 
                     style={{
-                      paddingLeft: lastImagePaddingLeft
+                      opacity: opacity3,
+                      scale: scale3,
+                      y: moveY3,
+                      x: moveX3
                     }}
                   >
-                    <motion.div
-                      className="w-full h-full"
-                      style={{
-                        opacity: opacity3,
-                        scale: scale3,
-                        y: moveY3,
-                        x: moveX3
-                      }}
-                    >
-                      <img 
-                        src={artists[2].image} 
-                        alt="Guitarrista performing" 
-                        className="w-full h-full brightness-75 object-cover rounded-[2vw]" 
-                      />
-                    </motion.div>
-                  </div>
+                    <img 
+                      src={artists[2].image} 
+                      alt="Guitarrista performing" 
+                      className="w-full h-full brightness-75 object-cover rounded-[2vw]" 
+                    />
+                  </motion.div>
 
-                  {/* Background overlay con padding fijo */}
-                  <div 
-                    className="absolute inset-0 bg-black opacity-50"
-                    style={{
-                      paddingLeft: lastImagePaddingLeft
-                    }}
-                  ></div>
+                  {/* Background overlay - SIN PADDING */}
+                  <div className="absolute inset-0 bg-black opacity-50"></div>
                   
                   {/* Content */}
                   <motion.div className="absolute inset-0 flex flex-col justify-center text-white px-6 md:px-12 lg:px-16">
@@ -165,6 +152,46 @@ const Index = () => {
             </div>
           </div>
         </div>
+
+        {/* Nueva sección debajo de la animación scroll */}
+        <section className="py-24 bg-vyba-cream">
+          <div className="container mx-auto">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
+              {/* Imagen a la izquierda en móvil, derecha en desktop */}
+              <div className="md:order-2">
+                <img 
+                  src="/lovable-uploads/77591a97-10cd-4c8b-b768-5b17483c3d9f.png" 
+                  alt="DJ en concierto" 
+                  className="w-full h-auto rounded-2xl shadow-lg object-cover aspect-[4/3]"
+                />
+              </div>
+              
+              {/* Contenido de texto */}
+              <div className="md:order-1">
+                <h2 className="text-4xl md:text-5xl lg:text-6xl font-black mb-8 text-vyba-navy">
+                  No te ralles, usa Vyba
+                </h2>
+                
+                <div className="flex w-full relative max-w-lg mb-8">
+                  <div className="relative w-full flex items-center">
+                    <Input 
+                      type="text" 
+                      placeholder="Buscar artistas" 
+                      className="pr-14 bg-white text-black placeholder:text-gray-500 h-14 text-lg rounded-full border-0 shadow-md" 
+                    />
+                    <Button 
+                      type="submit" 
+                      size="icon" 
+                      className="absolute right-1 rounded-full h-12 w-12 flex items-center justify-center"
+                    >
+                      <Search className="h-5 w-5" />
+                    </Button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
       </main>
 
       <Footer />
