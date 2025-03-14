@@ -36,8 +36,8 @@ const Index = () => {
   const searchPlaceholder = useTransform(scrollYProgress, [0, 0.25, 0.5, 1], ["Buscar artistas", "Buscar saxofonistas", "Buscar guitarristas", "Buscar guitarristas"]);
   const headingText = useTransform(scrollYProgress, [0, 0.25, 0.5], ["El portal perfecto para encontrar tu dj", "Descubre saxofonistas profesionales", "Conecta con guitarristas talentosos"]);
   
-  // Transformador para el padding izquierdo de la última imagen (guitarrista) - aumentado significativamente
-  const lastImagePaddingLeft = useTransform(scrollYProgress, [0, 0.45, 0.5, 0.75, 1], [0, 0, 300, 600, 800]);
+  // Transformador para el padding izquierdo de la última imagen (guitarrista) - aumentado bastante más
+  const lastImagePaddingLeft = useTransform(scrollYProgress, [0, 0.45, 0.5, 0.75, 1], [0, 0, 500, 900, 1200]);
   
   return <div className="min-h-screen flex flex-col p-0 m-0">
       <div className="w-full">
