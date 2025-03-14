@@ -38,23 +38,22 @@ const Index = () => {
   const scale2 = useTransform(scrollYProgress, [0.19, 0.25, 0.45, 0.5], [0.95, 1, 1.05, 1.1]);
   const scale3 = useTransform(scrollYProgress, [0.45, 0.5, 0.7], [0.95, 1, 1.05]);
   
-  // Efectos de movimiento paralaje para las imágenes
-  const moveY1 = useTransform(scrollYProgress, [0, 0.25], ["0%", "-5%"]);
-  const moveY2 = useTransform(scrollYProgress, [0.25, 0.5], ["0%", "-5%"]);
-  const moveY3 = useTransform(scrollYProgress, [0.5, 0.75], ["0%", "-5%"]);
+  // Efectos de movimiento paralaje para las imágenes - más sutiles
+  const moveY1 = useTransform(scrollYProgress, [0, 0.25], ["0%", "-3%"]);
+  const moveY2 = useTransform(scrollYProgress, [0.25, 0.5], ["0%", "-3%"]);
+  const moveY3 = useTransform(scrollYProgress, [0.5, 0.75], ["0%", "-3%"]);
 
   // Movimiento sutil en el eje X para dar profundidad
-  const moveX1 = useTransform(scrollYProgress, [0, 0.25], ["0%", "2%"]);
-  const moveX2 = useTransform(scrollYProgress, [0.25, 0.5], ["0%", "-2%"]);
-  const moveX3 = useTransform(scrollYProgress, [0.5, 0.75], ["0%", "2%"]);
+  const moveX1 = useTransform(scrollYProgress, [0, 0.25], ["0%", "1%"]);
+  const moveX2 = useTransform(scrollYProgress, [0.25, 0.5], ["0%", "-1%"]);
+  const moveX3 = useTransform(scrollYProgress, [0.5, 0.75], ["0%", "1%"]);
   
   // Mantener el texto y el placeholder sin animaciones
-  const textTranslateY = useTransform(scrollYProgress, [0, 1], [0, 0]);
   const searchPlaceholder = useTransform(scrollYProgress, [0, 0.25, 0.5, 1], ["Buscar artistas", "Buscar saxofonistas", "Buscar guitarristas", "Buscar guitarristas"]);
   const headingText = useTransform(scrollYProgress, [0, 0.25, 0.5], ["El portal perfecto para encontrar tu dj", "Descubre saxofonistas profesionales", "Conecta con guitarristas talentosos"]);
   
-  // Mantener el padding de la imagen final como está
-  const lastImagePaddingLeft = useTransform(scrollYProgress, [0, 0.45, 0.5, 0.75, 1], [0, 0, 500, 900, 1200]);
+  // VALOR FIJO para el padding de la última imagen (sin animación)
+  const lastImagePaddingLeft = 500;
   
   return (
     <div className="min-h-screen flex flex-col p-0 m-0">
@@ -68,70 +67,73 @@ const Index = () => {
             <div className="relative w-full h-screen overflow-hidden">
               <motion.div className="absolute inset-0 px-6 md:px-10 lg:px-14 xl:px-16 pt-8 pb-32">
                 <motion.div className="relative w-full h-full rounded-[2vw] overflow-hidden">
-                  {/* DJ image layer with enhanced animations */}
+                  {/* DJ image layer */}
                   <motion.div 
                     className="absolute inset-0 origin-center" 
                     style={{
                       opacity: opacity1,
                       scale: scale1,
                       y: moveY1,
-                      x: moveX1,
-                      filter: "brightness(0.75)"
+                      x: moveX1
                     }}
                   >
                     <img 
                       src={artists[0].image} 
                       alt="DJ performing" 
-                      className="w-full h-full object-cover"
+                      className="w-full h-full brightness-75 object-cover"
                     />
                   </motion.div>
                   
-                  {/* Saxofonista image layer with enhanced animations */}
+                  {/* Saxofonista image layer */}
                   <motion.div 
                     className="absolute inset-0 origin-center" 
                     style={{
                       opacity: opacity2,
                       scale: scale2,
                       y: moveY2,
-                      x: moveX2,
-                      filter: "brightness(0.75)"
+                      x: moveX2
                     }}
                   >
                     <img 
                       src={artists[1].image} 
                       alt="Saxofonista performing" 
-                      className="w-full h-full object-cover"
+                      className="w-full h-full brightness-75 object-cover"
                     />
                   </motion.div>
                   
-                  {/* Guitarrista image layer with maintained padding */}
-                  <motion.div 
+                  {/* Guitarrista image layer con padding fijo */}
+                  <div 
                     className="absolute inset-0 origin-center" 
                     style={{
-                      opacity: opacity3,
-                      paddingLeft: lastImagePaddingLeft,
-                      scale: scale3,
-                      y: moveY3,
-                      x: moveX3
+                      paddingLeft: lastImagePaddingLeft
                     }}
                   >
-                    <img 
-                      src={artists[2].image} 
-                      alt="Guitarrista performing" 
-                      className="w-full h-full brightness-75 object-cover rounded-[2vw]" 
-                    />
-                  </motion.div>
+                    <motion.div
+                      className="w-full h-full"
+                      style={{
+                        opacity: opacity3,
+                        scale: scale3,
+                        y: moveY3,
+                        x: moveX3
+                      }}
+                    >
+                      <img 
+                        src={artists[2].image} 
+                        alt="Guitarrista performing" 
+                        className="w-full h-full brightness-75 object-cover rounded-[2vw]" 
+                      />
+                    </motion.div>
+                  </div>
 
-                  {/* Background overlay with maintained padding */}
-                  <motion.div 
-                    className="absolute inset-0 bg-black"
+                  {/* Background overlay con padding fijo */}
+                  <div 
+                    className="absolute inset-0 bg-black opacity-50"
                     style={{
-                      paddingLeft: lastImagePaddingLeft,
-                      opacity: opacity3.get() > 0 ? 0.5 : 0.5
+                      paddingLeft: lastImagePaddingLeft
                     }}
-                  ></motion.div>
+                  ></div>
                   
-                  {/* Content without animations */}
+                  {/* Content */}
                   <motion.div className="absolute inset-0 flex flex-col justify-center text-white px-6 md:px-12 lg:px-16">
                     <div className="max-w-xl mx-0">
                       <motion.h1 className="text-4xl md:text-5xl lg:text-7xl font-black mb-8 text-white leading-tight">
