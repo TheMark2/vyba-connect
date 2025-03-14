@@ -52,7 +52,7 @@ const Navbar = ({ className }: NavbarProps) => {
             <Link 
               to="/" 
               className={cn(
-                "px-4 py-2 rounded-full transition-all duration-200",
+                "px-6 py-3 rounded-full transition-all duration-200",
                 isActive("/") 
                   ? "bg-secondary text-secondary-foreground font-medium" 
                   : "text-black font-medium hover:bg-secondary/70 hover:text-secondary-foreground"
@@ -72,7 +72,7 @@ const Navbar = ({ className }: NavbarProps) => {
             <Link 
               to="/artistas" 
               className={cn(
-                "px-4 py-2 rounded-full transition-all duration-200",
+                "px-6 py-6 rounded-full transition-all duration-200",
                 isActive("/artistas") 
                   ? "bg-secondary text-secondary-foreground font-medium" 
                   : "text-black font-medium hover:bg-secondary/70 hover:text-secondary-foreground"
@@ -91,7 +91,7 @@ const Navbar = ({ className }: NavbarProps) => {
             whileHover="hover"
           >
             <button className={cn(
-              "px-4 py-2 rounded-full transition-all duration-200 text-black font-medium flex items-center hover:bg-secondary/70 hover:text-secondary-foreground"
+              "px-6 py-3 rounded-full transition-all duration-200 text-black font-medium flex items-center hover:bg-secondary/70 hover:text-secondary-foreground"
             )}>
               Todos los artistas
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" className="ml-1">
@@ -109,7 +109,7 @@ const Navbar = ({ className }: NavbarProps) => {
             whileHover="hover"
           >
             <button className={cn(
-              "px-4 py-2 rounded-full transition-all duration-200 text-black font-medium flex items-center hover:bg-secondary/70 hover:text-secondary-foreground"
+              "px-6 py-3 rounded-full transition-all duration-200 text-black font-medium flex items-center hover:bg-secondary/70 hover:text-secondary-foreground"
             )}>
               Todos los géneros
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" className="ml-1">
