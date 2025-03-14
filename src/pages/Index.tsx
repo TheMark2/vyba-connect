@@ -105,7 +105,7 @@ const Index = () => {
                       
                       <motion.div className="flex w-full relative">
                         <div className="relative w-full flex items-center">
-                          <Input type="text" placeholder={String(searchPlaceholder)} className="pr-14 bg-white/95 text-black placeholder:text-gray-500 h-14 text-lg rounded-full border-0 shadow-md" value={searchQuery} onChange={e => setSearchQuery(e.target.value)} />
+                          <Input type="text" placeholder={String(searchPlaceholder)} className="pr-14 bg-[#F5F1EB] text-black placeholder:text-gray-500 h-14 text-base rounded-full border-0" value={searchQuery} onChange={e => setSearchQuery(e.target.value)} />
                           <Button type="submit" size="icon" className="absolute right-2 rounded-full h-11 w-11 flex items-center justify-center">
                             <Search className="h-5 w-5" />
                           </Button>
