@@ -1,3 +1,4 @@
+
 import { Button } from "@/components/ui/button";
 import { Search } from "lucide-react";
 import Navbar from "@/components/Navbar";
@@ -5,6 +6,7 @@ import Footer from "@/components/Footer";
 import { motion, useScroll, useTransform } from "framer-motion";
 import { useRef, useState } from "react";
 import { Input } from "@/components/ui/input";
+
 const Index = () => {
   const scrollRef = useRef(null);
   const [searchQuery, setSearchQuery] = useState("");
@@ -48,9 +50,11 @@ const Index = () => {
   const moveX2 = useTransform(scrollYProgress, [0.25, 0.5], ["0%", "-1%"]);
   const moveX3 = useTransform(scrollYProgress, [0.5, 0.75], ["0%", "1%"]);
 
-  // Mantener el texto y el placeholder sin animaciones
-  const searchPlaceholder = useTransform(scrollYProgress, [0, 0.25, 0.5, 1], ["Buscar artistas", "Buscar saxofonistas", "Buscar guitarristas", "Buscar guitarristas"]);
-  const headingText = useTransform(scrollYProgress, [0, 0.25, 0.5], ["El portal perfecto para encontrar tu dj", "Descubre saxofonistas profesionales", "Conecta con guitarristas talentosos"]);
+  // Transiciones para los tres textos
+  const textOpacity1 = useTransform(scrollYProgress, [0, 0.15, 0.25], [1, 0.3, 0]);
+  const textOpacity2 = useTransform(scrollYProgress, [0.25, 0.35, 0.45], [0, 1, 0]);
+  const textOpacity3 = useTransform(scrollYProgress, [0.45, 0.55, 1], [0, 1, 1]);
+
   return <div className="min-h-screen flex flex-col p-0 m-0">
       <div className="w-full">
         <Navbar className="mx-auto" />
@@ -98,14 +102,36 @@ const Index = () => {
                   
                   {/* Content */}
                   <motion.div className="absolute inset-0 flex flex-col justify-center text-white px-6 md:px-12 lg:px-16">
-                    <div className="max-w-2xl mx-0 space-y-10">
-                      <motion.h1 className="text-4xl md:text-5xl lg:text-7xl font-black mb-8 text-white leading-tight">
-                        {headingText}
-                      </motion.h1>
+                    <div className="max-w-2xl mx-0 space-y-14">
+                      <div className="relative h-28">
+                        {/* Texto 1: Contacta con los mejores artistas */}
+                        <motion.h1 
+                          className="text-4xl md:text-5xl lg:text-7xl font-black text-white leading-tight absolute top-0 left-0 w-full" 
+                          style={{ opacity: textOpacity1 }}
+                        >
+                          Contacta con los mejores artistas
+                        </motion.h1>
+                        
+                        {/* Texto 2: De una forma fácil */}
+                        <motion.h1 
+                          className="text-4xl md:text-5xl lg:text-7xl font-black text-white leading-tight absolute top-0 left-0 w-full" 
+                          style={{ opacity: textOpacity2 }}
+                        >
+                          De una forma fácil
+                        </motion.h1>
+                        
+                        {/* Texto 3: Usa Vyba */}
+                        <motion.h1 
+                          className="text-4xl md:text-5xl lg:text-7xl font-black text-white leading-tight absolute top-0 left-0 w-full" 
+                          style={{ opacity: textOpacity3 }}
+                        >
+                          Usa Vyba
+                        </motion.h1>
+                      </div>
                       
                       <motion.div className="flex w-full relative">
                         <div className="relative w-full flex items-center">
-                          <Input type="text" placeholder={String(searchPlaceholder)} className="pr-14 bg-[#F5F1EB] text-black placeholder:text-gray-500 h-14 text-base rounded-full border-0" value={searchQuery} onChange={e => setSearchQuery(e.target.value)} />
+                          <Input type="text" placeholder="Buscar artistas" className="pr-14 bg-[#F5F1EB] text-black placeholder:text-gray-500 h-14 text-base rounded-full border-0" value={searchQuery} onChange={e => setSearchQuery(e.target.value)} />
                           <Button type="submit" size="icon" className="absolute right-2 rounded-full h-11 w-11 flex items-center justify-center">
                             <Search className="h-5 w-5" />
                           </Button>
