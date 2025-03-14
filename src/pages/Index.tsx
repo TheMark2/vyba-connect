@@ -1,3 +1,4 @@
+
 import { Button } from "@/components/ui/button";
 import { Search } from "lucide-react";
 import Navbar from "@/components/Navbar";
@@ -16,15 +17,15 @@ const Index = () => {
   });
   const artists = [{
     type: "DJ",
-    image: "/lovable-uploads/d79d697f-5c21-443c-bc75-d988a2dbc770.png",
+    image: "/lovable-uploads/7e7c2282-785a-46fb-84b2-f7b14b762e64.png",
     description: "El portal perfecto para encontrar tu DJ"
   }, {
     type: "Saxofonista",
-    image: "https://images.unsplash.com/photo-1619983081563-430f63602796?w=1200&h=800&auto=format&fit=crop",
+    image: "/lovable-uploads/64cabbe3-ce62-4190-830d-0e5defd31a1b.png",
     description: "Encuentra al saxofonista ideal para tu evento"
   }, {
     type: "Guitarrista",
-    image: "https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?w=1200&h=800&auto=format&fit=crop",
+    image: "/lovable-uploads/440a191c-d45b-4031-acbe-509e602e5d22.png",
     description: "Conecta con talentosos guitarristas"
   }];
 
@@ -70,7 +71,7 @@ const Index = () => {
                   y: moveY1,
                   x: moveX1
                 }}>
-                    <img src={artists[0].image} alt="DJ performing" className="w-full h-full brightness-75 object-cover" />
+                    <img src={artists[0].image} alt="DJ performing" className="w-full h-full brightness-75 blur-[2px] object-cover" />
                   </motion.div>
                   
                   {/* Saxofonista image layer */}
@@ -80,20 +81,20 @@ const Index = () => {
                   y: moveY2,
                   x: moveX2
                 }}>
-                    <img src={artists[1].image} alt="Saxofonista performing" className="w-full h-full brightness-75 object-cover" />
+                    <img src={artists[1].image} alt="Saxofonista performing" className="w-full h-full brightness-75 blur-[2px] object-cover" />
                   </motion.div>
                   
-                  {/* Guitarrista image layer - SIN PADDING */}
+                  {/* Guitarrista image layer - sin padding */}
                   <motion.div className="absolute inset-0 origin-center" style={{
                   opacity: opacity3,
                   scale: scale3,
                   y: moveY3,
                   x: moveX3
                 }}>
-                    <img src={artists[2].image} alt="Guitarrista performing" className="w-full h-full brightness-75 object-cover rounded-[2vw]" />
+                    <img src={artists[2].image} alt="Guitarrista performing" className="w-full h-full brightness-75 blur-[2px] object-cover rounded-[2vw]" />
                   </motion.div>
 
-                  {/* Background overlay - SIN PADDING */}
+                  {/* Background overlay */}
                   <div className="absolute inset-0 bg-black opacity-50"></div>
                   
                   {/* Content */}
