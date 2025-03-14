@@ -1,4 +1,3 @@
-
 import { Button } from "@/components/ui/button";
 import { Search } from "lucide-react";
 import Navbar from "@/components/Navbar";
@@ -6,40 +5,47 @@ import Footer from "@/components/Footer";
 import { motion, useScroll, useTransform } from "framer-motion";
 import { useRef, useState } from "react";
 import { Input } from "@/components/ui/input";
+
 const Index = () => {
   const scrollRef = useRef(null);
   const [searchQuery, setSearchQuery] = useState("");
-  const {
-    scrollYProgress
-  } = useScroll({
+  const { scrollYProgress } = useScroll({
     target: scrollRef,
-    offset: ["start start", "end start"]
+    offset: ["start start", "end start"],
   });
-  const artists = [{
-    type: "DJ",
-    image: "/lovable-uploads/d79d697f-5c21-443c-bc75-d988a2dbc770.png",
-    description: "El portal perfecto para encontrar tu DJ"
-  }, {
-    type: "Saxofonista",
-    image: "https://images.unsplash.com/photo-1619983081563-430f63602796?w=1200&h=800&auto=format&fit=crop",
-    description: "Encuentra al saxofonista ideal para tu evento"
-  }, {
-    type: "Guitarrista",
-    image: "https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?w=1200&h=800&auto=format&fit=crop",
-    description: "Conecta con talentosos guitarristas"
-  }];
+
+  const artists = [
+    {
+      type: "DJ",
+      image: "/lovable-uploads/d79d697f-5c21-443c-bc75-d988a2dbc770.png",
+      description: "El portal perfecto para encontrar tu DJ",
+    },
+    {
+      type: "Saxofonista",
+      image:
+        "https://images.unsplash.com/photo-1619983081563-430f63602796?w=1200&h=800&auto=format&fit=crop",
+      description: "Encuentra al saxofonista ideal para tu evento",
+    },
+    {
+      type: "Guitarrista",
+      image:
+        "https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?w=1200&h=800&auto=format&fit=crop",
+      description: "Conecta con talentosos guitarristas",
+    },
+  ];
+
   const opacity1 = useTransform(scrollYProgress, [0, 0.2, 0.25, 1], [1, 1, 0, 0]);
   const opacity2 = useTransform(scrollYProgress, [0, 0.2, 0.25, 0.45, 0.5, 1], [0, 0, 1, 1, 0, 0]);
   const opacity3 = useTransform(scrollYProgress, [0, 0.45, 0.5, 1], [0, 0, 1, 1]);
-  const textTranslateY = useTransform(scrollYProgress, [0, 0.2, 0.4, 0.6, 0.8, 1], [0, -20, -40, -60, -80, -100]);
-  const searchScale = useTransform(scrollYProgress, [0, 0.3, 0.6, 1], [1, 1.05, 1.1, 1.15]);
-  const searchPlaceholder = useTransform(scrollYProgress, [0, 0.25, 0.5, 1], ["Buscar artistas", "Buscar saxofonistas", "Buscar guitarristas", "Buscar guitarristas"]);
-  const headingText = useTransform(scrollYProgress, [0, 0.25, 0.5], ["El portal perfecto para encontrar tu dj", "Descubre saxofonistas profesionales", "Conecta con guitarristas talentosos"]);
-  
-  // Nuevo transformador para el padding derecho de la última imagen
-  const lastImagePaddingLeft = useTransform(scrollYProgress, [0, 0.45, 0.5, 0.75, 1], [0, 0, 0, 200, 300]);
-  
-  return <div className="min-h-screen flex flex-col p-0 m-0">
+
+  const lastImageTranslateX = useTransform(scrollYProgress, [0, 0.45, 0.5, 0.75, 1], [0, 0, 0, -800, -1200]);
+
+  // Variables para el contenido
+  const headingText = "Encuentra al artista perfecto para tu evento";
+  const searchPlaceholder = "Busca por tipo de artista o ubicación...";
+
+  return (
+    <div className="min-h-screen flex flex-col p-0 m-0">
       <div className="w-full">
         <Navbar className="mx-auto" />
       </div>
@@ -50,41 +56,57 @@ const Index = () => {
             <div className="relative w-full h-screen overflow-hidden">
               <motion.div className="absolute inset-0 px-6 md:px-10 lg:px-14 xl:px-16 pt-8 pb-32">
                 <motion.div className="relative w-full h-full rounded-[2vw] overflow-hidden">
-                  <motion.div className="absolute inset-0" style={{
-                  opacity: opacity1
-                }}>
+                  <motion.div className="absolute inset-0" style={{ opacity: opacity1 }}>
                     <img src={artists[0].image} alt="DJ performing" className="w-full h-full brightness-75 object-cover" />
                   </motion.div>
-                  
-                  <motion.div className="absolute inset-0" style={{
-                  opacity: opacity2
-                }}>
+
+                  <motion.div className="absolute inset-0" style={{ opacity: opacity2 }}>
                     <img src={artists[1].image} alt="Saxofonista performing" className="w-full h-full brightness-75 object-cover" />
                   </motion.div>
-                  
-                  <motion.div 
-                    className="absolute inset-0" 
+
+                  <motion.div
+                    className="absolute inset-0"
                     style={{
                       opacity: opacity3,
-                      paddingLeft: lastImagePaddingLeft
+                      x: lastImageTranslateX,
                     }}
                   >
-                    <img src={artists[2].image} alt="Guitarrista performing" className="w-full h-full brightness-75 object-cover" />
+                    {/* Añadiendo padding a la imagen para que no esté encima del texto */}
+                    <div className="w-full h-full p-8 md:p-12 lg:p-16 xl:p-24">
+                      <img
+                        src={artists[2].image}
+                        alt="Guitarrista performing"
+                        className="w-full h-full brightness-75 object-cover rounded-lg"
+                      />
+                    </div>
                   </motion.div>
 
-                  <div className="absolute inset-0 bg-black opacity-50"></div>
-                  
+                  <motion.div
+                    className="absolute inset-0 bg-black"
+                    style={{ opacity: opacity3, x: lastImageTranslateX }}
+                  ></motion.div>
+
                   {/* Content with left-aligned text and simplified search input */}
                   <motion.div className="absolute inset-0 flex flex-col justify-center text-white px-6 md:px-12 lg:px-16">
-                    <div className="max-w-xl mx-0">
+                    <div className="max-w-xl mx-0 z-10 relative">
                       <motion.h1 className="text-4xl md:text-5xl lg:text-7xl font-black mb-8 text-white leading-tight">
                         {headingText}
                       </motion.h1>
-                      
+
                       <motion.div className="flex w-full relative">
                         <div className="relative w-full flex items-center">
-                          <Input type="text" placeholder={String(searchPlaceholder)} className="pr-14 bg-white/95 text-black placeholder:text-gray-500 h-14 text-lg rounded-full border-0 shadow-md" value={searchQuery} onChange={e => setSearchQuery(e.target.value)} />
-                          <Button type="submit" size="icon" className="absolute right-1 rounded-full h-12 w-12 flex items-center justify-center">
+                          <Input
+                            type="text"
+                            placeholder={String(searchPlaceholder)}
+                            className="pr-14 bg-white/95 text-black placeholder:text-gray-500 h-14 text-lg rounded-full border-0 shadow-md"
+                            value={searchQuery}
+                            onChange={(e) => setSearchQuery(e.target.value)}
+                          />
+                          <Button
+                            type="submit"
+                            size="icon"
+                            className="absolute right-1 rounded-full h-12 w-12 flex items-center justify-center"
+                          >
                             <Search className="h-5 w-5" />
                           </Button>
                         </div>
@@ -99,6 +121,8 @@ const Index = () => {
       </main>
 
       <Footer />
-    </div>;
+    </div>
+  );
 };
+
 export default Index;
