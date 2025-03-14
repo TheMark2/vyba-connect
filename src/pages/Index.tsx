@@ -29,16 +29,10 @@ const Index = () => {
     description: "Conecta con talentosos guitarristas"
   }];
   
-  // Transiciones más suaves con duraciones más largas
-  const opacity1 = useTransform(scrollYProgress, [0, 0.2, 0.25, 1], [1, 1, 0, 0], { 
-    ease: [0.32, 0.72, 0, 1] 
-  });
-  const opacity2 = useTransform(scrollYProgress, [0, 0.2, 0.25, 0.45, 0.5, 1], [0, 0, 1, 1, 0, 0], { 
-    ease: [0.32, 0.72, 0, 1] 
-  });
-  const opacity3 = useTransform(scrollYProgress, [0, 0.45, 0.5, 1], [0, 0, 1, 1], { 
-    ease: [0.32, 0.72, 0, 1] 
-  });
+  // Transiciones más suaves
+  const opacity1 = useTransform(scrollYProgress, [0, 0.2, 0.25, 1], [1, 1, 0, 0]);
+  const opacity2 = useTransform(scrollYProgress, [0, 0.2, 0.25, 0.45, 0.5, 1], [0, 0, 1, 1, 0, 0]);
+  const opacity3 = useTransform(scrollYProgress, [0, 0.45, 0.5, 1], [0, 0, 1, 1]);
   
   const textTranslateY = useTransform(scrollYProgress, [0, 0.2, 0.4, 0.6, 0.8, 1], [0, -20, -40, -60, -80, -100]);
   const searchScale = useTransform(scrollYProgress, [0, 0.3, 0.6, 1], [1, 1.05, 1.1, 1.15]);
@@ -46,9 +40,11 @@ const Index = () => {
   const headingText = useTransform(scrollYProgress, [0, 0.25, 0.5], ["El portal perfecto para encontrar tu dj", "Descubre saxofonistas profesionales", "Conecta con guitarristas talentosos"]);
   
   // Padding izquierdo aumentado aún más para la imagen y el fondo
-  const lastImagePaddingLeft = useTransform(scrollYProgress, [0, 0.45, 0.5, 0.75, 1], [0, 0, 500, 900, 1200], { 
-    ease: [0.16, 1, 0.3, 1] // Curva de animación más suave
-  });
+  const lastImagePaddingLeft = useTransform(
+    scrollYProgress, 
+    [0, 0.45, 0.5, 0.75, 1], 
+    [0, 0, 500, 900, 1500]
+  );
   
   return <div className="min-h-screen flex flex-col p-0 m-0">
       <div className="w-full">
