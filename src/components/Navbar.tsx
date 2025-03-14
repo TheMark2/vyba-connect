@@ -11,6 +11,12 @@ const Navbar = ({ className }: NavbarProps) => {
   const location = useLocation();
   const isActive = (path: string) => location.pathname === path;
 
+  // Animación para el fondo en movimiento
+  const hoverBackgroundVariants = {
+    initial: { scaleX: 0, originX: 0 }, // Inicia sin fondo visible
+    hover: { scaleX: 1, originX: 0, transition: { duration: 0.3, ease: "easeOut" } }, // El fondo se expande al hacer hover
+  };
+
   return (
     <div className={cn("mx-auto px-6 md:px-10 lg:px-14 xl:px-16 h-24 flex items-center justify-between", className)}>
       {/* Logo y enlaces alineados a la izquierda */}
@@ -27,49 +33,77 @@ const Navbar = ({ className }: NavbarProps) => {
 
         {/* Enlaces de navegación */}
         <div className="hidden md:flex items-center space-x-6">
-          <Link 
-            to="/" 
-            className={cn(
-              "px-4 py-2 rounded-full text-black font-medium transition-colors duration-200", // Cambiado a rounded-full
-              isActive("/") || "hover:bg-[#F5F1EB]",
-              isActive("/") && "bg-[#F5F1EB]"
-            )}
-          >
-            Inicio
-          </Link>
+          <motion.div whileHover="hover" className="relative">
+            <Link 
+              to="/" 
+              className={cn(
+                "px-6 py-3 rounded-full text-black font-medium relative overflow-hidden", // Padding ajustado
+                isActive("/") && "font-bold"
+              )}
+            >
+              {/* Fondo animado */}
+              <motion.span 
+                variants={hoverBackgroundVariants}
+                initial="initial"
+                className="absolute inset-0 bg-[#F5F1EB] z-0"
+              />
+              <span className="relative z-10">Inicio</span>
+            </Link>
+          </motion.div>
 
-          <Link 
-            to="/artistas" 
-            className={cn(
-              "px-4 py-2 rounded-full text-black font-medium transition-colors duration-200", // Cambiado a rounded-full
-              isActive("/artistas") || "hover:bg-[#F5F1EB]",
-              isActive("/artistas") && "bg-[#F5F1EB]"
-            )}
-          >
-            Artistas
-          </Link>
+          <motion.div whileHover="hover" className="relative">
+            <Link 
+              to="/artistas" 
+              className={cn(
+                "px-6 py-3 rounded-full text-black font-medium relative overflow-hidden", // Padding ajustado
+                isActive("/artistas") && "font-bold"
+              )}
+            >
+              {/* Fondo animado */}
+              <motion.span 
+                variants={hoverBackgroundVariants}
+                initial="initial"
+                className="absolute inset-0 bg-[#F5F1EB] z-0"
+              />
+              <span className="relative z-10">Artistas</span>
+            </Link>
+          </motion.div>
 
-          <Link 
-            to="/todos-artistas" 
-            className={cn(
-              "px-4 py-2 rounded-full text-black font-medium transition-colors duration-200", // Cambiado a rounded-full
-              isActive("/todos-artistas") || "hover:bg-[#F5F1EB]",
-              isActive("/todos-artistas") && "bg-[#F5F1EB]"
-            )}
-          >
-            Todos los artistas
-          </Link>
+          <motion.div whileHover="hover" className="relative">
+            <Link 
+              to="/todos-artistas" 
+              className={cn(
+                "px-6 py-3 rounded-full text-black font-medium relative overflow-hidden", // Padding ajustado
+                isActive("/todos-artistas") && "font-bold"
+              )}
+            >
+              {/* Fondo animado */}
+              <motion.span 
+                variants={hoverBackgroundVariants}
+                initial="initial"
+                className="absolute inset-0 bg-[#F5F1EB] z-0"
+              />
+              <span className="relative z-10">Todos los artistas</span>
+            </Link>
+          </motion.div>
 
-          <Link 
-            to="/todos-generos" 
-            className={cn(
-              "px-4 py-2 rounded-full text-black font-medium transition-colors duration-200", // Cambiado a rounded-full
-              isActive("/todos-generos") || "hover:bg-[#F5F1EB]",
-              isActive("/todos-generos") && "bg-[#F5F1EB]"
-            )}
-          >
-            Todos los géneros
-          </Link>
+          <motion.div whileHover="hover" className="relative">
+            <Link 
+              to="/todos-generos" 
+              className={cn(
+                "px-6 py-3 rounded-full text-black font-medium relative overflow-hidden", // Padding ajustado
+                isActive("/todos-generos") && "font-bold"
+              )}
+            >
+              {/* Fondo animado */}
+              <motion.span 
+                variants={hoverBackgroundVariants}
+                initial="initial"
+                className="absolute inset-0 bg-[#F5F1EB] z-0"
+              />
+              <span className="relative z-10">Todos los géneros</span>
+            </Link>
+          </motion.div>
         </div>
       </div>
 
