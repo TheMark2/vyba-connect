@@ -137,7 +137,7 @@ const Index = () => {
                   >
                     <div className="max-w-xl mx-0">
                       <motion.h1 
-                        className="text-4xl md:text-5xl lg:text-6xl font-bold mb-8 text-white leading-tight"
+                        className="text-4xl md:text-5xl lg:text-7xl font-black mb-8 text-white leading-tight"
                         style={{ 
                           opacity: 1,
                           textShadow: "1px 1px 3px rgba(0,0,0,0.5)"
