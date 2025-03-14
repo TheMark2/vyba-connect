@@ -32,7 +32,7 @@ const Navbar = ({ className }: NavbarProps) => {
 
   return (
     <div className={cn("mx-auto px-6 md:px-10 lg:px-14 xl:px-16 h-24 flex items-center justify-between", className)}>
-      <div className="flex items-center space-x-7">
+      <div className="flex items-center space-x-5">
         <motion.h1 
           initial={{ opacity: 0, x: -20 }}
           animate={{ opacity: 1, x: 0 }}
@@ -41,7 +41,7 @@ const Navbar = ({ className }: NavbarProps) => {
         >
           VYBA
         </motion.h1>
-        <div className="hidden md:flex items-center space-x-8">
+        <div className="hidden md:flex items-center space-x-4">
           <motion.div
             custom={0}
             variants={linkVariants}
@@ -52,13 +52,16 @@ const Navbar = ({ className }: NavbarProps) => {
             <Link 
               to="/" 
               className={cn(
-                "px-6 py-3 rounded-full transition-all duration-200",
+                "px-6 py-3 rounded-full transition-all duration-300 relative overflow-hidden z-10",
                 isActive("/") 
-                  ? "bg-vyba-blue/80 text-vyba-navy font-medium" 
-                  : "text-black font-medium hover:bg-vyba-blue/50"
+                  ? "bg-secondary text-secondary-foreground font-medium" 
+                  : "text-black font-medium hover:bg-secondary/70 hover:text-secondary-foreground group"
               )}
             >
-              Inicio
+              <span className="relative z-10">Inicio</span>
+              {!isActive("/") && (
+                <span className="absolute inset-0 bg-secondary/70 transform scale-x-0 origin-left transition-transform duration-300 -z-10 group-hover:scale-x-100"></span>
+              )}
             </Link>
           </motion.div>
           
@@ -72,13 +75,16 @@ const Navbar = ({ className }: NavbarProps) => {
             <Link 
               to="/artistas" 
               className={cn(
-                "px-6 py-3 rounded-full transition-all duration-200",
+                "px-6 py-3 rounded-full transition-all duration-300 relative overflow-hidden z-10",
                 isActive("/artistas") 
-                  ? "bg-vyba-blue/80 text-vyba-navy font-medium" 
-                  : "text-black font-medium hover:bg-vyba-blue/50"
+                  ? "bg-secondary text-secondary-foreground font-medium" 
+                  : "text-black font-medium hover:bg-secondary/70 hover:text-secondary-foreground group"
               )}
             >
-              Artistas
+              <span className="relative z-10">Artistas</span>
+              {!isActive("/artistas") && (
+                <span className="absolute inset-0 bg-secondary/70 transform scale-x-0 origin-left transition-transform duration-300 -z-10 group-hover:scale-x-100"></span>
+              )}
             </Link>
           </motion.div>
           
@@ -90,13 +96,12 @@ const Navbar = ({ className }: NavbarProps) => {
             animate="animate"
             whileHover="hover"
           >
-            <button className={cn(
-              "px-6 py-3 rounded-full transition-all duration-200 text-black font-medium flex items-center hover:bg-vyba-blue/50"
-            )}>
-              Todos los artistas
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" className="ml-1">
+            <button className="px-6 py-3 rounded-full transition-all duration-300 relative overflow-hidden z-10 text-black font-medium hover:text-secondary-foreground group flex items-center">
+              <span className="relative z-10">Todos los artistas</span>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" className="ml-1 relative z-10">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" />
               </svg>
+              <span className="absolute inset-0 bg-secondary/70 transform scale-x-0 origin-left transition-transform duration-300 -z-10 group-hover:scale-x-100"></span>
             </button>
           </motion.div>
           
@@ -108,13 +113,12 @@ const Navbar = ({ className }: NavbarProps) => {
             animate="animate"
             whileHover="hover"
           >
-            <button className={cn(
-              "px-6 py-3 rounded-full transition-all duration-200 text-black font-medium flex items-center hover:bg-vyba-blue/50"
-            )}>
-              Todos los géneros
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" className="ml-1">
+            <button className="px-6 py-3 rounded-full transition-all duration-300 relative overflow-hidden z-10 text-black font-medium hover:text-secondary-foreground group flex items-center">
+              <span className="relative z-10">Todos los géneros</span>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" className="ml-1 relative z-10">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" />
               </svg>
+              <span className="absolute inset-0 bg-secondary/70 transform scale-x-0 origin-left transition-transform duration-300 -z-10 group-hover:scale-x-100"></span>
             </button>
           </motion.div>
         </div>
