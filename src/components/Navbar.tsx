@@ -32,7 +32,7 @@ const Navbar = ({ className }: NavbarProps) => {
 
   return (
     <div className={cn("mx-auto px-6 md:px-10 lg:px-14 xl:px-16 h-24 flex items-center justify-between", className)}>
-      <div className="flex items-center space-x-12">
+      <div className="flex items-center space-x-7">
         <motion.h1 
           initial={{ opacity: 0, x: -20 }}
           animate={{ opacity: 1, x: 0 }}
