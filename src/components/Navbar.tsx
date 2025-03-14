@@ -11,7 +11,7 @@ const Navbar = ({
   const isActive = (path: string) => location.pathname === path;
   return <div className={cn("mx-auto px-6 md:px-10 lg:px-14 xl:px-16 h-24 flex items-center justify-between", className)}>
       {/* Logo y enlaces alineados a la izquierda */}
-      <div className="flex items-center space-x-8">
+      <div className="flex items-center space-x-12">
         {/* Logo */}
         <h1 className="text-3xl font-bold">
           VYBA
