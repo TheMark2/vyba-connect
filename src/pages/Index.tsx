@@ -90,7 +90,7 @@ const Index = () => {
           <div className="sticky top-0 h-screen overflow-hidden">
             <div className="relative w-full h-screen overflow-hidden">
               <motion.div 
-                className="absolute inset-0 px-6 md:px-10 lg:px-14 xl:px-16 pt-[150px] pb-[120px]"
+                className="absolute inset-0 px-6 md:px-10 lg:px-14 xl:px-16 pt-8 pb-32"
               >
                 <motion.div 
                   className="relative w-full h-full rounded-[2vw] overflow-hidden"
@@ -137,8 +137,11 @@ const Index = () => {
                   >
                     <div className="max-w-xl mx-0">
                       <motion.h1 
-                        className="text-4xl md:text-5xl lg:text-6xl font-bold mb-8 text-black leading-tight"
-                        style={{ opacity: 1 }}
+                        className="text-4xl md:text-5xl lg:text-6xl font-bold mb-8 text-white leading-tight"
+                        style={{ 
+                          opacity: 1,
+                          textShadow: "1px 1px 3px rgba(0,0,0,0.5)"
+                        }}
                       >
                         {headingText}
                       </motion.h1>
