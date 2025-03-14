@@ -124,13 +124,11 @@ const Navbar = ({ className }: NavbarProps) => {
         animate={{ opacity: 1, x: 0 }}
         transition={{ duration: 0.5, delay: 0.2 }}
       >
-        <Button 
-          className="text-base"
-          whileHover={{ scale: 1.05 }}
-          whileTap={{ scale: 0.98 }}
-        >
-          Entrar/Registrarse
-        </Button>
+        <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.98 }}>
+          <Button className="text-base">
+            Entrar/Registrarse
+          </Button>
+        </motion.div>
       </motion.div>
     </div>
   );
