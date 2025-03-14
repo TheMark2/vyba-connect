@@ -52,8 +52,6 @@ const Index = () => {
     [0, 0, 1, 1]
   );
 
-  // Removed dynamic paddingTop and paddingBottom, using fixed values in the className
-
   const textTranslateY = useTransform(
     scrollYProgress,
     [0, 0.2, 0.4, 0.6, 0.8, 1],
@@ -69,19 +67,13 @@ const Index = () => {
   const searchPlaceholder = useTransform(
     scrollYProgress,
     [0, 0.25, 0.5, 1],
-    ["Buscar DJs", "Buscar saxofonistas", "Buscar guitarristas", "Buscar guitarristas"]
+    ["Buscar artistas", "Buscar saxofonistas", "Buscar guitarristas", "Buscar guitarristas"]
   );
 
   const headingText = useTransform(
     scrollYProgress,
     [0, 0.25, 0.5],
-    ["Encuentra el mejor DJ para tu evento", "Descubre saxofonistas profesionales", "Conecta con guitarristas talentosos"]
-  );
-
-  const descriptionText = useTransform(
-    scrollYProgress,
-    [0, 0.25, 0.5],
-    [artists[0].description, artists[1].description, artists[2].description]
+    ["El portal perfecto para encontrar tu dj", "Descubre saxofonistas profesionales", "Conecta con guitarristas talentosos"]
   );
 
   return (
@@ -98,7 +90,7 @@ const Index = () => {
           <div className="sticky top-0 h-screen overflow-hidden">
             <div className="relative w-full h-screen overflow-hidden">
               <motion.div 
-                className="absolute inset-0 px-6 md:px-10 lg:px-14 xl:px-16 pt-8 pb-32"
+                className="absolute inset-0 px-6 md:px-10 lg:px-14 xl:px-16 pt-[150px] pb-[120px]"
               >
                 <motion.div 
                   className="relative w-full h-full rounded-[2vw] overflow-hidden"
@@ -138,43 +130,41 @@ const Index = () => {
 
                   <div className="absolute inset-0 bg-black opacity-50"></div>
                   
-                  {/* Contenido central con texto y buscador */}
+                  {/* Content with left-aligned text and simplified search input */}
                   <motion.div 
-                    className="absolute inset-0 flex flex-col items-center justify-center text-white px-6 md:px-12"
+                    className="absolute inset-0 flex flex-col justify-center text-white px-6 md:px-12 lg:px-16"
                     style={{ y: textTranslateY }}
                   >
-                    <motion.h1 
-                      className="text-4xl md:text-5xl lg:text-6xl font-bold mb-4 text-center"
-                      style={{ opacity: 1 }}
-                    >
-                      {headingText}
-                    </motion.h1>
-                    
-                    <motion.p 
-                      className="text-xl md:text-2xl text-center mb-8 max-w-2xl"
-                      style={{ opacity: 1 }}
-                    >
-                      {descriptionText}
-                    </motion.p>
-                    
-                    <motion.div 
-                      className="flex w-full max-w-xl mx-auto relative"
-                      style={{ scale: searchScale }}
-                    >
-                      <Input
-                        type="text"
-                        placeholder={String(searchPlaceholder)}
-                        className="pr-10 bg-white/90 text-black placeholder:text-gray-500 h-12 text-lg rounded-l-full"
-                        value={searchQuery}
-                        onChange={(e) => setSearchQuery(e.target.value)}
-                      />
-                      <Button 
-                        className="rounded-r-full h-12" 
-                        type="submit"
+                    <div className="max-w-xl mx-0">
+                      <motion.h1 
+                        className="text-4xl md:text-5xl lg:text-6xl font-bold mb-8 text-black leading-tight"
+                        style={{ opacity: 1 }}
                       >
-                        <Search className="h-5 w-5 mr-2" /> Buscar
-                      </Button>
-                    </motion.div>
+                        {headingText}
+                      </motion.h1>
+                      
+                      <motion.div 
+                        className="flex w-full relative"
+                        style={{ scale: searchScale }}
+                      >
+                        <div className="relative w-full flex items-center">
+                          <Input
+                            type="text"
+                            placeholder={String(searchPlaceholder)}
+                            className="pr-14 bg-white/95 text-black placeholder:text-gray-500 h-14 text-lg rounded-full border-0 shadow-md"
+                            value={searchQuery}
+                            onChange={(e) => setSearchQuery(e.target.value)}
+                          />
+                          <Button 
+                            className="absolute right-0 rounded-full h-14 w-14 flex items-center justify-center" 
+                            type="submit"
+                            size="icon"
+                          >
+                            <Search className="h-5 w-5" />
+                          </Button>
+                        </div>
+                      </motion.div>
+                    </div>
                   </motion.div>
                 </motion.div>
               </motion.div>
