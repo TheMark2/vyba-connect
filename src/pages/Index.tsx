@@ -36,8 +36,8 @@ const Index = () => {
   const searchPlaceholder = useTransform(scrollYProgress, [0, 0.25, 0.5, 1], ["Buscar artistas", "Buscar saxofonistas", "Buscar guitarristas", "Buscar guitarristas"]);
   const headingText = useTransform(scrollYProgress, [0, 0.25, 0.5], ["El portal perfecto para encontrar tu dj", "Descubre saxofonistas profesionales", "Conecta con guitarristas talentosos"]);
   
-  // Transformador para el padding izquierdo de la última imagen (guitarrista)
-  const lastImagePaddingLeft = useTransform(scrollYProgress, [0, 0.45, 0.5, 0.75, 1], [0, 0, 200, 400, 500]);
+  // Transformador para el padding izquierdo de la última imagen (guitarrista) - aumentado significativamente
+  const lastImagePaddingLeft = useTransform(scrollYProgress, [0, 0.45, 0.5, 0.75, 1], [0, 0, 300, 600, 800]);
   
   return <div className="min-h-screen flex flex-col p-0 m-0">
       <div className="w-full">
@@ -72,7 +72,13 @@ const Index = () => {
                     <img src={artists[2].image} alt="Guitarrista performing" className="w-full h-full brightness-75 object-cover rounded-[2vw]" />
                   </motion.div>
 
-                  <div className="absolute inset-0 bg-black opacity-50"></div>
+                  <motion.div 
+                    className="absolute inset-0 bg-black opacity-50"
+                    style={{
+                      paddingLeft: lastImagePaddingLeft,
+                      opacity: opacity3.get() > 0 ? 0.5 : 0.5
+                    }}
+                  ></motion.div>
                   
                   {/* Content with left-aligned text and simplified search input */}
                   <motion.div className="absolute inset-0 flex flex-col justify-center text-white px-6 md:px-12 lg:px-16">
