@@ -28,16 +28,27 @@ const Index = () => {
     image: "https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?w=1200&h=800&auto=format&fit=crop",
     description: "Conecta con talentosos guitarristas"
   }];
-  const opacity1 = useTransform(scrollYProgress, [0, 0.2, 0.25, 1], [1, 1, 0, 0]);
-  const opacity2 = useTransform(scrollYProgress, [0, 0.2, 0.25, 0.45, 0.5, 1], [0, 0, 1, 1, 0, 0]);
-  const opacity3 = useTransform(scrollYProgress, [0, 0.45, 0.5, 1], [0, 0, 1, 1]);
+  
+  // Transiciones más suaves con duraciones más largas
+  const opacity1 = useTransform(scrollYProgress, [0, 0.2, 0.25, 1], [1, 1, 0, 0], { 
+    ease: [0.32, 0.72, 0, 1] 
+  });
+  const opacity2 = useTransform(scrollYProgress, [0, 0.2, 0.25, 0.45, 0.5, 1], [0, 0, 1, 1, 0, 0], { 
+    ease: [0.32, 0.72, 0, 1] 
+  });
+  const opacity3 = useTransform(scrollYProgress, [0, 0.45, 0.5, 1], [0, 0, 1, 1], { 
+    ease: [0.32, 0.72, 0, 1] 
+  });
+  
   const textTranslateY = useTransform(scrollYProgress, [0, 0.2, 0.4, 0.6, 0.8, 1], [0, -20, -40, -60, -80, -100]);
   const searchScale = useTransform(scrollYProgress, [0, 0.3, 0.6, 1], [1, 1.05, 1.1, 1.15]);
   const searchPlaceholder = useTransform(scrollYProgress, [0, 0.25, 0.5, 1], ["Buscar artistas", "Buscar saxofonistas", "Buscar guitarristas", "Buscar guitarristas"]);
   const headingText = useTransform(scrollYProgress, [0, 0.25, 0.5], ["El portal perfecto para encontrar tu dj", "Descubre saxofonistas profesionales", "Conecta con guitarristas talentosos"]);
   
-  // Transformador para el padding izquierdo de la última imagen (guitarrista) - aumentado bastante más
-  const lastImagePaddingLeft = useTransform(scrollYProgress, [0, 0.45, 0.5, 0.75, 1], [0, 0, 500, 900, 1200]);
+  // Padding izquierdo aumentado aún más para la imagen y el fondo
+  const lastImagePaddingLeft = useTransform(scrollYProgress, [0, 0.45, 0.5, 0.75, 1], [0, 0, 500, 900, 1200], { 
+    ease: [0.16, 1, 0.3, 1] // Curva de animación más suave
+  });
   
   return <div className="min-h-screen flex flex-col p-0 m-0">
       <div className="w-full">
@@ -73,12 +84,14 @@ const Index = () => {
                   </motion.div>
 
                   <motion.div 
-                    className="absolute inset-0 bg-black opacity-50"
+                    className="absolute inset-0"
                     style={{
                       paddingLeft: lastImagePaddingLeft,
-                      opacity: opacity3.get() > 0 ? 0.5 : 0.5
+                      opacity: opacity3
                     }}
-                  ></motion.div>
+                  >
+                    <div className="w-full h-full bg-black/50 rounded-[2vw]"></div>
+                  </motion.div>
                   
                   {/* Content with left-aligned text and simplified search input */}
                   <motion.div className="absolute inset-0 flex flex-col justify-center text-white px-6 md:px-12 lg:px-16">
