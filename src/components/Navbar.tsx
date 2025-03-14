@@ -45,6 +45,7 @@ const Navbar = ({ className }: NavbarProps) => {
               <motion.span 
                 variants={hoverBackgroundVariants}
                 initial="initial"
+                animate={isActive("/") ? "hover" : "initial"} // Fondo visible si la página está activa
                 className="absolute inset-0 bg-[#F5F1EB] z-0"
               />
               <span className="relative z-10">Inicio</span>
@@ -63,6 +64,7 @@ const Navbar = ({ className }: NavbarProps) => {
               <motion.span 
                 variants={hoverBackgroundVariants}
                 initial="initial"
+                animate={isActive("/artistas") ? "hover" : "initial"} // Fondo visible si la página está activa
                 className="absolute inset-0 bg-[#F5F1EB] z-0"
               />
               <span className="relative z-10">Artistas</span>
@@ -81,6 +83,7 @@ const Navbar = ({ className }: NavbarProps) => {
               <motion.span 
                 variants={hoverBackgroundVariants}
                 initial="initial"
+                animate={isActive("/todos-artistas") ? "hover" : "initial"} // Fondo visible si la página está activa
                 className="absolute inset-0 bg-[#F5F1EB] z-0"
               />
               <span className="relative z-10">Todos los artistas</span>
@@ -99,6 +102,7 @@ const Navbar = ({ className }: NavbarProps) => {
               <motion.span 
                 variants={hoverBackgroundVariants}
                 initial="initial"
+                animate={isActive("/todos-generos") ? "hover" : "initial"} // Fondo visible si la página está activa
                 className="absolute inset-0 bg-[#F5F1EB] z-0"
               />
               <span className="relative z-10">Todos los géneros</span>
