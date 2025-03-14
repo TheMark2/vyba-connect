@@ -52,12 +52,7 @@ const Index = () => {
     [0, 0, 1, 1]
   );
 
-  const paddingTop = useTransform(
-    scrollYProgress,
-    [0, 0.5, 1],
-    ["0px", "200px", "120px"]
-  );
-
+  // Removed dynamic paddingTop, we'll use a fixed value in the className
   const paddingBottom = useTransform(
     scrollYProgress,
     [0, 0.5, 1],
@@ -108,9 +103,8 @@ const Index = () => {
           <div className="sticky top-0 h-screen overflow-hidden">
             <div className="relative w-full h-screen overflow-hidden">
               <motion.div 
-                className="absolute inset-0 px-6 md:px-10 lg:px-14 xl:px-16"
+                className="absolute inset-0 px-6 md:px-10 lg:px-14 xl:px-16 pt-[150px]"
                 style={{ 
-                  paddingTop, 
                   paddingBottom 
                 }}
               >
