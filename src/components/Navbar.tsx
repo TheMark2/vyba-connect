@@ -30,12 +30,13 @@ const Navbar = ({ className }: NavbarProps) => {
       </motion.h1>
 
       {/* Enlaces de navegación */}
-      <div className="hidden md:flex items-center space-x-10">
+      <div className="hidden md:flex items-center space-x-8">
         <motion.div whileHover="hover" className="relative">
           <Link 
             to="/" 
             className={cn(
-              "px-6 py-3 rounded-full text-black font-medium relative overflow-hidden"
+              "px-4 py-2 text-black font-medium relative overflow-hidden",
+              isActive("/") && "font-bold"
             )}
           >
             <motion.span 
@@ -51,7 +52,8 @@ const Navbar = ({ className }: NavbarProps) => {
           <Link 
             to="/artistas" 
             className={cn(
-              "px-6 py-3 rounded-full text-black font-medium relative overflow-hidden"
+              "px-4 py-2 text-black font-medium relative overflow-hidden",
+              isActive("/artistas") && "font-bold"
             )}
           >
             <motion.span 
@@ -65,9 +67,10 @@ const Navbar = ({ className }: NavbarProps) => {
 
         <motion.div whileHover="hover" className="relative">
           <Link 
-            to="/generos" 
+            to="/todos-artistas" 
             className={cn(
-              "px-6 py-3 rounded-full text-black font-medium relative overflow-hidden"
+              "px-4 py-2 text-black font-medium relative overflow-hidden",
+              isActive("/todos-artistas") && "font-bold"
             )}
           >
             <motion.span 
@@ -75,7 +78,24 @@ const Navbar = ({ className }: NavbarProps) => {
               initial="initial"
               className="absolute inset-0 bg-secondary z-0"
             />
-            <span className="relative z-10">Géneros</span>
+            <span className="relative z-10">Todos los artistas</span>
+          </Link>
+        </motion.div>
+
+        <motion.div whileHover="hover" className="relative">
+          <Link 
+            to="/todos-generos" 
+            className={cn(
+              "px-4 py-2 text-black font-medium relative overflow-hidden",
+              isActive("/todos-generos") && "font-bold"
+            )}
+          >
+            <motion.span 
+              variants={hoverVariants}
+              initial="initial"
+              className="absolute inset-0 bg-secondary z-0"
+            />
+            <span className="relative z-10">Todos los géneros</span>
           </Link>
         </motion.div>
       </div>
