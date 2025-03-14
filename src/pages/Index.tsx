@@ -37,7 +37,7 @@ const Index = () => {
   const headingText = useTransform(scrollYProgress, [0, 0.25, 0.5], ["El portal perfecto para encontrar tu dj", "Descubre saxofonistas profesionales", "Conecta con guitarristas talentosos"]);
   
   // Nuevo transformador para el padding derecho de la última imagen
-  const lastImagePaddingRight = useTransform(scrollYProgress, [0, 0.45, 0.5, 0.75, 1], [0, 0, 0, 100, 150]);
+  const lastImagePaddingLeft = useTransform(scrollYProgress, [0, 0.45, 0.5, 0.75, 1], [0, 0, 0, 200, 300]);
   
   return <div className="min-h-screen flex flex-col p-0 m-0">
       <div className="w-full">
@@ -66,7 +66,7 @@ const Index = () => {
                     className="absolute inset-0" 
                     style={{
                       opacity: opacity3,
-                      paddingRight: lastImagePaddingRight
+                      paddingLeft: lastImagePaddingLeft
                     }}
                   >
                     <img src={artists[2].image} alt="Guitarrista performing" className="w-full h-full brightness-75 object-cover" />
