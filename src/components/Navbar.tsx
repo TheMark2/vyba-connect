@@ -11,93 +11,66 @@ const Navbar = ({ className }: NavbarProps) => {
   const location = useLocation();
   const isActive = (path: string) => location.pathname === path;
 
-  // Animación para el fondo del hover
-  const hoverVariants = {
-    initial: { scaleX: 0, originX: 0 },
-    hover: { scaleX: 1, originX: 0, transition: { duration: 0.3, ease: "easeOut" } },
-  };
-
   return (
     <div className={cn("mx-auto px-6 md:px-10 lg:px-14 xl:px-16 h-24 flex items-center justify-between", className)}>
-      {/* Logo */}
-      <motion.h1 
-        initial={{ opacity: 0, x: -20 }}
-        animate={{ opacity: 1, x: 0 }}
-        transition={{ duration: 0.5 }}
-        className="text-3xl font-bold"
-      >
-        VYBA
-      </motion.h1>
+      {/* Logo y enlaces alineados a la izquierda */}
+      <div className="flex items-center space-x-8">
+        {/* Logo */}
+        <motion.h1 
+          initial={{ opacity: 0, x: -20 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ duration: 0.5 }}
+          className="text-3xl font-bold"
+        >
+          VYBA
+        </motion.h1>
 
-      {/* Enlaces de navegación */}
-      <div className="hidden md:flex items-center space-x-8">
-        <motion.div whileHover="hover" className="relative">
+        {/* Enlaces de navegación */}
+        <div className="hidden md:flex items-center space-x-6">
           <Link 
             to="/" 
             className={cn(
-              "px-4 py-2 text-black font-medium relative overflow-hidden",
-              isActive("/") && "font-bold"
+              "px-4 py-2 rounded-md text-black font-medium transition-colors duration-200",
+              isActive("/") || "hover:bg-[#F5F1EB]",
+              isActive("/") && "bg-[#F5F1EB]"
             )}
           >
-            <motion.span 
-              variants={hoverVariants}
-              initial="initial"
-              className="absolute inset-0 bg-secondary z-0"
-            />
-            <span className="relative z-10">Inicio</span>
+            Inicio
           </Link>
-        </motion.div>
 
-        <motion.div whileHover="hover" className="relative">
           <Link 
             to="/artistas" 
             className={cn(
-              "px-4 py-2 text-black font-medium relative overflow-hidden",
-              isActive("/artistas") && "font-bold"
+              "px-4 py-2 rounded-md text-black font-medium transition-colors duration-200",
+              isActive("/artistas") || "hover:bg-[#F5F1EB]",
+              isActive("/artistas") && "bg-[#F5F1EB]"
             )}
           >
-            <motion.span 
-              variants={hoverVariants}
-              initial="initial"
-              className="absolute inset-0 bg-secondary z-0"
-            />
-            <span className="relative z-10">Artistas</span>
+            Artistas
           </Link>
-        </motion.div>
 
-        <motion.div whileHover="hover" className="relative">
           <Link 
             to="/todos-artistas" 
             className={cn(
-              "px-4 py-2 text-black font-medium relative overflow-hidden",
-              isActive("/todos-artistas") && "font-bold"
+              "px-4 py-2 rounded-md text-black font-medium transition-colors duration-200",
+              isActive("/todos-artistas") || "hover:bg-[#F5F1EB]",
+              isActive("/todos-artistas") && "bg-[#F5F1EB]"
             )}
           >
-            <motion.span 
-              variants={hoverVariants}
-              initial="initial"
-              className="absolute inset-0 bg-secondary z-0"
-            />
-            <span className="relative z-10">Todos los artistas</span>
+            Todos los artistas
           </Link>
-        </motion.div>
 
-        <motion.div whileHover="hover" className="relative">
           <Link 
             to="/todos-generos" 
             className={cn(
-              "px-4 py-2 text-black font-medium relative overflow-hidden",
-              isActive("/todos-generos") && "font-bold"
+              "px-4 py-2 rounded-md text-black font-medium transition-colors duration-200",
+              isActive("/todos-generos") || "hover:bg-[#F5F1EB]",
+              isActive("/todos-generos") && "bg-[#F5F1EB]"
             )}
           >
-            <motion.span 
-              variants={hoverVariants}
-              initial="initial"
-              className="absolute inset-0 bg-secondary z-0"
-            />
-            <span className="relative z-10">Todos los géneros</span>
+            Todos los géneros
           </Link>
-        </motion.div>
+        </div>
       </div>
 
       {/* Botón de Entrar/Registrarse */}
