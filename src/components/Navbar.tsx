@@ -47,7 +47,7 @@ const Navbar = ({ className }: NavbarProps) => {
                 variants={hoverBackgroundVariants}
                 initial="initial"
                 whileHover="hover"
-                className="absolute inset-0 bg-[#F5F1EB] z-0"
+                className="absolute inset-0 bg-vyba-blue/30 z-0"
               />
               <span className="relative z-10">Inicio</span>
             </Link>
@@ -66,7 +66,7 @@ const Navbar = ({ className }: NavbarProps) => {
                 variants={hoverBackgroundVariants}
                 initial="initial"
                 whileHover="hover"
-                className="absolute inset-0 bg-[#F5F1EB] z-0"
+                className="absolute inset-0 bg-vyba-blue/30 z-0"
               />
               <span className="relative z-10">Artistas</span>
             </Link>
@@ -85,7 +85,7 @@ const Navbar = ({ className }: NavbarProps) => {
                 variants={hoverBackgroundVariants}
                 initial="initial"
                 whileHover="hover"
-                className="absolute inset-0 bg-[#F5F1EB] z-0"
+                className="absolute inset-0 bg-vyba-blue/30 z-0"
               />
               <span className="relative z-10">Todos los artistas</span>
             </Link>
@@ -104,7 +104,7 @@ const Navbar = ({ className }: NavbarProps) => {
                 variants={hoverBackgroundVariants}
                 initial="initial"
                 whileHover="hover"
-                className="absolute inset-0 bg-[#F5F1EB] z-0"
+                className="absolute inset-0 bg-vyba-blue/30 z-0"
               />
               <span className="relative z-10">Todos los géneros</span>
             </Link>
