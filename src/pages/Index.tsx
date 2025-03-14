@@ -37,7 +37,7 @@ const Index = () => {
   const headingText = useTransform(scrollYProgress, [0, 0.25, 0.5], ["El portal perfecto para encontrar tu dj", "Descubre saxofonistas profesionales", "Conecta con guitarristas talentosos"]);
   
   // Nuevo transformador para el padding derecho de la última imagen
-  const lastImagePaddingLeft = useTransform(scrollYProgress, [0, 0.45, 0.5, 0.75, 1], [0, 0, 0, 400, 600]);
+  const lastImagePaddingLeft = useTransform(scrollYProgress, [0, 0.45, 0.5, 0.75, 1], [0, 0, 0, 800, 1200]);
   
   return <div className="min-h-screen flex flex-col p-0 m-0">
       <div className="w-full">
@@ -72,7 +72,7 @@ const Index = () => {
                     <img src={artists[2].image} alt="Guitarrista performing" className="w-full h-full brightness-75 object-cover" />
                   </motion.div>
 
-                  <div className="absolute inset-0 bg-black opacity-50"></div>
+                  <motion.div className="absolute inset-0 bg-black" style={{ opacity: opacity3, paddingLeft: lastImagePaddingLeft }}></motion.div>
                   
                   {/* Content with left-aligned text and simplified search input */}
                   <motion.div className="absolute inset-0 flex flex-col justify-center text-white px-6 md:px-12 lg:px-16">
@@ -101,5 +101,4 @@ const Index = () => {
       <Footer />
     </div>;
 };
-
 export default Index;
