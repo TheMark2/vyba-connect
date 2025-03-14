@@ -1,4 +1,3 @@
-
 import { Button } from "@/components/ui/button";
 import { Search } from "lucide-react";
 import Navbar from "@/components/Navbar";
@@ -6,15 +5,15 @@ import Footer from "@/components/Footer";
 import { motion, useScroll, useTransform } from "framer-motion";
 import { useRef, useState } from "react";
 import { Input } from "@/components/ui/input";
-
 const Index = () => {
   const scrollRef = useRef(null);
   const [searchQuery, setSearchQuery] = useState("");
-  const { scrollYProgress } = useScroll({
+  const {
+    scrollYProgress
+  } = useScroll({
     target: scrollRef,
     offset: ["start start", "end start"]
   });
-
   const artists = [{
     type: "DJ",
     image: "/lovable-uploads/d79d697f-5c21-443c-bc75-d988a2dbc770.png",
@@ -38,7 +37,7 @@ const Index = () => {
   const scale1 = useTransform(scrollYProgress, [0, 0.19, 0.25], [1, 1.05, 1.1]);
   const scale2 = useTransform(scrollYProgress, [0.19, 0.25, 0.45, 0.5], [0.95, 1, 1.05, 1.1]);
   const scale3 = useTransform(scrollYProgress, [0.45, 0.5, 0.7], [0.95, 1, 1.05]);
-  
+
   // Efectos de movimiento paralaje para las imágenes - más sutiles
   const moveY1 = useTransform(scrollYProgress, [0, 0.25], ["0%", "-3%"]);
   const moveY2 = useTransform(scrollYProgress, [0.25, 0.5], ["0%", "-3%"]);
@@ -48,13 +47,11 @@ const Index = () => {
   const moveX1 = useTransform(scrollYProgress, [0, 0.25], ["0%", "1%"]);
   const moveX2 = useTransform(scrollYProgress, [0.25, 0.5], ["0%", "-1%"]);
   const moveX3 = useTransform(scrollYProgress, [0.5, 0.75], ["0%", "1%"]);
-  
+
   // Mantener el texto y el placeholder sin animaciones
   const searchPlaceholder = useTransform(scrollYProgress, [0, 0.25, 0.5, 1], ["Buscar artistas", "Buscar saxofonistas", "Buscar guitarristas", "Buscar guitarristas"]);
   const headingText = useTransform(scrollYProgress, [0, 0.25, 0.5], ["El portal perfecto para encontrar tu dj", "Descubre saxofonistas profesionales", "Conecta con guitarristas talentosos"]);
-  
-  return (
-    <div className="min-h-screen flex flex-col p-0 m-0">
+  return <div className="min-h-screen flex flex-col p-0 m-0">
       <div className="w-full">
         <Navbar className="mx-auto" />
       </div>
@@ -67,54 +64,33 @@ const Index = () => {
               <motion.div className="absolute inset-0 px-6 md:px-10 lg:px-14 xl:px-16 pt-8 pb-32">
                 <motion.div className="relative w-full h-full rounded-[2vw] overflow-hidden">
                   {/* DJ image layer */}
-                  <motion.div 
-                    className="absolute inset-0 origin-center" 
-                    style={{
-                      opacity: opacity1,
-                      scale: scale1,
-                      y: moveY1,
-                      x: moveX1
-                    }}
-                  >
-                    <img 
-                      src={artists[0].image} 
-                      alt="DJ performing" 
-                      className="w-full h-full brightness-75 object-cover"
-                    />
+                  <motion.div className="absolute inset-0 origin-center" style={{
+                  opacity: opacity1,
+                  scale: scale1,
+                  y: moveY1,
+                  x: moveX1
+                }}>
+                    <img src={artists[0].image} alt="DJ performing" className="w-full h-full brightness-75 object-cover" />
                   </motion.div>
                   
                   {/* Saxofonista image layer */}
-                  <motion.div 
-                    className="absolute inset-0 origin-center" 
-                    style={{
-                      opacity: opacity2,
-                      scale: scale2,
-                      y: moveY2,
-                      x: moveX2
-                    }}
-                  >
-                    <img 
-                      src={artists[1].image} 
-                      alt="Saxofonista performing" 
-                      className="w-full h-full brightness-75 object-cover"
-                    />
+                  <motion.div className="absolute inset-0 origin-center" style={{
+                  opacity: opacity2,
+                  scale: scale2,
+                  y: moveY2,
+                  x: moveX2
+                }}>
+                    <img src={artists[1].image} alt="Saxofonista performing" className="w-full h-full brightness-75 object-cover" />
                   </motion.div>
                   
                   {/* Guitarrista image layer - SIN PADDING */}
-                  <motion.div 
-                    className="absolute inset-0 origin-center" 
-                    style={{
-                      opacity: opacity3,
-                      scale: scale3,
-                      y: moveY3,
-                      x: moveX3
-                    }}
-                  >
-                    <img 
-                      src={artists[2].image} 
-                      alt="Guitarrista performing" 
-                      className="w-full h-full brightness-75 object-cover rounded-[2vw]" 
-                    />
+                  <motion.div className="absolute inset-0 origin-center" style={{
+                  opacity: opacity3,
+                  scale: scale3,
+                  y: moveY3,
+                  x: moveX3
+                }}>
+                    <img src={artists[2].image} alt="Guitarrista performing" className="w-full h-full brightness-75 object-cover rounded-[2vw]" />
                   </motion.div>
 
                   {/* Background overlay - SIN PADDING */}
@@ -129,18 +105,8 @@ const Index = () => {
                       
                       <motion.div className="flex w-full relative">
                         <div className="relative w-full flex items-center">
-                          <Input 
-                            type="text" 
-                            placeholder={String(searchPlaceholder)} 
-                            className="pr-14 bg-white/95 text-black placeholder:text-gray-500 h-14 text-lg rounded-full border-0 shadow-md" 
-                            value={searchQuery} 
-                            onChange={e => setSearchQuery(e.target.value)} 
-                          />
-                          <Button 
-                            type="submit" 
-                            size="icon" 
-                            className="absolute right-1 rounded-full h-12 w-12 flex items-center justify-center"
-                          >
+                          <Input type="text" placeholder={String(searchPlaceholder)} className="pr-14 bg-white/95 text-black placeholder:text-gray-500 h-14 text-lg rounded-full border-0 shadow-md" value={searchQuery} onChange={e => setSearchQuery(e.target.value)} />
+                          <Button type="submit" size="icon" className="absolute right-2 rounded-full h-11 w-11 flex items-center justify-center">
                             <Search className="h-5 w-5" />
                           </Button>
                         </div>
@@ -159,11 +125,7 @@ const Index = () => {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
               {/* Imagen a la izquierda en móvil, derecha en desktop */}
               <div className="md:order-2">
-                <img 
-                  src="/lovable-uploads/77591a97-10cd-4c8b-b768-5b17483c3d9f.png" 
-                  alt="DJ en concierto" 
-                  className="w-full h-auto rounded-2xl shadow-lg object-cover aspect-[4/3]"
-                />
+                <img src="/lovable-uploads/77591a97-10cd-4c8b-b768-5b17483c3d9f.png" alt="DJ en concierto" className="w-full h-auto rounded-2xl shadow-lg object-cover aspect-[4/3]" />
               </div>
               
               {/* Contenido de texto */}
@@ -174,16 +136,8 @@ const Index = () => {
                 
                 <div className="flex w-full relative max-w-lg mb-8">
                   <div className="relative w-full flex items-center">
-                    <Input 
-                      type="text" 
-                      placeholder="Buscar artistas" 
-                      className="pr-14 bg-white text-black placeholder:text-gray-500 h-14 text-lg rounded-full border-0 shadow-md" 
-                    />
-                    <Button 
-                      type="submit" 
-                      size="icon" 
-                      className="absolute right-1 rounded-full h-12 w-12 flex items-center justify-center"
-                    >
+                    <Input type="text" placeholder="Buscar artistas" className="pr-14 bg-white text-black placeholder:text-gray-500 h-14 text-lg rounded-full border-0 shadow-md" />
+                    <Button type="submit" size="icon" className="absolute right-1 rounded-full h-12 w-12 flex items-center justify-center">
                       <Search className="h-5 w-5" />
                     </Button>
                   </div>
@@ -195,8 +149,6 @@ const Index = () => {
       </main>
 
       <Footer />
-    </div>
-  );
+    </div>;
 };
-
 export default Index;
