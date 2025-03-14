@@ -133,7 +133,6 @@ const Index = () => {
                   {/* Content with left-aligned text and simplified search input */}
                   <motion.div 
                     className="absolute inset-0 flex flex-col justify-center text-white px-6 md:px-12 lg:px-16"
-                    style={{ y: textTranslateY }}
                   >
                     <div className="max-w-xl mx-0">
                       <motion.h1 
