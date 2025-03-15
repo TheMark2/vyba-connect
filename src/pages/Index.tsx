@@ -1,4 +1,3 @@
-
 import { Button } from "@/components/ui/button";
 import { Search, BrainCircuit } from "lucide-react";
 import Navbar from "@/components/Navbar";
@@ -295,14 +294,14 @@ const Index = () => {
         </div>
       </div>
       
-      <div className="relative w-full mt-4 overflow-visible px-6">
+      <div className="relative w-full mt-4 pl-6 overflow-visible">
         <Carousel
           opts={{
             align: "start",
             loop: true,
             containScroll: false,
           }}
-          className="w-full"
+          className="w-full -mr-6"
           onMouseDown={(e) => e.stopPropagation()}
         >
           <CarouselContent className="-ml-4">
@@ -518,3 +517,4 @@ const Index = () => {
 };
 
 export default Index;
+
