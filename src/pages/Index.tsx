@@ -1,11 +1,85 @@
-
 import { Button } from "@/components/ui/button";
 import { Search } from "lucide-react";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { motion, useScroll, useTransform } from "framer-motion";
 import { useRef, useState } from "react";
-import { Input } from "@/components/ui/input";
+import * as React from "react";
+import { cn } from "@/lib/utils";
+
+// Custom Animated Input component
+const Input = React.forwardRef<HTMLInputElement, React.ComponentProps<"input">>(
+  ({ className, ...props }, ref) => {
+    const [isFocused, setIsFocused] = React.useState(false);
+    const [hasValue, setHasValue] = React.useState(false);
+    const inputRef = React.useRef<HTMLInputElement>(null);
+    
+    // Combine refs
+    const combinedRef = React.useCallback(
+      (element: HTMLInputElement | null) => {
+        if (ref) {
+          if (typeof ref === 'function') {
+            ref(element);
+          } else {
+            (ref as React.MutableRefObject<HTMLInputElement | null>).current = element;
+          }
+        }
+        inputRef.current = element;
+      },
+      [ref]
+    );
+
+    React.useEffect(() => {
+      if (inputRef.current && inputRef.current.value) {
+        setHasValue(true);
+      } else {
+        setHasValue(false);
+      }
+    }, [props.value]);
+
+    const shouldFloatLabel = isFocused || hasValue;
+
+    return (
+      <div className="relative w-full">
+        {props.placeholder && (
+          <span
+            className={cn(
+              "absolute pointer-events-none transition-all duration-300 text-muted-foreground font-bold",
+              shouldFloatLabel 
+                ? "transform -translate-y-6 text-xs left-3" 
+                : "transform translate-y-0 text-base left-3 top-4"
+            )}
+          >
+            {props.placeholder}
+          </span>
+        )}
+        <input
+          {...props}
+          placeholder=""
+          className={cn(
+            "flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-base file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm pt-4",
+            className
+          )}
+          ref={combinedRef}
+          onFocus={(e) => {
+            setIsFocused(true);
+            props.onFocus && props.onFocus(e);
+          }}
+          onBlur={(e) => {
+            setIsFocused(false);
+            props.onBlur && props.onBlur(e);
+          }}
+          onChange={(e) => {
+            setHasValue(e.target.value.length > 0);
+            props.onChange && props.onChange(e);
+          }}
+        />
+      </div>
+    );
+  }
+);
+
+Input.displayName = "Input";
 
 const Index = () => {
   const scrollRef = useRef(null);
@@ -131,7 +205,13 @@ const Index = () => {
                       
                       <motion.div className="flex w-full relative">
                         <div className="relative w-full flex items-center">
-                          <Input type="text" placeholder="Buscar artistas" className="pr-14 bg-[#F5F1EB] text-black placeholder:text-gray-500 h-14 text-base rounded-full border-0" value={searchQuery} onChange={e => setSearchQuery(e.target.value)} />
+                          <Input 
+                            type="text" 
+                            placeholder="Buscar artistas" 
+                            className="pr-14 bg-[#F5F1EB] text-black h-14 rounded-full border-0" 
+                            value={searchQuery} 
+                            onChange={e => setSearchQuery(e.target.value)} 
+                          />
                           <Button type="submit" size="icon" className="absolute right-2 rounded-full h-11 w-11 flex items-center justify-center">
                             <Search className="h-5 w-5" />
                           </Button>
@@ -162,7 +242,11 @@ const Index = () => {
                 
                 <div className="flex w-full relative max-w-lg mb-8">
                   <div className="relative w-full flex items-center">
-                    <Input type="text" placeholder="Buscar artistas" className="pr-14 bg-white text-black placeholder:text-gray-500 h-14 text-lg rounded-full border-0 shadow-md" />
+                    <Input 
+                      type="text" 
+                      placeholder="Buscar artistas" 
+                      className="pr-14 bg-white text-black h-14 rounded-full border-0 shadow-md" 
+                    />
                     <Button type="submit" size="icon" className="absolute right-1 rounded-full h-12 w-12 flex items-center justify-center">
                       <Search className="h-5 w-5" />
                     </Button>
@@ -177,4 +261,5 @@ const Index = () => {
       <Footer />
     </div>;
 };
+
 export default Index;
