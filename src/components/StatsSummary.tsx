@@ -22,7 +22,7 @@ interface StatsSummaryProps {
 
 const StatsSummary = ({ className }: StatsSummaryProps) => {
   return (
-    <section className={cn("px-12 md:px-14 lg:px-16", className)}>
+    <section className={cn("px-12 md:px-14 lg:px-16 mt-32", className)}>
       <div className="bg-[#EDE8E0] rounded-3xl py-16">
         <div className="container mx-auto px-6 md:px-10">
           <div className="flex flex-wrap justify-center gap-10 md:gap-20 lg:gap-32">
