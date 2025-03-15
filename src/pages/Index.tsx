@@ -227,12 +227,7 @@ const Index = () => {
           </div>
         </div>
 
-        <section className="py-16 bg-white">
-          <div className="container mx-auto mb-8">
-            <h2 className="text-3xl md:text-4xl font-bold mb-2">Artistas destacados</h2>
-            <p className="text-gray-600 mb-8">Descubre los artistas mejor valorados en Vyba</p>
-          </div>
-          
+        <section className="py-16 bg-vyba-cream">
           <div className="w-full overflow-hidden">
             <Marquee className="py-4" pauseOnHover>
               {topArtists.map((artist, index) => (
