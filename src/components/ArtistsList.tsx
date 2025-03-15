@@ -1,3 +1,4 @@
+
 import React, { useRef, useState, useEffect } from "react";
 import ArtistProfileCard from "./ArtistProfileCard";
 import {
@@ -7,6 +8,7 @@ import {
   CarouselPrevious,
   CarouselNext
 } from "@/components/ui/carousel";
+import { useIsMobile } from "@/hooks/use-mobile";
 
 interface Artist {
   id: string;
@@ -32,6 +34,7 @@ const ArtistsList = ({
 }: ArtistsListProps) => {
   const carouselRef = useRef<HTMLDivElement>(null);
   const [showGradient, setShowGradient] = useState(true);
+  const isMobile = useIsMobile();
   
   // Function to check if there's more content to scroll
   const checkScrollable = () => {
@@ -53,10 +56,23 @@ const ArtistsList = ({
     return () => clearTimeout(timer);
   }, [artists]);
 
+  // Calculate item width based on screen size
+  const getItemWidth = () => {
+    if (isMobile) {
+      return 'calc(80% - 1rem)'; // Mobile: 1 card + a bit of the next
+    } else if (typeof window !== 'undefined' && window.innerWidth < 1024) {
+      return 'calc(40% - 1rem)'; // Tablet: 2 cards + a bit of the next
+    } else if (typeof window !== 'undefined' && window.innerWidth < 1280) {
+      return 'calc(30% - 1rem)'; // Small desktop: 3 cards + a bit of the next
+    } else {
+      return 'calc(23% - 1.5rem)'; // Large desktop: 4 cards + a bit of the next
+    }
+  };
+
   return (
     <div className="relative w-full overflow-hidden" ref={carouselRef}>
       <Carousel
-        className="w-full"
+        className="w-full pl-4 md:pl-6 lg:pl-8"
         opts={{
           align: "start",
           loop: false,
@@ -69,18 +85,14 @@ const ArtistsList = ({
           className="-ml-4"
           data-carousel-content
         >
-          {/* Initial spacer item */}
-          <CarouselItem className="pl-16 md:pl-10 max-w-[1px] min-w-[1px]" />
-          
           {artists.map((artist) => (
             <CarouselItem
               key={artist.id}
-              className="pl-4 pr-4"  // Added right padding for gap
-              // Adjusted width to make 4 full cards with 5th more visible
+              className="pl-4 pr-4"
               style={{
-                width: 'calc(23% - 1.5rem)',
-                minWidth: 'calc(23% - 1.5rem)',
-                flex: '0 0 calc(23% - 1.5rem)'
+                width: getItemWidth(),
+                minWidth: getItemWidth(),
+                flex: `0 0 ${getItemWidth()}`
               }}
             >
               <ArtistProfileCard
