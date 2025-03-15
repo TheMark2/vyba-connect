@@ -43,16 +43,23 @@ const ArtistProfileCard = ({
     <div
       className={cn(
         "flex flex-col overflow-hidden bg-transparent transition-all duration-300",
-        isHovered ? "cursor-pointer" : "cursor-default",
         className
       )}
       onClick={onClick}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
+      style={{
+        cursor: isHovered ? 'pointer' : 'default'
+      }}
     >
       {/* Imagen principal con etiqueta de tipo y botón favorito */}
       <div className="relative aspect-[3/4] w-full overflow-hidden rounded-3xl">
-        <div className="w-full h-full">
+        <div
+          className="w-full h-full transition-transform duration-300"
+          style={{
+            transform: isHovered ? 'scale(1.05)' : 'scale(1)',
+          }}
+        >
           <img
             src={image}
             alt={`${name} - ${type}`}
@@ -70,7 +77,7 @@ const ArtistProfileCard = ({
           </Badge>
           <button
             onClick={handleFavoriteClick}
-            className="h-7 w-7 rounded-full bg-white flex items-center justify-center transition-colors duration-300 hover:bg-gray-100"
+            className="h-7 w-7 rounded-full bg-white flex items-center justify-center transition-colors duration-300"
           >
             <Heart
               className={cn(
@@ -92,6 +99,16 @@ const ArtistProfileCard = ({
           de {priceRange}
         </p>
       </div>
+      
+      {/* CSS for custom cursor */}
+      <style jsx>{`
+        div {
+          cursor: ${isHovered ? 'pointer' : 'default'};
+        }
+        div:hover {
+          cursor: ${isHovered ? 'pointer' : 'default'};
+        }
+      `}</style>
     </div>
   );
 };
