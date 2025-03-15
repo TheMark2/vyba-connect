@@ -65,7 +65,7 @@ const ArtistsList = ({
     } else if (typeof window !== 'undefined' && window.innerWidth < 1280) {
       return 'calc(30% - 1rem)'; // Small desktop: 3 cards + a bit of the next
     } else {
-      return 'calc(23% - 1.5rem)'; // Large desktop: 4 cards + a bit of the next
+      return 'calc(22% - 1rem)'; // Large desktop: 4.5 cards (4 cards + half of the next one)
     }
   };
 
