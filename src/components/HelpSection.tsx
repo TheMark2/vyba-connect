@@ -18,7 +18,7 @@ const HelpSection = ({
           <h2 className="text-3xl md:text-4xl lg:text-5xl font-black mb-6 md:mb-0">
             ¿Tienes dudas?
           </h2>
-          <Button onClick={handleHelpClick} className="bg-[#D4DDFF] text-[#222845] text-base font-medium hover:bg-[#EBEFFF]">
+          <Button onClick={handleHelpClick} className="bg-[#D4DDFF] text-[#222845] text-sm font-bold hover:bg-[#EBEFFF]">
             Ir a Vyba help
           </Button>
         </div>
