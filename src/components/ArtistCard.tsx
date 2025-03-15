@@ -49,14 +49,21 @@ const ArtistCard = ({
         {/* Avatares de los artistas */}
         <div className="flex relative">
           {visibleAvatars.map((avatar, index) => (
-            <Avatar key={index} className="border-2 border-[#F5F1EB] h-7 w-7 -ml-2 first:ml-0" style={{ zIndex: MAX_VISIBLE_AVATARS - index }}>
+            <Avatar 
+              key={index} 
+              className="border-2 border-[#F5F1EB] h-7 w-7 -ml-2 first:ml-0" 
+              style={{ zIndex: index }}
+            >
               <AvatarImage src={avatar} alt={`Artista ${index + 1}`} />
               <AvatarFallback>{name.charAt(0)}</AvatarFallback>
             </Avatar>
           ))}
           
           {extraAvatars > 0 && (
-            <div className="flex items-center justify-center h-7 w-7 text-xs font-medium text-white bg-gray-700 border-2 border-[#F5F1EB] rounded-full -ml-2" style={{ zIndex: MAX_VISIBLE_AVATARS + 1 }}>
+            <div 
+              className="flex items-center justify-center h-7 w-7 text-xs font-medium text-white bg-gray-700 border-2 border-[#F5F1EB] rounded-full -ml-2" 
+              style={{ zIndex: MAX_VISIBLE_AVATARS }}
+            >
               +{extraAvatars}
             </div>
           )}
