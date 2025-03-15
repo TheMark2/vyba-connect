@@ -22,7 +22,7 @@ interface StatsSummaryProps {
 
 const StatsSummary = ({ className }: StatsSummaryProps) => {
   return (
-    <section className={cn("py-12 md:py-14 lg:py-16 bg-[#F1F0FB]", className)}>
+    <section className={cn("px-12 md:px-14 lg:px-16 bg-[#F1F0FB]", className)}>
       <div className="container mx-auto px-6 md:px-10">
         <div className="flex flex-wrap justify-center gap-10 md:gap-20 lg:gap-32">
           <StatsItem count="1.000" label="Artistas registrados" />
