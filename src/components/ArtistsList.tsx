@@ -48,11 +48,12 @@ const ArtistsList = ({
           {artists.map((artist) => (
             <CarouselItem 
               key={artist.id} 
-              className="pl-4 pr-0 md:basis-1/3 lg:basis-1/4 sm:basis-1/2"
-              // The width is calculated to ensure the last item is partially visible
+              className="pl-4 pr-0"
+              // Fixed width to ensure exactly 4 cards fit with 5th partially visible
               style={{ 
-                width: 'calc(100% / 4 - 0.5rem)',
-                minWidth: 'calc(100% / 4 - 0.5rem)',
+                width: 'calc(25% - 1rem)',
+                minWidth: 'calc(25% - 1rem)',
+                flex: '0 0 calc(25% - 1rem)'
               }}
             >
               <ArtistProfileCard
