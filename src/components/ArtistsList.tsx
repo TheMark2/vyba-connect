@@ -31,9 +31,9 @@ const ArtistsList = ({
   onFavoriteToggle,
 }: ArtistsListProps) => {
   return (
-    <div className="relative w-full px-6 md:px-10">
+    <div className="relative w-full">
       <Carousel
-        className="w-full"
+        className="w-full pl-6 md:pl-10"
         opts={{
           align: "start",
           loop: false,
@@ -43,7 +43,7 @@ const ArtistsList = ({
       >
         <CarouselContent className="ml-0">
           {artists.map((artist) => (
-            <CarouselItem key={artist.id} className="pl-4 pr-0 md:basis-1/4 lg:basis-1/4 sm:basis-1/3">
+            <CarouselItem key={artist.id} className="pl-4 pr-2 md:basis-1/3 lg:basis-1/4 sm:basis-1/2">
               <ArtistProfileCard
                 name={artist.name}
                 type={artist.type}
