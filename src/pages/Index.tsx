@@ -280,13 +280,13 @@ const Index = () => {
         >
           <Button 
             onClick={() => toast.success("Búsqueda con IA iniciada")}
-            className="px-8 rounded-full flex items-center gap-2 shadow-lg"
+            className="px-8 py-4 rounded-full flex items-center gap-3 shadow-lg"
             variant="default"
           >
-            <div className="rounded-full bg-secondary p-1">
+            <div className="rounded-full bg-secondary flex items-center justify-center p-2">
               <BrainCircuit className="h-5 w-5" />
             </div>
-            <span>Buscar con IA</span>
+            <span className="mr-1">Buscar con IA</span>
           </Button>
         </motion.div>
       )}
