@@ -369,7 +369,7 @@ const Index = () => {
             </div>
           </div>
         </section>
-        <section>
+        <section className="pb-20">
 
           {/* Lista de artistas recomendados */}
           <ArtistsList artists={filteredArtists} onArtistClick={handleArtistClick} onFavoriteToggle={handleFavoriteToggle} />
