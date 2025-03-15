@@ -1,3 +1,4 @@
+
 import React, { useState } from "react";
 import { Heart } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
@@ -100,15 +101,7 @@ const ArtistProfileCard = ({
         </p>
       </div>
       
-      {/* CSS for custom cursor */}
-      <style jsx>{`
-        div {
-          cursor: ${isHovered ? 'pointer' : 'default'};
-        }
-        div:hover {
-          cursor: ${isHovered ? 'pointer' : 'default'};
-        }
-      `}</style>
+      {/* Removing the style jsx tag that's causing the error */}
     </div>
   );
 };
