@@ -6,6 +6,8 @@ import { motion, useScroll, useTransform } from "framer-motion";
 import { useRef, useState } from "react";
 import * as React from "react";
 import { cn } from "@/lib/utils";
+import { Marquee } from "@/components/ui/marquee";
+import ArtistCard from "@/components/ArtistCard";
 
 // Custom Animated Input component
 const Input = React.forwardRef<HTMLInputElement, React.ComponentProps<"input">>(
@@ -14,7 +16,6 @@ const Input = React.forwardRef<HTMLInputElement, React.ComponentProps<"input">>(
     const [hasValue, setHasValue] = React.useState(false);
     const inputRef = React.useRef<HTMLInputElement>(null);
     
-    // Combine refs
     const combinedRef = React.useCallback(
       (element: HTMLInputElement | null) => {
         if (ref) {
@@ -110,30 +111,34 @@ const Index = () => {
     description: "Conecta con talentosos guitarristas"
   }];
 
-  // Transiciones de opacidad mejoradas con valores más optimizados
   const opacity1 = useTransform(scrollYProgress, [0, 0.19, 0.25, 0.3], [1, 0.9, 0.3, 0]);
   const opacity2 = useTransform(scrollYProgress, [0.19, 0.25, 0.3, 0.43, 0.5, 0.55], [0, 0.3, 0.9, 1, 0.3, 0]);
   const opacity3 = useTransform(scrollYProgress, [0.43, 0.5, 0.55, 1], [0, 0.3, 1, 1]);
 
-  // Efectos de escala refinados para las imágenes
   const scale1 = useTransform(scrollYProgress, [0, 0.19, 0.25], [1, 1.05, 1.1]);
   const scale2 = useTransform(scrollYProgress, [0.19, 0.25, 0.45, 0.5], [0.95, 1, 1.05, 1.1]);
   const scale3 = useTransform(scrollYProgress, [0.45, 0.5, 0.7], [0.95, 1, 1.05]);
 
-  // Efectos de movimiento paralaje para las imágenes - más sutiles
   const moveY1 = useTransform(scrollYProgress, [0, 0.25], ["0%", "-3%"]);
   const moveY2 = useTransform(scrollYProgress, [0.25, 0.5], ["0%", "-3%"]);
   const moveY3 = useTransform(scrollYProgress, [0.5, 0.75], ["0%", "-3%"]);
 
-  // Movimiento sutil en el eje X para dar profundidad
   const moveX1 = useTransform(scrollYProgress, [0, 0.25], ["0%", "1%"]);
   const moveX2 = useTransform(scrollYProgress, [0.25, 0.5], ["0%", "-1%"]);
   const moveX3 = useTransform(scrollYProgress, [0.5, 0.75], ["0%", "1%"]);
 
-  // Transiciones para los tres textos
   const textOpacity1 = useTransform(scrollYProgress, [0, 0.15, 0.25], [1, 0.3, 0]);
   const textOpacity2 = useTransform(scrollYProgress, [0.25, 0.35, 0.45], [0, 1, 0]);
   const textOpacity3 = useTransform(scrollYProgress, [0.45, 0.55, 1], [0, 1, 1]);
+
+  const topArtists = [
+    { name: "Antonia Pedragosa", role: "DJ", rating: 4.9 },
+    { name: "Marco Valiente", role: "Saxofonista", rating: 4.8 },
+    { name: "Sofía Montero", role: "DJ", rating: 4.9 },
+    { name: "Lucas Mendoza", role: "Guitarrista", rating: 4.7 },
+    { name: "Daniela Jiménez", role: "DJ", rating: 4.9 },
+    { name: "Rafael Torres", role: "DJ", rating: 4.8 }
+  ];
 
   return <div className="min-h-screen flex flex-col p-0 m-0">
       <div className="w-full">
@@ -141,13 +146,11 @@ const Index = () => {
       </div>
 
       <main className="flex-1">
-        {/* Sección de scroll animado */}
         <div ref={scrollRef} className="h-[300vh] relative">
           <div className="sticky top-0 h-screen overflow-hidden">
             <div className="relative w-full h-screen overflow-hidden">
               <motion.div className="absolute inset-0 px-6 md:px-10 lg:px-14 xl:px-16 pt-8 pb-32">
                 <motion.div className="relative w-full h-full rounded-[2vw] overflow-hidden">
-                  {/* DJ image layer */}
                   <motion.div className="absolute inset-0 origin-center" style={{
                   opacity: opacity1,
                   scale: scale1,
@@ -157,7 +160,6 @@ const Index = () => {
                     <img src={artists[0].image} alt="DJ performing" className="w-full h-full brightness-75 blur-[2px] object-cover" />
                   </motion.div>
                   
-                  {/* Saxofonista image layer */}
                   <motion.div className="absolute inset-0 origin-center" style={{
                   opacity: opacity2,
                   scale: scale2,
@@ -167,7 +169,6 @@ const Index = () => {
                     <img src={artists[1].image} alt="Saxofonista performing" className="w-full h-full brightness-75 blur-[2px] object-cover" />
                   </motion.div>
                   
-                  {/* Guitarrista image layer - sin padding */}
                   <motion.div className="absolute inset-0 origin-center" style={{
                   opacity: opacity3,
                   scale: scale3,
@@ -177,14 +178,11 @@ const Index = () => {
                     <img src={artists[2].image} alt="Guitarrista performing" className="w-full h-full brightness-75 blur-[2px] object-cover rounded-[2vw]" />
                   </motion.div>
 
-                  {/* Background overlay */}
                   <div className="absolute inset-0 bg-black opacity-50"></div>
                   
-                  {/* Content */}
                   <motion.div className="absolute inset-0 flex flex-col justify-center text-white px-6 md:px-12 lg:px-16">
                     <div className="max-w-2xl mx-0 space-y-14">
                       <div className="relative h-28">
-                        {/* Texto 1: Contacta con los mejores artistas */}
                         <motion.h1 
                           className="text-4xl md:text-5xl lg:text-7xl font-black text-white leading-tight absolute top-0 left-0 w-full" 
                           style={{ opacity: textOpacity1 }}
@@ -192,7 +190,6 @@ const Index = () => {
                           Contacta con los mejores artistas
                         </motion.h1>
                         
-                        {/* Texto 2: De una forma fácil */}
                         <motion.h1 
                           className="text-4xl md:text-5xl lg:text-7xl font-black text-white leading-tight absolute top-0 left-0 w-full" 
                           style={{ opacity: textOpacity2 }}
@@ -200,7 +197,6 @@ const Index = () => {
                           De una forma fácil
                         </motion.h1>
                         
-                        {/* Texto 3: Usa Vyba */}
                         <motion.h1 
                           className="text-4xl md:text-5xl lg:text-7xl font-black text-white leading-tight absolute top-0 left-0 w-full" 
                           style={{ opacity: textOpacity3 }}
@@ -231,35 +227,35 @@ const Index = () => {
           </div>
         </div>
 
-        {/* Nueva sección debajo de la animación scroll */}
-        <section className="py-24 bg-vyba-cream">
-          <div className="container mx-auto">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
-              {/* Imagen a la izquierda en móvil, derecha en desktop */}
-              <div className="md:order-2">
-                <img src="/lovable-uploads/77591a97-10cd-4c8b-b768-5b17483c3d9f.png" alt="DJ en concierto" className="w-full h-auto rounded-2xl shadow-lg object-cover aspect-[4/3]" />
-              </div>
-              
-              {/* Contenido de texto */}
-              <div className="md:order-1">
-                <h2 className="text-4xl md:text-5xl lg:text-6xl font-black mb-8 text-vyba-navy">
-                  No te ralles, usa Vyba
-                </h2>
-                
-                <div className="flex w-full relative max-w-lg mb-8">
-                  <div className="relative w-full flex items-center">
-                    <Input 
-                      type="text" 
-                      placeholder="Buscar artistas" 
-                      className="pr-14 bg-white text-black h-14 rounded-full border-0 shadow-md" 
-                    />
-                    <Button type="submit" size="icon" className="absolute right-1 rounded-full h-12 w-12 flex items-center justify-center">
-                      <BoldSearch />
-                    </Button>
-                  </div>
-                </div>
-              </div>
-            </div>
+        <section className="py-16 bg-white">
+          <div className="container mx-auto mb-8">
+            <h2 className="text-3xl md:text-4xl font-bold mb-2">Artistas destacados</h2>
+            <p className="text-gray-600 mb-8">Descubre los artistas mejor valorados en Vyba</p>
+          </div>
+          
+          <div className="w-full overflow-hidden">
+            <Marquee className="py-4" pauseOnHover>
+              {topArtists.map((artist, index) => (
+                <ArtistCard 
+                  key={index}
+                  name={artist.name}
+                  role={artist.role}
+                  rating={artist.rating}
+                />
+              ))}
+            </Marquee>
+            
+            <Marquee className="py-4" reverse pauseOnHover>
+              {topArtists.map((artist, index) => (
+                <ArtistCard 
+                  key={index + topArtists.length}
+                  name={artist.name}
+                  role={artist.role}
+                  rating={artist.rating}
+                  isReversed
+                />
+              ))}
+            </Marquee>
           </div>
         </section>
       </main>
