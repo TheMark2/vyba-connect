@@ -353,7 +353,7 @@ const Index = () => {
                 </div>
                 <div className="order-2 md:order-2">
                   <img
-                    src="/lovable-uploads/pexels-rovenimages-com-344613-949592"
+                    src="/lovable-uploads/pexels-rovenimages-com-344613-949592.jpg"
                     alt="Búsqueda de artistas"
                     className="w-full h-full object-cover aspect-[4/3] rounded-3xl"
                   />
