@@ -38,9 +38,9 @@ const ArtistCard = ({
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
       style={{
-        // Cambiando la animación a un sutil cambio de opacidad en lugar de transformación
-        opacity: isHovered ? 0.92 : 1,
-        transition: 'opacity 0.3s ease, border-color 0.3s ease'
+        // Cambiando la animación a un sutil cambio de background color
+        backgroundColor: isHovered ? '#EAE6E0' : '#F5F1EB',
+        transition: 'background-color 0.3s ease, border-color 0.3s ease'
       }}
     >
       {/* Rating en la esquina superior derecha */}
