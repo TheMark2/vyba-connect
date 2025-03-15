@@ -11,6 +11,8 @@ import ArtistCard, { CardType } from "@/components/ArtistCard";
 import { toast } from "sonner";
 import TimelineStep from "@/components/TimelineStep";
 import ArtistsList from "@/components/ArtistsList";
+import StatsSummary from "@/components/StatsSummary";
+import HelpSection from "@/components/HelpSection";
 const Input = React.forwardRef<HTMLInputElement, React.ComponentProps<"input">>(({
   className,
   ...props
@@ -357,6 +359,12 @@ const Index = () => {
           </div>
         </section>
 
+        {/* Nueva sección de estadísticas */}
+        <StatsSummary />
+        
+        {/* Nueva sección de ayuda */}
+        <HelpSection />
+
         <section className="py-20 md:py-32 bg-secondary/10">
           <div className="container mx-auto px-6 md:px-10">
             <h2 className="text-3xl md:text-5xl lg:text-7xl font-black text-center mb-20 md:mb-32">
@@ -419,6 +427,7 @@ const Index = () => {
             </div>
           </div>
         </section>
+        
         <section className="pb-20 bg-vyba-cream">
           <ArtistsList artists={filteredArtists} onArtistClick={handleArtistClick} onFavoriteToggle={handleFavoriteToggle} />
         </section>
@@ -427,4 +436,5 @@ const Index = () => {
       <Footer />
     </div>;
 };
+
 export default Index;
