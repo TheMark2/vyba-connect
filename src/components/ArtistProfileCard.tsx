@@ -42,7 +42,7 @@ const ArtistProfileCard = ({
   return (
     <div 
       className={cn(
-        "flex flex-col rounded-3xl overflow-hidden bg-white transition-all duration-300 cursor-pointer",
+        "flex flex-col overflow-hidden bg-transparent transition-all duration-300 cursor-pointer",
         className
       )}
       onClick={onClick}
@@ -52,7 +52,7 @@ const ArtistProfileCard = ({
         <img
           src={image}
           alt={`${name} - ${type}`}
-          className="w-full h-full object-cover"
+          className="w-full h-full object-cover rounded-3xl"
         />
         <div className="absolute top-0 left-0 w-full p-4 flex justify-between">
           <Badge 
@@ -76,15 +76,15 @@ const ArtistProfileCard = ({
       </div>
       
       {/* Información del artista */}
-      <div className="p-5 flex flex-col gap-1">
+      <div className="p-5 flex flex-col gap-1 bg-transparent">
         <div className="flex justify-between items-start">
-          <h3 className="text-2xl font-bold">{name}</h3>
-          <span className="text-2xl font-bold">{rating.toFixed(1)}</span>
+          <h3 className="text-lg font-bold">{name}</h3>
+          <span className="text-lg font-bold">{rating.toFixed(1)}</span>
         </div>
         
-        <p className="text-gray-500 text-lg">{description}</p>
+        <p className="text-gray-500 text-sm">{description}</p>
         
-        <p className="text-2xl font-bold mt-3">
+        <p className="text-lg font-bold mt-2">
           de {priceRange}
         </p>
       </div>

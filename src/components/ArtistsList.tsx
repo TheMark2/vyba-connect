@@ -1,6 +1,13 @@
 
 import React from "react";
 import ArtistProfileCard from "./ArtistProfileCard";
+import { 
+  Carousel, 
+  CarouselContent, 
+  CarouselItem, 
+  CarouselNext, 
+  CarouselPrevious 
+} from "@/components/ui/carousel";
 
 interface Artist {
   id: string;
@@ -25,22 +32,28 @@ const ArtistsList = ({
   onFavoriteToggle,
 }: ArtistsListProps) => {
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
-      {artists.map((artist) => (
-        <ArtistProfileCard
-          key={artist.id}
-          name={artist.name}
-          type={artist.type}
-          description={artist.description}
-          image={artist.image}
-          rating={artist.rating}
-          priceRange={artist.priceRange}
-          isFavorite={artist.isFavorite}
-          onClick={() => onArtistClick && onArtistClick(artist)}
-          onFavoriteToggle={() => onFavoriteToggle && onFavoriteToggle(artist)}
-        />
-      ))}
-    </div>
+    <Carousel className="w-full">
+      <CarouselContent className="-ml-2 md:-ml-4">
+        {artists.map((artist) => (
+          <CarouselItem key={artist.id} className="pl-2 md:pl-4 md:basis-1/2 lg:basis-1/3">
+            <ArtistProfileCard
+              name={artist.name}
+              type={artist.type}
+              description={artist.description}
+              image={artist.image}
+              rating={artist.rating}
+              priceRange={artist.priceRange}
+              isFavorite={artist.isFavorite}
+              onClick={() => onArtistClick && onArtistClick(artist)}
+              onFavoriteToggle={() => onFavoriteToggle && onFavoriteToggle(artist)}
+              className="h-full"
+            />
+          </CarouselItem>
+        ))}
+      </CarouselContent>
+      <CarouselPrevious className="left-1 md:-left-12 bg-black text-white hover:bg-black/80" />
+      <CarouselNext className="right-1 md:-right-12 bg-black text-white hover:bg-black/80" />
+    </Carousel>
   );
 };
 
