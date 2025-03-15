@@ -66,6 +66,7 @@ const Index = () => {
   const [showFixedSearch, setShowFixedSearch] = useState(false);
   const [fixedSearchQuery, setFixedSearchQuery] = useState("");
   const isMobile = useIsMobile();
+  const [activeArtistIndex, setActiveArtistIndex] = useState(0);
   
   const {
     scrollYProgress
@@ -292,20 +293,51 @@ const Index = () => {
         </div>
       </div>
       
-      <div className="px-4 mt-6 flex flex-col gap-4">
-        {artists.map((artist, index) => (
-          <div key={index} className="relative w-full h-[200px] rounded-3xl overflow-hidden">
-            <img 
-              src={artist.image} 
-              alt={artist.type}
-              className="absolute inset-0 w-full h-full object-cover"
-            />
-            <div className="absolute inset-0 bg-black/30"></div>
-            <div className="absolute inset-0 flex items-center justify-center">
-              <h3 className="text-white text-2xl font-bold">{artist.type}</h3>
-            </div>
+      <div className="w-full mt-6 relative">
+        <div className="w-full overflow-hidden">
+          <div 
+            className="flex transition-transform duration-300 px-4"
+            style={{
+              transform: `translateX(calc(-${activeArtistIndex * 100}% + ${activeArtistIndex > 0 ? '10%' : '30%'}))`
+            }}
+          >
+            {artists.map((artist, index) => (
+              <div
+                key={index}
+                className={cn(
+                  "relative h-[200px] rounded-3xl overflow-hidden flex-shrink-0 transition-all duration-300",
+                  index === activeArtistIndex ? "w-[80%] mx-[10%] opacity-100 z-10" : "w-[60%] mx-[5%] opacity-70"
+                )}
+                onClick={() => setActiveArtistIndex(index)}
+              >
+                <img 
+                  src={artist.image} 
+                  alt={artist.type}
+                  className="absolute inset-0 w-full h-full object-cover"
+                />
+                <div className="absolute inset-0 bg-black/30"></div>
+                <div className="absolute inset-0 flex items-center justify-center">
+                  <h3 className="text-white text-2xl font-bold">{artist.type}</h3>
+                </div>
+              </div>
+            ))}
           </div>
-        ))}
+        </div>
+        
+        {/* Indicadores de página */}
+        <div className="flex justify-center gap-1 mt-6">
+          {artists.map((_, index) => (
+            <button
+              key={index}
+              className={cn(
+                "h-2 rounded-full transition-all",
+                index === activeArtistIndex ? "w-6 bg-black" : "w-2 bg-gray-300"
+              )}
+              onClick={() => setActiveArtistIndex(index)}
+              aria-label={`Ir a la imagen ${index + 1}`}
+            />
+          ))}
+        </div>
       </div>
     </div>
   );
@@ -503,4 +535,3 @@ const Index = () => {
 };
 
 export default Index;
-
