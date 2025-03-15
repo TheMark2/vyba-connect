@@ -346,7 +346,7 @@ const Index = () => {
               {/* Primer paso */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-center mb-12">
                 <div className="order-1 md:order-1">
-                  <h2 className="text-2xl font-bold mb-4">Explora y elige tu artista</h2>
+                  <h2 className="text-5xl font-black mb-4">Explora y elige tu artista</h2>
                   <p className="text-gray-600">
                     Descubre el talento que mejor se adapta a tu evento. Filtra por género, estilo o popularidad y encuentra al artista perfecto en segundos.
                   </p>
@@ -370,7 +370,7 @@ const Index = () => {
                   />
                 </div>
                 <div className="order-1 md:order-2">
-                  <h2 className="text-2xl font-bold mb-4">Contacta con el artista de una forma fácil</h2>
+                  <h2 className="text-5xl font-black mb-4">Contacta con el artista de una forma fácil</h2>
                   <p className="text-gray-600">
                     Contacta de una forma fácil y rápida, un proceso seguro mediante a nuestro sistema de mensajes.
                   </p>
@@ -380,7 +380,7 @@ const Index = () => {
               {/* Tercer paso */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-center mb-12">
                 <div className="order-1 md:order-1">
-                  <h2 className="text-2xl font-bold mb-4">Escribe una reseña</h2>
+                  <h2 className="text-5xl font-black mb-4">Escribe una reseña</h2>
                   <p className="text-gray-600">
                     Comparte tu experiencia con la comunidad y ayuda a otros a encontrar al artista perfecto para sus eventos.
                   </p>
