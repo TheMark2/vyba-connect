@@ -1,6 +1,10 @@
+
 import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { useState } from "react";
+
 export type CardType = "género" | "tipo";
+
 interface ArtistCardProps {
   type: CardType;
   name: string;
@@ -8,20 +12,36 @@ interface ArtistCardProps {
   rating: number;
   artistAvatars?: string[];
   isReversed?: boolean;
+  onClick?: () => void;
 }
+
 const ArtistCard = ({
   type,
   name,
   artistCount,
   rating,
   artistAvatars = [],
-  isReversed = false
+  isReversed = false,
+  onClick
 }: ArtistCardProps) => {
+  const [isHovered, setIsHovered] = useState(false);
+  
   // Limitar a mostrar máximo 3 avatares y calcular los extras
   const MAX_VISIBLE_AVATARS = 3;
   const visibleAvatars = artistAvatars.slice(0, MAX_VISIBLE_AVATARS);
   const extraAvatars = artistAvatars.length > MAX_VISIBLE_AVATARS ? artistAvatars.length - MAX_VISIBLE_AVATARS : 0;
-  return <div className={`flex flex-col items-start bg-[#F5F1EB] p-6 rounded-3xl min-w-[400px] mx-3 transition-all duration-300 relative`}>
+  
+  return (
+    <div 
+      className={`flex flex-col items-start bg-[#F5F1EB] p-6 rounded-3xl min-w-[400px] mx-3 transition-all duration-300 relative cursor-pointer border-2 border-transparent ${isHovered ? 'border-primary' : ''}`}
+      onClick={onClick}
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
+      style={{
+        transform: isHovered ? 'translateY(-4px)' : 'translateY(0)',
+        transition: 'transform 0.3s ease, border-color 0.3s ease'
+      }}
+    >
       {/* Rating en la esquina superior derecha */}
       <div className="absolute top-6 right-6 flex items-center gap-1">
         <span className="font-bold text-base">{rating.toFixed(1)}</span>
@@ -33,7 +53,7 @@ const ArtistCard = ({
       </Badge>
       
       {/* Nombre de la categoría */}
-      <h3 className="font-bold text-lg mb-2">{name}</h3>
+      <h3 className="font-bold text-xl mb-2">{name}</h3>
       
       {/* Conteo de artistas y avatares */}
       <div className="flex items-center gap-4">
@@ -41,20 +61,33 @@ const ArtistCard = ({
         
         {/* Avatares de los artistas */}
         <div className="flex relative">
-          {visibleAvatars.map((avatar, index) => <Avatar key={index} className="border-2 border-[#F5F1EB] h-7 w-7 -ml-2 first:ml-0" style={{
-          zIndex: index
-        }}>
+          {visibleAvatars.map((avatar, index) => (
+            <Avatar 
+              key={index} 
+              className="border-2 border-[#F5F1EB] h-7 w-7 -ml-2 first:ml-0" 
+              style={{
+                zIndex: visibleAvatars.length - index  // Cambiamos el z-index para que las de la derecha estén arriba
+              }}
+            >
               <AvatarImage src={avatar} alt={`Artista ${index + 1}`} />
               <AvatarFallback>{name.charAt(0)}</AvatarFallback>
-            </Avatar>)}
+            </Avatar>
+          ))}
           
-          {extraAvatars > 0 && <div className="flex items-center justify-center h-7 w-7 text-xs font-medium text-white bg-gray-700 border-2 border-[#F5F1EB] rounded-full -ml-2" style={{
-          zIndex: MAX_VISIBLE_AVATARS
-        }}>
+          {extraAvatars > 0 && (
+            <div 
+              className="flex items-center justify-center h-7 w-7 text-xs font-medium text-white bg-gray-700 border-2 border-[#F5F1EB] rounded-full -ml-2" 
+              style={{
+                zIndex: MAX_VISIBLE_AVATARS + 1  // El contador siempre estará por encima de todos
+              }}
+            >
               +{extraAvatars}
-            </div>}
+            </div>
+          )}
         </div>
       </div>
-    </div>;
+    </div>
+  );
 };
+
 export default ArtistCard;

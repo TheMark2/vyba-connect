@@ -8,6 +8,7 @@ import * as React from "react";
 import { cn } from "@/lib/utils";
 import { Marquee } from "@/components/ui/marquee";
 import ArtistCard, { CardType } from "@/components/ArtistCard";
+import { toast } from "sonner";
 import { MUSIC_GENRES, MUSICIAN_TYPES } from "@/constants/music";
 
 const Input = React.forwardRef<HTMLInputElement, React.ComponentProps<"input">>(
@@ -153,6 +154,10 @@ const Index = () => {
     { type: "tipo" as CardType, name: "Guitarrista", artistCount: 14, rating: 4.8, artistAvatars: Array(7).fill("/lovable-uploads/77591a97-10cd-4c8b-b768-5b17483c3d9f.png") }
   ];
 
+  const handleCardClick = (name: string, type: CardType) => {
+    toast.success(`Has seleccionado ${type === "género" ? "el género" : "el tipo"} ${name}`);
+  };
+
   return <div className="min-h-screen flex flex-col p-0 m-0">
       <div className="w-full">
         <Navbar className="mx-auto" />
@@ -251,6 +256,7 @@ const Index = () => {
                   artistCount={card.artistCount}
                   rating={card.rating}
                   artistAvatars={card.artistAvatars}
+                  onClick={() => handleCardClick(card.name, card.type)}
                 />
               ))}
             </Marquee>
@@ -264,6 +270,7 @@ const Index = () => {
                   artistCount={card.artistCount}
                   rating={card.rating}
                   artistAvatars={card.artistAvatars}
+                  onClick={() => handleCardClick(card.name, card.type)}
                 />
               ))}
             </Marquee>
