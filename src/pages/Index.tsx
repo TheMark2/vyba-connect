@@ -11,7 +11,6 @@ import ArtistCard, { CardType } from "@/components/ArtistCard";
 import { toast } from "sonner";
 import TimelineStep from "@/components/TimelineStep";
 import ArtistsList from "@/components/ArtistsList";
-
 const Input = React.forwardRef<HTMLInputElement, React.ComponentProps<"input">>(({
   className,
   ...props
@@ -54,36 +53,29 @@ const Input = React.forwardRef<HTMLInputElement, React.ComponentProps<"input">>(
       </div>;
 });
 Input.displayName = "Input";
-
 const BoldSearch = () => <Search className="h-5 w-5 stroke-[2.5px]" />;
-
 const Index = () => {
   const scrollRef = useRef(null);
   const [searchQuery, setSearchQuery] = useState("");
   const [showFixedSearch, setShowFixedSearch] = useState(false);
   const [fixedSearchQuery, setFixedSearchQuery] = useState("");
-  
   const {
     scrollYProgress
   } = useScroll({
     target: scrollRef,
     offset: ["start start", "end start"]
   });
-
   useEffect(() => {
     const handleScroll = () => {
       const scrollPosition = window.scrollY;
       const shouldShowSearch = scrollPosition > window.innerHeight * 3;
-      
       if (shouldShowSearch !== showFixedSearch) {
         setShowFixedSearch(shouldShowSearch);
       }
     };
-
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   }, [showFixedSearch]);
-
   const artists = [{
     type: "DJ",
     image: "/lovable-uploads/7e7c2282-785a-46fb-84b2-f7b14b762e64.png",
@@ -97,7 +89,6 @@ const Index = () => {
     image: "/lovable-uploads/440a191c-d45b-4031-acbe-509e602e5d22.png",
     description: "Conecta con talentosos guitarristas"
   }];
-
   const opacity1 = useTransform(scrollYProgress, [0, 0.19, 0.25, 0.3], [1, 0.9, 0.3, 0]);
   const opacity2 = useTransform(scrollYProgress, [0.19, 0.25, 0.3, 0.43, 0.5, 0.55], [0, 0.3, 0.9, 1, 0.3, 0]);
   const opacity3 = useTransform(scrollYProgress, [0.43, 0.5, 0.55, 1], [0, 0.3, 1, 1]);
@@ -113,7 +104,6 @@ const Index = () => {
   const textOpacity1 = useTransform(scrollYProgress, [0, 0.15, 0.25], [1, 0.3, 0]);
   const textOpacity2 = useTransform(scrollYProgress, [0.25, 0.35, 0.45], [0, 1, 0]);
   const textOpacity3 = useTransform(scrollYProgress, [0.45, 0.55, 1], [0, 1, 1]);
-
   const topArtists = [{
     name: "Antonia Pedragosa",
     role: "DJ",
@@ -139,7 +129,6 @@ const Index = () => {
     role: "DJ",
     rating: 4.8
   }];
-
   const genreCards = [{
     type: "género" as CardType,
     name: "Pop",
@@ -165,7 +154,6 @@ const Index = () => {
     rating: 4.6,
     artistAvatars: Array(7).fill("/lovable-uploads/77591a97-10cd-4c8b-b768-5b17483c3d9f.png")
   }];
-
   const typeCards = [{
     type: "tipo" as CardType,
     name: "DJ",
@@ -191,11 +179,9 @@ const Index = () => {
     rating: 4.8,
     artistAvatars: Array(7).fill("/lovable-uploads/77591a97-10cd-4c8b-b768-5b17483c3d9f.png")
   }];
-
   const handleCardClick = (name: string, type: CardType) => {
     toast.success(`Has seleccionado ${type === "género" ? "el género" : "el tipo"} ${name}`);
   };
-
   const recommendedArtists = [{
     id: "1",
     name: "Antonia Pedragosa",
@@ -251,45 +237,40 @@ const Index = () => {
     priceRange: "450-550€",
     isFavorite: false
   }];
-
   const musicCategories = ["Reggaeton", "Pop", "House", "House", "Techno", "Jazz", "Rock"];
   const [activeCategory, setActiveCategory] = useState<string | null>(null);
-
   const handleArtistClick = (artist: any) => {
     toast.success(`Has seleccionado a ${artist.name}`);
   };
-  
   const handleFavoriteToggle = (artist: any) => {
     toast(`${artist.isFavorite ? "Eliminado de" : "Añadido a"} favoritos: ${artist.name}`);
   };
-
   const filteredArtists = activeCategory ? recommendedArtists.filter(artist => artist.type.toLowerCase().includes(activeCategory.toLowerCase()) || artist.description.toLowerCase().includes(activeCategory.toLowerCase())) : recommendedArtists;
-  
   return <div className="min-h-screen flex flex-col p-0 m-0">
       <div className="w-full">
         <Navbar className="mx-auto" />
       </div>
 
-      {showFixedSearch && (
-        <motion.div 
-          initial={{ opacity: 0, y: 50 }}
-          animate={{ opacity: 1, y: 0 }}
-          exit={{ opacity: 0, y: 50 }}
-          transition={{ duration: 0.3, ease: "easeOut" }}
-          className="fixed bottom-6 left-0 right-0 z-50 px-6 md:px-10 flex justify-center"
-        >
-          <Button 
-            onClick={() => toast.success("Búsqueda con IA iniciada")}
-            className="px-8 rounded-full flex items-center gap-2 shadow-lg"
-            variant="default"
-          >
-            <div className="rounded-full bg-secondary p-1">
+      {showFixedSearch && <motion.div initial={{
+      opacity: 0,
+      y: 50
+    }} animate={{
+      opacity: 1,
+      y: 0
+    }} exit={{
+      opacity: 0,
+      y: 50
+    }} transition={{
+      duration: 0.3,
+      ease: "easeOut"
+    }} className="fixed bottom-6 left-0 right-0 z-50 px-6 md:px-10 flex justify-center">
+          <Button onClick={() => toast.success("Búsqueda con IA iniciada")} className="px-8 rounded-full flex items-center gap-2 shadow-lg" variant="default">
+            <div className="">
               <BrainCircuit className="h-5 w-5" />
             </div>
             <span>Buscar con IA</span>
           </Button>
-        </motion.div>
-      )}
+        </motion.div>}
 
       <main className="flex-1">
         <div ref={scrollRef} className="h-[300vh] relative">
@@ -446,5 +427,4 @@ const Index = () => {
       <Footer />
     </div>;
 };
-
 export default Index;
