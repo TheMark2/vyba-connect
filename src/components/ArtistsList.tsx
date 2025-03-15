@@ -152,7 +152,7 @@ const ArtistsList = ({
                 isFavorite={artist.isFavorite}
                 onClick={() => onArtistClick && onArtistClick(artist)}
                 onFavoriteToggle={() => onFavoriteToggle && onFavoriteToggle(artist)}
-                className="h-full hover:scale-[1.02] transition-transform duration-300"
+                className="h-full"
               />
             </CarouselItem>
           ))}
