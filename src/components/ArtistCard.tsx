@@ -37,7 +37,7 @@ const ArtistCard = ({
       </div>
       
       {/* Badge de tipo */}
-      <Badge variant="outline" className="bg-white text-black mb-5 text-sm rounded-full border-0">
+      <Badge variant="outline" className="bg-white text-black mb-5 text-sm rounded-full border-0 py-3 px-6">
         {type === "género" ? "Género" : "Tipo"}
       </Badge>
       
