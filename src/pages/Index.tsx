@@ -1,5 +1,5 @@
 import { Button } from "@/components/ui/button";
-import { Search } from "lucide-react";
+import { Search, BrainCircuit } from "lucide-react";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { motion, useScroll, useTransform } from "framer-motion";
@@ -276,23 +276,16 @@ const Index = () => {
           animate={{ opacity: 1, y: 0 }}
           exit={{ opacity: 0, y: 50 }}
           transition={{ duration: 0.3, ease: "easeOut" }}
-          className="fixed bottom-6 left-0 right-0 z-50 px-6 md:px-10 flex justify-center gap-3"
+          className="fixed bottom-6 left-0 right-0 z-50 px-6 md:px-10 flex justify-center"
         >
           <Button 
-            onClick={() => toast.success("Búsqueda iniciada")}
-            className="px-6 rounded-full flex items-center gap-2 shadow-lg"
+            onClick={() => toast.success("Búsqueda con IA iniciada")}
+            className="px-8 rounded-full flex items-center gap-2 shadow-lg"
             variant="default"
           >
-            <BoldSearch />
-            <span>Buscar artistas</span>
-          </Button>
-          
-          <Button 
-            onClick={() => toast.success("Búsqueda con IA iniciada")}
-            className="px-6 rounded-full flex items-center gap-2 shadow-lg"
-            style={{ backgroundColor: "#FFEFD4", color: "#222845" }}
-          >
-            <BoldSearch />
+            <div className="rounded-full bg-secondary p-1">
+              <BrainCircuit className="h-5 w-5" />
+            </div>
             <span>Buscar con IA</span>
           </Button>
         </motion.div>
