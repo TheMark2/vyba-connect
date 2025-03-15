@@ -1,4 +1,3 @@
-
 import React, { useRef, useState, useEffect } from "react";
 import ArtistProfileCard from "./ArtistProfileCard";
 import {
@@ -132,10 +131,13 @@ const ArtistsList = ({
           className="-ml-4"
           data-carousel-content
         >
-          {artists.map((artist) => (
+          {artists.map((artist, index) => (
             <CarouselItem
               key={artist.id}
-              className="pl-4 pr-4"
+              className={cn(
+                "pl-4 pr-4",
+                index === 0 && current === 0 ? "ml-8" : "ml-0"
+              )}
               style={{
                 width: getItemWidth(),
                 minWidth: getItemWidth(),
