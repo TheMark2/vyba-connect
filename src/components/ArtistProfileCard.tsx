@@ -57,7 +57,7 @@ const ArtistProfileCard = ({
         <div
           className="w-full h-full transition-transform duration-300"
           style={{
-            transform: isHovered ? 'scale(1.05)' : 'scale(1)',
+            transform: isHovered ? 'scale(1.0)' : 'scale(1)',
           }}
         >
           <img
