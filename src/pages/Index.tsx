@@ -47,7 +47,7 @@ const Input = React.forwardRef<HTMLInputElement, React.ComponentProps<"input">>(
               "absolute pointer-events-none transition-all duration-300 text-black font-bold",
               shouldFloatLabel 
                 ? "transform -translate-y-1 text-xs left-6 top-3" 
-                : "transform translate-y-0 text-base left-6 top-4"
+                : "transform translate-y-0 text-base left-6 top-1/2 -mt-3"
             )}
           >
             {props.placeholder}
@@ -57,7 +57,8 @@ const Input = React.forwardRef<HTMLInputElement, React.ComponentProps<"input">>(
           {...props}
           placeholder=""
           className={cn(
-            "flex h-10 w-full rounded-md border border-input bg-background px-6 py-2 text-base file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm pt-6",
+            "flex h-14 w-full rounded-md border border-input bg-background px-6 py-2 text-base file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm",
+            hasValue || isFocused ? "pt-5 pb-1" : "py-3",
             className
           )}
           ref={combinedRef}
@@ -80,6 +81,11 @@ const Input = React.forwardRef<HTMLInputElement, React.ComponentProps<"input">>(
 );
 
 Input.displayName = "Input";
+
+// Bold Search Icon Component
+const BoldSearch = () => (
+  <Search className="h-5 w-5 stroke-[2.5px]" />
+);
 
 const Index = () => {
   const scrollRef = useRef(null);
@@ -213,7 +219,7 @@ const Index = () => {
                             onChange={e => setSearchQuery(e.target.value)} 
                           />
                           <Button type="submit" size="icon" className="absolute right-2 rounded-full h-11 w-11 flex items-center justify-center">
-                            <Search className="h-5 w-5" />
+                            <BoldSearch />
                           </Button>
                         </div>
                       </motion.div>
@@ -248,7 +254,7 @@ const Index = () => {
                       className="pr-14 bg-white text-black h-14 rounded-full border-0 shadow-md" 
                     />
                     <Button type="submit" size="icon" className="absolute right-1 rounded-full h-12 w-12 flex items-center justify-center">
-                      <Search className="h-5 w-5" />
+                      <BoldSearch />
                     </Button>
                   </div>
                 </div>
