@@ -1,3 +1,4 @@
+
 import { Button } from "@/components/ui/button";
 import { Search, BrainCircuit } from "lucide-react";
 import Navbar from "@/components/Navbar";
@@ -294,19 +295,19 @@ const Index = () => {
         </div>
       </div>
       
-      <div className="relative w-full mt-4 pl-6 overflow-visible">
+      <div className="relative w-full mt-4">
         <Carousel
           opts={{
-            align: "start",
+            align: "center",
             loop: true,
             containScroll: false,
           }}
-          className="w-full -mr-6"
+          className="w-full"
           onMouseDown={(e) => e.stopPropagation()}
         >
-          <CarouselContent className="-ml-4">
+          <CarouselContent>
             {artists.map((artist, index) => (
-              <CarouselItem key={index} className="pl-4 basis-[80%] md:basis-1/2 lg:basis-1/3">
+              <CarouselItem key={index} className="basis-[60%] md:basis-1/2 lg:basis-1/3 px-1">
                 <div className="h-[370px] relative rounded-[30px] overflow-hidden">
                   <img 
                     src={index === 1 ? "/lovable-uploads/b1d87308-8791-4bd4-bd43-e4f7cf7d9042.png" : artist.image} 
@@ -517,4 +518,3 @@ const Index = () => {
 };
 
 export default Index;
-
