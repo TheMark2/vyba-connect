@@ -1,3 +1,4 @@
+
 import React, { useRef, useState, useEffect } from "react";
 import ArtistProfileCard from "./ArtistProfileCard";
 import {
@@ -87,7 +88,7 @@ const ArtistsList = ({
   };
 
   return (
-    <div className="relative w-full px-4 md:px-6 lg:px-8 xl:px-12" ref={carouselRef}>      
+    <div className="relative w-full" ref={carouselRef}>      
       <Carousel
         className="w-full"
         setApi={setApi}
