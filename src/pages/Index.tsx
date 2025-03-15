@@ -263,59 +263,47 @@ const Index = () => {
           </div>
         </section>
 
-        <section className="py-20 bg-white">
+        <section className="py-20 md:py-32 bg-white">
           <div className="container mx-auto px-6 md:px-10">
-            <h2 className="text-3xl md:text-7xl font-black text-center mb-24">
+            <h2 className="text-3xl md:text-5xl lg:text-7xl font-black text-center mb-20 md:mb-32">
               Contratar a un artista nunca había sido tan fácil
             </h2>
 
-            <div className="max-w-6xl mx-auto">
-              <TimelineStep stepNumber={1} title="Busca entre todos los artistas disponibles" description="Busca con Rita y encuentra en pocos minutos al artista que mejor se adapte a tus condiciones.">
-                <div className="bg-vyba-cream rounded-xl overflow-hidden">
-                  <div className="bg-white rounded-lg p-5 border-vyba-beige/30 border">
-                    <div className="flex gap-2 mb-4">
-                      <div className="bg-vyba-blue text-vyba-navy font-medium text-sm py-1 px-3 rounded-full">Busca con IA</div>
-                      <div className="bg-gray-100 text-gray-700 font-medium text-sm py-1 px-3 rounded-full">Filtros</div>
-                    </div>
-                    <div className="bg-vyba-beige h-24 rounded-lg"></div>
-                  </div>
-                </div>
+            <div className="max-w-7xl mx-auto">
+              <TimelineStep 
+                title="Busca entre todos los artistas disponibles" 
+                description="Busca con Rita y encuentra en pocos minutos al artista que mejor se adapte a tus condiciones."
+                imagePosition="right"
+              >
+                <img 
+                  src="/lovable-uploads/c89ee394-3c08-48f6-b69b-bddd81dffa8b.png" 
+                  alt="Búsqueda de artistas"
+                  className="w-full h-full object-cover aspect-[4/3]" 
+                />
               </TimelineStep>
 
-              <TimelineStep stepNumber={2} title="Contacta con el artista de una forma fácil" description="Contacta de una forma fácil y rápida, un proceso seguro mediante a nuestro sistema de mensajes">
-                <div className="bg-vyba-cream rounded-xl overflow-hidden">
-                  <div className="bg-white rounded-lg p-5 border-vyba-beige/30 border">
-                    <div className="text-center mb-4">
-                      <div className="font-medium text-vyba-navy">Fines de semana</div>
-                      <div className="text-2xl font-bold text-vyba-navy">100-200€</div>
-                    </div>
-                    <Button className="w-full bg-vyba-blue text-vyba-navy hover:bg-vyba-blue/90">
-                      Contactar
-                    </Button>
-                  </div>
-                </div>
+              <TimelineStep 
+                title="Contacta con el artista de una forma fácil" 
+                description="Contacta de una forma fácil y rápida, un proceso seguro mediante a nuestro sistema de mensajes."
+                imagePosition="left"
+              >
+                <img 
+                  src="/lovable-uploads/7e7c2282-785a-46fb-84b2-f7b14b762e64.png" 
+                  alt="Contacto con artistas"
+                  className="w-full h-full object-cover aspect-[4/3]" 
+                />
               </TimelineStep>
 
-              <TimelineStep stepNumber={3} title="Escribe una reseña" description="Comparte tu experiencia con la comunidad y ayuda a otros a encontrar al artista perfecto para sus eventos." isLast={true}>
-                <div className="bg-vyba-cream rounded-xl overflow-hidden">
-                  <div className="bg-white rounded-lg p-5 border-vyba-beige/30 border">
-                    <div className="flex items-center gap-3 mb-4">
-                      <div className="w-10 h-10 bg-vyba-blue rounded-full flex items-center justify-center text-vyba-navy font-bold">VY</div>
-                      <div className="font-medium text-vyba-navy">DJ Antonio</div>
-                    </div>
-                    <Button variant="outline" className="w-full mb-4 border-vyba-blue text-vyba-navy hover:bg-vyba-blue/10">
-                      Escribe una reseña
-                    </Button>
-                    <div className="flex gap-1 mb-3">
-                      {[1, 2, 3, 4, 5].map(star => (
-                        <svg key={star} className="w-5 h-5 text-vyba-blue" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
-                          <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path>
-                        </svg>
-                      ))}
-                    </div>
-                    <div className="h-20 bg-vyba-beige rounded-lg"></div>
-                  </div>
-                </div>
+              <TimelineStep 
+                title="Escribe una reseña" 
+                description="Comparte tu experiencia con la comunidad y ayuda a otros a encontrar al artista perfecto para sus eventos."
+                imagePosition="right"
+              >
+                <img 
+                  src="/lovable-uploads/440a191c-d45b-4031-acbe-509e602e5d22.png" 
+                  alt="Escribir reseñas"
+                  className="w-full h-full object-cover aspect-[4/3]" 
+                />
               </TimelineStep>
             </div>
           </div>
