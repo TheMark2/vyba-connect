@@ -11,6 +11,8 @@ import ArtistCard, { CardType } from "@/components/ArtistCard";
 import { toast } from "sonner";
 import { MUSIC_GENRES, MUSICIAN_TYPES } from "@/constants/music";
 import TimelineStep from "@/components/TimelineStep";
+import ArtistsList from "@/components/ArtistsList";
+
 const Input = React.forwardRef<HTMLInputElement, React.ComponentProps<"input">>(({
   className,
   ...props
@@ -169,6 +171,91 @@ const Index = () => {
   const handleCardClick = (name: string, type: CardType) => {
     toast.success(`Has seleccionado ${type === "género" ? "el género" : "el tipo"} ${name}`);
   };
+
+  // Datos para la sección de artistas recomendados
+  const recommendedArtists = [
+    {
+      id: "1",
+      name: "Antonia Pedragosa",
+      type: "DJ",
+      description: "DJ para todo tipo de eventos",
+      image: "/lovable-uploads/7e7c2282-785a-46fb-84b2-f7b14b762e64.png",
+      rating: 4.9,
+      priceRange: "400-500€",
+      isFavorite: false
+    },
+    {
+      id: "2",
+      name: "Marco Valiente",
+      type: "Saxofonista",
+      description: "Saxofonista para eventos exclusivos",
+      image: "/lovable-uploads/64cabbe3-ce62-4190-830d-0e5defd31a1b.png",
+      rating: 4.8,
+      priceRange: "450-550€",
+      isFavorite: false
+    },
+    {
+      id: "3",
+      name: "Sofía Montero",
+      type: "DJ",
+      description: "DJ especializada en bodas y eventos",
+      image: "/lovable-uploads/c89ee394-3c08-48f6-b69b-bddd81dffa8b.png",
+      rating: 4.9,
+      priceRange: "400-500€",
+      isFavorite: false
+    },
+    {
+      id: "4",
+      name: "Lucas Mendoza",
+      type: "Guitarrista",
+      description: "Guitarrista versátil para cualquier evento",
+      image: "/lovable-uploads/440a191c-d45b-4031-acbe-509e602e5d22.png",
+      rating: 4.7,
+      priceRange: "350-450€",
+      isFavorite: false
+    },
+    {
+      id: "5",
+      name: "Daniela Jiménez",
+      type: "DJ",
+      description: "DJ con años de experiencia en festivales",
+      image: "/lovable-uploads/a3c6b43a-dd61-4889-ae77-cb1016e65371.png",
+      rating: 4.9,
+      priceRange: "500-600€",
+      isFavorite: false
+    },
+    {
+      id: "6",
+      name: "Rafael Torres",
+      type: "DJ",
+      description: "DJ especializado en música electrónica",
+      image: "/lovable-uploads/d79d697f-5c21-443c-bc75-d988a2dbc770.png",
+      rating: 4.8,
+      priceRange: "450-550€",
+      isFavorite: false
+    }
+  ];
+
+  // Categorías de música para los filtros
+  const musicCategories = ["Reggaeton", "Pop", "House", "House", "Techno", "Jazz", "Rock"];
+  const [activeCategory, setActiveCategory] = useState<string | null>(null);
+
+  // Manejadores de eventos para las tarjetas de artistas
+  const handleArtistClick = (artist: any) => {
+    toast.success(`Has seleccionado a ${artist.name}`);
+  };
+
+  const handleFavoriteToggle = (artist: any) => {
+    toast(`${artist.isFavorite ? "Eliminado de" : "Añadido a"} favoritos: ${artist.name}`);
+  };
+
+  // Filtrado de artistas según la categoría seleccionada
+  const filteredArtists = activeCategory
+    ? recommendedArtists.filter(artist => 
+        artist.type.toLowerCase().includes(activeCategory.toLowerCase()) || 
+        artist.description.toLowerCase().includes(activeCategory.toLowerCase()))
+    : recommendedArtists;
+
   return <div className="min-h-screen flex flex-col p-0 m-0">
       <div className="w-full">
         <Navbar className="mx-auto" />
@@ -280,9 +367,46 @@ const Index = () => {
             </div>
           </div>
         </section>
+
+        {/* Nueva sección de artistas recomendados */}
+        <section className="py-20 md:py-32 bg-vyba-cream">
+          <div className="container mx-auto px-6 md:px-10">
+            <h2 className="text-3xl md:text-5xl lg:text-7xl font-black text-center mb-12 md:mb-20">
+              Los que te recomendamos
+            </h2>
+
+            {/* Filtros de categorías */}
+            <div className="flex flex-wrap gap-3 mb-10 justify-center">
+              {musicCategories.map((category, index) => (
+                <button
+                  key={index}
+                  className={cn(
+                    "px-5 py-3 rounded-full text-sm font-medium transition-colors",
+                    activeCategory === category
+                      ? "bg-black text-white"
+                      : "bg-[#F5F1EB] hover:bg-[#EAE6E0]"
+                  )}
+                  onClick={() => setActiveCategory(
+                    activeCategory === category ? null : category
+                  )}
+                >
+                  {category}
+                </button>
+              ))}
+            </div>
+
+            {/* Lista de artistas recomendados */}
+            <ArtistsList 
+              artists={filteredArtists}
+              onArtistClick={handleArtistClick}
+              onFavoriteToggle={handleFavoriteToggle}
+            />
+          </div>
+        </section>
       </main>
 
       <Footer />
     </div>;
 };
+
 export default Index;
