@@ -264,7 +264,6 @@ const Index = () => {
                   artistCount={card.artistCount}
                   rating={card.rating}
                   artistAvatars={card.artistAvatars}
-                  isReversed
                 />
               ))}
             </Marquee>
