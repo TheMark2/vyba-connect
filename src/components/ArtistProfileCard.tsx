@@ -3,6 +3,8 @@ import React, { useState, useRef } from "react";
 import { Heart } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
+import { toast } from "sonner";
+
 interface ArtistProfileCardProps {
   name: string;
   type: string;
@@ -15,6 +17,7 @@ interface ArtistProfileCardProps {
   className?: string;
   onClick?: () => void;
 }
+
 const ArtistProfileCard = ({
   name,
   type,
@@ -29,11 +32,30 @@ const ArtistProfileCard = ({
 }: ArtistProfileCardProps) => {
   const [favorite, setFavorite] = useState(isFavorite);
   const [isHovered, setIsHovered] = useState(false);
+  const [isAnimating, setIsAnimating] = useState(false);
   const lastClickTimeRef = useRef<number>(0);
   
   const handleFavoriteClick = (e: React.MouseEvent) => {
     e.stopPropagation();
+    toggleFavorite();
+  };
+
+  const toggleFavorite = () => {
     setFavorite(!favorite);
+    setIsAnimating(true);
+    
+    // Mostrar toast para feedback adicional
+    toast.success(favorite ? "Eliminado de favoritos" : "Añadido a favoritos", {
+      icon: favorite ? "👋" : "❤️",
+      duration: 1500,
+      position: "bottom-center"
+    });
+    
+    // Detener la animación después de 600ms
+    setTimeout(() => {
+      setIsAnimating(false);
+    }, 600);
+    
     if (onFavoriteToggle) {
       onFavoriteToggle();
     }
@@ -45,10 +67,7 @@ const ArtistProfileCard = ({
     
     // Si el doble clic es menor a 300ms, consideramos que es un doble clic
     if (timeSinceLastClick < 300 && lastClickTimeRef.current !== 0) {
-      setFavorite(!favorite);
-      if (onFavoriteToggle) {
-        onFavoriteToggle();
-      }
+      toggleFavorite();
     } else {
       // Si es un clic simple, actualizamos el tiempo y ejecutamos onClick si existe
       if (onClick) {
@@ -81,8 +100,20 @@ const ArtistProfileCard = ({
           <Badge variant="outline" className="bg-white text-black py-0.5 px-3 rounded-full border-0 text-xs font-medium">
             {type}
           </Badge>
-          <button onClick={handleFavoriteClick} className="h-7 w-7 rounded-full bg-white flex items-center justify-center transition-colors duration-300">
-            <Heart className={cn("h-3.5 w-3.5 transition-colors duration-300", favorite ? "fill-black stroke-black" : "stroke-black")} />
+          <button 
+            onClick={handleFavoriteClick} 
+            className={cn(
+              "h-7 w-7 rounded-full bg-white flex items-center justify-center transition-all duration-300",
+              isAnimating && favorite && "animate-heartbeat"
+            )}
+          >
+            <Heart 
+              className={cn(
+                "h-3.5 w-3.5 transition-all duration-300", 
+                favorite ? "fill-black stroke-black" : "stroke-black",
+                isAnimating && favorite && "scale-110"
+              )} 
+            />
           </button>
         </div>
       </div>
@@ -99,4 +130,5 @@ const ArtistProfileCard = ({
       </div>
     </div>;
 };
+
 export default ArtistProfileCard;
