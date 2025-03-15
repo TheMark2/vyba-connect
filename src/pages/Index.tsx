@@ -270,7 +270,7 @@ const Index = () => {
   const filteredArtists = activeCategory ? recommendedArtists.filter(artist => artist.type.toLowerCase().includes(activeCategory.toLowerCase()) || artist.description.toLowerCase().includes(activeCategory.toLowerCase())) : recommendedArtists;
   const renderMobileHero = () => <div className="min-h-screen flex flex-col bg-vyba-cream">
       <div className="px-6 pt-20 pb-10">
-        <h1 className="text-4xl font-black leading-tight">
+        <h1 className="text-5xl font-black leading-tight">
           El portal perfecto para encontrar tu dj
         </h1>
         
