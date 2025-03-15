@@ -355,7 +355,7 @@ const Index = () => {
                   <img
                     src="/lovable-uploads/pexels-rovenimages-com-344613-949592"
                     alt="Búsqueda de artistas"
-                    className="w-full h-full object-cover aspect-[4/3]"
+                    className="w-full h-full object-cover aspect-[4/3] rounded-2xl"
                   />
                 </div>
               </div>
@@ -366,7 +366,7 @@ const Index = () => {
                   <img
                     src="/lovable-uploads/7e7c2282-785a-46fb-84b2-f7b14b762e64.png"
                     alt="Contacto con artistas"
-                    className="w-full h-full object-cover aspect-[4/3]"
+                    className="w-full h-full object-cover aspect-[4/3] rounded-2xl"
                   />
                 </div>
                 <div className="order-1 md:order-2">
@@ -389,7 +389,7 @@ const Index = () => {
                   <img
                     src="/lovable-uploads/440a191c-d45b-4031-acbe-509e602e5d22.png"
                     alt="Escribir reseñas"
-                    className="w-full h-full object-cover aspect-[4/3]"
+                    className="w-full h-full object-cover aspect-[4/3] rounded-2xl"
                   />
                 </div>
               </div>
