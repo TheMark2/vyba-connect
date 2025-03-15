@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import { Heart } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
@@ -41,54 +40,47 @@ const ArtistProfileCard = ({
   };
 
   return (
-    <div 
+    <div
       className={cn(
-        "flex flex-col overflow-hidden bg-transparent transition-all duration-300 cursor-pointer", 
+        "flex flex-col overflow-hidden bg-transparent transition-all duration-300",
+        isHovered ? "cursor-pointer" : "cursor-default",
         className
-      )} 
+      )}
       onClick={onClick}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >
       {/* Imagen principal con etiqueta de tipo y botón favorito */}
       <div className="relative aspect-[3/4] w-full overflow-hidden rounded-3xl">
-        <div 
-          className="w-full h-full transform transition-transform duration-300"
-          style={{
-            transform: isHovered ? 'scale(1.05)' : 'scale(1)',
-          }}
-        >
-          <img 
-            src={image} 
-            alt={`${name} - ${type}`} 
-            className="w-full h-full object-cover" 
+        <div className="w-full h-full">
+          <img
+            src={image}
+            alt={`${name} - ${type}`}
+            className="w-full h-full object-cover"
           />
         </div>
-        
         {/* Degradado negro de abajo a arriba */}
         <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-black/10 to-transparent"></div>
-        
         <div className="absolute top-0 left-0 w-full p-3 flex justify-between">
-          <Badge 
-            variant="outline" 
+          <Badge
+            variant="outline"
             className="bg-white text-black py-0.5 px-2 rounded-full border-0 text-xs font-medium"
           >
             {type}
           </Badge>
-          <button 
-            onClick={handleFavoriteClick} 
-            className="h-7 w-7 rounded-full bg-white flex items-center justify-center transition-colors duration-300"
+          <button
+            onClick={handleFavoriteClick}
+            className="h-7 w-7 rounded-full bg-white flex items-center justify-center transition-colors duration-300 hover:bg-gray-100"
           >
-            <Heart 
+            <Heart
               className={cn(
-                "h-3.5 w-3.5 transition-colors duration-300", 
+                "h-3.5 w-3.5 transition-colors duration-300",
                 favorite ? "fill-black stroke-black" : "stroke-black"
-              )} 
+              )}
             />
           </button>
         </div>
       </div>
-
       {/* Información del artista con margin-top */}
       <div className="pt-4 mt-2 flex flex-col gap-1 bg-transparent">
         <div className="flex justify-between items-start">
