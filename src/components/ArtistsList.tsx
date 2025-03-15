@@ -70,7 +70,7 @@ const ArtistsList = ({
           data-carousel-content
         >
           {/* Initial spacer item */}
-          <CarouselItem className="pl-6 md:pl-10 max-w-[1px] min-w-[1px]" />
+          <CarouselItem className="pl-16 md:pl-10 max-w-[1px] min-w-[1px]" />
           
           {artists.map((artist) => (
             <CarouselItem
