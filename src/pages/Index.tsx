@@ -346,7 +346,7 @@ const Index = () => {
               {/* Primer paso */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-16 items-center mb-12">
                 <div className="order-1 md:order-1">
-                  <h2 className="text-5xl font-black mb-4 leading-relaxed">Explora y elige el artista perfecto para tu evento</h2>
+                  <h2 className="text-5xl font-black mb-4 leading-normal">Explora y elige el artista perfecto para tu evento</h2>
                   <p className="text-gray-600">
                     Descubre el talento que mejor se adapta a tu evento. Filtra por género, estilo o popularidad y encuentra al artista perfecto en segundos.
                   </p>
@@ -370,7 +370,7 @@ const Index = () => {
                   />
                 </div>
                 <div className="order-1 md:order-2">
-                  <h2 className="text-5xl font-black mb-4 leading-relaxed">Contacta con el artista de una forma fácil y rápida</h2>
+                  <h2 className="text-5xl font-black mb-4 leading-normal">Contacta con el artista de una forma fácil y rápida</h2>
                   <p className="text-gray-600">
                     Contacta de una forma fácil y rápida, un proceso seguro mediante a nuestro sistema de mensajes.
                   </p>
@@ -380,7 +380,7 @@ const Index = () => {
               {/* Tercer paso */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-16 items-center mb-12">
                 <div className="order-1 md:order-1">
-                  <h2 className="text-5xl font-black mb-4 leading-relaxed">Confirma la reserva y disfruta de un show inolvidable</h2>
+                  <h2 className="text-5xl font-black mb-4 leading-normal">Confirma la reserva y disfruta de un show inolvidable</h2>
                   <p className="text-gray-600">
                     Comparte tu experiencia con la comunidad y ayuda a otros a encontrar al artista perfecto para sus eventos.
                   </p>
