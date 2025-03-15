@@ -1,4 +1,3 @@
-
 import { Button } from "@/components/ui/button";
 import { Search, BrainCircuit } from "lucide-react";
 import Navbar from "@/components/Navbar";
@@ -84,10 +83,29 @@ const Index = () => {
       if (shouldShowSearch !== showFixedSearch) {
         setShowFixedSearch(shouldShowSearch);
       }
+      
+      if (isMobile) {
+        const carouselSection = document.querySelector('.carousel-section');
+        if (carouselSection) {
+          const rect = carouselSection.getBoundingClientRect();
+          const viewHeight = window.innerHeight;
+          const percentVisible = Math.max(0, Math.min(1, (viewHeight - rect.top) / (viewHeight + rect.height)));
+          
+          if (percentVisible > 0 && percentVisible < 1) {
+            const carouselApi = (window as any).carouselApi;
+            if (carouselApi) {
+              const slideCount = artists.length;
+              const targetIndex = Math.min(slideCount - 1, Math.floor(percentVisible * slideCount * 1.5));
+              carouselApi.scrollTo(targetIndex);
+            }
+          }
+        }
+      }
     };
+    
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
-  }, [showFixedSearch]);
+  }, [showFixedSearch, isMobile, artists.length]);
 
   const artists = [{
     type: "DJ",
@@ -295,19 +313,24 @@ const Index = () => {
         </div>
       </div>
       
-      <div className="relative w-full mt-4">
+      <div className="relative w-full mt-4 carousel-section">
         <Carousel
           opts={{
             align: "center",
             loop: true,
+            dragFree: true,
             containScroll: false,
+            draggable: false,
           }}
           className="w-full"
           onMouseDown={(e) => e.stopPropagation()}
+          setApi={(api) => {
+            (window as any).carouselApi = api;
+          }}
         >
           <CarouselContent>
             {artists.map((artist, index) => (
-              <CarouselItem key={index} className="basis-[60%] md:basis-1/2 lg:basis-1/3 px-1">
+              <CarouselItem key={index} className="basis-[60%] md:basis-1/2 lg:basis-1/3 px-4">
                 <div className="h-[370px] relative rounded-[30px] overflow-hidden">
                   <img 
                     src={index === 1 ? "/lovable-uploads/b1d87308-8791-4bd4-bd43-e4f7cf7d9042.png" : artist.image} 
