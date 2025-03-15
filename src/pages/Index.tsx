@@ -235,17 +235,12 @@ const Index = () => {
   const handleArtistClick = (artist: any) => {
     toast.success(`Has seleccionado a ${artist.name}`);
   };
-  
   const handleFavoriteToggle = (artist: any) => {
     toast(`${artist.isFavorite ? "Eliminado de" : "Añadido a"} favoritos: ${artist.name}`);
   };
 
   // Filtrado de artistas según la categoría seleccionada
-  const filteredArtists = activeCategory ? recommendedArtists.filter(artist => 
-    artist.type.toLowerCase().includes(activeCategory.toLowerCase()) || 
-    artist.description.toLowerCase().includes(activeCategory.toLowerCase())
-  ) : recommendedArtists;
-  
+  const filteredArtists = activeCategory ? recommendedArtists.filter(artist => artist.type.toLowerCase().includes(activeCategory.toLowerCase()) || artist.description.toLowerCase().includes(activeCategory.toLowerCase())) : recommendedArtists;
   return <div className="min-h-screen flex flex-col p-0 m-0">
       <div className="w-full">
         <Navbar className="mx-auto" />
@@ -346,32 +341,24 @@ const Index = () => {
               {/* Primer paso */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-16 items-center mb-12">
                 <div className="order-1 md:order-1">
-                  <h2 className="text-5xl font-black mb-4 leading-tight">Explora y elige el artista perfecto para tu evento</h2>
-                  <p className="text-gray-600">
+                  <h2 className="text-5xl font-black mb-4 leading-tight">Explora y elige el artista perfecto para tu evento.</h2>
+                  <p className="text-gray-900 font-medium">
                     Descubre el talento que mejor se adapta a tu evento. Filtra por género, estilo o popularidad y encuentra al artista perfecto en segundos.
                   </p>
                 </div>
                 <div className="order-2 md:order-2">
-                  <img
-                    src="/lovable-uploads/pexels-rovenimages-com-344613-949592.jpg"
-                    alt="Búsqueda de artistas"
-                    className="w-full h-full object-cover aspect-[4/3] rounded-3xl"
-                  />
+                  <img src="/lovable-uploads/pexels-rovenimages-com-344613-949592.jpg" alt="Búsqueda de artistas" className="w-full h-full object-cover aspect-[4/3] rounded-3xl" />
                 </div>
               </div>
 
               {/* Segundo paso */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-16 items-center mb-12">
                 <div className="order-2 md:order-1">
-                  <img
-                    src="/lovable-uploads/7e7c2282-785a-46fb-84b2-f7b14b762e64.png"
-                    alt="Contacto con artistas"
-                    className="w-full h-full object-cover aspect-[4/3] rounded-3xl"
-                  />
+                  <img src="/lovable-uploads/7e7c2282-785a-46fb-84b2-f7b14b762e64.png" alt="Contacto con artistas" className="w-full h-full object-cover aspect-[4/3] rounded-3xl" />
                 </div>
                 <div className="order-1 md:order-2">
-                  <h2 className="text-5xl font-black mb-4 leading-tight">Contacta con el artista de una forma fácil y rápida</h2>
-                  <p className="text-gray-600">
+                  <h2 className="text-5xl font-black mb-4 leading-tight">Contacta con el artista de una forma fácil y rápida.</h2>
+                  <p className="text-gray-900 font-medium">
                     Contacta de una forma fácil y rápida, un proceso seguro mediante a nuestro sistema de mensajes.
                   </p>
                 </div>
@@ -380,17 +367,13 @@ const Index = () => {
               {/* Tercer paso */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-16 items-center mb-12">
                 <div className="order-1 md:order-1">
-                  <h2 className="text-5xl font-black mb-4 leading-tight">Confirma la reserva y disfruta de un show inolvidable</h2>
-                  <p className="text-gray-600">
+                  <h2 className="text-5xl font-black mb-4 leading-tight">Confirma la reserva y disfruta de un show inolvidable.</h2>
+                  <p className="text-gray-900 font-medium">
                     Comparte tu experiencia con la comunidad y ayuda a otros a encontrar al artista perfecto para sus eventos.
                   </p>
                 </div>
                 <div className="order-2 md:order-2">
-                  <img
-                    src="/lovable-uploads/440a191c-d45b-4031-acbe-509e602e5d22.png"
-                    alt="Escribir reseñas"
-                    className="w-full h-full object-cover aspect-[4/3] rounded-3xl"
-                  />
+                  <img src="/lovable-uploads/440a191c-d45b-4031-acbe-509e602e5d22.png" alt="Escribir reseñas" className="w-full h-full object-cover aspect-[4/3] rounded-3xl" />
                 </div>
               </div>
             </div>
@@ -413,16 +396,11 @@ const Index = () => {
           </div>
         </section>
         <section className="pb-20 bg-vyba-cream">
-          <ArtistsList 
-            artists={filteredArtists} 
-            onArtistClick={handleArtistClick} 
-            onFavoriteToggle={handleFavoriteToggle} 
-          />
+          <ArtistsList artists={filteredArtists} onArtistClick={handleArtistClick} onFavoriteToggle={handleFavoriteToggle} />
         </section>
       </main>
 
       <Footer />
     </div>;
 };
-
 export default Index;
