@@ -374,12 +374,12 @@ const Index = () => {
           </div>
         </section>
         <section className="pb-20 bg-vyba-cream">
-      <ArtistsList 
-        artists={filteredArtists} 
-        onArtistClick={handleArtistClick} 
-        onFavoriteToggle={handleFavoriteToggle} 
-      />
-    </section>
+          <ArtistsList 
+            artists={filteredArtists} 
+            onArtistClick={handleArtistClick} 
+            onFavoriteToggle={handleFavoriteToggle} 
+          />
+        </section>
       </main>
 
       <Footer />
