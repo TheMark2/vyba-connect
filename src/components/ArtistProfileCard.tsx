@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+
+import React, { useState, useRef } from "react";
 import { Heart } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
@@ -28,6 +29,8 @@ const ArtistProfileCard = ({
 }: ArtistProfileCardProps) => {
   const [favorite, setFavorite] = useState(isFavorite);
   const [isHovered, setIsHovered] = useState(false);
+  const lastClickTimeRef = useRef<number>(0);
+  
   const handleFavoriteClick = (e: React.MouseEvent) => {
     e.stopPropagation();
     setFavorite(!favorite);
@@ -35,14 +38,41 @@ const ArtistProfileCard = ({
       onFavoriteToggle();
     }
   };
-  return <div className={cn("flex flex-col overflow-hidden bg-transparent transition-all duration-300", className)} onClick={onClick} onMouseEnter={() => setIsHovered(true)} onMouseLeave={() => setIsHovered(false)} style={{
-    cursor: isHovered ? 'pointer' : 'default'
-  }}>
+
+  const handleCardClick = (e: React.MouseEvent) => {
+    const currentTime = new Date().getTime();
+    const timeSinceLastClick = currentTime - lastClickTimeRef.current;
+    
+    // Si el doble clic es menor a 300ms, consideramos que es un doble clic
+    if (timeSinceLastClick < 300 && lastClickTimeRef.current !== 0) {
+      setFavorite(!favorite);
+      if (onFavoriteToggle) {
+        onFavoriteToggle();
+      }
+    } else {
+      // Si es un clic simple, actualizamos el tiempo y ejecutamos onClick si existe
+      if (onClick) {
+        onClick();
+      }
+    }
+    
+    lastClickTimeRef.current = currentTime;
+  };
+  
+  return <div 
+    className={cn("flex flex-col overflow-hidden bg-transparent transition-all duration-300", className)} 
+    onClick={handleCardClick} 
+    onMouseEnter={() => setIsHovered(true)} 
+    onMouseLeave={() => setIsHovered(false)} 
+    style={{
+      cursor: isHovered ? 'pointer' : 'default'
+    }}
+  >
       {/* Imagen principal con etiqueta de tipo y botón favorito */}
       <div className="relative aspect-[3/4] w-full overflow-hidden rounded-3xl">
         <div className="w-full h-full transition-transform duration-300" style={{
-        transform: isHovered ? 'scale(1.07)' : 'scale(1)'
-      }}>
+          transform: isHovered ? 'scale(1.07)' : 'scale(1)'
+        }}>
           <img src={image} alt={`${name} - ${type}`} className="w-full h-full object-cover" />
         </div>
         {/* Degradado negro de abajo a arriba */}
@@ -67,8 +97,6 @@ const ArtistProfileCard = ({
           de {priceRange}
         </p>
       </div>
-      
-      {/* Removing the style jsx tag that's causing the error */}
     </div>;
 };
 export default ArtistProfileCard;
