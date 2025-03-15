@@ -38,7 +38,7 @@ const Navbar = ({
       </div>
 
       {/* Botón de Entrar/Registrarse */}
-      <Button className="text-base">
+      <Button className="text-sm">
         Entrar/Registrarse
       </Button>
     </div>;
