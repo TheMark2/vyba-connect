@@ -11,7 +11,6 @@ import ArtistCard, { CardType } from "@/components/ArtistCard";
 import { toast } from "sonner";
 import { MUSIC_GENRES, MUSICIAN_TYPES } from "@/constants/music";
 import TimelineStep from "@/components/TimelineStep";
-
 const Input = React.forwardRef<HTMLInputElement, React.ComponentProps<"input">>(({
   className,
   ...props
@@ -54,9 +53,7 @@ const Input = React.forwardRef<HTMLInputElement, React.ComponentProps<"input">>(
       </div>;
 });
 Input.displayName = "Input";
-
 const BoldSearch = () => <Search className="h-5 w-5 stroke-[2.5px]" />;
-
 const Index = () => {
   const scrollRef = useRef(null);
   const [searchQuery, setSearchQuery] = useState("");
@@ -172,7 +169,6 @@ const Index = () => {
   const handleCardClick = (name: string, type: CardType) => {
     toast.success(`Has seleccionado ${type === "género" ? "el género" : "el tipo"} ${name}`);
   };
-
   return <div className="min-h-screen flex flex-col p-0 m-0">
       <div className="w-full">
         <Navbar className="mx-auto" />
@@ -263,47 +259,23 @@ const Index = () => {
           </div>
         </section>
 
-        <section className="py-20 md:py-32 bg-white">
+        <section className="py-20 md:py-32 bg-secondary/10">
           <div className="container mx-auto px-6 md:px-10">
             <h2 className="text-3xl md:text-5xl lg:text-7xl font-black text-center mb-20 md:mb-32">
               Contratar a un artista nunca había sido tan fácil
             </h2>
 
             <div className="max-w-7xl mx-auto">
-              <TimelineStep 
-                title="Busca entre todos los artistas disponibles" 
-                description="Busca con Rita y encuentra en pocos minutos al artista que mejor se adapte a tus condiciones."
-                imagePosition="right"
-              >
-                <img 
-                  src="/lovable-uploads/c89ee394-3c08-48f6-b69b-bddd81dffa8b.png" 
-                  alt="Búsqueda de artistas"
-                  className="w-full h-full object-cover aspect-[4/3]" 
-                />
+              <TimelineStep title="Busca entre todos los artistas disponibles" description="Busca con Rita y encuentra en pocos minutos al artista que mejor se adapte a tus condiciones." imagePosition="right">
+                <img src="/lovable-uploads/c89ee394-3c08-48f6-b69b-bddd81dffa8b.png" alt="Búsqueda de artistas" className="w-full h-full object-cover aspect-[4/3]" />
               </TimelineStep>
 
-              <TimelineStep 
-                title="Contacta con el artista de una forma fácil" 
-                description="Contacta de una forma fácil y rápida, un proceso seguro mediante a nuestro sistema de mensajes."
-                imagePosition="left"
-              >
-                <img 
-                  src="/lovable-uploads/7e7c2282-785a-46fb-84b2-f7b14b762e64.png" 
-                  alt="Contacto con artistas"
-                  className="w-full h-full object-cover aspect-[4/3]" 
-                />
+              <TimelineStep title="Contacta con el artista de una forma fácil" description="Contacta de una forma fácil y rápida, un proceso seguro mediante a nuestro sistema de mensajes." imagePosition="left">
+                <img src="/lovable-uploads/7e7c2282-785a-46fb-84b2-f7b14b762e64.png" alt="Contacto con artistas" className="w-full h-full object-cover aspect-[4/3]" />
               </TimelineStep>
 
-              <TimelineStep 
-                title="Escribe una reseña" 
-                description="Comparte tu experiencia con la comunidad y ayuda a otros a encontrar al artista perfecto para sus eventos."
-                imagePosition="right"
-              >
-                <img 
-                  src="/lovable-uploads/440a191c-d45b-4031-acbe-509e602e5d22.png" 
-                  alt="Escribir reseñas"
-                  className="w-full h-full object-cover aspect-[4/3]" 
-                />
+              <TimelineStep title="Escribe una reseña" description="Comparte tu experiencia con la comunidad y ayuda a otros a encontrar al artista perfecto para sus eventos." imagePosition="right">
+                <img src="/lovable-uploads/440a191c-d45b-4031-acbe-509e602e5d22.png" alt="Escribir reseñas" className="w-full h-full object-cover aspect-[4/3]" />
               </TimelineStep>
             </div>
           </div>
@@ -313,5 +285,4 @@ const Index = () => {
       <Footer />
     </div>;
 };
-
 export default Index;
