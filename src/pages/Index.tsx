@@ -442,8 +442,8 @@ const Index = () => {
           <ArtistsList artists={filteredArtists} onArtistClick={handleArtistClick} onFavoriteToggle={handleFavoriteToggle} />
         </section>
         
-        <StatsSummary className="py-20 md:py-32" />
-        <HelpSection className="py-20 md:py-32" />
+        <StatsSummary className="px-20 md:px-32" />
+        <HelpSection className="px-20 md:px-32" />
       </main>
 
       <Footer />
