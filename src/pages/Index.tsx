@@ -15,6 +15,7 @@ import StatsSummary from "@/components/StatsSummary";
 import HelpSection from "@/components/HelpSection";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/carousel";
+
 const Input = React.forwardRef<HTMLInputElement, React.ComponentProps<"input">>(({
   className,
   ...props
@@ -57,7 +58,9 @@ const Input = React.forwardRef<HTMLInputElement, React.ComponentProps<"input">>(
       </div>;
 });
 Input.displayName = "Input";
+
 const BoldSearch = () => <Search className="h-5 w-5 stroke-[2.5px]" />;
+
 const Index = () => {
   const scrollRef = useRef(null);
   const [searchQuery, setSearchQuery] = useState("");
@@ -65,19 +68,26 @@ const Index = () => {
   const [fixedSearchQuery, setFixedSearchQuery] = useState("");
   const isMobile = useIsMobile();
   const [activeArtistIndex, setActiveArtistIndex] = useState(1);
-  const artists = [{
-    type: "DJ",
-    image: "/lovable-uploads/7e7c2282-785a-46fb-84b2-f7b14b762e64.png",
-    description: "El portal perfecto para encontrar tu DJ"
-  }, {
-    type: "Saxofonista",
-    image: "/lovable-uploads/64cabbe3-ce62-4190-830d-0e5defd31a1b.png",
-    description: "Encuentra al saxofonista ideal para tu evento"
-  }, {
-    type: "Guitarrista",
-    image: "/lovable-uploads/440a191c-d45b-4031-acbe-509e602e5d22.png",
-    description: "Conecta con talentosos guitarristas"
-  }];
+  
+  // Movemos la declaración de artists al principio para evitar el error TS2448
+  const artists = [
+    {
+      type: "DJ",
+      image: "/lovable-uploads/7e7c2282-785a-46fb-84b2-f7b14b762e64.png",
+      description: "El portal perfecto para encontrar tu DJ"
+    }, 
+    {
+      type: "Saxofonista",
+      image: "/lovable-uploads/64cabbe3-ce62-4190-830d-0e5defd31a1b.png",
+      description: "Encuentra al saxofonista ideal para tu evento"
+    }, 
+    {
+      type: "Guitarrista",
+      image: "/lovable-uploads/440a191c-d45b-4031-acbe-509e602e5d22.png",
+      description: "Conecta con talentosos guitarristas"
+    }
+  ];
+  
   const {
     scrollYProgress
   } = useScroll({
@@ -91,12 +101,14 @@ const Index = () => {
       if (shouldShowSearch !== showFixedSearch) {
         setShowFixedSearch(shouldShowSearch);
       }
+      
       if (isMobile) {
         const carouselSection = document.querySelector('.carousel-section');
         if (carouselSection) {
           const rect = carouselSection.getBoundingClientRect();
           const viewHeight = window.innerHeight;
           const percentVisible = Math.max(0, Math.min(1, (viewHeight - rect.top) / (viewHeight + rect.height)));
+          
           if (percentVisible > 0 && percentVisible < 1) {
             const carouselApi = (window as any).carouselApi;
             if (carouselApi) {
@@ -108,9 +120,11 @@ const Index = () => {
         }
       }
     };
+    
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   }, [showFixedSearch, isMobile, artists.length]);
+  
   const opacity1 = useTransform(scrollYProgress, [0, 0.19, 0.25, 0.3], [1, 0.9, 0.3, 0]);
   const opacity2 = useTransform(scrollYProgress, [0.19, 0.25, 0.3, 0.43, 0.5, 0.55], [0, 0.3, 0.9, 1, 0.3, 0]);
   const opacity3 = useTransform(scrollYProgress, [0.43, 0.5, 0.55, 1], [0, 0.3, 1, 1]);
@@ -268,7 +282,8 @@ const Index = () => {
     toast(`${artist.isFavorite ? "Eliminado de" : "Añadido a"} favoritos: ${artist.name}`);
   };
   const filteredArtists = activeCategory ? recommendedArtists.filter(artist => artist.type.toLowerCase().includes(activeCategory.toLowerCase()) || artist.description.toLowerCase().includes(activeCategory.toLowerCase())) : recommendedArtists;
-  const renderMobileHero = () => <div className="min-h-screen flex flex-col bg-vyba-cream">
+  const renderMobileHero = () => (
+    <div className="min-h-screen flex flex-col bg-vyba-cream">
       <div className="px-6 pt-20 pb-10">
         <h1 className="text-5xl font-black leading-tight">
           El portal perfecto para encontrar tu dj
@@ -276,8 +291,16 @@ const Index = () => {
         
         <div className="mt-10 relative">
           <div className="flex items-center bg-[#F5F1EB] rounded-full">
-            <input type="text" placeholder="Buscar artistas" className="pl-6 pr-12 py-4 w-full bg-transparent text-black rounded-full focus:outline-none" />
-            <Button type="submit" size="icon" className="absolute right-1 rounded-full h-11 w-11 flex items-center justify-center">
+            <input 
+              type="text" 
+              placeholder="Buscar artistas" 
+              className="pl-6 pr-12 py-4 w-full bg-transparent text-black rounded-full focus:outline-none" 
+            />
+            <Button 
+              type="submit" 
+              size="icon" 
+              className="absolute right-1 rounded-full h-11 w-11 flex items-center justify-center"
+            >
               <BoldSearch />
             </Button>
           </div>
@@ -285,54 +308,120 @@ const Index = () => {
       </div>
       
       <div className="relative w-full mt-4 carousel-section">
-        <Carousel opts={{
-        align: "center",
-        loop: true,
-        dragFree: true,
-        containScroll: false
-      }} className="w-full" onMouseDown={e => e.stopPropagation()} setApi={api => {
-        (window as any).carouselApi = api;
-      }}>
+        <Carousel 
+          opts={{
+            align: "center",
+            loop: true,
+            dragFree: true,
+            containScroll: false
+          }} 
+          className="w-full" 
+          onMouseDown={e => e.stopPropagation()}
+          setApi={api => {
+            (window as any).carouselApi = api;
+          }}
+        >
           <CarouselContent className="gap-6">
-            {artists.map((artist, index) => <CarouselItem key={index} className={cn("basis-auto px-0", index === 1 ? "sm:basis-[80%]" : "sm:basis-[40%]")}>
-                <div className={cn("h-[370px] relative rounded-[30px] overflow-hidden", index === 1 ? "scale-115" : "scale-90 opacity-80")}>
-                  <img src={artist.image} alt={artist.type} className="absolute inset-0 w-full h-full object-cover" />
+            {artists.map((artist, index) => (
+              <CarouselItem 
+                key={index} 
+                className={cn(
+                  "basis-auto px-0", 
+                  index === 1 ? "sm:basis-[85%]" : "sm:basis-[40%]"
+                )}
+              >
+                <div 
+                  className={cn(
+                    "h-[370px] relative rounded-[30px] overflow-hidden", 
+                    index === 1 ? "scale-110" : "scale-90 opacity-80"
+                  )}
+                >
+                  <img 
+                    src={artist.image} 
+                    alt={artist.type} 
+                    className="absolute inset-0 w-full h-full object-cover" 
+                    loading="eager"
+                    onError={(e) => {
+                      console.error(`Error loading image: ${artist.image}`);
+                      e.currentTarget.src = "/placeholder.svg";
+                    }}
+                  />
                 </div>
-              </CarouselItem>)}
+              </CarouselItem>
+            ))}
           </CarouselContent>
         </Carousel>
       </div>
-    </div>;
-  const renderDesktopHero = () => <div ref={scrollRef} className="h-[300vh] relative">
+    </div>
+  );
+
+  const renderDesktopHero = () => (
+    <div ref={scrollRef} className="h-[300vh] relative">
       <div className="sticky top-0 h-screen overflow-hidden">
         <div className="relative w-full h-screen overflow-hidden">
           <motion.div className="absolute inset-0 px-6 md:px-10 lg:px-14 xl:px-16 pt-8 pb-32">
             <motion.div className="relative w-full h-full rounded-[2vw] overflow-hidden">
-              <motion.div className="absolute inset-0 origin-center" style={{
-              opacity: opacity1,
-              scale: scale1,
-              y: moveY1,
-              x: moveX1
-            }}>
-                <img src={artists[0].image} alt="DJ performing" className="w-full h-full brightness-75 blur-[2px] object-cover" />
+              <motion.div 
+                className="absolute inset-0 origin-center" 
+                style={{
+                  opacity: opacity1,
+                  scale: scale1,
+                  y: moveY1,
+                  x: moveX1
+                }}
+              >
+                <img 
+                  src={artists[0].image} 
+                  alt="DJ performing" 
+                  className="w-full h-full brightness-75 blur-[2px] object-cover" 
+                  loading="eager"
+                  onError={(e) => {
+                    console.error(`Error loading image: ${artists[0].image}`);
+                    e.currentTarget.src = "/placeholder.svg";
+                  }}
+                />
               </motion.div>
               
-              <motion.div className="absolute inset-0 origin-center" style={{
-              opacity: opacity2,
-              scale: scale2,
-              y: moveY2,
-              x: moveX2
-            }}>
-                <img src={artists[1].image} alt="Saxofonista performing" className="w-full h-full brightness-75 blur-[2px] object-cover" />
+              <motion.div 
+                className="absolute inset-0 origin-center" 
+                style={{
+                  opacity: opacity2,
+                  scale: scale2,
+                  y: moveY2,
+                  x: moveX2
+                }}
+              >
+                <img 
+                  src={artists[1].image} 
+                  alt="Saxofonista performing" 
+                  className="w-full h-full brightness-75 blur-[2px] object-cover" 
+                  loading="eager"
+                  onError={(e) => {
+                    console.error(`Error loading image: ${artists[1].image}`);
+                    e.currentTarget.src = "/placeholder.svg";
+                  }}
+                />
               </motion.div>
               
-              <motion.div className="absolute inset-0 origin-center" style={{
-              opacity: opacity3,
-              scale: scale3,
-              y: moveY3,
-              x: moveX3
-            }}>
-                <img src={artists[2].image} alt="Guitarrista performing" className="w-full h-full brightness-75 blur-[2px] object-cover rounded-[2vw]" />
+              <motion.div 
+                className="absolute inset-0 origin-center" 
+                style={{
+                  opacity: opacity3,
+                  scale: scale3,
+                  y: moveY3,
+                  x: moveX3
+                }}
+              >
+                <img 
+                  src={artists[2].image} 
+                  alt="Guitarrista performing" 
+                  className="w-full h-full brightness-75 blur-[2px] object-cover rounded-[2vw]" 
+                  loading="eager"
+                  onError={(e) => {
+                    console.error(`Error loading image: ${artists[2].image}`);
+                    e.currentTarget.src = "/placeholder.svg";
+                  }}
+                />
               </motion.div>
 
               <div className="absolute inset-0 bg-black opacity-50"></div>
@@ -373,7 +462,9 @@ const Index = () => {
           </motion.div>
         </div>
       </div>
-    </div>;
+    </div>
+  );
+
   return <div className="min-h-screen flex flex-col p-0 m-0">
       <div className="w-full">
         <Navbar className="mx-auto" />
@@ -489,4 +580,5 @@ const Index = () => {
       <Footer />
     </div>;
 };
+
 export default Index;
