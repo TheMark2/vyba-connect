@@ -33,6 +33,7 @@ const ArtistProfileCard = ({
   const [favorite, setFavorite] = useState(isFavorite);
   const [isHovered, setIsHovered] = useState(false);
   const [isAnimating, setIsAnimating] = useState(false);
+  const [showCenterHeart, setShowCenterHeart] = useState(false);
   const lastClickTimeRef = useRef<number>(0);
   
   const handleFavoriteClick = (e: React.MouseEvent) => {
@@ -41,8 +42,17 @@ const ArtistProfileCard = ({
   };
 
   const toggleFavorite = () => {
-    setFavorite(!favorite);
+    const newFavoriteState = !favorite;
+    setFavorite(newFavoriteState);
     setIsAnimating(true);
+    
+    // Solo mostrar el corazón central si es un "like" (no cuando se quita el like)
+    if (newFavoriteState) {
+      setShowCenterHeart(true);
+      setTimeout(() => {
+        setShowCenterHeart(false);
+      }, 800);
+    }
     
     // Mostrar toast para feedback adicional
     toast.success(favorite ? "Eliminado de favoritos" : "Añadido a favoritos", {
@@ -94,6 +104,18 @@ const ArtistProfileCard = ({
         }}>
           <img src={image} alt={`${name} - ${type}`} className="w-full h-full object-cover" />
         </div>
+        
+        {/* Animación de corazón en el centro cuando se da like */}
+        {showCenterHeart && (
+          <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+            <Heart 
+              className={cn(
+                "h-20 w-20 fill-white stroke-white opacity-0 animate-fadeInOut z-10",
+              )} 
+            />
+          </div>
+        )}
+        
         {/* Degradado negro de abajo a arriba */}
         <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-black/10 to-transparent"></div>
         <div className="absolute top-0 left-0 w-full p-3 flex justify-between">
