@@ -40,7 +40,6 @@ export function Pointer({
  
         // Add event listeners to parent
         const handleMouseMove = (e: MouseEvent) => {
-          // Use requestAnimationFrame for smoother updates
           requestAnimationFrame(() => {
             x.set(e.clientX);
             y.set(e.clientY);
@@ -75,7 +74,7 @@ export function Pointer({
       <AnimatePresence>
         {isActive && (
           <motion.div
-            className="pointer-events-none fixed z-50 transform-gpu"
+            className="pointer-events-none fixed z-50"
             style={{
               top: y,
               left: x,
