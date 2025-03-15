@@ -3,7 +3,6 @@ import React, { useState } from "react";
 import { Heart } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
-import { Pointer } from "@/components/ui/pointer";
 
 interface ArtistProfileCardProps {
   name: string;
@@ -41,75 +40,52 @@ const ArtistProfileCard = ({
   };
 
   return (
-    <div className="relative">
-      <div 
-        className={cn(
-          "flex flex-col overflow-hidden bg-transparent transition-all duration-300 cursor-none", 
-          className
-        )} 
-        onClick={onClick}
-      >
-        {/* Imagen principal con etiqueta de tipo y botón favorito */}
-        <div className="relative aspect-[4/3] w-full">
-          <img 
-            src={image} 
-            alt={`${name} - ${type}`} 
-            className="w-full h-full object-cover rounded-3xl" 
-          />
-          <div className="absolute top-0 left-0 w-full p-3 flex justify-between">
-            <Badge 
-              variant="outline" 
-              className="bg-white text-black py-0.5 px-2 rounded-full border-0 text-xs font-medium"
-            >
-              {type}
-            </Badge>
-            <button 
-              onClick={handleFavoriteClick} 
-              className="h-7 w-7 rounded-full bg-white flex items-center justify-center transition-colors duration-300"
-            >
-              <Heart 
-                className={cn(
-                  "h-3.5 w-3.5 transition-colors duration-300", 
-                  favorite ? "fill-black stroke-black" : "stroke-black"
-                )} 
-              />
-            </button>
-          </div>
-        </div>
-
-        {/* Información del artista con margin-top */}
-        <div className="pt-4 mt-2 flex flex-col gap-1 bg-transparent">
-          <div className="flex justify-between items-start">
-            <h3 className="text-base font-bold">{name}</h3>
-            <span className="text-base font-bold">{rating.toFixed(1)}</span>
-          </div>
-          <p className="text-gray-500 text-sm line-clamp-1">{description}</p>
-          <p className="text-base font-bold">
-            de {priceRange}
-          </p>
+    <div 
+      className={cn(
+        "flex flex-col overflow-hidden bg-transparent transition-all duration-300 cursor-pointer", 
+        className
+      )} 
+      onClick={onClick}
+    >
+      {/* Imagen principal con etiqueta de tipo y botón favorito */}
+      <div className="relative aspect-[4/3] w-full">
+        <img 
+          src={image} 
+          alt={`${name} - ${type}`} 
+          className="w-full h-full object-cover rounded-3xl" 
+        />
+        <div className="absolute top-0 left-0 w-full p-3 flex justify-between">
+          <Badge 
+            variant="outline" 
+            className="bg-white text-black py-0.5 px-2 rounded-full border-0 text-xs font-medium"
+          >
+            {type}
+          </Badge>
+          <button 
+            onClick={handleFavoriteClick} 
+            className="h-7 w-7 rounded-full bg-white flex items-center justify-center transition-colors duration-300"
+          >
+            <Heart 
+              className={cn(
+                "h-3.5 w-3.5 transition-colors duration-300", 
+                favorite ? "fill-black stroke-black" : "stroke-black"
+              )} 
+            />
+          </button>
         </div>
       </div>
-      <Pointer>
-        <div className="h-10 w-10 rounded-full bg-black flex items-center justify-center">
-          <svg 
-            width="24" 
-            height="24" 
-            viewBox="0 0 24 24" 
-            fill="none" 
-            xmlns="http://www.w3.org/2000/svg"
-            className="text-white"
-          >
-            <path 
-              d="M15 19L8 12L15 5" 
-              stroke="currentColor" 
-              strokeWidth="2" 
-              strokeLinecap="round" 
-              strokeLinejoin="round" 
-              transform="rotate(180 12 12)" 
-            />
-          </svg>
+
+      {/* Información del artista con margin-top */}
+      <div className="pt-4 mt-2 flex flex-col gap-1 bg-transparent">
+        <div className="flex justify-between items-start">
+          <h3 className="text-base font-bold">{name}</h3>
+          <span className="text-base font-bold">{rating.toFixed(1)}</span>
         </div>
-      </Pointer>
+        <p className="text-gray-500 text-sm line-clamp-1">{description}</p>
+        <p className="text-base font-bold">
+          de {priceRange}
+        </p>
+      </div>
     </div>
   );
 };

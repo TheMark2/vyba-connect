@@ -9,6 +9,9 @@ import {
   CarouselNext
 } from "@/components/ui/carousel";
 import { useIsMobile } from "@/hooks/use-mobile";
+import { ArrowLeft, ArrowRight } from "lucide-react";
+import { cn } from "@/lib/utils";
+import { Button } from "@/components/ui/button";
 
 interface Artist {
   id: string;
@@ -34,9 +37,24 @@ const ArtistsList = ({
 }: ArtistsListProps) => {
   const carouselRef = useRef<HTMLDivElement>(null);
   const [showGradient, setShowGradient] = useState(true);
+  const [api, setApi] = useState<any>(null);
+  const [current, setCurrent] = useState(0);
+  const [count, setCount] = useState(0);
   const isMobile = useIsMobile();
   
-  // Function to check if there's more content to scroll
+  // Actualizar los contadores cuando cambia el API
+  useEffect(() => {
+    if (!api) return;
+    
+    setCount(api.scrollSnapList().length);
+    setCurrent(api.selectedScrollSnap());
+    
+    api.on("select", () => {
+      setCurrent(api.selectedScrollSnap());
+    });
+  }, [api]);
+  
+  // Función para verificar si hay más contenido para desplazar
   const checkScrollable = () => {
     if (carouselRef.current) {
       const container = carouselRef.current.querySelector('[data-carousel-content]');
@@ -48,31 +66,60 @@ const ArtistsList = ({
     }
   };
 
-  // Check on mount and when artists change
+  // Verificar al montar y cuando cambian los artistas
   useEffect(() => {
     checkScrollable();
-    // Add a slight delay to ensure everything is rendered
+    // Añadir un ligero retraso para asegurar que todo está renderizado
     const timer = setTimeout(checkScrollable, 100);
     return () => clearTimeout(timer);
   }, [artists]);
 
-  // Calculate item width based on screen size
+  // Calcular el ancho del elemento basado en tamaño de pantalla
   const getItemWidth = () => {
     if (isMobile) {
-      return 'calc(80% - 1rem)'; // Mobile: 1 card + a bit of the next
+      return 'calc(80% - 1rem)'; // Móvil: 1 tarjeta + un poco de la siguiente
     } else if (typeof window !== 'undefined' && window.innerWidth < 1024) {
-      return 'calc(40% - 1rem)'; // Tablet: 2 cards + a bit of the next
+      return 'calc(40% - 1rem)'; // Tablet: 2 tarjetas + un poco de la siguiente
     } else if (typeof window !== 'undefined' && window.innerWidth < 1280) {
-      return 'calc(30% - 1rem)'; // Small desktop: 3 cards + a bit of the next
+      return 'calc(30% - 1rem)'; // Escritorio pequeño: 3 tarjetas + un poco de la siguiente
     } else {
-      return 'calc(22% - 1rem)'; // Large desktop: 4.5 cards (4 cards + half of the next one)
+      return 'calc(22% - 1rem)'; // Escritorio grande: 4.5 tarjetas
     }
   };
 
   return (
-    <div className="relative w-full overflow-hidden" ref={carouselRef}>
+    <div className="relative w-full px-4 md:px-6 lg:px-8 xl:px-12" ref={carouselRef}>
+      <div className="flex justify-between items-center mb-8">
+        <div className="flex-1">
+          {/* Espacio para contenido adicional si se necesita */}
+        </div>
+        <div className="flex gap-2">
+          <Button
+            onClick={() => api?.scrollPrev()}
+            disabled={current === 0}
+            size="icon"
+            variant="outline"
+            className="rounded-full border-gray-200 h-10 w-10"
+          >
+            <ArrowLeft className="h-5 w-5" />
+            <span className="sr-only">Anterior</span>
+          </Button>
+          <Button
+            onClick={() => api?.scrollNext()}
+            disabled={current === count - 1}
+            size="icon"
+            variant="outline"
+            className="rounded-full border-gray-200 h-10 w-10"
+          >
+            <ArrowRight className="h-5 w-5" />
+            <span className="sr-only">Siguiente</span>
+          </Button>
+        </div>
+      </div>
+      
       <Carousel
-        className="w-full pl-4 md:pl-6 lg:pl-8"
+        className="w-full"
+        setApi={setApi}
         opts={{
           align: "start",
           loop: false,
@@ -105,14 +152,14 @@ const ArtistsList = ({
                 isFavorite={artist.isFavorite}
                 onClick={() => onArtistClick && onArtistClick(artist)}
                 onFavoriteToggle={() => onFavoriteToggle && onFavoriteToggle(artist)}
-                className="h-full"
+                className="h-full hover:scale-[1.02] transition-transform duration-300"
               />
             </CarouselItem>
           ))}
         </CarouselContent>
       </Carousel>
       
-      {/* Gradient overlay that only shows when there's more content */}
+      {/* Overlay de degradado que solo se muestra cuando hay más contenido */}
       {showGradient && (
         <div
           className="absolute right-0 top-0 h-full w-24 pointer-events-none"
@@ -120,6 +167,23 @@ const ArtistsList = ({
             background: "linear-gradient(90deg, rgba(255,255,255,0) 0%, rgba(255,255,255,0.2) 30%, rgba(255,255,255,0.8) 60%, rgba(255,255,255,1) 100%)"
           }}
         />
+      )}
+      
+      {/* Indicadores de página para pantallas móviles */}
+      {isMobile && count > 1 && (
+        <div className="flex justify-center gap-1 mt-6">
+          {Array.from({ length: count }).map((_, i) => (
+            <button
+              key={i}
+              className={cn(
+                "h-2 rounded-full transition-all",
+                i === current ? "w-6 bg-black" : "w-2 bg-gray-300"
+              )}
+              onClick={() => api?.scrollTo(i)}
+              aria-label={`Ir a la página ${i + 1}`}
+            />
+          ))}
+        </div>
       )}
     </div>
   );

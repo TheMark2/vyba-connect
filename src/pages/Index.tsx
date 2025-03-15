@@ -9,7 +9,6 @@ import { cn } from "@/lib/utils";
 import { Marquee } from "@/components/ui/marquee";
 import ArtistCard, { CardType } from "@/components/ArtistCard";
 import { toast } from "sonner";
-import { MUSIC_GENRES, MUSICIAN_TYPES } from "@/constants/music";
 import TimelineStep from "@/components/TimelineStep";
 import ArtistsList from "@/components/ArtistsList";
 const Input = React.forwardRef<HTMLInputElement, React.ComponentProps<"input">>(({
@@ -236,12 +235,17 @@ const Index = () => {
   const handleArtistClick = (artist: any) => {
     toast.success(`Has seleccionado a ${artist.name}`);
   };
+  
   const handleFavoriteToggle = (artist: any) => {
     toast(`${artist.isFavorite ? "Eliminado de" : "Añadido a"} favoritos: ${artist.name}`);
   };
 
   // Filtrado de artistas según la categoría seleccionada
-  const filteredArtists = activeCategory ? recommendedArtists.filter(artist => artist.type.toLowerCase().includes(activeCategory.toLowerCase()) || artist.description.toLowerCase().includes(activeCategory.toLowerCase())) : recommendedArtists;
+  const filteredArtists = activeCategory ? recommendedArtists.filter(artist => 
+    artist.type.toLowerCase().includes(activeCategory.toLowerCase()) || 
+    artist.description.toLowerCase().includes(activeCategory.toLowerCase())
+  ) : recommendedArtists;
+  
   return <div className="min-h-screen flex flex-col p-0 m-0">
       <div className="w-full">
         <Navbar className="mx-auto" />
@@ -369,15 +373,17 @@ const Index = () => {
             </div>
           </div>
         </section>
-        <section className="pb-20">
-
-          {/* Lista de artistas recomendados */}
-          <ArtistsList artists={filteredArtists} onArtistClick={handleArtistClick} onFavoriteToggle={handleFavoriteToggle} />
-
-        </section>
+        <section className="pb-20 bg-vyba-cream">
+      <ArtistsList 
+        artists={filteredArtists} 
+        onArtistClick={handleArtistClick} 
+        onFavoriteToggle={handleFavoriteToggle} 
+      />
+    </section>
       </main>
 
       <Footer />
     </div>;
 };
+
 export default Index;
