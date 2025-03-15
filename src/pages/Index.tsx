@@ -11,6 +11,7 @@ import ArtistCard, { CardType } from "@/components/ArtistCard";
 import { toast } from "sonner";
 import TimelineStep from "@/components/TimelineStep";
 import ArtistsList from "@/components/ArtistsList";
+
 const Input = React.forwardRef<HTMLInputElement, React.ComponentProps<"input">>(({
   className,
   ...props
@@ -53,7 +54,9 @@ const Input = React.forwardRef<HTMLInputElement, React.ComponentProps<"input">>(
       </div>;
 });
 Input.displayName = "Input";
+
 const BoldSearch = () => <Search className="h-5 w-5 stroke-[2.5px]" />;
+
 const Index = () => {
   const scrollRef = useRef(null);
   const [searchQuery, setSearchQuery] = useState("");
@@ -170,7 +173,6 @@ const Index = () => {
     toast.success(`Has seleccionado ${type === "género" ? "el género" : "el tipo"} ${name}`);
   };
 
-  // Datos para la sección de artistas recomendados
   const recommendedArtists = [{
     id: "1",
     name: "Antonia Pedragosa",
@@ -227,11 +229,9 @@ const Index = () => {
     isFavorite: false
   }];
 
-  // Categorías de música para los filtros
   const musicCategories = ["Reggaeton", "Pop", "House", "House", "Techno", "Jazz", "Rock"];
   const [activeCategory, setActiveCategory] = useState<string | null>(null);
 
-  // Manejadores de eventos para las tarjetas de artistas
   const handleArtistClick = (artist: any) => {
     toast.success(`Has seleccionado a ${artist.name}`);
   };
@@ -239,7 +239,6 @@ const Index = () => {
     toast(`${artist.isFavorite ? "Eliminado de" : "Añadido a"} favoritos: ${artist.name}`);
   };
 
-  // Filtrado de artistas según la categoría seleccionada
   const filteredArtists = activeCategory ? recommendedArtists.filter(artist => artist.type.toLowerCase().includes(activeCategory.toLowerCase()) || artist.description.toLowerCase().includes(activeCategory.toLowerCase())) : recommendedArtists;
   return <div className="min-h-screen flex flex-col p-0 m-0">
       <div className="w-full">
@@ -338,39 +337,39 @@ const Index = () => {
             </h2>
 
             <div className="max-w-7xl mx-auto">
-              {/* Primer paso */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-16 items-center mb-12">
                 <div className="order-1 md:order-1">
                   <h2 className="text-5xl font-black mb-4 leading-tight">Explora y elige el artista perfecto para tu evento.</h2>
-                  <p className="text-gray-900 font-medium">
+                  <p className="text-gray-900 font-medium mb-6">
                     Descubre el talento que mejor se adapta a tu evento. Filtra por género, estilo o popularidad y encuentra al artista perfecto en segundos.
                   </p>
+                  <Button variant="secondary" className="mt-2">Empieza a buscar ahora</Button>
                 </div>
                 <div className="order-2 md:order-2">
                   <img src="/lovable-uploads/pexels-rovenimages-com-344613-949592.jpg" alt="Búsqueda de artistas" className="w-full max-h-[450px]  object-cover aspect-[4/3] rounded-3xl" />
                 </div>
               </div>
 
-              {/* Segundo paso */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-16 items-center mb-12">
                 <div className="order-2 md:order-1">
                   <img src="/lovable-uploads/7e7c2282-785a-46fb-84b2-f7b14b762e64.png" alt="Contacto con artistas" className="w-full max-h-[450px]  object-cover aspect-[4/3] rounded-3xl" />
                 </div>
                 <div className="order-1 md:order-2">
                   <h2 className="text-5xl font-black mb-4 leading-tight">Contacta con el artista de una forma fácil y rápida.</h2>
-                  <p className="text-gray-900 font-medium">
+                  <p className="text-gray-900 font-medium mb-6">
                     Contacta de una forma fácil y rápida, un proceso seguro mediante a nuestro sistema de mensajes.
                   </p>
+                  <Button variant="secondary" className="mt-2">Empieza a buscar ahora</Button>
                 </div>
               </div>
 
-              {/* Tercer paso */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-16 items-center mb-12">
                 <div className="order-1 md:order-1">
                   <h2 className="text-5xl font-black mb-4 leading-tight">Confirma la reserva y disfruta de un show inolvidable.</h2>
-                  <p className="text-gray-900 font-medium">
+                  <p className="text-gray-900 font-medium mb-6">
                     Comparte tu experiencia con la comunidad y ayuda a otros a encontrar al artista perfecto para sus eventos.
                   </p>
+                  <Button variant="secondary" className="mt-2">Empieza a buscar ahora</Button>
                 </div>
                 <div className="order-2 md:order-2">
                   <img src="/lovable-uploads/440a191c-d45b-4031-acbe-509e602e5d22.png" alt="Escribir reseñas" className="w-full max-h-[450px] object-cover aspect-[4/3] rounded-3xl" />
@@ -380,14 +379,12 @@ const Index = () => {
           </div>
         </section>
 
-        {/* Nueva sección de artistas recomendados */}
         <section className="py-4 md:py-8 bg-vyba-cream">
           <div className="container mx-auto px-6 md:px-10">
             <h2 className="text-3xl md:text-5xl lg:text-7xl font-black text-center mb-12 md:mb-20">
               Los que te recomendamos
             </h2>
 
-            {/* Filtros de categorías */}
             <div className="flex flex-wrap gap-3 mb-10 justify-center">
               {musicCategories.map((category, index) => <button key={index} className={cn("px-5 py-3 rounded-full text-sm font-medium transition-colors", activeCategory === category ? "bg-black text-white" : "bg-[#F5F1EB] hover:bg-[#EAE6E0]")} onClick={() => setActiveCategory(activeCategory === category ? null : category)}>
                   {category}
@@ -403,4 +400,5 @@ const Index = () => {
       <Footer />
     </div>;
 };
+
 export default Index;
