@@ -245,7 +245,7 @@ const Index = () => {
                     <Input 
                       type="text" 
                       placeholder="Buscar artistas" 
-                      className="pl-16 bg-white text-black h-14 rounded-full border-0" 
+                      className="pl-8 bg-white text-black h-14 rounded-full border-0" 
                     />
                     <Button type="submit" size="icon" className="absolute right-1 rounded-full h-12 w-12 flex items-center justify-center">
                       <Search className="h-5 w-5" />
