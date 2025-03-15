@@ -35,28 +35,28 @@ const ArtistCard = ({
       </div>
       
       {/* Badge de tipo */}
-      <Badge variant="outline" className="bg-white text-black mb-4 py-1.5 px-6 text-sm rounded-full border-0">
+      <Badge variant="outline" className="bg-white text-black mb-3 py-1.5 px-6 text-sm rounded-full border-0">
         {type === "género" ? "Género" : "Tipo"}
       </Badge>
       
       {/* Nombre de la categoría */}
-      <h3 className="font-bold text-lg mb-3">{name}</h3>
+      <h3 className="font-bold text-lg mb-2">{name}</h3>
       
       {/* Conteo de artistas y avatares */}
-      <div className="flex items-center gap-4 mt-2">
+      <div className="flex items-center gap-4">
         <span className="text-gray-500 text-base">{artistCount} artistas</span>
         
         {/* Avatares de los artistas */}
         <div className="flex relative">
           {visibleAvatars.map((avatar, index) => (
-            <Avatar key={index} className="border-2 border-[#F5F1EB] h-10 w-10 -ml-2 first:ml-0" style={{ zIndex: MAX_VISIBLE_AVATARS - index }}>
+            <Avatar key={index} className="border-2 border-[#F5F1EB] h-7 w-7 -ml-2 first:ml-0" style={{ zIndex: MAX_VISIBLE_AVATARS - index }}>
               <AvatarImage src={avatar} alt={`Artista ${index + 1}`} />
               <AvatarFallback>{name.charAt(0)}</AvatarFallback>
             </Avatar>
           ))}
           
           {extraAvatars > 0 && (
-            <div className="flex items-center justify-center h-10 w-10 text-xs font-medium text-white bg-gray-700 border-2 border-[#F5F1EB] rounded-full -ml-2" style={{ zIndex: MAX_VISIBLE_AVATARS + 1 }}>
+            <div className="flex items-center justify-center h-7 w-7 text-xs font-medium text-white bg-gray-700 border-2 border-[#F5F1EB] rounded-full -ml-2" style={{ zIndex: MAX_VISIBLE_AVATARS + 1 }}>
               +{extraAvatars}
             </div>
           )}
