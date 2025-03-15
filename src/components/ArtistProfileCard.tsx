@@ -57,17 +57,17 @@ const ArtistProfileCard = ({
         <div className="absolute top-0 left-0 w-full p-4 flex justify-between">
           <Badge 
             variant="outline" 
-            className="bg-white text-black py-2 px-4 rounded-full border-0 font-medium"
+            className="bg-white text-black py-1 px-3 rounded-full border-0 text-xs font-medium"
           >
             {type}
           </Badge>
           
           <button 
             onClick={handleFavoriteClick}
-            className="h-10 w-10 rounded-full bg-white flex items-center justify-center transition-colors duration-300"
+            className="h-8 w-8 rounded-full bg-white flex items-center justify-center transition-colors duration-300"
           >
             <Heart 
-              className={cn("h-5 w-5 transition-colors duration-300", 
+              className={cn("h-4 w-4 transition-colors duration-300", 
                 favorite ? "fill-black stroke-black" : "stroke-black"
               )} 
             />
