@@ -40,8 +40,11 @@ export function Pointer({
  
         // Add event listeners to parent
         const handleMouseMove = (e: MouseEvent) => {
-          x.set(e.clientX);
-          y.set(e.clientY);
+          // Use requestAnimationFrame for smoother updates
+          requestAnimationFrame(() => {
+            x.set(e.clientX);
+            y.set(e.clientY);
+          });
         };
  
         const handleMouseEnter = () => {
