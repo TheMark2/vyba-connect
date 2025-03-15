@@ -276,14 +276,24 @@ const Index = () => {
           animate={{ opacity: 1, y: 0 }}
           exit={{ opacity: 0, y: 50 }}
           transition={{ duration: 0.3, ease: "easeOut" }}
-          className="fixed bottom-6 left-0 right-0 z-50 px-6 md:px-10 flex justify-center"
+          className="fixed bottom-6 left-0 right-0 z-50 px-6 md:px-10 flex justify-center gap-3"
         >
           <Button 
             onClick={() => toast.success("Búsqueda iniciada")}
-            className="max-w-md w-auto px-6 bg-black text-white hover:bg-black/90 rounded-full flex items-center gap-2 shadow-lg"
+            className="px-6 rounded-full flex items-center gap-2 shadow-lg"
+            variant="default"
           >
             <BoldSearch />
             <span>Buscar artistas</span>
+          </Button>
+          
+          <Button 
+            onClick={() => toast.success("Búsqueda con IA iniciada")}
+            className="px-6 rounded-full flex items-center gap-2 shadow-lg"
+            style={{ backgroundColor: "#FFEFD4", color: "#222845" }}
+          >
+            <BoldSearch />
+            <span>Buscar con IA</span>
           </Button>
         </motion.div>
       )}
