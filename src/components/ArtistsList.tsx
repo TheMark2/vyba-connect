@@ -41,7 +41,6 @@ const ArtistsList = ({
   const [count, setCount] = useState(0);
   const isMobile = useIsMobile();
   
-  // Actualizar los contadores cuando cambia el API
   useEffect(() => {
     if (!api) return;
     
@@ -53,7 +52,6 @@ const ArtistsList = ({
     });
   }, [api]);
   
-  // Función para verificar si hay más contenido para desplazar
   const checkScrollable = () => {
     if (carouselRef.current) {
       const container = carouselRef.current.querySelector('[data-carousel-content]');
@@ -65,29 +63,26 @@ const ArtistsList = ({
     }
   };
 
-  // Verificar al montar y cuando cambian los artistas
   useEffect(() => {
     checkScrollable();
-    // Añadir un ligero retraso para asegurar que todo está renderizado
     const timer = setTimeout(checkScrollable, 100);
     return () => clearTimeout(timer);
   }, [artists]);
 
-  // Calcular el ancho del elemento basado en tamaño de pantalla
   const getItemWidth = () => {
     if (isMobile) {
-      return 'calc(80% - 1rem)'; // Móvil: 1 tarjeta + un poco de la siguiente
+      return 'calc(80% - 1rem)';
     } else if (typeof window !== 'undefined' && window.innerWidth < 1024) {
-      return 'calc(40% - 1rem)'; // Tablet: 2 tarjetas + un poco de la siguiente
+      return 'calc(40% - 1rem)';
     } else if (typeof window !== 'undefined' && window.innerWidth < 1280) {
-      return 'calc(30% - 1rem)'; // Escritorio pequeño: 3 tarjetas + un poco de la siguiente
+      return 'calc(30% - 1rem)';
     } else {
-      return 'calc(22% - 1rem)'; // Escritorio grande: 4.5 tarjetas
+      return 'calc(22% - 1rem)';
     }
   };
 
   return (
-    <div className="relative w-full px-4 md:px-6 lg:px-8 xl:px-12" ref={carouselRef}>
+    <div className="relative w-full" ref={carouselRef}>
       <div className="flex justify-between items-center mb-8">
         <div className="flex-1">
           {/* Espacio para contenido adicional si se necesita */}
@@ -161,7 +156,6 @@ const ArtistsList = ({
         </CarouselContent>
       </Carousel>
       
-      {/* Overlay de degradado que solo se muestra cuando hay más contenido */}
       {showGradient && (
         <div
           className="absolute right-0 top-0 h-full w-24 pointer-events-none"
@@ -171,7 +165,6 @@ const ArtistsList = ({
         />
       )}
       
-      {/* Indicadores de página para pantallas móviles */}
       {isMobile && count > 1 && (
         <div className="flex justify-center gap-1 mt-6">
           {Array.from({ length: count }).map((_, i) => (
