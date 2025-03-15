@@ -44,10 +44,10 @@ const Input = React.forwardRef<HTMLInputElement, React.ComponentProps<"input">>(
         {props.placeholder && (
           <span
             className={cn(
-              "absolute pointer-events-none transition-all duration-300 text-muted-foreground font-bold",
+              "absolute pointer-events-none transition-all duration-300 text-black font-bold",
               shouldFloatLabel 
-                ? "transform -translate-y-2 text-xs left-3 top-2" 
-                : "transform translate-y-0 text-base left-3 top-4"
+                ? "transform -translate-y-1 text-xs left-6 top-3" 
+                : "transform translate-y-0 text-base left-6 top-4"
             )}
           >
             {props.placeholder}
@@ -57,7 +57,7 @@ const Input = React.forwardRef<HTMLInputElement, React.ComponentProps<"input">>(
           {...props}
           placeholder=""
           className={cn(
-            "flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-base file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm pt-6",
+            "flex h-10 w-full rounded-md border border-input bg-background px-6 py-2 text-base file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm pt-6",
             className
           )}
           ref={combinedRef}
@@ -245,7 +245,7 @@ const Index = () => {
                     <Input 
                       type="text" 
                       placeholder="Buscar artistas" 
-                      className="pl-8 bg-white text-black h-14 rounded-full border-0" 
+                      className="pr-14 bg-white text-black h-14 rounded-full border-0 shadow-md" 
                     />
                     <Button type="submit" size="icon" className="absolute right-1 rounded-full h-12 w-12 flex items-center justify-center">
                       <Search className="h-5 w-5" />
