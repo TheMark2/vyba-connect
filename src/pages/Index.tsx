@@ -333,15 +333,15 @@ const Index = () => {
                 key={index} 
                 className={cn(
                   "basis-auto px-0", 
-                  index === 1 ? "sm:basis-[70%]" : "sm:basis-[40%]"
+                  index === 1 ? "sm:basis-[80%]" : "sm:basis-[40%]"
                 )}
               >
                 <div className={cn(
                   "h-[370px] relative rounded-[30px] overflow-hidden",
-                  index === 1 ? "scale-110" : "scale-95 opacity-80"
+                  index === 1 ? "scale-115" : "scale-90 opacity-80"
                 )}>
                   <img 
-                    src={index === 1 ? "/lovable-uploads/b1d87308-8791-4bd4-bd43-e4f7cf7d9042.png" : artist.image} 
+                    src={artist.image} 
                     alt={artist.type}
                     className="absolute inset-0 w-full h-full object-cover"
                   />
