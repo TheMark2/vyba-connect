@@ -11,7 +11,6 @@ import ArtistCard, { CardType } from "@/components/ArtistCard";
 import { toast } from "sonner";
 import TimelineStep from "@/components/TimelineStep";
 import ArtistsList from "@/components/ArtistsList";
-
 const Input = React.forwardRef<HTMLInputElement, React.ComponentProps<"input">>(({
   className,
   ...props
@@ -54,9 +53,7 @@ const Input = React.forwardRef<HTMLInputElement, React.ComponentProps<"input">>(
       </div>;
 });
 Input.displayName = "Input";
-
 const BoldSearch = () => <Search className="h-5 w-5 stroke-[2.5px]" />;
-
 const Index = () => {
   const scrollRef = useRef(null);
   const [searchQuery, setSearchQuery] = useState("");
@@ -172,7 +169,6 @@ const Index = () => {
   const handleCardClick = (name: string, type: CardType) => {
     toast.success(`Has seleccionado ${type === "género" ? "el género" : "el tipo"} ${name}`);
   };
-
   const recommendedArtists = [{
     id: "1",
     name: "Antonia Pedragosa",
@@ -228,17 +224,14 @@ const Index = () => {
     priceRange: "450-550€",
     isFavorite: false
   }];
-
   const musicCategories = ["Reggaeton", "Pop", "House", "House", "Techno", "Jazz", "Rock"];
   const [activeCategory, setActiveCategory] = useState<string | null>(null);
-
   const handleArtistClick = (artist: any) => {
     toast.success(`Has seleccionado a ${artist.name}`);
   };
   const handleFavoriteToggle = (artist: any) => {
     toast(`${artist.isFavorite ? "Eliminado de" : "Añadido a"} favoritos: ${artist.name}`);
   };
-
   const filteredArtists = activeCategory ? recommendedArtists.filter(artist => artist.type.toLowerCase().includes(activeCategory.toLowerCase()) || artist.description.toLowerCase().includes(activeCategory.toLowerCase())) : recommendedArtists;
   return <div className="min-h-screen flex flex-col p-0 m-0">
       <div className="w-full">
@@ -346,13 +339,13 @@ const Index = () => {
                   <Button variant="secondary" className="mt-2">Empieza a buscar ahora</Button>
                 </div>
                 <div className="order-2 md:order-2">
-                  <img src="/lovable-uploads/pexels-rovenimages-com-344613-949592.jpg" alt="Búsqueda de artistas" className="w-full max-h-[450px]  object-cover aspect-[4/3] rounded-3xl" />
+                  <img src="/lovable-uploads/pexels-rovenimages-com-344613-949592.jpg" alt="Búsqueda de artistas" className="w-full max-h-[450px]  object-cover aspect-[4/3] rounded-[50px]" />
                 </div>
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-16 items-center mb-12">
                 <div className="order-2 md:order-1">
-                  <img src="/lovable-uploads/7e7c2282-785a-46fb-84b2-f7b14b762e64.png" alt="Contacto con artistas" className="w-full max-h-[450px]  object-cover aspect-[4/3] rounded-3xl" />
+                  <img src="/lovable-uploads/7e7c2282-785a-46fb-84b2-f7b14b762e64.png" alt="Contacto con artistas" className="w-full max-h-[450px]  object-cover aspect-[4/3] rounded-[50px]" />
                 </div>
                 <div className="order-1 md:order-2">
                   <h2 className="text-5xl font-black mb-4 leading-tight">Contacta con el artista de una forma fácil y rápida.</h2>
@@ -372,7 +365,7 @@ const Index = () => {
                   <Button variant="secondary" className="mt-2">Empieza a buscar ahora</Button>
                 </div>
                 <div className="order-2 md:order-2">
-                  <img src="/lovable-uploads/440a191c-d45b-4031-acbe-509e602e5d22.png" alt="Escribir reseñas" className="w-full max-h-[450px] object-cover aspect-[4/3] rounded-3xl" />
+                  <img src="/lovable-uploads/440a191c-d45b-4031-acbe-509e602e5d22.png" alt="Escribir reseñas" className="w-full max-h-[450px] object-cover aspect-[4/3] rounded-[50px]" />
                 </div>
               </div>
             </div>
@@ -400,5 +393,4 @@ const Index = () => {
       <Footer />
     </div>;
 };
-
 export default Index;
