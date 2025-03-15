@@ -82,7 +82,7 @@ const ArtistProfileCard = ({
           <span className="text-lg font-bold">{rating.toFixed(1)}</span>
         </div>
         
-        <p className="text-gray-500 text-sm">{description}</p>
+        <p className="text-gray-500 text-sm line-clamp-1">{description}</p>
         
         <p className="text-lg font-bold mt-2">
           de {priceRange}
