@@ -1,3 +1,4 @@
+
 import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { useState } from "react";
@@ -26,10 +27,10 @@ const ArtistCard = ({
   const MAX_VISIBLE_AVATARS = 3;
   const visibleAvatars = artistAvatars.slice(0, MAX_VISIBLE_AVATARS);
   const extraAvatars = artistAvatars.length > MAX_VISIBLE_AVATARS ? artistAvatars.length - MAX_VISIBLE_AVATARS : 0;
-  return <div className={`flex flex-col items-start bg-[#F5F1EB] p-6 rounded-3xl min-w-[400px] mx-3 transition-all duration-300 relative cursor-pointer border-2 ${isHovered ? 'border-primary' : 'border-transparent'}`} onClick={onClick} onMouseEnter={() => setIsHovered(true)} onMouseLeave={() => setIsHovered(false)} style={{
-    // Cambiando la animación a un sutil cambio de background color
+  return <div className={`flex flex-col items-start bg-[#F5F1EB] p-6 rounded-3xl min-w-[400px] mx-3 transition-all duration-300 relative cursor-pointer`} onClick={onClick} onMouseEnter={() => setIsHovered(true)} onMouseLeave={() => setIsHovered(false)} style={{
+    // Cambiando la animación a un sutil cambio de background color sin borde
     backgroundColor: isHovered ? '#EAE6E0' : '#F5F1EB',
-    transition: 'background-color 0.3s ease, border-color 0.3s ease'
+    transition: 'background-color 0.3s ease'
   }}>
       {/* Rating en la esquina superior derecha */}
       <div className="absolute top-6 right-6 flex items-center gap-1">
