@@ -394,14 +394,17 @@ const Index = () => {
                 </button>
               ))}
             </div>
-
-            {/* Lista de artistas recomendados */}
-            <ArtistsList 
-              artists={filteredArtists}
-              onArtistClick={handleArtistClick}
-              onFavoriteToggle={handleFavoriteToggle}
-            />
           </div>
+        </section>
+        <section>
+
+          {/* Lista de artistas recomendados */}
+          <ArtistsList 
+            artists={filteredArtists}
+            onArtistClick={handleArtistClick}
+            onFavoriteToggle={handleFavoriteToggle}
+          />
+
         </section>
       </main>
 
