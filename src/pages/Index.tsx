@@ -69,6 +69,20 @@ const Index = () => {
   const isMobile = useIsMobile();
   const [activeArtistIndex, setActiveArtistIndex] = useState(1);
 
+  const artists = [{
+    type: "DJ",
+    image: "/lovable-uploads/7e7c2282-785a-46fb-84b2-f7b14b762e64.png",
+    description: "El portal perfecto para encontrar tu DJ"
+  }, {
+    type: "Saxofonista",
+    image: "/lovable-uploads/64cabbe3-ce62-4190-830d-0e5defd31a1b.png",
+    description: "Encuentra al saxofonista ideal para tu evento"
+  }, {
+    type: "Guitarrista",
+    image: "/lovable-uploads/440a191c-d45b-4031-acbe-509e602e5d22.png",
+    description: "Conecta con talentosos guitarristas"
+  }];
+
   const {
     scrollYProgress
   } = useScroll({
@@ -106,20 +120,6 @@ const Index = () => {
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   }, [showFixedSearch, isMobile, artists.length]);
-
-  const artists = [{
-    type: "DJ",
-    image: "/lovable-uploads/7e7c2282-785a-46fb-84b2-f7b14b762e64.png",
-    description: "El portal perfecto para encontrar tu DJ"
-  }, {
-    type: "Saxofonista",
-    image: "/lovable-uploads/64cabbe3-ce62-4190-830d-0e5defd31a1b.png",
-    description: "Encuentra al saxofonista ideal para tu evento"
-  }, {
-    type: "Guitarrista",
-    image: "/lovable-uploads/440a191c-d45b-4031-acbe-509e602e5d22.png",
-    description: "Conecta con talentosos guitarristas"
-  }];
 
   const opacity1 = useTransform(scrollYProgress, [0, 0.19, 0.25, 0.3], [1, 0.9, 0.3, 0]);
   const opacity2 = useTransform(scrollYProgress, [0.19, 0.25, 0.3, 0.43, 0.5, 0.55], [0, 0.3, 0.9, 1, 0.3, 0]);
@@ -320,7 +320,6 @@ const Index = () => {
             loop: true,
             dragFree: true,
             containScroll: false,
-            draggable: false,
           }}
           className="w-full"
           onMouseDown={(e) => e.stopPropagation()}
