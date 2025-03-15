@@ -295,18 +295,19 @@ const Index = () => {
         </div>
       </div>
       
-      <div className="relative w-full mt-4">
+      <div className="relative w-full mt-4 overflow-visible px-6">
         <Carousel
           opts={{
-            align: "center",
+            align: "start",
             loop: true,
+            containScroll: false,
           }}
           className="w-full"
           onMouseDown={(e) => e.stopPropagation()}
         >
-          <CarouselContent className="-ml-8">
+          <CarouselContent className="-ml-4">
             {artists.map((artist, index) => (
-              <CarouselItem key={index} className="pl-8 basis-[85%] md:basis-1/2 lg:basis-1/3">
+              <CarouselItem key={index} className="pl-4 basis-[80%] md:basis-1/2 lg:basis-1/3">
                 <div className="h-[370px] relative rounded-[30px] overflow-hidden">
                   <img 
                     src={index === 1 ? "/lovable-uploads/b1d87308-8791-4bd4-bd43-e4f7cf7d9042.png" : artist.image} 
