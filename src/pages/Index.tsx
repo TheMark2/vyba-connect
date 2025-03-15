@@ -1,3 +1,4 @@
+
 import { Button } from "@/components/ui/button";
 import { Search, BrainCircuit } from "lucide-react";
 import Navbar from "@/components/Navbar";
@@ -14,6 +15,7 @@ import ArtistsList from "@/components/ArtistsList";
 import StatsSummary from "@/components/StatsSummary";
 import HelpSection from "@/components/HelpSection";
 import { useIsMobile } from "@/hooks/use-mobile";
+import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/carousel";
 
 const Input = React.forwardRef<HTMLInputElement, React.ComponentProps<"input">>(({
   className,
@@ -293,30 +295,29 @@ const Index = () => {
         </div>
       </div>
       
-      <div className="relative overflow-hidden w-full mt-4 px-0">
-        <div 
-          className="flex"
-          style={{
-            transform: `translateX(${-20 * activeArtistIndex}%)`
+      <div className="relative w-full mt-4">
+        <Carousel
+          opts={{
+            align: "center",
+            loop: true,
           }}
+          className="w-full"
+          onMouseDown={(e) => e.stopPropagation()}
         >
-          {artists.map((artist, index) => (
-            <div
-              key={index}
-              className={cn(
-                "min-w-[90%] mx-[-8%] h-[370px] relative rounded-none overflow-hidden",
-                index === activeArtistIndex ? "opacity-100 scale-100 z-10" : "opacity-90 scale-90 z-0"
-              )}
-              onClick={() => setActiveArtistIndex(index)}
-            >
-              <img 
-                src={index === 1 ? "/lovable-uploads/b1d87308-8791-4bd4-bd43-e4f7cf7d9042.png" : artist.image} 
-                alt={artist.type}
-                className="absolute inset-0 w-full h-full object-cover"
-              />
-            </div>
-          ))}
-        </div>
+          <CarouselContent className="-ml-8">
+            {artists.map((artist, index) => (
+              <CarouselItem key={index} className="pl-8 basis-[85%] md:basis-1/2 lg:basis-1/3">
+                <div className="h-[370px] relative rounded-[30px] overflow-hidden">
+                  <img 
+                    src={index === 1 ? "/lovable-uploads/b1d87308-8791-4bd4-bd43-e4f7cf7d9042.png" : artist.image} 
+                    alt={artist.type}
+                    className="absolute inset-0 w-full h-full object-cover"
+                  />
+                </div>
+              </CarouselItem>
+            ))}
+          </CarouselContent>
+        </Carousel>
       </div>
     </div>
   );
