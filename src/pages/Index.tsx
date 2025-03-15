@@ -73,7 +73,7 @@ const Index = () => {
   useEffect(() => {
     const handleScroll = () => {
       const scrollPosition = window.scrollY;
-      const shouldShowSearch = scrollPosition > window.innerHeight;
+      const shouldShowSearch = scrollPosition > window.innerHeight * 3;
       
       if (shouldShowSearch !== showFixedSearch) {
         setShowFixedSearch(shouldShowSearch);
@@ -278,22 +278,13 @@ const Index = () => {
           transition={{ duration: 0.3, ease: "easeOut" }}
           className="fixed bottom-6 left-0 right-0 z-50 px-6 md:px-10 flex justify-center"
         >
-          <div className="w-full max-w-3xl flex items-center rounded-full overflow-hidden bg-black shadow-lg">
-            <Input 
-              type="text" 
-              placeholder="Buscar artistas" 
-              className="pr-14 bg-black text-white border-0 h-14 rounded-full placeholder:text-white/70"
-              value={fixedSearchQuery} 
-              onChange={e => setFixedSearchQuery(e.target.value)} 
-            />
-            <Button 
-              type="submit" 
-              size="icon" 
-              className="absolute right-2 rounded-full h-11 w-11 flex items-center justify-center bg-white text-black"
-            >
-              <BoldSearch />
-            </Button>
-          </div>
+          <Button 
+            onClick={() => toast.success("Búsqueda iniciada")}
+            className="max-w-md w-auto px-6 bg-black text-white hover:bg-black/90 rounded-full flex items-center gap-2 shadow-lg"
+          >
+            <BoldSearch />
+            <span>Buscar artistas</span>
+          </Button>
         </motion.div>
       )}
 
