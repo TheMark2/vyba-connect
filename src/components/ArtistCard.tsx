@@ -33,13 +33,14 @@ const ArtistCard = ({
   
   return (
     <div 
-      className={`flex flex-col items-start bg-[#F5F1EB] p-6 rounded-3xl min-w-[400px] mx-3 transition-all duration-300 relative cursor-pointer border-2 border-transparent ${isHovered ? 'border-primary' : ''}`}
+      className={`flex flex-col items-start bg-[#F5F1EB] p-6 rounded-3xl min-w-[400px] mx-3 transition-all duration-300 relative cursor-pointer border-2 ${isHovered ? 'border-primary' : 'border-transparent'}`}
       onClick={onClick}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
       style={{
-        transform: isHovered ? 'translateY(-4px)' : 'translateY(0)',
-        transition: 'transform 0.3s ease, border-color 0.3s ease'
+        // Cambiando la animación a un sutil cambio de opacidad en lugar de transformación
+        opacity: isHovered ? 0.92 : 1,
+        transition: 'opacity 0.3s ease, border-color 0.3s ease'
       }}
     >
       {/* Rating en la esquina superior derecha */}
@@ -66,7 +67,7 @@ const ArtistCard = ({
               key={index} 
               className="border-2 border-[#F5F1EB] h-7 w-7 -ml-2 first:ml-0" 
               style={{
-                zIndex: visibleAvatars.length - index  // Cambiamos el z-index para que las de la derecha estén arriba
+                zIndex: index + 1  // Asegurando que los avatares de la derecha estén por encima
               }}
             >
               <AvatarImage src={avatar} alt={`Artista ${index + 1}`} />
