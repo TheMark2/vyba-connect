@@ -49,11 +49,11 @@ const ArtistsList = ({
             <CarouselItem 
               key={artist.id} 
               className="pl-4 pr-0"
-              // Fixed width to ensure exactly 4 cards fit with 5th partially visible
+              // Adjusted width to make 4 full cards with 5th more visible
               style={{ 
-                width: 'calc(25% - 1rem)',
-                minWidth: 'calc(25% - 1rem)',
-                flex: '0 0 calc(25% - 1rem)'
+                width: 'calc(23% - 1rem)',
+                minWidth: 'calc(23% - 1rem)',
+                flex: '0 0 calc(23% - 1rem)'
               }}
             >
               <ArtistProfileCard
@@ -75,9 +75,9 @@ const ArtistsList = ({
       
       {/* Gradient overlay on the right side to indicate more content */}
       <div 
-        className="absolute right-0 top-0 h-full w-16 pointer-events-none"
+        className="absolute right-0 top-0 h-full w-24 pointer-events-none"
         style={{
-          background: "linear-gradient(90deg, rgba(255,255,255,0) 0%, rgba(255,255,255,1) 100%)"
+          background: "linear-gradient(90deg, rgba(255,255,255,0) 0%, rgba(255,255,255,0.2) 30%, rgba(255,255,255,0.8) 60%, rgba(255,255,255,1) 100%)"
         }}
       />
     </div>
