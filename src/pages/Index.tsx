@@ -442,7 +442,7 @@ const Index = () => {
           <ArtistsList artists={filteredArtists} onArtistClick={handleArtistClick} onFavoriteToggle={handleFavoriteToggle} />
         </section>
         
-        <StatsSummary className="px-20 md:px-32" />
+        <StatsSummary className="px-20 md:px-32 mb-16" />
         <HelpSection className="px-20 md:px-32" />
       </main>
 
