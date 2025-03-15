@@ -265,14 +265,14 @@ const Index = () => {
 
         <section className="py-20 bg-white">
           <div className="container mx-auto px-6 md:px-10">
-            <h2 className="text-3xl md:text-7xl font-black text-center mb-16">
+            <h2 className="text-3xl md:text-7xl font-black text-center mb-24">
               Contratar a un artista nunca había sido tan fácil
             </h2>
 
             <div className="max-w-6xl mx-auto">
-              <TimelineStep stepNumber={1} title="Busca entre todos los artistas disponibles" description="Busca a Rita y encuentra en pocos minutos al artista que mejor se adapte a tus condiciones.">
-                <div className="bg-vyba-cream p-6 rounded-2xl shadow-sm">
-                  <div className="bg-white rounded-xl shadow-sm p-5 border border-vyba-beige/50">
+              <TimelineStep stepNumber={1} title="Busca entre todos los artistas disponibles" description="Busca con Rita y encuentra en pocos minutos al artista que mejor se adapte a tus condiciones.">
+                <div className="bg-vyba-cream rounded-xl overflow-hidden">
+                  <div className="bg-white rounded-lg p-5 border-vyba-beige/30 border">
                     <div className="flex gap-2 mb-4">
                       <div className="bg-vyba-blue text-vyba-navy font-medium text-sm py-1 px-3 rounded-full">Busca con IA</div>
                       <div className="bg-gray-100 text-gray-700 font-medium text-sm py-1 px-3 rounded-full">Filtros</div>
@@ -283,8 +283,8 @@ const Index = () => {
               </TimelineStep>
 
               <TimelineStep stepNumber={2} title="Contacta con el artista de una forma fácil" description="Contacta de una forma fácil y rápida, un proceso seguro mediante a nuestro sistema de mensajes">
-                <div className="bg-vyba-cream p-6 rounded-2xl shadow-sm">
-                  <div className="bg-white rounded-xl shadow-sm p-5 border border-vyba-beige/50">
+                <div className="bg-vyba-cream rounded-xl overflow-hidden">
+                  <div className="bg-white rounded-lg p-5 border-vyba-beige/30 border">
                     <div className="text-center mb-4">
                       <div className="font-medium text-vyba-navy">Fines de semana</div>
                       <div className="text-2xl font-bold text-vyba-navy">100-200€</div>
@@ -297,8 +297,8 @@ const Index = () => {
               </TimelineStep>
 
               <TimelineStep stepNumber={3} title="Escribe una reseña" description="Comparte tu experiencia con la comunidad y ayuda a otros a encontrar al artista perfecto para sus eventos." isLast={true}>
-                <div className="bg-vyba-cream p-6 rounded-2xl shadow-sm">
-                  <div className="bg-white rounded-xl shadow-sm p-5 border border-vyba-beige/50">
+                <div className="bg-vyba-cream rounded-xl overflow-hidden">
+                  <div className="bg-white rounded-lg p-5 border-vyba-beige/30 border">
                     <div className="flex items-center gap-3 mb-4">
                       <div className="w-10 h-10 bg-vyba-blue rounded-full flex items-center justify-center text-vyba-navy font-bold">VY</div>
                       <div className="font-medium text-vyba-navy">DJ Antonio</div>
