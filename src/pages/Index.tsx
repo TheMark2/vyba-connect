@@ -7,9 +7,9 @@ import { useRef, useState } from "react";
 import * as React from "react";
 import { cn } from "@/lib/utils";
 import { Marquee } from "@/components/ui/marquee";
-import ArtistCard from "@/components/ArtistCard";
+import ArtistCard, { CardType } from "@/components/ArtistCard";
+import { MUSIC_GENRES, MUSICIAN_TYPES } from "@/constants/music";
 
-// Custom Animated Input component
 const Input = React.forwardRef<HTMLInputElement, React.ComponentProps<"input">>(
   ({ className, ...props }, ref) => {
     const [isFocused, setIsFocused] = React.useState(false);
@@ -83,7 +83,6 @@ const Input = React.forwardRef<HTMLInputElement, React.ComponentProps<"input">>(
 
 Input.displayName = "Input";
 
-// Bold Search Icon Component
 const BoldSearch = () => (
   <Search className="h-5 w-5 stroke-[2.5px]" />
 );
@@ -138,6 +137,20 @@ const Index = () => {
     { name: "Lucas Mendoza", role: "Guitarrista", rating: 4.7 },
     { name: "Daniela Jiménez", role: "DJ", rating: 4.9 },
     { name: "Rafael Torres", role: "DJ", rating: 4.8 }
+  ];
+
+  const genreCards = [
+    { type: "género" as CardType, name: "Pop", artistCount: 15, rating: 4.7, artistAvatars: Array(7).fill("/lovable-uploads/77591a97-10cd-4c8b-b768-5b17483c3d9f.png") },
+    { type: "género" as CardType, name: "Rock", artistCount: 12, rating: 4.8, artistAvatars: Array(5).fill("/lovable-uploads/77591a97-10cd-4c8b-b768-5b17483c3d9f.png") },
+    { type: "género" as CardType, name: "Jazz", artistCount: 8, rating: 4.9, artistAvatars: Array(4).fill("/lovable-uploads/77591a97-10cd-4c8b-b768-5b17483c3d9f.png") },
+    { type: "género" as CardType, name: "Electrónica", artistCount: 20, rating: 4.6, artistAvatars: Array(7).fill("/lovable-uploads/77591a97-10cd-4c8b-b768-5b17483c3d9f.png") }
+  ];
+  
+  const typeCards = [
+    { type: "tipo" as CardType, name: "DJ", artistCount: 18, rating: 4.9, artistAvatars: Array(7).fill("/lovable-uploads/77591a97-10cd-4c8b-b768-5b17483c3d9f.png") },
+    { type: "tipo" as CardType, name: "Saxofonista", artistCount: 6, rating: 4.8, artistAvatars: Array(3).fill("/lovable-uploads/77591a97-10cd-4c8b-b768-5b17483c3d9f.png") },
+    { type: "tipo" as CardType, name: "Bandas", artistCount: 10, rating: 4.7, artistAvatars: Array(6).fill("/lovable-uploads/77591a97-10cd-4c8b-b768-5b17483c3d9f.png") },
+    { type: "tipo" as CardType, name: "Guitarrista", artistCount: 14, rating: 4.8, artistAvatars: Array(7).fill("/lovable-uploads/77591a97-10cd-4c8b-b768-5b17483c3d9f.png") }
   ];
 
   return <div className="min-h-screen flex flex-col p-0 m-0">
@@ -230,23 +243,27 @@ const Index = () => {
         <section className="py-16 bg-vyba-cream">
           <div className="w-full overflow-hidden">
             <Marquee className="py-4" pauseOnHover>
-              {topArtists.map((artist, index) => (
+              {genreCards.map((card, index) => (
                 <ArtistCard 
                   key={index}
-                  name={artist.name}
-                  role={artist.role}
-                  rating={artist.rating}
+                  type={card.type}
+                  name={card.name}
+                  artistCount={card.artistCount}
+                  rating={card.rating}
+                  artistAvatars={card.artistAvatars}
                 />
               ))}
             </Marquee>
             
             <Marquee className="py-4" reverse pauseOnHover>
-              {topArtists.map((artist, index) => (
+              {typeCards.map((card, index) => (
                 <ArtistCard 
-                  key={index + topArtists.length}
-                  name={artist.name}
-                  role={artist.role}
-                  rating={artist.rating}
+                  key={index + genreCards.length}
+                  type={card.type}
+                  name={card.name}
+                  artistCount={card.artistCount}
+                  rating={card.rating}
+                  artistAvatars={card.artistAvatars}
                   isReversed
                 />
               ))}
