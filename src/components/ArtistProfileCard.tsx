@@ -30,6 +30,7 @@ const ArtistProfileCard = ({
   onClick
 }: ArtistProfileCardProps) => {
   const [favorite, setFavorite] = useState(isFavorite);
+  const [isHovered, setIsHovered] = useState(false);
 
   const handleFavoriteClick = (e: React.MouseEvent) => {
     e.stopPropagation();
@@ -46,14 +47,27 @@ const ArtistProfileCard = ({
         className
       )} 
       onClick={onClick}
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
     >
       {/* Imagen principal con etiqueta de tipo y botón favorito */}
-      <div className="relative aspect-[4/3] w-full">
-        <img 
-          src={image} 
-          alt={`${name} - ${type}`} 
-          className="w-full h-full object-cover rounded-3xl" 
-        />
+      <div className="relative aspect-[3/4] w-full overflow-hidden rounded-3xl">
+        <div 
+          className="w-full h-full transform transition-transform duration-300"
+          style={{
+            transform: isHovered ? 'scale(1.05)' : 'scale(1)',
+          }}
+        >
+          <img 
+            src={image} 
+            alt={`${name} - ${type}`} 
+            className="w-full h-full object-cover" 
+          />
+        </div>
+        
+        {/* Degradado negro de abajo a arriba */}
+        <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-black/10 to-transparent"></div>
+        
         <div className="absolute top-0 left-0 w-full p-3 flex justify-between">
           <Badge 
             variant="outline" 
