@@ -31,7 +31,7 @@ const ArtistsList = ({
   onFavoriteToggle,
 }: ArtistsListProps) => {
   return (
-    <div className="relative w-full">
+    <div className="relative w-full px-6 md:px-10">
       <Carousel
         className="w-full"
         opts={{
@@ -41,9 +41,9 @@ const ArtistsList = ({
           dragFree: true,
         }}
       >
-        <CarouselContent className="-ml-0">
+        <CarouselContent className="ml-0">
           {artists.map((artist) => (
-            <CarouselItem key={artist.id} className="pl-0 md:basis-1/4 lg:basis-1/4">
+            <CarouselItem key={artist.id} className="pl-4 pr-0 md:basis-1/4 lg:basis-1/4 sm:basis-1/3">
               <ArtistProfileCard
                 name={artist.name}
                 type={artist.type}
@@ -61,7 +61,7 @@ const ArtistsList = ({
         </CarouselContent>
       </Carousel>
       {/* Gradiente a la derecha para indicar que hay más contenido */}
-      <div className="absolute right-0 top-0 h-full w-24 pointer-events-none" 
+      <div className="absolute right-0 top-0 h-full w-16 pointer-events-none" 
         style={{ 
           background: "linear-gradient(90deg, rgba(250,248,246,0) 0%, rgba(250,248,246,1) 100%)" 
         }}
