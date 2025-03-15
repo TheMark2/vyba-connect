@@ -22,8 +22,8 @@ interface StatsSummaryProps {
 
 const StatsSummary = ({ className }: StatsSummaryProps) => {
   return (
-    <section>
-      <div className="px-12 md:px-14 lg:px-16 bg-[#F1F0FB]">
+    <section className={cn("px-12 md:px-14 lg:px-16", className)}>
+      <div className="bg-[#F1F0FB] rounded-3xl">
         <div className="container mx-auto px-6 md:px-10">
           <div className="flex flex-wrap justify-center gap-10 md:gap-20 lg:gap-32">
             <StatsItem count="1.000" label="Artistas registrados" />
