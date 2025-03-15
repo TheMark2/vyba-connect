@@ -46,7 +46,7 @@ const Input = React.forwardRef<HTMLInputElement, React.ComponentProps<"input">>(
             className={cn(
               "absolute pointer-events-none transition-all duration-300 text-muted-foreground font-bold",
               shouldFloatLabel 
-                ? "transform -translate-y-6 text-xs left-3" 
+                ? "transform -translate-y-2 text-xs left-3 top-2" 
                 : "transform translate-y-0 text-base left-3 top-4"
             )}
           >
@@ -57,7 +57,7 @@ const Input = React.forwardRef<HTMLInputElement, React.ComponentProps<"input">>(
           {...props}
           placeholder=""
           className={cn(
-            "flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-base file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm pt-4",
+            "flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-base file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm pt-6",
             className
           )}
           ref={combinedRef}
