@@ -13,6 +13,7 @@ import TimelineStep from "@/components/TimelineStep";
 import ArtistsList from "@/components/ArtistsList";
 import StatsSummary from "@/components/StatsSummary";
 import HelpSection from "@/components/HelpSection";
+import { useIsMobile } from "@/hooks/use-mobile";
 
 const Input = React.forwardRef<HTMLInputElement, React.ComponentProps<"input">>(({
   className,
@@ -64,6 +65,8 @@ const Index = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [showFixedSearch, setShowFixedSearch] = useState(false);
   const [fixedSearchQuery, setFixedSearchQuery] = useState("");
+  const isMobile = useIsMobile();
+  
   const {
     scrollYProgress
   } = useScroll({
@@ -264,106 +267,154 @@ const Index = () => {
 
   const filteredArtists = activeCategory ? recommendedArtists.filter(artist => artist.type.toLowerCase().includes(activeCategory.toLowerCase()) || artist.description.toLowerCase().includes(activeCategory.toLowerCase())) : recommendedArtists;
 
-  return <div className="min-h-screen flex flex-col p-0 m-0">
+  const renderMobileHero = () => (
+    <div className="min-h-screen flex flex-col bg-vyba-cream">
+      <div className="px-6 pt-20 pb-10">
+        <h1 className="text-4xl font-black leading-tight">
+          El portal perfecto para encontrar tu dj
+        </h1>
+        
+        <div className="mt-10 relative">
+          <Input 
+            type="text" 
+            placeholder="Buscar artistas" 
+            className="pr-14 bg-[#F5F1EB] text-black h-14 rounded-full border-0"
+            value={searchQuery}
+            onChange={e => setSearchQuery(e.target.value)}
+          />
+          <Button 
+            type="submit" 
+            size="icon" 
+            className="absolute right-2 top-1/2 -translate-y-1/2 rounded-full h-11 w-11 flex items-center justify-center"
+          >
+            <BoldSearch />
+          </Button>
+        </div>
+      </div>
+      
+      <div className="px-4 mt-6 flex flex-col gap-4">
+        {artists.map((artist, index) => (
+          <div key={index} className="relative w-full h-[200px] rounded-3xl overflow-hidden">
+            <img 
+              src={artist.image} 
+              alt={artist.type}
+              className="absolute inset-0 w-full h-full object-cover"
+            />
+            <div className="absolute inset-0 bg-black/30"></div>
+            <div className="absolute inset-0 flex items-center justify-center">
+              <h3 className="text-white text-2xl font-bold">{artist.type}</h3>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+
+  const renderDesktopHero = () => (
+    <div ref={scrollRef} className="h-[300vh] relative">
+      <div className="sticky top-0 h-screen overflow-hidden">
+        <div className="relative w-full h-screen overflow-hidden">
+          <motion.div className="absolute inset-0 px-6 md:px-10 lg:px-14 xl:px-16 pt-8 pb-32">
+            <motion.div className="relative w-full h-full rounded-[2vw] overflow-hidden">
+              <motion.div className="absolute inset-0 origin-center" style={{
+                opacity: opacity1,
+                scale: scale1,
+                y: moveY1,
+                x: moveX1
+              }}>
+                <img src={artists[0].image} alt="DJ performing" className="w-full h-full brightness-75 blur-[2px] object-cover" />
+              </motion.div>
+              
+              <motion.div className="absolute inset-0 origin-center" style={{
+                opacity: opacity2,
+                scale: scale2,
+                y: moveY2,
+                x: moveX2
+              }}>
+                <img src={artists[1].image} alt="Saxofonista performing" className="w-full h-full brightness-75 blur-[2px] object-cover" />
+              </motion.div>
+              
+              <motion.div className="absolute inset-0 origin-center" style={{
+                opacity: opacity3,
+                scale: scale3,
+                y: moveY3,
+                x: moveX3
+              }}>
+                <img src={artists[2].image} alt="Guitarrista performing" className="w-full h-full brightness-75 blur-[2px] object-cover rounded-[2vw]" />
+              </motion.div>
+
+              <div className="absolute inset-0 bg-black opacity-50"></div>
+              
+              <motion.div className="absolute inset-0 flex flex-col justify-center text-white px-6 md:px-12 lg:px-16">
+                <div className="max-w-2xl mx-0 space-y-14">
+                  <div className="relative h-28">
+                    <motion.h1 className="text-4xl md:text-5xl lg:text-7xl font-black text-white leading-tight absolute top-0 left-0 w-full" style={{
+                      opacity: textOpacity1
+                    }}>
+                      Contacta con los mejores artistas
+                    </motion.h1>
+                    
+                    <motion.h1 className="text-4xl md:text-5xl lg:text-7xl font-black text-white leading-tight absolute top-0 left-0 w-full" style={{
+                      opacity: textOpacity2
+                    }}>
+                      De una forma fácil
+                    </motion.h1>
+                    
+                    <motion.h1 className="text-4xl md:text-5xl lg:text-7xl font-black text-white leading-tight absolute top-0 left-0 w-full" style={{
+                      opacity: textOpacity3
+                    }}>
+                      Usa Vyba
+                    </motion.h1>
+                  </div>
+                  
+                  <motion.div className="flex w-full relative">
+                    <div className="relative w-full flex items-center">
+                      <Input type="text" placeholder="Buscar artistas" className="pr-14 bg-[#F5F1EB] text-black h-14 rounded-full border-0" value={searchQuery} onChange={e => setSearchQuery(e.target.value)} />
+                      <Button type="submit" size="icon" className="absolute right-2 rounded-full h-11 w-11 flex items-center justify-center">
+                        <BoldSearch />
+                      </Button>
+                    </div>
+                  </motion.div>
+                </div>
+              </motion.div>
+            </motion.div>
+          </motion.div>
+        </div>
+      </div>
+    </div>
+  );
+
+  return (
+    <div className="min-h-screen flex flex-col p-0 m-0">
       <div className="w-full">
         <Navbar className="mx-auto" />
       </div>
 
       {showFixedSearch && <motion.div initial={{
-      opacity: 0,
-      y: 50
-    }} animate={{
-      opacity: 1,
-      y: 0
-    }} exit={{
-      opacity: 0,
-      y: 50
-    }} transition={{
-      duration: 0.3,
-      ease: "easeOut"
-    }} className="fixed bottom-6 left-0 right-0 z-50 px-6 md:px-10 flex justify-center">
-          <Button onClick={() => toast.success("Búsqueda con IA iniciada")} className="px-8 rounded-full flex items-center gap-2 shadow-lg" variant="default">
-            <div className="">
-              <BrainCircuit className="h-5 w-5" />
-            </div>
-            <span>Buscar con IA</span>
-          </Button>
-        </motion.div>}
+        opacity: 0,
+        y: 50
+      }} animate={{
+        opacity: 1,
+        y: 0
+      }} exit={{
+        opacity: 0,
+        y: 50
+      }} transition={{
+        duration: 0.3,
+        ease: "easeOut"
+      }} className="fixed bottom-6 left-0 right-0 z-50 px-6 md:px-10 flex justify-center">
+        <Button onClick={() => toast.success("Búsqueda con IA iniciada")} className="px-8 rounded-full flex items-center gap-2 shadow-lg" variant="default">
+          <div className="">
+            <BrainCircuit className="h-5 w-5" />
+          </div>
+          <span>Buscar con IA</span>
+        </Button>
+      </motion.div>}
 
       <main className="flex-1">
-        <div ref={scrollRef} className="h-[300vh] relative">
-          <div className="sticky top-0 h-screen overflow-hidden">
-            <div className="relative w-full h-screen overflow-hidden">
-              <motion.div className="absolute inset-0 px-6 md:px-10 lg:px-14 xl:px-16 pt-8 pb-32">
-                <motion.div className="relative w-full h-full rounded-[2vw] overflow-hidden">
-                  <motion.div className="absolute inset-0 origin-center" style={{
-                  opacity: opacity1,
-                  scale: scale1,
-                  y: moveY1,
-                  x: moveX1
-                }}>
-                    <img src={artists[0].image} alt="DJ performing" className="w-full h-full brightness-75 blur-[2px] object-cover" />
-                  </motion.div>
-                  
-                  <motion.div className="absolute inset-0 origin-center" style={{
-                  opacity: opacity2,
-                  scale: scale2,
-                  y: moveY2,
-                  x: moveX2
-                }}>
-                    <img src={artists[1].image} alt="Saxofonista performing" className="w-full h-full brightness-75 blur-[2px] object-cover" />
-                  </motion.div>
-                  
-                  <motion.div className="absolute inset-0 origin-center" style={{
-                  opacity: opacity3,
-                  scale: scale3,
-                  y: moveY3,
-                  x: moveX3
-                }}>
-                    <img src={artists[2].image} alt="Guitarrista performing" className="w-full h-full brightness-75 blur-[2px] object-cover rounded-[2vw]" />
-                  </motion.div>
+        {isMobile ? renderMobileHero() : renderDesktopHero()}
 
-                  <div className="absolute inset-0 bg-black opacity-50"></div>
-                  
-                  <motion.div className="absolute inset-0 flex flex-col justify-center text-white px-6 md:px-12 lg:px-16">
-                    <div className="max-w-2xl mx-0 space-y-14">
-                      <div className="relative h-28">
-                        <motion.h1 className="text-4xl md:text-5xl lg:text-7xl font-black text-white leading-tight absolute top-0 left-0 w-full" style={{
-                        opacity: textOpacity1
-                      }}>
-                          Contacta con los mejores artistas
-                        </motion.h1>
-                        
-                        <motion.h1 className="text-4xl md:text-5xl lg:text-7xl font-black text-white leading-tight absolute top-0 left-0 w-full" style={{
-                        opacity: textOpacity2
-                      }}>
-                          De una forma fácil
-                        </motion.h1>
-                        
-                        <motion.h1 className="text-4xl md:text-5xl lg:text-7xl font-black text-white leading-tight absolute top-0 left-0 w-full" style={{
-                        opacity: textOpacity3
-                      }}>
-                          Usa Vyba
-                        </motion.h1>
-                      </div>
-                      
-                      <motion.div className="flex w-full relative">
-                        <div className="relative w-full flex items-center">
-                          <Input type="text" placeholder="Buscar artistas" className="pr-14 bg-[#F5F1EB] text-black h-14 rounded-full border-0" value={searchQuery} onChange={e => setSearchQuery(e.target.value)} />
-                          <Button type="submit" size="icon" className="absolute right-2 rounded-full h-11 w-11 flex items-center justify-center">
-                            <BoldSearch />
-                          </Button>
-                        </div>
-                      </motion.div>
-                    </div>
-                  </motion.div>
-                </motion.div>
-              </motion.div>
-            </div>
-          </div>
-        </div>
-
-        <section className=" bg-vyba-cream">
+        <section className="bg-vyba-cream">
           <div className="w-full overflow-hidden">
             <Marquee className="py-4" pauseOnHover>
               {genreCards.map((card, index) => <ArtistCard key={index} type={card.type} name={card.name} artistCount={card.artistCount} rating={card.rating} artistAvatars={card.artistAvatars} onClick={() => handleCardClick(card.name, card.type)} />)}
@@ -432,8 +483,8 @@ const Index = () => {
 
             <div className="flex flex-wrap gap-3 mb-10 justify-center">
               {musicCategories.map((category, index) => <button key={index} className={cn("px-5 py-3 rounded-full text-sm font-medium transition-colors", activeCategory === category ? "bg-black text-white" : "bg-[#F5F1EB] hover:bg-[#EAE6E0]")} onClick={() => setActiveCategory(activeCategory === category ? null : category)}>
-                  {category}
-                </button>)}
+                {category}
+              </button>)}
             </div>
           </div>
         </section>
@@ -442,12 +493,14 @@ const Index = () => {
           <ArtistsList artists={filteredArtists} onArtistClick={handleArtistClick} onFavoriteToggle={handleFavoriteToggle} />
         </section>
         
-        <StatsSummary className="px-20 md:px-32 mb-16" />
-        <HelpSection className="px-20 md:px-32" />
+        <StatsSummary className="px-6 md:px-20 lg:px-32 mb-16" />
+        <HelpSection className="px-6 md:px-20 lg:px-32 mb-16" />
       </main>
 
       <Footer />
-    </div>;
+    </div>
+  );
 };
 
 export default Index;
+
