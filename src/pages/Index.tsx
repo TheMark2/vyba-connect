@@ -343,17 +343,56 @@ const Index = () => {
             </h2>
 
             <div className="max-w-7xl mx-auto">
-              <TimelineStep title="Busca entre todos los artistas disponibles" description="Busca con Rita y encuentra en pocos minutos al artista que mejor se adapte a tus condiciones." imagePosition="right">
-                <img src="/lovable-uploads/c89ee394-3c08-48f6-b69b-bddd81dffa8b.png" alt="Búsqueda de artistas" className="w-full h-full object-cover aspect-[4/3]" />
-              </TimelineStep>
+              {/* Primer paso */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-center mb-12">
+                <div className="order-1 md:order-1">
+                  <h2 className="text-2xl font-bold mb-4">Explora y elige tu artista</h2>
+                  <p className="text-gray-600">
+                    Descubre el talento que mejor se adapta a tu evento. Filtra por género, estilo o popularidad y encuentra al artista perfecto en segundos.
+                  </p>
+                </div>
+                <div className="order-2 md:order-2">
+                  <img
+                    src="/lovable-uploads/pexels-rovenimages-com-344613-949592"
+                    alt="Búsqueda de artistas"
+                    className="w-full h-full object-cover aspect-[4/3]"
+                  />
+                </div>
+              </div>
 
-              <TimelineStep title="Contacta con el artista de una forma fácil" description="Contacta de una forma fácil y rápida, un proceso seguro mediante a nuestro sistema de mensajes." imagePosition="left">
-                <img src="/lovable-uploads/7e7c2282-785a-46fb-84b2-f7b14b762e64.png" alt="Contacto con artistas" className="w-full h-full object-cover aspect-[4/3]" />
-              </TimelineStep>
+              {/* Segundo paso */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-center mb-12">
+                <div className="order-2 md:order-1">
+                  <img
+                    src="/lovable-uploads/7e7c2282-785a-46fb-84b2-f7b14b762e64.png"
+                    alt="Contacto con artistas"
+                    className="w-full h-full object-cover aspect-[4/3]"
+                  />
+                </div>
+                <div className="order-1 md:order-2">
+                  <h2 className="text-2xl font-bold mb-4">Contacta con el artista de una forma fácil</h2>
+                  <p className="text-gray-600">
+                    Contacta de una forma fácil y rápida, un proceso seguro mediante a nuestro sistema de mensajes.
+                  </p>
+                </div>
+              </div>
 
-              <TimelineStep title="Escribe una reseña" description="Comparte tu experiencia con la comunidad y ayuda a otros a encontrar al artista perfecto para sus eventos." imagePosition="right">
-                <img src="/lovable-uploads/440a191c-d45b-4031-acbe-509e602e5d22.png" alt="Escribir reseñas" className="w-full h-full object-cover aspect-[4/3]" />
-              </TimelineStep>
+              {/* Tercer paso */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-center mb-12">
+                <div className="order-1 md:order-1">
+                  <h2 className="text-2xl font-bold mb-4">Escribe una reseña</h2>
+                  <p className="text-gray-600">
+                    Comparte tu experiencia con la comunidad y ayuda a otros a encontrar al artista perfecto para sus eventos.
+                  </p>
+                </div>
+                <div className="order-2 md:order-2">
+                  <img
+                    src="/lovable-uploads/440a191c-d45b-4031-acbe-509e602e5d22.png"
+                    alt="Escribir reseñas"
+                    className="w-full h-full object-cover aspect-[4/3]"
+                  />
+                </div>
+              </div>
             </div>
           </div>
         </section>
