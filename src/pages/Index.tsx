@@ -361,7 +361,7 @@ const Index = () => {
               </div>
 
               {/* Segundo paso */}
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-center mb-12 max-h-32">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-center mb-12 ">
                 <div className="order-2 md:order-1">
                   <img
                     src="/lovable-uploads/7e7c2282-785a-46fb-84b2-f7b14b762e64.png"
@@ -378,7 +378,7 @@ const Index = () => {
               </div>
 
               {/* Tercer paso */}
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-center mb-12 max-h-32">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-center mb-12">
                 <div className="order-1 md:order-1">
                   <h2 className="text-5xl font-black mb-4">Escribe una reseña</h2>
                   <p className="text-gray-600">
