@@ -66,8 +66,8 @@ const Index = () => {
   const [showFixedSearch, setShowFixedSearch] = useState(false);
   const [fixedSearchQuery, setFixedSearchQuery] = useState("");
   const isMobile = useIsMobile();
-  const [activeArtistIndex, setActiveArtistIndex] = useState(0);
-  
+  const [activeArtistIndex, setActiveArtistIndex] = useState(1);
+
   const {
     scrollYProgress
   } = useScroll({
@@ -276,66 +276,45 @@ const Index = () => {
         </h1>
         
         <div className="mt-10 relative">
-          <Input 
-            type="text" 
-            placeholder="Buscar artistas" 
-            className="pr-14 bg-[#F5F1EB] text-black h-14 rounded-full border-0"
-            value={searchQuery}
-            onChange={e => setSearchQuery(e.target.value)}
-          />
-          <Button 
-            type="submit" 
-            size="icon" 
-            className="absolute right-2 top-1/2 -translate-y-1/2 rounded-full h-11 w-11 flex items-center justify-center"
-          >
-            <BoldSearch />
-          </Button>
+          <div className="flex items-center bg-[#F5F1EB] rounded-full">
+            <input 
+              type="text" 
+              placeholder="Buscar artistas" 
+              className="pl-6 pr-12 py-4 w-full bg-transparent text-black rounded-full focus:outline-none"
+            />
+            <Button 
+              type="submit" 
+              size="icon" 
+              className="absolute right-1 rounded-full h-11 w-11 flex items-center justify-center"
+            >
+              <BoldSearch />
+            </Button>
+          </div>
         </div>
       </div>
       
-      <div className="w-full mt-6 relative">
-        <div className="w-full overflow-hidden">
-          <div 
-            className="flex transition-transform duration-300 px-4"
-            style={{
-              transform: `translateX(calc(-${activeArtistIndex * 100}% + ${activeArtistIndex > 0 ? '10%' : '30%'}))`
-            }}
-          >
-            {artists.map((artist, index) => (
-              <div
-                key={index}
-                className={cn(
-                  "relative h-[200px] rounded-3xl overflow-hidden flex-shrink-0 transition-all duration-300",
-                  index === activeArtistIndex ? "w-[80%] mx-[10%] opacity-100 z-10" : "w-[60%] mx-[5%] opacity-70"
-                )}
-                onClick={() => setActiveArtistIndex(index)}
-              >
-                <img 
-                  src={artist.image} 
-                  alt={artist.type}
-                  className="absolute inset-0 w-full h-full object-cover"
-                />
-                <div className="absolute inset-0 bg-black/30"></div>
-                <div className="absolute inset-0 flex items-center justify-center">
-                  <h3 className="text-white text-2xl font-bold">{artist.type}</h3>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-        
-        {/* Indicadores de página */}
-        <div className="flex justify-center gap-1 mt-6">
-          {artists.map((_, index) => (
-            <button
+      <div className="relative overflow-hidden w-full mt-4 px-0">
+        <div 
+          className="flex"
+          style={{
+            transform: `translateX(${-20 * activeArtistIndex}%)`
+          }}
+        >
+          {artists.map((artist, index) => (
+            <div
               key={index}
               className={cn(
-                "h-2 rounded-full transition-all",
-                index === activeArtistIndex ? "w-6 bg-black" : "w-2 bg-gray-300"
+                "min-w-[90%] mx-[-8%] h-[370px] relative rounded-none overflow-hidden",
+                index === activeArtistIndex ? "opacity-100 scale-100 z-10" : "opacity-90 scale-90 z-0"
               )}
               onClick={() => setActiveArtistIndex(index)}
-              aria-label={`Ir a la imagen ${index + 1}`}
-            />
+            >
+              <img 
+                src={index === 1 ? "/lovable-uploads/b1d87308-8791-4bd4-bd43-e4f7cf7d9042.png" : artist.image} 
+                alt={artist.type}
+                className="absolute inset-0 w-full h-full object-cover"
+              />
+            </div>
           ))}
         </div>
       </div>
@@ -422,26 +401,28 @@ const Index = () => {
         <Navbar className="mx-auto" />
       </div>
 
-      {showFixedSearch && <motion.div initial={{
-        opacity: 0,
-        y: 50
-      }} animate={{
-        opacity: 1,
-        y: 0
-      }} exit={{
-        opacity: 0,
-        y: 50
-      }} transition={{
-        duration: 0.3,
-        ease: "easeOut"
-      }} className="fixed bottom-6 left-0 right-0 z-50 px-6 md:px-10 flex justify-center">
-        <Button onClick={() => toast.success("Búsqueda con IA iniciada")} className="px-8 rounded-full flex items-center gap-2 shadow-lg" variant="default">
-          <div className="">
-            <BrainCircuit className="h-5 w-5" />
-          </div>
-          <span>Buscar con IA</span>
-        </Button>
-      </motion.div>}
+      {showFixedSearch && (
+        <motion.div initial={{
+          opacity: 0,
+          y: 50
+        }} animate={{
+          opacity: 1,
+          y: 0
+        }} exit={{
+          opacity: 0,
+          y: 50
+        }} transition={{
+          duration: 0.3,
+          ease: "easeOut"
+        }} className="fixed bottom-6 left-0 right-0 z-50 px-6 md:px-10 flex justify-center">
+          <Button onClick={() => toast.success("Búsqueda con IA iniciada")} className="px-8 rounded-full flex items-center gap-2 shadow-lg" variant="default">
+            <div className="">
+              <BrainCircuit className="h-5 w-5" />
+            </div>
+            <span>Buscar con IA</span>
+          </Button>
+        </motion.div>
+      )}
 
       <main className="flex-1">
         {isMobile ? renderMobileHero() : renderDesktopHero()}
