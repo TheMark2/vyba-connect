@@ -31,7 +31,7 @@ const ArtistsList = ({
   onFavoriteToggle,
 }: ArtistsListProps) => {
   return (
-    <div className="relative">
+    <div className="relative w-full">
       <Carousel
         className="w-full"
         opts={{
@@ -41,9 +41,9 @@ const ArtistsList = ({
           dragFree: true,
         }}
       >
-        <CarouselContent className="-ml-2 md:-ml-4">
+        <CarouselContent className="-ml-0">
           {artists.map((artist) => (
-            <CarouselItem key={artist.id} className="pl-2 md:pl-4 md:basis-1/4 lg:basis-1/4">
+            <CarouselItem key={artist.id} className="pl-0 md:basis-1/4 lg:basis-1/4">
               <ArtistProfileCard
                 name={artist.name}
                 type={artist.type}
