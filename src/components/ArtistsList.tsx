@@ -1,4 +1,3 @@
-
 import React, { useRef, useState, useEffect } from "react";
 import ArtistProfileCard from "./ArtistProfileCard";
 import {
@@ -42,7 +41,6 @@ const ArtistsList = ({
   const [count, setCount] = useState(0);
   const isMobile = useIsMobile();
   
-  // Actualizar los contadores cuando cambia el API
   useEffect(() => {
     if (!api) return;
     
@@ -54,7 +52,6 @@ const ArtistsList = ({
     });
   }, [api]);
   
-  // Función para verificar si hay más contenido para desplazar
   const checkScrollable = () => {
     if (carouselRef.current) {
       const container = carouselRef.current.querySelector('[data-carousel-content]');
@@ -66,24 +63,23 @@ const ArtistsList = ({
     }
   };
 
-  // Verificar al montar y cuando cambian los artistas
   useEffect(() => {
     checkScrollable();
-    // Añadir un ligero retraso para asegurar que todo está renderizado
     const timer = setTimeout(checkScrollable, 100);
     return () => clearTimeout(timer);
   }, [artists]);
 
-  // Calcular el ancho del elemento basado en tamaño de pantalla
   const getItemWidth = () => {
     if (isMobile) {
-      return 'calc(75% - 0.5rem)'; // Móvil: mostrar 75% para que se vea un 25% de la siguiente
+      return 'calc(75% - 0.5rem)';
     } else if (typeof window !== 'undefined' && window.innerWidth < 1024) {
-      return 'calc(40% - 0.75rem)'; // Tablet: 2 tarjetas + aprox. 20% de la siguiente
+      return 'calc(40% - 0.75rem)';
     } else if (typeof window !== 'undefined' && window.innerWidth < 1280) {
-      return 'calc(30% - 0.75rem)'; // Escritorio pequeño: 3 tarjetas + parte de la siguiente
+      return 'calc(30% - 0.75rem)';
+    } else if (typeof window !== 'undefined' && window.innerWidth < 1536) {
+      return 'calc(23% - 0.75rem)';
     } else {
-      return 'calc(23% - 0.75rem)'; // Escritorio grande: 4 tarjetas completas + parte de la siguiente
+      return 'calc(19% - 0.75rem)';
     }
   };
 
@@ -108,7 +104,7 @@ const ArtistsList = ({
             <CarouselItem
               key={artist.id}
               className={cn(
-                "pl-3 pr-1", // Reducir padding-right para que se vea más de la siguiente
+                "pl-3 pr-1",
                 index === 0 && current === 0 ? "ml-6" : "ml-0"
               )}
               style={{
@@ -134,7 +130,6 @@ const ArtistsList = ({
         </CarouselContent>
       </Carousel>
       
-      {/* Overlay de degradado que solo se muestra cuando hay más contenido */}
       {showGradient && (
         <div
           className="absolute right-0 top-0 h-full w-12 pointer-events-none"
@@ -144,7 +139,6 @@ const ArtistsList = ({
         />
       )}
       
-      {/* Indicadores de página para pantallas móviles */}
       {isMobile && count > 1 && (
         <div className="flex justify-center gap-1 mt-6">
           {Array.from({ length: count }).map((_, i) => (
