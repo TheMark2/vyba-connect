@@ -35,7 +35,7 @@ export function LanguageDropdown({ className }: LanguageDropdownProps) {
       <DropdownMenuTrigger asChild>
         <Button 
           variant="secondary" 
-          className={cn("text-sm px-6 py-3 h-auto rounded-xl flex items-center gap-2", className)}
+          className={cn("text-sm px-6 py-3 h-auto flex items-center gap-2", className)}
         >
           <Globe className="w-4 h-4" />
           {selectedLanguage.name}
@@ -49,7 +49,7 @@ export function LanguageDropdown({ className }: LanguageDropdownProps) {
           <DropdownMenuItem
             key={language.code}
             className={cn(
-              "rounded-sm px-3 py-2.5 text-base mb-1 focus:bg-[#F8F8F8] hover:bg-[#F8F8F8] cursor-pointer",
+              "rounded-md px-3 py-2.5 text-base mb-1 focus:bg-[#F8F8F8] hover:bg-[#F8F8F8] cursor-pointer",
               selectedLanguage.code === language.code && "bg-[#F8F8F8] font-medium"
             )}
             onClick={() => setSelectedLanguage(language)}
