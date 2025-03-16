@@ -273,7 +273,7 @@ const Index = () => {
   const filteredArtists = activeCategory ? recommendedArtists.filter(artist => artist.type.toLowerCase().includes(activeCategory.toLowerCase()) || artist.description.toLowerCase().includes(activeCategory.toLowerCase())) : recommendedArtists;
   const renderMobileHero = () => <div className="min-h-screen flex flex-col bg-vyba-cream">
       <div className="px-6 pt-20 pb-10">
-        <h1 className="text-4xl font-black leading-tight">
+        <h1 className="text-5xl font-black leading-tight">
           El portal perfecto para encontrar tu dj
         </h1>
         
@@ -425,14 +425,14 @@ const Index = () => {
 
         <section className="py-20 md:py-32 bg-secondary/10">
           <div className="container mx-auto px-6 md:px-10">
-            <h2 className="text-3xl md:text-5xl lg:text-7xl font-black text-center mb-20 md:mb-32">
+            <h2 className="text-4xl md:text-5xl lg:text-7xl font-black text-center mb-20 md:mb-32">
               Contratar a un artista nunca había sido tan fácil
             </h2>
 
             <div className="max-w-7xl mx-auto">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-16 items-center mb-12">
                 <div className="order-1 md:order-1">
-                  <h2 className="text-5xl font-black mb-4 leading-tight">Explora y elige el artista perfecto para tu evento.</h2>
+                  <h2 className="text-3xl md:text-4xl lg:text-5xl font-black mb-4 leading-tight">Explora y elige el artista perfecto para tu evento.</h2>
                   <p className="text-gray-900 font-medium mb-6">
                     Descubre el talento que mejor se adapta a tu evento. Filtra por género, estilo o popularidad y encuentra al artista perfecto en segundos.
                   </p>
