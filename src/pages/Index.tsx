@@ -15,7 +15,6 @@ import StatsSummary from "@/components/StatsSummary";
 import HelpSection from "@/components/HelpSection";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/carousel";
-
 const Input = React.forwardRef<HTMLInputElement, React.ComponentProps<"input">>(({
   className,
   ...props
@@ -58,9 +57,7 @@ const Input = React.forwardRef<HTMLInputElement, React.ComponentProps<"input">>(
       </div>;
 });
 Input.displayName = "Input";
-
 const BoldSearch = () => <Search className="h-5 w-5 stroke-[2.5px]" />;
-
 const Index = () => {
   const scrollRef = useRef(null);
   const [searchQuery, setSearchQuery] = useState("");
@@ -68,7 +65,6 @@ const Index = () => {
   const [fixedSearchQuery, setFixedSearchQuery] = useState("");
   const isMobile = useIsMobile();
   const [activeArtistIndex, setActiveArtistIndex] = useState(1);
-
   const artists = [{
     type: "DJ",
     image: "/lovable-uploads/7e7c2282-785a-46fb-84b2-f7b14b762e64.png",
@@ -82,14 +78,12 @@ const Index = () => {
     image: "/lovable-uploads/440a191c-d45b-4031-acbe-509e602e5d22.png",
     description: "Conecta con talentosos guitarristas"
   }];
-
   const {
     scrollYProgress
   } = useScroll({
     target: scrollRef,
     offset: ["start start", "end start"]
   });
-
   useEffect(() => {
     const handleScroll = () => {
       const scrollPosition = window.scrollY;
@@ -97,14 +91,12 @@ const Index = () => {
       if (shouldShowSearch !== showFixedSearch) {
         setShowFixedSearch(shouldShowSearch);
       }
-      
       if (isMobile) {
         const carouselSection = document.querySelector('.carousel-section');
         if (carouselSection) {
           const rect = carouselSection.getBoundingClientRect();
           const viewHeight = window.innerHeight;
           const percentVisible = Math.max(0, Math.min(1, (viewHeight - rect.top) / (viewHeight + rect.height)));
-          
           if (percentVisible > 0 && percentVisible < 1) {
             const carouselApi = (window as any).carouselApi;
             if (carouselApi) {
@@ -116,11 +108,9 @@ const Index = () => {
         }
       }
     };
-    
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   }, [showFixedSearch, isMobile, artists.length]);
-
   const opacity1 = useTransform(scrollYProgress, [0, 0.19, 0.25, 0.3], [1, 0.9, 0.3, 0]);
   const opacity2 = useTransform(scrollYProgress, [0.19, 0.25, 0.3, 0.43, 0.5, 0.55], [0, 0.3, 0.9, 1, 0.3, 0]);
   const opacity3 = useTransform(scrollYProgress, [0.43, 0.5, 0.55, 1], [0, 0.3, 1, 1]);
@@ -136,7 +126,6 @@ const Index = () => {
   const textOpacity1 = useTransform(scrollYProgress, [0, 0.15, 0.25], [1, 0.3, 0]);
   const textOpacity2 = useTransform(scrollYProgress, [0.25, 0.35, 0.45], [0, 1, 0]);
   const textOpacity3 = useTransform(scrollYProgress, [0.45, 0.55, 1], [0, 1, 1]);
-
   const topArtists = [{
     name: "Antonia Pedragosa",
     role: "DJ",
@@ -162,7 +151,6 @@ const Index = () => {
     role: "DJ",
     rating: 4.8
   }];
-
   const genreCards = [{
     type: "género" as CardType,
     name: "Pop",
@@ -188,7 +176,6 @@ const Index = () => {
     rating: 4.6,
     artistAvatars: Array(7).fill("/lovable-uploads/77591a97-10cd-4c8b-b768-5b17483c3d9f.png")
   }];
-
   const typeCards = [{
     type: "tipo" as CardType,
     name: "DJ",
@@ -214,11 +201,9 @@ const Index = () => {
     rating: 4.8,
     artistAvatars: Array(7).fill("/lovable-uploads/77591a97-10cd-4c8b-b768-5b17483c3d9f.png")
   }];
-
   const handleCardClick = (name: string, type: CardType) => {
     toast.success(`Has seleccionado ${type === "género" ? "el género" : "el tipo"} ${name}`);
   };
-
   const recommendedArtists = [{
     id: "1",
     name: "Antonia Pedragosa",
@@ -274,22 +259,16 @@ const Index = () => {
     priceRange: "450-550€",
     isFavorite: false
   }];
-
   const musicCategories = ["Reggaeton", "Pop", "House", "House", "Techno", "Jazz", "Rock"];
   const [activeCategory, setActiveCategory] = useState<string | null>(null);
-
   const handleArtistClick = (artist: any) => {
     toast.success(`Has seleccionado a ${artist.name}`);
   };
-
   const handleFavoriteToggle = (artist: any) => {
     toast(`${artist.isFavorite ? "Eliminado de" : "Añadido a"} favoritos: ${artist.name}`);
   };
-
   const filteredArtists = activeCategory ? recommendedArtists.filter(artist => artist.type.toLowerCase().includes(activeCategory.toLowerCase()) || artist.description.toLowerCase().includes(activeCategory.toLowerCase())) : recommendedArtists;
-
-  const renderMobileHero = () => (
-    <div className="min-h-screen flex flex-col bg-vyba-cream">
+  const renderMobileHero = () => <div className="min-h-screen flex flex-col bg-vyba-cream">
       <div className="px-6 pt-20 pb-10">
         <h1 className="text-4xl font-black leading-tight">
           El portal perfecto para encontrar tu dj
@@ -297,16 +276,8 @@ const Index = () => {
         
         <div className="mt-10 relative">
           <div className="flex items-center bg-[#F5F1EB] rounded-full">
-            <input 
-              type="text" 
-              placeholder="Buscar artistas" 
-              className="pl-6 pr-12 py-4 w-full bg-transparent text-black rounded-full focus:outline-none"
-            />
-            <Button 
-              type="submit" 
-              size="icon" 
-              className="absolute right-1 rounded-full h-11 w-11 flex items-center justify-center"
-            >
+            <input type="text" placeholder="Buscar artistas" className="pl-6 pr-12 py-4 w-full bg-transparent text-black rounded-full focus:outline-none" />
+            <Button type="submit" size="icon" className="absolute right-1 rounded-full h-11 w-11 flex items-center justify-center">
               <BoldSearch />
             </Button>
           </div>
@@ -314,72 +285,56 @@ const Index = () => {
       </div>
       
       <div className="relative w-full mt-4 carousel-section">
-        <Carousel
-          opts={{
-            align: "center",
-            loop: true,
-            dragFree: true,
-            containScroll: false,
-          }}
-          className="w-full"
-          onMouseDown={(e) => e.stopPropagation()}
-          setApi={(api) => {
-            (window as any).carouselApi = api;
-          }}
-        >
+        <Carousel opts={{
+        align: "center",
+        loop: true,
+        dragFree: true,
+        containScroll: false
+      }} className="w-full" onMouseDown={e => e.stopPropagation()} setApi={api => {
+        (window as any).carouselApi = api;
+      }}>
           <CarouselContent className="-ml-3">
-            {artists.map((artist, index) => (
-              <CarouselItem key={index} className="basis-[70%] md:basis-1/2 lg:basis-1/3 pl-3">
+            {artists.map((artist, index) => <CarouselItem key={index} className="basis-[70%] md:basis-1/2 lg:basis-1/3 pl-3">
                 <div className="h-[370px] relative rounded-[30px] overflow-hidden">
-                  <img 
-                    src={artist.image} 
-                    alt={artist.type}
-                    className="absolute inset-0 w-full h-full object-cover"
-                    loading="eager"
-                    onError={(e) => {
-                      console.error(`Error loading image: ${artist.image}`);
-                      e.currentTarget.src = '/placeholder.svg';
-                    }}
-                  />
+                  <img src={artist.image} alt={artist.type} className="absolute inset-0 w-full h-full object-cover" loading="eager" onError={e => {
+                console.error(`Error loading image: ${artist.image}`);
+                e.currentTarget.src = '/placeholder.svg';
+              }} />
                 </div>
-              </CarouselItem>
-            ))}
+              </CarouselItem>)}
           </CarouselContent>
         </Carousel>
       </div>
-    </div>
-  );
-
-  const renderDesktopHero = () => (
-    <div ref={scrollRef} className="h-[300vh] relative">
+    </div>;
+  const renderDesktopHero = () => <div ref={scrollRef} className="h-[300vh] relative">
       <div className="sticky top-0 h-screen overflow-hidden">
         <div className="relative w-full h-screen overflow-hidden">
           <motion.div className="absolute inset-0 px-6 md:px-10 lg:px-14 xl:px-16 pt-8 pb-32">
             <motion.div className="relative w-full h-full rounded-[2vw] overflow-hidden">
               <motion.div className="absolute inset-0 origin-center" style={{
-                opacity: opacity1,
-                scale: scale1,
-                y: moveY1,
-                x: moveX1
-              }}>
+              opacity: opacity1,
+              scale: scale1,
+              y: moveY1,
+              x: moveX1
+            }}>
                 <img src={artists[0].image} alt="DJ performing" className="w-full h-full brightness-75 blur-[2px] object-cover" />
               </motion.div>
               
               <motion.div className="absolute inset-0 origin-center" style={{
-                opacity: opacity2,
-                scale: scale2,
-                y: moveY2,
-                x: moveX2
-              }}>
+              opacity: opacity2,
+              scale: scale2,
+              y: moveY2,
+              x: moveX2
+            }}>
                 <img src={artists[1].image} alt="Saxofonista performing" className="w-full h-full brightness-75 blur-[2px] object-cover" />
               </motion.div>
               
               <motion.div className="absolute inset-0 origin-center" style={{
-                opacity: opacity3,
-                scale: scale3,
-                y: moveY3,
-                x: moveX3
-              }}>
+              opacity: opacity3,
+              scale: scale3,
+              y: moveY3,
+              x: moveX3
+            }}>
                 <img src={artists[2].image} alt="Guitarrista performing" className="w-full h-full brightness-75 blur-[2px] object-cover rounded-[2vw]" />
               </motion.div>
 
@@ -389,20 +344,20 @@ const Index = () => {
                 <div className="max-w-2xl mx-0 space-y-14">
                   <div className="relative h-28">
                     <motion.h1 className="text-4xl md:text-5xl lg:text-7xl font-black text-white leading-tight absolute top-0 left-0 w-full" style={{
-                      opacity: textOpacity1
-                    }}>
+                    opacity: textOpacity1
+                  }}>
                       Contacta con los mejores artistas
                     </motion.h1>
                     
                     <motion.h1 className="text-4xl md:text-5xl lg:text-7xl font-black text-white leading-tight absolute top-0 left-0 w-full" style={{
-                      opacity: textOpacity2
-                    }}>
+                    opacity: textOpacity2
+                  }}>
                       De una forma fácil
                     </motion.h1>
                     
                     <motion.h1 className="text-4xl md:text-5xl lg:text-7xl font-black text-white leading-tight absolute top-0 left-0 w-full" style={{
-                      opacity: textOpacity3
-                    }}>
+                    opacity: textOpacity3
+                  }}>
                       Usa Vyba
                     </motion.h1>
                   </div>
@@ -421,48 +376,43 @@ const Index = () => {
           </motion.div>
         </div>
       </div>
-    </div>
-  );
-
-  return (
-    <div className="min-h-screen flex flex-col p-0 m-0">
+    </div>;
+  return <div className="min-h-screen flex flex-col p-0 m-0">
       <div className="w-full">
         <Navbar className="mx-auto" />
       </div>
 
-      {showFixedSearch && (
-        <motion.div initial={{
-          opacity: 0,
-          y: 50
-        }} animate={{
-          opacity: 1,
-          y: 0
-        }} exit={{
-          opacity: 0,
-          y: 50
-        }} transition={{
-          duration: 0.3,
-          ease: "easeOut"
-        }} className="fixed bottom-6 left-0 right-0 z-50 px-6 md:px-10 flex justify-center">
+      {showFixedSearch && <motion.div initial={{
+      opacity: 0,
+      y: 50
+    }} animate={{
+      opacity: 1,
+      y: 0
+    }} exit={{
+      opacity: 0,
+      y: 50
+    }} transition={{
+      duration: 0.3,
+      ease: "easeOut"
+    }} className="fixed bottom-6 left-0 right-0 z-50 px-6 md:px-10 flex justify-center">
           <Button onClick={() => toast.success("Búsqueda con IA iniciada")} className="px-8 rounded-full flex items-center gap-2 shadow-lg" variant="default">
             <div className="">
               <BrainCircuit className="h-5 w-5" />
             </div>
             <span>Buscar con IA</span>
           </Button>
-        </motion.div>
-      )}
+        </motion.div>}
 
       <main className="flex-1">
         {isMobile ? renderMobileHero() : renderDesktopHero()}
 
-        <section className="bg-vyba-cream py-8">
+        <section className="bg-vyba-cream">
           <div className="w-full overflow-hidden">
-            <Marquee className="mb-4" pauseOnHover gap="1.5rem">
+            <Marquee pauseOnHover className="">
               {genreCards.map((card, index) => <ArtistCard key={index} type={card.type} name={card.name} artistCount={card.artistCount} rating={card.rating} artistAvatars={card.artistAvatars} onClick={() => handleCardClick(card.name, card.type)} />)}
             </Marquee>
             
-            <Marquee className="mt-4" reverse pauseOnHover gap="1.5rem">
+            <Marquee reverse pauseOnHover className="">
               {typeCards.map((card, index) => <ArtistCard key={index + genreCards.length} type={card.type} name={card.name} artistCount={card.artistCount} rating={card.rating} artistAvatars={card.artistAvatars} onClick={() => handleCardClick(card.name, card.type)} />)}
             </Marquee>
           </div>
@@ -517,7 +467,7 @@ const Index = () => {
           </div>
         </section>
 
-        <section className="pb-20 bg-vyba-cream">
+        <section className="py-4 md:py-8 bg-vyba-cream">
           <div className="container mx-auto px-6 md:px-10">
             <h2 className="text-3xl md:text-5xl lg:text-7xl font-black text-center mb-12 md:mb-20">
               Los que te recomendamos
@@ -540,8 +490,6 @@ const Index = () => {
       </main>
 
       <Footer />
-    </div>
-  );
+    </div>;
 };
-
 export default Index;
