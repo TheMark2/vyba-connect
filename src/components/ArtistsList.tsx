@@ -77,13 +77,13 @@ const ArtistsList = ({
   // Calcular el ancho del elemento basado en tamaño de pantalla
   const getItemWidth = () => {
     if (isMobile) {
-      return 'calc(85% - 0.5rem)'; // Móvil: 1 tarjeta + menos de la siguiente
+      return 'calc(75% - 0.5rem)'; // Móvil: mostrar 75% para que se vea un 25% de la siguiente
     } else if (typeof window !== 'undefined' && window.innerWidth < 1024) {
-      return 'calc(45% - 0.75rem)'; // Tablet: 2 tarjetas + un poco menos de la siguiente
+      return 'calc(40% - 0.75rem)'; // Tablet: 2 tarjetas + aprox. 20% de la siguiente
     } else if (typeof window !== 'undefined' && window.innerWidth < 1280) {
-      return 'calc(33% - 0.75rem)'; // Escritorio pequeño: 3 tarjetas + menos de la siguiente
+      return 'calc(30% - 0.75rem)'; // Escritorio pequeño: 3 tarjetas + parte de la siguiente
     } else {
-      return 'calc(25% - 0.75rem)'; // Escritorio grande: 4 tarjetas con menos visibilidad de las extras
+      return 'calc(23% - 0.75rem)'; // Escritorio grande: 4 tarjetas completas + parte de la siguiente
     }
   };
 
@@ -108,7 +108,7 @@ const ArtistsList = ({
             <CarouselItem
               key={artist.id}
               className={cn(
-                "pl-3 pr-3",
+                "pl-3 pr-1", // Reducir padding-right para que se vea más de la siguiente
                 index === 0 && current === 0 ? "ml-6" : "ml-0"
               )}
               style={{
@@ -137,7 +137,7 @@ const ArtistsList = ({
       {/* Overlay de degradado que solo se muestra cuando hay más contenido */}
       {showGradient && (
         <div
-          className="absolute right-0 top-0 h-full w-20 pointer-events-none"
+          className="absolute right-0 top-0 h-full w-12 pointer-events-none"
           style={{
             background: "linear-gradient(90deg, rgba(255,255,255,0) 0%, rgba(255,255,255,0.5) 40%, rgba(255,255,255,0.9) 80%, rgba(255,255,255,1) 100%)"
           }}
