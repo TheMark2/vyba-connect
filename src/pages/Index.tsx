@@ -90,10 +90,22 @@ const Index = () => {
   useEffect(() => {
     const handleScroll = () => {
       const scrollPosition = window.scrollY;
-      const shouldShowSearch = scrollPosition > window.innerHeight * 3;
+      const footerElement = document.querySelector('footer');
+      const footerPosition = footerElement ? footerElement.getBoundingClientRect().top + window.scrollY - window.innerHeight : 0;
+      
+      // Make buttons appear earlier on mobile
+      const shouldShowSearchThreshold = isMobile ? window.innerHeight * 1.5 : window.innerHeight * 3;
+      
+      // Hide buttons before reaching the footer (with a buffer of 100px)
+      const shouldHideBeforeFooter = scrollPosition > footerPosition - 100;
+      
+      // Only show if we've scrolled past threshold AND we're not near the footer
+      const shouldShowSearch = scrollPosition > shouldShowSearchThreshold && !shouldHideBeforeFooter;
+      
       if (shouldShowSearch !== showFixedSearch) {
         setShowFixedSearch(shouldShowSearch);
       }
+      
       if (isMobile) {
         const carouselSection = document.querySelector('.carousel-section');
         if (carouselSection) {
@@ -111,6 +123,7 @@ const Index = () => {
         }
       }
     };
+    
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   }, [showFixedSearch, isMobile, artists.length]);
@@ -387,28 +400,32 @@ const Index = () => {
         <Navbar className="mx-auto" />
       </div>
 
-      {showFixedSearch && <motion.div initial={{
-      opacity: 0,
-      y: 50
-    }} animate={{
-      opacity: 1,
-      y: 0
-    }} exit={{
-      opacity: 0,
-      y: 50
-    }} transition={{
-      duration: 0.3,
-      ease: "easeOut"
-    }} className="fixed bottom-6 left-0 right-0 z-50 px-6 md:px-10 flex justify-center">
-          <div className="bg-white py-3 px-4 rounded-full inline-flex gap-3 shadow-sm">
-            <Button onClick={() => toast.success("Búsqueda iniciada")} className="rounded-full text-black bg-[#F5F1EB] hover:bg-[#EAE6E0] shadow-none" variant="secondary">
-              Empezar a buscar
-            </Button>
-            <Button onClick={() => toast.success("Búsqueda con IA iniciada")} className="rounded-full shadow-none" variant="default">
-              Buscar con IA
-            </Button>
-          </div>
-        </motion.div>}
+      {showFixedSearch && (
+      <motion.div 
+        initial={{ opacity: 0, y: 50 }}
+        animate={{ opacity: 1, y: 0 }}
+        exit={{ opacity: 0, y: 50 }}
+        transition={{ duration: 0.3, ease: "easeOut" }}
+        className="fixed bottom-6 left-0 right-0 z-50 px-6 md:px-10 flex justify-center"
+      >
+        <div className="bg-white py-3 px-4 rounded-full inline-flex gap-3 shadow-sm">
+          <Button 
+            onClick={() => toast.success("Búsqueda iniciada")} 
+            className="rounded-full text-black bg-[#F5F1EB] hover:bg-[#EAE6E0] shadow-none" 
+            variant="secondary"
+          >
+            Empezar a buscar
+          </Button>
+          <Button 
+            onClick={() => toast.success("Búsqueda con IA iniciada")} 
+            className="rounded-full shadow-none" 
+            variant="default"
+          >
+            Buscar con IA
+          </Button>
+        </div>
+      </motion.div>
+    )}
 
       <main className="flex-1">
         {isMobile ? renderMobileHero() : renderDesktopHero()}
