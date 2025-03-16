@@ -31,7 +31,7 @@ const ArtistCard = ({
   // Nuevo diseño según la imagen proporcionada
   return (
     <div 
-      className={`flex items-center justify-between bg-[#F5F1EB] px-6 py-4 rounded-full min-w-[280px] mx-3 transition-all duration-300 cursor-pointer`}
+      className={`flex items-center justify-between bg-[#F5F1EB] px-6 py-4 rounded-full min-w-[280px] mx-2 transition-all duration-300 cursor-pointer`}
       onClick={onClick} 
       onMouseEnter={() => setIsHovered(true)} 
       onMouseLeave={() => setIsHovered(false)}
@@ -41,7 +41,6 @@ const ArtistCard = ({
       }}
     >
       <div className="flex flex-col">
-        <span className="text-gray-500 text-xs mb-1">{type}</span>
         <span className="font-bold text-base">{name}</span>
       </div>
       
