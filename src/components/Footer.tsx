@@ -1,16 +1,13 @@
-
 import { Link } from "react-router-dom";
 import { cn } from "@/lib/utils";
 import { LanguageDropdown } from "@/components/ui/language-dropdown";
-
 const Footer = () => {
-  return (
-    <footer className="bg-vyba-cream py-8 border-t border-gray-200/30">
+  return <footer className="bg-vyba-cream py-8 border-t border-gray-200/30">
       <div className="container mx-auto px-8 md:px-16 lg:px-24 xl:px-32 2xl:max-w-[1800px]">
         <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
           <div>
             <h2 className="text-xl font-bold">VYBA</h2>
-            <p className="text-black/60 text-sm mt-1">© 2023 Vyba. Todos los derechos reservados</p>
+            <p className="text-black/60 text-sm mt-1">© 2025 Vyba. Todos los derechos reservados</p>
           </div>
           
           <div className="grid grid-cols-2 md:grid-cols-3 gap-x-10 gap-y-4">
@@ -28,8 +25,6 @@ const Footer = () => {
           </div>
         </div>
       </div>
-    </footer>
-  );
+    </footer>;
 };
-
 export default Footer;
