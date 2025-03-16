@@ -467,7 +467,7 @@ const Index = () => {
                   <img src="/lovable-uploads/7e7c2282-785a-46fb-84b2-f7b14b762e64.png" alt="Contacto con artistas" className="w-full max-h-[450px]  object-cover aspect-[4/3] rounded-[40px] md:rounded-[40px] lg:rounded-[50px]" />
                 </div>
                 <div className="order-1 md:order-2">
-                  <h2 className="text-5xl font-black mb-4 leading-tight">Contacta con el artista de una forma fácil y rápida.</h2>
+                  <h2 className="text-3xl md:text-4xl lg:text-5xl font-black mb-4 leading-tight">Contacta con el artista de una forma fácil y rápida.</h2>
                   <p className="text-gray-900 font-medium mb-6">
                     Contacta de una forma fácil y rápida, un proceso seguro mediante a nuestro sistema de mensajes.
                   </p>
@@ -477,7 +477,7 @@ const Index = () => {
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-16 items-center mb-12">
                 <div className="order-1 md:order-1">
-                  <h2 className="text-5xl font-black mb-4 leading-tight">Confirma la reserva y disfruta de un show inolvidable.</h2>
+                  <h2 className="text-3xl md:text-4xl lg:text-5xl font-black mb-4 leading-tight">Confirma la reserva y disfruta de un show inolvidable.</h2>
                   <p className="text-gray-900 font-medium mb-6">
                     Comparte tu experiencia con la comunidad y ayuda a otros a encontrar al artista perfecto para sus eventos.
                   </p>
