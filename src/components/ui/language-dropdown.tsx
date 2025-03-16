@@ -9,7 +9,6 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { cn } from "@/lib/utils";
-import { useIsMobile } from "@/hooks/use-mobile";
 
 export type Language = {
   name: string;
@@ -30,7 +29,6 @@ interface LanguageDropdownProps {
 
 export function LanguageDropdown({ className }: LanguageDropdownProps) {
   const [selectedLanguage, setSelectedLanguage] = React.useState<Language>(languages[0]);
-  const isMobile = useIsMobile();
 
   return (
     <DropdownMenu>
@@ -46,14 +44,12 @@ export function LanguageDropdown({ className }: LanguageDropdownProps) {
       <DropdownMenuContent 
         className="min-w-[225px] bg-white border-none rounded-3xl p-3 shadow-none mb-2"
         align="center"
-        sideOffset={8}
-        style={{ marginLeft: isMobile ? '16px' : '0' }}
       >
         {languages.map((language) => (
           <DropdownMenuItem
             key={language.code}
             className={cn(
-              "rounded-md px-3 py-3 text-sm font-medium mb-1 focus:bg-[#F8F8F8] hover:bg-[#F8F8F8] cursor-pointer",
+              "rounded-md px-3 py-3 text-base font-medium mb-1 focus:bg-[#F8F8F8] hover:bg-[#F8F8F8] cursor-pointer",
               selectedLanguage.code === language.code && "bg-[#F8F8F8]"
             )}
             onClick={() => setSelectedLanguage(language)}
