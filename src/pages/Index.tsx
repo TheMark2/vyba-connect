@@ -439,7 +439,7 @@ const Index = () => {
                   <Button variant="secondary" className="mt-2">Empieza a buscar ahora</Button>
                 </div>
                 <div className="order-2 md:order-2">
-                  <img src="/lovable-uploads/pexels-rovenimages-com-344613-949592.jpg" alt="Búsqueda de artistas" className="w-full max-h-[450px]  object-cover aspect-[4/3] rounded-[30px] md:rounded-[40px] lg:rounded-[50px]" />
+                  <img src="/lovable-uploads/pexels-rovenimages-com-344613-949592.jpg" alt="Búsqueda de artistas" className="w-full max-h-[450px]  object-cover aspect-[4/3] rounded-[40px] md:rounded-[40px] lg:rounded-[50px]" />
                 </div>
               </div>
 
