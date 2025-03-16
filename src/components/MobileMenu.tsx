@@ -1,12 +1,15 @@
 
-import React from "react";
+import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { SheetContent, SheetClose } from "@/components/ui/sheet";
 import { Separator } from "@/components/ui/separator";
 import { X, Sun, Moon, Monitor } from "lucide-react";
+import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 
 const MobileMenu = () => {
+  const [theme, setTheme] = useState("light");
+
   return (
     <SheetContent side="top" className="h-full pt-10 bg-vyba-cream overflow-y-auto">
       <div className="flex justify-between items-center mb-8">
@@ -33,16 +36,18 @@ const MobileMenu = () => {
 
       <Separator className="my-6" />
 
-      <div className="flex justify-center space-x-6 my-6">
-        <Button variant="outline" size="icon" className="rounded-full">
-          <Sun className="h-5 w-5" />
-        </Button>
-        <Button variant="outline" size="icon" className="rounded-full">
-          <Moon className="h-5 w-5" />
-        </Button>
-        <Button variant="outline" size="icon" className="rounded-full">
-          <Monitor className="h-5 w-5" />
-        </Button>
+      <div className="flex justify-center my-6">
+        <ToggleGroup type="single" value={theme} onValueChange={(value) => value && setTheme(value)} className="bg-[#F5F1EB] p-1 rounded-full">
+          <ToggleGroupItem value="light" aria-label="Modo claro" className="data-[state=on]:bg-white rounded-full w-14 h-10 flex items-center justify-center">
+            <Sun className="h-5 w-5" />
+          </ToggleGroupItem>
+          <ToggleGroupItem value="dark" aria-label="Modo oscuro" className="data-[state=on]:bg-white rounded-full w-14 h-10 flex items-center justify-center">
+            <Moon className="h-5 w-5" />
+          </ToggleGroupItem>
+          <ToggleGroupItem value="system" aria-label="Modo sistema" className="data-[state=on]:bg-white rounded-full w-14 h-10 flex items-center justify-center">
+            <Monitor className="h-5 w-5" />
+          </ToggleGroupItem>
+        </ToggleGroup>
       </div>
 
       <div className="flex flex-col space-y-3 mt-6">
