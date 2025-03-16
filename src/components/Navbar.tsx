@@ -42,7 +42,7 @@ const Navbar = ({
       <div className="flex items-center space-x-3">
         <Button 
           variant="secondary" 
-          className="text-sm hidden sm:flex"
+          className="text-sm hidden sm:flex bg-[#E7D3D3]"
         >
           Promocionarse como artista
         </Button>
