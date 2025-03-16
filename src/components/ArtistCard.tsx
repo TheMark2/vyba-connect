@@ -40,8 +40,8 @@ const ArtistCard = ({
         transition: 'background-color 0.3s ease'
       }}
     >
-      <div className="flex items-center">
-        <span className="text-gray-500 text-xs mr-1">{type}</span>
+      <div className="flex flex-col">
+        <span className="text-gray-500 text-xs mb-1">{type}</span>
         <span className="font-bold text-base">{name}</span>
       </div>
       

@@ -52,7 +52,7 @@ export function Marquee({
     <div
       {...props}
       className={cn(
-        "group flex overflow-hidden py-6 [--duration:40s] [gap:var(--gap)]",
+        "group flex overflow-hidden py-2 [--duration:40s] [gap:var(--gap)]",
         {
           "flex-row": !vertical,
           "flex-col": vertical,

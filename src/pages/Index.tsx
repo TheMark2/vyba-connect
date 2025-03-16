@@ -413,7 +413,7 @@ const Index = () => {
 
         <section className="bg-vyba-cream">
           <div className="w-full overflow-hidden">
-            <Marquee pauseOnHover className="">
+            <Marquee pauseOnHover className="mb-2">
               {genreCards.map((card, index) => <ArtistCard key={index} type={card.type} name={card.name} artistCount={card.artistCount} rating={card.rating} artistAvatars={card.artistAvatars} onClick={() => handleCardClick(card.name, card.type)} />)}
             </Marquee>
             
@@ -499,4 +499,3 @@ const Index = () => {
 };
 
 export default Index;
-
