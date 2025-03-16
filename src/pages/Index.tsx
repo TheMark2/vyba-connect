@@ -398,7 +398,7 @@ const Index = () => {
       duration: 0.3,
       ease: "easeOut"
     }} className="fixed bottom-6 left-0 right-0 z-50 px-6 md:px-10 flex justify-center">
-          <div className="bg-white py-3 px-5 rounded-full inline-flex gap-3 shadow-sm">
+          <div className="bg-white py-3 px-4 rounded-full inline-flex gap-3 shadow-sm">
             <Button onClick={() => toast.success("Búsqueda iniciada")} className="rounded-full text-black bg-[#F5F1EB] hover:bg-[#EAE6E0] shadow-none" variant="secondary">
               Empezar a buscar
             </Button>
