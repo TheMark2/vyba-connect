@@ -42,15 +42,15 @@ export function LanguageDropdown({ className }: LanguageDropdownProps) {
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent 
-        className="min-w-[225px] bg-white border-none rounded-3xl p-3 shadow-none"
+        className="min-w-[225px] bg-white border-none rounded-3xl p-3 shadow-none mb-4"
         align="center"
       >
         {languages.map((language) => (
           <DropdownMenuItem
             key={language.code}
             className={cn(
-              "rounded-md px-3 py-2.5 text-base mb-1 focus:bg-[#F8F8F8] hover:bg-[#F8F8F8] cursor-pointer",
-              selectedLanguage.code === language.code && "bg-[#F8F8F8] font-medium"
+              "rounded-md px-3 py-2.5 text-base font-medium mb-1 focus:bg-[#F8F8F8] hover:bg-[#F8F8F8] cursor-pointer",
+              selectedLanguage.code === language.code && "bg-[#F8F8F8]"
             )}
             onClick={() => setSelectedLanguage(language)}
           >
