@@ -1,3 +1,4 @@
+
 import { Button } from "@/components/ui/button";
 import { Link, useLocation } from "react-router-dom";
 import { cn } from "@/lib/utils";
@@ -37,10 +38,18 @@ const Navbar = ({
         </div>
       </div>
 
-      {/* Botón de Entrar/Registrarse */}
-      <Button className="text-sm">
-        Entrar/Registrarse
-      </Button>
+      {/* Botones de acción */}
+      <div className="flex items-center space-x-3">
+        <Button 
+          variant="secondary" 
+          className="text-sm hidden sm:flex"
+        >
+          Promocionarse como artista
+        </Button>
+        <Button className="text-sm">
+          Entrar/Registrarse
+        </Button>
+      </div>
     </div>;
 };
 export default Navbar;
