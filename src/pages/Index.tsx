@@ -412,7 +412,7 @@ const Index = () => {
         {isMobile ? renderMobileHero() : renderDesktopHero()}
 
         <section className="bg-vyba-cream">
-          <div className="w-full overflow-hidden">
+          <div className="w-full overflow-hidden mt-3 md:mt-2 lg:mt-0">
             <Marquee pauseOnHover className="mb-4">
               {genreCards.map((card, index) => <ArtistCard key={index} type={card.type} name={card.name} artistCount={card.artistCount} rating={card.rating} artistAvatars={card.artistAvatars} onClick={() => handleCardClick(card.name, card.type)} />)}
             </Marquee>
