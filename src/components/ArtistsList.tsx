@@ -50,6 +50,7 @@ const ArtistsList = ({
     
     api.on("select", () => {
       setCurrent(api.selectedScrollSnap());
+      checkScrollable();
     });
   }, [api]);
   
@@ -67,7 +68,17 @@ const ArtistsList = ({
   useEffect(() => {
     checkScrollable();
     const timer = setTimeout(checkScrollable, 100);
-    return () => clearTimeout(timer);
+    
+    // También verificar cuando cambia el tamaño de la ventana
+    const handleResize = () => {
+      checkScrollable();
+    };
+    
+    window.addEventListener('resize', handleResize);
+    return () => {
+      clearTimeout(timer);
+      window.removeEventListener('resize', handleResize);
+    };
   }, [artists]);
 
   const getItemWidth = () => {
@@ -137,7 +148,7 @@ const ArtistsList = ({
         <div
           className="absolute right-0 top-0 h-full w-12 pointer-events-none"
           style={{
-            background: "linear-gradient(90deg, rgba(255,255,255,0) 0%, rgba(255,255,255,0.5) 40%, rgba(255,255,255,0.9) 80%, rgba(255,255,255,1) 100%)"
+            background: "linear-gradient(90deg, rgba(246,240,226,0) 0%, rgba(246,240,226,0.5) 40%, rgba(246,240,226,0.9) 80%, rgba(246,240,226,1) 100%)"
           }}
         />
       )}
