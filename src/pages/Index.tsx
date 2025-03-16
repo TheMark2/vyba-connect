@@ -456,13 +456,13 @@ const Index = () => {
       <main className="flex-1">
         {isMobile ? renderMobileHero() : renderDesktopHero()}
 
-        <section className="bg-vyba-cream">
+        <section className="bg-vyba-cream py-8">
           <div className="w-full overflow-hidden">
-            <Marquee className="py-4" pauseOnHover>
+            <Marquee className="mb-4" pauseOnHover gap="1.5rem">
               {genreCards.map((card, index) => <ArtistCard key={index} type={card.type} name={card.name} artistCount={card.artistCount} rating={card.rating} artistAvatars={card.artistAvatars} onClick={() => handleCardClick(card.name, card.type)} />)}
             </Marquee>
             
-            <Marquee className="py-4" reverse pauseOnHover>
+            <Marquee className="mt-4" reverse pauseOnHover gap="1.5rem">
               {typeCards.map((card, index) => <ArtistCard key={index + genreCards.length} type={card.type} name={card.name} artistCount={card.artistCount} rating={card.rating} artistAvatars={card.artistAvatars} onClick={() => handleCardClick(card.name, card.type)} />)}
             </Marquee>
           </div>
@@ -517,7 +517,7 @@ const Index = () => {
           </div>
         </section>
 
-        <section className="py-4 md:py-8 bg-vyba-cream">
+        <section className="pb-20 bg-vyba-cream">
           <div className="container mx-auto px-6 md:px-10">
             <h2 className="text-3xl md:text-5xl lg:text-7xl font-black text-center mb-12 md:mb-20">
               Los que te recomendamos

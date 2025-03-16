@@ -31,6 +31,11 @@ interface MarqueeProps extends ComponentPropsWithoutRef<"div"> {
    * @default 4
    */
   repeat?: number;
+  /**
+   * Gap between items
+   * @default 1rem
+   */
+  gap?: string;
 }
  
 export function Marquee({
@@ -40,19 +45,21 @@ export function Marquee({
   children,
   vertical = false,
   repeat = 4,
+  gap = '1rem',
   ...props
 }: MarqueeProps) {
   return (
     <div
       {...props}
       className={cn(
-        "group flex overflow-hidden p-2 [--duration:40s] [--gap:1rem] [gap:var(--gap)]",
+        "group flex overflow-hidden py-6 [--duration:40s] [gap:var(--gap)]",
         {
           "flex-row": !vertical,
           "flex-col": vertical,
         },
         className,
       )}
+      style={{ '--gap': gap } as React.CSSProperties}
     >
       {Array(repeat)
         .fill(0)
