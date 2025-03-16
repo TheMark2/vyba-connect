@@ -425,7 +425,7 @@ const Index = () => {
 
         <section className="py-20 md:py-32 bg-secondary/10">
           <div className="container mx-auto px-6 md:px-10">
-            <h2 className="text-4xl md:text-5xl lg:text-7xl font-black text-center mb-20 md:mb-32">
+            <h2 className="text-5xl md:text-5xl lg:text-7xl font-black text-center mb-20 md:mb-32">
               Contratar a un artista nunca había sido tan fácil
             </h2>
 
