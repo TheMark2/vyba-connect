@@ -15,6 +15,7 @@ import StatsSummary from "@/components/StatsSummary";
 import HelpSection from "@/components/HelpSection";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/carousel";
+
 const Input = React.forwardRef<HTMLInputElement, React.ComponentProps<"input">>(({
   className,
   ...props
@@ -57,7 +58,9 @@ const Input = React.forwardRef<HTMLInputElement, React.ComponentProps<"input">>(
       </div>;
 });
 Input.displayName = "Input";
+
 const BoldSearch = () => <Search className="h-5 w-5 stroke-[2.5px]" />;
+
 const Index = () => {
   const scrollRef = useRef(null);
   const [searchQuery, setSearchQuery] = useState("");
@@ -394,12 +397,12 @@ const Index = () => {
     }} transition={{
       duration: 0.3,
       ease: "easeOut"
-    }} className="fixed bottom-6 left-0 right-0 z-50 px-6 md:px-10 flex justify-center">
-          <Button onClick={() => toast.success("Búsqueda con IA iniciada")} className="px-8 rounded-full flex items-center gap-2 shadow-lg" variant="default">
-            <div className="">
-              <BrainCircuit className="h-5 w-5" />
-            </div>
-            <span>Buscar con IA</span>
+    }} className="fixed bottom-6 left-0 right-0 z-50 px-6 md:px-10 flex justify-center gap-3">
+          <Button onClick={() => toast.success("Búsqueda iniciada")} className="rounded-full text-black bg-[#F5F1EB] hover:bg-[#EAE6E0] shadow-none" variant="secondary">
+            Empezar a buscar
+          </Button>
+          <Button onClick={() => toast.success("Búsqueda con IA iniciada")} className="rounded-full shadow-none" variant="default">
+            Buscar con IA
           </Button>
         </motion.div>}
 
@@ -492,4 +495,5 @@ const Index = () => {
       <Footer />
     </div>;
 };
+
 export default Index;
