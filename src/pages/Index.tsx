@@ -445,7 +445,7 @@ const Index = () => {
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-16 items-center mb-12">
                 <div className="order-2 md:order-1">
-                  <img src="/lovable-uploads/7e7c2282-785a-46fb-84b2-f7b14b762e64.png" alt="Contacto con artistas" className="w-full max-h-[450px]  object-cover aspect-[4/3] rounded-[50px]" />
+                  <img src="/lovable-uploads/7e7c2282-785a-46fb-84b2-f7b14b762e64.png" alt="Contacto con artistas" className="w-full max-h-[450px]  object-cover aspect-[4/3] rounded-[40px] md:rounded-[40px] lg:rounded-[50px]" />
                 </div>
                 <div className="order-1 md:order-2">
                   <h2 className="text-5xl font-black mb-4 leading-tight">Contacta con el artista de una forma fácil y rápida.</h2>
@@ -465,7 +465,7 @@ const Index = () => {
                   <Button variant="secondary" className="mt-2">Empieza a buscar ahora</Button>
                 </div>
                 <div className="order-2 md:order-2">
-                  <img src="/lovable-uploads/440a191c-d45b-4031-acbe-509e602e5d22.png" alt="Escribir reseñas" className="w-full max-h-[450px] object-cover aspect-[4/3] rounded-[50px]" />
+                  <img src="/lovable-uploads/440a191c-d45b-4031-acbe-509e602e5d22.png" alt="Escribir reseñas" className="w-full max-h-[450px] object-cover aspect-[4/3] rounded-[40px] md:rounded-[40px] lg:rounded-[50px]" />
                 </div>
               </div>
             </div>
