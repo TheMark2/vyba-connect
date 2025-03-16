@@ -353,13 +353,13 @@ const Index = () => {
                       Contacta con los mejores artistas
                     </motion.h1>
                     
-                    <motion.h1 className="text-4xl md:text-5xl lg:text-7xl font-black text-white leading-tight absolute top-0 left-0 w-full" style={{
+                    <motion.h1 className="text-4xl md:text-5xl lg:text-7xl font-black text-white leading-tight absolute top-16 left-0 w-full" style={{
                     opacity: textOpacity2
                   }}>
                       De una forma fácil
                     </motion.h1>
                     
-                    <motion.h1 className="text-4xl md:text-5xl lg:text-7xl font-black text-white leading-tight absolute top-0 left-0 w-full" style={{
+                    <motion.h1 className="text-4xl md:text-5xl lg:text-7xl font-black text-white leading-tight absolute top-16 left-0 w-full" style={{
                     opacity: textOpacity3
                   }}>
                       Usa Vyba
@@ -501,4 +501,3 @@ const Index = () => {
 };
 
 export default Index;
-
