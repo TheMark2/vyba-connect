@@ -309,6 +309,7 @@ const Index = () => {
         </Carousel>
       </div>
     </div>;
+    
   const renderDesktopHero = () => <div ref={scrollRef} className="h-[300vh] relative">
       <div className="sticky top-0 h-screen overflow-hidden">
         <div className="relative w-full h-screen overflow-hidden">
@@ -345,7 +346,7 @@ const Index = () => {
               
               <motion.div className="absolute inset-0 flex flex-col justify-center text-white px-6 md:px-12 lg:px-16">
                 <div className="max-w-2xl mx-0 space-y-14">
-                  <div className="relative h-28">
+                  <div className="relative h-36">
                     <motion.h1 className="text-4xl md:text-5xl lg:text-7xl font-black text-white leading-tight absolute top-0 left-0 w-full" style={{
                     opacity: textOpacity1
                   }}>
@@ -380,6 +381,7 @@ const Index = () => {
         </div>
       </div>
     </div>;
+
   return <div className="min-h-screen flex flex-col p-0 m-0">
       <div className="w-full">
         <Navbar className="mx-auto" />
@@ -499,3 +501,4 @@ const Index = () => {
 };
 
 export default Index;
+
