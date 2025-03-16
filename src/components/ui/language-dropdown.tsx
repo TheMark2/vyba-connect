@@ -42,7 +42,7 @@ export function LanguageDropdown({ className }: LanguageDropdownProps) {
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent 
-        className="min-w-[250px] bg-white border-none rounded-3xl p-3 shadow-0"
+        className="min-w-[250px] bg-white border-none rounded-3xl p-3 shadow-none"
         align="center"
       >
         {languages.map((language) => (
