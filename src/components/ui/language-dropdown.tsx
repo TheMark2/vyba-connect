@@ -53,7 +53,7 @@ export function LanguageDropdown({ className }: LanguageDropdownProps) {
           <DropdownMenuItem
             key={language.code}
             className={cn(
-              "rounded-md px-3 py-3 text-base font-medium mb-1 focus:bg-[#F8F8F8] hover:bg-[#F8F8F8] cursor-pointer",
+              "rounded-md px-3 py-3 text-sm font-medium mb-1 focus:bg-[#F8F8F8] hover:bg-[#F8F8F8] cursor-pointer",
               selectedLanguage.code === language.code && "bg-[#F8F8F8]"
             )}
             onClick={() => setSelectedLanguage(language)}
