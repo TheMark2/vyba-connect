@@ -1,3 +1,4 @@
+
 import React, { useRef, useState, useEffect } from "react";
 import ArtistProfileCard from "./ArtistProfileCard";
 import {
@@ -71,15 +72,17 @@ const ArtistsList = ({
 
   const getItemWidth = () => {
     if (isMobile) {
-      return 'calc(75% - 0.5rem)';
+      return 'calc(70% - 1rem)'; // Smaller width to show more of next card on mobile
+    } else if (typeof window !== 'undefined' && window.innerWidth < 768) {
+      return 'calc(65% - 1rem)'; 
     } else if (typeof window !== 'undefined' && window.innerWidth < 1024) {
-      return 'calc(40% - 0.75rem)';
+      return 'calc(38% - 1rem)'; // Show ~2.5 cards on tablets
     } else if (typeof window !== 'undefined' && window.innerWidth < 1280) {
-      return 'calc(30% - 0.75rem)';
+      return 'calc(28% - 1rem)'; // Show ~3.5 cards on small desktops
     } else if (typeof window !== 'undefined' && window.innerWidth < 1536) {
-      return 'calc(23% - 0.75rem)';
+      return 'calc(21% - 1rem)'; // Show ~4.5 cards on desktops
     } else {
-      return 'calc(19% - 0.75rem)';
+      return 'calc(18% - 1rem)'; // Show ~5.5 cards on large screens
     }
   };
 
@@ -97,14 +100,14 @@ const ArtistsList = ({
         onScroll={checkScrollable}
       >
         <CarouselContent 
-          className="-ml-3"
+          className="-ml-5" // Increased negative margin for larger gap
           data-carousel-content
         >
           {artists.map((artist, index) => (
             <CarouselItem
               key={artist.id}
               className={cn(
-                "pl-3 pr-1",
+                "pl-5 pr-2", // Increased padding for larger gap
                 index === 0 && current === 0 ? "ml-6" : "ml-0"
               )}
               style={{
