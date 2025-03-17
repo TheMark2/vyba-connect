@@ -1,3 +1,4 @@
+@import url('https://api.fontshare.com/v2/css?f[]=satoshi@900,700,500,400&display=swap');
 
 @tailwind base;
 @tailwind components;
@@ -5,78 +6,155 @@
 
 @layer base {
   :root {
-    --background: 60 100% 97.1%;
-    --foreground: 20 14.3% 4.1%;
-    --card: 60 100% 97.1%;
-    --card-foreground: 20 14.3% 4.1%;
-    --popover: 60 100% 97.1%;
-    --popover-foreground: 20 14.3% 4.1%;
-    --primary: 18 64% 52.5%;
-    --primary-foreground: 60 9.1% 97.8%;
-    --secondary: 45 14.3% 95.1%;
-    --secondary-foreground: 20 14.3% 4.1%;
-    --muted: 45 7.7% 88.2%;
-    --muted-foreground: 20 8.3% 32.5%;
-    --accent: 45 14.3% 90.1%;
-    --accent-foreground: 20 14.3% 4.1%;
+    --background: 34 33 27;
+    --foreground: 0 0% 3.9%;
+
+    --card: 0 0% 100%;
+    --card-foreground: 0 0% 3.9%;
+ 
+    --popover: 0 0% 100%;
+    --popover-foreground: 0 0% 3.9%;
+ 
+    --primary: 227 100% 98%;
+    --primary-foreground: 224 35% 20%;
+ 
+    --secondary: 37 29% 95%;
+    --secondary-foreground: 224 35% 20%;
+ 
+    --muted: 0 0% 96.1%;
+    --muted-foreground: 0 0% 45.1%;
+ 
+    --accent: 0 0% 96.1%;
+    --accent-foreground: 0 0% 9%;
+ 
     --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 60 9.1% 97.8%;
-    --border: 20 5.9% 90%;
-    --input: 20 5.9% 90%;
-    --ring: 18 64% 52.5%;
-    --radius: 0.5rem;
-    --vyba-cream: 60 100% 97.1%;
-    --vyba-dark-bg: 45 6% 17.1%;
-    --vyba-dark-secondary: 45 5% 27.1%;
+    --destructive-foreground: 0 0% 98%;
+
+    --border: 0 0% 89.8%;
+    --input: 0 0% 89.8%;
+    --ring: 0 0% 3.9%;
+ 
+    --radius: 0.75rem;
   }
 
   .dark {
-    --background: 20 14.3% 4.1%;
-    --foreground: 60 9.1% 97.8%;
-    --card: 20 14.3% 4.1%;
-    --card-foreground: 60 9.1% 97.8%;
-    --popover: 20 14.3% 4.1%;
-    --popover-foreground: 60 9.1% 97.8%;
-    --primary: 18 64% 52.5%;
-    --primary-foreground: 60 9.1% 97.8%;
-    --secondary: 45 5% 27.1%;
-    --secondary-foreground: 60 9.1% 97.8%;
-    --muted: 45 5.9% 20%;
-    --muted-foreground: 20 5.9% 80%;
-    --accent: 45 5.9% 25%;
-    --accent-foreground: 60 9.1% 97.8%;
+    --background: 25 1% 17%;
+    --foreground: 0 0% 98%;
+
+    --card: 25 1% 17%;
+    --card-foreground: 0 0% 98%;
+ 
+    --popover: 25 1% 17%;
+    --popover-foreground: 0 0% 98%;
+ 
+    --primary: 227 100% 98%;
+    --primary-foreground: 224 35% 20%;
+ 
+    --secondary: 25 1% 26%;
+    --secondary-foreground: 0 0% 98%;
+ 
+    --muted: 25 1% 26%;
+    --muted-foreground: 0 0% 63.9%;
+ 
+    --accent: 25 1% 26%;
+    --accent-foreground: 0 0% 98%;
+ 
     --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 60 9.1% 97.8%;
-    --border: 45 5.9% 20%;
-    --input: 45 5.9% 20%;
-    --ring: 18 64% 52.5%;
+    --destructive-foreground: 0 0% 98%;
+
+    --border: 25 1% 36%;
+    --input: 25 1% 36%;
+    --ring: 0 0% 83.9%;
   }
 }
 
 @layer base {
   * {
-    @apply border-border;
+    @apply border-border font-satoshi;
   }
   body {
-    @apply bg-background text-foreground;
-    font-feature-settings: "rlig" 1, "calt" 1;
+    @apply bg-vyba-cream text-black antialiased dark:bg-vyba-dark-bg dark:text-white;
   }
-
-  /* Add any base-level styles here */
+  
+  /* Animación de transición entre temas */
+  .theme-transition {
+    transition: background-color 0.5s ease, color 0.5s ease, border-color 0.5s ease, fill 0.5s ease, stroke 0.5s ease;
+  }
+  
+  /* Añadir padding-top al cuerpo en móvil para compensar la navbar fija */
+  @media (max-width: 768px) {
+    body {
+      @apply pt-20;
+    }
+  }
+  
+  /* Add smooth scrolling for the entire page */
+  html {
+    scroll-behavior: smooth;
+  }
 }
 
-@keyframes fadeInOut {
-  0% {
-    opacity: 0;
-    transform: scale(0.5);
+@layer components {
+  .btn-primary {
+    @apply bg-primary hover:bg-primary-hover text-primary-foreground px-6 py-3 rounded-full transition-colors 
+    duration-200 inline-flex items-center justify-center font-medium relative overflow-hidden;
   }
-  50% {
-    opacity: 1;
-    transform: scale(1.2);
+  
+  .btn-secondary {
+    @apply bg-secondary hover:bg-secondary-hover text-secondary-foreground px-6 py-3 rounded-full 
+    transition-colors duration-200 inline-flex items-center justify-center font-medium dark:bg-vyba-dark-secondary dark:hover:bg-opacity-80 dark:text-white relative overflow-hidden;
   }
-  100% {
-    opacity: 0;
-    transform: scale(1.5);
+
+  .ripple-effect {
+    position: absolute;
+    border-radius: 50%;
+    transform: scale(0);
+    animation: ripple 0.8s linear;
+    background-color: rgba(255, 255, 255, 0.3);
+    pointer-events: none;
+    width: 200px;
+    height: 200px;
+    margin-left: -100px;
+    margin-top: -100px;
+  }
+
+  .card-artist {
+    @apply bg-white rounded-xl overflow-hidden shadow-sm hover:shadow-md transition-shadow duration-200 dark:bg-vyba-dark-bg;
+  }
+
+  .nav-link {
+    @apply text-black/80 hover:text-black transition-colors duration-200 px-4 py-2 rounded-lg font-medium dark:text-white/80 dark:hover:text-white;
+  }
+
+  .input-field {
+    @apply w-full px-4 py-3 rounded-lg border border-gray-200 focus:border-primary focus:ring-2 
+    focus:ring-primary/20 outline-none transition-all duration-200 dark:border-vyba-dark-secondary dark:bg-vyba-dark-bg dark:text-white;
+  }
+  
+  .scroll-animate-image {
+    @apply transition-transform duration-300 ease-out;
+  }
+  
+  .scroll-animate-text {
+    @apply transition-colors duration-300 ease-out;
+  }
+}
+
+@keyframes marquee {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(calc(-100% - var(--gap)));
+  }
+}
+
+@keyframes marquee-vertical {
+  from {
+    transform: translateY(0);
+  }
+  to {
+    transform: translateY(calc(-100% - var(--gap)));
   }
 }
 
@@ -98,34 +176,78 @@
   }
 }
 
-.animate-fadeInOut {
-  animation: fadeInOut 0.8s ease-in-out forwards;
-}
-
-.animate-heartbeat {
-  animation: heartbeat 0.6s ease-in-out;
-}
-
-/* Ripple effect for heart button */
-.ripple-effect {
-  position: absolute;
-  border-radius: 50%;
-  background-color: rgba(0, 0, 0, 0.2);
-  width: 100px;
-  height: 100px;
-  margin-top: -50px;
-  margin-left: -50px;
-  animation: ripple 0.8s linear;
-  opacity: 0;
+@keyframes fadeInOut {
+  0% {
+    opacity: 0;
+    transform: scale(0.5);
+  }
+  50% {
+    opacity: 0.8;
+    transform: scale(1.2);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(1.5);
+  }
 }
 
 @keyframes ripple {
-  0% {
-    transform: scale(0);
-    opacity: 0.5;
-  }
-  100% {
-    transform: scale(2);
+  to {
+    transform: scale(4);
     opacity: 0;
+  }
+}
+
+@keyframes slideInRight {
+  from {
+    transform: translateX(100%);
+  }
+  to {
+    transform: translateX(0);
+  }
+}
+
+@keyframes slideOutRight {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(100%);
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@layer utilities {
+  .animate-marquee {
+    animation: marquee var(--duration) linear infinite;
+  }
+  .animate-marquee-vertical {
+    animation: marquee-vertical var(--duration) linear infinite;
+  }
+  .animate-heartbeat {
+    animation: heartbeat 0.6s ease-in-out;
+  }
+  .animate-fadeInOut {
+    animation: fadeInOut 0.8s ease-in-out forwards;
+  }
+  .animate-slide-in-right {
+    animation: slideInRight 350ms cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  }
+  .animate-slide-out-right {
+    animation: slideOutRight 350ms cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  }
+  .animate-menu-item {
+    opacity: 0;
+    animation: fadeIn 350ms cubic-bezier(0.16, 1, 0.3, 1) forwards;
   }
 }

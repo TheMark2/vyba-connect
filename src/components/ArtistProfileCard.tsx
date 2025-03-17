@@ -1,17 +1,9 @@
-
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useRef } from "react";
 import { Heart, ChevronLeft, ChevronRight } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
 import { toast } from "sonner";
 import { useIsMobile } from "@/hooks/use-mobile";
-import { 
-  Carousel,
-  CarouselContent,
-  CarouselItem,
-  CarouselPrevious,
-  CarouselNext
-} from "@/components/ui/carousel";
 
 interface ArtistProfileCardProps {
   name: string;
@@ -42,6 +34,7 @@ const ArtistProfileCard = ({
   const [isHovered, setIsHovered] = useState(false);
   const [isAnimating, setIsAnimating] = useState(false);
   const [showCenterHeart, setShowCenterHeart] = useState(false);
+  const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const lastClickTimeRef = useRef<number>(0);
   const isMobile = useIsMobile();
   
@@ -110,6 +103,24 @@ const ArtistProfileCard = ({
       ripple.remove();
     }, 800);
   };
+
+  const handlePrevImage = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    if (currentImageIndex > 0) {
+      setCurrentImageIndex(prev => prev - 1);
+    } else {
+      setCurrentImageIndex(images.length - 1);
+    }
+  };
+
+  const handleNextImage = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    if (currentImageIndex < images.length - 1) {
+      setCurrentImageIndex(prev => prev + 1);
+    } else {
+      setCurrentImageIndex(0);
+    }
+  };
   
   return (
     <div 
@@ -125,34 +136,35 @@ const ArtistProfileCard = ({
         "relative w-full overflow-hidden rounded-3xl",
         isMobile ? "aspect-[1/1]" : "aspect-[3/4]"
       )}>
-        {/* Image carousel for mobile and desktop */}
-        <Carousel className="w-full h-full" opts={{ loop: true, align: "center" }}>
-          <CarouselContent className="h-full">
-            {images.map((img, index) => (
-              <CarouselItem key={index} className="h-full">
-                <div className="w-full h-full transition-transform duration-300" style={{
-                  transform: isHovered && !isMobile ? 'scale(1.07)' : 'scale(1)'
-                }}>
-                  <img 
-                    src={img} 
-                    alt={`${name} - ${type} ${index + 1}`} 
-                    className="w-full h-full object-cover"
-                  />
-                </div>
-              </CarouselItem>
-            ))}
-          </CarouselContent>
-          
-          {/* Show navigation arrows on desktop when hovering */}
-          {isHovered && images.length > 1 && !isMobile && (
-            <>
-              <CarouselPrevious className="absolute left-4 bg-white/60 backdrop-blur-sm hover:bg-white/80 p-1.5 rounded-full opacity-90 hover:opacity-100" />
-              <CarouselNext className="absolute right-4 bg-white/60 backdrop-blur-sm hover:bg-white/80 p-1.5 rounded-full opacity-90 hover:opacity-100" />
-            </>
-          )}
-        </Carousel>
+        <div className="w-full h-full transition-transform duration-300" style={{
+          transform: isHovered ? 'scale(1.07)' : 'scale(1)'
+        }}>
+          <img 
+            src={images[currentImageIndex]} 
+            alt={`${name} - ${type}`} 
+            className="w-full h-full object-cover"
+          />
+        </div>
         
-        {/* Show dots for multiple images */}
+        {isHovered && images.length > 1 && !isMobile && (
+          <>
+            <button 
+              onClick={handlePrevImage}
+              className="absolute left-4 top-1/2 transform -translate-y-1/2 bg-white/60 backdrop-blur-sm p-1.5 rounded-full opacity-90 hover:opacity-100 transition-opacity z-10"
+              aria-label="Imagen anterior"
+            >
+              <ChevronLeft className="h-5 w-5 text-black" />
+            </button>
+            <button 
+              onClick={handleNextImage}
+              className="absolute right-4 top-1/2 transform -translate-y-1/2 bg-white/60 backdrop-blur-sm p-1.5 rounded-full opacity-90 hover:opacity-100 transition-opacity z-10"
+              aria-label="Siguiente imagen"
+            >
+              <ChevronRight className="h-5 w-5 text-black" />
+            </button>
+          </>
+        )}
+
         {images.length > 1 && (
           <div className="absolute bottom-3 left-1/2 transform -translate-x-1/2 flex gap-1.5 z-20">
             {images.map((_, index) => (
@@ -160,7 +172,7 @@ const ArtistProfileCard = ({
                 key={index}
                 className={cn(
                   "h-1.5 rounded-full bg-white/80 transition-all",
-                  index === 0 ? "w-5" : "w-1.5 opacity-60"
+                  currentImageIndex === index ? "w-5" : "w-1.5 opacity-60"
                 )}
               />
             ))}
@@ -181,8 +193,8 @@ const ArtistProfileCard = ({
         
         <div className="absolute top-0 left-0 w-full p-3 flex justify-between">
           <Badge variant="outline" className={cn(
-            "bg-white text-black py-1 rounded-full border-0 font-medium",
-            isMobile ? "text-sm px-4" : "text-sm px-5 py-1.5" // Increased size for desktop
+            "bg-white text-black py-1 px-4 rounded-full border-0 font-medium",
+            isMobile ? "text-sm" : "text-xs"
           )}>
             {type}
           </Badge>
@@ -191,14 +203,14 @@ const ArtistProfileCard = ({
             onMouseDown={handleRippleEffect}
             className={cn(
               "rounded-full bg-white flex items-center justify-center transition-all duration-300 relative overflow-hidden",
-              isMobile ? "h-9 w-9" : "h-10 w-10", // Increased size for desktop
+              isMobile ? "h-9 w-9" : "h-7 w-7",
               isAnimating && favorite && "animate-heartbeat"
             )}
           >
             <Heart 
               className={cn(
                 "transition-all duration-300", 
-                isMobile ? "h-4.5 w-4.5" : "h-5 w-5", // Increased size for desktop
+                isMobile ? "h-4.5 w-4.5" : "h-3.5 w-3.5",
                 favorite ? "fill-black stroke-black" : "stroke-black",
                 isAnimating && favorite && "scale-110"
               )} 
