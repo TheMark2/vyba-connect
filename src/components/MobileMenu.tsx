@@ -64,7 +64,7 @@ const MobileMenu = () => {
   }, []);
 
   return (
-    <SheetContent side="right" className="h-[100dvh] w-full p-0 border-0 bg-white overflow-y-auto">
+    <SheetContent side="right" className="h-[100dvh] w-full p-0 border-0 bg-white z-[999]">
       {/* Botón de cierre en la esquina superior derecha */}
       <div className="flex justify-end p-6">
         <SheetClose asChild>

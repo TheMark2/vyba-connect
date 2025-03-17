@@ -1,3 +1,4 @@
+
 @import url('https://api.fontshare.com/v2/css?f[]=satoshi@900,700,500,400&display=swap');
 
 @tailwind base;
@@ -53,14 +54,9 @@
     }
   }
   
-  /* Clase para evitar el scroll cuando el menú está abierto */
-  body.overflow-hidden {
-    overflow: hidden;
-    height: 100vh;
-    width: 100%;
-    position: fixed;
-    top: 0;
-    left: 0;
+  /* Estilos para cuando el cuerpo tiene posición fija (menú abierto) */
+  body[style*="position: fixed"] {
+    overflow-y: hidden;
   }
   
   /* Add smooth scrolling for the entire page */
@@ -100,11 +96,6 @@
   
   .scroll-animate-text {
     @apply transition-colors duration-300 ease-out;
-  }
-
-  /* Eliminando la clase para el degradado de la navbar */
-  .navbar-gradient {
-    position: relative;
   }
 }
 

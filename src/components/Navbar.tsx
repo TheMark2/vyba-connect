@@ -1,3 +1,4 @@
+
 import { Button } from "@/components/ui/button";
 import { Link, useLocation } from "react-router-dom";
 import { cn } from "@/lib/utils";
@@ -5,10 +6,12 @@ import { Menu, X } from "lucide-react";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import MobileMenu from "@/components/MobileMenu";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
+
 interface NavbarProps {
   className?: string;
 }
+
 const Navbar = ({
   className
 }: NavbarProps) => {
@@ -17,7 +20,7 @@ const Navbar = ({
   const isMobile = useIsMobile();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
-  const [scrollPosition, setScrollPosition] = useState(0);
+  const scrollPositionRef = useRef(0);
 
   // Detectar el scroll y cambiar el estado
   useEffect(() => {
@@ -35,30 +38,36 @@ const Navbar = ({
     };
   }, []);
 
-  // Prevenir scroll cuando el menú está abierto
-  useEffect(() => {
-    if (isMenuOpen) {
-      // Guardar la posición actual de scroll antes de abrir el menú
-      setScrollPosition(window.scrollY);
-      document.body.classList.add('overflow-hidden');
-      // No permitir que el body se desplace hacia arriba
-      document.body.style.top = `-${scrollPosition}px`;
+  // Manejo de apertura/cierre del menú
+  const handleMenuOpenChange = (open: boolean) => {
+    if (open) {
+      // Guardar la posición actual antes de abrir
+      scrollPositionRef.current = window.scrollY;
+      document.body.style.position = 'fixed';
+      document.body.style.top = `-${scrollPositionRef.current}px`;
+      document.body.style.width = '100%';
     } else {
-      document.body.classList.remove('overflow-hidden');
-      // Restaurar la posición del scroll cuando se cierra el menú
+      // Restaurar la posición al cerrar
+      document.body.style.position = '';
       document.body.style.top = '';
-      window.scrollTo(0, scrollPosition);
+      document.body.style.width = '';
+      window.scrollTo(0, scrollPositionRef.current);
     }
-    return () => {
-      document.body.classList.remove('overflow-hidden');
-      document.body.style.top = '';
-    };
-  }, [isMenuOpen, scrollPosition]);
-  return <div className={cn("w-full mx-auto px-6 md:px-10 lg:px-14 xl:px-16 flex items-center justify-between",
-  // Cambiamos de sticky a fixed para móvil y reducimos altura
-  isMobile ? "fixed top-0 left-0 right-0 z-50 transition-colors duration-500 h-20" : "h-24",
-  // Cambiamos el fondo basado en el estado de scroll (solo en móvil, quitamos la clase del gradiente)
-  isMobile && scrolled ? "bg-[#F5F1EB]" : "bg-transparent", className)}>
+    
+    setIsMenuOpen(open);
+  };
+
+  return (
+    <div 
+      className={cn(
+        "w-full mx-auto px-6 md:px-10 lg:px-14 xl:px-16 flex items-center justify-between",
+        // Cambiamos de sticky a fixed para móvil y reducimos altura
+        isMobile ? "fixed top-0 left-0 right-0 z-50 transition-colors duration-500 h-20" : "h-24",
+        // Cambiamos el fondo basado en el estado de scroll (solo en móvil)
+        isMobile && scrolled ? "bg-[#F5F1EB]" : "bg-transparent",
+        className
+      )}
+    >
       {/* Logo y enlaces alineados a la izquierda */}
       <div className="flex items-center space-x-12">
         {/* Logo */}
@@ -88,13 +97,18 @@ const Navbar = ({
 
       {/* Botones de acción */}
       <div className="flex items-center space-x-3">
-        {isMobile ? <>
+        {isMobile ? (
+          <>
             {/* Botón de iniciar sesión en móvil */}
-            <Button size="sm" variant="ghost" className="bg-[#D4DDFF] text-[#222845] hover:bg-[#C4D1FF] border-none">
+            <Button 
+              size="sm" 
+              variant="ghost" 
+              className="bg-[#D4DDFF] text-[#222845] hover:bg-[#C4D1FF] border-none"
+            >
               Iniciar sesión
             </Button>
             
-            <Sheet open={isMenuOpen} onOpenChange={setIsMenuOpen}>
+            <Sheet open={isMenuOpen} onOpenChange={handleMenuOpenChange}>
               <SheetTrigger asChild>
                 <Button variant="ghost" size="icon" className="relative w-10 h-10 flex items-center justify-center">
                   <div className="relative w-6 h-6">
@@ -105,15 +119,23 @@ const Navbar = ({
               </SheetTrigger>
               <MobileMenu />
             </Sheet>
-          </> : <>
-            <Button variant="secondary" className="text-sm hidden sm:flex bg-[#E7D3D3]">
+          </>
+        ) : (
+          <>
+            <Button 
+              variant="secondary" 
+              className="text-sm hidden sm:flex bg-[#E7D3D3]"
+            >
               Promocionarse como artista
             </Button>
             <Button className="text-sm">
               Entrar/Registrarse
             </Button>
-          </>}
+          </>
+        )}
       </div>
-    </div>;
+    </div>
+  );
 };
+
 export default Navbar;
