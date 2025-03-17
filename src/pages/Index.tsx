@@ -42,10 +42,10 @@ const Input = React.forwardRef<HTMLInputElement, React.ComponentProps<"input">>(
   }, [props.value]);
   const shouldFloatLabel = isFocused || hasValue;
   return <div className="relative w-full">
-        {props.placeholder && <span className={cn("absolute pointer-events-none transition-all duration-300 text-black font-bold", shouldFloatLabel ? "transform -translate-y-1 text-xs left-6 top-3" : "transform translate-y-0 text-base left-6 top-1/2 -mt-3")}>
+        {props.placeholder && <span className={cn("absolute pointer-events-none transition-all duration-300 text-black font-bold dark:text-white", shouldFloatLabel ? "transform -translate-y-1 text-xs left-6 top-3" : "transform translate-y-0 text-base left-6 top-1/2 -mt-3")}>
             {props.placeholder}
           </span>}
-        <input {...props} placeholder="" className={cn("flex h-14 w-full rounded-md border border-input bg-background px-6 py-2 text-base file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm", hasValue || isFocused ? "pt-5 pb-1" : "py-3", className)} ref={combinedRef} onFocus={e => {
+        <input {...props} placeholder="" className={cn("flex h-14 w-full rounded-md border border-input bg-background px-6 py-2 text-base file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm dark:bg-vyba-dark-secondary", hasValue || isFocused ? "pt-5 pb-1" : "py-3", className)} ref={combinedRef} onFocus={e => {
       setIsFocused(true);
       props.onFocus && props.onFocus(e);
     }} onBlur={e => {
@@ -93,13 +93,10 @@ const Index = () => {
       const footerElement = document.querySelector('footer');
       const footerPosition = footerElement ? footerElement.getBoundingClientRect().top + window.scrollY - window.innerHeight : 0;
       
-      // Make buttons appear earlier on mobile
       const shouldShowSearchThreshold = isMobile ? window.innerHeight * 1.5 : window.innerHeight * 3;
       
-      // Hide buttons before reaching the footer (with a buffer of 100px)
       const shouldHideBeforeFooter = scrollPosition > footerPosition - 100;
       
-      // Only show if we've scrolled past threshold AND we're not near the footer
       const shouldShowSearch = scrollPosition > shouldShowSearchThreshold && !shouldHideBeforeFooter;
       
       if (shouldShowSearch !== showFixedSearch) {
@@ -284,15 +281,15 @@ const Index = () => {
     toast(`${artist.isFavorite ? "Eliminado de" : "Añadido a"} favoritos: ${artist.name}`);
   };
   const filteredArtists = activeCategory ? recommendedArtists.filter(artist => artist.type.toLowerCase().includes(activeCategory.toLowerCase()) || artist.description.toLowerCase().includes(activeCategory.toLowerCase())) : recommendedArtists;
-  const renderMobileHero = () => <div className="min-h-screen flex flex-col bg-vyba-cream">
+  const renderMobileHero = () => <div className="min-h-screen flex flex-col bg-vyba-cream dark:bg-vyba-dark-bg">
       <div className="px-6 pt-20 pb-10">
         <h1 className="text-5xl font-black leading-tight">
           El portal perfecto para encontrar tu dj
         </h1>
         
         <div className="mt-10 relative">
-          <div className="flex items-center bg-[#F5F1EB] rounded-full">
-            <input type="text" placeholder="Buscar artistas" className="pl-6 pr-12 py-4 w-full bg-transparent text-black rounded-full focus:outline-none" />
+          <div className="flex items-center bg-[#F5F1EB] dark:bg-vyba-dark-secondary rounded-full">
+            <input type="text" placeholder="Buscar artistas" className="pl-6 pr-12 py-4 w-full bg-transparent text-black dark:text-white rounded-full focus:outline-none" />
             <Button type="submit" size="icon" className="absolute right-1 rounded-full h-11 w-11 flex items-center justify-center">
               <BoldSearch />
             </Button>
@@ -381,7 +378,7 @@ const Index = () => {
                   
                   <motion.div className="flex w-full relative">
                     <div className="relative w-full flex items-center">
-                      <Input type="text" placeholder="Buscar artistas" className="pr-14 bg-[#F5F1EB] text-black h-14 rounded-full border-0" value={searchQuery} onChange={e => setSearchQuery(e.target.value)} />
+                      <Input type="text" placeholder="Buscar artistas" className="pr-14 bg-[#F5F1EB] dark:bg-vyba-dark-secondary text-black dark:text-white h-14 rounded-full border-0" value={searchQuery} onChange={e => setSearchQuery(e.target.value)} />
                       <Button type="submit" size="icon" className="absolute right-2 rounded-full h-11 w-11 flex items-center justify-center">
                         <BoldSearch />
                       </Button>
@@ -408,10 +405,10 @@ const Index = () => {
         transition={{ duration: 0.3, ease: "easeOut" }}
         className="fixed bottom-6 left-0 right-0 z-50 px-6 md:px-10 flex justify-center"
       >
-        <div className="bg-white py-3 px-4 rounded-full inline-flex gap-3 shadow-sm">
+        <div className="bg-white dark:bg-vyba-dark-bg py-3 px-4 rounded-full inline-flex gap-3 shadow-sm">
           <Button 
             onClick={() => toast.success("Búsqueda iniciada")} 
-            className="rounded-full text-black bg-[#F5F1EB] hover:bg-[#EAE6E0] shadow-none" 
+            className="rounded-full text-black dark:text-white bg-[#F5F1EB] dark:bg-vyba-dark-secondary hover:bg-[#EAE6E0] dark:hover:bg-opacity-80 shadow-none" 
             variant="secondary"
           >
             Empezar a buscar
@@ -430,7 +427,7 @@ const Index = () => {
       <main className="flex-1">
         {isMobile ? renderMobileHero() : renderDesktopHero()}
 
-        <section className="bg-vyba-cream">
+        <section className="bg-vyba-cream dark:bg-vyba-dark-bg">
           <div className="w-full overflow-hidden mt-3 md:mt-2 lg:mt-0">
             <Marquee pauseOnHover className="mb-4">
               {genreCards.map((card, index) => <ArtistCard key={index} type={card.type} name={card.name} artistCount={card.artistCount} rating={card.rating} artistAvatars={card.artistAvatars} onClick={() => handleCardClick(card.name, card.type)} />)}
@@ -442,7 +439,7 @@ const Index = () => {
           </div>
         </section>
 
-        <section className="py-20 md:py-32 bg-secondary/10">
+        <section className="py-20 md:py-32 bg-secondary/10 dark:bg-vyba-dark-bg">
           <div className="container mx-auto px-6 md:px-10">
             <h2 className="text-5xl md:text-5xl lg:text-7xl font-black text-center mb-20 md:mb-32">
               Contratar a un artista nunca había sido tan fácil
@@ -452,7 +449,7 @@ const Index = () => {
               <div className="grid grid-cols-1 md:grid-cols-2 gap-16 items-center mb-12">
                 <div className="order-1 md:order-1">
                   <h2 className="text-3xl md:text-4xl lg:text-5xl font-black mb-4 leading-tight">Explora y elige el artista perfecto para tu evento.</h2>
-                  <p className="text-gray-900 font-medium mb-6">
+                  <p className="text-gray-900 dark:text-gray-200 font-medium mb-6">
                     Descubre el talento que mejor se adapta a tu evento. Filtra por género, estilo o popularidad y encuentra al artista perfecto en segundos.
                   </p>
                   <Button variant="secondary" className="mt-2">Empieza a buscar ahora</Button>
@@ -468,7 +465,7 @@ const Index = () => {
                 </div>
                 <div className="order-1 md:order-2">
                   <h2 className="text-3xl md:text-4xl lg:text-5xl font-black mb-4 leading-tight">Contacta con el artista de una forma fácil y rápida.</h2>
-                  <p className="text-gray-900 font-medium mb-6">
+                  <p className="text-gray-900 dark:text-gray-200 font-medium mb-6">
                     Contacta de una forma fácil y rápida, un proceso seguro mediante a nuestro sistema de mensajes.
                   </p>
                   <Button variant="secondary" className="mt-2">Empieza a buscar ahora</Button>
@@ -478,7 +475,7 @@ const Index = () => {
               <div className="grid grid-cols-1 md:grid-cols-2 gap-16 items-center mb-12">
                 <div className="order-1 md:order-1">
                   <h2 className="text-3xl md:text-4xl lg:text-5xl font-black mb-4 leading-tight">Confirma la reserva y disfruta de un show inolvidable.</h2>
-                  <p className="text-gray-900 font-medium mb-6">
+                  <p className="text-gray-900 dark:text-gray-200 font-medium mb-6">
                     Comparte tu experiencia con la comunidad y ayuda a otros a encontrar al artista perfecto para sus eventos.
                   </p>
                   <Button variant="secondary" className="mt-2">Empieza a buscar ahora</Button>
@@ -491,21 +488,21 @@ const Index = () => {
           </div>
         </section>
 
-        <section className="py-4 md:py-8 bg-vyba-cream">
+        <section className="py-4 md:py-8 bg-vyba-cream dark:bg-vyba-dark-bg">
           <div className="container mx-auto px-6 md:px-10">
             <h2 className="text-5xl md:text-5xl lg:text-7xl font-black text-center mb-12 md:mb-20">
               Los que te recomendamos
             </h2>
 
             <div className="flex flex-wrap gap-3 mb-10 justify-center">
-              {musicCategories.map((category, index) => <button key={index} className={cn("px-5 py-3 rounded-full text-sm font-medium transition-colors", activeCategory === category ? "bg-black text-white" : "bg-[#F5F1EB] hover:bg-[#EAE6E0]")} onClick={() => setActiveCategory(activeCategory === category ? null : category)}>
+              {musicCategories.map((category, index) => <button key={index} className={cn("px-5 py-3 rounded-full text-sm font-medium transition-colors", activeCategory === category ? "bg-black text-white" : "bg-[#F5F1EB] dark:bg-vyba-dark-secondary hover:bg-[#EAE6E0] dark:hover:bg-opacity-80")} onClick={() => setActiveCategory(activeCategory === category ? null : category)}>
                 {category}
               </button>)}
             </div>
           </div>
         </section>
         
-        <section className="pb-20 bg-vyba-cream">
+        <section className="pb-20 bg-vyba-cream dark:bg-vyba-dark-bg">
           <ArtistsList artists={filteredArtists} onArtistClick={handleArtistClick} onFavoriteToggle={handleFavoriteToggle} />
         </section>
         
@@ -518,3 +515,4 @@ const Index = () => {
 };
 
 export default Index;
+

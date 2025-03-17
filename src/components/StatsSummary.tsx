@@ -1,10 +1,13 @@
+
 import { cn } from "@/lib/utils";
 import { useIsMobile } from "@/hooks/use-mobile";
+
 interface StatsItemProps {
   count: string;
   label: string;
   className?: string;
 }
+
 const StatsItem = ({
   count,
   label,
@@ -15,15 +18,18 @@ const StatsItem = ({
       <span className="text-lg md:text-xl font-medium mt-2">{label}</span>
     </div>;
 };
+
 interface StatsSummaryProps {
   className?: string;
 }
+
 const StatsSummary = ({
   className
 }: StatsSummaryProps) => {
   const isMobile = useIsMobile();
+  
   return <section className={cn("px-6 md:px-14 lg:px-16 mt-16 md:mt-32", className)}>
-      <div className="bg-[#EDE8E0] rounded-[20px] md:rounded-[40px] py-10 md:py-16">
+      <div className="bg-[#EDE8E0] dark:bg-vyba-dark-secondary rounded-[20px] md:rounded-[40px] py-10 md:py-16">
         <div className="container mx-auto px-4 md:px-10">
           <div className="flex flex-col md:flex-row justify-center gap-10 md:gap-20 lg:gap-32">
             <StatsItem count="1.000" label="Artistas registrados" />
@@ -34,4 +40,5 @@ const StatsSummary = ({
       </div>
     </section>;
 };
+
 export default StatsSummary;
