@@ -161,7 +161,7 @@ const Navbar = ({
             >
               <DropdownMenuItem 
                 className={cn(
-                  "rounded-lg px-3 py-3 flex items-center gap-4 hover:bg-[#F8F8F8] dark:hover:bg-[#444341] cursor-pointer transition-colors duration-300",
+                  "rounded-lg px-3 py-3 flex mb-1 items-center gap-4 hover:bg-[#F8F8F8] dark:hover:bg-[#444341] cursor-pointer transition-colors duration-300",
                   currentTheme === 'light' && "bg-[#F8F8F8] dark:bg-[#444341]"
                 )}
                 onClick={() => setTheme('light')}
@@ -171,7 +171,7 @@ const Navbar = ({
               </DropdownMenuItem>
               <DropdownMenuItem 
                 className={cn(
-                  "rounded-lg px-3 py-3 flex items-center gap-4 hover:bg-[#F8F8F8] dark:hover:bg-[#444341] cursor-pointer transition-colors duration-300",
+                  "rounded-lg px-3 py-3 flex mb-1 items-center gap-4 hover:bg-[#F8F8F8] dark:hover:bg-[#444341] cursor-pointer transition-colors duration-300",
                   currentTheme === 'dark' && "bg-[#F8F8F8] dark:bg-[#444341]"
                 )}
                 onClick={() => setTheme('dark')}
