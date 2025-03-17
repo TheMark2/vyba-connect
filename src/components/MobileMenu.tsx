@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect, useRef } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { Button } from "@/components/ui/button";
@@ -194,28 +195,24 @@ const MobileMenu = ({ isOpen, onClose }: MobileMenuProps) => {
           {/* Otro separador que va de extremo a extremo */}
           <Separator className="animate-menu-item w-full" style={{ animationDelay: "350ms", margin: "0.5rem 0" }} />
           
-          {/* Selector de tema rediseñado con ToggleGroup */}
+          {/* Selector de tema solo con iconos usando ToggleGroup */}
           <div className="px-6 my-4 animate-menu-item" style={{ animationDelay: "400ms" }}>
-            <p className="text-sm font-medium text-gray-500 mb-3">Modo de visualización</p>
             <ToggleGroup 
               type="single" 
               value={theme} 
               onValueChange={(value) => value && setTheme(value)}
               className="w-full"
             >
-              <ToggleGroupItem value="light" className="flex-1 flex flex-col items-center justify-center py-3">
-                <Sun className="h-5 w-5 mb-1" />
-                <span className="text-xs font-medium">Claro</span>
+              <ToggleGroupItem value="light" className="flex-1 flex items-center justify-center py-3">
+                <Sun className="h-5 w-5" />
               </ToggleGroupItem>
               
-              <ToggleGroupItem value="dark" className="flex-1 flex flex-col items-center justify-center py-3">
-                <Moon className="h-5 w-5 mb-1" />
-                <span className="text-xs font-medium">Oscuro</span>
+              <ToggleGroupItem value="dark" className="flex-1 flex items-center justify-center py-3">
+                <Moon className="h-5 w-5" />
               </ToggleGroupItem>
               
-              <ToggleGroupItem value="system" className="flex-1 flex flex-col items-center justify-center py-3">
-                <Monitor className="h-5 w-5 mb-1" />
-                <span className="text-xs font-medium">Sistema</span>
+              <ToggleGroupItem value="system" className="flex-1 flex items-center justify-center py-3">
+                <Monitor className="h-5 w-5" />
               </ToggleGroupItem>
             </ToggleGroup>
           </div>
