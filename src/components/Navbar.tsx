@@ -45,7 +45,7 @@ const Navbar = ({
         "w-full mx-auto px-6 md:px-10 lg:px-14 xl:px-16 flex items-center justify-between",
         // Cambiamos de sticky a fixed para móvil y reducimos altura
         isMobile ? "fixed top-0 left-0 right-0 z-50 transition-colors duration-500 h-20" : "h-24",
-        // Cambiamos el fondo basado en el estado de scroll (solo en móvil)
+        // Cambiamos el fondo y el degradado basado en el estado de scroll (solo en móvil)
         isMobile && scrolled ? "bg-[#F5F1EB] navbar-gradient" : "bg-transparent",
         className
       )}
