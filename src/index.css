@@ -53,6 +53,14 @@
     }
   }
   
+  /* Clase para evitar el scroll cuando el menú está abierto */
+  body.overflow-hidden {
+    overflow: hidden;
+    position: fixed;
+    width: 100%;
+    height: 100%;
+  }
+  
   /* Add smooth scrolling for the entire page */
   html {
     scroll-behavior: smooth;

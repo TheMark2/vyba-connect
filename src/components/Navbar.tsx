@@ -39,6 +39,19 @@ const Navbar = ({
     };
   }, []);
 
+  // Prevenir scroll cuando el menú está abierto
+  useEffect(() => {
+    if (isMenuOpen) {
+      document.body.classList.add('overflow-hidden');
+    } else {
+      document.body.classList.remove('overflow-hidden');
+    }
+    
+    return () => {
+      document.body.classList.remove('overflow-hidden');
+    };
+  }, [isMenuOpen]);
+
   return (
     <div 
       className={cn(
