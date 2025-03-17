@@ -167,7 +167,7 @@ const Navbar = ({
                 onClick={() => setTheme('light')}
               >
                 <Sun className="h-5 w-5" />
-                <span className="text-base font-medium">Claro</span>
+                <span className="text-sm font-medium">Claro</span>
               </DropdownMenuItem>
               <DropdownMenuItem 
                 className={cn(
@@ -177,7 +177,7 @@ const Navbar = ({
                 onClick={() => setTheme('dark')}
               >
                 <Moon className="h-5 w-5" />
-                <span className="text-base font-medium">Oscuro</span>
+                <span className="text-sm font-medium">Oscuro</span>
               </DropdownMenuItem>
               <DropdownMenuItem 
                 className={cn(
@@ -187,7 +187,7 @@ const Navbar = ({
                 onClick={() => setTheme('system')}
               >
                 <LaptopIcon className="h-5 w-5" />
-                <span className="text-base font-medium">Sistema</span>
+                <span className="text-sm font-medium">Sistema</span>
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
