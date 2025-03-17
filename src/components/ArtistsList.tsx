@@ -18,7 +18,7 @@ interface Artist {
   name: string;
   type: string;
   description: string;
-  images: string[]; // Changed from image to images (array)
+  images: string[];
   rating: number;
   priceRange: string;
   isFavorite?: boolean;
@@ -98,7 +98,7 @@ const ArtistsList = ({
   };
 
   return (
-    <div className="relative w-full" ref={carouselRef}>      
+    <div className="relative w-full overflow-hidden" ref={carouselRef}>      
       <Carousel
         className="w-full"
         setApi={setApi}
@@ -111,15 +111,15 @@ const ArtistsList = ({
         onScroll={checkScrollable}
       >
         <CarouselContent 
-          className="-ml-5" // Increased negative margin for larger gap
+          className="-ml-4 md:-ml-5" // Reduced negative margin on mobile
           data-carousel-content
         >
           {artists.map((artist, index) => (
             <CarouselItem
               key={artist.id}
               className={cn(
-                "pl-5 pr-2", // Increased padding for larger gap
-                index === 0 && current === 0 ? "ml-6" : "ml-0"
+                "pl-4 md:pl-5", // Reduced padding on mobile
+                index === 0 && current === 0 ? "ml-0 md:ml-6" : "ml-0"
               )}
               style={{
                 width: getItemWidth(),
@@ -131,7 +131,7 @@ const ArtistsList = ({
                 name={artist.name}
                 type={artist.type}
                 description={artist.description}
-                images={artist.images} // Changed from image to images
+                images={artist.images}
                 rating={artist.rating}
                 priceRange={artist.priceRange}
                 isFavorite={artist.isFavorite}

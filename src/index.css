@@ -73,7 +73,12 @@
     @apply border-border font-satoshi;
   }
   body {
-    @apply bg-vyba-cream text-black antialiased dark:bg-vyba-dark-bg dark:text-white;
+    @apply bg-vyba-cream text-black antialiased dark:bg-vyba-dark-bg dark:text-white overflow-x-hidden;
+  }
+  
+  html {
+    @apply overflow-x-hidden;
+    scroll-behavior: smooth;
   }
   
   /* Animación de transición entre temas */
@@ -86,11 +91,6 @@
     body {
       @apply pt-20;
     }
-  }
-  
-  /* Add smooth scrolling for the entire page */
-  html {
-    scroll-behavior: smooth;
   }
 }
 

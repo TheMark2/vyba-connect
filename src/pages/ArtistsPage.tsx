@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import { Search, SlidersHorizontal } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -106,12 +105,12 @@ const ArtistsPage = () => {
   };
 
   return (
-    <>
+    <div className="overflow-x-hidden w-full">
       <Navbar />
-      <div className="px-6 md:px-14 lg:px-16 mx-auto mt-6 mb-8">
+      <div className="px-4 md:px-14 lg:px-16 mx-auto mt-6 mb-8 max-w-full overflow-hidden">
         <div className={`
           ${isMobile 
-            ? "bg-secondary dark:bg-vyba-dark-secondary/40 rounded-3xl py-6 mb-6 px-6 text-center"
+            ? "bg-secondary dark:bg-vyba-dark-secondary/40 rounded-3xl py-6 mb-6 px-4 text-center"
             : "bg-secondary dark:bg-vyba-dark-secondary/40 rounded-3xl py-8 mb-12 px-16 flex justify-between"
           }
         `}>
@@ -161,9 +160,9 @@ const ArtistsPage = () => {
 
         <div className={`
           ${isSmallMobile
-            ? "grid grid-cols-1 gap-6"
+            ? "grid grid-cols-1 gap-4"
             : isMobile
-              ? "grid grid-cols-2 gap-6"
+              ? "grid grid-cols-2 gap-4"
               : "grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-4 2xl:grid-cols-5 gap-6"
           }
         `}>
@@ -185,7 +184,7 @@ const ArtistsPage = () => {
         </div>
       </div>
       <Footer />
-    </>
+    </div>
   );
 };
 
