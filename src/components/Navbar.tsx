@@ -25,13 +25,25 @@ const Navbar = ({
   const isMobile = useIsMobile();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
-  const [currentTheme, setCurrentTheme] = useState<'light' | 'dark' | 'system'>('light');
+  const [currentTheme, setCurrentTheme] = useState<'light' | 'dark' | 'system'>('system');
 
   // Limpiar overflow en caso de que el componente se desmonte con el menú abierto
   useEffect(() => {
     return () => {
       document.body.style.overflow = '';
     };
+  }, []);
+
+  // Detectar el tema inicial del sistema
+  useEffect(() => {
+    const savedTheme = localStorage.getItem('theme');
+    if (savedTheme === 'dark') {
+      setCurrentTheme('dark');
+    } else if (savedTheme === 'light') {
+      setCurrentTheme('light');
+    } else {
+      setCurrentTheme('system');
+    }
   }, []);
 
   // Detectar el scroll y cambiar el estado
@@ -71,11 +83,26 @@ const Navbar = ({
         ? 'dark'
         : 'light';
       root.classList.add(systemTheme);
+      localStorage.setItem('theme', 'system');
     } else {
       root.classList.add(theme);
+      localStorage.setItem('theme', theme);
     }
     
     setCurrentTheme(theme);
+  };
+
+  // Función para obtener el icono correcto según el tema actual
+  const getThemeIcon = () => {
+    if (currentTheme === 'dark') {
+      return <Moon className="h-5 w-5" />;
+    } else if (currentTheme === 'light') {
+      return <Sun className="h-5 w-5" />;
+    } else {
+      // Para 'system', comprobar la preferencia actual del sistema
+      const isSystemDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+      return isSystemDark ? <Moon className="h-5 w-5" /> : <Sun className="h-5 w-5" />;
+    }
   };
 
   return (
@@ -125,9 +152,7 @@ const Navbar = ({
                 size="icon" 
                 className="w-10 h-10 rounded-full"
               >
-                {currentTheme === 'light' && <Sun className="h-5 w-5" />}
-                {currentTheme === 'dark' && <Moon className="h-5 w-5" />}
-                {currentTheme === 'system' && <LaptopIcon className="h-5 w-5" />}
+                {getThemeIcon()}
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent 
@@ -135,21 +160,30 @@ const Navbar = ({
               align="end"
             >
               <DropdownMenuItem 
-                className="rounded-lg px-3 py-3 flex items-center gap-4 hover:bg-[#F8F8F8] dark:hover:bg-[#444341] cursor-pointer transition-colors duration-300 focus:bg-[#F8F8F8] dark:focus:bg-[#444341]"
+                className={cn(
+                  "rounded-lg px-3 py-3 flex items-center gap-4 hover:bg-[#F8F8F8] dark:hover:bg-[#444341] cursor-pointer transition-colors duration-300",
+                  currentTheme === 'light' && "bg-[#F8F8F8] dark:bg-[#444341]"
+                )}
                 onClick={() => setTheme('light')}
               >
                 <Sun className="h-5 w-5" />
                 <span className="text-base font-medium">Claro</span>
               </DropdownMenuItem>
               <DropdownMenuItem 
-                className="rounded-lg px-3 py-3 flex items-center gap-4 hover:bg-[#F8F8F8] dark:hover:bg-[#444341] cursor-pointer transition-colors duration-300 focus:bg-[#F8F8F8] dark:focus:bg-[#444341]"
+                className={cn(
+                  "rounded-lg px-3 py-3 flex items-center gap-4 hover:bg-[#F8F8F8] dark:hover:bg-[#444341] cursor-pointer transition-colors duration-300",
+                  currentTheme === 'dark' && "bg-[#F8F8F8] dark:bg-[#444341]"
+                )}
                 onClick={() => setTheme('dark')}
               >
                 <Moon className="h-5 w-5" />
                 <span className="text-base font-medium">Oscuro</span>
               </DropdownMenuItem>
               <DropdownMenuItem 
-                className="rounded-lg px-3 py-3 flex items-center gap-4 hover:bg-[#F8F8F8] dark:hover:bg-[#444341] cursor-pointer transition-colors duration-300 focus:bg-[#F8F8F8] dark:focus:bg-[#444341]"
+                className={cn(
+                  "rounded-lg px-3 py-3 flex items-center gap-4 hover:bg-[#F8F8F8] dark:hover:bg-[#444341] cursor-pointer transition-colors duration-300",
+                  currentTheme === 'system' && "bg-[#F8F8F8] dark:bg-[#444341]"
+                )}
                 onClick={() => setTheme('system')}
               >
                 <LaptopIcon className="h-5 w-5" />
