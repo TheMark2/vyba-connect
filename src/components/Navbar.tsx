@@ -43,8 +43,8 @@ const Navbar = ({
     <div 
       className={cn(
         "w-full mx-auto px-6 md:px-10 lg:px-14 xl:px-16 h-24 flex items-center justify-between",
-        // Añadimos sticky para móvil
-        isMobile ? "sticky top-0 z-50 transition-colors duration-500" : "",
+        // Cambiamos de sticky a fixed para móvil
+        isMobile ? "fixed top-0 left-0 right-0 z-50 transition-colors duration-500" : "",
         // Cambiamos el fondo basado en el estado de scroll (solo en móvil)
         isMobile && scrolled ? "bg-[#F5F1EB]" : "bg-transparent",
         className

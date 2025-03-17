@@ -47,6 +47,13 @@
     @apply bg-vyba-cream text-black antialiased;
   }
   
+  /* Añadir padding-top al cuerpo en móvil para compensar la navbar fija */
+  @media (max-width: 768px) {
+    body {
+      @apply pt-24;
+    }
+  }
+  
   /* Add smooth scrolling for the entire page */
   html {
     scroll-behavior: smooth;
