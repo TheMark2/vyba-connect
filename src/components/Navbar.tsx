@@ -6,7 +6,7 @@ import { Menu, X } from "lucide-react";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import MobileMenu from "@/components/MobileMenu";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 interface NavbarProps {
   className?: string;
@@ -19,8 +19,36 @@ const Navbar = ({
   const isActive = (path: string) => location.pathname === path;
   const isMobile = useIsMobile();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
 
-  return <div className={cn("mx-auto px-6 md:px-10 lg:px-14 xl:px-16 h-24 flex items-center justify-between", className)}>
+  // Detectar el scroll y cambiar el estado
+  useEffect(() => {
+    const handleScroll = () => {
+      // En dispositivos móviles, cambiamos el color después de 20px de scroll
+      if (window.scrollY > 20) {
+        setScrolled(true);
+      } else {
+        setScrolled(false);
+      }
+    };
+
+    window.addEventListener('scroll', handleScroll);
+    
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+    };
+  }, []);
+
+  return <div 
+    className={cn(
+      "w-full mx-auto px-6 md:px-10 lg:px-14 xl:px-16 h-24 flex items-center justify-between",
+      // Añadimos sticky para móvil
+      isMobile ? "sticky top-0 z-50 transition-colors duration-500" : "",
+      // Cambiamos el fondo basado en el estado de scroll (solo en móvil)
+      isMobile && scrolled ? "bg-[#F5F1EB]" : "bg-transparent",
+      className
+    )}
+  >
       {/* Logo y enlaces alineados a la izquierda */}
       <div className="flex items-center space-x-12">
         {/* Logo */}
