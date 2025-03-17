@@ -148,6 +148,7 @@ const ArtistProfileCard = ({
             opts={{ 
               loop: true, 
               dragFree: false,
+              draggable: true,
               speed: 20
             }}
           >
@@ -166,29 +167,15 @@ const ArtistProfileCard = ({
             </CarouselContent>
           </Carousel>
         ) : (
-          <Carousel 
-            className="w-full h-full" 
-            onSlideChange={handleSlideChange} 
-            opts={{ 
-              loop: true, 
-              dragFree: false,
-              speed: 20
-            }}
-          >
-            <CarouselContent className="h-full">
-              {images.map((image, index) => (
-                <CarouselItem key={index} className="h-full">
-                  <div className="w-full h-full transform transition-transform duration-500 ease-in-out">
-                    <img 
-                      src={image} 
-                      alt={`${name} - ${type}`} 
-                      className="w-full h-full object-cover transition-all duration-500"
-                    />
-                  </div>
-                </CarouselItem>
-              ))}
-            </CarouselContent>
-          </Carousel>
+          <div className="w-full h-full transition-transform duration-300" style={{
+            transform: isHovered ? 'scale(1.07)' : 'scale(1)'
+          }}>
+            <img 
+              src={images[currentImageIndex]} 
+              alt={`${name} - ${type}`} 
+              className="w-full h-full object-cover"
+            />
+          </div>
         )}
         
         {isHovered && images.length > 1 && !isMobile && (
@@ -239,7 +226,7 @@ const ArtistProfileCard = ({
         <div className="absolute top-0 left-0 w-full p-3 flex justify-between">
           <Badge variant="outline" className={cn(
             "bg-white text-black py-1 px-4 rounded-full border-0 font-medium",
-            isMobile ? "text-sm" : "text-xs py-0.5 px-3"
+            isMobile ? "text-sm" : "text-base py-1 px-4"
           )}>
             {type}
           </Badge>
@@ -248,14 +235,14 @@ const ArtistProfileCard = ({
             onMouseDown={handleRippleEffect}
             className={cn(
               "rounded-full bg-white flex items-center justify-center transition-all duration-300 relative overflow-hidden",
-              isMobile ? "h-9 w-9" : "h-8 w-8",
+              isMobile ? "h-9 w-9" : "h-10 w-10",
               isAnimating && favorite && "animate-heartbeat"
             )}
           >
             <Heart 
               className={cn(
                 "transition-all duration-300", 
-                isMobile ? "h-4.5 w-4.5" : "h-4 w-4",
+                isMobile ? "h-4.5 w-4.5" : "h-5 w-5",
                 favorite ? "fill-black stroke-black" : "stroke-black",
                 isAnimating && favorite && "scale-110"
               )} 
