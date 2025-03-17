@@ -41,6 +41,7 @@ const ArtistsList = ({
   const [current, setCurrent] = useState(0);
   const [count, setCount] = useState(0);
   const isMobile = useIsMobile();
+  const isDarkMode = typeof document !== 'undefined' && document.documentElement.classList.contains('dark');
   
   useEffect(() => {
     if (!api) return;
@@ -147,7 +148,9 @@ const ArtistsList = ({
         <div
           className="absolute right-0 top-0 h-full w-12 pointer-events-none"
           style={{
-            background: "linear-gradient(90deg, rgba(250,248,246,0) 0%, rgba(250,248,246,0.5) 40%, rgba(250,248,246,0.9) 80%, rgba(250,248,246,1) 100%)"
+            background: document.documentElement.classList.contains('dark')
+              ? "linear-gradient(90deg, rgba(44,44,43,0) 0%, rgba(44,44,43,0.5) 40%, rgba(44,44,43,0.9) 80%, rgba(44,44,43,1) 100%)"
+              : "linear-gradient(90deg, rgba(250,248,246,0) 0%, rgba(250,248,246,0.5) 40%, rgba(250,248,246,0.9) 80%, rgba(250,248,246,1) 100%)"
           }}
         />
       )}
@@ -159,7 +162,7 @@ const ArtistsList = ({
               key={i}
               className={cn(
                 "h-2 rounded-full transition-all",
-                i === current ? "w-6 bg-black" : "w-2 bg-gray-300"
+                i === current ? "w-6 bg-black dark:bg-white" : "w-2 bg-gray-300 dark:bg-gray-600"
               )}
               onClick={() => api?.scrollTo(i)}
               aria-label={`Ir a la página ${i + 1}`}
