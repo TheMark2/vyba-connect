@@ -58,16 +58,16 @@ const MobileMenu = () => {
   }, []);
   return <SheetContent side="bottom" className="h-[calc(100vh-96px)] bg-white pt-10 overflow-y-auto mt-24 border-t-0">
       <nav className="flex flex-col space-y-2 mb-6">
-        <Link to="/" className="px-4 py-4 rounded-lg bg-[#F5F1EB] text-black font-medium">
+        <Link to="/" className="px-3 py-4 rounded-lg bg-[#F8F8F8] text-black font-medium">
           Inicio
         </Link>
-        <Link to="/artistas" className="px-4 py-4 rounded-lg hover:bg-[#F5F1EB] text-black font-medium">
+        <Link to="/artistas" className="px-4 py-4 rounded-lg hover:bg-[#F8F8F8] text-black font-medium">
           Artistas
         </Link>
-        <Link to="/todos-generos" className="px-4 py-4 rounded-lg hover:bg-[#F5F1EB] text-black font-medium">
+        <Link to="/todos-generos" className="px-4 py-4 rounded-lg hover:bg-[#F8F8F8] text-black font-medium">
           Todos los géneros
         </Link>
-        <Link to="/todos-artistas" className="px-4 py-4 rounded-lg hover:bg-[#F5F1EB] text-black font-medium">
+        <Link to="/todos-artistas" className="px-4 py-4 rounded-lg hover:bg-[#F8F8F8] text-black font-medium">
           Todos los artistas
         </Link>
       </nav>
