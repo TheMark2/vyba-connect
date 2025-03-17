@@ -1,15 +1,11 @@
+
 import React, { useState, useRef } from "react";
 import { Heart, ChevronLeft, ChevronRight } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
 import { toast } from "sonner";
 import { useIsMobile } from "@/hooks/use-mobile";
-import { 
-  Carousel, 
-  CarouselContent, 
-  CarouselItem
-} from "@/components/ui/carousel";
-import useEmblaCarousel from "embla-carousel-react";
+import { Carousel, CarouselContent, CarouselItem } from "@/components/ui/carousel";
 
 interface ArtistProfileCardProps {
   name: string;
@@ -43,13 +39,6 @@ const ArtistProfileCard = ({
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const lastClickTimeRef = useRef<number>(0);
   const isMobile = useIsMobile();
-  
-  // Configuración del carrusel con embla
-  const [emblaRef] = useEmblaCarousel({ 
-    loop: true,
-    dragFree: true,
-    speed: 10
-  });
   
   const handleFavoriteClick = (e: React.MouseEvent) => {
     e.stopPropagation();
@@ -154,24 +143,22 @@ const ArtistProfileCard = ({
         isMobile ? "aspect-[1/1]" : "aspect-[3/4]"
       )}>
         {isMobile ? (
-          <div className="w-full h-full">
-            <div className="overflow-hidden h-full" ref={emblaRef}>
-              <div className="flex h-full">
-                {images.map((image, index) => (
-                  <div 
-                    key={index} 
-                    className="flex-[0_0_100%] min-w-0 h-full transition-transform duration-300"
-                  >
+          <Carousel className="w-full h-full" onSlideChange={handleSlideChange}>
+            <CarouselContent className="h-full">
+              {images.map((image, index) => (
+                <CarouselItem key={index} className="h-full">
+                  <div className="w-full h-full">
                     <img 
                       src={image} 
                       alt={`${name} - ${type}`} 
-                      className="w-full h-full object-cover"
+                      className="w-full h-full object-cover transition-opacity duration-300"
+                      style={{ opacity: 1 }}
                     />
                   </div>
-                ))}
-              </div>
-            </div>
-          </div>
+                </CarouselItem>
+              ))}
+            </CarouselContent>
+          </Carousel>
         ) : (
           <div className="w-full h-full transition-transform duration-300" style={{
             transform: isHovered ? 'scale(1.07)' : 'scale(1)'
@@ -179,7 +166,7 @@ const ArtistProfileCard = ({
             <img 
               src={images[currentImageIndex]} 
               alt={`${name} - ${type}`} 
-              className="w-full h-full object-cover transition-opacity duration-300"
+              className="w-full h-full object-cover"
             />
           </div>
         )}
@@ -220,7 +207,9 @@ const ArtistProfileCard = ({
         {showCenterHeart && (
           <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
             <Heart 
-              className="h-20 w-20 fill-white stroke-white opacity-0 animate-pulse z-10" 
+              className={cn(
+                "h-20 w-20 fill-white stroke-white opacity-0 animate-fadeInOut z-10",
+              )} 
             />
           </div>
         )}
@@ -240,7 +229,7 @@ const ArtistProfileCard = ({
             className={cn(
               "rounded-full bg-white flex items-center justify-center transition-all duration-300 relative overflow-hidden",
               isMobile ? "h-9 w-9" : "h-11 w-11",
-              isAnimating && favorite && "animate-pulse"
+              isAnimating && favorite && "animate-heartbeat"
             )}
           >
             <Heart 
