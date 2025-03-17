@@ -95,7 +95,7 @@ const ArtistsPage = () => {
   };
   return <>
       <Navbar />
-      <div className="container mx-auto px-4 pb-16 mt-6">
+      <div className="px-6 md:px-14 lg:px-16 mt-16 md:mt-32 mx-auto mt-6 mb-8">
         {/* Encabezado de la página */}
         <div className="bg-secondary dark:bg-vyba-dark-secondary/40 rounded-3xl py-8 mb-12 px-16 flex justify-between">
           <div>
