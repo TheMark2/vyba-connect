@@ -1,4 +1,3 @@
-
 import { Button } from "@/components/ui/button";
 import { Link, useLocation } from "react-router-dom";
 import { cn } from "@/lib/utils";
@@ -7,11 +6,9 @@ import { useIsMobile } from "@/hooks/use-mobile";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import MobileMenu from "@/components/MobileMenu";
 import { useState, useEffect } from "react";
-
 interface NavbarProps {
   className?: string;
 }
-
 const Navbar = ({
   className
 }: NavbarProps) => {
@@ -32,9 +29,7 @@ const Navbar = ({
         setScrolled(false);
       }
     };
-
     window.addEventListener('scroll', handleScroll);
-    
     return () => {
       window.removeEventListener('scroll', handleScroll);
     };
@@ -54,24 +49,16 @@ const Navbar = ({
       document.body.style.top = '';
       window.scrollTo(0, scrollPosition);
     }
-    
     return () => {
       document.body.classList.remove('overflow-hidden');
       document.body.style.top = '';
     };
   }, [isMenuOpen, scrollPosition]);
-
-  return (
-    <div 
-      className={cn(
-        "w-full mx-auto px-6 md:px-10 lg:px-14 xl:px-16 flex items-center justify-between",
-        // Cambiamos de sticky a fixed para móvil y reducimos altura
-        isMobile ? "fixed top-0 left-0 right-0 z-50 transition-colors duration-500 h-20" : "h-24",
-        // Cambiamos el fondo basado en el estado de scroll (solo en móvil, quitamos la clase del gradiente)
-        isMobile && scrolled ? "bg-[#F5F1EB]" : "bg-transparent",
-        className
-      )}
-    >
+  return <div className={cn("w-full mx-auto px-6 md:px-10 lg:px-14 xl:px-16 flex items-center justify-between",
+  // Cambiamos de sticky a fixed para móvil y reducimos altura
+  isMobile ? "fixed top-0 left-0 right-0 z-50 transition-colors duration-500 h-20" : "h-24",
+  // Cambiamos el fondo basado en el estado de scroll (solo en móvil, quitamos la clase del gradiente)
+  isMobile && scrolled ? "bg-[#F5F1EB]" : "bg-transparent", className)}>
       {/* Logo y enlaces alineados a la izquierda */}
       <div className="flex items-center space-x-12">
         {/* Logo */}
@@ -101,14 +88,9 @@ const Navbar = ({
 
       {/* Botones de acción */}
       <div className="flex items-center space-x-3">
-        {isMobile ? (
-          <>
+        {isMobile ? <>
             {/* Botón de iniciar sesión en móvil */}
-            <Button 
-              size="sm" 
-              variant="ghost" 
-              className="bg-[#D4DDFF] text-[#222845] hover:bg-[#C4D1FF] border-none h-9 px-4"
-            >
+            <Button size="sm" variant="ghost" className="bg-[#D4DDFF] text-[#222845] hover:bg-[#C4D1FF] border-none">
               Iniciar sesión
             </Button>
             
@@ -123,22 +105,15 @@ const Navbar = ({
               </SheetTrigger>
               <MobileMenu />
             </Sheet>
-          </>
-        ) : (
-          <>
-            <Button 
-              variant="secondary" 
-              className="text-sm hidden sm:flex bg-[#E7D3D3]"
-            >
+          </> : <>
+            <Button variant="secondary" className="text-sm hidden sm:flex bg-[#E7D3D3]">
               Promocionarse como artista
             </Button>
             <Button className="text-sm">
               Entrar/Registrarse
             </Button>
-          </>
-        )}
+          </>}
       </div>
-    </div>
-  );
+    </div>;
 };
 export default Navbar;
