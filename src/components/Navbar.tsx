@@ -102,17 +102,28 @@ const Navbar = ({
       {/* Botones de acción */}
       <div className="flex items-center space-x-3">
         {isMobile ? (
-          <Sheet open={isMenuOpen} onOpenChange={setIsMenuOpen}>
-            <SheetTrigger asChild>
-              <Button variant="ghost" size="icon" className="md:hidden relative w-10 h-10 flex items-center justify-center">
-                <div className="relative w-6 h-6">
-                  <Menu className={`h-6 w-6 absolute transition-all duration-300 ${isMenuOpen ? 'opacity-0 rotate-90 scale-0' : 'opacity-100 rotate-0 scale-100'}`} />
-                  <X className={`h-6 w-6 absolute transition-all duration-300 ${isMenuOpen ? 'opacity-100 rotate-0 scale-100' : 'opacity-0 rotate-90 scale-0'}`} />
-                </div>
-              </Button>
-            </SheetTrigger>
-            <MobileMenu />
-          </Sheet>
+          <>
+            {/* Botón de iniciar sesión en móvil */}
+            <Button 
+              size="sm" 
+              variant="ghost" 
+              className="bg-[#D4DDFF] text-[#222845] hover:bg-[#C4D1FF] border-none h-9 px-4"
+            >
+              Iniciar sesión
+            </Button>
+            
+            <Sheet open={isMenuOpen} onOpenChange={setIsMenuOpen}>
+              <SheetTrigger asChild>
+                <Button variant="ghost" size="icon" className="relative w-10 h-10 flex items-center justify-center">
+                  <div className="relative w-6 h-6">
+                    <Menu className={`h-6 w-6 absolute transition-all duration-300 ${isMenuOpen ? 'opacity-0 rotate-90 scale-0' : 'opacity-100 rotate-0 scale-100'}`} />
+                    <X className={`h-6 w-6 absolute transition-all duration-300 ${isMenuOpen ? 'opacity-100 rotate-0 scale-100' : 'opacity-0 rotate-90 scale-0'}`} />
+                  </div>
+                </Button>
+              </SheetTrigger>
+              <MobileMenu />
+            </Sheet>
+          </>
         ) : (
           <>
             <Button 

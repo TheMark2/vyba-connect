@@ -64,7 +64,7 @@ const MobileMenu = () => {
   }, []);
 
   return (
-    <SheetContent side="right" className="h-[100vh] w-full p-0 border-0 bg-white">
+    <SheetContent side="right" className="h-[100dvh] w-full p-0 border-0 bg-white overflow-y-auto">
       {/* Botón de cierre en la esquina superior derecha */}
       <div className="flex justify-end p-6">
         <SheetClose asChild>
@@ -75,7 +75,7 @@ const MobileMenu = () => {
       </div>
       
       {/* Contenido del menú, con padding adicional en la parte superior */}
-      <div className="px-6 pt-4 pb-10 overflow-y-auto h-full">
+      <div className="px-6 pb-10 h-full flex flex-col">
         <nav className="flex flex-col space-y-2 mb-6">
           <Link to="/" className={`px-4 py-3 rounded-lg ${isActive('/') ? 'bg-[#F8F8F8]' : 'hover:bg-[#F8F8F8]'} text-black font-medium transition-all duration-200`}>
             <div className="flex items-center space-x-3">
@@ -141,11 +141,11 @@ const MobileMenu = () => {
             </button>
           </div>
         </div>
-        <div className="flex flex-col space-y-3 mt-6">
-          <Button className="w-full rounded-full bg-[#F5F1EB] text-black hover:bg-[#EDE8E0]">
+        <div className="flex flex-col space-y-3 mt-auto mb-10">
+          <Button className="w-full rounded-full bg-[#D4DDFF] text-[#222845] hover:bg-[#C4D1FF]">
             Iniciar sesión/Registrarse
           </Button>
-          <Button className="w-full rounded-full bg-[#D4DDFF] text-[#222845] hover:bg-primary-hover">
+          <Button className="w-full rounded-full bg-[#E7D3D3] text-black hover:bg-[#DDCACA]">
             Promocionarse como artista
           </Button>
         </div>
