@@ -40,10 +40,10 @@ const ArtistCard = ({
   const visibleAvatars = artistAvatars.slice(0, MAX_VISIBLE_AVATARS);
   const extraAvatars = artistAvatars.length > MAX_VISIBLE_AVATARS ? artistAvatars.length - MAX_VISIBLE_AVATARS : 0;
   
-  // Configuración para el carrusel
+  // Configuración para el carrusel - corregido el tipo de align para que sea válido
   const carouselOptions = {
     loop: true,
-    align: "start",
+    align: "start" as const, // Especificamos el tipo correcto
     inViewThreshold: 0.8,
   };
   
@@ -71,7 +71,7 @@ const ArtistCard = ({
       </div>
       
       <div className="flex relative">
-        <div className="relative w-auto" data-carousel>
+        <div className="relative w-auto" data-carousel='{"loadingClasses": "opacity-0", "dotsItemClasses": "carousel-box"}'>
           <Carousel 
             opts={carouselOptions} 
             className="w-auto"
