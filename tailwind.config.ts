@@ -45,9 +45,6 @@ export default {
           hover: "#EDE8E0",
           foreground: "#222845",
         },
-        // Añadimos colores básicos para el carrusel
-        "base-100": "#FFFFFF",
-        "base-300": "#E5E7EB",
       },
       borderRadius: {
         lg: "1rem",
@@ -71,43 +68,8 @@ export default {
           "100%": { opacity: "1", transform: "translateY(0)" },
         },
         "fade-out": {
-          "0%": { opacity: "0", transform: "translateY(0)" },
-          "100%": { opacity: "1", transform: "translateY(10px)" },
-        },
-        "heartbeat": {
-          "0%": { transform: "scale(1)" },
-          "14%": { transform: "scale(1.15)" },
-          "28%": { transform: "scale(1)" },
-          "42%": { transform: "scale(1.15)" },
-          "70%": { transform: "scale(1)" },
-        },
-        "fadeInOut": {
-          "0%": { opacity: "0", transform: "scale(0.5)" },
-          "15%": { opacity: "1", transform: "scale(1.1)" },
-          "30%": { opacity: "1", transform: "scale(1)" },
-          "70%": { opacity: "1" },
-          "100%": { opacity: "0" },
-        },
-        "slide-left": {
-          "0%": { transform: "translateX(100%)" },
-          "100%": { transform: "translateX(0)" },
-        },
-        "slide-right": {
-          "0%": { transform: "translateX(-100%)" },
-          "100%": { transform: "translateX(0)" },
-        },
-        "image-slide": {
-          "0%": { opacity: "0.4", transform: "translateX(20px)" },
-          "100%": { opacity: "1", transform: "translateX(0)" },
-        },
-        "carousel-slide": {
-          "0%": { opacity: "0", transform: "translateX(10px)" },
-          "100%": { opacity: "1", transform: "translateX(0)" },
-        },
-        // Añadimos nuevo keyframe para el carrusel
-        "carousel-fade": {
-          "0%": { opacity: "0" },
-          "100%": { opacity: "1" },
+          "0%": { opacity: "1", transform: "translateY(0)" },
+          "100%": { opacity: "0", transform: "translateY(10px)" },
         },
       },
       animation: {
@@ -115,18 +77,6 @@ export default {
         "accordion-up": "accordion-up 0.2s ease-out",
         "fade-in": "fade-in 0.3s ease-out",
         "fade-out": "fade-out 0.3s ease-out",
-        "heartbeat": "heartbeat 1.5s ease-in-out",
-        "fadeInOut": "fadeInOut 1s ease-in-out forwards",
-        "slide-left": "slide-left 0.5s ease-out",
-        "slide-right": "slide-right 0.5s ease-out",
-        "image-slide": "image-slide 0.5s ease-out",
-        "carousel-slide": "carousel-slide 0.3s ease-out",
-        // Añadimos nueva animación para el carrusel
-        "carousel-fade": "carousel-fade 0.5s ease-out",
-      },
-      // Añadimos utilidades para el tamaño
-      spacing: {
-        "9.5": "2.375rem", // Equivalente a size-9.5
       },
     },
   },

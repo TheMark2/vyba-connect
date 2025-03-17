@@ -1,3 +1,4 @@
+
 import React, { useState, useRef } from "react";
 import { Heart, ChevronLeft, ChevronRight } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
@@ -142,24 +143,16 @@ const ArtistProfileCard = ({
         isMobile ? "aspect-[1/1]" : "aspect-[3/4]"
       )}>
         {isMobile ? (
-          <Carousel 
-            className="w-full h-full" 
-            onSlideChange={handleSlideChange} 
-            opts={{ 
-              loop: true, 
-              dragFree: false,
-              draggable: true,
-              speed: 20
-            }}
-          >
+          <Carousel className="w-full h-full" onSlideChange={handleSlideChange}>
             <CarouselContent className="h-full">
               {images.map((image, index) => (
                 <CarouselItem key={index} className="h-full">
-                  <div className="w-full h-full transform transition-transform duration-500 ease-in-out">
+                  <div className="w-full h-full">
                     <img 
                       src={image} 
                       alt={`${name} - ${type}`} 
-                      className="w-full h-full object-cover transition-all duration-500"
+                      className="w-full h-full object-cover transition-opacity duration-300"
+                      style={{ opacity: 1 }}
                     />
                   </div>
                 </CarouselItem>
@@ -226,7 +219,7 @@ const ArtistProfileCard = ({
         <div className="absolute top-0 left-0 w-full p-3 flex justify-between">
           <Badge variant="outline" className={cn(
             "bg-white text-black py-1 px-4 rounded-full border-0 font-medium",
-            isMobile ? "text-sm" : "text-base py-1 px-4"
+            isMobile ? "text-sm" : "text-base py-1.5 px-5"
           )}>
             {type}
           </Badge>
@@ -235,7 +228,7 @@ const ArtistProfileCard = ({
             onMouseDown={handleRippleEffect}
             className={cn(
               "rounded-full bg-white flex items-center justify-center transition-all duration-300 relative overflow-hidden",
-              isMobile ? "h-9 w-9" : "h-10 w-10",
+              isMobile ? "h-9 w-9" : "h-11 w-11",
               isAnimating && favorite && "animate-heartbeat"
             )}
           >

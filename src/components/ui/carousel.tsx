@@ -1,3 +1,4 @@
+
 import * as React from "react"
 import useEmblaCarousel, {
   type UseEmblaCarouselType,
@@ -18,7 +19,6 @@ type CarouselProps = {
   orientation?: "horizontal" | "vertical"
   setApi?: (api: CarouselApi) => void
   onSlideChange?: (index: number) => void
-  onScroll?: () => void
 }
 
 type CarouselContextProps = {
@@ -56,7 +56,6 @@ const Carousel = React.forwardRef<
       className,
       children,
       onSlideChange,
-      onScroll,
       ...props
     },
     ref
@@ -125,18 +124,11 @@ const Carousel = React.forwardRef<
       onSelect(api)
       api.on("reInit", onSelect)
       api.on("select", onSelect)
-      
-      if (onScroll) {
-        api.on("scroll", onScroll)
-      }
 
       return () => {
         api?.off("select", onSelect)
-        if (onScroll) {
-          api?.off("scroll", onScroll)
-        }
       }
-    }, [api, onSelect, onScroll])
+    }, [api, onSelect])
 
     return (
       <CarouselContext.Provider
@@ -203,7 +195,7 @@ const CarouselItem = React.forwardRef<
       role="group"
       aria-roledescription="slide"
       className={cn(
-        "min-w-0 shrink-0 grow-0 basis-full transition-opacity duration-300",
+        "min-w-0 shrink-0 grow-0 basis-full",
         orientation === "horizontal" ? "pl-3" : "pt-3",
         className
       )}
