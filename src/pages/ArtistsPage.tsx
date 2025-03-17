@@ -106,7 +106,7 @@ const ArtistsPage = () => {
   return (
     <>
       <Navbar />
-      <div className="px-6 md:px-14 lg:px-16 mx-auto mt-6 mb-8 max-w-7xl">
+      <div className="px-6 md:px-14 lg:px-16 mx-auto mt-6 mb-8">
         <div className={`
           ${isMobile 
             ? "bg-secondary dark:bg-vyba-dark-secondary/40 rounded-3xl py-6 mb-6 px-6 text-center"
