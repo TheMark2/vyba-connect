@@ -131,7 +131,7 @@ const Navbar = ({
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent 
-              className="bg-white dark:bg-[#575654] border-none rounded-xl p-2 shadow-none mr-3" 
+              className="bg-white dark:bg-[#575654] border-none rounded-xl p-2 shadow-none mr-3 min-w-[150px]" 
               align="end"
             >
               <DropdownMenuItem 
@@ -139,21 +139,21 @@ const Navbar = ({
                 onClick={() => setTheme('light')}
               >
                 <Sun className="h-5 w-5" />
-                <span>Claro</span>
+                <span className="text-base font-medium">Claro</span>
               </DropdownMenuItem>
               <DropdownMenuItem 
                 className="rounded-lg px-3 py-3 flex items-center gap-2 hover:bg-[#F8F8F8] dark:hover:bg-[#444341] cursor-pointer transition-colors duration-300"
                 onClick={() => setTheme('dark')}
               >
                 <Moon className="h-5 w-5" />
-                <span>Oscuro</span>
+                <span className="text-base font-medium">Oscuro</span>
               </DropdownMenuItem>
               <DropdownMenuItem 
                 className="rounded-lg px-3 py-3 flex items-center gap-2 hover:bg-[#F8F8F8] dark:hover:bg-[#444341] cursor-pointer transition-colors duration-300"
                 onClick={() => setTheme('system')}
               >
                 <LaptopIcon className="h-5 w-5" />
-                <span>Sistema</span>
+                <span className="text-base font-medium">Sistema</span>
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
