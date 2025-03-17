@@ -112,18 +112,6 @@ const ArtistsPage = () => {
           </div>
         </div>
 
-        {/* Barra de búsqueda y filtros */}
-        <div className="flex flex-col md:flex-row gap-4 mb-8 justify-end">
-          <div className="relative w-full md:w-64">
-            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={20} />
-            <Input placeholder="Buscar con IA" className="pl-10 py-6 rounded-full" value={searchTerm} onChange={e => setSearchTerm(e.target.value)} />
-          </div>
-          <Button variant="outline" className="flex gap-2 items-center">
-            <SlidersHorizontal size={18} />
-            Filtros
-          </Button>
-        </div>
-
         {/* Grid de artistas */}
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
           {artists.map(artist => <ArtistProfileCard key={artist.id} name={artist.name} type={artist.type} description={artist.description} images={artist.images} rating={artist.rating} priceRange={artist.priceRange} isFavorite={artist.isFavorite} onClick={() => handleArtistClick(artist)} onFavoriteToggle={() => handleFavoriteToggle(artist)} />)}
