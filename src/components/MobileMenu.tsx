@@ -4,41 +4,34 @@ import { Button } from "@/components/ui/button";
 import { SheetContent } from "@/components/ui/sheet";
 import { Separator } from "@/components/ui/separator";
 import { Sun, Moon, Monitor } from "lucide-react";
-
 const MobileMenu = () => {
   const [theme, setTheme] = useState("light");
   const backgroundRef = useRef(null);
   const containerRef = useRef(null);
 
   // Función para sincronizar la posición y forma del fondo
-  const updateBackgroundPosition = (newTheme) => {
+  const updateBackgroundPosition = newTheme => {
     if (!backgroundRef.current || !containerRef.current) return;
-    
     const container = containerRef.current;
     const buttons = container.querySelectorAll('button');
-    
     let activeIndex;
-    if (newTheme === "light") activeIndex = 0;
-    else if (newTheme === "dark") activeIndex = 1;
-    else if (newTheme === "system") activeIndex = 2;
-    
+    if (newTheme === "light") activeIndex = 0;else if (newTheme === "dark") activeIndex = 1;else if (newTheme === "system") activeIndex = 2;
     const activeButton = buttons[activeIndex];
-    
     if (activeButton) {
       const containerRect = container.getBoundingClientRect();
       const buttonRect = activeButton.getBoundingClientRect();
-      
+
       // Calcular la posición exacta
       const left = buttonRect.left - containerRect.left;
-      
+
       // Eliminar cualquier transición anterior para asegurar una actualización inmediata
       backgroundRef.current.style.transition = 'all 400ms cubic-bezier(0.34, 1.56, 0.64, 1)';
-      
+
       // Actualizar todo en un solo paso para que la animación sea fluida
       requestAnimationFrame(() => {
         backgroundRef.current.style.transform = `translateX(${left}px)`;
         backgroundRef.current.style.width = `${buttonRect.width}px`;
-        
+
         // Actualizar el border-radius según el índice
         if (activeIndex === 0) {
           backgroundRef.current.style.borderRadius = '9999px 0 0 9999px';
@@ -50,12 +43,12 @@ const MobileMenu = () => {
       });
     }
   };
-  
+
   // Ejecutar cuando cambia el tema
   useEffect(() => {
     updateBackgroundPosition(theme);
   }, [theme]);
-  
+
   // Ejecutar después del montaje para la posición inicial
   useEffect(() => {
     // Pequeño retraso para asegurar que el DOM esté completamente cargado
@@ -63,12 +56,7 @@ const MobileMenu = () => {
       updateBackgroundPosition(theme);
     }, 100);
   }, []);
-
-  return (
-    <SheetContent
-      side="bottom"
-      className="h-[calc(100vh-96px)] bg-white pt-10 overflow-y-auto mt-24 border-t-0"
-    >
+  return <SheetContent side="bottom" className="h-[calc(100vh-96px)] bg-white pt-10 overflow-y-auto mt-24 border-t-0">
       <nav className="flex flex-col space-y-2 mb-6">
         <Link to="/" className="px-4 py-4 rounded-lg bg-[#F5F1EB] text-black font-medium">
           Inicio
@@ -85,43 +73,27 @@ const MobileMenu = () => {
       </nav>
       <Separator className="my-6" />
       <div className="flex justify-center my-6">
-        <div 
-          ref={containerRef}
-          className="bg-[#F5F1EB] p-1 rounded-full flex relative overflow-hidden"
-        >
+        <div ref={containerRef} className="border-1 border-[#F8F8F8] rounded-full flex relative overflow-hidden">
           {/* Fondo animado */}
-          <div 
-            ref={backgroundRef}
-            className="absolute bg-[#F8F8F8]"
-            style={{ 
-              left: '1px',
-              top: '4px',
-              bottom: '4px',
-              width: '56px',
-              height: 'calc(100% - 8px)',
-              willChange: 'transform, border-radius, width'
-            }}
-          />
+          <div ref={backgroundRef} className="absolute bg-[#F8F8F8]" style={{
+          left: '1px',
+          top: '4px',
+          bottom: '4px',
+          width: '56px',
+          height: 'calc(100% - 8px)',
+          willChange: 'transform, border-radius, width'
+        }} />
 
           {/* Botones de cambio de tema */}
-          <button
-            onClick={() => setTheme("light")}
-            className="rounded-l-full w-14 h-10 flex items-center justify-center z-10 relative"
-          >
+          <button onClick={() => setTheme("light")} className="rounded-l-full w-14 h-10 flex items-center justify-center z-10 relative">
             <Sun className="h-5 w-5" />
           </button>
           
-          <button
-            onClick={() => setTheme("dark")}
-            className="w-14 h-10 flex items-center justify-center z-10 relative"
-          >
+          <button onClick={() => setTheme("dark")} className="w-14 h-10 flex items-center justify-center z-10 relative">
             <Moon className="h-5 w-5" />
           </button>
           
-          <button
-            onClick={() => setTheme("system")}
-            className="rounded-r-full w-14 h-10 flex items-center justify-center z-10 relative"
-          >
+          <button onClick={() => setTheme("system")} className="rounded-r-full w-14 h-10 flex items-center justify-center z-10 relative">
             <Monitor className="h-5 w-5" />
           </button>
         </div>
@@ -134,8 +106,6 @@ const MobileMenu = () => {
           Promocionarse como artista
         </Button>
       </div>
-    </SheetContent>
-  );
+    </SheetContent>;
 };
-
 export default MobileMenu;
