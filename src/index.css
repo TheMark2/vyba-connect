@@ -1,4 +1,3 @@
-
 @import url('https://api.fontshare.com/v2/css?f[]=satoshi@900,700,500,400&display=swap');
 
 @tailwind base;
@@ -50,7 +49,7 @@
   /* Añadir padding-top al cuerpo en móvil para compensar la navbar fija */
   @media (max-width: 768px) {
     body {
-      @apply pt-24;
+      @apply pt-20;
     }
   }
   
@@ -91,6 +90,23 @@
   
   .scroll-animate-text {
     @apply transition-colors duration-300 ease-out;
+  }
+
+  /* Añadir la clase para el degradado de la navbar */
+  .navbar-gradient {
+    position: relative;
+  }
+  
+  .navbar-gradient:after {
+    content: '';
+    position: absolute;
+    bottom: -20px;
+    left: 0;
+    right: 0;
+    height: 20px;
+    background: linear-gradient(to bottom, #F5F1EB 0%, rgba(245, 241, 235, 0) 100%);
+    pointer-events: none;
+    z-index: -1;
   }
 }
 
