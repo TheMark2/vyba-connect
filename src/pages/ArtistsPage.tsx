@@ -1,10 +1,11 @@
+
 import React, { useState } from "react";
 import { Search, SlidersHorizontal } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import ArtistProfileCard from "@/components/ArtistProfileCard";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
-import { useIsMobile } from "@/hooks/use-mobile";
+import { useIsMobile, useIsSmallMobile } from "@/hooks/use-mobile";
 
 // Datos de ejemplo para los artistas
 const artistsData = [
@@ -87,6 +88,7 @@ const ArtistsPage = () => {
   const [artists, setArtists] = useState(artistsData);
   const [searchTerm, setSearchTerm] = useState("");
   const isMobile = useIsMobile();
+  const isSmallMobile = useIsSmallMobile();
 
   const handleArtistClick = (artist: typeof artistsData[0]) => {
     console.log("Artista seleccionado:", artist);
@@ -158,9 +160,11 @@ const ArtistsPage = () => {
         </div>
 
         <div className={`
-          ${isMobile 
-            ? "grid grid-cols-1 gap-6" 
-            : "grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6 gap-6"
+          ${isSmallMobile
+            ? "grid grid-cols-1 gap-6"
+            : isMobile
+              ? "grid grid-cols-2 gap-6"
+              : "grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6 gap-6"
           }
         `}>
           {artists.map(artist => (
