@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { SheetContent, SheetClose } from "@/components/ui/sheet";
 import { Separator } from "@/components/ui/separator";
-import { X, Sun, Moon, Monitor } from "lucide-react";
+import { Sun, Moon, Monitor } from "lucide-react";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 
 const MobileMenu = () => {
@@ -15,13 +15,6 @@ const MobileMenu = () => {
       side="bottom" 
       className="h-[calc(100vh-96px)] bg-white pt-10 overflow-y-auto mt-24 border-t-0"
     >
-      <div className="flex justify-between items-center mb-8">
-        <h2 className="text-2xl font-bold">VYBA</h2>
-        <SheetClose className="rounded-full p-2 hover:bg-gray-100">
-          <X className="h-6 w-6" />
-        </SheetClose>
-      </div>
-
       <nav className="flex flex-col space-y-2 mb-6">
         <Link to="/" className="px-4 py-4 rounded-lg bg-[#F5F1EB] text-black font-medium">
           Inicio
