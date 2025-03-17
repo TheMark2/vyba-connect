@@ -2,9 +2,8 @@
 import React, { useState } from "react";
 import { Search, SlidersHorizontal } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import ArtistProfileCard from "@/components/ArtistProfileCard";
-import Navbar from "@/components/Navbar";
-import Footer from "@/components/Footer";
 
 // Datos de ejemplo para los artistas
 const artistsData = [
@@ -124,6 +123,7 @@ const artistsData = [
 
 const ArtistsPage = () => {
   const [artists, setArtists] = useState(artistsData);
+  const [searchTerm, setSearchTerm] = useState("");
 
   const handleArtistClick = (artist: typeof artistsData[0]) => {
     console.log("Artista seleccionado:", artist);
@@ -139,67 +139,48 @@ const ArtistsPage = () => {
   };
 
   return (
-    <>
-      <Navbar />
-      <div className="container mx-auto px-4 pb-16 mt-6">
-        {/* Encabezado de la página */}
-        <div className="bg-secondary dark:bg-vyba-dark-secondary/40 rounded-3xl p-8 mb-12">
-          <h1 className="text-4xl font-bold mb-2">Todos los artistas</h1>
-          <p className="text-3xl">{artists.length} artistas</p>
-        </div>
-
-        {/* Nuevos botones */}
-        <div className="flex flex-col md:flex-row gap-4 mb-8 justify-end">
-          <Button 
-            variant="outline" 
-            className="flex gap-2 items-center bg-white dark:bg-vyba-dark-secondary"
-          >
-            <Search size={20} />
-            Buscar con IA
-          </Button>
-          <Button 
-            variant="outline" 
-            className="flex gap-2 items-center bg-white dark:bg-vyba-dark-secondary"
-          >
-            <SlidersHorizontal size={20} />
-            Filtros
-          </Button>
-        </div>
-
-        {/* Grid de artistas */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-          {artists.map((artist) => (
-            <ArtistProfileCard
-              key={artist.id}
-              name={artist.name}
-              type={artist.type}
-              description={artist.description}
-              images={artist.images}
-              rating={artist.rating}
-              priceRange={artist.priceRange}
-              isFavorite={artist.isFavorite}
-              onClick={() => handleArtistClick(artist)}
-              onFavoriteToggle={() => handleFavoriteToggle(artist)}
-              className="artist-card"
-            />
-          ))}
-        </div>
+    <div className="container mx-auto px-4 pb-16 mt-6">
+      {/* Encabezado de la página */}
+      <div className="bg-secondary dark:bg-vyba-dark-secondary/40 rounded-3xl p-8 mb-12">
+        <h1 className="text-4xl font-bold mb-2">Todos los artistas</h1>
+        <p className="text-3xl">{artists.length} artistas</p>
       </div>
-      <Footer />
-      
-      {/* Estilos específicos para tarjetas de artistas */}
-      <style jsx>{`
-        /* Estilo para aumentar el tamaño del tipo y corazón */
-        :global(.artist-card .artist-type) {
-          font-size: 1.1rem; /* Ligeramente más grande */
-          font-weight: 600;
-        }
-        
-        :global(.artist-card .favorite-icon) {
-          transform: scale(1.2); /* Ligeramente más grande */
-        }
-      `}</style>
-    </>
+
+      {/* Barra de búsqueda y filtros */}
+      <div className="flex flex-col md:flex-row gap-4 mb-8 justify-end">
+        <div className="relative w-full md:w-64">
+          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={20} />
+          <Input 
+            placeholder="Buscar con IA" 
+            className="pl-10 py-6 rounded-full" 
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+          />
+        </div>
+        <Button variant="outline" className="flex gap-2 items-center">
+          <SlidersHorizontal size={18} />
+          Filtros
+        </Button>
+      </div>
+
+      {/* Grid de artistas */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+        {artists.map((artist) => (
+          <ArtistProfileCard
+            key={artist.id}
+            name={artist.name}
+            type={artist.type}
+            description={artist.description}
+            images={artist.images}
+            rating={artist.rating}
+            priceRange={artist.priceRange}
+            isFavorite={artist.isFavorite}
+            onClick={() => handleArtistClick(artist)}
+            onFavoriteToggle={() => handleFavoriteToggle(artist)}
+          />
+        ))}
+      </div>
+    </div>
   );
 };
 
