@@ -95,7 +95,6 @@ const Navbar = ({
           <>
             {/* Botón de iniciar sesión en móvil */}
             <Button 
-              size="sm" 
               variant="ghost" 
               className="bg-[#D4DDFF] text-[#222845] hover:bg-[#C4D1FF] border-none"
             >
