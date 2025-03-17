@@ -1,5 +1,5 @@
 
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { Heart, ChevronLeft, ChevronRight } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
@@ -37,6 +37,7 @@ const ArtistProfileCard = ({
   const [isAnimating, setIsAnimating] = useState(false);
   const [showCenterHeart, setShowCenterHeart] = useState(false);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
+  const [isImageChanging, setIsImageChanging] = useState(false);
   const lastClickTimeRef = useRef<number>(0);
   const isMobile = useIsMobile();
   
@@ -108,24 +109,44 @@ const ArtistProfileCard = ({
 
   const handlePrevImage = (e: React.MouseEvent) => {
     e.stopPropagation();
-    if (currentImageIndex > 0) {
-      setCurrentImageIndex(prev => prev - 1);
-    } else {
-      setCurrentImageIndex(images.length - 1);
-    }
+    setIsImageChanging(true);
+    setTimeout(() => {
+      if (currentImageIndex > 0) {
+        setCurrentImageIndex(prev => prev - 1);
+      } else {
+        setCurrentImageIndex(images.length - 1);
+      }
+      setTimeout(() => {
+        setIsImageChanging(false);
+      }, 300);
+    }, 150);
   };
 
   const handleNextImage = (e: React.MouseEvent) => {
     e.stopPropagation();
-    if (currentImageIndex < images.length - 1) {
-      setCurrentImageIndex(prev => prev + 1);
-    } else {
-      setCurrentImageIndex(0);
-    }
+    setIsImageChanging(true);
+    setTimeout(() => {
+      if (currentImageIndex < images.length - 1) {
+        setCurrentImageIndex(prev => prev + 1);
+      } else {
+        setCurrentImageIndex(0);
+      }
+      setTimeout(() => {
+        setIsImageChanging(false);
+      }, 300);
+    }, 150);
   };
 
   const handleSlideChange = (index: number) => {
-    setCurrentImageIndex(index);
+    if (index !== currentImageIndex) {
+      setIsImageChanging(true);
+      setTimeout(() => {
+        setCurrentImageIndex(index);
+        setTimeout(() => {
+          setIsImageChanging(false);
+        }, 300);
+      }, 150);
+    }
   };
   
   return (
@@ -160,14 +181,20 @@ const ArtistProfileCard = ({
             </CarouselContent>
           </Carousel>
         ) : (
-          <div className="w-full h-full transition-transform duration-300" style={{
-            transform: isHovered ? 'scale(1.07)' : 'scale(1)'
-          }}>
-            <img 
-              src={images[currentImageIndex]} 
-              alt={`${name} - ${type}`} 
-              className="w-full h-full object-cover"
-            />
+          <div className="w-full h-full relative overflow-hidden">
+            <div 
+              className={cn(
+                "w-full h-full transition-all duration-500",
+                isImageChanging ? "opacity-0 scale-105" : "opacity-100 scale-100",
+                isHovered ? "scale-105" : ""
+              )}
+            >
+              <img 
+                src={images[currentImageIndex]} 
+                alt={`${name} - ${type}`} 
+                className="w-full h-full object-cover"
+              />
+            </div>
           </div>
         )}
         
@@ -199,6 +226,11 @@ const ArtistProfileCard = ({
                   "h-1.5 rounded-full bg-white/80 transition-all",
                   currentImageIndex === index ? "w-5" : "w-1.5 opacity-60"
                 )}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  handleSlideChange(index);
+                }}
+                style={{ cursor: 'pointer' }}
               />
             ))}
           </div>
