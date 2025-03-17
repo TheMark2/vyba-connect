@@ -11,7 +11,10 @@ const MobileMenu = () => {
   const [theme, setTheme] = useState("light");
 
   return (
-    <SheetContent side="bottom" className="h-full bg-white pt-10 overflow-y-auto">
+    <SheetContent 
+      side="bottom" 
+      className="h-[calc(100vh-96px)] bg-white pt-10 overflow-y-auto mt-24 border-t-0"
+    >
       <div className="flex justify-between items-center mb-8">
         <h2 className="text-2xl font-bold">VYBA</h2>
         <SheetClose className="rounded-full p-2 hover:bg-gray-100">
