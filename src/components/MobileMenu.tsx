@@ -73,7 +73,7 @@ const MobileMenu = () => {
       </nav>
       <Separator className="my-6" />
       <div className="flex justify-center my-6">
-        <div ref={containerRef} className="border border-[#F8F8F8] rounded-full flex relative overflow-hidden">
+        <div ref={containerRef} className="border border-[#F8F8F8] rounded-full flex relative overflow-hidden p-0">
           {/* Fondo animado */}
           <div ref={backgroundRef} className="absolute bg-[#F8F8F8]" style={{
           left: '1px',
