@@ -78,13 +78,28 @@ const Index = () => {
     image: "/lovable-uploads/440a191c-d45b-4031-acbe-509e602e5d22.png",
     description: "Conecta con talentosos guitarristas"
   }];
-  const {
-    scrollYProgress
-  } = useScroll({
+  
+  // Corregir la configuración del scroll para asegurar que funcione en todas las pantallas
+  const { scrollYProgress } = useScroll({
     target: scrollRef,
-    offset: ["start start", "end start"]
+    offset: ["start start", "end start"],
   });
+
   useEffect(() => {
+    // Asegurar que scrollYProgress se actualice correctamente
+    const handleResize = () => {
+      // Forzar actualización del componente cuando cambia el tamaño de la ventana
+      setActiveArtistIndex(prev => prev === 1 ? 0 : 1);
+      setTimeout(() => setActiveArtistIndex(1), 10);
+    };
+
+    window.addEventListener('resize', handleResize);
+    
+    // Verificar si estamos en una pantalla grande para forzar la animación
+    if (window.innerWidth >= 768) {
+      handleResize();
+    }
+
     const handleScroll = () => {
       const scrollPosition = window.scrollY;
       const footerElement = document.querySelector('footer');
@@ -92,9 +107,20 @@ const Index = () => {
       const shouldShowSearchThreshold = isMobile ? window.innerHeight * 1.5 : window.innerHeight * 3;
       const shouldHideBeforeFooter = scrollPosition > footerPosition - 100;
       const shouldShowSearch = scrollPosition > shouldShowSearchThreshold && !shouldHideBeforeFooter;
+      
       if (shouldShowSearch !== showFixedSearch) {
         setShowFixedSearch(shouldShowSearch);
       }
+
+      // Mejorar la detección de scroll para la animación en pantallas grandes
+      if (!isMobile) {
+        const heroSection = document.querySelector('.hero-section');
+        if (heroSection) {
+          const scrollPercentage = Math.min(1, scrollPosition / (window.innerHeight * 2));
+          document.documentElement.style.setProperty('--scroll-progress', scrollPercentage.toString());
+        }
+      }
+      
       if (isMobile) {
         const carouselSection = document.querySelector('.carousel-section');
         if (carouselSection) {
@@ -112,24 +138,39 @@ const Index = () => {
         }
       }
     };
+    
     window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
+    
+    // Ejecutar handleScroll inmediatamente para inicializar correctamente
+    handleScroll();
+    
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+      window.removeEventListener('resize', handleResize);
+    };
   }, [showFixedSearch, isMobile, artists.length]);
+
+  // Optimizar las transformaciones para asegurar que funcionan en todos los tamaños de pantalla
   const opacity1 = useTransform(scrollYProgress, [0, 0.19, 0.25, 0.3], [1, 0.9, 0.3, 0]);
   const opacity2 = useTransform(scrollYProgress, [0.19, 0.25, 0.3, 0.43, 0.5, 0.55], [0, 0.3, 0.9, 1, 0.3, 0]);
   const opacity3 = useTransform(scrollYProgress, [0.43, 0.5, 0.55, 1], [0, 0.3, 1, 1]);
+  
   const scale1 = useTransform(scrollYProgress, [0, 0.19, 0.25], [1, 1.05, 1.1]);
   const scale2 = useTransform(scrollYProgress, [0.19, 0.25, 0.45, 0.5], [0.95, 1, 1.05, 1.1]);
   const scale3 = useTransform(scrollYProgress, [0.45, 0.5, 0.7], [0.95, 1, 1.05]);
+  
   const moveY1 = useTransform(scrollYProgress, [0, 0.25], ["0%", "-3%"]);
   const moveY2 = useTransform(scrollYProgress, [0.25, 0.5], ["0%", "-3%"]);
   const moveY3 = useTransform(scrollYProgress, [0.5, 0.75], ["0%", "-3%"]);
+  
   const moveX1 = useTransform(scrollYProgress, [0, 0.25], ["0%", "1%"]);
   const moveX2 = useTransform(scrollYProgress, [0.25, 0.5], ["0%", "-1%"]);
   const moveX3 = useTransform(scrollYProgress, [0.5, 0.75], ["0%", "1%"]);
+  
   const textOpacity1 = useTransform(scrollYProgress, [0, 0.15, 0.25], [1, 0.3, 0]);
   const textOpacity2 = useTransform(scrollYProgress, [0.25, 0.35, 0.45], [0, 1, 0]);
   const textOpacity3 = useTransform(scrollYProgress, [0.45, 0.55, 1], [0, 1, 1]);
+
   const topArtists = [{
     name: "Antonia Pedragosa",
     role: "DJ",
@@ -310,36 +351,57 @@ const Index = () => {
         </Carousel>
       </div>
     </div>;
-  const renderDesktopHero = () => <div ref={scrollRef} className="h-[300vh] relative">
+  const renderDesktopHero = () => <div ref={scrollRef} className="h-[300vh] relative hero-section">
       <div className="sticky top-0 h-screen overflow-hidden">
         <div className="relative w-full h-screen overflow-hidden">
           <motion.div className="absolute inset-0 px-6 md:px-10 lg:px-14 xl:px-16 pt-8 pb-32">
             <motion.div className="relative w-full h-full rounded-[2vw] overflow-hidden">
-              <motion.div className="absolute inset-0 origin-center" style={{
-              opacity: opacity1,
-              scale: scale1,
-              y: moveY1,
-              x: moveX1
-            }}>
-                <img src={artists[0].image} alt="DJ performing" className="w-full h-full brightness-75 blur-[2px] object-cover" />
+              <motion.div 
+                className="absolute inset-0 origin-center" 
+                style={{
+                  opacity: opacity1,
+                  scale: scale1,
+                  y: moveY1,
+                  x: moveX1
+                }}
+              >
+                <img 
+                  src={artists[0].image} 
+                  alt="DJ performing" 
+                  className="w-full h-full brightness-75 blur-[2px] object-cover" 
+                />
               </motion.div>
               
-              <motion.div className="absolute inset-0 origin-center" style={{
-              opacity: opacity2,
-              scale: scale2,
-              y: moveY2,
-              x: moveX2
-            }}>
-                <img src={artists[1].image} alt="Saxofonista performing" className="w-full h-full brightness-75 blur-[2px] object-cover" />
+              <motion.div 
+                className="absolute inset-0 origin-center" 
+                style={{
+                  opacity: opacity2,
+                  scale: scale2,
+                  y: moveY2,
+                  x: moveX2
+                }}
+              >
+                <img 
+                  src={artists[1].image} 
+                  alt="Saxofonista performing" 
+                  className="w-full h-full brightness-75 blur-[2px] object-cover" 
+                />
               </motion.div>
               
-              <motion.div className="absolute inset-0 origin-center" style={{
-              opacity: opacity3,
-              scale: scale3,
-              y: moveY3,
-              x: moveX3
-            }}>
-                <img src={artists[2].image} alt="Guitarrista performing" className="w-full h-full brightness-75 blur-[2px] object-cover rounded-[2vw]" />
+              <motion.div 
+                className="absolute inset-0 origin-center" 
+                style={{
+                  opacity: opacity3,
+                  scale: scale3,
+                  y: moveY3,
+                  x: moveX3
+                }}
+              >
+                <img 
+                  src={artists[2].image} 
+                  alt="Guitarrista performing" 
+                  className="w-full h-full brightness-75 blur-[2px] object-cover rounded-[2vw]" 
+                />
               </motion.div>
 
               <div className="absolute inset-0 bg-black opacity-50"></div>
@@ -347,29 +409,48 @@ const Index = () => {
               <motion.div className="absolute inset-0 flex flex-col justify-center text-white px-6 md:px-12 lg:px-16">
                 <div className="max-w-2xl mx-0 space-y-14">
                   <div className="relative h-36">
-                    <motion.h1 className="text-4xl md:text-5xl lg:text-7xl font-black text-white leading-tight absolute top-0 left-0 w-full" style={{
-                    opacity: textOpacity1
-                  }}>
+                    <motion.h1 
+                      className="text-4xl md:text-5xl lg:text-7xl font-black text-white leading-tight absolute top-0 left-0 w-full" 
+                      style={{
+                        opacity: textOpacity1
+                      }}
+                    >
                       Contacta con los mejores artistas
                     </motion.h1>
                     
-                    <motion.h1 className="text-4xl md:text-5xl lg:text-7xl font-black text-white leading-tight absolute top-16 left-0 w-full" style={{
-                    opacity: textOpacity2
-                  }}>
+                    <motion.h1 
+                      className="text-4xl md:text-5xl lg:text-7xl font-black text-white leading-tight absolute top-16 left-0 w-full" 
+                      style={{
+                        opacity: textOpacity2
+                      }}
+                    >
                       De una forma fácil
                     </motion.h1>
                     
-                    <motion.h1 className="text-4xl md:text-5xl lg:text-7xl font-black text-white leading-tight absolute top-16 left-0 w-full" style={{
-                    opacity: textOpacity3
-                  }}>
+                    <motion.h1 
+                      className="text-4xl md:text-5xl lg:text-7xl font-black text-white leading-tight absolute top-16 left-0 w-full" 
+                      style={{
+                        opacity: textOpacity3
+                      }}
+                    >
                       Usa Vyba
                     </motion.h1>
                   </div>
                   
                   <motion.div className="flex w-full relative">
                     <div className="relative w-full flex items-center">
-                      <Input type="text" placeholder="Buscar artistas" className="pr-14 bg-[#F5F1EB] dark:bg-vyba-dark-secondary text-black dark:text-white h-14 rounded-full border-0" value={searchQuery} onChange={e => setSearchQuery(e.target.value)} />
-                      <Button type="submit" size="icon" className="absolute right-2 rounded-full h-11 w-11 flex items-center justify-center">
+                      <Input 
+                        type="text" 
+                        placeholder="Buscar artistas" 
+                        className="pr-14 bg-[#F5F1EB] dark:bg-vyba-dark-secondary text-black dark:text-white h-14 rounded-full border-0" 
+                        value={searchQuery} 
+                        onChange={e => setSearchQuery(e.target.value)} 
+                      />
+                      <Button 
+                        type="submit" 
+                        size="icon" 
+                        className="absolute right-2 rounded-full h-11 w-11 flex items-center justify-center"
+                      >
                         <BoldSearch />
                       </Button>
                     </div>
@@ -380,13 +461,17 @@ const Index = () => {
           </motion.div>
         </div>
       </div>
-    </div>;
-  return <div className="min-h-screen flex flex-col p-0 m-0">
+    </div>
+  );
+
+  return (
+    <div className="min-h-screen flex flex-col p-0 m-0 overflow-x-hidden">
       <div className="w-full">
         <Navbar className="mx-auto" />
       </div>
 
-      {showFixedSearch && <motion.div initial={{
+      {showFixedSearch && (
+        <motion.div initial={{
       opacity: 0,
       y: 50
     }} animate={{
@@ -407,13 +492,14 @@ const Index = () => {
             Buscar con IA
           </Button>
         </div>
-      </motion.div>}
+      </motion.div>
+      )}
 
-      <main className="flex-1">
+      <main className="flex-1 overflow-x-hidden">
         {isMobile ? renderMobileHero() : renderDesktopHero()}
 
-        <section className="bg-vyba-cream dark:bg-vyba-dark-bg">
-          <div className="w-full overflow-hidden mt-3 md:mt-2 lg:mt-0">
+        <section className="bg-vyba-cream dark:bg-vyba-dark-bg mt-[-10vh] md:mt-[-15vh] lg:mt-[-20vh]">
+          <div className="w-full overflow-hidden">
             <Marquee pauseOnHover className="mb-4">
               {genreCards.map((card, index) => <ArtistCard key={index} type={card.type} name={card.name} artistCount={card.artistCount} rating={card.rating} artistAvatars={card.artistAvatars} onClick={() => handleCardClick(card.name, card.type)} />)}
             </Marquee>
@@ -496,6 +582,8 @@ const Index = () => {
       </main>
 
       <Footer />
-    </div>;
+    </div>
+  );
 };
+
 export default Index;
