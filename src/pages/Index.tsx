@@ -15,7 +15,6 @@ import StatsSummary from "@/components/StatsSummary";
 import HelpSection from "@/components/HelpSection";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/carousel";
-
 const Input = React.forwardRef<HTMLInputElement, React.ComponentProps<"input">>(({
   className,
   ...props
@@ -58,9 +57,7 @@ const Input = React.forwardRef<HTMLInputElement, React.ComponentProps<"input">>(
       </div>;
 });
 Input.displayName = "Input";
-
 const BoldSearch = () => <Search className="h-5 w-5 stroke-[2.5px]" />;
-
 const Index = () => {
   const scrollRef = useRef(null);
   const [searchQuery, setSearchQuery] = useState("");
@@ -68,7 +65,6 @@ const Index = () => {
   const [fixedSearchQuery, setFixedSearchQuery] = useState("");
   const isMobile = useIsMobile();
   const [activeArtistIndex, setActiveArtistIndex] = useState(1);
-  
   const artists = [{
     type: "DJ",
     image: "/lovable-uploads/7e7c2282-785a-46fb-84b2-f7b14b762e64.png",
@@ -82,14 +78,12 @@ const Index = () => {
     image: "/lovable-uploads/440a191c-d45b-4031-acbe-509e602e5d22.png",
     description: "Conecta con talentosos guitarristas"
   }];
-
   const {
     scrollYProgress
   } = useScroll({
     target: scrollRef,
     offset: ["start start", "end start"]
   });
-
   useEffect(() => {
     const handleScroll = () => {
       const scrollPosition = window.scrollY;
@@ -98,11 +92,9 @@ const Index = () => {
       const shouldShowSearchThreshold = isMobile ? window.innerHeight * 1.5 : window.innerHeight * 3;
       const shouldHideBeforeFooter = scrollPosition > footerPosition - 100;
       const shouldShowSearch = scrollPosition > shouldShowSearchThreshold && !shouldHideBeforeFooter;
-      
       if (shouldShowSearch !== showFixedSearch) {
         setShowFixedSearch(shouldShowSearch);
       }
-      
       if (isMobile) {
         const carouselSection = document.querySelector('.carousel-section');
         if (carouselSection) {
@@ -120,23 +112,9 @@ const Index = () => {
         }
       }
     };
-
-    const updateStickyPosition = () => {
-      const stickyContainer = document.querySelector('.sticky-container');
-      if (stickyContainer) {
-        stickyContainer.classList.add('sticky-active');
-      }
-    };
-    
     window.addEventListener('scroll', handleScroll);
-    window.addEventListener('scroll', updateStickyPosition);
-    
-    return () => {
-      window.removeEventListener('scroll', handleScroll);
-      window.removeEventListener('scroll', updateStickyPosition);
-    };
+    return () => window.removeEventListener('scroll', handleScroll);
   }, [showFixedSearch, isMobile, artists.length]);
-
   const opacity1 = useTransform(scrollYProgress, [0, 0.19, 0.25, 0.3], [1, 0.9, 0.3, 0]);
   const opacity2 = useTransform(scrollYProgress, [0.19, 0.25, 0.3, 0.43, 0.5, 0.55], [0, 0.3, 0.9, 1, 0.3, 0]);
   const opacity3 = useTransform(scrollYProgress, [0.43, 0.5, 0.55, 1], [0, 0.3, 1, 1]);
@@ -152,7 +130,6 @@ const Index = () => {
   const textOpacity1 = useTransform(scrollYProgress, [0, 0.15, 0.25], [1, 0.3, 0]);
   const textOpacity2 = useTransform(scrollYProgress, [0.25, 0.35, 0.45], [0, 1, 0]);
   const textOpacity3 = useTransform(scrollYProgress, [0.45, 0.55, 1], [0, 1, 1]);
-
   const topArtists = [{
     name: "Antonia Pedragosa",
     role: "DJ",
@@ -178,7 +155,6 @@ const Index = () => {
     role: "DJ",
     rating: 4.8
   }];
-
   const genreCards = [{
     type: "género" as CardType,
     name: "Pop",
@@ -204,7 +180,6 @@ const Index = () => {
     rating: 4.6,
     artistAvatars: Array(7).fill("/lovable-uploads/77591a97-10cd-4c8b-b768-5b17483c3d9f.png")
   }];
-
   const typeCards = [{
     type: "tipo" as CardType,
     name: "DJ",
@@ -230,11 +205,9 @@ const Index = () => {
     rating: 4.8,
     artistAvatars: Array(7).fill("/lovable-uploads/77591a97-10cd-4c8b-b768-5b17483c3d9f.png")
   }];
-
   const handleCardClick = (name: string, type: CardType) => {
     toast.success(`Has seleccionado ${type === "género" ? "el género" : "el tipo"} ${name}`);
   };
-
   const recommendedArtists = [{
     id: "1",
     name: "Antonia Pedragosa",
@@ -290,22 +263,16 @@ const Index = () => {
     priceRange: "450-550€",
     isFavorite: false
   }];
-
   const musicCategories = ["Reggaeton", "Pop", "House", "House", "Techno", "Jazz", "Rock"];
   const [activeCategory, setActiveCategory] = useState<string | null>(null);
-
   const handleArtistClick = (artist: any) => {
     toast.success(`Has seleccionado a ${artist.name}`);
   };
-
   const handleFavoriteToggle = (artist: any) => {
     toast(`${artist.isFavorite ? "Eliminado de" : "Añadido a"} favoritos: ${artist.name}`);
   };
-
   const filteredArtists = activeCategory ? recommendedArtists.filter(artist => artist.type.toLowerCase().includes(activeCategory.toLowerCase()) || artist.description.toLowerCase().includes(activeCategory.toLowerCase())) : recommendedArtists;
-
-  const renderMobileHero = () => (
-    <div className="min-h-screen flex flex-col bg-vyba-cream dark:bg-vyba-dark-bg">
+  const renderMobileHero = () => <div className="min-h-screen flex flex-col bg-vyba-cream dark:bg-vyba-dark-bg">
       <div className="px-6 pt-20 pb-10">
         <h1 className="text-5xl font-black leading-tight">
           El portal perfecto para encontrar tu dj
@@ -342,11 +309,8 @@ const Index = () => {
           </CarouselContent>
         </Carousel>
       </div>
-    </div>
-  );
-
-  const renderDesktopHero = () => (
-    <div ref={scrollRef} className="h-[300vh] relative sticky-container">
+    </div>;
+  const renderDesktopHero = () => <div ref={scrollRef} className="h-[300vh] relative">
       <div className="sticky top-0 h-screen overflow-hidden">
         <div className="relative w-full h-screen overflow-hidden">
           <motion.div className="absolute inset-0 px-6 md:px-10 lg:px-14 xl:px-16 pt-8 pb-32">
@@ -416,77 +380,46 @@ const Index = () => {
           </motion.div>
         </div>
       </div>
-    </div>
-  );
-
-  return (
-    <div className="min-h-screen flex flex-col p-0 m-0">
+    </div>;
+  return <div className="min-h-screen flex flex-col p-0 m-0">
       <div className="w-full">
         <Navbar className="mx-auto" />
       </div>
 
-      {showFixedSearch && (
-        <motion.div
-          initial={{
-            opacity: 0,
-            y: 50
-          }}
-          animate={{
-            opacity: 1,
-            y: 0
-          }}
-          exit={{
-            opacity: 0,
-            y: 50
-          }}
-          transition={{
-            duration: 0.3,
-            ease: "easeOut"
-          }}
-          className="fixed bottom-6 left-0 right-0 z-50 px-6 md:px-10 flex justify-center"
-        >
-          <div className="bg-white dark:bg-[#575654] py-3 px-4 rounded-full inline-flex gap-3 shadow-sm">
-            <Button onClick={() => toast.success("Búsqueda iniciada")} className="rounded-full text-black dark:text-white bg-[#F5F1EB] dark:bg-vyba-dark-secondary hover:bg-[#EAE6E0] dark:hover:bg-opacity-80 shadow-none" variant="secondary">
-              Empezar a buscar
-            </Button>
-            <Button onClick={() => toast.success("Búsqueda con IA iniciada")} className="rounded-full shadow-none" variant="default">
-              Buscar con IA
-            </Button>
-          </div>
-        </motion.div>
-      )}
+      {showFixedSearch && <motion.div initial={{
+      opacity: 0,
+      y: 50
+    }} animate={{
+      opacity: 1,
+      y: 0
+    }} exit={{
+      opacity: 0,
+      y: 50
+    }} transition={{
+      duration: 0.3,
+      ease: "easeOut"
+    }} className="fixed bottom-6 left-0 right-0 z-50 px-6 md:px-10 flex justify-center">
+        <div className="bg-white dark:bg-[#575654] py-3 px-4 rounded-full inline-flex gap-3 shadow-sm">
+          <Button onClick={() => toast.success("Búsqueda iniciada")} className="rounded-full text-black dark:text-white bg-[#F5F1EB] dark:bg-vyba-dark-secondary hover:bg-[#EAE6E0] dark:hover:bg-opacity-80 shadow-none" variant="secondary">
+            Empezar a buscar
+          </Button>
+          <Button onClick={() => toast.success("Búsqueda con IA iniciada")} className="rounded-full shadow-none" variant="default">
+            Buscar con IA
+          </Button>
+        </div>
+      </motion.div>}
 
       <main className="flex-1">
         {isMobile ? renderMobileHero() : renderDesktopHero()}
 
-        <section className="bg-vyba-cream dark:bg-vyba-dark-bg mt-[-30vh] relative z-10">
+        <section className="bg-vyba-cream dark:bg-vyba-dark-bg">
           <div className="w-full overflow-hidden mt-3 md:mt-2 lg:mt-0">
             <Marquee pauseOnHover className="mb-4">
-              {genreCards.map((card, index) => (
-                <ArtistCard
-                  key={index}
-                  type={card.type}
-                  name={card.name}
-                  artistCount={card.artistCount}
-                  rating={card.rating}
-                  artistAvatars={card.artistAvatars}
-                  onClick={() => handleCardClick(card.name, card.type)}
-                />
-              ))}
+              {genreCards.map((card, index) => <ArtistCard key={index} type={card.type} name={card.name} artistCount={card.artistCount} rating={card.rating} artistAvatars={card.artistAvatars} onClick={() => handleCardClick(card.name, card.type)} />)}
             </Marquee>
             
             <Marquee reverse pauseOnHover className="">
-              {typeCards.map((card, index) => (
-                <ArtistCard
-                  key={index + genreCards.length}
-                  type={card.type}
-                  name={card.name}
-                  artistCount={card.artistCount}
-                  rating={card.rating}
-                  artistAvatars={card.artistAvatars}
-                  onClick={() => handleCardClick(card.name, card.type)}
-                />
-              ))}
+              {typeCards.map((card, index) => <ArtistCard key={index + genreCards.length} type={card.type} name={card.name} artistCount={card.artistCount} rating={card.rating} artistAvatars={card.artistAvatars} onClick={() => handleCardClick(card.name, card.type)} />)}
             </Marquee>
           </div>
         </section>
@@ -547,11 +480,9 @@ const Index = () => {
             </h2>
 
             <div className="flex flex-wrap gap-3 mb-10 justify-center">
-              {musicCategories.map((category, index) => (
-                <button key={index} className={cn("px-5 py-3 rounded-full text-sm font-medium transition-colors", activeCategory === category ? "bg-black text-white" : "bg-[#F5F1EB] dark:bg-vyba-dark-secondary hover:bg-[#EAE6E0] dark:hover:bg-opacity-80")} onClick={() => setActiveCategory(activeCategory === category ? null : category)}>
-                  {category}
-                </button>
-              ))}
+              {musicCategories.map((category, index) => <button key={index} className={cn("px-5 py-3 rounded-full text-sm font-medium transition-colors", activeCategory === category ? "bg-black text-white" : "bg-[#F5F1EB] dark:bg-vyba-dark-secondary hover:bg-[#EAE6E0] dark:hover:bg-opacity-80")} onClick={() => setActiveCategory(activeCategory === category ? null : category)}>
+                {category}
+              </button>)}
             </div>
           </div>
         </section>
@@ -565,8 +496,6 @@ const Index = () => {
       </main>
 
       <Footer />
-    </div>
-  );
+    </div>;
 };
-
 export default Index;

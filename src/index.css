@@ -73,12 +73,7 @@
     @apply border-border font-satoshi;
   }
   body {
-    @apply bg-vyba-cream text-black antialiased dark:bg-vyba-dark-bg dark:text-white overflow-x-hidden;
-  }
-  
-  html {
-    @apply overflow-x-hidden;
-    scroll-behavior: smooth;
+    @apply bg-vyba-cream text-black antialiased dark:bg-vyba-dark-bg dark:text-white;
   }
   
   /* Animación de transición entre temas */
@@ -92,17 +87,10 @@
       @apply pt-20;
     }
   }
-
-  /* Asegurar que el contenedor de scroll se quede sticky */
-  .sticky-container {
-    position: relative;
-    will-change: transform;
-  }
-
-  .sticky-container .sticky {
-    position: sticky;
-    top: 0;
-    z-index: 10;
+  
+  /* Add smooth scrolling for the entire page */
+  html {
+    scroll-behavior: smooth;
   }
 }
 
