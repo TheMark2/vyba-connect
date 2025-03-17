@@ -102,7 +102,7 @@ const ArtistsPage = () => {
             <h1 className="text-5xl font-black mb-2">Todos los artistas</h1>
             <p className="text-5xl">{artists.length} artistas</p> 
           </div>
-          <div>
+          <div className="gap-4">
             <Button variant="secondary" className="bg-white">
               Busca con IA
             </Button>
