@@ -1,9 +1,7 @@
 
-import React, { useState, useRef } from "react";
-import { Heart, ChevronLeft, ChevronRight } from "lucide-react";
-import { Badge } from "@/components/ui/badge";
+import React, { useState } from "react";
+import { Heart, LeftArrow, RightArrow, Star } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { toast } from "sonner";
 
 interface ArtistProfileCardProps {
   name: string;
@@ -12,10 +10,10 @@ interface ArtistProfileCardProps {
   images: string[];
   rating: number;
   priceRange: string;
-  onFavoriteToggle?: () => void;
   isFavorite?: boolean;
-  className?: string;
   onClick?: () => void;
+  onFavoriteToggle?: () => void;
+  className?: string;
 }
 
 const ArtistProfileCard = ({
@@ -25,210 +23,141 @@ const ArtistProfileCard = ({
   images,
   rating,
   priceRange,
-  onFavoriteToggle,
   isFavorite = false,
+  onClick,
+  onFavoriteToggle,
   className,
-  onClick
 }: ArtistProfileCardProps) => {
-  const [favorite, setFavorite] = useState(isFavorite);
-  const [isHovered, setIsHovered] = useState(false);
-  const [isAnimating, setIsAnimating] = useState(false);
-  const [showCenterHeart, setShowCenterHeart] = useState(false);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
-  const lastClickTimeRef = useRef<number>(0);
-  
-  const handleFavoriteClick = (e: React.MouseEvent) => {
+  const [showControls, setShowControls] = useState(false);
+
+  const handleNextImage = (e: React.MouseEvent) => {
     e.stopPropagation();
-    toggleFavorite();
-  };
-
-  const toggleFavorite = () => {
-    const newFavoriteState = !favorite;
-    setFavorite(newFavoriteState);
-    setIsAnimating(true);
-    
-    // Solo mostrar el corazón central si es un "like" (no cuando se quita el like)
-    if (newFavoriteState) {
-      setShowCenterHeart(true);
-      setTimeout(() => {
-        setShowCenterHeart(false);
-      }, 800);
-    }
-    
-    // Mostrar toast para feedback adicional
-    toast.success(favorite ? "Eliminado de favoritos" : "Añadido a favoritos", {
-      icon: favorite ? "👋" : "❤️",
-      duration: 1500,
-      position: "bottom-center"
-    });
-    
-    // Detener la animación después de 600ms
-    setTimeout(() => {
-      setIsAnimating(false);
-    }, 600);
-    
-    if (onFavoriteToggle) {
-      onFavoriteToggle();
-    }
-  };
-
-  const handleCardClick = (e: React.MouseEvent) => {
-    const currentTime = new Date().getTime();
-    const timeSinceLastClick = currentTime - lastClickTimeRef.current;
-    
-    // Si el doble clic es menor a 300ms, consideramos que es un doble clic
-    if (timeSinceLastClick < 300 && lastClickTimeRef.current !== 0) {
-      toggleFavorite();
-    } else {
-      // Si es un clic simple, actualizamos el tiempo y ejecutamos onClick si existe
-      if (onClick) {
-        onClick();
-      }
-    }
-    
-    lastClickTimeRef.current = currentTime;
-  };
-
-  // Función para manejar el efecto de onda desde el punto de clic
-  const handleRippleEffect = (event: React.MouseEvent<HTMLButtonElement>) => {
-    const button = event.currentTarget;
-    const rect = button.getBoundingClientRect();
-    
-    const x = event.clientX - rect.left;
-    const y = event.clientY - rect.top;
-    
-    const ripple = document.createElement('span');
-    ripple.className = 'ripple-effect';
-    ripple.style.left = `${x}px`;
-    ripple.style.top = `${y}px`;
-    
-    button.appendChild(ripple);
-    
-    // Eliminar el elemento después de la animación
-    setTimeout(() => {
-      ripple.remove();
-    }, 800);
+    setCurrentImageIndex((prev) => (prev + 1) % images.length);
   };
 
   const handlePrevImage = (e: React.MouseEvent) => {
     e.stopPropagation();
-    if (currentImageIndex > 0) {
-      setCurrentImageIndex(prev => prev - 1);
-    } else {
-      setCurrentImageIndex(images.length - 1);
-    }
+    setCurrentImageIndex((prev) => (prev - 1 + images.length) % images.length);
   };
 
-  const handleNextImage = (e: React.MouseEvent) => {
+  const handleFavoriteClick = (e: React.MouseEvent) => {
     e.stopPropagation();
-    if (currentImageIndex < images.length - 1) {
-      setCurrentImageIndex(prev => prev + 1);
-    } else {
-      setCurrentImageIndex(0);
-    }
+    if (onFavoriteToggle) onFavoriteToggle();
   };
-  
+
   return (
-    <div 
-      className={cn("flex flex-col overflow-hidden bg-transparent transition-all duration-300", className)} 
-      onClick={handleCardClick} 
-      onMouseEnter={() => setIsHovered(true)} 
-      onMouseLeave={() => setIsHovered(false)} 
-      style={{
-        cursor: isHovered ? 'pointer' : 'default'
-      }}
+    <div
+      className={cn(
+        "card-artist h-full cursor-pointer transition-all duration-300 hover:scale-[1.02]",
+        className
+      )}
+      onClick={onClick}
     >
-      {/* Imagen principal con etiqueta de tipo y botón favorito */}
-      <div className="relative aspect-[3/4] w-full overflow-hidden rounded-3xl">
-        <div className="w-full h-full transition-transform duration-300" style={{
-          transform: isHovered ? 'scale(1.07)' : 'scale(1)'
-        }}>
-          <img 
-            src={images[currentImageIndex]} 
-            alt={`${name} - ${type}`} 
-            className="w-full h-full object-cover"
-          />
-        </div>
-        
-        {/* Botones de navegación de imágenes */}
-        {isHovered && images.length > 1 && (
+      {/* Imagen con controles en hover */}
+      <div
+        className="relative aspect-[3/2] overflow-hidden rounded-t-xl"
+        onMouseEnter={() => setShowControls(true)}
+        onMouseLeave={() => setShowControls(false)}
+      >
+        <img
+          src={images[currentImageIndex]}
+          alt={name}
+          className="h-full w-full object-cover transition-transform duration-300 hover:scale-105"
+        />
+
+        {/* Controles de navegación de imágenes */}
+        {images.length > 1 && showControls && (
           <>
-            <button 
+            <button
               onClick={handlePrevImage}
-              className="absolute left-4 top-1/2 transform -translate-y-1/2 bg-white/60 backdrop-blur-sm p-1.5 rounded-full opacity-90 hover:opacity-100 transition-opacity z-10"
+              className="absolute left-2 top-1/2 -translate-y-1/2 rounded-full bg-black/30 p-2 text-white transition-all hover:bg-black/50"
               aria-label="Imagen anterior"
             >
-              <ChevronLeft className="h-5 w-5 text-black" />
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="20"
+                height="20"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              >
+                <path d="m15 18-6-6 6-6" />
+              </svg>
             </button>
-            <button 
+            <button
               onClick={handleNextImage}
-              className="absolute right-4 top-1/2 transform -translate-y-1/2 bg-white/60 backdrop-blur-sm p-1.5 rounded-full opacity-90 hover:opacity-100 transition-opacity z-10"
+              className="absolute right-2 top-1/2 -translate-y-1/2 rounded-full bg-black/30 p-2 text-white transition-all hover:bg-black/50"
               aria-label="Siguiente imagen"
             >
-              <ChevronRight className="h-5 w-5 text-black" />
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="20"
+                height="20"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              >
+                <path d="m9 18 6-6-6-6" />
+              </svg>
             </button>
           </>
         )}
 
         {/* Indicadores de imágenes */}
         {images.length > 1 && (
-          <div className="absolute bottom-3 left-1/2 transform -translate-x-1/2 flex gap-1.5 z-20">
+          <div className="absolute bottom-2 left-1/2 flex -translate-x-1/2 gap-1">
             {images.map((_, index) => (
-              <span 
+              <div
                 key={index}
-                className={cn(
-                  "h-1.5 rounded-full bg-white/80 transition-all",
-                  currentImageIndex === index ? "w-5" : "w-1.5 opacity-60"
-                )}
+                className={`h-1.5 rounded-full ${
+                  index === currentImageIndex
+                    ? "w-6 bg-white"
+                    : "w-1.5 bg-white/60"
+                } transition-all`}
               />
             ))}
           </div>
         )}
-        
-        {/* Animación de corazón en el centro cuando se da like */}
-        {showCenterHeart && (
-          <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-            <Heart 
-              className={cn(
-                "h-20 w-20 fill-white stroke-white opacity-0 animate-fadeInOut z-10",
-              )} 
-            />
-          </div>
-        )}
-        
-        {/* Degradado negro de abajo a arriba */}
-        <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-black/10 to-transparent"></div>
-        <div className="absolute top-0 left-0 w-full p-3 flex justify-between">
-          <Badge variant="outline" className="bg-white text-black py-0.5 px-3 rounded-full border-0 text-xs font-medium">
-            {type}
-          </Badge>
-          <button 
-            onClick={handleFavoriteClick} 
-            onMouseDown={handleRippleEffect}
+
+        {/* Botón de favorito */}
+        <button
+          onClick={handleFavoriteClick}
+          className="absolute right-3 top-3 rounded-full bg-white/80 p-2 text-black transition-all hover:bg-white dark:bg-black/50 dark:text-white dark:hover:bg-black/70"
+          aria-label={isFavorite ? "Eliminar de favoritos" : "Añadir a favoritos"}
+        >
+          <Heart
             className={cn(
-              "h-7 w-7 rounded-full bg-white flex items-center justify-center transition-all duration-300 relative overflow-hidden",
-              isAnimating && favorite && "animate-heartbeat"
+              "favorite-icon h-5 w-5 transition-all",
+              isFavorite
+                ? "fill-red-500 text-red-500"
+                : "fill-transparent text-gray-600 dark:text-gray-300"
             )}
-          >
-            <Heart 
-              className={cn(
-                "h-3.5 w-3.5 transition-all duration-300", 
-                favorite ? "fill-black stroke-black" : "stroke-black",
-                isAnimating && favorite && "scale-110"
-              )} 
-            />
-          </button>
-        </div>
+          />
+        </button>
       </div>
-      {/* Información del artista con margin-top */}
-      <div className="pt-4 mt-2 flex flex-col gap-1 bg-transparent">
-        <div className="flex justify-between items-start">
-          <h3 className="text-base font-bold">{name}</h3>
-          <span className="text-base font-bold">{rating.toFixed(1)}</span>
+
+      {/* Información del artista */}
+      <div className="p-4">
+        <div className="mb-2 flex items-center justify-between">
+          <h3 className="text-lg font-bold">{name}</h3>
+          <div className="flex items-center gap-1">
+            <Star className="h-4 w-4 fill-yellow-400 text-yellow-400" />
+            <span className="text-sm font-medium">{rating}</span>
+          </div>
         </div>
-        <p className="text-gray-400 text-base line-clamp-1">{description}</p>
-        <p className="text-base font-bold">
-          de {priceRange}
+        <div className="mb-2 flex items-center justify-between">
+          <span className="artist-type text-gray-600 dark:text-gray-300">{type}</span>
+          <span className="text-sm font-medium">{priceRange}</span>
+        </div>
+        <p className="text-sm text-gray-500 dark:text-gray-400 line-clamp-2">
+          {description}
         </p>
       </div>
     </div>
