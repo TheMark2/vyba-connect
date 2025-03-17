@@ -9,6 +9,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { cn } from "@/lib/utils";
+import { useIsMobile } from "@/hooks/use-mobile";
 
 export type Language = {
   name: string;
@@ -29,6 +30,7 @@ interface LanguageDropdownProps {
 
 export function LanguageDropdown({ className }: LanguageDropdownProps) {
   const [selectedLanguage, setSelectedLanguage] = React.useState<Language>(languages[0]);
+  const isMobile = useIsMobile();
 
   return (
     <DropdownMenu>
@@ -42,7 +44,10 @@ export function LanguageDropdown({ className }: LanguageDropdownProps) {
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent 
-        className="min-w-[225px] bg-white dark:bg-[#575654] border-none rounded-3xl p-3 shadow-none mb-2"
+        className={cn(
+          "min-w-[225px] bg-white dark:bg-[#575654] border-none rounded-3xl p-3 shadow-none mb-2",
+          isMobile && "ml-3"
+        )}
         align="center"
       >
         {languages.map((language) => (
