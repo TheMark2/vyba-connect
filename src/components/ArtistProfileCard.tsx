@@ -1,9 +1,11 @@
+
 import React, { useState, useRef } from "react";
 import { Heart, ChevronLeft, ChevronRight } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
 import { toast } from "sonner";
 import { useIsMobile } from "@/hooks/use-mobile";
+import { Carousel, CarouselContent, CarouselItem } from "@/components/ui/carousel";
 
 interface ArtistProfileCardProps {
   name: string;
@@ -121,6 +123,10 @@ const ArtistProfileCard = ({
       setCurrentImageIndex(0);
     }
   };
+
+  const handleSlideChange = (index: number) => {
+    setCurrentImageIndex(index);
+  };
   
   return (
     <div 
@@ -136,15 +142,34 @@ const ArtistProfileCard = ({
         "relative w-full overflow-hidden rounded-3xl",
         isMobile ? "aspect-[1/1]" : "aspect-[3/4]"
       )}>
-        <div className="w-full h-full transition-transform duration-300" style={{
-          transform: isHovered ? 'scale(1.07)' : 'scale(1)'
-        }}>
-          <img 
-            src={images[currentImageIndex]} 
-            alt={`${name} - ${type}`} 
-            className="w-full h-full object-cover"
-          />
-        </div>
+        {isMobile ? (
+          <Carousel className="w-full h-full" onSlideChange={handleSlideChange}>
+            <CarouselContent className="h-full">
+              {images.map((image, index) => (
+                <CarouselItem key={index} className="h-full">
+                  <div className="w-full h-full">
+                    <img 
+                      src={image} 
+                      alt={`${name} - ${type}`} 
+                      className="w-full h-full object-cover transition-opacity duration-300"
+                      style={{ opacity: 1 }}
+                    />
+                  </div>
+                </CarouselItem>
+              ))}
+            </CarouselContent>
+          </Carousel>
+        ) : (
+          <div className="w-full h-full transition-transform duration-300" style={{
+            transform: isHovered ? 'scale(1.07)' : 'scale(1)'
+          }}>
+            <img 
+              src={images[currentImageIndex]} 
+              alt={`${name} - ${type}`} 
+              className="w-full h-full object-cover"
+            />
+          </div>
+        )}
         
         {isHovered && images.length > 1 && !isMobile && (
           <>
@@ -194,7 +219,7 @@ const ArtistProfileCard = ({
         <div className="absolute top-0 left-0 w-full p-3 flex justify-between">
           <Badge variant="outline" className={cn(
             "bg-white text-black py-1 px-4 rounded-full border-0 font-medium",
-            isMobile ? "text-sm" : "text-xs"
+            isMobile ? "text-sm" : "text-base py-1.5 px-5"
           )}>
             {type}
           </Badge>
@@ -203,14 +228,14 @@ const ArtistProfileCard = ({
             onMouseDown={handleRippleEffect}
             className={cn(
               "rounded-full bg-white flex items-center justify-center transition-all duration-300 relative overflow-hidden",
-              isMobile ? "h-9 w-9" : "h-7 w-7",
+              isMobile ? "h-9 w-9" : "h-11 w-11",
               isAnimating && favorite && "animate-heartbeat"
             )}
           >
             <Heart 
               className={cn(
                 "transition-all duration-300", 
-                isMobile ? "h-4.5 w-4.5" : "h-3.5 w-3.5",
+                isMobile ? "h-4.5 w-4.5" : "h-5 w-5",
                 favorite ? "fill-black stroke-black" : "stroke-black",
                 isAnimating && favorite && "scale-110"
               )} 
