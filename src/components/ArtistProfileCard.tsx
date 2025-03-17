@@ -1,6 +1,6 @@
 
 import React, { useState, useRef } from "react";
-import { Heart } from "lucide-react";
+import { Heart, ChevronLeft, ChevronRight } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
 import { toast } from "sonner";
@@ -9,7 +9,7 @@ interface ArtistProfileCardProps {
   name: string;
   type: string;
   description: string;
-  image: string;
+  images: string[];
   rating: number;
   priceRange: string;
   onFavoriteToggle?: () => void;
@@ -22,7 +22,7 @@ const ArtistProfileCard = ({
   name,
   type,
   description,
-  image,
+  images,
   rating,
   priceRange,
   onFavoriteToggle,
@@ -34,6 +34,7 @@ const ArtistProfileCard = ({
   const [isHovered, setIsHovered] = useState(false);
   const [isAnimating, setIsAnimating] = useState(false);
   const [showCenterHeart, setShowCenterHeart] = useState(false);
+  const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const lastClickTimeRef = useRef<number>(0);
   
   const handleFavoriteClick = (e: React.MouseEvent) => {
@@ -108,23 +109,81 @@ const ArtistProfileCard = ({
       ripple.remove();
     }, 800);
   };
+
+  const handlePrevImage = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    if (currentImageIndex > 0) {
+      setCurrentImageIndex(prev => prev - 1);
+    } else {
+      setCurrentImageIndex(images.length - 1);
+    }
+  };
+
+  const handleNextImage = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    if (currentImageIndex < images.length - 1) {
+      setCurrentImageIndex(prev => prev + 1);
+    } else {
+      setCurrentImageIndex(0);
+    }
+  };
   
-  return <div 
-    className={cn("flex flex-col overflow-hidden bg-transparent transition-all duration-300", className)} 
-    onClick={handleCardClick} 
-    onMouseEnter={() => setIsHovered(true)} 
-    onMouseLeave={() => setIsHovered(false)} 
-    style={{
-      cursor: isHovered ? 'pointer' : 'default'
-    }}
-  >
+  return (
+    <div 
+      className={cn("flex flex-col overflow-hidden bg-transparent transition-all duration-300", className)} 
+      onClick={handleCardClick} 
+      onMouseEnter={() => setIsHovered(true)} 
+      onMouseLeave={() => setIsHovered(false)} 
+      style={{
+        cursor: isHovered ? 'pointer' : 'default'
+      }}
+    >
       {/* Imagen principal con etiqueta de tipo y botón favorito */}
       <div className="relative aspect-[3/4] w-full overflow-hidden rounded-3xl">
         <div className="w-full h-full transition-transform duration-300" style={{
           transform: isHovered ? 'scale(1.07)' : 'scale(1)'
         }}>
-          <img src={image} alt={`${name} - ${type}`} className="w-full h-full object-cover" />
+          <img 
+            src={images[currentImageIndex]} 
+            alt={`${name} - ${type}`} 
+            className="w-full h-full object-cover"
+          />
         </div>
+        
+        {/* Botones de navegación de imágenes */}
+        {isHovered && images.length > 1 && (
+          <>
+            <button 
+              onClick={handlePrevImage}
+              className="absolute left-4 top-1/2 transform -translate-y-1/2 bg-white/60 backdrop-blur-sm p-1.5 rounded-full opacity-90 hover:opacity-100 transition-opacity z-10"
+              aria-label="Imagen anterior"
+            >
+              <ChevronLeft className="h-5 w-5 text-black" />
+            </button>
+            <button 
+              onClick={handleNextImage}
+              className="absolute right-4 top-1/2 transform -translate-y-1/2 bg-white/60 backdrop-blur-sm p-1.5 rounded-full opacity-90 hover:opacity-100 transition-opacity z-10"
+              aria-label="Siguiente imagen"
+            >
+              <ChevronRight className="h-5 w-5 text-black" />
+            </button>
+          </>
+        )}
+
+        {/* Indicadores de imágenes */}
+        {images.length > 1 && (
+          <div className="absolute bottom-3 left-1/2 transform -translate-x-1/2 flex gap-1.5 z-20">
+            {images.map((_, index) => (
+              <span 
+                key={index}
+                className={cn(
+                  "h-1.5 rounded-full bg-white/80 transition-all",
+                  currentImageIndex === index ? "w-5" : "w-1.5 opacity-60"
+                )}
+              />
+            ))}
+          </div>
+        )}
         
         {/* Animación de corazón en el centro cuando se da like */}
         {showCenterHeart && (
@@ -172,7 +231,8 @@ const ArtistProfileCard = ({
           de {priceRange}
         </p>
       </div>
-    </div>;
+    </div>
+  );
 };
 
 export default ArtistProfileCard;
