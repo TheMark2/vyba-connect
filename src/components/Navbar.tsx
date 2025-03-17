@@ -20,6 +20,7 @@ const Navbar = ({
   const isMobile = useIsMobile();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const [scrollPosition, setScrollPosition] = useState(0);
 
   // Detectar el scroll y cambiar el estado
   useEffect(() => {
@@ -42,15 +43,23 @@ const Navbar = ({
   // Prevenir scroll cuando el menú está abierto
   useEffect(() => {
     if (isMenuOpen) {
+      // Guardar la posición actual de scroll antes de abrir el menú
+      setScrollPosition(window.scrollY);
       document.body.classList.add('overflow-hidden');
+      // No permitir que el body se desplace hacia arriba
+      document.body.style.top = `-${scrollPosition}px`;
     } else {
       document.body.classList.remove('overflow-hidden');
+      // Restaurar la posición del scroll cuando se cierra el menú
+      document.body.style.top = '';
+      window.scrollTo(0, scrollPosition);
     }
     
     return () => {
       document.body.classList.remove('overflow-hidden');
+      document.body.style.top = '';
     };
-  }, [isMenuOpen]);
+  }, [isMenuOpen, scrollPosition]);
 
   return (
     <div 
@@ -58,8 +67,8 @@ const Navbar = ({
         "w-full mx-auto px-6 md:px-10 lg:px-14 xl:px-16 flex items-center justify-between",
         // Cambiamos de sticky a fixed para móvil y reducimos altura
         isMobile ? "fixed top-0 left-0 right-0 z-50 transition-colors duration-500 h-20" : "h-24",
-        // Cambiamos el fondo y el degradado basado en el estado de scroll (solo en móvil)
-        isMobile && scrolled ? "bg-[#F5F1EB] navbar-gradient" : "bg-transparent",
+        // Cambiamos el fondo basado en el estado de scroll (solo en móvil, quitamos la clase del gradiente)
+        isMobile && scrolled ? "bg-[#F5F1EB]" : "bg-transparent",
         className
       )}
     >

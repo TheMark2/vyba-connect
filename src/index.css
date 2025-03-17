@@ -56,9 +56,11 @@
   /* Clase para evitar el scroll cuando el menú está abierto */
   body.overflow-hidden {
     overflow: hidden;
-    position: fixed;
+    height: 100vh;
     width: 100%;
-    height: 100%;
+    position: fixed;
+    top: 0;
+    left: 0;
   }
   
   /* Add smooth scrolling for the entire page */
@@ -100,21 +102,9 @@
     @apply transition-colors duration-300 ease-out;
   }
 
-  /* Añadir la clase para el degradado de la navbar */
+  /* Eliminando la clase para el degradado de la navbar */
   .navbar-gradient {
     position: relative;
-  }
-  
-  .navbar-gradient:after {
-    content: '';
-    position: absolute;
-    bottom: -20px;
-    left: 0;
-    right: 0;
-    height: 20px;
-    background: linear-gradient(to bottom, #F5F1EB 0%, rgba(245, 241, 235, 0) 100%);
-    pointer-events: none;
-    z-index: -1;
   }
 }
 
