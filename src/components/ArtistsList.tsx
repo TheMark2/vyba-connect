@@ -98,7 +98,7 @@ const ArtistsList = ({
   };
 
   return (
-    <div className="relative w-full overflow-hidden" ref={carouselRef}>      
+    <div className="relative w-full" ref={carouselRef}>      
       <Carousel
         className="w-full"
         setApi={setApi}
@@ -161,7 +161,7 @@ const ArtistsList = ({
             <button
               key={i}
               className={cn(
-                "h-2 rounded-full transition-all duration-300",
+                "h-2 rounded-full transition-all",
                 i === current ? "w-6 bg-black dark:bg-white" : "w-2 bg-gray-300 dark:bg-gray-600"
               )}
               onClick={() => api?.scrollTo(i)}
