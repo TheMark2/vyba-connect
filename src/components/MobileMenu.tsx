@@ -1,38 +1,39 @@
 import React, { useState, useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { SheetContent, SheetClose } from "@/components/ui/sheet";
+import { SheetContent } from "@/components/ui/sheet";
 import { Separator } from "@/components/ui/separator";
 import { Sun, Moon, Monitor } from "lucide-react";
-import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 
 const MobileMenu = () => {
   const [theme, setTheme] = useState("light");
   const backgroundRef = useRef(null);
   const containerRef = useRef(null);
 
-  // Función para mover el fondo
-  const moveBackground = (value) => {
+  // Actualizar la posición del fondo cuando cambia el tema
+  useEffect(() => {
     if (!backgroundRef.current || !containerRef.current) return;
     
     const container = containerRef.current;
-    const items = container.querySelectorAll('[data-value]');
-    const targetItem = Array.from(items).find(item => item.dataset.value === value);
+    const buttons = container.querySelectorAll('button');
     
-    if (targetItem) {
+    // Encontrar el botón activo basado en el tema
+    let activeButton;
+    if (theme === "light") activeButton = buttons[0];
+    else if (theme === "dark") activeButton = buttons[1];
+    else if (theme === "system") activeButton = buttons[2];
+    
+    if (activeButton) {
       const containerRect = container.getBoundingClientRect();
-      const targetRect = targetItem.getBoundingClientRect();
+      const buttonRect = activeButton.getBoundingClientRect();
       
-      const left = targetRect.left - containerRect.left;
+      // Calcular la posición relativa
+      const left = buttonRect.left - containerRect.left;
       
+      // Aplicar transformación
       backgroundRef.current.style.transform = `translateX(${left}px)`;
-      backgroundRef.current.style.width = `${targetRect.width}px`;
+      backgroundRef.current.style.width = `${buttonRect.width}px`;
     }
-  };
-
-  // Actualizar la posición del fondo cuando cambia el tema
-  useEffect(() => {
-    moveBackground(theme);
   }, [theme]);
 
   return (
@@ -63,46 +64,37 @@ const MobileMenu = () => {
           {/* Fondo animado */}
           <div 
             ref={backgroundRef}
-            className="absolute top-1 bottom-1 bg-[#F8F8F8] rounded-full transition-transform duration-300 ease-in-out"
+            className="absolute top-1 bottom-1 left-1 bg-[#F8F8F8] rounded-full transition-all duration-300 ease-in-out"
             style={{ width: '56px', height: 'calc(100% - 8px)' }}
           />
 
           {/* Botones de cambio de tema */}
-          <ToggleGroupItem 
-            data-value="light"
-            value="light" 
-            aria-label="Modo claro" 
+          <button
             onClick={() => setTheme("light")}
-            className={`rounded-bl-full rounded-tl-full w-14 h-10 flex items-center justify-center z-10 ${
+            className={`rounded-l-full w-14 h-10 flex items-center justify-center z-10 ${
               theme !== 'light' ? 'border border-[#F8F8F8]' : ''
             }`}
           >
             <Sun className="h-5 w-5" />
-          </ToggleGroupItem>
+          </button>
           
-          <ToggleGroupItem 
-            data-value="dark"
-            value="dark" 
-            aria-label="Modo oscuro" 
+          <button
             onClick={() => setTheme("dark")}
-            className={`w-14 h-10 flex items-center justify-center rounded-none z-10 ${
+            className={`w-14 h-10 flex items-center justify-center z-10 ${
               theme !== 'dark' ? 'border border-[#F8F8F8]' : ''
             }`}
           >
             <Moon className="h-5 w-5" />
-          </ToggleGroupItem>
+          </button>
           
-          <ToggleGroupItem 
-            data-value="system"
-            value="system" 
-            aria-label="Modo sistema" 
+          <button
             onClick={() => setTheme("system")}
-            className={`rounded-br-full rounded-tr-full w-14 h-10 flex items-center justify-center z-10 ${
+            className={`rounded-r-full w-14 h-10 flex items-center justify-center z-10 ${
               theme !== 'system' ? 'border border-[#F8F8F8]' : ''
             }`}
           >
             <Monitor className="h-5 w-5" />
-          </ToggleGroupItem>
+          </button>
         </div>
       </div>
       <div className="flex flex-col space-y-3 mt-6">
