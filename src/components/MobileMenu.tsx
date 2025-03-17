@@ -1,13 +1,19 @@
+
 import React, { useState, useEffect, useRef } from "react";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { SheetContent } from "@/components/ui/sheet";
 import { Separator } from "@/components/ui/separator";
-import { Sun, Moon, Monitor } from "lucide-react";
+import { Sun, Moon, Monitor, Home, Users, Music, Palette } from "lucide-react";
+
 const MobileMenu = () => {
   const [theme, setTheme] = useState("light");
   const backgroundRef = useRef(null);
   const containerRef = useRef(null);
+  const location = useLocation();
+
+  // Función para verificar si un enlace está activo
+  const isActive = (path: string) => location.pathname === path;
 
   // Función para sincronizar la posición y forma del fondo
   const updateBackgroundPosition = newTheme => {
@@ -56,19 +62,44 @@ const MobileMenu = () => {
       updateBackgroundPosition(theme);
     }, 100);
   }, []);
+
   return <SheetContent side="bottom" className="h-[calc(100vh-96px)] bg-white pt-10 overflow-y-auto mt-24 border-t-0">
       <nav className="flex flex-col space-y-2 mb-6">
-        <Link to="/" className="px-4 py-3 rounded-lg bg-[#F8F8F8] text-black font-medium">
-          Inicio
+        <Link to="/" className={`px-4 py-3 rounded-lg ${isActive('/') ? 'bg-[#F8F8F8]' : 'hover:bg-[#F8F8F8]'} text-black font-medium transition-all duration-200`}>
+          <div className="flex items-center space-x-3">
+            <Home 
+              className={`h-5 w-5 transition-all duration-200 ${isActive('/') ? 'fill-[#9b87f5] text-[#9b87f5]' : 'hover:fill-[#E5DEFF] hover:text-[#9b87f5]'}`} 
+              strokeWidth={isActive('/') ? 2 : 1.5}
+            />
+            <span>Inicio</span>
+          </div>
         </Link>
-        <Link to="/artistas" className="px-4 py-3 rounded-lg hover:bg-[#F8F8F8] text-black font-medium">
-          Artistas
+        <Link to="/artistas" className={`px-4 py-3 rounded-lg ${isActive('/artistas') ? 'bg-[#F8F8F8]' : 'hover:bg-[#F8F8F8]'} text-black font-medium transition-all duration-200`}>
+          <div className="flex items-center space-x-3">
+            <Users 
+              className={`h-5 w-5 transition-all duration-200 ${isActive('/artistas') ? 'fill-[#9b87f5] text-[#9b87f5]' : 'hover:fill-[#E5DEFF] hover:text-[#9b87f5]'}`} 
+              strokeWidth={isActive('/artistas') ? 2 : 1.5}
+            />
+            <span>Artistas</span>
+          </div>
         </Link>
-        <Link to="/todos-generos" className="px-4 py-3 rounded-lg hover:bg-[#F8F8F8] text-black font-medium">
-          Todos los géneros
+        <Link to="/todos-generos" className={`px-4 py-3 rounded-lg ${isActive('/todos-generos') ? 'bg-[#F8F8F8]' : 'hover:bg-[#F8F8F8]'} text-black font-medium transition-all duration-200`}>
+          <div className="flex items-center space-x-3">
+            <Palette 
+              className={`h-5 w-5 transition-all duration-200 ${isActive('/todos-generos') ? 'fill-[#9b87f5] text-[#9b87f5]' : 'hover:fill-[#E5DEFF] hover:text-[#9b87f5]'}`} 
+              strokeWidth={isActive('/todos-generos') ? 2 : 1.5}
+            />
+            <span>Todos los géneros</span>
+          </div>
         </Link>
-        <Link to="/todos-artistas" className="px-4 py-3 rounded-lg hover:bg-[#F8F8F8] text-black font-medium">
-          Todos los artistas
+        <Link to="/todos-artistas" className={`px-4 py-3 rounded-lg ${isActive('/todos-artistas') ? 'bg-[#F8F8F8]' : 'hover:bg-[#F8F8F8]'} text-black font-medium transition-all duration-200`}>
+          <div className="flex items-center space-x-3">
+            <Music 
+              className={`h-5 w-5 transition-all duration-200 ${isActive('/todos-artistas') ? 'fill-[#9b87f5] text-[#9b87f5]' : 'hover:fill-[#E5DEFF] hover:text-[#9b87f5]'}`} 
+              strokeWidth={isActive('/todos-artistas') ? 2 : 1.5}
+            />
+            <span>Todos los artistas</span>
+          </div>
         </Link>
       </nav>
       <Separator className="my-6" />
@@ -86,15 +117,15 @@ const MobileMenu = () => {
 
           {/* Botones de cambio de tema */}
           <button onClick={() => setTheme("light")} className="rounded-l-full w-14 h-16 flex items-center justify-center z-10 relative">
-            <Sun className="h-5 w-5" />
+            <Sun className={`h-5 w-5 transition-all duration-200 ${theme === 'light' ? 'fill-[#9b87f5] text-[#9b87f5]' : ''}`} />
           </button>
           
           <button onClick={() => setTheme("dark")} className="w-14 h-16 flex items-center justify-center z-10 relative">
-            <Moon className="h-5 w-5" />
+            <Moon className={`h-5 w-5 transition-all duration-200 ${theme === 'dark' ? 'fill-[#9b87f5] text-[#9b87f5]' : ''}`} />
           </button>
           
           <button onClick={() => setTheme("system")} className="rounded-r-full w-14 h-16 flex items-center justify-center z-10 relative">
-            <Monitor className="h-5 w-5" />
+            <Monitor className={`h-5 w-5 transition-all duration-200 ${theme === 'system' ? 'fill-[#9b87f5] text-[#9b87f5]' : ''}`} />
           </button>
         </div>
       </div>
