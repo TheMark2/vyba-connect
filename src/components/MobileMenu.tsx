@@ -10,49 +10,59 @@ const MobileMenu = () => {
   const backgroundRef = useRef(null);
   const containerRef = useRef(null);
 
-  // Actualizar la posición y forma del fondo cuando cambia el tema
-  useEffect(() => {
+  // Función para sincronizar la posición y forma del fondo
+  const updateBackgroundPosition = (newTheme) => {
     if (!backgroundRef.current || !containerRef.current) return;
     
     const container = containerRef.current;
     const buttons = container.querySelectorAll('button');
     
-    // Encontrar el botón activo basado en el tema
-    let activeButton;
-    let activeIndex = 0;
+    let activeIndex;
+    if (newTheme === "light") activeIndex = 0;
+    else if (newTheme === "dark") activeIndex = 1;
+    else if (newTheme === "system") activeIndex = 2;
     
-    if (theme === "light") {
-      activeButton = buttons[0];
-      activeIndex = 0;
-    } else if (theme === "dark") {
-      activeButton = buttons[1];
-      activeIndex = 1;
-    } else if (theme === "system") {
-      activeButton = buttons[2];
-      activeIndex = 2;
-    }
+    const activeButton = buttons[activeIndex];
     
     if (activeButton) {
       const containerRect = container.getBoundingClientRect();
       const buttonRect = activeButton.getBoundingClientRect();
       
-      // Calcular la posición relativa y centrada
+      // Calcular la posición exacta
       const left = buttonRect.left - containerRect.left;
       
-      // Aplicar transformación
-      backgroundRef.current.style.transform = `translateX(${left}px)`;
-      backgroundRef.current.style.width = `${buttonRect.width}px`;
+      // Eliminar cualquier transición anterior para asegurar una actualización inmediata
+      backgroundRef.current.style.transition = 'all 400ms cubic-bezier(0.34, 1.56, 0.64, 1)';
       
-      // Actualizar el border-radius según la posición
-      if (activeIndex === 0) {
-        backgroundRef.current.style.borderRadius = "9999px 0 0 9999px"; // Esquina izquierda redondeada
-      } else if (activeIndex === 1) {
-        backgroundRef.current.style.borderRadius = "0"; // Sin esquinas redondeadas
-      } else if (activeIndex === 2) {
-        backgroundRef.current.style.borderRadius = "0 9999px 9999px 0"; // Esquina derecha redondeada
-      }
+      // Actualizar todo en un solo paso para que la animación sea fluida
+      requestAnimationFrame(() => {
+        backgroundRef.current.style.transform = `translateX(${left}px)`;
+        backgroundRef.current.style.width = `${buttonRect.width}px`;
+        
+        // Actualizar el border-radius según el índice
+        if (activeIndex === 0) {
+          backgroundRef.current.style.borderRadius = '9999px 0 0 9999px';
+        } else if (activeIndex === 1) {
+          backgroundRef.current.style.borderRadius = '0';
+        } else if (activeIndex === 2) {
+          backgroundRef.current.style.borderRadius = '0 9999px 9999px 0';
+        }
+      });
     }
+  };
+  
+  // Ejecutar cuando cambia el tema
+  useEffect(() => {
+    updateBackgroundPosition(theme);
   }, [theme]);
+  
+  // Ejecutar después del montaje para la posición inicial
+  useEffect(() => {
+    // Pequeño retraso para asegurar que el DOM esté completamente cargado
+    setTimeout(() => {
+      updateBackgroundPosition(theme);
+    }, 100);
+  }, []);
 
   return (
     <SheetContent
@@ -77,15 +87,19 @@ const MobileMenu = () => {
       <div className="flex justify-center my-6">
         <div 
           ref={containerRef}
-          className="bg-[#F5F1EB] p-1 rounded-full flex relative"
+          className="bg-[#F5F1EB] p-1 rounded-full flex relative overflow-hidden"
         >
-          {/* Fondo animado que se adapta */}
+          {/* Fondo animado */}
           <div 
             ref={backgroundRef}
-            className="absolute inset-y-1 left-1 bg-[#F8F8F8] transition-all duration-500 ease-out"
+            className="absolute bg-[#F8F8F8]"
             style={{ 
-              width: '56px', 
-              borderRadius: '9999px 0 0 9999px' // Inicialmente redondeado a la izquierda
+              left: '1px',
+              top: '4px',
+              bottom: '4px',
+              width: '56px',
+              height: 'calc(100% - 8px)',
+              willChange: 'transform, border-radius, width'
             }}
           />
 
