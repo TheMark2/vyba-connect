@@ -37,7 +37,7 @@ const MobileMenu = () => {
           <ToggleGroupItem value="light" aria-label="Modo claro" className="data-[state=on]:bg-white rounded-bl-full rounded-tl-full w-14 h-10 flex items-center justify-center border-1 border-black">
             <Sun className="h-5 w-5" />
           </ToggleGroupItem>
-          <ToggleGroupItem value="dark" aria-label="Modo oscuro" className="data-[state=on]:bg-white w-14 h-10 flex items-center justify-center">
+          <ToggleGroupItem value="dark" aria-label="Modo oscuro" className="data-[state=on]:bg-white w-14 h-10 flex items-center justify-center rounded-none">
             <Moon className="h-5 w-5" />
           </ToggleGroupItem>
           <ToggleGroupItem value="system" aria-label="Modo sistema" className="data-[state=on]:bg-white rounded-br-full rounded-tr-full w-14 h-10 flex items-center justify-center">
