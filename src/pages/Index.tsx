@@ -213,7 +213,7 @@ const Index = () => {
     name: "Antonia Pedragosa",
     type: "DJ",
     description: "DJ para todo tipo de eventos",
-    image: "/lovable-uploads/7e7c2282-785a-46fb-84b2-f7b14b762e64.png",
+    images: ["/lovable-uploads/7e7c2282-785a-46fb-84b2-f7b14b762e64.png"],
     rating: 4.9,
     priceRange: "400-500€",
     isFavorite: false
@@ -222,7 +222,7 @@ const Index = () => {
     name: "Marco Valiente",
     type: "Saxofonista",
     description: "Saxofonista para eventos exclusivos",
-    image: "/lovable-uploads/64cabbe3-ce62-4190-830d-0e5defd31a1b.png",
+    images: ["/lovable-uploads/64cabbe3-ce62-4190-830d-0e5defd31a1b.png"],
     rating: 4.8,
     priceRange: "450-550€",
     isFavorite: false
@@ -231,7 +231,7 @@ const Index = () => {
     name: "Sofía Montero",
     type: "DJ",
     description: "DJ especializada en bodas y eventos",
-    image: "/lovable-uploads/c89ee394-3c08-48f6-b69b-bddd81dffa8b.png",
+    images: ["/lovable-uploads/c89ee394-3c08-48f6-b69b-bddd81dffa8b.png"],
     rating: 4.9,
     priceRange: "400-500€",
     isFavorite: false
@@ -240,7 +240,7 @@ const Index = () => {
     name: "Lucas Mendoza",
     type: "Guitarrista",
     description: "Guitarrista versátil para cualquier evento",
-    image: "/lovable-uploads/440a191c-d45b-4031-acbe-509e602e5d22.png",
+    images: ["/lovable-uploads/440a191c-d45b-4031-acbe-509e602e5d22.png"],
     rating: 4.7,
     priceRange: "350-450€",
     isFavorite: false
@@ -249,7 +249,7 @@ const Index = () => {
     name: "Daniela Jiménez",
     type: "DJ",
     description: "DJ con años de experiencia en festivales",
-    image: "/lovable-uploads/a3c6b43a-dd61-4889-ae77-cb1016e65371.png",
+    images: ["/lovable-uploads/a3c6b43a-dd61-4889-ae77-cb1016e65371.png"],
     rating: 4.9,
     priceRange: "500-600€",
     isFavorite: false
@@ -258,7 +258,7 @@ const Index = () => {
     name: "Rafael Torres",
     type: "DJ",
     description: "DJ especializado en música electrónica",
-    image: "/lovable-uploads/d79d697f-5c21-443c-bc75-d988a2dbc770.png",
+    images: ["/lovable-uploads/d79d697f-5c21-443c-bc75-d988a2dbc770.png"],
     rating: 4.8,
     priceRange: "450-550€",
     isFavorite: false
