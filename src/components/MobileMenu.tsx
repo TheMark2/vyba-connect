@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect, useRef } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { Button } from "@/components/ui/button";
@@ -6,6 +5,7 @@ import { Separator } from "@/components/ui/separator";
 import { Sun, Moon, Monitor, Home, Users, Music, Palette, X, Search, SlidersHorizontal } from "lucide-react";
 import { createPortal } from "react-dom";
 import { cn } from "@/lib/utils";
+import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 
 interface MobileMenuProps {
   isOpen: boolean;
@@ -194,37 +194,30 @@ const MobileMenu = ({ isOpen, onClose }: MobileMenuProps) => {
           {/* Otro separador que va de extremo a extremo */}
           <Separator className="animate-menu-item w-full" style={{ animationDelay: "350ms", margin: "0.5rem 0" }} />
           
-          {/* Selector de tema rediseñado */}
+          {/* Selector de tema rediseñado con ToggleGroup */}
           <div className="px-6 my-4 animate-menu-item" style={{ animationDelay: "400ms" }}>
             <p className="text-sm font-medium text-gray-500 mb-3">Modo de visualización</p>
-            <div className="grid grid-cols-3 gap-2">
-              <Button 
-                onClick={() => setTheme("light")} 
-                variant={theme === "light" ? "default" : "ghost"}
-                className={`h-auto py-3 flex flex-col items-center justify-center ${theme === "light" ? "bg-[#D4DDFF] text-[#222845]" : "hover:bg-[#F8F8F8] text-gray-700"}`}
-              >
+            <ToggleGroup 
+              type="single" 
+              value={theme} 
+              onValueChange={(value) => value && setTheme(value)}
+              className="w-full"
+            >
+              <ToggleGroupItem value="light" className="flex-1 flex flex-col items-center justify-center py-3">
                 <Sun className="h-5 w-5 mb-1" />
                 <span className="text-xs font-medium">Claro</span>
-              </Button>
+              </ToggleGroupItem>
               
-              <Button 
-                onClick={() => setTheme("dark")} 
-                variant={theme === "dark" ? "default" : "ghost"}
-                className={`h-auto py-3 flex flex-col items-center justify-center ${theme === "dark" ? "bg-[#D4DDFF] text-[#222845]" : "hover:bg-[#F8F8F8] text-gray-700"}`}
-              >
+              <ToggleGroupItem value="dark" className="flex-1 flex flex-col items-center justify-center py-3">
                 <Moon className="h-5 w-5 mb-1" />
                 <span className="text-xs font-medium">Oscuro</span>
-              </Button>
+              </ToggleGroupItem>
               
-              <Button 
-                onClick={() => setTheme("system")} 
-                variant={theme === "system" ? "default" : "ghost"}
-                className={`h-auto py-3 flex flex-col items-center justify-center ${theme === "system" ? "bg-[#D4DDFF] text-[#222845]" : "hover:bg-[#F8F8F8] text-gray-700"}`}
-              >
+              <ToggleGroupItem value="system" className="flex-1 flex flex-col items-center justify-center py-3">
                 <Monitor className="h-5 w-5 mb-1" />
                 <span className="text-xs font-medium">Sistema</span>
-              </Button>
-            </div>
+              </ToggleGroupItem>
+            </ToggleGroup>
           </div>
           
           {/* Separador final */}
