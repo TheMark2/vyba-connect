@@ -3,7 +3,7 @@ import React, { useState, useEffect, useRef } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
-import { Sun, Moon, Monitor, Home, Users, Music, Palette, X } from "lucide-react";
+import { Sun, Moon, Monitor, Home, Users, Music, Palette, X, Search, SlidersHorizontal } from "lucide-react";
 import { createPortal } from "react-dom";
 import { cn } from "@/lib/utils";
 
@@ -15,8 +15,6 @@ interface MobileMenuProps {
 const MobileMenu = ({ isOpen, onClose }: MobileMenuProps) => {
   const [theme, setTheme] = useState("light");
   const [isAnimating, setIsAnimating] = useState(false);
-  const backgroundRef = useRef(null);
-  const containerRef = useRef(null);
   const menuRef = useRef<HTMLDivElement>(null);
   const location = useLocation();
 
@@ -43,61 +41,6 @@ const MobileMenu = ({ isOpen, onClose }: MobileMenuProps) => {
       document.body.style.overflow = '';
     };
   }, [isOpen]);
-
-  // Función para sincronizar la posición y forma del fondo del selector de tema
-  const updateBackgroundPosition = (newTheme) => {
-    if (!backgroundRef.current || !containerRef.current) return;
-    
-    const container = containerRef.current;
-    const buttons = container.querySelectorAll('button');
-    let activeIndex;
-    
-    if (newTheme === "light") activeIndex = 0;
-    else if (newTheme === "dark") activeIndex = 1;
-    else if (newTheme === "system") activeIndex = 2;
-    
-    const activeButton = buttons[activeIndex];
-    
-    if (activeButton) {
-      const containerRect = container.getBoundingClientRect();
-      const buttonRect = activeButton.getBoundingClientRect();
-
-      // Calcular la posición exacta
-      const left = buttonRect.left - containerRect.left;
-
-      // Aplicar transición suave
-      backgroundRef.current.style.transition = 'all 400ms cubic-bezier(0.34, 1.56, 0.64, 1)';
-
-      // Actualizar posición y forma
-      requestAnimationFrame(() => {
-        backgroundRef.current.style.transform = `translateX(${left}px)`;
-        backgroundRef.current.style.width = `${buttonRect.width}px`;
-
-        // Actualizar el border-radius según el índice
-        if (activeIndex === 0) {
-          backgroundRef.current.style.borderRadius = '9999px 0 0 9999px';
-        } else if (activeIndex === 1) {
-          backgroundRef.current.style.borderRadius = '0';
-        } else if (activeIndex === 2) {
-          backgroundRef.current.style.borderRadius = '0 9999px 9999px 0';
-        }
-      });
-    }
-  };
-
-  // Ejecutar cuando cambia el tema
-  useEffect(() => {
-    updateBackgroundPosition(theme);
-  }, [theme]);
-
-  // Ejecutar después del montaje para la posición inicial
-  useEffect(() => {
-    if (isOpen && backgroundRef.current) {
-      setTimeout(() => {
-        updateBackgroundPosition(theme);
-      }, 100);
-    }
-  }, [isOpen, theme]);
 
   // Cerrar el menú al hacer clic en un enlace
   const handleLinkClick = () => {
@@ -129,7 +72,7 @@ const MobileMenu = ({ isOpen, onClose }: MobileMenuProps) => {
         transition: "opacity 350ms cubic-bezier(0.4, 0, 0.2, 1)"
       }}
     >
-      {/* Overlay de fondo oscuro con animación de fade */}
+      {/* Overlay de fondo oscuro con animación de fade y blur */}
       <div 
         className={cn(
           "absolute inset-0 bg-black/50 backdrop-blur-sm",
@@ -161,8 +104,8 @@ const MobileMenu = ({ isOpen, onClose }: MobileMenuProps) => {
         </div>
         
         {/* Contenido del menú con animación de fadeIn para los elementos */}
-        <div className="px-6 pb-10 flex-1 flex flex-col overflow-y-auto">
-          <nav className="flex flex-col space-y-2 mb-6">
+        <div className="flex-1 flex flex-col overflow-y-auto">
+          <nav className="flex flex-col space-y-2 px-6 mb-4">
             {/* Links con animación de fade-in secuencial */}
             <Link 
               to="/" 
@@ -222,58 +165,81 @@ const MobileMenu = ({ isOpen, onClose }: MobileMenuProps) => {
             </Link>
           </nav>
           
-          <Separator className="my-6 animate-menu-item" style={{ animationDelay: "250ms" }} />
+          {/* Separador que va de extremo a extremo */}
+          <Separator className="animate-menu-item w-full" style={{ animationDelay: "250ms", margin: "0.5rem 0" }} />
           
-          <div className="flex justify-center my-6 animate-menu-item" style={{ animationDelay: "300ms" }}>
-            <div ref={containerRef} className="border border-[#F8F8F8] rounded-full flex relative overflow-hidden p-0">
-              {/* Fondo animado */}
-              <div 
-                ref={backgroundRef} 
-                className="absolute bg-[#F8F8F8]" 
-                style={{
-                  left: '1px',
-                  top: '4px',
-                  bottom: '4px',
-                  width: '56px',
-                  height: 'calc(100% - 8px)',
-                  willChange: 'transform, border-radius, width'
-                }} 
-              />
-
-              {/* Botones de cambio de tema */}
-              <button 
+          {/* Nuevos botones: Buscar con IA y Filtrar */}
+          <div className="px-6 my-4 flex flex-col space-y-2 animate-menu-item" style={{ animationDelay: "300ms" }}>
+            <Button 
+              variant="ghost" 
+              className="justify-start px-4 py-3 h-auto text-black hover:bg-[#F8F8F8] rounded-lg w-full font-medium"
+            >
+              <div className="flex items-center space-x-3">
+                <Search className="h-5 w-5" />
+                <span>Buscar con IA</span>
+              </div>
+            </Button>
+            
+            <Button 
+              variant="ghost" 
+              className="justify-start px-4 py-3 h-auto text-black hover:bg-[#F8F8F8] rounded-lg w-full font-medium"
+            >
+              <div className="flex items-center space-x-3">
+                <SlidersHorizontal className="h-5 w-5" />
+                <span>Filtrar</span>
+              </div>
+            </Button>
+          </div>
+          
+          {/* Otro separador que va de extremo a extremo */}
+          <Separator className="animate-menu-item w-full" style={{ animationDelay: "350ms", margin: "0.5rem 0" }} />
+          
+          {/* Selector de tema rediseñado */}
+          <div className="px-6 my-4 animate-menu-item" style={{ animationDelay: "400ms" }}>
+            <p className="text-sm font-medium text-gray-500 mb-3">Modo de visualización</p>
+            <div className="grid grid-cols-3 gap-2">
+              <Button 
                 onClick={() => setTheme("light")} 
-                className="rounded-l-full w-14 h-16 flex items-center justify-center z-10 relative"
+                variant={theme === "light" ? "default" : "ghost"}
+                className={`h-auto py-3 flex flex-col items-center justify-center ${theme === "light" ? "bg-[#D4DDFF] text-[#222845]" : "hover:bg-[#F8F8F8] text-gray-700"}`}
               >
-                <Sun className={`h-5 w-5 transition-all duration-200 ${theme === 'light' ? 'text-gray-800' : ''}`} />
-              </button>
+                <Sun className="h-5 w-5 mb-1" />
+                <span className="text-xs font-medium">Claro</span>
+              </Button>
               
-              <button 
+              <Button 
                 onClick={() => setTheme("dark")} 
-                className="w-14 h-16 flex items-center justify-center z-10 relative"
+                variant={theme === "dark" ? "default" : "ghost"}
+                className={`h-auto py-3 flex flex-col items-center justify-center ${theme === "dark" ? "bg-[#D4DDFF] text-[#222845]" : "hover:bg-[#F8F8F8] text-gray-700"}`}
               >
-                <Moon className={`h-5 w-5 transition-all duration-200 ${theme === 'dark' ? 'text-gray-800' : ''}`} />
-              </button>
+                <Moon className="h-5 w-5 mb-1" />
+                <span className="text-xs font-medium">Oscuro</span>
+              </Button>
               
-              <button 
+              <Button 
                 onClick={() => setTheme("system")} 
-                className="rounded-r-full w-14 h-16 flex items-center justify-center z-10 relative"
+                variant={theme === "system" ? "default" : "ghost"}
+                className={`h-auto py-3 flex flex-col items-center justify-center ${theme === "system" ? "bg-[#D4DDFF] text-[#222845]" : "hover:bg-[#F8F8F8] text-gray-700"}`}
               >
-                <Monitor className={`h-5 w-5 transition-all duration-200 ${theme === 'system' ? 'text-gray-800' : ''}`} />
-              </button>
+                <Monitor className="h-5 w-5 mb-1" />
+                <span className="text-xs font-medium">Sistema</span>
+              </Button>
             </div>
           </div>
           
-          <div className="flex flex-col space-y-3 mt-auto mb-10">
+          {/* Separador final */}
+          <Separator className="animate-menu-item w-full" style={{ animationDelay: "450ms", margin: "0.5rem 0" }} />
+          
+          <div className="flex flex-col space-y-3 p-6 mt-auto">
             <Button 
               className="w-full rounded-full bg-[#D4DDFF] text-[#222845] hover:bg-[#C4D1FF] animate-menu-item"
-              style={{ animationDelay: "350ms" }}
+              style={{ animationDelay: "500ms" }}
             >
               Iniciar sesión/Registrarse
             </Button>
             <Button 
               className="w-full rounded-full bg-[#E7D3D3] text-black hover:bg-[#DDCACA] animate-menu-item"
-              style={{ animationDelay: "400ms" }}
+              style={{ animationDelay: "550ms" }}
             >
               Promocionarse como artista
             </Button>
