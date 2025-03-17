@@ -131,7 +131,7 @@ const Navbar = ({
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent 
-              className="bg-white dark:bg-[#575654] border-none rounded-xl p-2 shadow-none mr-3 min-w-[150px]" 
+              className="bg-white dark:bg-[#575654] border-none rounded-3xl p-3 shadow-none mr-3 min-w-[150px]" 
               align="end"
             >
               <DropdownMenuItem 
