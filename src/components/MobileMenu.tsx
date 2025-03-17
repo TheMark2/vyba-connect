@@ -35,7 +35,7 @@ const MobileMenu = ({ isOpen, onClose }: MobileMenuProps) => {
         if (!isOpen) {
           document.body.style.overflow = '';
         }
-      }, 300); // Esperar a que termine la animación de salida
+      }, 350); // Esperar a que termine la animación de salida
     }
 
     // Limpiar el efecto cuando se desmonta el componente
@@ -126,42 +126,49 @@ const MobileMenu = ({ isOpen, onClose }: MobileMenuProps) => {
         isOpen ? "opacity-100" : "opacity-0 pointer-events-none"
       )}
       style={{
-        transition: "opacity 300ms ease"
+        transition: "opacity 350ms cubic-bezier(0.4, 0, 0.2, 1)"
       }}
     >
-      {/* Overlay de fondo oscuro */}
+      {/* Overlay de fondo oscuro con animación de fade */}
       <div 
         className={cn(
-          "absolute inset-0 bg-black/50",
+          "absolute inset-0 bg-black/50 backdrop-blur-sm",
           isOpen ? "opacity-100" : "opacity-0"
         )}
-        style={{ transition: "opacity 300ms ease" }}
+        style={{ transition: "opacity 350ms cubic-bezier(0.4, 0, 0.2, 1)" }}
         onClick={onClose}
       />
       
-      {/* Panel del menú */}
+      {/* Panel del menú con animación de entrada/salida */}
       <div 
         ref={menuRef}
         className={cn(
-          "absolute top-0 right-0 bottom-0 w-full max-w-full h-full bg-white shadow-lg flex flex-col transition-transform duration-300 ease-in-out",
-          isOpen ? "translate-x-0" : "translate-x-full"
+          "absolute top-0 right-0 bottom-0 w-full max-w-full h-full bg-white shadow-lg flex flex-col",
+          isOpen ? "animate-slide-in-right" : "animate-slide-out-right"
         )}
         onTransitionEnd={handleTransitionEnd}
       >
         {/* Encabezado con botón de cierre */}
         <div className="flex justify-end p-6">
-          <Button variant="ghost" size="icon" className="h-10 w-10" onClick={onClose}>
+          <Button 
+            variant="ghost" 
+            size="icon" 
+            className="h-10 w-10 hover:bg-slate-100 transition-colors" 
+            onClick={onClose}
+          >
             <X className="h-6 w-6" />
           </Button>
         </div>
         
-        {/* Contenido del menú */}
+        {/* Contenido del menú con animación de fadeIn para los elementos */}
         <div className="px-6 pb-10 flex-1 flex flex-col overflow-y-auto">
           <nav className="flex flex-col space-y-2 mb-6">
+            {/* Links con animación de fade-in secuencial */}
             <Link 
               to="/" 
-              className={`px-4 py-3 rounded-lg ${isActive('/') ? 'bg-[#F8F8F8]' : 'hover:bg-[#F8F8F8]'} text-black font-medium transition-all duration-200`}
+              className={`px-4 py-3 rounded-lg ${isActive('/') ? 'bg-[#F8F8F8]' : 'hover:bg-[#F8F8F8]'} text-black font-medium transition-all duration-200 animate-menu-item`}
               onClick={handleLinkClick}
+              style={{ animationDelay: "50ms" }}
             >
               <div className="flex items-center space-x-3">
                 <Home 
@@ -173,8 +180,9 @@ const MobileMenu = ({ isOpen, onClose }: MobileMenuProps) => {
             </Link>
             <Link 
               to="/artistas" 
-              className={`px-4 py-3 rounded-lg ${isActive('/artistas') ? 'bg-[#F8F8F8]' : 'hover:bg-[#F8F8F8]'} text-black font-medium transition-all duration-200`}
+              className={`px-4 py-3 rounded-lg ${isActive('/artistas') ? 'bg-[#F8F8F8]' : 'hover:bg-[#F8F8F8]'} text-black font-medium transition-all duration-200 animate-menu-item`}
               onClick={handleLinkClick}
+              style={{ animationDelay: "100ms" }}
             >
               <div className="flex items-center space-x-3">
                 <Users 
@@ -186,8 +194,9 @@ const MobileMenu = ({ isOpen, onClose }: MobileMenuProps) => {
             </Link>
             <Link 
               to="/todos-generos" 
-              className={`px-4 py-3 rounded-lg ${isActive('/todos-generos') ? 'bg-[#F8F8F8]' : 'hover:bg-[#F8F8F8]'} text-black font-medium transition-all duration-200`}
+              className={`px-4 py-3 rounded-lg ${isActive('/todos-generos') ? 'bg-[#F8F8F8]' : 'hover:bg-[#F8F8F8]'} text-black font-medium transition-all duration-200 animate-menu-item`}
               onClick={handleLinkClick}
+              style={{ animationDelay: "150ms" }}
             >
               <div className="flex items-center space-x-3">
                 <Palette 
@@ -199,8 +208,9 @@ const MobileMenu = ({ isOpen, onClose }: MobileMenuProps) => {
             </Link>
             <Link 
               to="/todos-artistas" 
-              className={`px-4 py-3 rounded-lg ${isActive('/todos-artistas') ? 'bg-[#F8F8F8]' : 'hover:bg-[#F8F8F8]'} text-black font-medium transition-all duration-200`}
+              className={`px-4 py-3 rounded-lg ${isActive('/todos-artistas') ? 'bg-[#F8F8F8]' : 'hover:bg-[#F8F8F8]'} text-black font-medium transition-all duration-200 animate-menu-item`}
               onClick={handleLinkClick}
+              style={{ animationDelay: "200ms" }}
             >
               <div className="flex items-center space-x-3">
                 <Music 
@@ -212,9 +222,9 @@ const MobileMenu = ({ isOpen, onClose }: MobileMenuProps) => {
             </Link>
           </nav>
           
-          <Separator className="my-6" />
+          <Separator className="my-6 animate-menu-item" style={{ animationDelay: "250ms" }} />
           
-          <div className="flex justify-center my-6">
+          <div className="flex justify-center my-6 animate-menu-item" style={{ animationDelay: "300ms" }}>
             <div ref={containerRef} className="border border-[#F8F8F8] rounded-full flex relative overflow-hidden p-0">
               {/* Fondo animado */}
               <div 
@@ -255,10 +265,16 @@ const MobileMenu = ({ isOpen, onClose }: MobileMenuProps) => {
           </div>
           
           <div className="flex flex-col space-y-3 mt-auto mb-10">
-            <Button className="w-full rounded-full bg-[#D4DDFF] text-[#222845] hover:bg-[#C4D1FF]">
+            <Button 
+              className="w-full rounded-full bg-[#D4DDFF] text-[#222845] hover:bg-[#C4D1FF] animate-menu-item"
+              style={{ animationDelay: "350ms" }}
+            >
               Iniciar sesión/Registrarse
             </Button>
-            <Button className="w-full rounded-full bg-[#E7D3D3] text-black hover:bg-[#DDCACA]">
+            <Button 
+              className="w-full rounded-full bg-[#E7D3D3] text-black hover:bg-[#DDCACA] animate-menu-item"
+              style={{ animationDelay: "400ms" }}
+            >
               Promocionarse como artista
             </Button>
           </div>
