@@ -203,15 +203,15 @@ const MobileMenu = ({ isOpen, onClose }: MobileMenuProps) => {
               onValueChange={(value) => value && setTheme(value)}
               className="w-full"
             >
-              <ToggleGroupItem value="light" className="flex-1 flex items-center justify-center py-3">
+              <ToggleGroupItem value="light" className="flex-1 flex items-center justify-center py-5">
                 <Sun className="h-5 w-5" />
               </ToggleGroupItem>
               
-              <ToggleGroupItem value="dark" className="flex-1 flex items-center justify-center py-3">
+              <ToggleGroupItem value="dark" className="flex-1 flex items-center justify-center py-5">
                 <Moon className="h-5 w-5" />
               </ToggleGroupItem>
               
-              <ToggleGroupItem value="system" className="flex-1 flex items-center justify-center py-3">
+              <ToggleGroupItem value="system" className="flex-1 flex items-center justify-center py-5">
                 <Monitor className="h-5 w-5" />
               </ToggleGroupItem>
             </ToggleGroup>
