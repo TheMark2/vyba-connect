@@ -135,21 +135,21 @@ const Navbar = ({
               align="end"
             >
               <DropdownMenuItem 
-                className="rounded-lg px-3 py-3 flex items-center gap-4 hover:bg-[#F8F8F8] dark:hover:bg-[#444341] cursor-pointer transition-colors duration-300"
+                className="rounded-lg px-3 py-3 flex items-center gap-4 hover:bg-[#F8F8F8] dark:hover:bg-[#444341] cursor-pointer transition-colors duration-300 focus:bg-[#F8F8F8] dark:focus:bg-[#444341]"
                 onClick={() => setTheme('light')}
               >
                 <Sun className="h-5 w-5" />
                 <span className="text-base font-medium">Claro</span>
               </DropdownMenuItem>
               <DropdownMenuItem 
-                className="rounded-lg px-3 py-3 flex items-center gap-4 hover:bg-[#F8F8F8] dark:hover:bg-[#444341] cursor-pointer transition-colors duration-300"
+                className="rounded-lg px-3 py-3 flex items-center gap-4 hover:bg-[#F8F8F8] dark:hover:bg-[#444341] cursor-pointer transition-colors duration-300 focus:bg-[#F8F8F8] dark:focus:bg-[#444341]"
                 onClick={() => setTheme('dark')}
               >
                 <Moon className="h-5 w-5" />
                 <span className="text-base font-medium">Oscuro</span>
               </DropdownMenuItem>
               <DropdownMenuItem 
-                className="rounded-lg px-3 py-3 flex items-center gap-4 hover:bg-[#F8F8F8] dark:hover:bg-[#444341] cursor-pointer transition-colors duration-300"
+                className="rounded-lg px-3 py-3 flex items-center gap-4 hover:bg-[#F8F8F8] dark:hover:bg-[#444341] cursor-pointer transition-colors duration-300 focus:bg-[#F8F8F8] dark:focus:bg-[#444341]"
                 onClick={() => setTheme('system')}
               >
                 <LaptopIcon className="h-5 w-5" />
