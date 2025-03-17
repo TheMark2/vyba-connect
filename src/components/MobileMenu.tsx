@@ -36,7 +36,7 @@ const MobileMenu = () => {
       const containerRect = container.getBoundingClientRect();
       const buttonRect = activeButton.getBoundingClientRect();
       
-      // Calcular la posición relativa
+      // Calcular la posición relativa y centrada
       const left = buttonRect.left - containerRect.left;
       
       // Aplicar transformación
@@ -82,10 +82,9 @@ const MobileMenu = () => {
           {/* Fondo animado que se adapta */}
           <div 
             ref={backgroundRef}
-            className="absolute top-1 bottom-1 left-1 bg-[#F8F8F8] transition-all duration-300 ease-in-out"
+            className="absolute inset-y-1 left-1 bg-[#F8F8F8] transition-all duration-500 ease-out"
             style={{ 
               width: '56px', 
-              height: 'calc(100% - 8px)', 
               borderRadius: '9999px 0 0 9999px' // Inicialmente redondeado a la izquierda
             }}
           />
@@ -93,27 +92,21 @@ const MobileMenu = () => {
           {/* Botones de cambio de tema */}
           <button
             onClick={() => setTheme("light")}
-            className={`rounded-l-full w-14 h-10 flex items-center justify-center z-10 relative ${
-              theme !== 'light' ? 'border border-[#F8F8F8]' : ''
-            }`}
+            className="rounded-l-full w-14 h-10 flex items-center justify-center z-10 relative"
           >
             <Sun className="h-5 w-5" />
           </button>
           
           <button
             onClick={() => setTheme("dark")}
-            className={`w-14 h-10 flex items-center justify-center z-10 relative ${
-              theme !== 'dark' ? 'border border-[#F8F8F8]' : ''
-            }`}
+            className="w-14 h-10 flex items-center justify-center z-10 relative"
           >
             <Moon className="h-5 w-5" />
           </button>
           
           <button
             onClick={() => setTheme("system")}
-            className={`rounded-r-full w-14 h-10 flex items-center justify-center z-10 relative ${
-              theme !== 'system' ? 'border border-[#F8F8F8]' : ''
-            }`}
+            className="rounded-r-full w-14 h-10 flex items-center justify-center z-10 relative"
           >
             <Monitor className="h-5 w-5" />
           </button>
