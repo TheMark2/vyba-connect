@@ -43,11 +43,39 @@ export interface ButtonProps
 const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
   ({ className, variant, size, asChild = false, ...props }, ref) => {
     const Comp = asChild ? Slot : "button"
+    
+    // Función para manejar el efecto de onda desde el punto de clic
+    const handleRippleEffect = (event: React.MouseEvent<HTMLButtonElement>) => {
+      const button = event.currentTarget;
+      const rect = button.getBoundingClientRect();
+      
+      const x = event.clientX - rect.left;
+      const y = event.clientY - rect.top;
+      
+      const ripple = document.createElement('span');
+      ripple.className = 'ripple-effect';
+      ripple.style.left = `${x}px`;
+      ripple.style.top = `${y}px`;
+      
+      button.appendChild(ripple);
+      
+      // Eliminar el elemento después de la animación
+      setTimeout(() => {
+        ripple.remove();
+      }, 800);
+      
+      // Llamar al onClick original si existe
+      if (props.onClick) {
+        props.onClick(event);
+      }
+    };
+    
     return (
       <Comp
         className={cn(buttonVariants({ variant, size, className }))}
         ref={ref}
         {...props}
+        onClick={handleRippleEffect}
       />
     )
   }

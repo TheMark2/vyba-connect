@@ -42,13 +42,39 @@ const Toggle = React.forwardRef<
     VariantProps<typeof toggleVariants> & {
       position?: "start" | "middle" | "end" | "single" | "default"
     }
->(({ className, variant, size, position, ...props }, ref) => (
-  <TogglePrimitive.Root
-    ref={ref}
-    className={cn(toggleVariants({ variant, size, position, className }))}
-    {...props}
-  />
-))
+>(({ className, variant, size, position, ...props }, ref) => {
+  // Función para manejar el efecto de onda desde el punto de clic
+  const handleRippleEffect = (event: React.MouseEvent<HTMLButtonElement>) => {
+    const button = event.currentTarget;
+    const rect = button.getBoundingClientRect();
+    
+    const x = event.clientX - rect.left;
+    const y = event.clientY - rect.top;
+    
+    const ripple = document.createElement('span');
+    ripple.className = 'ripple-effect';
+    ripple.style.left = `${x}px`;
+    ripple.style.top = `${y}px`;
+    
+    button.appendChild(ripple);
+    
+    // Eliminar el elemento después de la animación
+    setTimeout(() => {
+      ripple.remove();
+    }, 800);
+    
+    // No modificamos el onClick original porque Radix UI lo maneja internamente
+  };
+
+  return (
+    <TogglePrimitive.Root
+      ref={ref}
+      className={cn(toggleVariants({ variant, size, position, className }))}
+      {...props}
+      onMouseDown={handleRippleEffect}
+    />
+  )
+})
 
 Toggle.displayName = TogglePrimitive.Root.displayName
 

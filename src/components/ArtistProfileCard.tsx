@@ -87,6 +87,27 @@ const ArtistProfileCard = ({
     
     lastClickTimeRef.current = currentTime;
   };
+
+  // Función para manejar el efecto de onda desde el punto de clic
+  const handleRippleEffect = (event: React.MouseEvent<HTMLButtonElement>) => {
+    const button = event.currentTarget;
+    const rect = button.getBoundingClientRect();
+    
+    const x = event.clientX - rect.left;
+    const y = event.clientY - rect.top;
+    
+    const ripple = document.createElement('span');
+    ripple.className = 'ripple-effect';
+    ripple.style.left = `${x}px`;
+    ripple.style.top = `${y}px`;
+    
+    button.appendChild(ripple);
+    
+    // Eliminar el elemento después de la animación
+    setTimeout(() => {
+      ripple.remove();
+    }, 800);
+  };
   
   return <div 
     className={cn("flex flex-col overflow-hidden bg-transparent transition-all duration-300", className)} 
@@ -124,8 +145,9 @@ const ArtistProfileCard = ({
           </Badge>
           <button 
             onClick={handleFavoriteClick} 
+            onMouseDown={handleRippleEffect}
             className={cn(
-              "h-7 w-7 rounded-full bg-white flex items-center justify-center transition-all duration-300",
+              "h-7 w-7 rounded-full bg-white flex items-center justify-center transition-all duration-300 relative overflow-hidden",
               isAnimating && favorite && "animate-heartbeat"
             )}
           >

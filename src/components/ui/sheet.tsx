@@ -10,7 +10,48 @@ const Sheet = SheetPrimitive.Root
 
 const SheetTrigger = SheetPrimitive.Trigger
 
-const SheetClose = SheetPrimitive.Close
+const SheetClose = React.forwardRef<
+  React.ElementRef<typeof SheetPrimitive.Close>,
+  React.ComponentPropsWithoutRef<typeof SheetPrimitive.Close>
+>(({ className, ...props }, ref) => {
+  // Función para manejar el efecto de onda desde el punto de clic
+  const handleRippleEffect = (event: React.MouseEvent<HTMLButtonElement>) => {
+    const button = event.currentTarget;
+    const rect = button.getBoundingClientRect();
+    
+    const x = event.clientX - rect.left;
+    const y = event.clientY - rect.top;
+    
+    const ripple = document.createElement('span');
+    ripple.className = 'ripple-effect';
+    ripple.style.left = `${x}px`;
+    ripple.style.top = `${y}px`;
+    
+    button.appendChild(ripple);
+    
+    // Eliminar el elemento después de la animación
+    setTimeout(() => {
+      ripple.remove();
+    }, 800);
+  };
+
+  return (
+    <SheetPrimitive.Close
+      ref={ref}
+      className={cn(
+        "absolute right-4 top-4 rounded-sm opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:pointer-events-none data-[state=open]:bg-secondary", 
+        className
+      )}
+      onMouseDown={handleRippleEffect}
+      {...props}
+    >
+      <X className="h-4 w-4" />
+      <span className="sr-only">Close</span>
+    </SheetPrimitive.Close>
+  );
+});
+
+SheetClose.displayName = SheetPrimitive.Close.displayName;
 
 const SheetPortal = SheetPrimitive.Portal
 
@@ -67,6 +108,7 @@ const SheetContent = React.forwardRef<
       <SheetPrimitive.Title className="sr-only">
         Menú de navegación
       </SheetPrimitive.Title>
+      <SheetClose />
     </SheetPrimitive.Content>
   </SheetPortal>
 ))
