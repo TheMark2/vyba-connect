@@ -6,6 +6,7 @@ import { Menu, X } from "lucide-react";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import MobileMenu from "@/components/MobileMenu";
+import { useState } from "react";
 
 interface NavbarProps {
   className?: string;
@@ -17,6 +18,7 @@ const Navbar = ({
   const location = useLocation();
   const isActive = (path: string) => location.pathname === path;
   const isMobile = useIsMobile();
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   return <div className={cn("mx-auto px-6 md:px-10 lg:px-14 xl:px-16 h-24 flex items-center justify-between", className)}>
       {/* Logo y enlaces alineados a la izquierda */}
@@ -49,10 +51,13 @@ const Navbar = ({
       {/* Botones de acción */}
       <div className="flex items-center space-x-3">
         {isMobile ? (
-          <Sheet>
+          <Sheet open={isMenuOpen} onOpenChange={setIsMenuOpen}>
             <SheetTrigger asChild>
-              <Button variant="ghost" size="icon" className="md:hidden">
-                <Menu className="h-6 w-6" />
+              <Button variant="ghost" size="icon" className="md:hidden relative w-10 h-10 flex items-center justify-center">
+                <div className="relative w-6 h-6">
+                  <Menu className={`h-6 w-6 absolute transition-all duration-300 ${isMenuOpen ? 'opacity-0 rotate-90 scale-0' : 'opacity-100 rotate-0 scale-100'}`} />
+                  <X className={`h-6 w-6 absolute transition-all duration-300 ${isMenuOpen ? 'opacity-100 rotate-0 scale-100' : 'opacity-0 rotate-90 scale-0'}`} />
+                </div>
               </Button>
             </SheetTrigger>
             <MobileMenu />
