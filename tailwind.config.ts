@@ -93,6 +93,10 @@ export default {
           "0%": { transform: "translateX(-100%)" },
           "100%": { transform: "translateX(0)" },
         },
+        "image-slide": {
+          "0%": { opacity: "0.4", transform: "translateX(20px)" },
+          "100%": { opacity: "1", transform: "translateX(0)" },
+        },
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
@@ -103,6 +107,7 @@ export default {
         "fadeInOut": "fadeInOut 1s ease-in-out forwards",
         "slide-left": "slide-left 0.5s ease-out",
         "slide-right": "slide-right 0.5s ease-out",
+        "image-slide": "image-slide 0.5s ease-out",
       },
     },
   },

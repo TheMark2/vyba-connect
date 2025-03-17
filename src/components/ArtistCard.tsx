@@ -2,6 +2,14 @@
 import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { useState } from "react";
+import {
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+  CarouselNext,
+  CarouselPrevious,
+} from "@/components/ui/carousel";
+
 export type CardType = "género" | "tipo";
 interface ArtistCardProps {
   type: CardType;
@@ -28,6 +36,14 @@ const ArtistCard = ({
   const visibleAvatars = artistAvatars.slice(0, MAX_VISIBLE_AVATARS);
   const extraAvatars = artistAvatars.length > MAX_VISIBLE_AVATARS ? artistAvatars.length - MAX_VISIBLE_AVATARS : 0;
   
+  // Configuración para Carousel para asegurar que haya transiciones suaves
+  const carouselOptions = {
+    loop: true,
+    draggable: true,
+    slidesToScroll: 1,
+    inViewThreshold: 0.8,
+  };
+  
   // Nuevo diseño según la imagen proporcionada
   return (
     <div 
@@ -47,14 +63,20 @@ const ArtistCard = ({
       </div>
       
       <div className="flex relative -space-x-2">
-        {visibleAvatars.map((avatar, index) => (
-          <Avatar key={index} className="border-2 border-[#F5F1EB] dark:border-[#444341] h-7 w-7" style={{
-            zIndex: MAX_VISIBLE_AVATARS - index // Asegurando que los avatares de la izquierda estén por encima
-          }}>
-            <AvatarImage src={avatar} alt={`Artista ${index + 1}`} />
-            <AvatarFallback>{name.charAt(0)}</AvatarFallback>
-          </Avatar>
-        ))}
+        <Carousel opts={carouselOptions} className="w-auto">
+          <CarouselContent className="transition-transform duration-500 ease-in-out">
+            {visibleAvatars.map((avatar, index) => (
+              <CarouselItem key={index} className="transition-all duration-500">
+                <Avatar key={index} className="border-2 border-[#F5F1EB] dark:border-[#444341] h-7 w-7" style={{
+                  zIndex: MAX_VISIBLE_AVATARS - index // Asegurando que los avatares de la izquierda estén por encima
+                }}>
+                  <AvatarImage src={avatar} alt={`Artista ${index + 1}`} className="transition-all duration-500" />
+                  <AvatarFallback>{name.charAt(0)}</AvatarFallback>
+                </Avatar>
+              </CarouselItem>
+            ))}
+          </CarouselContent>
+        </Carousel>
         
         {extraAvatars > 0 && (
           <div 
