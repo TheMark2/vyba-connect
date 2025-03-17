@@ -14,7 +14,7 @@ interface MobileMenuProps {
 }
 
 const MobileMenu = ({ isOpen, onClose }: MobileMenuProps) => {
-  const [theme, setTheme] = useState("light");
+  const [theme, setTheme] = useState("system");
   const [isAnimating, setIsAnimating] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
   const location = useLocation();
@@ -27,29 +27,74 @@ const MobileMenu = ({ isOpen, onClose }: MobileMenuProps) => {
     if (value) {
       setTheme(value);
       
-      // Aplicar la clase dark al documento
+      // Aplicar la clase dark al documento con animación
       if (value === 'dark') {
+        document.documentElement.classList.add('theme-transition');
         document.documentElement.classList.add('dark');
+        setTimeout(() => {
+          document.documentElement.classList.remove('theme-transition');
+        }, 500);
       } else if (value === 'light') {
+        document.documentElement.classList.add('theme-transition');
         document.documentElement.classList.remove('dark');
+        setTimeout(() => {
+          document.documentElement.classList.remove('theme-transition');
+        }, 500);
       } else if (value === 'system') {
+        document.documentElement.classList.add('theme-transition');
         const isDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches;
         if (isDarkMode) {
           document.documentElement.classList.add('dark');
         } else {
           document.documentElement.classList.remove('dark');
         }
+        setTimeout(() => {
+          document.documentElement.classList.remove('theme-transition');
+        }, 500);
       }
     }
   };
 
   // Configurar el tema inicial
   useEffect(() => {
-    const isDarkMode = document.documentElement.classList.contains('dark');
-    if (isDarkMode) {
-      setTheme('dark');
+    // Verificar si existe preferencia guardada, sino usar el tema del sistema
+    const savedTheme = localStorage.getItem('theme');
+    
+    if (savedTheme) {
+      setTheme(savedTheme);
+    } else {
+      setTheme('system');
+      const isDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches;
+      if (isDarkMode) {
+        document.documentElement.classList.add('dark');
+      } else {
+        document.documentElement.classList.remove('dark');
+      }
     }
   }, []);
+
+  // Escuchar cambios en la preferencia del sistema
+  useEffect(() => {
+    const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
+    
+    const handleChange = (e: MediaQueryListEvent) => {
+      if (theme === 'system') {
+        if (e.matches) {
+          document.documentElement.classList.add('dark');
+        } else {
+          document.documentElement.classList.remove('dark');
+        }
+      }
+    };
+    
+    mediaQuery.addEventListener('change', handleChange);
+    return () => mediaQuery.removeEventListener('change', handleChange);
+  }, [theme]);
+
+  // Guardar el tema cuando cambia
+  useEffect(() => {
+    localStorage.setItem('theme', theme);
+  }, [theme]);
 
   // Gestionar la animación al abrir/cerrar y el scrolling del body
   useEffect(() => {
@@ -232,15 +277,15 @@ const MobileMenu = ({ isOpen, onClose }: MobileMenuProps) => {
               onValueChange={handleThemeChange}
               className="w-full"
             >
-              <ToggleGroupItem value="light" className="flex-1 flex items-center justify-center py-5">
+              <ToggleGroupItem value="light" className="flex-1 flex items-center justify-center py-6">
                 <Sun className="h-5 w-5" />
               </ToggleGroupItem>
               
-              <ToggleGroupItem value="dark" className="flex-1 flex items-center justify-center py-5">
+              <ToggleGroupItem value="dark" className="flex-1 flex items-center justify-center py-6">
                 <Moon className="h-5 w-5" />
               </ToggleGroupItem>
               
-              <ToggleGroupItem value="system" className="flex-1 flex items-center justify-center py-5">
+              <ToggleGroupItem value="system" className="flex-1 flex items-center justify-center py-6">
                 <Monitor className="h-5 w-5" />
               </ToggleGroupItem>
             </ToggleGroup>

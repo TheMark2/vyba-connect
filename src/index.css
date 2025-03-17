@@ -77,6 +77,11 @@
     @apply bg-vyba-cream text-black antialiased dark:bg-vyba-dark-bg dark:text-white;
   }
   
+  /* Animación de transición entre temas */
+  .theme-transition {
+    transition: background-color 0.5s ease, color 0.5s ease, border-color 0.5s ease, fill 0.5s ease, stroke 0.5s ease;
+  }
+  
   /* Añadir padding-top al cuerpo en móvil para compensar la navbar fija */
   @media (max-width: 768px) {
     body {
@@ -93,12 +98,40 @@
 @layer components {
   .btn-primary {
     @apply bg-primary hover:bg-primary-hover text-primary-foreground px-6 py-3 rounded-full transition-colors 
-    duration-200 inline-flex items-center justify-center font-medium;
+    duration-200 inline-flex items-center justify-center font-medium relative overflow-hidden;
   }
   
   .btn-secondary {
     @apply bg-secondary hover:bg-secondary-hover text-secondary-foreground px-6 py-3 rounded-full 
-    transition-colors duration-200 inline-flex items-center justify-center font-medium dark:bg-vyba-dark-secondary dark:hover:bg-opacity-80 dark:text-white;
+    transition-colors duration-200 inline-flex items-center justify-center font-medium dark:bg-vyba-dark-secondary dark:hover:bg-opacity-80 dark:text-white relative overflow-hidden;
+  }
+
+  /* Efecto radial para botones */
+  .btn-primary::after,
+  .btn-secondary::after,
+  button::after {
+    content: '';
+    display: block;
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    pointer-events: none;
+    background-image: radial-gradient(circle, rgba(255, 255, 255, 0.3) 10%, transparent 10.01%);
+    background-repeat: no-repeat;
+    background-position: 50%;
+    transform: scale(10, 10);
+    opacity: 0;
+    transition: transform 0.5s, opacity 0.8s;
+  }
+
+  .btn-primary:active::after,
+  .btn-secondary:active::after,
+  button:active::after {
+    transform: scale(0, 0);
+    opacity: 0.3;
+    transition: 0s;
   }
 
   .card-artist {
