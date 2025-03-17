@@ -58,22 +58,22 @@ const MobileMenu = () => {
   }, []);
   return <SheetContent side="bottom" className="h-[calc(100vh-96px)] bg-white pt-10 overflow-y-auto mt-24 border-t-0">
       <nav className="flex flex-col space-y-2 mb-6">
-        <Link to="/" className="px-3 py-4 rounded-lg bg-[#F8F8F8] text-black font-medium">
+        <Link to="/" className="px-4 py-3 rounded-lg bg-[#F8F8F8] text-black font-medium">
           Inicio
         </Link>
-        <Link to="/artistas" className="px-4 py-4 rounded-lg hover:bg-[#F8F8F8] text-black font-medium">
+        <Link to="/artistas" className="px-4 py-3 rounded-lg hover:bg-[#F8F8F8] text-black font-medium">
           Artistas
         </Link>
-        <Link to="/todos-generos" className="px-4 py-4 rounded-lg hover:bg-[#F8F8F8] text-black font-medium">
+        <Link to="/todos-generos" className="px-4 py-3 rounded-lg hover:bg-[#F8F8F8] text-black font-medium">
           Todos los géneros
         </Link>
-        <Link to="/todos-artistas" className="px-4 py-4 rounded-lg hover:bg-[#F8F8F8] text-black font-medium">
+        <Link to="/todos-artistas" className="px-4 py-3 rounded-lg hover:bg-[#F8F8F8] text-black font-medium">
           Todos los artistas
         </Link>
       </nav>
       <Separator className="my-6" />
       <div className="flex justify-center my-6">
-        <div ref={containerRef} className="border-1 border-[#F8F8F8] rounded-full flex relative overflow-hidden">
+        <div ref={containerRef} className="border border-[#F8F8F8] rounded-full flex relative overflow-hidden">
           {/* Fondo animado */}
           <div ref={backgroundRef} className="absolute bg-[#F8F8F8]" style={{
           left: '1px',
@@ -85,15 +85,15 @@ const MobileMenu = () => {
         }} />
 
           {/* Botones de cambio de tema */}
-          <button onClick={() => setTheme("light")} className="rounded-l-full w-14 h-10 flex items-center justify-center z-10 relative">
+          <button onClick={() => setTheme("light")} className="rounded-l-full w-14 h-16 flex items-center justify-center z-10 relative">
             <Sun className="h-5 w-5" />
           </button>
           
-          <button onClick={() => setTheme("dark")} className="w-14 h-10 flex items-center justify-center z-10 relative">
+          <button onClick={() => setTheme("dark")} className="w-14 h-16 flex items-center justify-center z-10 relative">
             <Moon className="h-5 w-5" />
           </button>
           
-          <button onClick={() => setTheme("system")} className="rounded-r-full w-14 h-10 flex items-center justify-center z-10 relative">
+          <button onClick={() => setTheme("system")} className="rounded-r-full w-14 h-16 flex items-center justify-center z-10 relative">
             <Monitor className="h-5 w-5" />
           </button>
         </div>
