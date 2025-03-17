@@ -10,10 +10,10 @@ const toggleVariants = cva(
   {
     variants: {
       variant: {
-        default: "bg-transparent hover:bg-muted",
+        default: "bg-transparent hover:bg-muted dark:hover:bg-vyba-dark-secondary",
         outline:
-          "border border-input bg-transparent hover:bg-accent hover:text-accent-foreground",
-        segmented: "bg-[#F8F8F8] data-[state=on]:bg-secondary hover:bg-[#F0F0F0] text-gray-600 data-[state=on]:text-black",
+          "border border-input bg-transparent hover:bg-accent hover:text-accent-foreground dark:border-vyba-dark-secondary dark:hover:bg-vyba-dark-secondary dark:text-white",
+        segmented: "bg-[#F8F8F8] data-[state=on]:bg-secondary hover:bg-[#F0F0F0] text-gray-600 data-[state=on]:text-black dark:bg-vyba-dark-bg dark:data-[state=on]:bg-vyba-dark-secondary dark:hover:bg-vyba-dark-secondary/70 dark:text-gray-300 dark:data-[state=on]:text-white",
       },
       size: {
         default: "h-10 px-3",

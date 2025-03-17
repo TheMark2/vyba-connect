@@ -37,6 +37,36 @@
  
     --radius: 0.75rem;
   }
+
+  .dark {
+    --background: 25 1% 17%;
+    --foreground: 0 0% 98%;
+
+    --card: 25 1% 17%;
+    --card-foreground: 0 0% 98%;
+ 
+    --popover: 25 1% 17%;
+    --popover-foreground: 0 0% 98%;
+ 
+    --primary: 227 100% 98%;
+    --primary-foreground: 224 35% 20%;
+ 
+    --secondary: 25 1% 26%;
+    --secondary-foreground: 0 0% 98%;
+ 
+    --muted: 25 1% 26%;
+    --muted-foreground: 0 0% 63.9%;
+ 
+    --accent: 25 1% 26%;
+    --accent-foreground: 0 0% 98%;
+ 
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 0 0% 98%;
+
+    --border: 25 1% 36%;
+    --input: 25 1% 36%;
+    --ring: 0 0% 83.9%;
+  }
 }
 
 @layer base {
@@ -44,7 +74,7 @@
     @apply border-border font-satoshi;
   }
   body {
-    @apply bg-vyba-cream text-black antialiased;
+    @apply bg-vyba-cream text-black antialiased dark:bg-vyba-dark-bg dark:text-white;
   }
   
   /* Añadir padding-top al cuerpo en móvil para compensar la navbar fija */
@@ -68,20 +98,20 @@
   
   .btn-secondary {
     @apply bg-secondary hover:bg-secondary-hover text-secondary-foreground px-6 py-3 rounded-full 
-    transition-colors duration-200 inline-flex items-center justify-center font-medium;
+    transition-colors duration-200 inline-flex items-center justify-center font-medium dark:bg-vyba-dark-secondary dark:hover:bg-opacity-80 dark:text-white;
   }
 
   .card-artist {
-    @apply bg-white rounded-xl overflow-hidden shadow-sm hover:shadow-md transition-shadow duration-200;
+    @apply bg-white rounded-xl overflow-hidden shadow-sm hover:shadow-md transition-shadow duration-200 dark:bg-vyba-dark-bg;
   }
 
   .nav-link {
-    @apply text-black/80 hover:text-black transition-colors duration-200 px-4 py-2 rounded-lg font-medium;
+    @apply text-black/80 hover:text-black transition-colors duration-200 px-4 py-2 rounded-lg font-medium dark:text-white/80 dark:hover:text-white;
   }
 
   .input-field {
     @apply w-full px-4 py-3 rounded-lg border border-gray-200 focus:border-primary focus:ring-2 
-    focus:ring-primary/20 outline-none transition-all duration-200;
+    focus:ring-primary/20 outline-none transition-all duration-200 dark:border-vyba-dark-secondary dark:bg-vyba-dark-bg dark:text-white;
   }
   
   /* Add animation classes */
