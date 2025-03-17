@@ -1,9 +1,9 @@
-
 import React, { useState, useRef } from "react";
 import { Heart, ChevronLeft, ChevronRight } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
 import { toast } from "sonner";
+import { useIsMobile } from "@/hooks/use-mobile";
 
 interface ArtistProfileCardProps {
   name: string;
@@ -36,6 +36,7 @@ const ArtistProfileCard = ({
   const [showCenterHeart, setShowCenterHeart] = useState(false);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const lastClickTimeRef = useRef<number>(0);
+  const isMobile = useIsMobile();
   
   const handleFavoriteClick = (e: React.MouseEvent) => {
     e.stopPropagation();
@@ -47,7 +48,6 @@ const ArtistProfileCard = ({
     setFavorite(newFavoriteState);
     setIsAnimating(true);
     
-    // Solo mostrar el corazón central si es un "like" (no cuando se quita el like)
     if (newFavoriteState) {
       setShowCenterHeart(true);
       setTimeout(() => {
@@ -55,14 +55,12 @@ const ArtistProfileCard = ({
       }, 800);
     }
     
-    // Mostrar toast para feedback adicional
     toast.success(favorite ? "Eliminado de favoritos" : "Añadido a favoritos", {
       icon: favorite ? "👋" : "❤️",
       duration: 1500,
       position: "bottom-center"
     });
     
-    // Detener la animación después de 600ms
     setTimeout(() => {
       setIsAnimating(false);
     }, 600);
@@ -76,11 +74,9 @@ const ArtistProfileCard = ({
     const currentTime = new Date().getTime();
     const timeSinceLastClick = currentTime - lastClickTimeRef.current;
     
-    // Si el doble clic es menor a 300ms, consideramos que es un doble clic
     if (timeSinceLastClick < 300 && lastClickTimeRef.current !== 0) {
       toggleFavorite();
     } else {
-      // Si es un clic simple, actualizamos el tiempo y ejecutamos onClick si existe
       if (onClick) {
         onClick();
       }
@@ -89,7 +85,6 @@ const ArtistProfileCard = ({
     lastClickTimeRef.current = currentTime;
   };
 
-  // Función para manejar el efecto de onda desde el punto de clic
   const handleRippleEffect = (event: React.MouseEvent<HTMLButtonElement>) => {
     const button = event.currentTarget;
     const rect = button.getBoundingClientRect();
@@ -104,7 +99,6 @@ const ArtistProfileCard = ({
     
     button.appendChild(ripple);
     
-    // Eliminar el elemento después de la animación
     setTimeout(() => {
       ripple.remove();
     }, 800);
@@ -138,8 +132,10 @@ const ArtistProfileCard = ({
         cursor: isHovered ? 'pointer' : 'default'
       }}
     >
-      {/* Imagen principal con etiqueta de tipo y botón favorito */}
-      <div className="relative aspect-[3/4] w-full overflow-hidden rounded-3xl">
+      <div className={cn(
+        "relative w-full overflow-hidden rounded-3xl",
+        isMobile ? "aspect-[1/1]" : "aspect-[3/4]"
+      )}>
         <div className="w-full h-full transition-transform duration-300" style={{
           transform: isHovered ? 'scale(1.07)' : 'scale(1)'
         }}>
@@ -150,8 +146,7 @@ const ArtistProfileCard = ({
           />
         </div>
         
-        {/* Botones de navegación de imágenes */}
-        {isHovered && images.length > 1 && (
+        {isHovered && images.length > 1 && !isMobile && (
           <>
             <button 
               onClick={handlePrevImage}
@@ -170,7 +165,6 @@ const ArtistProfileCard = ({
           </>
         )}
 
-        {/* Indicadores de imágenes */}
         {images.length > 1 && (
           <div className="absolute bottom-3 left-1/2 transform -translate-x-1/2 flex gap-1.5 z-20">
             {images.map((_, index) => (
@@ -185,7 +179,6 @@ const ArtistProfileCard = ({
           </div>
         )}
         
-        {/* Animación de corazón en el centro cuando se da like */}
         {showCenterHeart && (
           <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
             <Heart 
@@ -196,23 +189,28 @@ const ArtistProfileCard = ({
           </div>
         )}
         
-        {/* Degradado negro de abajo a arriba */}
         <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-black/10 to-transparent"></div>
+        
         <div className="absolute top-0 left-0 w-full p-3 flex justify-between">
-          <Badge variant="outline" className="bg-white text-black py-0.5 px-3 rounded-full border-0 text-xs font-medium">
+          <Badge variant="outline" className={cn(
+            "bg-white text-black py-1 px-4 rounded-full border-0 font-medium",
+            isMobile ? "text-sm" : "text-xs"
+          )}>
             {type}
           </Badge>
           <button 
             onClick={handleFavoriteClick} 
             onMouseDown={handleRippleEffect}
             className={cn(
-              "h-7 w-7 rounded-full bg-white flex items-center justify-center transition-all duration-300 relative overflow-hidden",
+              "rounded-full bg-white flex items-center justify-center transition-all duration-300 relative overflow-hidden",
+              isMobile ? "h-9 w-9" : "h-7 w-7",
               isAnimating && favorite && "animate-heartbeat"
             )}
           >
             <Heart 
               className={cn(
-                "h-3.5 w-3.5 transition-all duration-300", 
+                "transition-all duration-300", 
+                isMobile ? "h-4.5 w-4.5" : "h-3.5 w-3.5",
                 favorite ? "fill-black stroke-black" : "stroke-black",
                 isAnimating && favorite && "scale-110"
               )} 
@@ -220,7 +218,7 @@ const ArtistProfileCard = ({
           </button>
         </div>
       </div>
-      {/* Información del artista con margin-top */}
+      
       <div className="pt-4 mt-2 flex flex-col gap-1 bg-transparent">
         <div className="flex justify-between items-start">
           <h3 className="text-base font-bold">{name}</h3>
