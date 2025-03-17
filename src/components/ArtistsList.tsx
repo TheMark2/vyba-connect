@@ -18,7 +18,7 @@ interface Artist {
   name: string;
   type: string;
   description: string;
-  image: string;
+  images: string[]; // Changed from image to images (array)
   rating: number;
   priceRange: string;
   isFavorite?: boolean;
@@ -131,7 +131,7 @@ const ArtistsList = ({
                 name={artist.name}
                 type={artist.type}
                 description={artist.description}
-                image={artist.image}
+                images={artist.images} // Changed from image to images
                 rating={artist.rating}
                 priceRange={artist.priceRange}
                 isFavorite={artist.isFavorite}
