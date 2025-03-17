@@ -15,7 +15,6 @@ import StatsSummary from "@/components/StatsSummary";
 import HelpSection from "@/components/HelpSection";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/carousel";
-
 const Input = React.forwardRef<HTMLInputElement, React.ComponentProps<"input">>(({
   className,
   ...props
@@ -58,9 +57,7 @@ const Input = React.forwardRef<HTMLInputElement, React.ComponentProps<"input">>(
       </div>;
 });
 Input.displayName = "Input";
-
 const BoldSearch = () => <Search className="h-5 w-5 stroke-[2.5px]" />;
-
 const Index = () => {
   const scrollRef = useRef(null);
   const [searchQuery, setSearchQuery] = useState("");
@@ -92,17 +89,12 @@ const Index = () => {
       const scrollPosition = window.scrollY;
       const footerElement = document.querySelector('footer');
       const footerPosition = footerElement ? footerElement.getBoundingClientRect().top + window.scrollY - window.innerHeight : 0;
-      
       const shouldShowSearchThreshold = isMobile ? window.innerHeight * 1.5 : window.innerHeight * 3;
-      
       const shouldHideBeforeFooter = scrollPosition > footerPosition - 100;
-      
       const shouldShowSearch = scrollPosition > shouldShowSearchThreshold && !shouldHideBeforeFooter;
-      
       if (shouldShowSearch !== showFixedSearch) {
         setShowFixedSearch(shouldShowSearch);
       }
-      
       if (isMobile) {
         const carouselSection = document.querySelector('.carousel-section');
         if (carouselSection) {
@@ -120,7 +112,6 @@ const Index = () => {
         }
       }
     };
-    
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   }, [showFixedSearch, isMobile, artists.length]);
@@ -319,7 +310,6 @@ const Index = () => {
         </Carousel>
       </div>
     </div>;
-    
   const renderDesktopHero = () => <div ref={scrollRef} className="h-[300vh] relative">
       <div className="sticky top-0 h-screen overflow-hidden">
         <div className="relative w-full h-screen overflow-hidden">
@@ -391,38 +381,33 @@ const Index = () => {
         </div>
       </div>
     </div>;
-
   return <div className="min-h-screen flex flex-col p-0 m-0">
       <div className="w-full">
         <Navbar className="mx-auto" />
       </div>
 
-      {showFixedSearch && (
-      <motion.div 
-        initial={{ opacity: 0, y: 50 }}
-        animate={{ opacity: 1, y: 0 }}
-        exit={{ opacity: 0, y: 50 }}
-        transition={{ duration: 0.3, ease: "easeOut" }}
-        className="fixed bottom-6 left-0 right-0 z-50 px-6 md:px-10 flex justify-center"
-      >
-        <div className="bg-white dark:bg-vyba-dark-bg py-3 px-4 rounded-full inline-flex gap-3 shadow-sm">
-          <Button 
-            onClick={() => toast.success("Búsqueda iniciada")} 
-            className="rounded-full text-black dark:text-white bg-[#F5F1EB] dark:bg-vyba-dark-secondary hover:bg-[#EAE6E0] dark:hover:bg-opacity-80 shadow-none" 
-            variant="secondary"
-          >
+      {showFixedSearch && <motion.div initial={{
+      opacity: 0,
+      y: 50
+    }} animate={{
+      opacity: 1,
+      y: 0
+    }} exit={{
+      opacity: 0,
+      y: 50
+    }} transition={{
+      duration: 0.3,
+      ease: "easeOut"
+    }} className="fixed bottom-6 left-0 right-0 z-50 px-6 md:px-10 flex justify-center">
+        <div className="bg-white dark:bg-[#575654] py-3 px-4 rounded-full inline-flex gap-3 shadow-sm">
+          <Button onClick={() => toast.success("Búsqueda iniciada")} className="rounded-full text-black dark:text-white bg-[#F5F1EB] dark:bg-vyba-dark-secondary hover:bg-[#EAE6E0] dark:hover:bg-opacity-80 shadow-none" variant="secondary">
             Empezar a buscar
           </Button>
-          <Button 
-            onClick={() => toast.success("Búsqueda con IA iniciada")} 
-            className="rounded-full shadow-none" 
-            variant="default"
-          >
+          <Button onClick={() => toast.success("Búsqueda con IA iniciada")} className="rounded-full shadow-none" variant="default">
             Buscar con IA
           </Button>
         </div>
-      </motion.div>
-    )}
+      </motion.div>}
 
       <main className="flex-1">
         {isMobile ? renderMobileHero() : renderDesktopHero()}
@@ -513,6 +498,4 @@ const Index = () => {
       <Footer />
     </div>;
 };
-
 export default Index;
-
