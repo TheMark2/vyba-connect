@@ -34,7 +34,7 @@ const MobileMenu = () => {
 
       <div className="flex justify-center my-6">
         <ToggleGroup type="single" value={theme} onValueChange={(value) => value && setTheme(value)} className="bg-[#F5F1EB] p-1 rounded-full">
-          <ToggleGroupItem value="light" aria-label="Modo claro" className="data-[state=on]:bg-white rounded-bl-full rounded-tl-full w-14 h-10 flex items-center justify-center border-l-1 border-t-1 border-b-1 border-black">
+          <ToggleGroupItem value="light" aria-label="Modo claro" className="data-[state=on]:bg-white rounded-bl-full rounded-tl-full w-14 h-10 flex items-center justify-center border-1 border-black">
             <Sun className="h-5 w-5" />
           </ToggleGroupItem>
           <ToggleGroupItem value="dark" aria-label="Modo oscuro" className="data-[state=on]:bg-white w-14 h-10 flex items-center justify-center">
