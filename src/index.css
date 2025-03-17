@@ -92,6 +92,18 @@
       @apply pt-20;
     }
   }
+
+  /* Asegurar que el contenedor de scroll se quede sticky */
+  .sticky-container {
+    position: relative;
+    will-change: transform;
+  }
+
+  .sticky-container .sticky {
+    position: sticky;
+    top: 0;
+    z-index: 10;
+  }
 }
 
 @layer components {
