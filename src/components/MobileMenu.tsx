@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect, useRef } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { Button } from "@/components/ui/button";
@@ -67,7 +68,7 @@ const MobileMenu = () => {
         <Link to="/" className={`px-4 py-3 rounded-lg ${isActive('/') ? 'bg-[#F8F8F8]' : 'hover:bg-[#F8F8F8]'} text-black font-medium transition-all duration-200`}>
           <div className="flex items-center space-x-3">
             <Home 
-              className={`h-5 w-5 transition-all duration-200 ${isActive('/') ? 'text-[#9b87f5]' : 'hover:text-[#9b87f5]'}`} 
+              className={`h-5 w-5 transition-all duration-200 ${isActive('/') ? 'text-gray-800' : 'hover:text-gray-800'}`} 
               strokeWidth={isActive('/') ? 2 : 1.5}
             />
             <span>Inicio</span>
@@ -76,7 +77,7 @@ const MobileMenu = () => {
         <Link to="/artistas" className={`px-4 py-3 rounded-lg ${isActive('/artistas') ? 'bg-[#F8F8F8]' : 'hover:bg-[#F8F8F8]'} text-black font-medium transition-all duration-200`}>
           <div className="flex items-center space-x-3">
             <Users 
-              className={`h-5 w-5 transition-all duration-200 ${isActive('/artistas') ? 'text-[#9b87f5]' : 'hover:text-[#9b87f5]'}`} 
+              className={`h-5 w-5 transition-all duration-200 ${isActive('/artistas') ? 'text-gray-800' : 'hover:text-gray-800'}`} 
               strokeWidth={isActive('/artistas') ? 2 : 1.5}
             />
             <span>Artistas</span>
@@ -85,7 +86,7 @@ const MobileMenu = () => {
         <Link to="/todos-generos" className={`px-4 py-3 rounded-lg ${isActive('/todos-generos') ? 'bg-[#F8F8F8]' : 'hover:bg-[#F8F8F8]'} text-black font-medium transition-all duration-200`}>
           <div className="flex items-center space-x-3">
             <Palette 
-              className={`h-5 w-5 transition-all duration-200 ${isActive('/todos-generos') ? 'text-[#9b87f5]' : 'hover:text-[#9b87f5]'}`} 
+              className={`h-5 w-5 transition-all duration-200 ${isActive('/todos-generos') ? 'text-gray-800' : 'hover:text-gray-800'}`} 
               strokeWidth={isActive('/todos-generos') ? 2 : 1.5}
             />
             <span>Todos los géneros</span>
@@ -94,7 +95,7 @@ const MobileMenu = () => {
         <Link to="/todos-artistas" className={`px-4 py-3 rounded-lg ${isActive('/todos-artistas') ? 'bg-[#F8F8F8]' : 'hover:bg-[#F8F8F8]'} text-black font-medium transition-all duration-200`}>
           <div className="flex items-center space-x-3">
             <Music 
-              className={`h-5 w-5 transition-all duration-200 ${isActive('/todos-artistas') ? 'text-[#9b87f5]' : 'hover:text-[#9b87f5]'}`} 
+              className={`h-5 w-5 transition-all duration-200 ${isActive('/todos-artistas') ? 'text-gray-800' : 'hover:text-gray-800'}`} 
               strokeWidth={isActive('/todos-artistas') ? 2 : 1.5}
             />
             <span>Todos los artistas</span>
@@ -116,15 +117,15 @@ const MobileMenu = () => {
 
           {/* Botones de cambio de tema */}
           <button onClick={() => setTheme("light")} className="rounded-l-full w-14 h-16 flex items-center justify-center z-10 relative">
-            <Sun className={`h-5 w-5 transition-all duration-200 ${theme === 'light' ? 'text-[#9b87f5]' : ''}`} />
+            <Sun className={`h-5 w-5 transition-all duration-200 ${theme === 'light' ? 'text-gray-800' : ''}`} />
           </button>
           
           <button onClick={() => setTheme("dark")} className="w-14 h-16 flex items-center justify-center z-10 relative">
-            <Moon className={`h-5 w-5 transition-all duration-200 ${theme === 'dark' ? 'text-[#9b87f5]' : ''}`} />
+            <Moon className={`h-5 w-5 transition-all duration-200 ${theme === 'dark' ? 'text-gray-800' : ''}`} />
           </button>
           
           <button onClick={() => setTheme("system")} className="rounded-r-full w-14 h-16 flex items-center justify-center z-10 relative">
-            <Monitor className={`h-5 w-5 transition-all duration-200 ${theme === 'system' ? 'text-[#9b87f5]' : ''}`} />
+            <Monitor className={`h-5 w-5 transition-all duration-200 ${theme === 'system' ? 'text-gray-800' : ''}`} />
           </button>
         </div>
       </div>
