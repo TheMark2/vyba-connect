@@ -97,6 +97,10 @@ export default {
           "0%": { opacity: "0.4", transform: "translateX(20px)" },
           "100%": { opacity: "1", transform: "translateX(0)" },
         },
+        "carousel-slide": {
+          "0%": { opacity: "0", transform: "translateX(10px)" },
+          "100%": { opacity: "1", transform: "translateX(0)" },
+        },
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
@@ -108,6 +112,7 @@ export default {
         "slide-left": "slide-left 0.5s ease-out",
         "slide-right": "slide-right 0.5s ease-out",
         "image-slide": "image-slide 0.5s ease-out",
+        "carousel-slide": "carousel-slide 0.3s ease-out",
       },
     },
   },
