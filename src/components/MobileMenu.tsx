@@ -190,8 +190,8 @@ const MobileMenu = ({ isOpen, onClose }: MobileMenuProps) => {
             >
               <div className="flex items-center space-x-3">
                 <Home 
-                  className={`h-5 w-5 transition-all duration-200 ${isActive('/') ? 'text-gray-800 dark:text-white' : 'hover:text-gray-800 dark:hover:text-white'}`} 
-                  strokeWidth={isActive('/') ? 2 : 1.5}
+                  className={`h-5 w-5 ${isActive('/') ? 'text-gray-800 dark:text-white' : 'hover:text-gray-800 dark:hover:text-white'}`} 
+                  strokeWidth={isActive('/') ? 2.5 : 2}
                 />
                 <span>Inicio</span>
               </div>
@@ -204,8 +204,8 @@ const MobileMenu = ({ isOpen, onClose }: MobileMenuProps) => {
             >
               <div className="flex items-center space-x-3">
                 <Users 
-                  className={`h-5 w-5 transition-all duration-200 ${isActive('/artistas') ? 'text-gray-800 dark:text-white' : 'hover:text-gray-800 dark:hover:text-white'}`} 
-                  strokeWidth={isActive('/artistas') ? 2 : 1.5}
+                  className={`h-5 w-5 ${isActive('/artistas') ? 'text-gray-800 dark:text-white' : 'hover:text-gray-800 dark:hover:text-white'}`} 
+                  strokeWidth={isActive('/artistas') ? 2.5 : 2}
                 />
                 <span>Artistas</span>
               </div>
@@ -218,8 +218,8 @@ const MobileMenu = ({ isOpen, onClose }: MobileMenuProps) => {
             >
               <div className="flex items-center space-x-3">
                 <Palette 
-                  className={`h-5 w-5 transition-all duration-200 ${isActive('/todos-generos') ? 'text-gray-800 dark:text-white' : 'hover:text-gray-800 dark:hover:text-white'}`} 
-                  strokeWidth={isActive('/todos-generos') ? 2 : 1.5}
+                  className={`h-5 w-5 ${isActive('/todos-generos') ? 'text-gray-800 dark:text-white' : 'hover:text-gray-800 dark:hover:text-white'}`} 
+                  strokeWidth={isActive('/todos-generos') ? 2.5 : 2}
                 />
                 <span>Todos los géneros</span>
               </div>
@@ -232,8 +232,8 @@ const MobileMenu = ({ isOpen, onClose }: MobileMenuProps) => {
             >
               <div className="flex items-center space-x-3">
                 <Music 
-                  className={`h-5 w-5 transition-all duration-200 ${isActive('/todos-artistas') ? 'text-gray-800 dark:text-white' : 'hover:text-gray-800 dark:hover:text-white'}`} 
-                  strokeWidth={isActive('/todos-artistas') ? 2 : 1.5}
+                  className={`h-5 w-5 ${isActive('/todos-artistas') ? 'text-gray-800 dark:text-white' : 'hover:text-gray-800 dark:hover:text-white'}`} 
+                  strokeWidth={isActive('/todos-artistas') ? 2.5 : 2}
                 />
                 <span>Todos los artistas</span>
               </div>
@@ -250,7 +250,7 @@ const MobileMenu = ({ isOpen, onClose }: MobileMenuProps) => {
               className="justify-start px-4 py-3 h-auto text-black dark:text-white hover:bg-[#F8F8F8] dark:hover:bg-vyba-dark-secondary rounded-lg w-full font-medium"
             >
               <div className="flex items-center space-x-3">
-                <Search className="h-5 w-5" />
+                <Search className="h-5 w-5 stroke-2" />
                 <span>Buscar con IA</span>
               </div>
             </Button>
@@ -260,7 +260,7 @@ const MobileMenu = ({ isOpen, onClose }: MobileMenuProps) => {
               className="justify-start px-4 py-3 h-auto text-black dark:text-white hover:bg-[#F8F8F8] dark:hover:bg-vyba-dark-secondary rounded-lg w-full font-medium"
             >
               <div className="flex items-center space-x-3">
-                <SlidersHorizontal className="h-5 w-5" />
+                <SlidersHorizontal className="h-5 w-5 stroke-2" />
                 <span>Filtrar</span>
               </div>
             </Button>
