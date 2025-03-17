@@ -23,14 +23,25 @@ const MobileMenu = ({ isOpen, onClose }: MobileMenuProps) => {
   // Función para verificar si un enlace está activo
   const isActive = (path: string) => location.pathname === path;
 
-  // Gestionar la animación al abrir/cerrar
+  // Gestionar la animación al abrir/cerrar y el scrolling del body
   useEffect(() => {
     if (isOpen) {
       setIsAnimating(true);
-      document.body.style.overflow = 'hidden'; // Prevenir scroll del body
+      // Prevenir scroll del body cuando el menú está abierto
+      document.body.style.overflow = 'hidden';
     } else {
-      document.body.style.overflow = ''; // Restaurar scroll
+      // Restaurar scroll cuando comienza la animación de cierre
+      setTimeout(() => {
+        if (!isOpen) {
+          document.body.style.overflow = '';
+        }
+      }, 300); // Esperar a que termine la animación de salida
     }
+
+    // Limpiar el efecto cuando se desmonta el componente
+    return () => {
+      document.body.style.overflow = '';
+    };
   }, [isOpen]);
 
   // Función para sincronizar la posición y forma del fondo del selector de tema
@@ -97,6 +108,8 @@ const MobileMenu = ({ isOpen, onClose }: MobileMenuProps) => {
   const handleTransitionEnd = () => {
     if (!isOpen) {
       setIsAnimating(false);
+      // Asegurarnos de restaurar el scroll después de la transición
+      document.body.style.overflow = '';
     }
   };
 

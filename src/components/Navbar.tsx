@@ -20,6 +20,13 @@ const Navbar = ({
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
 
+  // Limpiar overflow en caso de que el componente se desmonte con el menú abierto
+  useEffect(() => {
+    return () => {
+      document.body.style.overflow = '';
+    };
+  }, []);
+
   // Detectar el scroll y cambiar el estado
   useEffect(() => {
     const handleScroll = () => {
@@ -35,6 +42,16 @@ const Navbar = ({
       window.removeEventListener('scroll', handleScroll);
     };
   }, []);
+
+  // Manejar apertura del menú
+  const handleOpenMenu = () => {
+    setIsMenuOpen(true);
+  };
+
+  // Manejar cierre del menú
+  const handleCloseMenu = () => {
+    setIsMenuOpen(false);
+  };
 
   return (
     <div 
@@ -85,23 +102,21 @@ const Navbar = ({
               Iniciar sesión
             </Button>
             
-            {/* Nuevo botón de menú hamburguesa simplificado */}
+            {/* Botón de menú hamburguesa */}
             <Button 
               variant="ghost" 
               size="icon" 
               className="relative w-10 h-10 flex items-center justify-center"
-              onClick={() => setIsMenuOpen(true)}
+              onClick={handleOpenMenu}
             >
               <Menu className="h-6 w-6" />
             </Button>
 
             {/* Menú móvil como componente independiente */}
-            {isMenuOpen && (
-              <MobileMenu 
-                isOpen={isMenuOpen} 
-                onClose={() => setIsMenuOpen(false)} 
-              />
-            )}
+            <MobileMenu 
+              isOpen={isMenuOpen} 
+              onClose={handleCloseMenu} 
+            />
           </>
         ) : (
           <>
