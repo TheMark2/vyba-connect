@@ -142,15 +142,24 @@ const ArtistProfileCard = ({
         isMobile ? "aspect-[1/1]" : "aspect-[3/4]"
       )}>
         {isMobile ? (
-          <Carousel className="w-full h-full" onSlideChange={handleSlideChange} opts={{ loop: true, dragFree: false }}>
+          <Carousel 
+            className="w-full h-full" 
+            onSlideChange={handleSlideChange} 
+            opts={{ 
+              loop: true, 
+              dragFree: false,
+              draggable: true,
+              speed: 20
+            }}
+          >
             <CarouselContent className="h-full">
               {images.map((image, index) => (
                 <CarouselItem key={index} className="h-full">
-                  <div className="w-full h-full transition-transform duration-300">
+                  <div className="w-full h-full transform transition-transform duration-500 ease-in-out">
                     <img 
                       src={image} 
                       alt={`${name} - ${type}`} 
-                      className="w-full h-full object-cover transition-opacity duration-300"
+                      className="w-full h-full object-cover transition-all duration-500"
                     />
                   </div>
                 </CarouselItem>
@@ -257,4 +266,3 @@ const ArtistProfileCard = ({
 };
 
 export default ArtistProfileCard;
-
