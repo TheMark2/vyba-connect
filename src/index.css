@@ -54,11 +54,6 @@
     }
   }
   
-  /* Estilos para cuando el cuerpo tiene posición fija (menú abierto) */
-  body[style*="position: fixed"] {
-    overflow-y: hidden;
-  }
-  
   /* Add smooth scrolling for the entire page */
   html {
     scroll-behavior: smooth;
