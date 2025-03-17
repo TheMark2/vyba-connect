@@ -113,7 +113,7 @@ const ArtistsPage = () => {
         </div>
 
         {/* Grid de artistas */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6">
           {artists.map(artist => <ArtistProfileCard key={artist.id} name={artist.name} type={artist.type} description={artist.description} images={artist.images} rating={artist.rating} priceRange={artist.priceRange} isFavorite={artist.isFavorite} onClick={() => handleArtistClick(artist)} onFavoriteToggle={() => handleFavoriteToggle(artist)} />)}
         </div>
       </div>
