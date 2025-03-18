@@ -132,10 +132,10 @@ const ArtistProfilePage = () => {
           
           {/* Contenido en la parte inferior - layout adaptativo para móvil */}
           {isMobile ? (
-            // Versión móvil: foto y textos alineados a la izquierda
-            <div className="absolute bottom-12 left-5 right-0 flex items-center">
-              {/* Foto de perfil a la izquierda */}
-              <div className="rounded-full overflow-hidden mr-4 w-24 h-24 border-2 border-white">
+            // Versión móvil: foto arriba y textos abajo, alineados a la izquierda
+            <div className="absolute bottom-12 left-5 right-0 flex flex-col items-start">
+              {/* Foto de perfil arriba */}
+              <div className="rounded-full overflow-hidden mb-4 w-24 h-24 border-2 border-white">
                 <img 
                   src={artist.images[0]} 
                   alt={artist.name} 
@@ -144,7 +144,7 @@ const ArtistProfilePage = () => {
               </div>
               
               {/* Información del artista - alineada a la izquierda y con truncamiento */}
-              <div className="text-white space-y-2 max-w-[65%]">
+              <div className="text-white space-y-2 max-w-[85%]">
                 <h1 className="text-2xl font-black truncate">{artist.name}</h1>
                 <p className="text-lg opacity-90 line-clamp-2">{artist.description}</p>
               </div>
