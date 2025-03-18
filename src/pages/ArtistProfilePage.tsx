@@ -107,7 +107,7 @@ const ArtistProfilePage = () => {
             <Button 
               variant="secondary" 
               size="icon" 
-              className="bg-white/70 backdrop-blur-sm hover:bg-white/90 dark:bg-white/50 dark:hover:bg-white/70 w-10 h-10 rounded-full"
+              className="w-10 h-10 rounded-full"
               onClick={handleFavorite}
             >
               <Heart className="h-5 w-5 text-black" />
@@ -115,7 +115,7 @@ const ArtistProfilePage = () => {
             <Button 
               variant="secondary" 
               size="icon" 
-              className="bg-white/70 backdrop-blur-sm hover:bg-white/90 dark:bg-white/50 dark:hover:bg-white/70 w-10 h-10 rounded-full"
+              className="w-10 h-10 rounded-full"
               onClick={handleReport}
             >
               <Flag className="h-5 w-5 text-black" />
@@ -123,7 +123,7 @@ const ArtistProfilePage = () => {
             <Button 
               variant="secondary" 
               size="icon" 
-              className="bg-white/70 backdrop-blur-sm hover:bg-white/90 dark:bg-white/50 dark:hover:bg-white/70 w-10 h-10 rounded-full"
+              className="w-10 h-10 rounded-full"
               onClick={handleShare}
             >
               <Share2 className="h-5 w-5 text-black" />
