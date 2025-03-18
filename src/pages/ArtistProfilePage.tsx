@@ -131,9 +131,9 @@ const ArtistProfilePage = () => {
           </div>
           
           {/* Contenido en la parte inferior */}
-          <div className="absolute bottom-12 left-10 md:left-14 flex items-center">
+          <div className="absolute bottom-12 left-5 md:left-10 lg:left-14 flex items-center">
             {/* Foto de perfil */}
-            <div className="rounded-full overflow-hidden border-4 border-white bg-white mr-4 md:mr-6 w-24 h-24 md:w-32 md:h-32">
+            <div className="rounded-full overflow-hidden mr-4 md:mr-6 w-24 h-24 md:w-32 md:h-32">
               <img 
                 src={artist.images[0]} 
                 alt={artist.name} 
