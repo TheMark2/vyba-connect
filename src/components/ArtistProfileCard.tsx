@@ -259,8 +259,8 @@ const ArtistProfileCard = ({
         
         <div className="absolute top-0 left-0 w-full p-3 flex justify-between">
           <Badge variant="outline" className={cn(
-            "bg-white text-black py-1 px-3 rounded-full border-0 font-medium",
-            isMobile ? "text-sm" : "text-base py-1.5 px-4"
+            "bg-white text-black py-1 px-2 rounded-full border-0 font-medium",
+            isMobile ? "text-sm" : "text-base py-1.5 px-3"
           )}>
             {type}
           </Badge>
@@ -276,7 +276,7 @@ const ArtistProfileCard = ({
             <Heart 
               className={cn(
                 "transition-all duration-300", 
-                isMobile ? "h-4.5 w-4.5" : "h-5 w-5",
+                isMobile ? "h-3 w-3" : "h-4 w-4",
                 favorite ? "fill-black stroke-black" : "stroke-black",
                 isAnimating && favorite && "scale-110"
               )} 
