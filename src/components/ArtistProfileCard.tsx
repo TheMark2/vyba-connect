@@ -257,7 +257,7 @@ const ArtistProfileCard = ({
         
         <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-black/10 to-transparent"></div>
         
-        <div className="absolute top-0 left-0 w-full p-3 flex justify-between">
+        <div className="absolute top-0 left-0 w-full p-3 py-4 flex justify-between">
           <Badge variant="outline" className={cn(
             "bg-white text-black py-1 px-2 rounded-full border-0 font-medium",
             isMobile ? "text-sm" : "text-sm py-1.5 px-3"
