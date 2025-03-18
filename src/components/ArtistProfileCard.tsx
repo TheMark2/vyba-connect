@@ -1,3 +1,4 @@
+
 import React, { useState, useRef, useEffect } from "react";
 import { Heart, ChevronLeft, ChevronRight } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
@@ -5,7 +6,6 @@ import { cn } from "@/lib/utils";
 import { toast } from "sonner";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { Carousel, CarouselContent, CarouselItem } from "@/components/ui/carousel";
-import { AspectRatio, Image } from "next/image";
 
 interface ArtistProfileCardProps {
   name: string;
@@ -164,24 +164,27 @@ const ArtistProfileCard = ({
         isMobile ? "aspect-[1/1]" : "aspect-[3/4]"
       )}>
         {isMobile ? (
-          <Carousel className="w-full h-full" onSlideChange={handleSlideChange} opts={{
-            dragFree: true,
-            loop: images.length > 1,
-            align: "center"
-          }}>
+          <Carousel 
+            className="w-full h-full" 
+            onSlideChange={handleSlideChange} 
+            opts={{
+              dragFree: true,
+              loop: images.length > 1,
+              align: "center"
+            }}
+          >
             <CarouselContent className="h-full">
               {images.map((image, index) => (
                 <CarouselItem key={index} className="h-full">
-                  <AspectRatio ratio={1} className="h-full">
-                    <div className="relative w-full h-full overflow-hidden">
-                      <Image
+                  <div className="relative w-full h-full aspect-square">
+                    <div className="w-full h-full relative overflow-hidden">
+                      <img
                         src={image}
                         alt={`${name} - ${index + 1}`}
-                        fill
-                        className="object-cover rounded-xl"
+                        className="object-cover w-full h-full rounded-xl"
                       />
                     </div>
-                  </AspectRatio>
+                  </div>
                 </CarouselItem>
               ))}
             </CarouselContent>

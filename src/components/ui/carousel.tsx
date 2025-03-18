@@ -1,5 +1,6 @@
+
 import * as React from "react"
-import { ArrowLeftIcon, ArrowRightIcon } from "@radix-ui/react-icons"
+import { ChevronLeft, ChevronRight } from "lucide-react"
 import useEmblaCarousel, {
   type UseEmblaCarouselType,
 } from "embla-carousel-react"
@@ -7,16 +8,18 @@ import useEmblaCarousel, {
 import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
 
-type Orientation = "horizontal" | "vertical"
+type CarouselApi = UseEmblaCarouselType[1]
+type UseCarouselParameters = Parameters<typeof useEmblaCarousel>
+type CarouselOptions = UseCarouselParameters[0]
+type CarouselPlugin = UseCarouselParameters[1]
 
-export interface CarouselProps {
-  opts?: Omit<
-    React.ComponentProps<typeof useEmblaCarousel>["options"],
-    "axis"
-  >
-  plugins?: React.ComponentProps<typeof useEmblaCarousel>["plugins"]
-  orientation?: Orientation
+interface CarouselProps {
+  opts?: CarouselOptions
+  plugins?: CarouselPlugin
+  orientation?: "horizontal" | "vertical"
+  setApi?: (api: CarouselApi) => void
   onSlideChange?: (index: number) => void
+  onScroll?: () => void
 }
 
 type CarouselContextProps = {
@@ -53,6 +56,8 @@ const Carousel = React.forwardRef<
       className,
       children,
       onSlideChange,
+      setApi,
+      onScroll,
       ...props
     },
     ref
@@ -68,6 +73,13 @@ const Carousel = React.forwardRef<
     const [canScrollNext, setCanScrollNext] = React.useState(false)
     const [currentIndex, setCurrentIndex] = React.useState(0)
 
+    // Set API for external use
+    React.useEffect(() => {
+      if (api && setApi) {
+        setApi(api)
+      }
+    }, [api, setApi])
+
     React.useEffect(() => {
       if (!api) {
         return
@@ -76,7 +88,7 @@ const Carousel = React.forwardRef<
       if (onSlideChange) {
         onSlideChange(currentIndex)
       }
-    }, [currentIndex, onSlideChange])
+    }, [api, currentIndex, onSlideChange])
 
     const scrollPrev = React.useCallback(() => {
       api?.scrollPrev()
@@ -85,6 +97,11 @@ const Carousel = React.forwardRef<
     const scrollNext = React.useCallback(() => {
       api?.scrollNext()
     }, [api])
+
+    const handleScroll = React.useCallback(() => {
+      if (!api || !onScroll) return
+      onScroll()
+    }, [api, onScroll])
 
     const onSelect = React.useCallback(() => {
       if (!api) {
@@ -104,11 +121,18 @@ const Carousel = React.forwardRef<
       onSelect()
       api.on("reInit", onSelect)
       api.on("select", onSelect)
+      
+      if (onScroll) {
+        api.on("scroll", handleScroll)
+      }
 
       return () => {
-        api?.off("select", onSelect)
+        api.off("select", onSelect)
+        if (onScroll) {
+          api.off("scroll", handleScroll)
+        }
       }
-    }, [api, onSelect])
+    }, [api, onSelect, handleScroll, onScroll])
 
     return (
       <CarouselContext.Provider
@@ -191,7 +215,7 @@ const CarouselPrevious = React.forwardRef<
       ref={ref}
       {...props}
     >
-      <ArrowLeftIcon className="h-4 w-4" />
+      <ChevronLeft className="h-4 w-4" />
       <span className="sr-only">Previous slide</span>
     </Button>
   )
@@ -219,7 +243,7 @@ const CarouselNext = React.forwardRef<
       ref={ref}
       {...props}
     >
-      <ArrowRightIcon className="h-4 w-4" />
+      <ChevronRight className="h-4 w-4" />
       <span className="sr-only">Next slide</span>
     </Button>
   )
