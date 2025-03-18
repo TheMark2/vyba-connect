@@ -110,7 +110,7 @@ const ArtistProfilePage = () => {
               className="w-10 h-10 rounded-full"
               onClick={handleFavorite}
             >
-              <Heart className="h-5 w-5 text-black" />
+              <Heart className="h-5 w-5 text-black dark:text-white" />
             </Button>
             <Button 
               variant="secondary" 
@@ -118,7 +118,7 @@ const ArtistProfilePage = () => {
               className="w-10 h-10 rounded-full"
               onClick={handleReport}
             >
-              <Flag className="h-5 w-5 text-black" />
+              <Flag className="h-5 w-5 text-black dark:text-white" />
             </Button>
             <Button 
               variant="secondary" 
@@ -126,7 +126,7 @@ const ArtistProfilePage = () => {
               className="w-10 h-10 rounded-full"
               onClick={handleShare}
             >
-              <Share2 className="h-5 w-5 text-black" />
+              <Share2 className="h-5 w-5 text-black dark:text-white" />
             </Button>
           </div>
           
