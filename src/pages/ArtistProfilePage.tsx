@@ -100,7 +100,7 @@ const ArtistProfilePage = () => {
           />
           
           {/* Gradiente sobre la imagen */}
-          <div className="absolute inset-0 bg-gradient-to-b from-black/50 via-black/30 to-transparent"></div>
+          <div className="absolute inset-0 bg-gradient-to-b from-black to-transparent"></div>
           
           {/* Botones de acción en la esquina superior derecha */}
           <div className="absolute top-4 right-4 sm:top-6 sm:right-6 flex space-x-2">
