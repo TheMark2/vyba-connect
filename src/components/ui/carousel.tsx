@@ -19,6 +19,7 @@ type CarouselProps = {
   orientation?: "horizontal" | "vertical"
   setApi?: (api: CarouselApi) => void
   onSlideChange?: (index: number) => void
+  onScroll?: () => void
 }
 
 type CarouselContextProps = {
@@ -29,6 +30,7 @@ type CarouselContextProps = {
   canScrollPrev: boolean
   canScrollNext: boolean
   onSlideChange?: (index: number) => void
+  onScroll?: () => void
 } & CarouselProps
 
 const CarouselContext = React.createContext<CarouselContextProps | null>(null)
@@ -56,13 +58,23 @@ const Carousel = React.forwardRef<
       className,
       children,
       onSlideChange,
+      onScroll,
       ...props
     },
     ref
   ) => {
+    const defaultOptions = {
+      draggable: true,
+      dragFree: false,
+      loop: false,
+      align: "start",
+      containScroll: "trimSnaps",
+      ...opts
+    }
+    
     const [carouselRef, api] = useEmblaCarousel(
       {
-        ...opts,
+        ...defaultOptions,
         axis: orientation === "horizontal" ? "x" : "y",
       },
       plugins
@@ -86,6 +98,12 @@ const Carousel = React.forwardRef<
         onSlideChange(newIndex);
       }
     }, [onSlideChange, currentIndex])
+    
+    const handleScroll = React.useCallback(() => {
+      if (onScroll) {
+        onScroll();
+      }
+    }, [onScroll]);
 
     const scrollPrev = React.useCallback(() => {
       api?.scrollPrev()
@@ -124,25 +142,33 @@ const Carousel = React.forwardRef<
       onSelect(api)
       api.on("reInit", onSelect)
       api.on("select", onSelect)
+      
+      if (onScroll) {
+        api.on("scroll", handleScroll)
+      }
 
       return () => {
         api?.off("select", onSelect)
+        if (onScroll) {
+          api?.off("scroll", handleScroll)
+        }
       }
-    }, [api, onSelect])
+    }, [api, onSelect, onScroll, handleScroll])
 
     return (
       <CarouselContext.Provider
         value={{
           carouselRef,
           api: api,
-          opts,
+          opts: defaultOptions,
           orientation:
-            orientation || (opts?.axis === "y" ? "vertical" : "horizontal"),
+            orientation || (defaultOptions?.axis === "y" ? "vertical" : "horizontal"),
           scrollPrev,
           scrollNext,
           canScrollPrev,
           canScrollNext,
           onSlideChange,
+          onScroll,
         }}
       >
         <div

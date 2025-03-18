@@ -164,7 +164,12 @@ const ArtistProfileCard = ({
         isMobile ? "aspect-[1/1]" : "aspect-[3/4]"
       )}>
         {isMobile ? (
-          <Carousel className="w-full h-full" onSlideChange={handleSlideChange}>
+          <Carousel className="w-full h-full" onSlideChange={handleSlideChange} opts={{
+            dragFree: true,
+            loop: images.length > 1,
+            draggable: true,
+            align: "center"
+          }}>
             <CarouselContent className="h-full">
               {images.map((image, index) => (
                 <CarouselItem key={index} className="h-full">
