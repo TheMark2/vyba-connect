@@ -250,8 +250,8 @@ const ArtistProfileCard = ({
         
         <div className="absolute top-0 left-0 w-full p-3 flex justify-between">
           <Badge variant="outline" className={cn(
-            "bg-white text-black py-1 px-4 rounded-full border-0 font-medium",
-            isMobile ? "text-sm" : "text-base py-1.5 px-5"
+            "bg-white text-black py-1 px-3 rounded-full border-0 font-medium",
+            isMobile ? "text-sm" : "text-base py-1.5 px-4"
           )}>
             {type}
           </Badge>
@@ -260,7 +260,7 @@ const ArtistProfileCard = ({
             onMouseDown={handleRippleEffect}
             className={cn(
               "rounded-full bg-white flex items-center justify-center transition-all duration-300 relative overflow-hidden",
-              isMobile ? "h-9 w-9" : "h-11 w-11",
+              isMobile ? "h-9 w-9" : "h-9 w-9",
               isAnimating && favorite && "animate-heartbeat"
             )}
           >
