@@ -91,7 +91,7 @@ const ArtistProfilePage = () => {
       <Navbar />
       <div className="px-6 md:px-10 lg:px-14 xl:px-16">
         {/* Portada con gradiente y foto de perfil */}
-        <div className="relative w-full h-[80vh] sm:h-[60vh] md:h-[70vh] overflow-hidden rounded-[35px] lg:rounded-[50px]">
+        <div className="relative w-full h-[70vh] sm:h-[60vh] md:h-[70vh] overflow-hidden rounded-[35px] lg:rounded-[50px]">
           {/* Imagen de portada */}
           <img 
             src={artist.coverImage} 
@@ -135,7 +135,7 @@ const ArtistProfilePage = () => {
             // Versión móvil: foto arriba y textos abajo, alineados a la izquierda
             <div className="absolute bottom-12 left-5 right-0 flex flex-col items-start">
               {/* Foto de perfil arriba */}
-              <div className="rounded-full overflow-hidden mb-4 w-24 h-24 border-2 border-white">
+              <div className="rounded-full overflow-hidden mb-4 w-24 h-24">
                 <img 
                   src={artist.images[0]} 
                   alt={artist.name} 
