@@ -130,23 +130,44 @@ const ArtistProfilePage = () => {
             </Button>
           </div>
           
-          {/* Contenido en la parte inferior */}
-          <div className="absolute bottom-12 left-5 md:left-10 lg:left-14 flex items-center">
-            {/* Foto de perfil - Ahora siempre redonda */}
-            <div className="rounded-full overflow-hidden mr-4 md:mr-6 w-24 h-24 md:w-32 md:h-32 border-2 border-white">
-              <img 
-                src={artist.images[0]} 
-                alt={artist.name} 
-                className="w-full h-full object-cover rounded-full"
-              />
+          {/* Contenido en la parte inferior - layout adaptativo para móvil */}
+          {isMobile ? (
+            // Versión móvil: foto centrada arriba, textos debajo
+            <div className="absolute bottom-12 left-0 right-0 flex flex-col items-center">
+              {/* Foto de perfil centrada */}
+              <div className="rounded-full overflow-hidden mb-4 w-24 h-24 border-2 border-white">
+                <img 
+                  src={artist.images[0]} 
+                  alt={artist.name} 
+                  className="w-full h-full object-cover rounded-full"
+                />
+              </div>
+              
+              {/* Información del artista - centrada y con truncamiento */}
+              <div className="text-white text-center px-4 space-y-2 max-w-full">
+                <h1 className="text-2xl font-black truncate max-w-[280px]">{artist.name}</h1>
+                <p className="text-lg opacity-90 line-clamp-2 max-w-[280px]">{artist.description}</p>
+              </div>
             </div>
-            
-            {/* Información del artista con truncamiento de texto */}
-            <div className="text-white space-y-4 max-w-[80%]">
-              <h1 className="text-3xl md:text-5xl font-black truncate">{artist.name}</h1>
-              <p className="text-xl md:text-2xl opacity-90 line-clamp-2">{artist.description}</p>
+          ) : (
+            // Versión desktop: foto a la izquierda, textos a la derecha
+            <div className="absolute bottom-12 left-5 md:left-10 lg:left-14 flex items-center">
+              {/* Foto de perfil - siempre redonda */}
+              <div className="rounded-full overflow-hidden mr-4 md:mr-6 w-24 h-24 md:w-32 md:h-32 border-2 border-white">
+                <img 
+                  src={artist.images[0]} 
+                  alt={artist.name} 
+                  className="w-full h-full object-cover rounded-full"
+                />
+              </div>
+              
+              {/* Información del artista con truncamiento de texto */}
+              <div className="text-white space-y-4 max-w-[80%]">
+                <h1 className="text-3xl md:text-5xl font-black truncate">{artist.name}</h1>
+                <p className="text-xl md:text-2xl opacity-90 line-clamp-2">{artist.description}</p>
+              </div>
             </div>
-          </div>
+          )}
         </div>
         
         {/* Aquí se pueden añadir más secciones como bio, tarifas, portfolio, etc. */}
