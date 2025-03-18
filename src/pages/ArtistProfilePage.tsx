@@ -132,19 +132,19 @@ const ArtistProfilePage = () => {
           
           {/* Contenido en la parte inferior */}
           <div className="absolute bottom-12 left-5 md:left-10 lg:left-14 flex items-center">
-            {/* Foto de perfil */}
-            <div className="rounded-full overflow-hidden mr-4 md:mr-6 w-24 h-24 md:w-32 md:h-32">
+            {/* Foto de perfil - Ahora siempre redonda */}
+            <div className="rounded-full overflow-hidden mr-4 md:mr-6 w-24 h-24 md:w-32 md:h-32 border-2 border-white">
               <img 
                 src={artist.images[0]} 
                 alt={artist.name} 
-                className="w-full h-full object-cover"
+                className="w-full h-full object-cover rounded-full"
               />
             </div>
             
-            {/* Información del artista */}
-            <div className="text-white space-y-4">
-              <h1 className="text-3xl md:text-5xl font-black">{artist.name}</h1>
-              <p className="text-xl md:text-2xl opacity-90">{artist.description}</p>
+            {/* Información del artista con truncamiento de texto */}
+            <div className="text-white space-y-4 max-w-[80%]">
+              <h1 className="text-3xl md:text-5xl font-black truncate">{artist.name}</h1>
+              <p className="text-xl md:text-2xl opacity-90 line-clamp-2">{artist.description}</p>
             </div>
           </div>
         </div>
