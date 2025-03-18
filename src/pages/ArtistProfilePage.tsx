@@ -1,5 +1,4 @@
-
-import React from "react";
+import React, { useEffect, useRef } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
@@ -7,8 +6,9 @@ import { Heart, Flag, Share2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 import { useIsMobile } from "@/hooks/use-mobile";
+import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/carousel";
+import { ScrollArea } from "@/components/ui/scroll-area";
 
-// Datos de ejemplo para los artistas (en producción deberíamos obtenerlos de una API)
 const artistsData = [
   {
     id: "1",
@@ -41,16 +41,34 @@ const artistsData = [
     priceRange: "400-500€",
     isFavorite: false
   }
-  // ... más artistas si es necesario
 ];
 
 const ArtistProfilePage = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const isMobile = useIsMobile();
+  const carouselRef = useRef(null);
   
-  // Encontrar el artista por ID
   const artist = artistsData.find(artist => artist.id === id);
+  
+  useEffect(() => {
+    const handleScroll = () => {
+      const carouselElement = carouselRef.current;
+      if (carouselElement) {
+        const scrollPosition = window.scrollY;
+        const startOffset = 400;
+        
+        if (scrollPosition > startOffset) {
+          const scrollDiff = scrollPosition - startOffset;
+          const moveAmount = scrollDiff * 0.2;
+          carouselElement.scrollLeft = moveAmount;
+        }
+      }
+    };
+
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
   
   if (!artist) {
     return (
@@ -80,7 +98,6 @@ const ArtistProfilePage = () => {
   };
   
   const handleShare = () => {
-    // En producción, integrarlo con Web Share API si está disponible
     toast.success("Enlace copiado al portapapeles", {
       position: "bottom-center",
     });
@@ -90,19 +107,15 @@ const ArtistProfilePage = () => {
     <>
       <Navbar />
       <div className="px-6 md:px-10 lg:px-14 xl:px-16">
-        {/* Portada con gradiente y foto de perfil */}
-        <div className="relative w-full h-[80vh] sm:h-[60vh] md:h-[70vh] overflow-hidden rounded-[35px] lg:rounded-[50px]">
-          {/* Imagen de portada */}
+        <div className="relative w-full h-[calc(100vh-5rem)] sm:h-[60vh] md:h-[70vh] overflow-hidden rounded-[35px] lg:rounded-[50px]">
           <img 
             src={artist.coverImage} 
             alt={`${artist.name} portada`}
             className="w-full h-full object-cover"
           />
           
-          {/* Gradiente sobre la imagen */}
           <div className="absolute inset-0 bg-gradient-to-t from-black to-transparent"></div>
           
-          {/* Botones de acción en la esquina superior derecha */}
           <div className="absolute top-4 right-4 sm:top-6 sm:right-6 flex space-x-2">
             <Button 
               variant="secondary" 
@@ -130,11 +143,8 @@ const ArtistProfilePage = () => {
             </Button>
           </div>
           
-          {/* Contenido en la parte inferior - layout adaptativo para móvil */}
           {isMobile ? (
-            // Versión móvil: foto arriba y textos abajo, alineados a la izquierda
             <div className="absolute bottom-12 left-5 right-0 flex flex-col items-start">
-              {/* Foto de perfil arriba */}
               <div className="rounded-full overflow-hidden mb-4 w-24 h-24">
                 <img 
                   src={artist.images[0]} 
@@ -143,16 +153,13 @@ const ArtistProfilePage = () => {
                 />
               </div>
               
-              {/* Información del artista - alineada a la izquierda y con truncamiento */}
               <div className="text-white space-y-2 max-w-[85%]">
                 <h1 className="text-2xl font-black truncate">{artist.name}</h1>
                 <p className="text-lg opacity-90 line-clamp-2">{artist.description}</p>
               </div>
             </div>
           ) : (
-            // Versión desktop: foto a la izquierda, textos a la derecha
             <div className="absolute bottom-12 left-5 md:left-10 lg:left-14 flex items-center">
-              {/* Foto de perfil - siempre redonda */}
               <div className="rounded-full overflow-hidden mr-4 md:mr-6 w-24 h-24 md:w-32 md:h-32">
                 <img 
                   src={artist.images[0]} 
@@ -161,7 +168,6 @@ const ArtistProfilePage = () => {
                 />
               </div>
               
-              {/* Información del artista con truncamiento de texto */}
               <div className="text-white space-y-4 max-w-[80%]">
                 <h1 className="text-3xl md:text-5xl font-black truncate">{artist.name}</h1>
                 <p className="text-xl md:text-2xl opacity-90 line-clamp-2">{artist.description}</p>
@@ -170,9 +176,58 @@ const ArtistProfilePage = () => {
           )}
         </div>
         
-        {/* Aquí se pueden añadir más secciones como bio, tarifas, portfolio, etc. */}
-        <div className="max-w-screen-xl mx-auto px-6 md:px-10 py-10">
-          {/* Contenido adicional del perfil se implementará en futuras actualizaciones */}
+        <div className="sticky top-20 pt-8 pb-16 z-10 bg-white dark:bg-vyba-dark-bg">
+          <h2 className="text-2xl md:text-3xl font-bold mb-6">Galería</h2>
+          <div
+            ref={carouselRef}
+            className="w-full overflow-x-auto scrollbar-hide pb-4"
+            style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
+          >
+            <div className="flex gap-4 min-w-max px-4">
+              {artist.images.map((image, index) => (
+                <div 
+                  key={index} 
+                  className={`rounded-3xl overflow-hidden transition-all duration-300 ${
+                    index === 1 ? 'w-[300px] h-[400px]' : 'w-[200px] h-[300px]'
+                  }`}
+                >
+                  <img 
+                    src={image} 
+                    alt={`${artist.name} - imagen ${index + 1}`} 
+                    className="w-full h-full object-cover"
+                  />
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+        
+        <div className="max-w-screen-xl mx-auto px-0 md:px-10 py-10">
+          <div className="h-[800px]">
+            <h2 className="text-2xl font-bold mb-4">Información adicional</h2>
+            <p className="text-lg mb-8">
+              Aquí puedes añadir más información sobre el artista, como su biografía,
+              experiencia, eventos pasados, testimonios de clientes, etc.
+            </p>
+            
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+              <div className="bg-secondary dark:bg-vyba-dark-secondary/30 p-6 rounded-3xl">
+                <h3 className="text-xl font-bold mb-3">Experiencia</h3>
+                <p>
+                  {artist.name} tiene más de 10 años de experiencia como DJ profesional,
+                  habiendo actuado en los mejores clubes y eventos de la ciudad.
+                </p>
+              </div>
+              
+              <div className="bg-secondary dark:bg-vyba-dark-secondary/30 p-6 rounded-3xl">
+                <h3 className="text-xl font-bold mb-3">Servicios</h3>
+                <p>
+                  Ofrece servicios de DJ para bodas, fiestas privadas, eventos corporativos
+                  y clubes nocturnos. Incluye equipo propio de sonido e iluminación.
+                </p>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
       <Footer />
