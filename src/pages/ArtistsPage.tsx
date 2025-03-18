@@ -5,6 +5,7 @@ import ArtistProfileCard from "@/components/ArtistProfileCard";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { useIsMobile, useIsSmallMobile } from "@/hooks/use-mobile";
+import { useNavigate } from "react-router-dom";
 
 // Datos de ejemplo para los artistas
 const artistsData = [
@@ -88,10 +89,11 @@ const ArtistsPage = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const isMobile = useIsMobile();
   const isSmallMobile = useIsSmallMobile();
+  const navigate = useNavigate();
 
   const handleArtistClick = (artist: typeof artistsData[0]) => {
     console.log("Artista seleccionado:", artist);
-    // Aquí se puede implementar la navegación al perfil del artista
+    navigate(`/artista/${artist.id}`);
   };
 
   const handleFavoriteToggle = (artist: typeof artistsData[0]) => {

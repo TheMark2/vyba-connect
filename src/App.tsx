@@ -8,6 +8,7 @@ import { useEffect } from "react";
 import Index from "./pages/Index";
 import NotFound from "./pages/NotFound";
 import ArtistsPage from "./pages/ArtistsPage";
+import ArtistProfilePage from "./pages/ArtistProfilePage";
 
 const queryClient = new QueryClient();
 
@@ -71,6 +72,7 @@ const App = () => {
             <Route path="/" element={<Index />} />
             <Route path="/artistas" element={<ArtistsPage />} />
             <Route path="/todos-artistas" element={<ArtistsPage />} />
+            <Route path="/artista/:id" element={<ArtistProfilePage />} />
             <Route path="/todos-generos" element={<Index />} />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
