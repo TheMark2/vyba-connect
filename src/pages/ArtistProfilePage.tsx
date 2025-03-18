@@ -153,7 +153,7 @@ const ArtistProfilePage = () => {
             // Versión desktop: foto a la izquierda, textos a la derecha
             <div className="absolute bottom-12 left-5 md:left-10 lg:left-14 flex items-center">
               {/* Foto de perfil - siempre redonda */}
-              <div className="rounded-full overflow-hidden mr-4 md:mr-6 w-24 h-24 md:w-32 md:h-32 border-2 border-white">
+              <div className="rounded-full overflow-hidden mr-4 md:mr-6 w-24 h-24 md:w-32 md:h-32">
                 <img 
                   src={artist.images[0]} 
                   alt={artist.name} 
