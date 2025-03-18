@@ -3,7 +3,7 @@ import * as React from "react"
 
 // Ajustamos los breakpoints para que las columnas se reduzcan más rápido
 const MOBILE_BREAKPOINT = 768
-const SMALL_MOBILE_BREAKPOINT = 550 // Aumentamos este valor para hacer que pase a 1 columna antes
+const SMALL_MOBILE_BREAKPOINT = 550 // Mantenemos el valor para móviles pequeños
 
 export function useIsMobile() {
   const [isMobile, setIsMobile] = React.useState<boolean>(window.innerWidth < MOBILE_BREAKPOINT);
