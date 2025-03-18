@@ -1,4 +1,3 @@
-
 import React, { useState, useRef, useEffect } from "react";
 import { Heart, ChevronLeft, ChevronRight } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
@@ -6,6 +5,7 @@ import { cn } from "@/lib/utils";
 import { toast } from "sonner";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { Carousel, CarouselContent, CarouselItem } from "@/components/ui/carousel";
+import { AspectRatio, Image } from "next/image";
 
 interface ArtistProfileCardProps {
   name: string;
@@ -167,20 +167,21 @@ const ArtistProfileCard = ({
           <Carousel className="w-full h-full" onSlideChange={handleSlideChange} opts={{
             dragFree: true,
             loop: images.length > 1,
-            draggable: true,
             align: "center"
           }}>
             <CarouselContent className="h-full">
               {images.map((image, index) => (
                 <CarouselItem key={index} className="h-full">
-                  <div className="w-full h-full">
-                    <img 
-                      src={image} 
-                      alt={`${name} - ${type}`} 
-                      className="w-full h-full object-cover transition-opacity duration-300"
-                      style={{ opacity: 1 }}
-                    />
-                  </div>
+                  <AspectRatio ratio={1} className="h-full">
+                    <div className="relative w-full h-full overflow-hidden">
+                      <Image
+                        src={image}
+                        alt={`${name} - ${index + 1}`}
+                        fill
+                        className="object-cover rounded-xl"
+                      />
+                    </div>
+                  </AspectRatio>
                 </CarouselItem>
               ))}
             </CarouselContent>

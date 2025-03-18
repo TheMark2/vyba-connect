@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import { Search, SlidersHorizontal } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -111,11 +110,12 @@ const ArtistsPage = () => {
       <div className="px-6 md:px-14 lg:px-16 mx-auto mt-6 mb-8">
         <div className={`
           ${isMobile 
-            ? "bg-secondary dark:bg-vyba-dark-secondary/40 rounded-3xl py-6 mb-6 px-6 text-center"
-            : "bg-secondary dark:bg-vyba-dark-secondary/40 rounded-3xl py-8 mb-12 px-16 flex justify-between"
+            ? "bg-secondary dark:bg-vyba-dark-secondary/40 rounded-3xl py-6 mb-6 px-6"
+            : "bg-secondary dark:bg-vyba-dark-secondary/40 rounded-3xl py-8 mb-12 px-16"
           }
+          flex flex-col md:flex-row md:justify-between items-center
         `}>
-          <div>
+          <div className={`${isMobile ? "text-center mb-4" : ""}`}>
             <h1 className={`
               ${isMobile 
                 ? "text-3xl font-black mb-1" 
@@ -126,37 +126,24 @@ const ArtistsPage = () => {
             </h1>
             <p className={`
               ${isMobile 
-                ? "text-2xl mb-4" 
+                ? "text-2xl" 
                 : "text-5xl"
               }
             `}>
               {artists.length} artistas
             </p>
-            
-            {isMobile && (
-              <div className="flex justify-center gap-3 mt-2">
-                <Button variant="secondary" className="bg-white dark:bg-white dark:text-black" size="sm">
-                  <Search className="h-4 w-4 mr-1" />
-                  Buscar con IA
-                </Button>
-                <Button variant="secondary" className="bg-white dark:bg-white dark:text-black" size="sm">
-                  <SlidersHorizontal className="h-4 w-4 mr-1" />
-                  Filtros
-                </Button>
-              </div>
-            )}
           </div>
           
-          {!isMobile && (
-            <div className="space-x-4">
-              <Button variant="secondary" className="bg-white dark:bg-white dark:text-black">
-                Busca con IA
-              </Button>
-              <Button variant="secondary" className="bg-white dark:bg-white dark:text-black">
-                Filtros
-              </Button>
-            </div>
-          )}
+          <div className={`space-x-3 ${isMobile ? "w-full flex justify-center" : ""}`}>
+            <Button variant="secondary" className="bg-white dark:bg-white dark:text-black">
+              <Search className="h-4 w-4 mr-1" />
+              Buscar con IA
+            </Button>
+            <Button variant="secondary" className="bg-white dark:bg-white dark:text-black">
+              <SlidersHorizontal className="h-4 w-4 mr-1" />
+              Filtros
+            </Button>
+          </div>
         </div>
 
         <div className={`
