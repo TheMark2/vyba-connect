@@ -1,3 +1,4 @@
+
 import React, { useEffect, useRef } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import Navbar from "@/components/Navbar";
@@ -6,8 +7,6 @@ import { Heart, Flag, Share2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 import { useIsMobile } from "@/hooks/use-mobile";
-import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/carousel";
-import { ScrollArea } from "@/components/ui/scroll-area";
 
 const artistsData = [
   {
@@ -15,7 +14,15 @@ const artistsData = [
     name: "Antonia Pedragosa",
     type: "DJ",
     description: "DJ para todo tipo de eventos",
-    images: ["/lovable-uploads/77591a97-10cd-4c8b-b768-5b17483c3d9f.png", "/lovable-uploads/64cabbe3-ce62-4190-830d-0e5defd31a1b.png", "/lovable-uploads/c89ee394-3c08-48f6-b69b-bddd81dffa8b.png"],
+    images: [
+      "/lovable-uploads/77591a97-10cd-4c8b-b768-5b17483c3d9f.png", 
+      "/lovable-uploads/64cabbe3-ce62-4190-830d-0e5defd31a1b.png", 
+      "/lovable-uploads/c89ee394-3c08-48f6-b69b-bddd81dffa8b.png",
+      "/lovable-uploads/a3c6b43a-dd61-4889-ae77-cb1016e65371.png",
+      "/lovable-uploads/b1d87308-8791-4bd4-bd43-e4f7cf7d9042.png",
+      "/lovable-uploads/77591a97-10cd-4c8b-b768-5b17483c3d9f.png", 
+      "/lovable-uploads/64cabbe3-ce62-4190-830d-0e5defd31a1b.png"
+    ],
     coverImage: "/lovable-uploads/672e18fa-dfe5-48bb-b838-4f7f26998dc3.png",
     rating: 4.9,
     priceRange: "400-500€",
@@ -25,7 +32,15 @@ const artistsData = [
     name: "Antonia Pedragosa",
     type: "DJ",
     description: "DJ para todo tipo de eventos",
-    images: ["/lovable-uploads/64cabbe3-ce62-4190-830d-0e5defd31a1b.png", "/lovable-uploads/77591a97-10cd-4c8b-b768-5b17483c3d9f.png", "/lovable-uploads/a3c6b43a-dd61-4889-ae77-cb1016e65371.png"],
+    images: [
+      "/lovable-uploads/64cabbe3-ce62-4190-830d-0e5defd31a1b.png", 
+      "/lovable-uploads/77591a97-10cd-4c8b-b768-5b17483c3d9f.png", 
+      "/lovable-uploads/a3c6b43a-dd61-4889-ae77-cb1016e65371.png",
+      "/lovable-uploads/b1d87308-8791-4bd4-bd43-e4f7cf7d9042.png",
+      "/lovable-uploads/c89ee394-3c08-48f6-b69b-bddd81dffa8b.png",
+      "/lovable-uploads/64cabbe3-ce62-4190-830d-0e5defd31a1b.png",
+      "/lovable-uploads/77591a97-10cd-4c8b-b768-5b17483c3d9f.png"
+    ],
     coverImage: "/lovable-uploads/672e18fa-dfe5-48bb-b838-4f7f26998dc3.png",
     rating: 4.9,
     priceRange: "400-500€",
@@ -35,7 +50,15 @@ const artistsData = [
     name: "Antonia Pedragosa",
     type: "DJ",
     description: "DJ para todo tipo de eventos",
-    images: ["/lovable-uploads/a3c6b43a-dd61-4889-ae77-cb1016e65371.png", "/lovable-uploads/b1d87308-8791-4bd4-bd43-e4f7cf7d9042.png", "/lovable-uploads/c89ee394-3c08-48f6-b69b-bddd81dffa8b.png"],
+    images: [
+      "/lovable-uploads/a3c6b43a-dd61-4889-ae77-cb1016e65371.png", 
+      "/lovable-uploads/b1d87308-8791-4bd4-bd43-e4f7cf7d9042.png", 
+      "/lovable-uploads/c89ee394-3c08-48f6-b69b-bddd81dffa8b.png",
+      "/lovable-uploads/77591a97-10cd-4c8b-b768-5b17483c3d9f.png",
+      "/lovable-uploads/64cabbe3-ce62-4190-830d-0e5defd31a1b.png",
+      "/lovable-uploads/a3c6b43a-dd61-4889-ae77-cb1016e65371.png",
+      "/lovable-uploads/b1d87308-8791-4bd4-bd43-e4f7cf7d9042.png"
+    ],
     coverImage: "/lovable-uploads/672e18fa-dfe5-48bb-b838-4f7f26998dc3.png",
     rating: 4.9,
     priceRange: "400-500€",
@@ -47,22 +70,26 @@ const ArtistProfilePage = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const isMobile = useIsMobile();
-  const carouselRef = useRef(null);
+  const scrollContainerRef = useRef<HTMLDivElement>(null);
   
   const artist = artistsData.find(artist => artist.id === id);
   
   useEffect(() => {
     const handleScroll = () => {
-      const carouselElement = carouselRef.current;
-      if (carouselElement) {
-        const scrollPosition = window.scrollY;
-        const startOffset = 400;
-        
-        if (scrollPosition > startOffset) {
-          const scrollDiff = scrollPosition - startOffset;
-          const moveAmount = scrollDiff * 0.2;
-          carouselElement.scrollLeft = moveAmount;
-        }
+      if (!scrollContainerRef.current) return;
+      
+      const scrollY = window.scrollY;
+      const startOffset = 400; // Ajusta este valor según cuando quieras que empiece el efecto
+      const scrollContainerWidth = scrollContainerRef.current.scrollWidth;
+      const viewportWidth = window.innerWidth;
+      const maxScroll = scrollContainerWidth - viewportWidth;
+      
+      if (scrollY > startOffset) {
+        const scrollProgress = Math.min((scrollY - startOffset) / 1000, 1); // Ajusta la velocidad del scroll
+        const translateX = -scrollProgress * maxScroll;
+        scrollContainerRef.current.style.transform = `translateX(${translateX}px)`;
+      } else {
+        scrollContainerRef.current.style.transform = 'translateX(0)';
       }
     };
 
@@ -107,7 +134,7 @@ const ArtistProfilePage = () => {
     <>
       <Navbar />
       <div className="px-6 md:px-10 lg:px-14 xl:px-16">
-        <div className="relative w-full h-[calc(100vh-5rem)] sm:h-[60vh] md:h-[70vh] overflow-hidden rounded-[35px] lg:rounded-[50px]">
+        <div className="relative w-full h-[calc(100vh-5rem)] overflow-hidden rounded-[35px] lg:rounded-[50px]">
           <img 
             src={artist.coverImage} 
             alt={`${artist.name} portada`}
@@ -176,34 +203,47 @@ const ArtistProfilePage = () => {
           )}
         </div>
         
-        <div className="sticky top-20 pt-8 pb-16 z-10 bg-white dark:bg-vyba-dark-bg">
+        {/* Carrusel sticky con efecto de scroll */}
+        <div className="sticky top-20 py-8 z-10 bg-white dark:bg-vyba-dark-bg overflow-hidden">
           <h2 className="text-2xl md:text-3xl font-bold mb-6">Galería</h2>
-          <div
-            ref={carouselRef}
-            className="w-full overflow-x-auto scrollbar-hide pb-4"
-            style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
-          >
-            <div className="flex gap-4 min-w-max px-4">
-              {artist.images.map((image, index) => (
-                <div 
-                  key={index} 
-                  className={`rounded-3xl overflow-hidden transition-all duration-300 ${
-                    index === 1 ? 'w-[300px] h-[400px]' : 'w-[200px] h-[300px]'
-                  }`}
-                >
-                  <img 
-                    src={image} 
-                    alt={`${artist.name} - imagen ${index + 1}`} 
-                    className="w-full h-full object-cover"
-                  />
-                </div>
-              ))}
+          
+          <div className="w-full overflow-hidden">
+            <div 
+              ref={scrollContainerRef}
+              className="flex transition-transform duration-200 ease-out"
+              style={{ width: 'max-content' }}
+            >
+              {artist.images.map((image, index) => {
+                // Determinar el tamaño de la imagen basado en su posición
+                const isCenter = index % 3 === 1; // Cambia esto si necesitas otro patrón
+                
+                return (
+                  <div 
+                    key={index} 
+                    className={`mx-2 rounded-3xl overflow-hidden ${
+                      isCenter 
+                        ? 'w-[350px] h-[450px] md:w-[400px] md:h-[550px]' 
+                        : 'w-[250px] h-[350px] md:w-[300px] md:h-[400px]'
+                    }`}
+                  >
+                    <img 
+                      src={image} 
+                      alt={`${artist.name} - imagen ${index + 1}`} 
+                      className="w-full h-full object-cover transition-transform duration-300 hover:scale-105"
+                    />
+                  </div>
+                );
+              })}
             </div>
+          </div>
+          
+          <div className="mt-4 text-sm text-muted-foreground text-center">
+            Desplázate para ver más imágenes
           </div>
         </div>
         
         <div className="max-w-screen-xl mx-auto px-0 md:px-10 py-10">
-          <div className="h-[800px]">
+          <div className="min-h-[800px]">
             <h2 className="text-2xl font-bold mb-4">Información adicional</h2>
             <p className="text-lg mb-8">
               Aquí puedes añadir más información sobre el artista, como su biografía,
