@@ -89,9 +89,9 @@ const ArtistProfilePage = () => {
   return (
     <>
       <Navbar />
-      <div className="w-full">
+      <div className="px-6 md:px-10 lg:px-14 xl:px-16">
         {/* Portada con gradiente y foto de perfil */}
-        <div className="relative w-full h-[70vh] sm:h-[60vh] md:h-[70vh] overflow-hidden px-6 md:px-10 lg:px-14 xl:px-16 rounded-[50px]">
+        <div className="relative w-full h-[70vh] sm:h-[60vh] md:h-[70vh] overflow-hidden rounded-[50px]">
           {/* Imagen de portada */}
           <img 
             src={artist.coverImage} 
