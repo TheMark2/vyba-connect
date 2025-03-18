@@ -1,4 +1,3 @@
-
 import React, { useEffect, useRef } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import Navbar from "@/components/Navbar";
@@ -7,6 +6,13 @@ import { Heart, Flag, Share2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 import { useIsMobile } from "@/hooks/use-mobile";
+import {
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+  CarouselNext,
+  CarouselPrevious,
+} from "@/components/ui/carousel";
 
 const artistsData = [
   {
@@ -21,7 +27,10 @@ const artistsData = [
       "/lovable-uploads/a3c6b43a-dd61-4889-ae77-cb1016e65371.png",
       "/lovable-uploads/b1d87308-8791-4bd4-bd43-e4f7cf7d9042.png",
       "/lovable-uploads/77591a97-10cd-4c8b-b768-5b17483c3d9f.png", 
-      "/lovable-uploads/64cabbe3-ce62-4190-830d-0e5defd31a1b.png"
+      "/lovable-uploads/64cabbe3-ce62-4190-830d-0e5defd31a1b.png",
+      "/lovable-uploads/c89ee394-3c08-48f6-b69b-bddd81dffa8b.png", 
+      "/lovable-uploads/a3c6b43a-dd61-4889-ae77-cb1016e65371.png",
+      "/lovable-uploads/b1d87308-8791-4bd4-bd43-e4f7cf7d9042.png"
     ],
     coverImage: "/lovable-uploads/672e18fa-dfe5-48bb-b838-4f7f26998dc3.png",
     rating: 4.9,
@@ -70,32 +79,9 @@ const ArtistProfilePage = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const isMobile = useIsMobile();
-  const scrollContainerRef = useRef<HTMLDivElement>(null);
+  const carouselRef = useRef<HTMLDivElement>(null);
   
   const artist = artistsData.find(artist => artist.id === id);
-  
-  useEffect(() => {
-    const handleScroll = () => {
-      if (!scrollContainerRef.current) return;
-      
-      const scrollY = window.scrollY;
-      const startOffset = 400; // Ajusta este valor según cuando quieras que empiece el efecto
-      const scrollContainerWidth = scrollContainerRef.current.scrollWidth;
-      const viewportWidth = window.innerWidth;
-      const maxScroll = scrollContainerWidth - viewportWidth;
-      
-      if (scrollY > startOffset) {
-        const scrollProgress = Math.min((scrollY - startOffset) / 1000, 1); // Ajusta la velocidad del scroll
-        const translateX = -scrollProgress * maxScroll;
-        scrollContainerRef.current.style.transform = `translateX(${translateX}px)`;
-      } else {
-        scrollContainerRef.current.style.transform = 'translateX(0)';
-      }
-    };
-
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
   
   if (!artist) {
     return (
@@ -203,42 +189,36 @@ const ArtistProfilePage = () => {
           )}
         </div>
         
-        {/* Carrusel sticky con efecto de scroll */}
-        <div className="sticky top-20 py-8 z-10 bg-white dark:bg-vyba-dark-bg overflow-hidden">
+        <div className="py-10 bg-white dark:bg-vyba-dark-bg">
           <h2 className="text-2xl md:text-3xl font-bold mb-6">Galería</h2>
           
-          <div className="w-full overflow-hidden">
-            <div 
-              ref={scrollContainerRef}
-              className="flex transition-transform duration-200 ease-out"
-              style={{ width: 'max-content' }}
-            >
-              {artist.images.map((image, index) => {
-                // Determinar el tamaño de la imagen basado en su posición
-                const isCenter = index % 3 === 1; // Cambia esto si necesitas otro patrón
-                
-                return (
-                  <div 
-                    key={index} 
-                    className={`mx-2 rounded-3xl overflow-hidden ${
-                      isCenter 
-                        ? 'w-[350px] h-[450px] md:w-[400px] md:h-[550px]' 
-                        : 'w-[250px] h-[350px] md:w-[300px] md:h-[400px]'
-                    }`}
-                  >
+          <Carousel ref={carouselRef} className="w-full">
+            <CarouselContent className="-ml-4 md:-ml-6">
+              {artist.images.map((image, index) => (
+                <CarouselItem 
+                  key={index} 
+                  className="pl-4 md:pl-6 transition-all duration-300 flex items-center justify-center"
+                >
+                  <div className="overflow-hidden rounded-3xl">
                     <img 
                       src={image} 
                       alt={`${artist.name} - imagen ${index + 1}`} 
-                      className="w-full h-full object-cover transition-transform duration-300 hover:scale-105"
+                      className="w-full h-auto object-cover transition-transform duration-300 hover:scale-105"
+                      style={{
+                        aspectRatio: "3/4",
+                        objectFit: "cover"
+                      }}
                     />
                   </div>
-                );
-              })}
-            </div>
-          </div>
+                </CarouselItem>
+              ))}
+            </CarouselContent>
+            <CarouselPrevious className="absolute left-4 -translate-y-1/2" />
+            <CarouselNext className="absolute right-4 -translate-y-1/2" />
+          </Carousel>
           
           <div className="mt-4 text-sm text-muted-foreground text-center">
-            Desplázate para ver más imágenes
+            Desliza para ver más imágenes
           </div>
         </div>
         

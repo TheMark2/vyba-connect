@@ -29,6 +29,8 @@ type CarouselContextProps = {
   scrollNext: () => void
   canScrollPrev: boolean
   canScrollNext: boolean
+  selectedIndex: number
+  scrollSnaps: number[]
   onSlideChange?: (index: number) => void
 } & CarouselProps
 
@@ -71,7 +73,8 @@ const Carousel = React.forwardRef<
     )
     const [canScrollPrev, setCanScrollPrev] = React.useState(false)
     const [canScrollNext, setCanScrollNext] = React.useState(false)
-    const [currentIndex, setCurrentIndex] = React.useState(0)
+    const [selectedIndex, setSelectedIndex] = React.useState(0)
+    const [scrollSnaps, setScrollSnaps] = React.useState<number[]>([])
 
     // Set API for external use
     React.useEffect(() => {
@@ -86,10 +89,11 @@ const Carousel = React.forwardRef<
       }
 
       if (onSlideChange) {
-        onSlideChange(currentIndex)
+        onSlideChange(selectedIndex)
       }
-    }, [api, currentIndex, onSlideChange])
+    }, [api, selectedIndex, onSlideChange])
 
+    // Scroll to functions
     const scrollPrev = React.useCallback(() => {
       api?.scrollPrev()
     }, [api])
@@ -103,21 +107,23 @@ const Carousel = React.forwardRef<
       onScroll()
     }, [api, onScroll])
 
+    // Handle API changes
     const onSelect = React.useCallback(() => {
       if (!api) {
         return
       }
 
-      setCurrentIndex(api.selectedScrollSnap())
+      setSelectedIndex(api.selectedScrollSnap())
       setCanScrollPrev(api.canScrollPrev())
       setCanScrollNext(api.canScrollNext())
     }, [api])
 
+    // Get the scroll snap positions
     React.useEffect(() => {
-      if (!api) {
-        return
-      }
-
+      if (!api) return
+      
+      setScrollSnaps(api.scrollSnapList())
+      
       onSelect()
       api.on("reInit", onSelect)
       api.on("select", onSelect)
@@ -146,6 +152,8 @@ const Carousel = React.forwardRef<
           scrollNext,
           canScrollPrev,
           canScrollNext,
+          selectedIndex,
+          scrollSnaps,
           onSlideChange,
         }}
       >
@@ -184,10 +192,63 @@ const CarouselItem = React.forwardRef<
   HTMLDivElement,
   React.HTMLAttributes<HTMLDivElement>
 >(({ className, ...props }, ref) => {
+  const { selectedIndex, scrollSnaps } = useCarousel()
+  const itemRef = React.useRef<HTMLDivElement>(null)
+  const [index, setIndex] = React.useState<number>(-1)
+  
+  // Determinar el índice del elemento actual
+  React.useEffect(() => {
+    // Encontrar todos los elementos CarouselItem
+    if (!itemRef.current) return
+    
+    const parent = itemRef.current.parentElement
+    if (!parent) return
+    
+    const items = Array.from(parent.children)
+    const currentIndex = items.indexOf(itemRef.current)
+    
+    setIndex(currentIndex)
+  }, [])
+  
+  // Calcular si este elemento es el seleccionado
+  const isSelected = index === selectedIndex
+  
+  // Calcular la distancia al elemento seleccionado
+  let distance = 0
+  if (index !== -1 && selectedIndex !== -1) {
+    distance = Math.abs(index - selectedIndex)
+  }
+  
+  // Ajustar tamaño y opacidad basado en la distancia
+  let scale = 1
+  let opacity = 1
+  let zIndex = 10
+  
+  if (distance > 0) {
+    scale = Math.max(0.8, 1 - distance * 0.1)
+    opacity = Math.max(0.5, 1 - distance * 0.2)
+    zIndex = 10 - distance
+  }
+  
+  const transform = isSelected ? "scale(1.1)" : `scale(${scale})`
+  
   return (
     <div
-      ref={ref}
-      className={cn("relative flex-[0_0_auto]", className)}
+      ref={(node) => {
+        // Combine the refs
+        if (typeof ref === 'function') ref(node)
+        else if (ref) ref.current = node
+        itemRef.current = node
+      }}
+      className={cn(
+        "relative flex-[0_0_auto] transition-all duration-300",
+        className
+      )}
+      style={{
+        transform,
+        opacity,
+        zIndex
+      }}
       {...props}
     />
   )
