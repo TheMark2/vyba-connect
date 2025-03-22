@@ -1,5 +1,4 @@
-
-import React from "react";
+import React, { useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
@@ -8,6 +7,7 @@ import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { MUSIC_GENRES } from "@/constants/music";
+import { Badge } from "@/components/ui/badge";
 
 const artistsData = [
   {
@@ -120,6 +120,14 @@ const ArtistProfilePage = () => {
     });
   };
   
+  const handleGenreClick = (genre: string) => {
+    toast.success(`Buscando más artistas de ${genre}`, {
+      position: "bottom-center",
+    });
+    // Aquí podríamos navegar a una página de búsqueda filtrada por género
+    // navigate(`/artistas?genero=${genre}`);
+  };
+  
   return (
     <>
       <Navbar />
@@ -204,15 +212,17 @@ const ArtistProfilePage = () => {
                 {artist.description}
               </p>
               
-              {/* Genres */}
+              {/* Genres - Convertidos a botones */}
               <div className="flex flex-wrap gap-3 mb-10">
                 {artist.genres?.map((genre, index) => (
-                  <span 
-                    key={index} 
-                    className="px-4 py-2 bg-secondary dark:bg-vyba-dark-secondary rounded-full text-sm font-medium"
+                  <Button 
+                    key={index}
+                    variant="secondary"
+                    className="rounded-full text-sm font-medium"
+                    onClick={() => handleGenreClick(genre)}
                   >
                     {genre}
-                  </span>
+                  </Button>
                 ))}
               </div>
             </div>
