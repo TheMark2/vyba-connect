@@ -134,23 +134,18 @@ const ArtistProfilePage = () => {
       <div className="px-6 md:px-10 lg:px-14 xl:px-16">
         {/* Banner Section with Blurred Background */}
         <div className="relative w-full h-[95vh] md:h-[calc(80vh)] overflow-hidden rounded-[25px] lg:rounded-[35px] mb-12">
-          {/* Blurred background image */}
-          <div 
-            className="absolute inset-0 w-full h-full z-0"
-            style={{
-              overflow: 'hidden',
-              position: 'absolute'
-            }}
-          >
+          {/* Blurred background image - Capa base */}
+          <div className="absolute inset-0 w-full h-full" style={{ zIndex: 0 }}>
             <img 
               src={artist.coverImage} 
               alt=""
-              className="w-full h-full object-cover filter blur-3xl scale-125 opacity-90"
+              className="w-full h-full object-cover filter blur-xl scale-125 opacity-80"
+              style={{ transform: "scale(1.2)" }}
             />
-            <div className="absolute inset-0 bg-black/30"></div>
+            <div className="absolute inset-0 bg-black/40"></div>
           </div>
           
-          {/* Main Banner Image */}
+          {/* Main Banner Image - Capa principal */}
           <div className="relative z-10 w-full h-full">
             <img 
               src={artist.coverImage} 
@@ -161,6 +156,7 @@ const ArtistProfilePage = () => {
             <div className="absolute inset-0 bg-gradient-to-t from-black to-transparent"></div>
           </div>
           
+          {/* Buttons in top right corner */}
           <div className="absolute top-4 right-4 sm:top-6 sm:right-6 flex space-x-2 z-20">
             <Button 
               variant="secondary" 
@@ -188,6 +184,7 @@ const ArtistProfilePage = () => {
             </Button>
           </div>
           
+          {/* Artist info overlay */}
           {isMobile ? (
             <div className="absolute bottom-12 left-5 right-0 flex flex-col items-start z-20">
               <div className="rounded-full overflow-hidden mb-4 w-24 h-24">
