@@ -1,4 +1,5 @@
-import React, { useEffect, useRef } from "react";
+
+import React from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
@@ -6,13 +7,6 @@ import { Heart, Flag, Share2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 import { useIsMobile } from "@/hooks/use-mobile";
-import {
-  Carousel,
-  CarouselContent,
-  CarouselItem,
-  CarouselNext,
-  CarouselPrevious,
-} from "@/components/ui/carousel";
 
 const artistsData = [
   {
@@ -79,7 +73,6 @@ const ArtistProfilePage = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const isMobile = useIsMobile();
-  const carouselRef = useRef<HTMLDivElement>(null);
   
   const artist = artistsData.find(artist => artist.id === id);
   
@@ -120,7 +113,7 @@ const ArtistProfilePage = () => {
     <>
       <Navbar />
       <div className="px-6 md:px-10 lg:px-14 xl:px-16">
-        <div className="relative w-full h-[calc(100vh-10rem)] overflow-hidden rounded-[25px] lg:rounded-[35px]">
+        <div className="relative w-full h-[calc(95vh)] md:h-[calc(100vh-10rem)] overflow-hidden rounded-[25px] lg:rounded-[35px]">
           <img 
             src={artist.coverImage} 
             alt={`${artist.name} portada`}
@@ -189,41 +182,8 @@ const ArtistProfilePage = () => {
           )}
         </div>
         
-        <div className="py-10 bg-white dark:bg-vyba-dark-bg">
-          <h2 className="text-2xl md:text-3xl font-bold mb-6">Galería</h2>
-          
-          <Carousel ref={carouselRef} className="w-full">
-            <CarouselContent className="-ml-4 md:-ml-6">
-              {artist.images.map((image, index) => (
-                <CarouselItem 
-                  key={index} 
-                  className="pl-4 md:pl-6 transition-all duration-300 flex items-center justify-center"
-                >
-                  <div className="overflow-hidden rounded-3xl">
-                    <img 
-                      src={image} 
-                      alt={`${artist.name} - imagen ${index + 1}`} 
-                      className="w-full h-auto object-cover transition-transform duration-300 hover:scale-105"
-                      style={{
-                        aspectRatio: "3/4",
-                        objectFit: "cover"
-                      }}
-                    />
-                  </div>
-                </CarouselItem>
-              ))}
-            </CarouselContent>
-            <CarouselPrevious className="absolute left-4 -translate-y-1/2" />
-            <CarouselNext className="absolute right-4 -translate-y-1/2" />
-          </Carousel>
-          
-          <div className="mt-4 text-sm text-muted-foreground text-center">
-            Desliza para ver más imágenes
-          </div>
-        </div>
-        
         <div className="max-w-screen-xl mx-auto px-0 md:px-10 py-10">
-          <div className="min-h-[800px]">
+          <div className="min-h-[400px]">
             <h2 className="text-2xl font-bold mb-4">Información adicional</h2>
             <p className="text-lg mb-8">
               Aquí puedes añadir más información sobre el artista, como su biografía,
