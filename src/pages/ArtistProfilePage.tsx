@@ -136,11 +136,11 @@ const ArtistProfilePage = () => {
         <div className="relative w-full h-[95vh] md:h-[calc(80vh)] overflow-hidden rounded-[25px] lg:rounded-[35px] mb-12">
           {/* Blurred background image - Capa base */}
           <div className="absolute inset-0 w-full h-full overflow-visible flex justify-center items-center" style={{ zIndex: 0 }}>
-            <div className="absolute w-[120%] h-[120%] filter blur-3xl opacity-70">
+            <div className="absolute w-[120%] h-[120%] opacity-70">
               <img 
                 src={artist.coverImage} 
                 alt=""
-                className="w-full h-full object-cover scale-150"
+                className="w-full h-full object-cover scale-150 filter blur-3xl"
               />
             </div>
             <div className="absolute inset-0 bg-black/40"></div>
