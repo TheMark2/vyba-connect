@@ -119,7 +119,6 @@ const ArtistProfileCard = ({
     
     const newIndex = currentImageIndex > 0 ? currentImageIndex - 1 : images.length - 1;
     setCurrentImageIndex(newIndex);
-    resetDragState();
   };
 
   const handleNextImage = (e: React.MouseEvent) => {
@@ -128,26 +127,26 @@ const ArtistProfileCard = ({
     
     const newIndex = currentImageIndex < images.length - 1 ? currentImageIndex + 1 : 0;
     setCurrentImageIndex(newIndex);
-    resetDragState();
   };
 
   const handleSlideChange = (index: number) => {
     if (index === currentImageIndex || index < 0 || index >= images.length) return;
     setCurrentImageIndex(index);
-    resetDragState();
   };
   
   // Funciones para el gesto de deslizamiento
-  const handleTouchStart = (e: React.TouchEvent) => {
+  const handleTouchStart = (e: TouchEvent) => {
     touchStartX.current = e.touches[0].clientX;
     isDragging.current = true;
     dragStartX.current = e.touches[0].clientX;
+    
+    // Eliminar transición durante el arrastre
     if (imageContainerRef.current) {
       imageContainerRef.current.style.transition = "none";
     }
   };
   
-  const handleTouchMove = (e: React.TouchEvent) => {
+  const handleTouchMove = (e: TouchEvent) => {
     if (!isDragging.current) return;
     
     const currentX = e.touches[0].clientX;
@@ -170,8 +169,13 @@ const ArtistProfileCard = ({
     setDragTransform(newOffset);
   };
   
-  const handleTouchEnd = (e: React.TouchEvent) => {
+  const handleTouchEnd = (e: TouchEvent) => {
     if (!isDragging.current) return;
+    
+    // Restaurar la transición para el efecto de rebote
+    if (imageContainerRef.current) {
+      imageContainerRef.current.style.transition = "transform 300ms ease-out";
+    }
     
     touchEndX.current = e.changedTouches[0].clientX;
     const diffX = touchEndX.current - touchStartX.current;
@@ -185,28 +189,32 @@ const ArtistProfileCard = ({
       setCurrentImageIndex(currentImageIndex + 1);
     } else {
       // Si el movimiento fue pequeño, vuelve a la imagen actual
-      resetDragState();
+      setDragTransform(-currentImageIndex * 100);
     }
     
     isDragging.current = false;
   };
   
-  const resetDragState = () => {
-    if (imageContainerRef.current) {
-      imageContainerRef.current.style.transition = "transform 300ms ease-out";
-    }
-    setDragTransform(-currentImageIndex * 100);
-  };
-  
-  // Restaurar la posición correcta cuando cambia currentImageIndex
+  // Efecto para actualizar el transform cuando cambia el índice de la imagen
   useEffect(() => {
-    // Asegúrate de que el índice esté dentro de los límites
+    // Solo actualizar si no estamos arrastrando
+    if (!isDragging.current) {
+      // Asegúrate de que la transición esté habilitada para el cambio de índice
+      if (imageContainerRef.current) {
+        imageContainerRef.current.style.transition = "transform 300ms ease-out";
+      }
+      
+      // Actualizar la posición
+      setDragTransform(-currentImageIndex * 100);
+    }
+  }, [currentImageIndex]);
+  
+  // Asegurarse de que el índice está dentro de los límites
+  useEffect(() => {
     if (currentImageIndex >= images.length) {
       setCurrentImageIndex(0);
     } else if (currentImageIndex < 0) {
       setCurrentImageIndex(images.length - 1);
-    } else {
-      setDragTransform(-currentImageIndex * 100);
     }
   }, [currentImageIndex, images.length]);
   
@@ -240,8 +248,9 @@ const ArtistProfileCard = ({
           <div 
             ref={imageContainerRef}
             className={cn(
-              "flex transition-transform duration-300 ease-out h-full w-full",
-              isHovered ? "scale-105" : ""
+              "flex h-full w-full",
+              isHovered ? "scale-105" : "",
+              isDragging.current ? "" : "transition-transform duration-300 ease-out"
             )}
             style={{ 
               width: `${images.length * 100}%`,
@@ -259,7 +268,7 @@ const ArtistProfileCard = ({
                   alt={`${name} - ${index + 1}`}
                   className="w-full h-full object-cover"
                   draggable="false"
-                  loading="lazy"
+                  loading={index === 0 ? "eager" : "lazy"}
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black via-black/40 to-transparent opacity-60 pointer-events-none" />
               </div>
