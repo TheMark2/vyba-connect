@@ -140,7 +140,7 @@ const ArtistProfilePage = () => {
             <img 
               src={artist.coverImage} 
               alt=""
-              className="w-full h-full object-cover filter blur-lg scale-110 opacity-50"
+              className="w-full h-full object-cover filter blur-3xl scale-110 opacity-50"
             />
           </div>
           
