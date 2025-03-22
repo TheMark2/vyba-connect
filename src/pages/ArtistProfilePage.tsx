@@ -3,17 +3,21 @@ import React from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
-import { Heart, Flag, Share2 } from "lucide-react";
+import { Heart, Flag, Share2, MapPin } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 import { useIsMobile } from "@/hooks/use-mobile";
+import { MUSIC_GENRES } from "@/constants/music";
 
 const artistsData = [
   {
     id: "1",
     name: "Antonia Pedragosa",
     type: "DJ",
-    description: "DJ para todo tipo de eventos",
+    description: "¿Buscas añadir un toque de elegancia y encanto musical a tu próximo evento? ¡Estás en el lugar indicado! Soy Antonia Pedragosa, una apasionada DJ especializada en jazz, bossa nova y blues. ✨ Con años de experiencia y un repertorio cautivador, puedo crear la atmósfera perfecta para tu ocasión especial. Ya sea una boda íntima, una fiesta corporativa o una velada romántica, mi música te transportará a un mundo lleno de melodías irresistibles.",
+    genres: ["Pop", "House", "Reggaeton", "Comercial"],
+    location: "Barcelona",
+    availability: "Esta semana disponible",
     images: [
       "/lovable-uploads/77591a97-10cd-4c8b-b768-5b17483c3d9f.png", 
       "/lovable-uploads/64cabbe3-ce62-4190-830d-0e5defd31a1b.png", 
@@ -28,7 +32,7 @@ const artistsData = [
     ],
     coverImage: "/lovable-uploads/672e18fa-dfe5-48bb-b838-4f7f26998dc3.png",
     rating: 4.9,
-    priceRange: "400-500€",
+    priceRange: "150-400€",
     isFavorite: false
   }, {
     id: "2",
@@ -108,12 +112,20 @@ const ArtistProfilePage = () => {
       position: "bottom-center",
     });
   };
+
+  const handleContact = () => {
+    toast.success(`Contactando con ${artist.name}`, {
+      description: "Te conectaremos pronto",
+      position: "bottom-center",
+    });
+  };
   
   return (
     <>
       <Navbar />
       <div className="px-6 md:px-10 lg:px-14 xl:px-16">
-        <div className="relative w-full h-[calc(70vh)] md:h-[calc(80vh)] overflow-hidden rounded-[25px] lg:rounded-[35px]">
+        {/* Banner Section */}
+        <div className="relative w-full h-[95vh] md:h-[calc(80vh)] overflow-hidden rounded-[25px] lg:rounded-[35px] mb-12">
           <img 
             src={artist.coverImage} 
             alt={`${artist.name} portada`}
@@ -161,7 +173,7 @@ const ArtistProfilePage = () => {
               
               <div className="text-white space-y-2 max-w-[85%]">
                 <h1 className="text-2xl font-black truncate">{artist.name}</h1>
-                <p className="text-lg opacity-90 line-clamp-2">{artist.description}</p>
+                <p className="text-lg opacity-90 line-clamp-2">{artist.type}</p>
               </div>
             </div>
           ) : (
@@ -176,10 +188,52 @@ const ArtistProfilePage = () => {
               
               <div className="text-white space-y-4 max-w-[80%]">
                 <h1 className="text-3xl md:text-5xl font-black truncate">{artist.name}</h1>
-                <p className="text-xl md:text-2xl opacity-90 line-clamp-2">{artist.description}</p>
+                <p className="text-xl md:text-2xl opacity-90 line-clamp-2">{artist.type}</p>
               </div>
             </div>
           )}
+        </div>
+
+        {/* About Me Section */}
+        <div className="pb-16">
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-10">
+            {/* Left Content */}
+            <div className="lg:col-span-2">
+              <h2 className="text-3xl sm:text-4xl font-black mb-6">Sobre mi</h2>
+              <p className="text-base sm:text-lg mb-10 leading-relaxed">
+                {artist.description}
+              </p>
+              
+              {/* Genres */}
+              <div className="flex flex-wrap gap-3 mb-10">
+                {artist.genres?.map((genre, index) => (
+                  <span 
+                    key={index} 
+                    className="px-4 py-2 bg-secondary dark:bg-vyba-dark-secondary rounded-full text-sm font-medium"
+                  >
+                    {genre}
+                  </span>
+                ))}
+              </div>
+            </div>
+            
+            {/* Right Sticky Content */}
+            <div className="lg:sticky lg:top-24 h-fit bg-white dark:bg-vyba-dark-bg rounded-3xl p-6 shadow-sm">
+              <div className="flex items-center gap-2 mb-3">
+                <MapPin className="h-5 w-5 text-neutral-500" />
+                <p className="text-lg text-neutral-600 dark:text-neutral-300">{artist.location} · {artist.availability}</p>
+              </div>
+              
+              <h3 className="text-3xl font-black mb-6">{artist.priceRange}</h3>
+              
+              <Button 
+                className="w-full py-6 text-lg font-bold mb-4"
+                onClick={handleContact}
+              >
+                Contactar con {artist.name}
+              </Button>
+            </div>
+          </div>
         </div>
       </div>
       <Footer />
