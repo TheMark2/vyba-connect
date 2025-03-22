@@ -18,7 +18,8 @@ const artistsData = [
     rating: 4.9,
     priceRange: "400-500€",
     isFavorite: false
-  }, {
+  },
+  {
     id: "2",
     name: "Antonia Pedragosa",
     type: "DJ",
@@ -27,7 +28,8 @@ const artistsData = [
     rating: 4.9,
     priceRange: "400-500€",
     isFavorite: false
-  }, {
+  },
+  {
     id: "3",
     name: "Antonia Pedragosa",
     type: "DJ",
@@ -36,7 +38,8 @@ const artistsData = [
     rating: 4.9,
     priceRange: "400-500€",
     isFavorite: false
-  }, {
+  },
+  {
     id: "4",
     name: "Antonia Pedragosa",
     type: "DJ",
@@ -45,7 +48,8 @@ const artistsData = [
     rating: 4.9,
     priceRange: "400-500€",
     isFavorite: false
-  }, {
+  },
+  {
     id: "5",
     name: "Carlos Martínez",
     type: "Banda",
@@ -54,7 +58,8 @@ const artistsData = [
     rating: 4.7,
     priceRange: "600-800€",
     isFavorite: false
-  }, {
+  },
+  {
     id: "6",
     name: "Laura González",
     type: "Solista",
@@ -63,7 +68,8 @@ const artistsData = [
     rating: 4.8,
     priceRange: "350-450€",
     isFavorite: false
-  }, {
+  },
+  {
     id: "7",
     name: "Miguel Torres",
     type: "Grupo",
@@ -72,7 +78,8 @@ const artistsData = [
     rating: 4.6,
     priceRange: "550-700€",
     isFavorite: false
-  }, {
+  },
+  {
     id: "8",
     name: "Andrea Vega",
     type: "Violinista",
@@ -150,10 +157,10 @@ const ArtistsPage = () => {
 
         <div className={`
           ${isSmallMobile
-            ? "grid grid-cols-1 gap-6"
+            ? "grid grid-cols-1 gap-8"
             : isMobile
               ? "grid grid-cols-2 gap-6"
-              : "grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-4 2xl:grid-cols-5 gap-6"
+              : "grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-4 2xl:grid-cols-5 gap-8"
           }
         `}>
           {artists.map(artist => (
@@ -168,7 +175,7 @@ const ArtistsPage = () => {
               isFavorite={artist.isFavorite} 
               onClick={() => handleArtistClick(artist)} 
               onFavoriteToggle={() => handleFavoriteToggle(artist)} 
-              className={isMobile ? "mb-6" : ""}
+              className={isMobile ? "mb-2" : ""}
             />
           ))}
         </div>

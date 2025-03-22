@@ -1,6 +1,5 @@
-
 import React, { useState, useRef, useEffect } from "react";
-import { Heart, ChevronLeft, ChevronRight } from "lucide-react";
+import { Heart, ChevronLeft, ChevronRight, Star } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
 import { toast } from "sonner";
@@ -159,9 +158,10 @@ const ArtistProfileCard = ({
         cursor: isHovered ? 'pointer' : 'default'
       }}
     >
+      {/* Imagen y Carousel en estilo Airbnb */}
       <div className={cn(
-        "relative w-full overflow-hidden rounded-3xl",
-        isMobile ? "aspect-[1/1]" : "aspect-[3/4]"
+        "relative w-full overflow-hidden rounded-2xl",
+        isMobile ? "aspect-[1/1]" : "aspect-[1/1]"
       )}>
         {isMobile ? (
           <Carousel 
@@ -181,7 +181,7 @@ const ArtistProfileCard = ({
                       <img
                         src={image}
                         alt={`${name} - ${index + 1}`}
-                        className="object-cover w-full h-full rounded-xl"
+                        className="object-cover w-full h-full"
                       />
                     </div>
                   </div>
@@ -207,33 +207,35 @@ const ArtistProfileCard = ({
           </div>
         )}
         
+        {/* Controles de imagen al estilo Airbnb */}
         {isHovered && images.length > 1 && !isMobile && (
           <>
             <button 
               onClick={handlePrevImage}
-              className="absolute left-4 top-1/2 transform -translate-y-1/2 bg-white/60 backdrop-blur-sm p-1.5 rounded-full opacity-90 hover:opacity-100 transition-opacity z-10"
+              className="absolute left-3 top-1/2 transform -translate-y-1/2 bg-white p-1.5 rounded-full opacity-90 hover:opacity-100 transition-opacity z-10 shadow-md"
               aria-label="Imagen anterior"
             >
-              <ChevronLeft className="h-5 w-5 text-black" />
+              <ChevronLeft className="h-4 w-4 text-black" />
             </button>
             <button 
               onClick={handleNextImage}
-              className="absolute right-4 top-1/2 transform -translate-y-1/2 bg-white/60 backdrop-blur-sm p-1.5 rounded-full opacity-90 hover:opacity-100 transition-opacity z-10"
+              className="absolute right-3 top-1/2 transform -translate-y-1/2 bg-white p-1.5 rounded-full opacity-90 hover:opacity-100 transition-opacity z-10 shadow-md"
               aria-label="Siguiente imagen"
             >
-              <ChevronRight className="h-5 w-5 text-black" />
+              <ChevronRight className="h-4 w-4 text-black" />
             </button>
           </>
         )}
 
+        {/* Indicadores de página estilo Airbnb */}
         {images.length > 1 && (
           <div className="absolute bottom-3 left-1/2 transform -translate-x-1/2 flex gap-1.5 z-20">
             {images.map((_, index) => (
               <span 
                 key={index}
                 className={cn(
-                  "h-1.5 rounded-full bg-white/80 transition-all",
-                  currentImageIndex === index ? "w-5" : "w-1.5 opacity-60"
+                  "h-1.5 rounded-full transition-all",
+                  currentImageIndex === index ? "w-6 bg-white" : "w-1.5 bg-white/60"
                 )}
                 onClick={(e) => {
                   e.stopPropagation();
@@ -255,44 +257,38 @@ const ArtistProfileCard = ({
           </div>
         )}
         
-        <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-black/10 to-transparent"></div>
-        
-        <div className="absolute top-0 left-0 w-full p-3 flex justify-between">
-          <Badge variant="outline" className={cn(
-            "bg-white text-black py-1 px-2 rounded-full border-0 font-medium",
-            isMobile ? "text-sm" : "text-sm py-1.5 px-3"
-          )}>
-            {type}
-          </Badge>
-          <button 
-            onClick={handleFavoriteClick} 
-            onMouseDown={handleRippleEffect}
+        {/* Botón favorito estilo Airbnb */}
+        <button 
+          onClick={handleFavoriteClick} 
+          className="absolute top-3 right-3 z-10 shadow-sm" 
+          aria-label={favorite ? "Quitar de favoritos" : "Añadir a favoritos"}
+        >
+          <Heart 
             className={cn(
-              "rounded-full bg-white flex items-center justify-center transition-all duration-300 relative overflow-hidden",
-              isMobile ? "h-7 w-7" : "h-8 w-8",
-              isAnimating && favorite && "animate-heartbeat"
-            )}
-          >
-            <Heart 
-              className={cn(
-                "transition-all duration-300", 
-                isMobile ? "h-3 w-3" : "h-4 w-4",
-                favorite ? "fill-black stroke-black" : "stroke-black",
-                isAnimating && favorite && "scale-110"
-              )} 
-            />
-          </button>
-        </div>
+              "h-6 w-6 transition-colors duration-300",
+              favorite ? "fill-red-500 stroke-white" : "fill-transparent stroke-white stroke-[1.5px]"
+            )} 
+          />
+        </button>
+        
+        {/* Etiqueta tipo en estilo Airbnb */}
+        <Badge variant="secondary" className="absolute top-3 left-3 font-medium text-xs bg-white/80 backdrop-blur-sm text-black z-10 shadow-sm">
+          {type}
+        </Badge>
       </div>
       
-      <div className="pt-4 mt-2 flex flex-col gap-1 bg-transparent">
-        <div className="flex justify-between items-start">
-          <h3 className="text-base font-bold">{name}</h3>
-          <span className="text-base font-bold">{rating.toFixed(1)}</span>
+      {/* Información del artista en estilo Airbnb */}
+      <div className="pt-3 flex flex-col gap-1 bg-transparent">
+        <div className="flex justify-between items-center">
+          <h3 className="text-base font-medium">{name}</h3>
+          <div className="flex items-center gap-1">
+            <Star className="h-4 w-4 fill-black stroke-black" />
+            <span className="text-sm font-medium">{rating.toFixed(1)}</span>
+          </div>
         </div>
-        <p className="text-gray-400 text-base line-clamp-1">{description}</p>
-        <p className="text-base font-bold">
-          de {priceRange}
+        <p className="text-sm text-gray-500 dark:text-gray-400 line-clamp-1">{description}</p>
+        <p className="text-sm font-medium mt-0.5">
+          <span className="font-bold">{priceRange}</span>
         </p>
       </div>
     </div>
