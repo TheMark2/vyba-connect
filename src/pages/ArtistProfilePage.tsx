@@ -8,13 +8,6 @@ import { toast } from "sonner";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { MUSIC_GENRES } from "@/constants/music";
 import { Badge } from "@/components/ui/badge";
-import {
-  Carousel,
-  CarouselContent,
-  CarouselItem,
-  CarouselNext,
-  CarouselPrevious,
-} from "@/components/ui/carousel";
 
 const artistsData = [
   {
@@ -37,12 +30,11 @@ const artistsData = [
       "/lovable-uploads/a3c6b43a-dd61-4889-ae77-cb1016e65371.png",
       "/lovable-uploads/b1d87308-8791-4bd4-bd43-e4f7cf7d9042.png"
     ],
-    coverImage: "https://images.unsplash.com/photo-1571751239008-50cad6cb9265?q=80&w=1470&auto=format&fit=crop",
+    coverImage: "https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05",
     rating: 4.9,
     priceRange: "150-400€",
     isFavorite: false
-  },
-  {
+  }, {
     id: "2",
     name: "Antonia Pedragosa",
     type: "DJ",
@@ -60,8 +52,7 @@ const artistsData = [
     rating: 4.9,
     priceRange: "400-500€",
     isFavorite: false
-  },
-  {
+  }, {
     id: "3",
     name: "Antonia Pedragosa",
     type: "DJ",
@@ -86,7 +77,6 @@ const ArtistProfilePage = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const isMobile = useIsMobile();
-  const [activeImageIndex, setActiveImageIndex] = useState(0);
   
   const artist = artistsData.find(artist => artist.id === id);
   
@@ -142,46 +132,31 @@ const ArtistProfilePage = () => {
     <>
       <Navbar />
       <div className="px-6 md:px-10 lg:px-14 xl:px-16">
-        {/* Banner Section con nueva estructura para el blur */}
-        <div className="relative w-full h-[95vh] md:h-[calc(80vh)] overflow-hidden mb-12">
-          {/* Blurred background - fuera de los límites del contenedor */}
-          <div 
-            className="absolute inset-0 overflow-hidden" 
-            style={{ 
-              zIndex: 0,
-              position: "absolute",
-              width: "120%", 
-              height: "120%", 
-              left: "-10%", 
-              top: "-10%"
-            }}
-          >
+        {/* Banner Section with Blurred Background */}
+        <div className="relative w-full h-[95vh] md:h-[calc(80vh)] overflow-hidden rounded-[25px] lg:rounded-[35px] mb-12">
+          {/* Blurred background image - Capa base */}
+          <div className="absolute inset-0 w-full h-full" style={{ zIndex: 0 }}>
             <img 
               src={artist.coverImage} 
               alt=""
-              className="w-full h-full object-cover"
-              style={{ 
-                filter: "blur(30px)", 
-                transform: "scale(1.2)",
-                opacity: 0.85
-              }}
+              className="w-full h-full object-cover filter blur-xl scale-125 opacity-80"
+              style={{ transform: "scale(1.2)" }}
             />
-            <div className="absolute inset-0 bg-black/50"></div>
+            <div className="absolute inset-0 bg-black/40"></div>
           </div>
           
-          {/* Contenedor principal con bordes redondeados */}
-          <div className="relative z-10 w-full h-full rounded-[25px] lg:rounded-[35px] overflow-hidden">
-            {/* Imagen principal del banner */}
+          {/* Main Banner Image - Capa principal */}
+          <div className="relative z-10 w-full h-full">
             <img 
               src={artist.coverImage} 
               alt={`${artist.name} portada`}
-              className="w-full h-full object-cover"
+              className="w-full h-full object-cover rounded-[25px] filter blur-xl lg:rounded-[35px]"
             />
             
             <div className="absolute inset-0 bg-gradient-to-t from-black to-transparent"></div>
           </div>
           
-          {/* Botones en la esquina superior derecha */}
+          {/* Buttons in top right corner */}
           <div className="absolute top-4 right-4 sm:top-6 sm:right-6 flex space-x-2 z-20">
             <Button 
               variant="secondary" 
@@ -209,7 +184,7 @@ const ArtistProfilePage = () => {
             </Button>
           </div>
           
-          {/* Información del artista */}
+          {/* Artist info overlay */}
           {isMobile ? (
             <div className="absolute bottom-12 left-5 right-0 flex flex-col items-start z-20">
               <div className="rounded-full overflow-hidden mb-4 w-24 h-24">
@@ -241,28 +216,6 @@ const ArtistProfilePage = () => {
               </div>
             </div>
           )}
-        </div>
-
-        {/* Galería de imágenes */}
-        <div className="mb-10">
-          <h2 className="text-3xl font-black mb-6">Galería</h2>
-          <Carousel className="w-full">
-            <CarouselContent>
-              {artist.images.map((image, index) => (
-                <CarouselItem key={index} className="basis-1/2 md:basis-1/3 lg:basis-1/4">
-                  <div className="aspect-square rounded-xl overflow-hidden">
-                    <img 
-                      src={image} 
-                      alt={`${artist.name} ${index + 1}`} 
-                      className="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
-                    />
-                  </div>
-                </CarouselItem>
-              ))}
-            </CarouselContent>
-            <CarouselPrevious className="left-2" />
-            <CarouselNext className="right-2" />
-          </Carousel>
         </div>
 
         {/* About Me Section */}
