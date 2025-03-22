@@ -135,16 +135,16 @@ const ArtistProfilePage = () => {
         {/* Banner Section with Blurred Background */}
         <div className="relative w-full h-[95vh] md:h-[calc(80vh)] overflow-hidden rounded-[25px] lg:rounded-[35px] mb-12">
           {/* Blurred background image - Capa base */}
-          <div className="absolute inset-0 w-full filter scale-125 blur-xl h-full" style={{ zIndex: 0 }}>
-            <img 
-              src={artist.coverImage} 
-              alt=""
-              className="w-full h-full object-cover opacity-80"
-              style={{ transform: "scale(1.2)" }}
-            />
+          <div className="absolute inset-0 w-full h-full overflow-visible flex justify-center items-center" style={{ zIndex: 0 }}>
+            <div className="absolute w-[120%] h-[120%] filter blur-3xl opacity-70">
+              <img 
+                src={artist.coverImage} 
+                alt=""
+                className="w-full h-full object-cover scale-150"
+              />
+            </div>
             <div className="absolute inset-0 bg-black/40"></div>
-          </div>
-          
+          </div>          
           {/* Main Banner Image - Capa principal */}
           <div className="relative z-10 w-full h-full">
             <img 
