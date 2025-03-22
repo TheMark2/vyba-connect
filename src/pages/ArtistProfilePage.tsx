@@ -366,7 +366,8 @@ const ArtistProfilePage = () => {
                         </p>
                         <div className="flex gap-3 flex-wrap">
                           {artist.timeRequirements?.map((req, index) => (
-                            <UIBadge key={index} variant="outline" className="py-2 px-4 bg-white dark:bg-vyba-dark-secondary">
+                            <UIBadge key={index} variant="outline" className="py-2 px-4 bg-white border-0 text-sm font-medium flex items-center gap-2 dark:bg-vyba-dark-secondary">
+                              <Clock className="w-4 h-4" />
                               {req}
                             </UIBadge>
                           ))}
@@ -388,7 +389,7 @@ const ArtistProfilePage = () => {
                             <UIBadge 
                               key={index} 
                               variant="primary" 
-                              className="py-2 px-4 bg-white border-0 text-sm font-bold flex items-center gap-2 dark:bg-vyba-dark-secondary"
+                              className="py-2 px-4 bg-white border-0 text-sm font-medium flex items-center gap-2 dark:bg-vyba-dark-secondary"
                             >
                               <Book className="w-4 h-4" />
                               {edu}
