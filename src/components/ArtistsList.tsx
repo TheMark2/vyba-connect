@@ -83,17 +83,17 @@ const ArtistsList = ({
 
   const getItemWidth = () => {
     if (isMobile) {
-      return 'calc(70% - 1rem)'; // Smaller width to show more of next card on mobile
+      return 'calc(85% - 1rem)'; // Mayor tamaño en móvil para mantener proporción
     } else if (typeof window !== 'undefined' && window.innerWidth < 768) {
-      return 'calc(65% - 1rem)'; 
+      return 'calc(75% - 1rem)'; // Mayor tamaño en tablet pequeña
     } else if (typeof window !== 'undefined' && window.innerWidth < 1024) {
-      return 'calc(38% - 1rem)'; // Show ~2.5 cards on tablets
+      return 'calc(45% - 1rem)'; // Mayor tamaño en tablets
     } else if (typeof window !== 'undefined' && window.innerWidth < 1280) {
-      return 'calc(28% - 1rem)'; // Show ~3.5 cards on small desktops
+      return 'calc(33% - 1rem)'; // Mayor tamaño en small desktops
     } else if (typeof window !== 'undefined' && window.innerWidth < 1536) {
-      return 'calc(21% - 1rem)'; // Show ~4.5 cards on desktops
+      return 'calc(25% - 1rem)'; // Mayor tamaño en desktops
     } else {
-      return 'calc(18% - 1rem)'; // Show ~5.5 cards on large screens
+      return 'calc(20% - 1rem)'; // Mayor tamaño en pantallas grandes
     }
   };
 

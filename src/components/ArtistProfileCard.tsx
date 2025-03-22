@@ -175,7 +175,7 @@ const ArtistProfileCard = ({
     
     touchEndX.current = e.changedTouches[0].clientX;
     const diffX = touchEndX.current - touchStartX.current;
-    const threshold = 50; // Umbral para cambiar de imagen (reducido para hacerlo más sensible)
+    const threshold = 50; // Umbral para cambiar de imagen
     
     if (diffX > threshold && currentImageIndex > 0) {
       // Deslizar a la izquierda (imagen anterior)
@@ -183,9 +183,11 @@ const ArtistProfileCard = ({
     } else if (diffX < -threshold && currentImageIndex < images.length - 1) {
       // Deslizar a la derecha (imagen siguiente)
       setCurrentImageIndex(currentImageIndex + 1);
+    } else {
+      // Si el movimiento fue pequeño, vuelve a la imagen actual
+      resetDragState();
     }
     
-    resetDragState();
     isDragging.current = false;
   };
   
@@ -198,8 +200,15 @@ const ArtistProfileCard = ({
   
   // Restaurar la posición correcta cuando cambia currentImageIndex
   useEffect(() => {
-    setDragTransform(-currentImageIndex * 100);
-  }, [currentImageIndex]);
+    // Asegúrate de que el índice esté dentro de los límites
+    if (currentImageIndex >= images.length) {
+      setCurrentImageIndex(0);
+    } else if (currentImageIndex < 0) {
+      setCurrentImageIndex(images.length - 1);
+    } else {
+      setDragTransform(-currentImageIndex * 100);
+    }
+  }, [currentImageIndex, images.length]);
   
   // Agregar cleanup para eventos touch
   useEffect(() => {
