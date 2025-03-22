@@ -431,7 +431,7 @@ const ArtistProfilePage = () => {
               <h3 className="text-3xl font-black mb-6">{artist.priceRange}</h3>
               
               <Button 
-                className="w-full py-6 text-lg font-bold mb-4"
+                className="w-full py-4 text-base font-bold mb-4"
                 onClick={handleContact}
               >
                 Contactar con {artist.name}
