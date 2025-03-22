@@ -1,4 +1,5 @@
-import React, { useState, useRef, useEffect } from "react";
+
+import React, { useState, useRef, useEffect, TouchEvent } from "react";
 import { Heart, ChevronLeft, ChevronRight, Star } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
@@ -37,6 +38,15 @@ const ArtistProfileCard = ({
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const isMobile = useIsMobile();
   const lastClickTimeRef = useRef<number>(0);
+  
+  // Referencias y estados para el gesto de deslizamiento
+  const touchStartX = useRef<number>(0);
+  const touchEndX = useRef<number>(0);
+  const imageContainerRef = useRef<HTMLDivElement>(null);
+  const isDragging = useRef<boolean>(false);
+  const dragStartX = useRef<number>(0);
+  const dragOffset = useRef<number>(0);
+  const [dragTransform, setDragTransform] = useState<number>(0);
   
   const handleFavoriteClick = (e: React.MouseEvent) => {
     e.stopPropagation();
@@ -108,18 +118,82 @@ const ArtistProfileCard = ({
     e.stopPropagation();
     const newIndex = currentImageIndex > 0 ? currentImageIndex - 1 : images.length - 1;
     setCurrentImageIndex(newIndex);
+    resetDragState();
   };
 
   const handleNextImage = (e: React.MouseEvent) => {
     e.stopPropagation();
     const newIndex = currentImageIndex < images.length - 1 ? currentImageIndex + 1 : 0;
     setCurrentImageIndex(newIndex);
+    resetDragState();
   };
 
   const handleSlideChange = (index: number) => {
     if (index === currentImageIndex) return;
     setCurrentImageIndex(index);
+    resetDragState();
   };
+  
+  // Funciones para el gesto de deslizamiento
+  const handleTouchStart = (e: React.TouchEvent) => {
+    touchStartX.current = e.touches[0].clientX;
+    isDragging.current = true;
+    dragStartX.current = e.touches[0].clientX;
+    if (imageContainerRef.current) {
+      imageContainerRef.current.style.transition = "none";
+    }
+  };
+  
+  const handleTouchMove = (e: React.TouchEvent) => {
+    if (!isDragging.current) return;
+    
+    const currentX = e.touches[0].clientX;
+    const diffX = currentX - dragStartX.current;
+    const containerWidth = imageContainerRef.current?.clientWidth || 0;
+    const maxOffset = containerWidth / images.length;
+    
+    // Limitar el desplazamiento
+    let newOffset = (currentImageIndex * -100) + (diffX / containerWidth * 100);
+    
+    // Añadir resistencia al llegar a los extremos
+    if (newOffset > 0) {
+      newOffset = newOffset * 0.3;
+    } else if (newOffset < -100 * (images.length - 1)) {
+      const overscroll = newOffset + 100 * (images.length - 1);
+      newOffset = -100 * (images.length - 1) + overscroll * 0.3;
+    }
+    
+    setDragTransform(newOffset);
+  };
+  
+  const handleTouchEnd = (e: React.TouchEvent) => {
+    touchEndX.current = e.changedTouches[0].clientX;
+    const diffX = touchEndX.current - touchStartX.current;
+    const threshold = 100; // Umbral para cambiar de imagen
+    
+    if (diffX > threshold && currentImageIndex > 0) {
+      // Deslizar a la izquierda (imagen anterior)
+      setCurrentImageIndex(currentImageIndex - 1);
+    } else if (diffX < -threshold && currentImageIndex < images.length - 1) {
+      // Deslizar a la derecha (imagen siguiente)
+      setCurrentImageIndex(currentImageIndex + 1);
+    }
+    
+    resetDragState();
+  };
+  
+  const resetDragState = () => {
+    isDragging.current = false;
+    setDragTransform(-currentImageIndex * 100);
+    if (imageContainerRef.current) {
+      imageContainerRef.current.style.transition = "transform 300ms ease-out";
+    }
+  };
+  
+  // Restaurar la posición correcta cuando cambia currentImageIndex
+  useEffect(() => {
+    setDragTransform(-currentImageIndex * 100);
+  }, [currentImageIndex]);
   
   return (
     <div 
@@ -135,33 +209,38 @@ const ArtistProfileCard = ({
         "relative w-full overflow-hidden rounded-2xl",
         "aspect-[1/1]"
       )}>
-        <div className="w-full h-full relative overflow-hidden">
-          <div className="absolute inset-0 w-full h-full">
-            <div 
-              className={cn(
-                "flex transition-transform duration-500 ease-in-out h-full",
-                isHovered ? "scale-105" : ""
-              )}
-              style={{ 
-                width: `${images.length * 100}%`,
-                transform: `translateX(-${(currentImageIndex * 100) / images.length}%)`
-              }}
-            >
-              {images.map((image, index) => (
-                <div 
-                  key={index} 
-                  className="relative h-full"
-                  style={{ width: `${100 / images.length}%` }}
-                >
-                  <img 
-                    src={image} 
-                    alt={`${name} - ${type}`} 
-                    className="w-full h-full object-cover"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black via-black/40 to-transparent opacity-60 pointer-events-none" />
-                </div>
-              ))}
-            </div>
+        <div 
+          className="w-full h-full relative overflow-hidden"
+          onTouchStart={handleTouchStart}
+          onTouchMove={handleTouchMove}
+          onTouchEnd={handleTouchEnd}
+        >
+          <div 
+            ref={imageContainerRef}
+            className={cn(
+              "flex transition-transform duration-300 ease-out h-full",
+              isHovered ? "scale-105" : ""
+            )}
+            style={{ 
+              width: `${images.length * 100}%`,
+              transform: `translateX(${dragTransform}%)`,
+            }}
+          >
+            {images.map((image, index) => (
+              <div 
+                key={index} 
+                className="relative h-full"
+                style={{ width: `${100 / images.length}%` }}
+              >
+                <img 
+                  src={image} 
+                  alt={`${name} - ${type}`} 
+                  className="w-full h-full object-cover"
+                  draggable="false"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black via-black/40 to-transparent opacity-60 pointer-events-none" />
+              </div>
+            ))}
           </div>
         </div>
         
@@ -169,14 +248,20 @@ const ArtistProfileCard = ({
           <>
             <button 
               onClick={handlePrevImage}
-              className="absolute left-3 top-1/2 transform -translate-y-1/2 bg-white p-1.5 rounded-full opacity-90 hover:opacity-100 transition-opacity z-10 shadow-md"
+              className={cn(
+                "absolute left-3 top-1/2 transform -translate-y-1/2 bg-white p-1.5 rounded-full opacity-90 hover:opacity-100 transition-opacity z-10 shadow-md",
+                isMobile ? "opacity-90" : (isHovered ? "opacity-90" : "opacity-0")
+              )}
               aria-label="Imagen anterior"
             >
               <ChevronLeft className="h-4 w-4 text-black" />
             </button>
             <button 
               onClick={handleNextImage}
-              className="absolute right-3 top-1/2 transform -translate-y-1/2 bg-white p-1.5 rounded-full opacity-90 hover:opacity-100 transition-opacity z-10 shadow-md"
+              className={cn(
+                "absolute right-3 top-1/2 transform -translate-y-1/2 bg-white p-1.5 rounded-full opacity-90 hover:opacity-100 transition-opacity z-10 shadow-md",
+                isMobile ? "opacity-90" : (isHovered ? "opacity-90" : "opacity-0")
+              )}
               aria-label="Siguiente imagen"
             >
               <ChevronRight className="h-4 w-4 text-black" />
