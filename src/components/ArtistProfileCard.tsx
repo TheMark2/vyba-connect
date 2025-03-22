@@ -183,6 +183,8 @@ const ArtistProfileCard = ({
                         alt={`${name} - ${index + 1}`}
                         className="object-cover w-full h-full"
                       />
+                      {/* Gradient overlay - bottom to top */}
+                      <div className="absolute inset-0 bg-gradient-to-t from-black via-black/40 to-transparent opacity-60 pointer-events-none" />
                     </div>
                   </div>
                 </CarouselItem>
@@ -203,6 +205,8 @@ const ArtistProfileCard = ({
                 alt={`${name} - ${type}`} 
                 className="w-full h-full object-cover"
               />
+              {/* Gradient overlay - bottom to top */}
+              <div className="absolute inset-0 bg-gradient-to-t from-black via-black/40 to-transparent opacity-60 pointer-events-none" />
             </div>
           </div>
         )}
