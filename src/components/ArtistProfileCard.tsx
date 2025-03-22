@@ -4,7 +4,6 @@ import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
 import { toast } from "sonner";
 import { useIsMobile } from "@/hooks/use-mobile";
-import { Carousel, CarouselContent, CarouselItem } from "@/components/ui/carousel";
 
 interface ArtistProfileCardProps {
   name: string;
@@ -36,11 +35,8 @@ const ArtistProfileCard = ({
   const [isAnimating, setIsAnimating] = useState(false);
   const [showCenterHeart, setShowCenterHeart] = useState(false);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
-  const [previousImageIndex, setPreviousImageIndex] = useState(0);
-  const [slideDirection, setSlideDirection] = useState<'left' | 'right'>('right');
-  const [isImageChanging, setIsImageChanging] = useState(false);
-  const lastClickTimeRef = useRef<number>(0);
   const isMobile = useIsMobile();
+  const lastClickTimeRef = useRef<number>(0);
   
   const handleFavoriteClick = (e: React.MouseEvent) => {
     e.stopPropagation();
@@ -108,38 +104,21 @@ const ArtistProfileCard = ({
     }, 800);
   };
 
-  const changeImage = (newIndex: number, direction: 'left' | 'right') => {
-    if (newIndex === currentImageIndex) return;
-    
-    setPreviousImageIndex(currentImageIndex);
-    setSlideDirection(direction);
-    setIsImageChanging(true);
-    
-    setTimeout(() => {
-      setCurrentImageIndex(newIndex);
-      setTimeout(() => {
-        setIsImageChanging(false);
-      }, 300);
-    }, 150);
-  };
-
   const handlePrevImage = (e: React.MouseEvent) => {
     e.stopPropagation();
     const newIndex = currentImageIndex > 0 ? currentImageIndex - 1 : images.length - 1;
-    changeImage(newIndex, 'left');
+    setCurrentImageIndex(newIndex);
   };
 
   const handleNextImage = (e: React.MouseEvent) => {
     e.stopPropagation();
     const newIndex = currentImageIndex < images.length - 1 ? currentImageIndex + 1 : 0;
-    changeImage(newIndex, 'right');
+    setCurrentImageIndex(newIndex);
   };
 
   const handleSlideChange = (index: number) => {
     if (index === currentImageIndex) return;
-    
-    const direction = index > currentImageIndex ? 'right' : 'left';
-    changeImage(index, direction);
+    setCurrentImageIndex(index);
   };
   
   return (
@@ -152,75 +131,41 @@ const ArtistProfileCard = ({
         cursor: isHovered ? 'pointer' : 'default'
       }}
     >
-      {/* Imagen y Carousel en estilo Airbnb */}
       <div className={cn(
         "relative w-full overflow-hidden rounded-2xl",
-        isMobile ? "aspect-[1/1]" : "aspect-[1/1]"
+        "aspect-[1/1]"
       )}>
-        {isMobile ? (
-          <Carousel 
-            className="w-full h-full" 
-            onSlideChange={handleSlideChange} 
-            opts={{
-              dragFree: true,
-              loop: images.length > 1,
-              align: "center"
-            }}
-          >
-            <CarouselContent className="h-full">
+        <div className="w-full h-full relative overflow-hidden">
+          <div className="absolute inset-0 w-full h-full">
+            <div 
+              className={cn(
+                "flex transition-transform duration-500 ease-in-out h-full",
+                isHovered ? "scale-105" : ""
+              )}
+              style={{ 
+                width: `${images.length * 100}%`,
+                transform: `translateX(-${(currentImageIndex * 100) / images.length}%)`
+              }}
+            >
               {images.map((image, index) => (
-                <CarouselItem key={index} className="h-full">
-                  <div className="relative w-full h-full aspect-square">
-                    <div className="w-full h-full relative overflow-hidden">
-                      <img
-                        src={image}
-                        alt={`${name} - ${index + 1}`}
-                        className="object-cover w-full h-full"
-                      />
-                      {/* Gradient overlay - bottom to top */}
-                      <div className="absolute inset-0 bg-gradient-to-t from-black via-black/40 to-transparent opacity-60 pointer-events-none" />
-                    </div>
-                  </div>
-                </CarouselItem>
+                <div 
+                  key={index} 
+                  className="relative h-full"
+                  style={{ width: `${100 / images.length}%` }}
+                >
+                  <img 
+                    src={image} 
+                    alt={`${name} - ${type}`} 
+                    className="w-full h-full object-cover"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black via-black/40 to-transparent opacity-60 pointer-events-none" />
+                </div>
               ))}
-            </CarouselContent>
-          </Carousel>
-        ) : (
-          <div className="w-full h-full relative overflow-hidden">
-            {/* Contenedor de imágenes con efecto de desplazamiento */}
-            <div className="absolute inset-0 w-full h-full">
-              <div 
-                className={cn(
-                  "flex transition-transform duration-500 ease-in-out h-full",
-                  isHovered ? "scale-105" : ""
-                )}
-                style={{ 
-                  width: `${images.length * 100}%`,
-                  transform: `translateX(-${(currentImageIndex * 100) / images.length}%)`
-                }}
-              >
-                {images.map((image, index) => (
-                  <div 
-                    key={index} 
-                    className="relative h-full"
-                    style={{ width: `${100 / images.length}%` }}
-                  >
-                    <img 
-                      src={image} 
-                      alt={`${name} - ${type}`} 
-                      className="w-full h-full object-cover"
-                    />
-                    {/* Gradient overlay - bottom to top */}
-                    <div className="absolute inset-0 bg-gradient-to-t from-black via-black/40 to-transparent opacity-60 pointer-events-none" />
-                  </div>
-                ))}
-              </div>
             </div>
           </div>
-        )}
+        </div>
         
-        {/* Controles de imagen al estilo Airbnb */}
-        {isHovered && images.length > 1 && !isMobile && (
+        {images.length > 1 && (
           <>
             <button 
               onClick={handlePrevImage}
@@ -239,7 +184,6 @@ const ArtistProfileCard = ({
           </>
         )}
 
-        {/* Indicadores de página estilo Airbnb */}
         {images.length > 1 && (
           <div className="absolute bottom-3 left-1/2 transform -translate-x-1/2 flex gap-1.5 z-20">
             {images.map((_, index) => (
@@ -269,7 +213,6 @@ const ArtistProfileCard = ({
           </div>
         )}
         
-        {/* Botón favorito estilo Airbnb */}
         <button 
           onClick={handleFavoriteClick} 
           className="absolute top-3 right-3 z-10 shadow-sm" 
@@ -283,13 +226,11 @@ const ArtistProfileCard = ({
           />
         </button>
         
-        {/* Etiqueta tipo en estilo Airbnb */}
         <Badge variant="secondary" className="absolute top-3 left-3 font-medium text-xs bg-white/80 backdrop-blur-sm text-black z-10 shadow-sm">
           {type}
         </Badge>
       </div>
       
-      {/* Información del artista en estilo Airbnb */}
       <div className="pt-3 flex flex-col gap-1 bg-transparent">
         <div className="flex justify-between items-center">
           <h3 className="text-base font-medium">{name}</h3>
