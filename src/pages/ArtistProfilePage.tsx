@@ -135,25 +135,34 @@ const ArtistProfilePage = () => {
       <div className="px-6 md:px-10 lg:px-14 xl:px-16">
         {/* Banner Section with Blurred Background */}
         <div className="relative w-full h-[95vh] md:h-[calc(80vh)] overflow-hidden rounded-[25px] lg:rounded-[35px] mb-12">
-          {/* Blurred background image - positioned behind the main image */}
-          <div className="absolute inset-0 w-full h-full z-[-1]">
+          {/* Blurred background image */}
+          <div 
+            className="absolute inset-0 w-full h-full z-0"
+            style={{
+              overflow: 'hidden',
+              position: 'absolute'
+            }}
+          >
             <img 
               src={artist.coverImage} 
               alt=""
               className="w-full h-full object-cover filter blur-3xl scale-125 opacity-90"
             />
+            <div className="absolute inset-0 bg-black/30"></div>
           </div>
           
           {/* Main Banner Image */}
-          <img 
-            src={artist.coverImage} 
-            alt={`${artist.name} portada`}
-            className="relative w-full h-full object-cover rounded-[25px] lg:rounded-[35px]"
-          />
+          <div className="relative z-10 w-full h-full">
+            <img 
+              src={artist.coverImage} 
+              alt={`${artist.name} portada`}
+              className="w-full h-full object-cover rounded-[25px] lg:rounded-[35px]"
+            />
+            
+            <div className="absolute inset-0 bg-gradient-to-t from-black to-transparent"></div>
+          </div>
           
-          <div className="absolute inset-0 bg-gradient-to-t from-black to-transparent"></div>
-          
-          <div className="absolute top-4 right-4 sm:top-6 sm:right-6 flex space-x-2">
+          <div className="absolute top-4 right-4 sm:top-6 sm:right-6 flex space-x-2 z-20">
             <Button 
               variant="secondary" 
               size="icon" 
@@ -181,7 +190,7 @@ const ArtistProfilePage = () => {
           </div>
           
           {isMobile ? (
-            <div className="absolute bottom-12 left-5 right-0 flex flex-col items-start">
+            <div className="absolute bottom-12 left-5 right-0 flex flex-col items-start z-20">
               <div className="rounded-full overflow-hidden mb-4 w-24 h-24">
                 <img 
                   src={artist.images[0]} 
@@ -196,7 +205,7 @@ const ArtistProfilePage = () => {
               </div>
             </div>
           ) : (
-            <div className="absolute bottom-12 left-5 md:left-10 lg:left-14 flex items-center">
+            <div className="absolute bottom-12 left-5 md:left-10 lg:left-14 flex items-center z-20">
               <div className="rounded-full overflow-hidden mr-4 md:mr-6 w-24 h-24 md:w-32 md:h-32">
                 <img 
                   src={artist.images[0]} 
