@@ -1,3 +1,4 @@
+
 import React, { useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import Navbar from "@/components/Navbar";
@@ -132,12 +133,23 @@ const ArtistProfilePage = () => {
     <>
       <Navbar />
       <div className="px-6 md:px-10 lg:px-14 xl:px-16">
-        {/* Banner Section */}
+        {/* Banner Section with Blurred Background */}
         <div className="relative w-full h-[95vh] md:h-[calc(80vh)] overflow-hidden rounded-[25px] lg:rounded-[35px] mb-12">
+          {/* Blurred background image - positioned behind the main image */}
+          <div className="absolute inset-0 w-full h-full">
+            <img 
+              src={artist.coverImage} 
+              alt=""
+              className="w-full h-full object-cover filter blur-xl scale-110 opacity-90"
+            />
+            <div className="absolute inset-0 bg-black/50"></div>
+          </div>
+          
+          {/* Main Banner Image */}
           <img 
             src={artist.coverImage} 
             alt={`${artist.name} portada`}
-            className="w-full h-full object-cover"
+            className="relative w-full h-full object-cover rounded-[25px] lg:rounded-[35px]"
           />
           
           <div className="absolute inset-0 bg-gradient-to-t from-black to-transparent"></div>
