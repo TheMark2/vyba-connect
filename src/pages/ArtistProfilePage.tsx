@@ -422,21 +422,20 @@ const ArtistProfilePage = () => {
             </div>
             
             {/* Right Sticky Content */}
-            <div className="lg:sticky lg:top-24 h-fit bg-white dark:bg-vyba-dark-bg rounded-3xl px-6 pt-6">
-              <div className="flex items-center gap-2 mb-3 px-6">
+            <div className="lg:sticky lg:top-24 h-fit bg-white dark:bg-vyba-dark-bg rounded-3xl p-6">
+              <div className="flex items-center gap-2 mb-3">
                 <p className="text-base text-neutral-600 dark:text-neutral-300">{artist.location} · {artist.availability}</p>
               </div>
               
               <h3 className="text-lg font-black mb-6">{artist.priceRange}</h3>
               <hr className="border-t border-neutral-300 dark:border-neutral-600 my-6 w-full" />
-              <div className="px-6 pb-6">
-                <Button 
-                  className="w-full py-4 text-base font-bold"
-                  onClick={handleContact}
-                >
-                  Contactar con {artist.name}
-                </Button>
-              </div>
+              
+              <Button 
+                className="w-full py-4 text-base font-bold"
+                onClick={handleContact}
+              >
+                Contactar con {artist.name}
+              </Button>
             </div>
           </div>
         </div>
