@@ -2,12 +2,13 @@ import React, { useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
-import { Heart, Flag, Share2, MapPin } from "lucide-react";
+import { Heart, Flag, Share2, MapPin, ChevronDown, Book, List, Clock, Badge } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { MUSIC_GENRES } from "@/constants/music";
-import { Badge } from "@/components/ui/badge";
+import { Badge as UIBadge } from "@/components/ui/badge";
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 
 const artistsData = [
   {
@@ -33,7 +34,23 @@ const artistsData = [
     coverImage: "https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05",
     rating: 4.9,
     priceRange: "150-400€",
-    isFavorite: false
+    isFavorite: false,
+    experience: [
+      "TotKfe - Caldes de Montbui",
+      "TotKfe - Caldes de Montbui",
+      "TotKfe - Caldes de Montbui"
+    ],
+    equipment: [
+      "Con equipo propio",
+      "Para <100 personas"
+    ],
+    timeRequirements: [
+      "10-15 minutos de prueba de sonido",
+      "1h de montaje"
+    ],
+    education: [
+      "Conservatorio Provincial de Música Luis Gianneo"
+    ]
   }, {
     id: "2",
     name: "Antonia Pedragosa",
@@ -51,7 +68,23 @@ const artistsData = [
     coverImage: "https://images.unsplash.com/photo-1465146344425-f00d5f5c8f07",
     rating: 4.9,
     priceRange: "400-500€",
-    isFavorite: false
+    isFavorite: false,
+    experience: [
+      "TotKfe - Caldes de Montbui",
+      "TotKfe - Caldes de Montbui",
+      "TotKfe - Caldes de Montbui"
+    ],
+    equipment: [
+      "Con equipo propio",
+      "Para <100 personas"
+    ],
+    timeRequirements: [
+      "10-15 minutos de prueba de sonido",
+      "1h de montaje"
+    ],
+    education: [
+      "Conservatorio Provincial de Música Luis Gianneo"
+    ]
   }, {
     id: "3",
     name: "Antonia Pedragosa",
@@ -69,7 +102,23 @@ const artistsData = [
     coverImage: "https://images.unsplash.com/photo-1506744038136-46273834b3fb",
     rating: 4.9,
     priceRange: "400-500€",
-    isFavorite: false
+    isFavorite: false,
+    experience: [
+      "TotKfe - Caldes de Montbui",
+      "TotKfe - Caldes de Montbui",
+      "TotKfe - Caldes de Montbui"
+    ],
+    equipment: [
+      "Con equipo propio",
+      "Para <100 personas"
+    ],
+    timeRequirements: [
+      "10-15 minutos de prueba de sonido",
+      "1h de montaje"
+    ],
+    education: [
+      "Conservatorio Provincial de Música Luis Gianneo"
+    ]
   }
 ];
 
@@ -77,6 +126,7 @@ const ArtistProfilePage = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const isMobile = useIsMobile();
+  const [isInfoOpen, setIsInfoOpen] = useState(false);
   
   const artist = artistsData.find(artist => artist.id === id);
   
@@ -240,6 +290,114 @@ const ArtistProfilePage = () => {
                     {genre}
                   </Button>
                 ))}
+              </div>
+
+              {/* Más información Section */}
+              <div className="mt-8 mb-16">
+                <h2 className="text-3xl font-black mb-6">Más información</h2>
+                <div className="bg-[#F8F8F8] dark:bg-vyba-dark-bg rounded-3xl overflow-hidden">
+                  <Collapsible
+                    open={isInfoOpen}
+                    onOpenChange={setIsInfoOpen}
+                    className="w-full"
+                  >
+                    <CollapsibleTrigger asChild>
+                      <button className="flex items-center justify-between w-full p-6 text-xl font-bold hover:bg-gray-100 dark:hover:bg-vyba-dark-secondary/70 transition-colors duration-200">
+                        <span>Experiencia, Repertorio, Logística y Equipamiento, Tiempos</span>
+                        <ChevronDown className={`h-6 w-6 transition-transform duration-300 ${isInfoOpen ? "rotate-180" : ""}`} />
+                      </button>
+                    </CollapsibleTrigger>
+                    <CollapsibleContent className="p-6 pt-0 space-y-8">
+                      {/* Experiencia */}
+                      <div>
+                        <h3 className="text-xl font-bold mb-3 flex items-center">
+                          <Book className="mr-2 h-5 w-5" />
+                          Experiencia
+                        </h3>
+                        <p className="mb-4">
+                          ¿Buscas añadir un toque de elegancia y encanto musical a tu próximo evento? ¡Estás en el lugar indicado!
+                          Soy Antonia Pedragosa, una apasionada DJ especializada en jazz, bossa nova y blues. ✨✨
+                        </p>
+                        <div className="flex gap-3 flex-wrap">
+                          {artist.experience?.map((exp, index) => (
+                            <UIBadge key={index} variant="outline" className="py-2 px-4 bg-white dark:bg-vyba-dark-secondary">
+                              {exp}
+                            </UIBadge>
+                          ))}
+                        </div>
+                      </div>
+
+                      {/* Repertorio */}
+                      <div>
+                        <h3 className="text-xl font-bold mb-3 flex items-center">
+                          <List className="mr-2 h-5 w-5" />
+                          Repertorio
+                        </h3>
+                        <p className="mb-4">
+                          ¿Buscas añadir un toque de elegancia y encanto musical a tu próximo evento? ¡Estás en el lugar indicado!
+                          Soy Antonia Pedragosa, una apasionada DJ especializada en jazz, bossa nova y blues. ✨✨
+                        </p>
+                      </div>
+
+                      {/* Logística y equipamiento */}
+                      <div>
+                        <h3 className="text-xl font-bold mb-3 flex items-center">
+                          <MapPin className="mr-2 h-5 w-5" />
+                          Logística y equipamiento
+                        </h3>
+                        <p className="mb-4">
+                          ¿Buscas añadir un toque de elegancia y encanto musical a tu próximo evento? ¡Estás en el lugar indicado!
+                          Soy Antonia Pedragosa, una apasionada DJ especializada en jazz, bossa nova y blues. ✨✨
+                        </p>
+                        <div className="flex gap-3 flex-wrap">
+                          {artist.equipment?.map((item, index) => (
+                            <UIBadge key={index} variant="outline" className="py-2 px-4 bg-white dark:bg-vyba-dark-secondary">
+                              {item}
+                            </UIBadge>
+                          ))}
+                        </div>
+                      </div>
+
+                      {/* Tiempos */}
+                      <div>
+                        <h3 className="text-xl font-bold mb-3 flex items-center">
+                          <Clock className="mr-2 h-5 w-5" />
+                          Tiempos
+                        </h3>
+                        <p className="mb-4">
+                          ¿Buscas añadir un toque de elegancia y encanto musical a tu próximo evento? ¡Estás en el lugar indicado!
+                          Soy Antonia Pedragosa, una apasionada DJ especializada en jazz, bossa nova y blues. ✨✨
+                        </p>
+                        <div className="flex gap-3 flex-wrap">
+                          {artist.timeRequirements?.map((req, index) => (
+                            <UIBadge key={index} variant="outline" className="py-2 px-4 bg-white dark:bg-vyba-dark-secondary">
+                              {req}
+                            </UIBadge>
+                          ))}
+                        </div>
+                      </div>
+
+                      {/* Formación */}
+                      <div>
+                        <h3 className="text-xl font-bold mb-3 flex items-center">
+                          <Badge className="mr-2 h-5 w-5" />
+                          Formación
+                        </h3>
+                        <p className="mb-4">
+                          ¿Buscas añadir un toque de elegancia y encanto musical a tu próximo evento? ¡Estás en el lugar indicado!
+                          Soy Antonia Pedragosa, una apasionada DJ especializada en jazz, bossa nova y blues. ✨✨
+                        </p>
+                        <div className="flex gap-3 flex-wrap">
+                          {artist.education?.map((edu, index) => (
+                            <UIBadge key={index} variant="outline" className="py-2 px-4 bg-white dark:bg-vyba-dark-secondary">
+                              {edu}
+                            </UIBadge>
+                          ))}
+                        </div>
+                      </div>
+                    </CollapsibleContent>
+                  </Collapsible>
+                </div>
               </div>
             </div>
             
