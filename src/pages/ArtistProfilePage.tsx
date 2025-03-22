@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import Navbar from "@/components/Navbar";
@@ -31,7 +30,7 @@ const artistsData = [
       "/lovable-uploads/a3c6b43a-dd61-4889-ae77-cb1016e65371.png",
       "/lovable-uploads/b1d87308-8791-4bd4-bd43-e4f7cf7d9042.png"
     ],
-    coverImage: "/lovable-uploads/672e18fa-dfe5-48bb-b838-4f7f26998dc3.png",
+    coverImage: "https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05",
     rating: 4.9,
     priceRange: "150-400€",
     isFavorite: false
@@ -49,7 +48,7 @@ const artistsData = [
       "/lovable-uploads/64cabbe3-ce62-4190-830d-0e5defd31a1b.png",
       "/lovable-uploads/77591a97-10cd-4c8b-b768-5b17483c3d9f.png"
     ],
-    coverImage: "/lovable-uploads/672e18fa-dfe5-48bb-b838-4f7f26998dc3.png",
+    coverImage: "https://images.unsplash.com/photo-1465146344425-f00d5f5c8f07",
     rating: 4.9,
     priceRange: "400-500€",
     isFavorite: false
@@ -67,7 +66,7 @@ const artistsData = [
       "/lovable-uploads/a3c6b43a-dd61-4889-ae77-cb1016e65371.png",
       "/lovable-uploads/b1d87308-8791-4bd4-bd43-e4f7cf7d9042.png"
     ],
-    coverImage: "/lovable-uploads/672e18fa-dfe5-48bb-b838-4f7f26998dc3.png",
+    coverImage: "https://images.unsplash.com/photo-1506744038136-46273834b3fb",
     rating: 4.9,
     priceRange: "400-500€",
     isFavorite: false
