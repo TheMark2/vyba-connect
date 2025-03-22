@@ -424,11 +424,10 @@ const ArtistProfilePage = () => {
             {/* Right Sticky Content */}
             <div className="lg:sticky lg:top-24 h-fit bg-white dark:bg-vyba-dark-bg rounded-3xl p-6 shadow-sm">
               <div className="flex items-center gap-2 mb-3">
-                <MapPin className="h-5 w-5 text-neutral-500" />
-                <p className="text-lg text-neutral-600 dark:text-neutral-300">{artist.location} · {artist.availability}</p>
+                <p className="text-base text-neutral-600 dark:text-neutral-300">{artist.location} · {artist.availability}</p>
               </div>
               
-              <h3 className="text-3xl font-black mb-6">{artist.priceRange}</h3>
+              <h3 className="text-lg font-black mb-6">{artist.priceRange}</h3>
               
               <Button 
                 className="w-full py-4 text-base font-bold"
