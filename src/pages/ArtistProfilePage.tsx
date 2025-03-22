@@ -140,9 +140,8 @@ const ArtistProfilePage = () => {
             <img 
               src={artist.coverImage} 
               alt=""
-              className="w-full h-full object-cover filter blur-xl scale-110 opacity-90"
+              className="w-full h-full object-cover filter blur-xl scale-110 opacity-50"
             />
-            <div className="absolute inset-0 bg-black/50"></div>
           </div>
           
           {/* Main Banner Image */}
