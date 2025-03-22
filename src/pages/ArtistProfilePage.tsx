@@ -181,34 +181,6 @@ const ArtistProfilePage = () => {
             </div>
           )}
         </div>
-        
-        <div className="max-w-screen-xl mx-auto px-0 md:px-10 py-10">
-          <div className="min-h-[400px]">
-            <h2 className="text-2xl font-bold mb-4">Información adicional</h2>
-            <p className="text-lg mb-8">
-              Aquí puedes añadir más información sobre el artista, como su biografía,
-              experiencia, eventos pasados, testimonios de clientes, etc.
-            </p>
-            
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-              <div className="bg-secondary dark:bg-vyba-dark-secondary/30 p-6 rounded-3xl">
-                <h3 className="text-xl font-bold mb-3">Experiencia</h3>
-                <p>
-                  {artist.name} tiene más de 10 años de experiencia como DJ profesional,
-                  habiendo actuado en los mejores clubes y eventos de la ciudad.
-                </p>
-              </div>
-              
-              <div className="bg-secondary dark:bg-vyba-dark-secondary/30 p-6 rounded-3xl">
-                <h3 className="text-xl font-bold mb-3">Servicios</h3>
-                <p>
-                  Ofrece servicios de DJ para bodas, fiestas privadas, eventos corporativos
-                  y clubes nocturnos. Incluye equipo propio de sonido e iluminación.
-                </p>
-              </div>
-            </div>
-          </div>
-        </div>
       </div>
       <Footer />
     </>
