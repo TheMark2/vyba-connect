@@ -187,46 +187,34 @@ const ArtistProfileCard = ({
           </Carousel>
         ) : (
           <div className="w-full h-full relative overflow-hidden">
-            {/* Current Image */}
-            <div 
-              className={cn(
-                "absolute w-full h-full transition-all duration-500 ease-in-out",
-                isImageChanging 
-                  ? slideDirection === 'right' 
-                    ? "-translate-x-full opacity-0" 
-                    : "translate-x-full opacity-0"
-                  : "translate-x-0 opacity-100",
-                isHovered ? "scale-105" : ""
-              )}
-            >
-              <img 
-                src={images[previousImageIndex]} 
-                alt={`${name} - ${type}`} 
-                className="w-full h-full object-cover"
-              />
-              {/* Gradient overlay - bottom to top */}
-              <div className="absolute inset-0 bg-gradient-to-t from-black via-black/40 to-transparent opacity-60 pointer-events-none" />
-            </div>
-            
-            {/* New Image (coming in) */}
-            <div 
-              className={cn(
-                "absolute w-full h-full transition-all duration-500 ease-in-out",
-                isImageChanging 
-                  ? "translate-x-0 opacity-100" 
-                  : slideDirection === 'right' 
-                    ? "translate-x-full opacity-0" 
-                    : "-translate-x-full opacity-0",
-                isHovered ? "scale-105" : ""
-              )}
-            >
-              <img 
-                src={images[currentImageIndex]} 
-                alt={`${name} - ${type}`} 
-                className="w-full h-full object-cover"
-              />
-              {/* Gradient overlay - bottom to top */}
-              <div className="absolute inset-0 bg-gradient-to-t from-black via-black/40 to-transparent opacity-60 pointer-events-none" />
+            {/* Contenedor de imágenes con efecto de desplazamiento */}
+            <div className="absolute inset-0 w-full h-full">
+              <div 
+                className={cn(
+                  "flex transition-transform duration-500 ease-in-out h-full",
+                  isHovered ? "scale-105" : ""
+                )}
+                style={{ 
+                  width: `${images.length * 100}%`,
+                  transform: `translateX(-${(currentImageIndex * 100) / images.length}%)`
+                }}
+              >
+                {images.map((image, index) => (
+                  <div 
+                    key={index} 
+                    className="relative h-full"
+                    style={{ width: `${100 / images.length}%` }}
+                  >
+                    <img 
+                      src={image} 
+                      alt={`${name} - ${type}`} 
+                      className="w-full h-full object-cover"
+                    />
+                    {/* Gradient overlay - bottom to top */}
+                    <div className="absolute inset-0 bg-gradient-to-t from-black via-black/40 to-transparent opacity-60 pointer-events-none" />
+                  </div>
+                ))}
+              </div>
             </div>
           </div>
         )}
