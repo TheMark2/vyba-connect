@@ -318,11 +318,28 @@ const ArtistProfilePage = () => {
                           Soy Antonia Pedragosa, una apasionada DJ especializada en jazz, bossa nova y blues. ✨✨
                         </p>
                         <div className="flex gap-3 flex-wrap">
-                          {artist.experience?.map((exp, index) => (
-                            <UIBadge key={index} variant="outline" className="py-2 px-4 bg-white border-0 text-sm font-medium flex items-center gap-2 dark:bg-vyba-dark-secondary">
-                              {exp}
-                            </UIBadge>
-                          ))}
+                          {artist.experience?.map((exp, index) => {
+                            // Dividir la experiencia en nombre y ubicación (asumiendo formato "Nombre - Ubicación")
+                            const parts = exp.split(' - ');
+                            const name = parts[0];
+                            const location = parts.length > 1 ? parts[1] : '';
+                            
+                            return (
+                              <UIBadge 
+                                key={index} 
+                                variant="outline" 
+                                className="py-2 px-4 bg-white border-0 text-sm font-medium dark:bg-vyba-dark-secondary"
+                              >
+                                <span className="text-black dark:text-white">{name}</span>
+                                {location && (
+                                  <>
+                                    <span className="mx-1 text-gray-500">·</span>
+                                    <span className="text-gray-500">{location}</span>
+                                  </>
+                                )}
+                              </UIBadge>
+                            );
+                          })}
                         </div>
                       </div>
 
