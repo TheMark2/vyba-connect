@@ -319,7 +319,7 @@ const ArtistProfilePage = () => {
                         </p>
                         <div className="flex gap-3 flex-wrap">
                           {artist.experience?.map((exp, index) => (
-                            <UIBadge key={index} variant="outline" className="py-2 px-4 bg-white dark:bg-vyba-dark-secondary">
+                            <UIBadge key={index} variant="outline" className="py-2 px-4 bg-white border-0 text-sm font-medium flex items-center gap-2 dark:bg-vyba-dark-secondary">
                               {exp}
                             </UIBadge>
                           ))}
@@ -348,7 +348,8 @@ const ArtistProfilePage = () => {
                         </p>
                         <div className="flex gap-3 flex-wrap">
                           {artist.equipment?.map((item, index) => (
-                            <UIBadge key={index} variant="outline" className="py-2 px-4 bg-white dark:bg-vyba-dark-secondary">
+                            <UIBadge key={index} variant="outline" className="py-2 px-4 bg-white border-0 text-sm font-medium flex items-center gap-2 dark:bg-vyba-dark-secondary">
+                              <List className="w-4 h-4" />                              
                               {item}
                             </UIBadge>
                           ))}
