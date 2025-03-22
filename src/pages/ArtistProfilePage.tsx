@@ -311,7 +311,6 @@ const ArtistProfilePage = () => {
                       {/* Experiencia */}
                       <div>
                         <h3 className="text-xl font-bold mb-3 flex items-center">
-                          <Book className="mr-2 h-5 w-5" />
                           Experiencia
                         </h3>
                         <p className="mb-4">
@@ -330,7 +329,6 @@ const ArtistProfilePage = () => {
                       {/* Repertorio */}
                       <div>
                         <h3 className="text-xl font-bold mb-3 flex items-center">
-                          <List className="mr-2 h-5 w-5" />
                           Repertorio
                         </h3>
                         <p className="mb-4">
@@ -342,7 +340,6 @@ const ArtistProfilePage = () => {
                       {/* Logística y equipamiento */}
                       <div>
                         <h3 className="text-xl font-bold mb-3 flex items-center">
-                          <MapPin className="mr-2 h-5 w-5" />
                           Logística y equipamiento
                         </h3>
                         <p className="mb-4">
@@ -361,7 +358,6 @@ const ArtistProfilePage = () => {
                       {/* Tiempos */}
                       <div>
                         <h3 className="text-xl font-bold mb-3 flex items-center">
-                          <Clock className="mr-2 h-5 w-5" />
                           Tiempos
                         </h3>
                         <p className="mb-4">
