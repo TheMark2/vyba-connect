@@ -307,7 +307,7 @@ const ArtistProfilePage = () => {
                         <ChevronDown className={`h-6 w-6 transition-transform duration-300 ${isInfoOpen ? "rotate-180" : ""}`} />
                       </button>
                     </CollapsibleTrigger>
-                    <CollapsibleContent className="p-6 pt-0 space-y-8">
+                    <CollapsibleContent className="p-6 pt-0 space-y-8 bg-secondary rounded-2xl">
                       {/* Experiencia */}
                       <div>
                         <h3 className="text-xl font-bold mb-3 flex items-center">
