@@ -385,7 +385,7 @@ const ArtistProfilePage = () => {
                         </p>
                         <div className="flex gap-3 flex-wrap">
                           {artist.education?.map((edu, index) => (
-                            <UIBadge key={index} variant="outline" className="py-2 px-4 bg-white dark:bg-vyba-dark-secondary">
+                            <UIBadge key={index} variant="primary" className="py-2 px-4 dark:bg-vyba-dark-secondary">
                               {edu}
                             </UIBadge>
                           ))}
