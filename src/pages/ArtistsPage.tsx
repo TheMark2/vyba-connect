@@ -142,7 +142,7 @@ const ArtistsPage = () => {
               Buscar con IA
             </Button>
             <Button variant="secondary" className="bg-white hover:bg-[#F5F1EB]">
-              <Blend className="h-4 w-4 mr-1 stroke-2" />
+              <Blend className="h-5 w-5 mr-1 stroke-2" />
               Filtros
             </Button>
           </div>
