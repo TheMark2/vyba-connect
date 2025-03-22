@@ -388,7 +388,7 @@ const ArtistProfilePage = () => {
                             <UIBadge 
                               key={index} 
                               variant="primary" 
-                              className="py-2 px-4 bg-white border-0 text-sm font-black flex items-center gap-2 dark:bg-vyba-dark-secondary"
+                              className="py-2 px-4 bg-white border-0 text-sm font-bold flex items-center gap-2 dark:bg-vyba-dark-secondary"
                             >
                               <Book className="w-4 h-4" />
                               {edu}
