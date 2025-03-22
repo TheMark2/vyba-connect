@@ -406,7 +406,7 @@ const ArtistProfilePage = () => {
                           {artist.education?.map((edu, index) => (
                             <UIBadge 
                               key={index} 
-                              variant="primary" 
+                              variant="outline" 
                               className="py-2 px-4 bg-white border-0 text-sm font-medium flex items-center gap-2 dark:bg-vyba-dark-secondary"
                             >
                               <Book className="w-4 h-4" />
