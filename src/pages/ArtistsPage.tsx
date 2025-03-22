@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Search, Blend } from "lucide-react";
+import { Sparkles, Blend } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import ArtistProfileCard from "@/components/ArtistProfileCard";
 import Navbar from "@/components/Navbar";
@@ -138,7 +138,7 @@ const ArtistsPage = () => {
           
           <div className={`space-x-3 ${isMobile ? "w-full flex justify-center" : ""}`}>
             <Button variant="secondary" className="bg-white hover:bg-[#F5F1EB]">
-              <Search className="h-4 w-4 mr-1" />
+              <Sparkles className="h-5 w-5 mr-1 stroke-2" />
               Buscar con IA
             </Button>
             <Button variant="secondary" className="bg-white hover:bg-[#F5F1EB]">
