@@ -422,7 +422,7 @@ const ArtistProfilePage = () => {
             </div>
             
             {/* Right Sticky Content */}
-            <div className="lg:sticky lg:top-24 h-fit bg-white dark:bg-vyba-dark-bg rounded-3xl px-6 py-2">
+            <div className="lg:sticky lg:top-24 h-fit bg-white dark:bg-vyba-dark-bg rounded-3xl px-6 py-4">
               <div className="flex items-center gap-2 mb-3">
                 <p className="text-base text-neutral-600 dark:text-neutral-300">{artist.location} · {artist.availability}</p>
               </div>
