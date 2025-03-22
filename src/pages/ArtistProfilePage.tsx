@@ -150,7 +150,7 @@ const ArtistProfilePage = () => {
             <img 
               src={artist.coverImage} 
               alt={`${artist.name} portada`}
-              className="w-full h-full object-cover rounded-[25px] filter blur-xl lg:rounded-[35px]"
+              className="w-full h-full object-cover rounded-[25px] lg:rounded-[35px]"
             />
             
             <div className="absolute inset-0 bg-gradient-to-t from-black to-transparent"></div>
