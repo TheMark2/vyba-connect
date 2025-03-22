@@ -45,7 +45,6 @@ const ArtistProfileCard = ({
   const imageContainerRef = useRef<HTMLDivElement>(null);
   const isDragging = useRef<boolean>(false);
   const dragStartX = useRef<number>(0);
-  const dragOffset = useRef<number>(0);
   const [dragTransform, setDragTransform] = useState<number>(0);
   
   const handleFavoriteClick = (e: React.MouseEvent) => {
@@ -116,6 +115,8 @@ const ArtistProfileCard = ({
 
   const handlePrevImage = (e: React.MouseEvent) => {
     e.stopPropagation();
+    if (images.length <= 1) return;
+    
     const newIndex = currentImageIndex > 0 ? currentImageIndex - 1 : images.length - 1;
     setCurrentImageIndex(newIndex);
     resetDragState();
@@ -123,13 +124,15 @@ const ArtistProfileCard = ({
 
   const handleNextImage = (e: React.MouseEvent) => {
     e.stopPropagation();
+    if (images.length <= 1) return;
+    
     const newIndex = currentImageIndex < images.length - 1 ? currentImageIndex + 1 : 0;
     setCurrentImageIndex(newIndex);
     resetDragState();
   };
 
   const handleSlideChange = (index: number) => {
-    if (index === currentImageIndex) return;
+    if (index === currentImageIndex || index < 0 || index >= images.length) return;
     setCurrentImageIndex(index);
     resetDragState();
   };
@@ -149,10 +152,11 @@ const ArtistProfileCard = ({
     
     const currentX = e.touches[0].clientX;
     const diffX = currentX - dragStartX.current;
-    const containerWidth = imageContainerRef.current?.clientWidth || 0;
-    const maxOffset = containerWidth / images.length;
     
-    // Limitar el desplazamiento
+    // Obtener el ancho real del contenedor
+    const containerWidth = imageContainerRef.current?.clientWidth || 0;
+    
+    // Calcular el desplazamiento como porcentaje del ancho
     let newOffset = (currentImageIndex * -100) + (diffX / containerWidth * 100);
     
     // Añadir resistencia al llegar a los extremos
@@ -167,9 +171,11 @@ const ArtistProfileCard = ({
   };
   
   const handleTouchEnd = (e: React.TouchEvent) => {
+    if (!isDragging.current) return;
+    
     touchEndX.current = e.changedTouches[0].clientX;
     const diffX = touchEndX.current - touchStartX.current;
-    const threshold = 100; // Umbral para cambiar de imagen
+    const threshold = 50; // Umbral para cambiar de imagen (reducido para hacerlo más sensible)
     
     if (diffX > threshold && currentImageIndex > 0) {
       // Deslizar a la izquierda (imagen anterior)
@@ -180,20 +186,27 @@ const ArtistProfileCard = ({
     }
     
     resetDragState();
+    isDragging.current = false;
   };
   
   const resetDragState = () => {
-    isDragging.current = false;
-    setDragTransform(-currentImageIndex * 100);
     if (imageContainerRef.current) {
       imageContainerRef.current.style.transition = "transform 300ms ease-out";
     }
+    setDragTransform(-currentImageIndex * 100);
   };
   
   // Restaurar la posición correcta cuando cambia currentImageIndex
   useEffect(() => {
     setDragTransform(-currentImageIndex * 100);
   }, [currentImageIndex]);
+  
+  // Agregar cleanup para eventos touch
+  useEffect(() => {
+    return () => {
+      isDragging.current = false;
+    };
+  }, []);
   
   return (
     <div 
@@ -218,7 +231,7 @@ const ArtistProfileCard = ({
           <div 
             ref={imageContainerRef}
             className={cn(
-              "flex transition-transform duration-300 ease-out h-full",
+              "flex transition-transform duration-300 ease-out h-full w-full",
               isHovered ? "scale-105" : ""
             )}
             style={{ 
@@ -229,14 +242,15 @@ const ArtistProfileCard = ({
             {images.map((image, index) => (
               <div 
                 key={index} 
-                className="relative h-full"
+                className="relative h-full flex-shrink-0"
                 style={{ width: `${100 / images.length}%` }}
               >
                 <img 
                   src={image} 
-                  alt={`${name} - ${type}`} 
+                  alt={`${name} - ${index + 1}`}
                   className="w-full h-full object-cover"
                   draggable="false"
+                  loading="lazy"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black via-black/40 to-transparent opacity-60 pointer-events-none" />
               </div>
