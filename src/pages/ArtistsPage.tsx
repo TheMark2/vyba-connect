@@ -146,11 +146,11 @@ const ArtistsPage = () => {
           <div className={`space-x-3 ${isMobile ? "w-full flex justify-center" : ""}`}>
             <Button variant="secondary" className="bg-white hover:bg-[#F5F1EB]">
               Buscar con IA
-              <Sparkles className="h-4 w-4 mr-1 stroke-2" />
+              <Sparkles className="h-4 w-4 ml-1 stroke-3" />
             </Button>
             <Button variant="secondary" className="bg-white hover:bg-[#F5F1EB]">
               Filtros
-              <Blend className="h-4 w-4 mr-1 stroke-2" />
+              <Blend className="h-4 w-4 ml-1 stroke-3" />
             </Button>
           </div>
         </div>
