@@ -136,11 +136,11 @@ const ArtistProfilePage = () => {
         {/* Banner Section with Blurred Background */}
         <div className="relative w-full h-[95vh] md:h-[calc(80vh)] overflow-hidden rounded-[25px] lg:rounded-[35px] mb-12">
           {/* Blurred background image - positioned behind the main image */}
-          <div className="absolute inset-0 w-full h-full">
+          <div className="absolute inset-0 w-full h-full z-[-1]">
             <img 
               src={artist.coverImage} 
               alt=""
-              className="w-full h-full object-cover filter blur-3xl scale-110 opacity-50"
+              className="w-full h-full object-cover filter blur-3xl scale-125 opacity-90"
             />
           </div>
           
