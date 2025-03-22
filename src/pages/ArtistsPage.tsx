@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Search, SlidersHorizontal } from "lucide-react";
+import { Search, Blend } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import ArtistProfileCard from "@/components/ArtistProfileCard";
 import Navbar from "@/components/Navbar";
@@ -142,7 +142,7 @@ const ArtistsPage = () => {
               Buscar con IA
             </Button>
             <Button variant="secondary" className="bg-white dark:bg-white dark:text-black">
-              <SlidersHorizontal className="h-4 w-4 mr-1" />
+              <Blend className="h-4 w-4 mr-1 stroke-2" />
               Filtros
             </Button>
           </div>
