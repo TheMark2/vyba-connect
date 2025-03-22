@@ -36,6 +36,8 @@ const ArtistProfileCard = ({
   const [isAnimating, setIsAnimating] = useState(false);
   const [showCenterHeart, setShowCenterHeart] = useState(false);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
+  const [previousImageIndex, setPreviousImageIndex] = useState(0);
+  const [slideDirection, setSlideDirection] = useState<'left' | 'right'>('right');
   const [isImageChanging, setIsImageChanging] = useState(false);
   const lastClickTimeRef = useRef<number>(0);
   const isMobile = useIsMobile();
@@ -106,46 +108,38 @@ const ArtistProfileCard = ({
     }, 800);
   };
 
-  const handlePrevImage = (e: React.MouseEvent) => {
-    e.stopPropagation();
+  const changeImage = (newIndex: number, direction: 'left' | 'right') => {
+    if (newIndex === currentImageIndex) return;
+    
+    setPreviousImageIndex(currentImageIndex);
+    setSlideDirection(direction);
     setIsImageChanging(true);
+    
     setTimeout(() => {
-      if (currentImageIndex > 0) {
-        setCurrentImageIndex(prev => prev - 1);
-      } else {
-        setCurrentImageIndex(images.length - 1);
-      }
+      setCurrentImageIndex(newIndex);
       setTimeout(() => {
         setIsImageChanging(false);
       }, 300);
     }, 150);
+  };
+
+  const handlePrevImage = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    const newIndex = currentImageIndex > 0 ? currentImageIndex - 1 : images.length - 1;
+    changeImage(newIndex, 'left');
   };
 
   const handleNextImage = (e: React.MouseEvent) => {
     e.stopPropagation();
-    setIsImageChanging(true);
-    setTimeout(() => {
-      if (currentImageIndex < images.length - 1) {
-        setCurrentImageIndex(prev => prev + 1);
-      } else {
-        setCurrentImageIndex(0);
-      }
-      setTimeout(() => {
-        setIsImageChanging(false);
-      }, 300);
-    }, 150);
+    const newIndex = currentImageIndex < images.length - 1 ? currentImageIndex + 1 : 0;
+    changeImage(newIndex, 'right');
   };
 
   const handleSlideChange = (index: number) => {
-    if (index !== currentImageIndex) {
-      setIsImageChanging(true);
-      setTimeout(() => {
-        setCurrentImageIndex(index);
-        setTimeout(() => {
-          setIsImageChanging(false);
-        }, 300);
-      }, 150);
-    }
+    if (index === currentImageIndex) return;
+    
+    const direction = index > currentImageIndex ? 'right' : 'left';
+    changeImage(index, direction);
   };
   
   return (
@@ -193,10 +187,36 @@ const ArtistProfileCard = ({
           </Carousel>
         ) : (
           <div className="w-full h-full relative overflow-hidden">
+            {/* Current Image */}
             <div 
               className={cn(
-                "w-full h-full transition-all duration-500",
-                isImageChanging ? "opacity-0 scale-105" : "opacity-100 scale-100",
+                "absolute w-full h-full transition-all duration-500 ease-in-out",
+                isImageChanging 
+                  ? slideDirection === 'right' 
+                    ? "-translate-x-full opacity-0" 
+                    : "translate-x-full opacity-0"
+                  : "translate-x-0 opacity-100",
+                isHovered ? "scale-105" : ""
+              )}
+            >
+              <img 
+                src={images[previousImageIndex]} 
+                alt={`${name} - ${type}`} 
+                className="w-full h-full object-cover"
+              />
+              {/* Gradient overlay - bottom to top */}
+              <div className="absolute inset-0 bg-gradient-to-t from-black via-black/40 to-transparent opacity-60 pointer-events-none" />
+            </div>
+            
+            {/* New Image (coming in) */}
+            <div 
+              className={cn(
+                "absolute w-full h-full transition-all duration-500 ease-in-out",
+                isImageChanging 
+                  ? "translate-x-0 opacity-100" 
+                  : slideDirection === 'right' 
+                    ? "translate-x-full opacity-0" 
+                    : "-translate-x-full opacity-0",
                 isHovered ? "scale-105" : ""
               )}
             >
