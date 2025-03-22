@@ -120,7 +120,7 @@ const ArtistProfilePage = () => {
     <>
       <Navbar />
       <div className="px-6 md:px-10 lg:px-14 xl:px-16">
-        <div className="relative w-full h-[calc(100vh-10rem)] overflow-hidden rounded-[25px] lg:rounded-[30px]">
+        <div className="relative w-full h-[calc(100vh-10rem)] overflow-hidden rounded-[25px] lg:rounded-[35px]">
           <img 
             src={artist.coverImage} 
             alt={`${artist.name} portada`}
