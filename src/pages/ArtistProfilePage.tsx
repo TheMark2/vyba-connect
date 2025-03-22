@@ -203,12 +203,12 @@ const ArtistProfilePage = () => {
         </div>
 
         {/* About Me Section */}
-        <div className="pb-16 max-w-3/4">
+        <div className="pb-16 max-w-96">
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-10">
             {/* Left Content */}
             <div className="lg:col-span-2">
               <h2 className="text-3xl font-black mb-6">Sobre mi</h2>
-              <p className="text-base mb-10 leading-relaxed">
+              <p className="text-base mb-5 leading-relaxed">
                 {artist.description}
               </p>
               
