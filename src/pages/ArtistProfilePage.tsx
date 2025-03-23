@@ -13,6 +13,8 @@ import { Separator } from "@/components/ui/separator";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import ArtistsList from "@/components/ArtistsList";
+import ArtistProfileCard from "@/components/ArtistProfileCard";
+import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/carousel";
 
 const artistsData = [
   {
@@ -692,14 +694,38 @@ const ArtistProfilePage = () => {
         <div className="mb-16 max-w-7xl mx-auto">
           <h2 className="text-3xl font-black mb-6">Recomendados</h2>
           
-          <ArtistsList 
-            artists={artistsData.filter(a => a.id !== id)} 
-            onArtistClick={(artist) => navigate(`/artista/${artist.id}`)}
-            onFavoriteToggle={(artist) => toast.success(artist.isFavorite ? "Eliminado de favoritos" : "Añadido a favoritos", {
-              icon: artist.isFavorite ? "👋" : "❤️",
-              position: "bottom-center",
-            })}
-          />
+          <Carousel
+            opts={{ 
+              align: "start",
+              loop: false,
+            }}
+            className="w-full"
+          >
+            <CarouselContent className="-ml-4">
+              {artistsData.filter(a => a.id !== id).map((artistItem) => (
+                <CarouselItem key={artistItem.id} className="pl-4 md:basis-1/2 lg:basis-1/3 xl:basis-1/4">
+                  <ArtistProfileCard
+                    name={artistItem.name}
+                    type={artistItem.type}
+                    description={artistItem.description || ""}
+                    images={artistItem.images}
+                    rating={artistItem.rating}
+                    priceRange={artistItem.priceRange}
+                    isFavorite={artistItem.isFavorite}
+                    onClick={() => navigate(`/artista/${artistItem.id}`)}
+                    onFavoriteToggle={() => {
+                      toast.success(artistItem.isFavorite ? "Eliminado de favoritos" : "Añadido a favoritos", {
+                        icon: artistItem.isFavorite ? "👋" : "❤️",
+                        position: "bottom-center",
+                      });
+                    }}
+                  />
+                </CarouselItem>
+              ))}
+            </CarouselContent>
+            <CarouselPrevious className="left-2" />
+            <CarouselNext className="right-2" />
+          </Carousel>
         </div>
       </div>
       <Footer />
