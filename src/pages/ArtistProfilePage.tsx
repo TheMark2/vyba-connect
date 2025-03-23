@@ -1,3 +1,4 @@
+
 import React, { useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import Navbar from "@/components/Navbar";
@@ -308,19 +309,19 @@ const ArtistProfilePage = () => {
               {/* Más información Section */}
               <div className="mt-8 mb-12">
                 <h2 className="text-3xl font-black mb-6">Más información</h2>
-                <div className="bg-[#F8F8F8] dark:bg-vyba-dark-bg rounded-3xl overflow-hidden">
+                <div className="bg-secondary dark:bg-vyba-dark-secondary/70 rounded-3xl overflow-hidden">
                   <Collapsible
                     open={isInfoOpen}
                     onOpenChange={setIsInfoOpen}
                     className="w-full"
                   >
                     <CollapsibleTrigger asChild>
-                      <button className="flex items-center justify-between w-full p-8 text-xl bg-secondary font-bold hover:bg-secondary dark:hover:bg-vyba-dark-secondary/70 transition-colors duration-200">
+                      <button className="flex items-center justify-between w-full p-8 text-xl bg-secondary font-bold hover:bg-secondary/80 dark:bg-vyba-dark-secondary/70 dark:hover:bg-vyba-dark-secondary/90 transition-colors duration-200">
                         <span>Experiencia, Repertorio, Logística y Equipamiento, Tiempos</span>
-                        <ChevronDown className={`h-6 w-6 transition-transform duration-300 ${isInfoOpen ? "rotate-180" : ""}`} />
+                        <ChevronDown className={`h-6 w-6 transition-transform duration-500 ${isInfoOpen ? "rotate-180" : ""}`} />
                       </button>
                     </CollapsibleTrigger>
-                    <CollapsibleContent className="p-8 pt-0 space-y-8 bg-secondary rounded-2xl rounded-tr-none rounded-tl-none dark:bg-vyba-dark-secondary/70 animate-collapsible-down data-[state=closed]:animate-collapsible-up">
+                    <CollapsibleContent className="p-8 pt-0 space-y-8 bg-secondary rounded-2xl rounded-tr-none rounded-tl-none dark:bg-vyba-dark-secondary/70">
                       {/* Experiencia */}
                       <div>
                         <h3 className="text-xl font-bold mb-3 flex items-center">
