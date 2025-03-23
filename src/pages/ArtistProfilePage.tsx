@@ -443,16 +443,18 @@ const ArtistProfilePage = () => {
                       className="group flex items-center gap-4 p-2 bg-secondary dark:bg-vyba-dark-secondary/70 rounded-2xl hover:bg-opacity-80 transition-colors duration-200 cursor-pointer hover:bg-secondary/90 dark:hover:bg-vyba-dark-secondary/90 relative"
                     >
                       <div className="absolute left-4 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
-                        <Play className="w-8 h-8 text-primary-foreground" />
+                        <div className="bg-primary rounded-full w-6 h-6 flex items-center justify-center">
+                          <Play className="w-3 h-3 text-primary-foreground" fill="currentColor" />
+                        </div>
                       </div>
-                      <div className="w-14 h-14 flex-shrink-0 rounded-md overflow-hidden transition-transform duration-300 group-hover:translate-x-12">
+                      <div className="w-14 h-14 flex-shrink-0 rounded-md overflow-hidden transition-transform duration-300 group-hover:translate-x-8">
                         <img 
                           src={preview.image} 
                           alt={preview.title} 
                           className="w-full h-full object-cover"
                         />
                       </div>
-                      <div className="flex-grow transition-transform duration-300 group-hover:translate-x-4">
+                      <div className="flex-grow transition-transform duration-300 group-hover:translate-x-8">
                         <h3 className="text-base font-bold">{preview.title}</h3>
                         <p className="text-sm text-gray-500 dark:text-gray-400">{artist.name}</p>
                       </div>
