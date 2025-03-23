@@ -192,63 +192,11 @@ const CarouselItem = React.forwardRef<
   HTMLDivElement,
   React.HTMLAttributes<HTMLDivElement>
 >(({ className, ...props }, ref) => {
-  const { selectedIndex, scrollSnaps } = useCarousel()
-  const itemRef = React.useRef<HTMLDivElement>(null)
-  const [index, setIndex] = React.useState<number>(-1)
-  
-  // Determinar el índice del elemento actual
-  React.useEffect(() => {
-    // Encontrar todos los elementos CarouselItem
-    if (!itemRef.current) return
-    
-    const parent = itemRef.current.parentElement
-    if (!parent) return
-    
-    const items = Array.from(parent.children)
-    const currentIndex = items.indexOf(itemRef.current)
-    
-    setIndex(currentIndex)
-  }, [])
-  
-  // Calcular si este elemento es el seleccionado
-  const isSelected = index === selectedIndex
-  
-  // Calcular la distancia al elemento seleccionado
-  let distance = 0
-  if (index !== -1 && selectedIndex !== -1) {
-    distance = Math.abs(index - selectedIndex)
-  }
-  
-  // Ajustar tamaño y opacidad basado en la distancia
-  let scale = 1
-  let opacity = 1
-  let zIndex = 10
-  
-  if (distance > 0) {
-    scale = Math.max(0.8, 1 - distance * 0.1)
-    opacity = Math.max(0.5, 1 - distance * 0.2)
-    zIndex = 10 - distance
-  }
-  
-  const transform = isSelected ? "scale(1.1)" : `scale(${scale})`
-  
+  // Simplificamos el componente para evitar la superposición de elementos
   return (
     <div
-      ref={(node) => {
-        // Combine the refs
-        if (typeof ref === 'function') ref(node)
-        else if (ref) ref.current = node
-        itemRef.current = node
-      }}
-      className={cn(
-        "relative flex-[0_0_auto] transition-all duration-300",
-        className
-      )}
-      style={{
-        transform,
-        opacity,
-        zIndex
-      }}
+      ref={ref}
+      className={cn("relative flex-[0_0_auto]", className)}
       {...props}
     />
   )
