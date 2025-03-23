@@ -187,6 +187,79 @@ const artistsData = [
   }
 ];
 
+const recommendedArtists = [
+  {
+    id: "101",
+    name: "Marco Olivera",
+    type: "Saxofonista",
+    description: "Saxofonista con experiencia en eventos y fiestas privadas",
+    images: [
+      "/lovable-uploads/77591a97-10cd-4c8b-b768-5b17483c3d9f.png",
+      "/lovable-uploads/64cabbe3-ce62-4190-830d-0e5defd31a1b.png",
+      "/lovable-uploads/c89ee394-3c08-48f6-b69b-bddd81dffa8b.png"
+    ],
+    rating: 4.7,
+    priceRange: "250-350€",
+    isFavorite: false
+  },
+  {
+    id: "102",
+    name: "Laura Gómez",
+    type: "Violinista",
+    description: "Violinista clásica para bodas y eventos formales",
+    images: [
+      "/lovable-uploads/a3c6b43a-dd61-4889-ae77-cb1016e65371.png",
+      "/lovable-uploads/b1d87308-8791-4bd4-bd43-e4f7cf7d9042.png",
+      "/lovable-uploads/77591a97-10cd-4c8b-b768-5b17483c3d9f.png"
+    ],
+    rating: 4.9,
+    priceRange: "300-450€",
+    isFavorite: true
+  },
+  {
+    id: "103",
+    name: "Carlos Mendoza",
+    type: "Pianista",
+    description: "Pianista versátil para todo tipo de eventos y ocasiones",
+    images: [
+      "/lovable-uploads/b1d87308-8791-4bd4-bd43-e4f7cf7d9042.png",
+      "/lovable-uploads/77591a97-10cd-4c8b-b768-5b17483c3d9f.png",
+      "/lovable-uploads/64cabbe3-ce62-4190-830d-0e5defd31a1b.png"
+    ],
+    rating: 4.8,
+    priceRange: "200-400€",
+    isFavorite: false
+  },
+  {
+    id: "104",
+    name: "Elena Ruiz",
+    type: "Cantante",
+    description: "Vocalista con amplio repertorio de jazz y música moderna",
+    images: [
+      "/lovable-uploads/64cabbe3-ce62-4190-830d-0e5defd31a1b.png",
+      "/lovable-uploads/c89ee394-3c08-48f6-b69b-bddd81dffa8b.png",
+      "/lovable-uploads/a3c6b43a-dd61-4889-ae77-cb1016e65371.png"
+    ],
+    rating: 4.6,
+    priceRange: "270-380€",
+    isFavorite: false
+  },
+  {
+    id: "105",
+    name: "Javier Blanco",
+    type: "Guitarrista",
+    description: "Guitarrista flamenco y clásico para eventos especiales",
+    images: [
+      "/lovable-uploads/c89ee394-3c08-48f6-b69b-bddd81dffa8b.png",
+      "/lovable-uploads/a3c6b43a-dd61-4889-ae77-cb1016e65371.png",
+      "/lovable-uploads/b1d87308-8791-4bd4-bd43-e4f7cf7d9042.png"
+    ],
+    rating: 4.5,
+    priceRange: "180-350€",
+    isFavorite: true
+  }
+];
+
 const ArtistProfilePage = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
@@ -690,42 +763,44 @@ const ArtistProfilePage = () => {
           </div>
         </div>
 
-        {/* Nueva sección de Recomendados */}
+        {/* Nueva sección de Recomendados con carrusel básico */}
         <div className="mb-16 max-w-7xl mx-auto">
           <h2 className="text-3xl font-black mb-6">Recomendados</h2>
           
-          <Carousel
-            opts={{ 
-              align: "start",
-              loop: false,
-            }}
-            className="w-full"
-          >
-            <CarouselContent className="-ml-4">
-              {artistsData.filter(a => a.id !== id).map((artistItem) => (
-                <CarouselItem key={artistItem.id} className="pl-4 md:basis-1/2 lg:basis-1/3 xl:basis-1/4">
-                  <ArtistProfileCard
-                    name={artistItem.name}
-                    type={artistItem.type}
-                    description={artistItem.description || ""}
-                    images={artistItem.images}
-                    rating={artistItem.rating}
-                    priceRange={artistItem.priceRange}
-                    isFavorite={artistItem.isFavorite}
-                    onClick={() => navigate(`/artista/${artistItem.id}`)}
-                    onFavoriteToggle={() => {
-                      toast.success(artistItem.isFavorite ? "Eliminado de favoritos" : "Añadido a favoritos", {
-                        icon: artistItem.isFavorite ? "👋" : "❤️",
-                        position: "bottom-center",
-                      });
-                    }}
-                  />
-                </CarouselItem>
-              ))}
-            </CarouselContent>
-            <CarouselPrevious className="left-2" />
-            <CarouselNext className="right-2" />
-          </Carousel>
+          <div className="relative">
+            <Carousel
+              opts={{
+                align: "start",
+                loop: false,
+              }}
+              className="w-full"
+            >
+              <CarouselContent>
+                {recommendedArtists.map((artist) => (
+                  <CarouselItem key={artist.id} className="basis-full sm:basis-1/2 md:basis-1/3 lg:basis-1/4">
+                    <ArtistProfileCard
+                      name={artist.name}
+                      type={artist.type}
+                      description={artist.description}
+                      images={artist.images}
+                      rating={artist.rating}
+                      priceRange={artist.priceRange}
+                      isFavorite={artist.isFavorite}
+                      onClick={() => navigate(`/artista/${artist.id}`)}
+                      onFavoriteToggle={() => {
+                        toast.success(artist.isFavorite ? "Eliminado de favoritos" : "Añadido a favoritos", {
+                          icon: artist.isFavorite ? "👋" : "❤️",
+                          position: "bottom-center",
+                        });
+                      }}
+                    />
+                  </CarouselItem>
+                ))}
+              </CarouselContent>
+              <CarouselPrevious className="left-2" />
+              <CarouselNext className="right-2" />
+            </Carousel>
+          </div>
         </div>
       </div>
       <Footer />
