@@ -518,7 +518,7 @@ const ArtistProfilePage = () => {
                 <h2 className="text-3xl font-black mb-6">FAQ</h2>
                 <Accordion type="single" collapsible className="bg-secondary dark:bg-vyba-dark-secondary/70 rounded-3xl overflow-hidden">
                   <AccordionItem value="item-1" className="border-b-0">
-                    <AccordionTrigger className="px-8 py-6 text-base font-normal">
+                    <AccordionTrigger className="px-8 py-6 text-base font-medium">
                       ¿Cómo puedo reservar una fecha?
                     </AccordionTrigger>
                     <AccordionContent className="px-8 text-base">
@@ -526,7 +526,7 @@ const ArtistProfilePage = () => {
                     </AccordionContent>
                   </AccordionItem>
                   <AccordionItem value="item-2" className="border-b-0">
-                    <AccordionTrigger className="px-8 py-6 text-base font-normal">
+                    <AccordionTrigger className="px-8 py-6 text-base font-medium">
                       ¿Qué incluye el precio?
                     </AccordionTrigger>
                     <AccordionContent className="px-8 text-base">
@@ -534,7 +534,7 @@ const ArtistProfilePage = () => {
                     </AccordionContent>
                   </AccordionItem>
                   <AccordionItem value="item-3" className="border-b-0">
-                    <AccordionTrigger className="px-8 py-6 text-base font-normal">
+                    <AccordionTrigger className="px-8 py-6 text-base font-medium">
                       ¿Cuánto tiempo dura una actuación?
                     </AccordionTrigger>
                     <AccordionContent className="px-8 text-base">
@@ -542,7 +542,7 @@ const ArtistProfilePage = () => {
                     </AccordionContent>
                   </AccordionItem>
                   <AccordionItem value="item-4" className="border-b-0">
-                    <AccordionTrigger className="px-8 py-6 text-base font-normal">
+                    <AccordionTrigger className="px-8 py-6 text-base font-medium">
                       ¿Puedo solicitar canciones específicas?
                     </AccordionTrigger>
                     <AccordionContent className="px-8 text-base">
@@ -550,7 +550,7 @@ const ArtistProfilePage = () => {
                     </AccordionContent>
                   </AccordionItem>
                   <AccordionItem value="item-5" className="border-b-0">
-                    <AccordionTrigger className="px-8 py-6 text-base font-normal">
+                    <AccordionTrigger className="px-8 py-6 text-base font-medium">
                       ¿Qué pasa si necesito cancelar?
                     </AccordionTrigger>
                     <AccordionContent className="px-8 text-base">
@@ -558,7 +558,7 @@ const ArtistProfilePage = () => {
                     </AccordionContent>
                   </AccordionItem>
                   <AccordionItem value="item-6" className="border-b-0">
-                    <AccordionTrigger className="px-8 py-6 text-base font-normal">
+                    <AccordionTrigger className="px-8 py-6 text-base font-medium">
                       ¿Cómo funciona el pago?
                     </AccordionTrigger>
                     <AccordionContent className="px-8 text-base">
