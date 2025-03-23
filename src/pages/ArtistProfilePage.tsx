@@ -597,13 +597,13 @@ const ArtistProfilePage = () => {
 
               {/* Nueva sección de Reseñas */}
               <div className="mt-8 mb-16">
-                <h2 className="text-3xl font-black mb-6">Reseñas</h2>
+                <h2 className="text-3xl font-black mb-3">Reseñas</h2>
                 <div className="space-y-6">
                   {/* Rating summary */}
                   <div className="flex flex-wrap items-center gap-6 mb-8">
                     <div className="flex items-baseline gap-2">
-                      <span className="text-4xl font-bold">{artist.rating}</span>
-                      <span className="text-3xl font-bold">({artist.reviews})</span>
+                      <span className="text-3xl font-medium">{artist.rating}</span>
+                      <span className="text-3xl font-medium">({artist.reviews})</span>
                     </div>
                     <div className="flex flex-wrap gap-3">
                       {artist.genres?.filter((_, i) => i < 2).map((genre, index) => (
