@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
-import { Heart, Flag, Share2, MapPin, ChevronDown, Book, List, Clock, Badge } from "lucide-react";
+import { Heart, Flag, Share2, MapPin, ChevronDown, Book, List, Clock, Badge, Play } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 import { useIsMobile } from "@/hooks/use-mobile";
@@ -56,12 +56,12 @@ const artistsData = [
       {
         title: "Set 30 min musica urbana",
         duration: "30:45",
-        image: "/lovable-uploads/c4bfab5a-986d-4b42-8904-4baf5eee1da2.png"
+        image: "https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?q=80&w=1000"
       },
       {
         title: "Mix pop comercial",
         duration: "45:20",
-        image: "/lovable-uploads/c89ee394-3c08-48f6-b69b-bddd81dffa8b.png"
+        image: "https://images.unsplash.com/photo-1514525253161-7a46d19cd819?q=80&w=1000"
       }
     ]
   }, {
@@ -440,16 +440,19 @@ const ArtistProfilePage = () => {
                   {artist.musicPreviews?.map((preview, index) => (
                     <div 
                       key={index} 
-                      className="flex items-center gap-4 p-2 bg-secondary dark:bg-vyba-dark-secondary/70 rounded-2xl hover:bg-opacity-80 transition-colors duration-200 cursor-pointer"
+                      className="group flex items-center gap-4 p-2 bg-secondary dark:bg-vyba-dark-secondary/70 rounded-2xl hover:bg-opacity-80 transition-colors duration-200 cursor-pointer hover:bg-secondary/90 dark:hover:bg-vyba-dark-secondary/90 relative"
                     >
-                      <div className="w-14 h-14 flex-shrink-0 rounded-md overflow-hidden">
+                      <div className="absolute left-4 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
+                        <Play className="w-8 h-8 text-primary-foreground" />
+                      </div>
+                      <div className="w-14 h-14 flex-shrink-0 rounded-md overflow-hidden transition-transform duration-300 group-hover:translate-x-12">
                         <img 
                           src={preview.image} 
                           alt={preview.title} 
                           className="w-full h-full object-cover"
                         />
                       </div>
-                      <div className="flex-grow">
+                      <div className="flex-grow transition-transform duration-300 group-hover:translate-x-4">
                         <h3 className="text-base font-bold">{preview.title}</h3>
                         <p className="text-sm text-gray-500 dark:text-gray-400">{artist.name}</p>
                       </div>
