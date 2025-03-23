@@ -51,6 +51,18 @@ const artistsData = [
     ],
     education: [
       "Conservatorio Provincial de Música Luis Gianneo"
+    ],
+    musicPreviews: [
+      {
+        title: "Set 30 min musica urbana",
+        duration: "30:45",
+        image: "/lovable-uploads/c4bfab5a-986d-4b42-8904-4baf5eee1da2.png"
+      },
+      {
+        title: "Mix pop comercial",
+        duration: "45:20",
+        image: "/lovable-uploads/c89ee394-3c08-48f6-b69b-bddd81dffa8b.png"
+      }
     ]
   }, {
     id: "2",
@@ -294,7 +306,7 @@ const ArtistProfilePage = () => {
               </div>
 
               {/* Más información Section */}
-              <div className="mt-8 mb-16">
+              <div className="mt-8 mb-12">
                 <h2 className="text-3xl font-black mb-6">Más información</h2>
                 <div className="bg-[#F8F8F8] dark:bg-vyba-dark-bg rounded-3xl overflow-hidden">
                   <Collapsible
@@ -308,7 +320,7 @@ const ArtistProfilePage = () => {
                         <ChevronDown className={`h-6 w-6 transition-transform duration-300 ${isInfoOpen ? "rotate-180" : ""}`} />
                       </button>
                     </CollapsibleTrigger>
-                    <CollapsibleContent className="p-8 pt-0 space-y-8 bg-secondary rounded-2xl rounded-tr-none rounded-tl-none dark:bg-vyba-dark-secondary/70">
+                    <CollapsibleContent className="p-8 pt-0 space-y-8 bg-secondary rounded-2xl rounded-tr-none rounded-tl-none dark:bg-vyba-dark-secondary/70 animate-collapsible-down data-[state=closed]:animate-collapsible-up">
                       {/* Experiencia */}
                       <div>
                         <h3 className="text-xl font-bold mb-3 flex items-center">
@@ -418,6 +430,34 @@ const ArtistProfilePage = () => {
                       </div>
                     </CollapsibleContent>
                   </Collapsible>
+                </div>
+              </div>
+
+              {/* Sección de Preview Musical */}
+              <div className="mt-8 mb-16">
+                <h2 className="text-3xl font-black mb-6">Preview</h2>
+                <div className="space-y-4">
+                  {artist.musicPreviews?.map((preview, index) => (
+                    <div 
+                      key={index} 
+                      className="flex items-center gap-4 p-4 bg-secondary dark:bg-vyba-dark-secondary/70 rounded-2xl hover:bg-opacity-80 transition-colors duration-200 cursor-pointer"
+                    >
+                      <div className="w-16 h-16 md:w-20 md:h-20 flex-shrink-0 rounded-lg overflow-hidden">
+                        <img 
+                          src={preview.image} 
+                          alt={preview.title} 
+                          className="w-full h-full object-cover"
+                        />
+                      </div>
+                      <div className="flex-grow">
+                        <h3 className="text-lg font-bold">{preview.title}</h3>
+                        <p className="text-gray-500 dark:text-gray-400">{artist.name}</p>
+                      </div>
+                      <div className="text-right">
+                        <span className="text-lg font-medium">{preview.duration}</span>
+                      </div>
+                    </div>
+                  ))}
                 </div>
               </div>
             </div>
