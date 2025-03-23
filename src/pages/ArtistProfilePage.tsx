@@ -1,9 +1,8 @@
-
 import React, { useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
-import { Heart, Flag, Share2, MapPin, ChevronDown, Book, List, Clock, Badge, Play } from "lucide-react";
+import { Heart, Flag, Share2, MapPin, ChevronDown, Book, List, Clock, Badge, Play, Star } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 import { useIsMobile } from "@/hooks/use-mobile";
@@ -12,6 +11,7 @@ import { Badge as UIBadge } from "@/components/ui/badge";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 import { Separator } from "@/components/ui/separator";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
 const artistsData = [
   {
@@ -35,7 +35,8 @@ const artistsData = [
       "/lovable-uploads/b1d87308-8791-4bd4-bd43-e4f7cf7d9042.png"
     ],
     coverImage: "https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05",
-    rating: 4.9,
+    rating: 4.5,
+    reviews: 34,
     priceRange: "150-400€",
     isFavorite: false,
     experience: [
@@ -74,6 +75,32 @@ const artistsData = [
       "Inauguraciones",
       "Aniversarios",
       "Cenas de Gala"
+    ],
+    reviewsData: [
+      {
+        id: 1,
+        name: "Antonia Pedragosa",
+        date: "4 días",
+        rating: 4,
+        badges: ["Reggaeton", "Comercial"],
+        comment: "¿Buscas añadir un toque de elegancia y encanto musical a tu próximo evento? ¡Estás en el lugar indicado! Soy Rodrigo Belga, un apasionado saxofonista especializado en jazz, bossa nova y blues. 🎷✨"
+      },
+      {
+        id: 2,
+        name: "Antonia Pedragosa",
+        date: "4 días",
+        rating: 4,
+        badges: ["Reggaeton", "Comercial"],
+        comment: "¿Buscas añadir un toque de elegancia y encanto musical a tu próximo evento? ¡Estás en el lugar indicado! Soy Rodrigo Belga, un apasionado saxofonista especializado en jazz, bossa nova y blues. 🎷✨"
+      },
+      {
+        id: 3,
+        name: "Antonia Pedragosa",
+        date: "4 días",
+        rating: 4,
+        badges: ["Reggaeton", "Comercial"],
+        comment: "¿Buscas añadir un toque de elegancia y encanto musical a tu próximo evento? ¡Estás en el lugar indicado! Soy Rodrigo Belga, un apasionado saxofonista especializado en jazz, bossa nova y blues. 🎷✨"
+      }
     ]
   }, {
     id: "2",
@@ -567,6 +594,76 @@ const ArtistProfilePage = () => {
                   </AccordionItem>
                 </Accordion>
               </div>
+
+              {/* Nueva sección de Reseñas */}
+              <div className="mt-8 mb-16">
+                <h2 className="text-3xl font-black mb-6">Reseñas</h2>
+                <div className="space-y-6">
+                  {/* Rating summary */}
+                  <div className="flex flex-wrap items-center gap-6 mb-8">
+                    <div className="flex items-baseline gap-2">
+                      <span className="text-4xl font-bold">{artist.rating}</span>
+                      <span className="text-3xl font-bold">({artist.reviews})</span>
+                    </div>
+                    <div className="flex flex-wrap gap-3">
+                      {artist.genres?.filter((_, i) => i < 2).map((genre, index) => (
+                        <UIBadge 
+                          key={index} 
+                          variant="outline" 
+                          className="py-2 px-4 bg-white/90 border-0 text-base font-medium dark:bg-vyba-dark-secondary"
+                        >
+                          {genre}
+                        </UIBadge>
+                      ))}
+                    </div>
+                  </div>
+                  
+                  {/* Individual reviews */}
+                  <div className="space-y-10">
+                    {artist.reviewsData?.map((review) => (
+                      <div key={review.id} className="pb-8 border-b border-gray-200 dark:border-gray-700">
+                        <div className="flex items-start mb-4">
+                          <Avatar className="w-16 h-16 mr-4">
+                            <AvatarImage src="/lovable-uploads/77591a97-10cd-4c8b-b768-5b17483c3d9f.png" alt={review.name} />
+                            <AvatarFallback>{review.name.charAt(0)}</AvatarFallback>
+                          </Avatar>
+                          <div className="flex-1">
+                            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-1">
+                              <div>
+                                <h3 className="text-base font-bold">{review.name}</h3>
+                                <p className="text-base text-gray-600 dark:text-gray-300">hace {review.date}</p>
+                              </div>
+                              <div className="flex items-center mt-2 sm:mt-0">
+                                <Star className="h-5 w-5 text-black dark:text-white fill-current mr-1" />
+                                <span className="text-base font-medium">{review.rating}</span>
+                              </div>
+                            </div>
+                            <div className="flex flex-wrap gap-2 my-3">
+                              {review.badges.map((badge, idx) => (
+                                <UIBadge 
+                                  key={idx} 
+                                  variant="outline" 
+                                  className="py-1 px-4 bg-white/90 border-0 text-base font-medium dark:bg-vyba-dark-secondary"
+                                >
+                                  {badge}
+                                </UIBadge>
+                              ))}
+                            </div>
+                          </div>
+                        </div>
+                        <p className="text-base">{review.comment}</p>
+                      </div>
+                    ))}
+                  </div>
+                  
+                  {/* Ver todas button */}
+                  <div className="flex justify-center mt-8">
+                    <Button variant="secondary" className="px-12">
+                      Ver todas
+                    </Button>
+                  </div>
+                </div>
+              </div>
             </div>
             
             {/* Right Sticky Content */}
@@ -594,3 +691,4 @@ const ArtistProfilePage = () => {
 };
 
 export default ArtistProfilePage;
+
