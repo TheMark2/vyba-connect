@@ -600,7 +600,7 @@ const ArtistProfilePage = () => {
                 <h2 className="text-3xl font-black mb-3">Reseñas</h2>
                 <div className="space-y-6">
                   {/* Rating summary */}
-                  <div className="flex flex-wrap items-center gap-6 mb-8">
+                  <div className="flex flex-wrap items-center gap-6 mb-8 justify-between">
                     <div className="flex items-baseline gap-2">
                       <span className="text-3xl font-medium">{artist.rating}</span>
                       <span className="text-3xl font-medium">({artist.reviews})</span>
