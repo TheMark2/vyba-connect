@@ -610,7 +610,7 @@ const ArtistProfilePage = () => {
                         <UIBadge 
                           key={index} 
                           variant="outline" 
-                          className="py-2 px-4 bg-white/90 border-0 text-base font-medium dark:bg-vyba-dark-secondary"
+                          className="py-2 px-4 bg-white border-0 text-sm font-medium flex items-center gap-2 dark:bg-vyba-dark-secondary"
                         >
                           {genre}
                         </UIBadge>
@@ -643,7 +643,7 @@ const ArtistProfilePage = () => {
                                 <UIBadge 
                                   key={idx} 
                                   variant="outline" 
-                                  className="py-1 px-4 bg-white/90 border-0 text-base font-medium dark:bg-vyba-dark-secondary"
+                                  className="py-2 px-4 bg-white border-0 text-sm font-medium flex items-center gap-2 dark:bg-vyba-dark-secondary"
                                 >
                                   {badge}
                                 </UIBadge>
