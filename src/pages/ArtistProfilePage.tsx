@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import Navbar from "@/components/Navbar";
@@ -64,6 +63,15 @@ const artistsData = [
         duration: "45:20",
         image: "https://images.unsplash.com/photo-1514525253161-7a46d19cd819?q=80&w=1000"
       }
+    ],
+    eventTypes: [
+      "Bodas",
+      "Fiestas Privadas",
+      "Cumpleaños",
+      "Eventos Corporativos",
+      "Inauguraciones",
+      "Aniversarios",
+      "Cenas de Gala"
     ]
   }, {
     id: "2",
@@ -98,6 +106,12 @@ const artistsData = [
     ],
     education: [
       "Conservatorio Provincial de Música Luis Gianneo"
+    ],
+    eventTypes: [
+      "Bodas",
+      "Fiestas Privadas",
+      "Cumpleaños",
+      "Eventos Corporativos"
     ]
   }, {
     id: "3",
@@ -132,6 +146,11 @@ const artistsData = [
     ],
     education: [
       "Conservatorio Provincial de Música Luis Gianneo"
+    ],
+    eventTypes: [
+      "Fiestas Privadas",
+      "Inauguraciones",
+      "Aniversarios"
     ]
   }
 ];
@@ -190,6 +209,14 @@ const ArtistProfilePage = () => {
     });
     // Aquí podríamos navegar a una página de búsqueda filtrada por género
     // navigate(`/artistas?genero=${genre}`);
+  };
+  
+  const handleEventTypeClick = (eventType: string) => {
+    toast.success(`Buscando artistas para ${eventType}`, {
+      position: "bottom-center",
+    });
+    // Aquí podríamos navegar a una página de búsqueda filtrada por tipo de evento
+    // navigate(`/artistas?evento=${eventType}`);
   };
   
   return (
@@ -463,6 +490,23 @@ const ArtistProfilePage = () => {
                         <span className="text-sm font-medium">{preview.duration}</span>
                       </div>
                     </div>
+                  ))}
+                </div>
+              </div>
+
+              {/* Nueva sección de Tipos de Eventos */}
+              <div className="mt-8 mb-16">
+                <h2 className="text-3xl font-black mb-6">Tipos de Eventos</h2>
+                <div className="flex flex-wrap gap-3">
+                  {artist.eventTypes?.map((eventType, index) => (
+                    <Button 
+                      key={index}
+                      variant="secondary"
+                      className="rounded-full text-sm font-medium"
+                      onClick={() => handleEventTypeClick(eventType)}
+                    >
+                      {eventType}
+                    </Button>
                   ))}
                 </div>
               </div>
