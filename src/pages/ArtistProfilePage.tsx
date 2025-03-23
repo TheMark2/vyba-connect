@@ -442,7 +442,7 @@ const ArtistProfilePage = () => {
                       key={index} 
                       className="flex items-center gap-4 p-2 bg-secondary dark:bg-vyba-dark-secondary/70 rounded-2xl hover:bg-opacity-80 transition-colors duration-200 cursor-pointer"
                     >
-                      <div className="w-10 h-10 flex-shrink-0 rounded-lg overflow-hidden">
+                      <div className="w-12 h-12 flex-shrink-0 rounded-md overflow-hidden">
                         <img 
                           src={preview.image} 
                           alt={preview.title} 
