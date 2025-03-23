@@ -182,62 +182,6 @@ const artistsData = [
       "Inauguraciones",
       "Aniversarios"
     ]
-  },
-  {
-    id: "4",
-    name: "Antonia Pedragosa",
-    type: "DJ",
-    description: "DJ especializada en eventos corporativos y fiestas de empresa",
-    images: [
-      "/lovable-uploads/c89ee394-3c08-48f6-b69b-bddd81dffa8b.png", 
-      "/lovable-uploads/77591a97-10cd-4c8b-b768-5b17483c3d9f.png", 
-      "/lovable-uploads/64cabbe3-ce62-4190-830d-0e5defd31a1b.png",
-      "/lovable-uploads/a3c6b43a-dd61-4889-ae77-cb1016e65371.png",
-      "/lovable-uploads/b1d87308-8791-4bd4-bd43-e4f7cf7d9042.png"
-    ],
-    coverImage: "https://images.unsplash.com/photo-1506905925346-21bda4d32df4",
-    rating: 4.8,
-    priceRange: "350-600€",
-    isFavorite: true,
-    experience: [
-      "Corporate Music - Barcelona",
-      "Eventos Marbella - Málaga",
-      "Festivales del Sur - Sevilla"
-    ],
-    eventTypes: [
-      "Eventos Corporativos",
-      "Congresos",
-      "Inauguraciones",
-      "Lanzamientos de producto"
-    ]
-  },
-  {
-    id: "5",
-    name: "Antonia Pedragosa",
-    type: "DJ",
-    description: "DJ con sonido vintage y especialización en jazz, swing y música de los años 20-50",
-    images: [
-      "/lovable-uploads/b1d87308-8791-4bd4-bd43-e4f7cf7d9042.png", 
-      "/lovable-uploads/c89ee394-3c08-48f6-b69b-bddd81dffa8b.png", 
-      "/lovable-uploads/77591a97-10cd-4c8b-b768-5b17483c3d9f.png",
-      "/lovable-uploads/64cabbe3-ce62-4190-830d-0e5defd31a1b.png",
-      "/lovable-uploads/a3c6b43a-dd61-4889-ae77-cb1016e65371.png"
-    ],
-    coverImage: "https://images.unsplash.com/photo-1518495973542-4542c06a5843",
-    rating: 4.7,
-    priceRange: "250-450€",
-    isFavorite: false,
-    experience: [
-      "Jazz Club Barcelona - Barcelona",
-      "Vintage Nights - Madrid",
-      "Gatsby Evening - Valencia"
-    ],
-    eventTypes: [
-      "Bodas temáticas",
-      "Eventos de época",
-      "Fiestas privadas",
-      "Celebraciones especiales"
-    ]
   }
 ];
 
@@ -745,20 +689,20 @@ const ArtistProfilePage = () => {
         </div>
 
         {/* Nueva sección de Recomendados */}
-        <div className="mb-16">
-          <h2 className="text-3xl font-black mb-3">Recomendados</h2>
-          <p className="text-base text-gray-500 dark:text-gray-400 mb-6">Artistas similares que te podrían interesar</p>
-          
-          <div className="-mx-6 md:-mx-10 lg:-mx-14 xl:-mx-16">
-            <ArtistsList 
-              artists={artistsData.filter(a => a.id !== id)} 
-              onArtistClick={(artist) => navigate(`/artista/${artist.id}`)}
-              onFavoriteToggle={(artist) => toast.success(artist.isFavorite ? "Eliminado de favoritos" : "Añadido a favoritos", {
-                icon: artist.isFavorite ? "👋" : "❤️",
-                position: "bottom-center",
-              })}
-            />
+        <div className="mb-16 -mx-6 md:-mx-10 lg:-mx-14 xl:-mx-16">
+          <div className="px-6 md:px-10 lg:px-14 xl:px-16 mb-6">
+            <h2 className="text-3xl font-black">Recomendados</h2>
+            <p className="text-base text-gray-500 dark:text-gray-400">Artistas similares que te podrían interesar</p>
           </div>
+          
+          <ArtistsList 
+            artists={artistsData.filter(a => a.id !== id)} 
+            onArtistClick={(artist) => navigate(`/artista/${artist.id}`)}
+            onFavoriteToggle={(artist) => toast.success(artist.isFavorite ? "Eliminado de favoritos" : "Añadido a favoritos", {
+              icon: artist.isFavorite ? "👋" : "❤️",
+              position: "bottom-center",
+            })}
+          />
         </div>
       </div>
       <Footer />
@@ -767,4 +711,3 @@ const ArtistProfilePage = () => {
 };
 
 export default ArtistProfilePage;
-
