@@ -119,7 +119,7 @@ const ArtistsList = ({
               key={artist.id}
               className={cn(
                 "pl-5 pr-2", // Increased padding for larger gap
-                index === 0 && current === 0 ? "ml-6" : "ml-0"
+                index === 0 && current === 0 ? "ml-0" : "ml-0" // Modificado para alinear con el título
               )}
               style={{
                 width: getItemWidth(),
