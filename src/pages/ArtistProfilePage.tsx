@@ -689,7 +689,7 @@ const ArtistProfilePage = () => {
         </div>
 
         {/* Nueva sección de Recomendados */}
-        <div className="mb-16 -mx-6 md:-mx-10 lg:-mx-14 xl:-mx-16">
+        <div className="mb-16 max-w-7xl mx-auto">
           <div className="px-6 md:px-10 lg:px-14 xl:px-16 mb-6">
             <h2 className="text-3xl font-black">Recomendados</h2>
             <p className="text-base text-gray-500 dark:text-gray-400">Artistas similares que te podrían interesar</p>
