@@ -453,8 +453,8 @@ const ArtistProfilePage = () => {
                         <h3 className="text-base font-bold">{preview.title}</h3>
                         <p className="text-sm text-gray-500 dark:text-gray-400">{artist.name}</p>
                       </div>
-                      <div className="text-right">
-                        <span className="text-base">{preview.duration}</span>
+                      <div className="text-right ml-4">
+                        <span className="text-sm font-medium">{preview.duration}</span>
                       </div>
                     </div>
                   ))}
