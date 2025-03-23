@@ -621,7 +621,7 @@ const ArtistProfilePage = () => {
                   {/* Individual reviews */}
                   <div className="space-y-10">
                     {artist.reviewsData?.map((review) => (
-                      <div key={review.id} className="pb-8 border-b border-gray-200 dark:border-gray-700">
+                      <div key={review.id} className="pb-8">
                         <div className="flex items-start mb-4">
                           <Avatar className="w-16 h-16 mr-4">
                             <AvatarImage src="/lovable-uploads/77591a97-10cd-4c8b-b768-5b17483c3d9f.png" alt={review.name} />
@@ -631,23 +631,25 @@ const ArtistProfilePage = () => {
                             <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-1">
                               <div>
                                 <h3 className="text-base font-bold">{review.name}</h3>
-                                <p className="text-base text-gray-600 dark:text-gray-300">hace {review.date}</p>
+                                <p className="text-sm text-gray-900 dark:text-white-900">hace {review.date}</p>
                               </div>
-                              <div className="flex items-center mt-2 sm:mt-0">
-                                <Star className="h-5 w-5 text-black dark:text-white fill-current mr-1" />
-                                <span className="text-base font-medium">{review.rating}</span>
+                              <div className="gap-4">
+                                <div className="flex items-center mt-2 sm:mt-0">
+                                  <Star className="h-4 w-4 text-black dark:text-white fill-current mr-1" />
+                                  <span className="text-base font-medium">{review.rating}</span>
+                                </div>
+                                <div className="flex flex-wrap gap-2 my-3">
+                                  {review.badges.map((badge, idx) => (
+                                    <UIBadge 
+                                      key={idx} 
+                                      variant="outline" 
+                                      className="py-2 px-4 bg-white border-0 text-sm font-medium flex items-center gap-2 dark:bg-vyba-dark-secondary"
+                                    >
+                                      {badge}
+                                    </UIBadge>
+                                  ))}
+                                </div>
                               </div>
-                            </div>
-                            <div className="flex flex-wrap gap-2 my-3">
-                              {review.badges.map((badge, idx) => (
-                                <UIBadge 
-                                  key={idx} 
-                                  variant="outline" 
-                                  className="py-2 px-4 bg-white border-0 text-sm font-medium flex items-center gap-2 dark:bg-vyba-dark-secondary"
-                                >
-                                  {badge}
-                                </UIBadge>
-                              ))}
                             </div>
                           </div>
                         </div>
