@@ -447,14 +447,14 @@ const ArtistProfilePage = () => {
                           <Play className="w-3 h-3 text-primary-foreground" fill="currentColor" />
                         </div>
                       </div>
-                      <div className="w-14 h-14 flex-shrink-0 rounded-md overflow-hidden transition-transform duration-300 group-hover:translate-x-8">
+                      <div className="w-14 h-14 flex-shrink-0 rounded-md overflow-hidden transition-transform duration-300 group-hover:translate-x-10">
                         <img 
                           src={preview.image} 
                           alt={preview.title} 
                           className="w-full h-full object-cover"
                         />
                       </div>
-                      <div className="flex-grow transition-transform duration-300 group-hover:translate-x-8">
+                      <div className="flex-grow transition-transform duration-300 group-hover:translate-x-10">
                         <h3 className="text-base font-bold">{preview.title}</h3>
                         <p className="text-sm text-gray-500 dark:text-gray-400">{artist.name}</p>
                       </div>
