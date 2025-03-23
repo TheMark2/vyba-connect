@@ -633,7 +633,7 @@ const ArtistProfilePage = () => {
                                 <h3 className="text-base font-bold">{review.name}</h3>
                                 <p className="text-sm text-gray-900 dark:text-white-900">hace {review.date}</p>
                               </div>
-                              <div className="gap-4">
+                              <div className="gap-4 flex">
                                 <div className="flex items-center mt-2 sm:mt-0">
                                   <Star className="h-4 w-4 text-black dark:text-white fill-current mr-1" />
                                   <span className="text-base font-medium">{review.rating}</span>
