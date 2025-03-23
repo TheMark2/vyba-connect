@@ -440,9 +440,9 @@ const ArtistProfilePage = () => {
                   {artist.musicPreviews?.map((preview, index) => (
                     <div 
                       key={index} 
-                      className="flex items-center gap-4 p-4 bg-secondary dark:bg-vyba-dark-secondary/70 rounded-2xl hover:bg-opacity-80 transition-colors duration-200 cursor-pointer"
+                      className="flex items-center gap-4 p-2 bg-secondary dark:bg-vyba-dark-secondary/70 rounded-2xl hover:bg-opacity-80 transition-colors duration-200 cursor-pointer"
                     >
-                      <div className="w-16 h-16 md:w-20 md:h-20 flex-shrink-0 rounded-lg overflow-hidden">
+                      <div className="w-10 h-10 flex-shrink-0 rounded-lg overflow-hidden">
                         <img 
                           src={preview.image} 
                           alt={preview.title} 
