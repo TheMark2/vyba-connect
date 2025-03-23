@@ -1,8 +1,9 @@
+
 import React, { useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
-import { Heart, Flag, Share2, MapPin, ChevronDown, Book, List, Clock, Badge, Play, Star } from "lucide-react";
+import { Heart, Flag, Share2, MapPin, ChevronDown, Book, List, Clock, Badge, Play } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 import { useIsMobile } from "@/hooks/use-mobile";
@@ -11,7 +12,6 @@ import { Badge as UIBadge } from "@/components/ui/badge";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 import { Separator } from "@/components/ui/separator";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
-import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 
 const artistsData = [
   {
@@ -157,42 +157,11 @@ const artistsData = [
   }
 ];
 
-const reviewsData = [
-  {
-    id: 1,
-    name: "Antonia Pedragosa",
-    avatar: "/lovable-uploads/77591a97-10cd-4c8b-b768-5b17483c3d9f.png",
-    date: "hace 4 días",
-    rating: 4,
-    text: "¿Buscas añadir un toque de elegancia y encanto musical a tu próximo evento? ¡Estás en el lugar indicado! Soy Rodrigo Belga, un apasionado saxofonista especializado en jazz, bossa nova y blues. 🎷✨",
-    genres: ["Reggaeton", "Comercial"]
-  },
-  {
-    id: 2,
-    name: "Antonia Pedragosa",
-    avatar: "/lovable-uploads/77591a97-10cd-4c8b-b768-5b17483c3d9f.png",
-    date: "hace 4 días",
-    rating: 4,
-    text: "¿Buscas añadir un toque de elegancia y encanto musical a tu próximo evento? ¡Estás en el lugar indicado! Soy Rodrigo Belga, un apasionado saxofonista especializado en jazz, bossa nova y blues. 🎷✨",
-    genres: ["Reggaeton", "Comercial"]
-  },
-  {
-    id: 3,
-    name: "Antonia Pedragosa",
-    avatar: "/lovable-uploads/77591a97-10cd-4c8b-b768-5b17483c3d9f.png",
-    date: "hace 4 días",
-    rating: 4,
-    text: "¿Buscas añadir un toque de elegancia y encanto musical a tu próximo evento? ¡Estás en el lugar indicado! Soy Rodrigo Belga, un apasionado saxofonista especializado en jazz, bossa nova y blues. 🎷✨",
-    genres: ["Reggaeton", "Comercial"]
-  }
-];
-
 const ArtistProfilePage = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const isMobile = useIsMobile();
   const [isInfoOpen, setIsInfoOpen] = useState(false);
-  const [showAllReviews, setShowAllReviews] = useState(false);
   
   const artist = artistsData.find(artist => artist.id === id);
   
@@ -252,17 +221,13 @@ const ArtistProfilePage = () => {
     // navigate(`/artistas?evento=${eventType}`);
   };
   
-  const displayedReviews = showAllReviews ? reviewsData : reviewsData.slice(0, 3);
-  
-  const handleShowAllReviews = () => {
-    setShowAllReviews(true);
-  };
-  
   return (
     <>
       <Navbar />
       <div className="px-6 md:px-10 lg:px-14 xl:px-16">
+        {/* Banner Section with Blurred Background */}
         <div className="relative w-full h-[95vh] md:h-[calc(80vh)] overflow-hidden rounded-[25px] lg:rounded-[35px] mb-12">
+          {/* Blurred background image - Capa base */}
           <div className="absolute inset-0 w-full h-full overflow-visible flex justify-center items-center" style={{ zIndex: 0 }}>
             <div className="absolute w-[120%] h-[120%] opacity-70">
               <img 
@@ -273,6 +238,7 @@ const ArtistProfilePage = () => {
             </div>
             <div className="absolute inset-0 bg-black/40"></div>
           </div>          
+          {/* Main Banner Image - Capa principal */}
           <div className="relative z-10 w-full h-full">
             <img 
               src={artist.coverImage} 
@@ -283,6 +249,7 @@ const ArtistProfilePage = () => {
             <div className="absolute inset-0 bg-gradient-to-t from-black to-transparent"></div>
           </div>
           
+          {/* Buttons in top right corner */}
           <div className="absolute top-4 right-4 sm:top-6 sm:right-6 flex space-x-2 z-20">
             <Button 
               variant="secondary" 
@@ -310,30 +277,51 @@ const ArtistProfilePage = () => {
             </Button>
           </div>
           
-          <div className="absolute bottom-12 left-5 right-0 flex flex-col items-start z-20">
-            <div className="rounded-full overflow-hidden mb-4 w-24 h-24">
-              <img 
-                src={artist.images[0]} 
-                alt={artist.name} 
-                className="w-full h-full object-cover rounded-full"
-              />
+          {/* Artist info overlay */}
+          {isMobile ? (
+            <div className="absolute bottom-12 left-5 right-0 flex flex-col items-start z-20">
+              <div className="rounded-full overflow-hidden mb-4 w-24 h-24">
+                <img 
+                  src={artist.images[0]} 
+                  alt={artist.name} 
+                  className="w-full h-full object-cover rounded-full"
+                />
+              </div>
+              
+              <div className="text-white space-y-2 max-w-[85%]">
+                <h1 className="text-2xl font-black truncate">{artist.name}</h1>
+                <p className="text-lg opacity-90 line-clamp-2">{artist.type}</p>
+              </div>
             </div>
-            
-            <div className="text-white space-y-2 max-w-[85%]">
-              <h1 className="text-2xl font-black truncate">{artist.name}</h1>
-              <p className="text-lg opacity-90 line-clamp-2">{artist.type}</p>
+          ) : (
+            <div className="absolute bottom-12 left-5 md:left-10 lg:left-14 flex items-center z-20">
+              <div className="rounded-full overflow-hidden mr-4 md:mr-6 w-24 h-24 md:w-32 md:h-32">
+                <img 
+                  src={artist.images[0]} 
+                  alt={artist.name} 
+                  className="w-full h-full object-cover rounded-full"
+                />
+              </div>
+              
+              <div className="text-white space-y-4 max-w-[80%]">
+                <h1 className="text-3xl md:text-5xl font-black truncate">{artist.name}</h1>
+                <p className="text-xl md:text-2xl opacity-90 line-clamp-2">{artist.type}</p>
+              </div>
             </div>
-          </div>
+          )}
         </div>
 
+        {/* About Me Section */}
         <div className="pb-16 max-w-7xl mx-auto">
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-16">
+            {/* Left Content */}
             <div className="lg:col-span-2">
               <h2 className="text-3xl font-black mb-6">Sobre mi</h2>
               <p className="text-base mb-5 leading-relaxed">
                 {artist.description}
               </p>
               
+              {/* Genres - Convertidos a botones */}
               <div className="flex flex-wrap gap-3 mb-10">
                 {artist.genres?.map((genre, index) => (
                   <Button 
@@ -347,6 +335,7 @@ const ArtistProfilePage = () => {
                 ))}
               </div>
 
+              {/* Más información Section */}
               <div className="mt-8 mb-12">
                 <h2 className="text-3xl font-black mb-6">Más información</h2>
                 <div className="bg-secondary dark:bg-vyba-dark-secondary/70 rounded-3xl overflow-hidden">
@@ -362,6 +351,7 @@ const ArtistProfilePage = () => {
                       </button>
                     </CollapsibleTrigger>
                     <CollapsibleContent className="p-8 pt-0 space-y-8 bg-secondary rounded-lg rounded-tr-none rounded-tl-none dark:bg-vyba-dark-secondary/70">
+                      {/* Experiencia */}
                       <div>
                         <h3 className="text-xl font-bold mb-3 flex items-center">
                           Experiencia
@@ -372,6 +362,7 @@ const ArtistProfilePage = () => {
                         </p>
                         <div className="flex gap-3 flex-wrap">
                           {artist.experience?.map((exp, index) => {
+                            // Dividir la experiencia en nombre y ubicación (asumiendo formato "Nombre - Ubicación")
                             const parts = exp.split(' - ');
                             const name = parts[0];
                             const location = parts.length > 1 ? parts[1] : '';
@@ -395,6 +386,7 @@ const ArtistProfilePage = () => {
                         </div>
                       </div>
 
+                      {/* Repertorio */}
                       <div>
                         <h3 className="text-xl font-bold mb-3 flex items-center">
                           Repertorio
@@ -405,6 +397,7 @@ const ArtistProfilePage = () => {
                         </p>
                       </div>
 
+                      {/* Logística y equipamiento */}
                       <div>
                         <h3 className="text-xl font-bold mb-3 flex items-center">
                           Logística y equipamiento
@@ -423,6 +416,7 @@ const ArtistProfilePage = () => {
                         </div>
                       </div>
 
+                      {/* Tiempos */}
                       <div>
                         <h3 className="text-xl font-bold mb-3 flex items-center">
                           Tiempos
@@ -441,6 +435,7 @@ const ArtistProfilePage = () => {
                         </div>
                       </div>
 
+                      {/* Formación */}
                       <div>
                         <h3 className="text-xl font-bold mb-3 flex items-center">
                           <Badge className="mr-2 h-5 w-5" />
@@ -468,6 +463,7 @@ const ArtistProfilePage = () => {
                 </div>
               </div>
 
+              {/* Sección de Preview Musical */}
               <div className="mt-8 mb-16">
                 <h2 className="text-3xl font-black mb-6">Preview</h2>
                 <div className="space-y-4">
@@ -500,6 +496,7 @@ const ArtistProfilePage = () => {
                 </div>
               </div>
 
+              {/* Nueva sección de Tipos de Eventos */}
               <div className="mt-8 mb-16">
                 <h2 className="text-3xl font-black mb-6">Tipos de Eventos</h2>
                 <div className="flex flex-wrap gap-3">
@@ -516,11 +513,12 @@ const ArtistProfilePage = () => {
                 </div>
               </div>
 
+              {/* Nueva sección de FAQ */}
               <div className="mt-8 mb-16">
                 <h2 className="text-3xl font-black mb-6">FAQ</h2>
                 <Accordion type="single" collapsible className="bg-secondary dark:bg-vyba-dark-secondary/70 rounded-3xl overflow-hidden">
                   <AccordionItem value="item-1" className="border-b-0">
-                    <AccordionTrigger className="px-8 py-6 text-base font-medium">
+                    <AccordionTrigger className="px-8 py-6 text-base font-normal">
                       ¿Cómo puedo reservar una fecha?
                     </AccordionTrigger>
                     <AccordionContent className="px-8 text-base">
@@ -528,7 +526,7 @@ const ArtistProfilePage = () => {
                     </AccordionContent>
                   </AccordionItem>
                   <AccordionItem value="item-2" className="border-b-0">
-                    <AccordionTrigger className="px-8 py-6 text-base font-medium">
+                    <AccordionTrigger className="px-8 py-6 text-base font-normal">
                       ¿Qué incluye el precio?
                     </AccordionTrigger>
                     <AccordionContent className="px-8 text-base">
@@ -536,7 +534,7 @@ const ArtistProfilePage = () => {
                     </AccordionContent>
                   </AccordionItem>
                   <AccordionItem value="item-3" className="border-b-0">
-                    <AccordionTrigger className="px-8 py-6 text-base font-medium">
+                    <AccordionTrigger className="px-8 py-6 text-base font-normal">
                       ¿Cuánto tiempo dura una actuación?
                     </AccordionTrigger>
                     <AccordionContent className="px-8 text-base">
@@ -544,7 +542,7 @@ const ArtistProfilePage = () => {
                     </AccordionContent>
                   </AccordionItem>
                   <AccordionItem value="item-4" className="border-b-0">
-                    <AccordionTrigger className="px-8 py-6 text-base font-medium">
+                    <AccordionTrigger className="px-8 py-6 text-base font-normal">
                       ¿Puedo solicitar canciones específicas?
                     </AccordionTrigger>
                     <AccordionContent className="px-8 text-base">
@@ -552,7 +550,7 @@ const ArtistProfilePage = () => {
                     </AccordionContent>
                   </AccordionItem>
                   <AccordionItem value="item-5" className="border-b-0">
-                    <AccordionTrigger className="px-8 py-6 text-base font-medium">
+                    <AccordionTrigger className="px-8 py-6 text-base font-normal">
                       ¿Qué pasa si necesito cancelar?
                     </AccordionTrigger>
                     <AccordionContent className="px-8 text-base">
@@ -560,7 +558,7 @@ const ArtistProfilePage = () => {
                     </AccordionContent>
                   </AccordionItem>
                   <AccordionItem value="item-6" className="border-b-0">
-                    <AccordionTrigger className="px-8 py-6 text-base font-medium">
+                    <AccordionTrigger className="px-8 py-6 text-base font-normal">
                       ¿Cómo funciona el pago?
                     </AccordionTrigger>
                     <AccordionContent className="px-8 text-base">
@@ -569,74 +567,9 @@ const ArtistProfilePage = () => {
                   </AccordionItem>
                 </Accordion>
               </div>
-
-              <div className="mt-8 mb-16">
-                <div className="flex flex-col mb-6">
-                  <h2 className="text-3xl font-black mb-1">Reseñas</h2>
-                  <div className="flex items-center gap-2">
-                    <span className="text-3xl font-black">4,5</span>
-                    <span className="text-3xl font-black text-gray-600">(34)</span>
-                  </div>
-                </div>
-                
-                <div className="flex flex-wrap gap-3 mb-8">
-                  <UIBadge className="py-2 px-4 bg-secondary text-base font-medium">
-                    Reggaeton
-                  </UIBadge>
-                  <UIBadge className="py-2 px-4 bg-secondary text-base font-medium">
-                    Comercial
-                  </UIBadge>
-                </div>
-                
-                <div className="space-y-8">
-                  {displayedReviews.map((review) => (
-                    <div key={review.id} className="bg-secondary dark:bg-vyba-dark-secondary/70 rounded-3xl p-6">
-                      <div className="flex items-start justify-between mb-4">
-                        <div className="flex items-center gap-4">
-                          <Avatar className="h-16 w-16">
-                            <AvatarImage src={review.avatar} alt={review.name} />
-                            <AvatarFallback>{review.name.charAt(0)}</AvatarFallback>
-                          </Avatar>
-                          <div>
-                            <h3 className="text-base font-bold">{review.name}</h3>
-                            <p className="text-base text-gray-500">{review.date}</p>
-                          </div>
-                        </div>
-                        <div className="flex items-center gap-6">
-                          <div className="flex flex-wrap gap-2">
-                            {review.genres.map((genre, idx) => (
-                              <UIBadge key={idx} className="py-2 px-4 bg-white dark:bg-vyba-dark-secondary text-base font-medium">
-                                {genre}
-                              </UIBadge>
-                            ))}
-                          </div>
-                          <div className="flex items-center">
-                            <Star className="h-5 w-5 fill-black text-black dark:fill-white dark:text-white" />
-                            <span className="ml-1 text-base font-medium">{review.rating}</span>
-                          </div>
-                        </div>
-                      </div>
-                      <p className="text-base leading-relaxed">
-                        {review.text}
-                      </p>
-                    </div>
-                  ))}
-                </div>
-                
-                {!showAllReviews && reviewsData.length > 3 && (
-                  <div className="flex justify-center mt-8">
-                    <Button 
-                      variant="secondary" 
-                      className="rounded-full py-3 px-8 text-base font-medium"
-                      onClick={handleShowAllReviews}
-                    >
-                      Ver todas
-                    </Button>
-                  </div>
-                )}
-              </div>
             </div>
             
+            {/* Right Sticky Content */}
             <div className="lg:sticky lg:top-24 h-fit bg-white dark:bg-vyba-dark-bg rounded-3xl px-6 py-4">
               <div className="flex items-center gap-2 mb-2">
                 <p className="text-base text-neutral-600 dark:text-neutral-300">{artist.location} · {artist.availability}</p>
