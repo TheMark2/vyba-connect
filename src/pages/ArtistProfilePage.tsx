@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import Navbar from "@/components/Navbar";
@@ -441,27 +440,19 @@ const ArtistProfilePage = () => {
                   {artist.musicPreviews?.map((preview, index) => (
                     <div 
                       key={index} 
-                      className="group flex items-center gap-6 p-2 bg-secondary dark:bg-vyba-dark-secondary/70 rounded-2xl hover:bg-opacity-80 transition-colors duration-200 cursor-pointer hover:bg-secondary/90 dark:hover:bg-vyba-dark-secondary/90 relative"
+                      className="group flex items-center gap-4 p-2 bg-secondary dark:bg-vyba-dark-secondary/70 rounded-2xl hover:bg-opacity-80 transition-colors duration-200 cursor-pointer hover:bg-secondary/90 dark:hover:bg-vyba-dark-secondary/90 relative"
                     >
                       <div className="absolute left-4 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
                         <div className="bg-primary rounded-full w-6 h-6 flex items-center justify-center">
                           <Play className="w-3 h-3 text-primary-foreground" fill="currentColor" />
                         </div>
                       </div>
-                      <div className="relative w-14 h-14 flex-shrink-0 rounded-md overflow-hidden transition-transform duration-300 group-hover:translate-x-8">
+                      <div className="w-14 h-14 flex-shrink-0 rounded-md overflow-hidden transition-transform duration-300 group-hover:translate-x-8">
                         <img 
                           src={preview.image} 
                           alt={preview.title} 
-                          className="w-full h-full object-cover relative z-10"
+                          className="w-full h-full object-cover"
                         />
-                        {/* Duplicated blurred image underneath */}
-                        <div className="absolute -bottom-2 left-0 w-full h-full z-0 scale-90 opacity-70">
-                          <img 
-                            src={preview.image} 
-                            alt="" 
-                            className="w-full h-full object-cover blur-md"
-                          />
-                        </div>
                       </div>
                       <div className="flex-grow transition-transform duration-300 group-hover:translate-x-8">
                         <h3 className="text-base font-bold">{preview.title}</h3>
