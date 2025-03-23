@@ -9,6 +9,7 @@ import { useIsMobile } from "@/hooks/use-mobile";
 import { MUSIC_GENRES } from "@/constants/music";
 import { Badge as UIBadge } from "@/components/ui/badge";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
+import { Separator } from "@/components/ui/separator";
 
 const artistsData = [
   {
@@ -428,10 +429,10 @@ const ArtistProfilePage = () => {
               </div>
               
               <h3 className="text-lg font-black mb-6">{artist.priceRange}</h3>
-              <hr className="border-t border-neutral-300 dark:border-neutral-600 my-6 w-full" />
+              <Separator className="-mx-6 w-[calc(100%+48px)]" />
               
               <Button 
-                className="w-full py-4 text-base font-bold"
+                className="w-full py-4 text-base font-bold mt-6"
                 onClick={handleContact}
               >
                 Contactar con {artist.name}
