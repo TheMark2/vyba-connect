@@ -454,7 +454,7 @@ const ArtistProfilePage = () => {
                         <p className="text-sm text-gray-500 dark:text-gray-400">{artist.name}</p>
                       </div>
                       <div className="text-right">
-                        <span className="text-lg font-medium">{preview.duration}</span>
+                        <span className="text-base">{preview.duration}</span>
                       </div>
                     </div>
                   ))}
