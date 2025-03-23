@@ -442,7 +442,7 @@ const ArtistProfilePage = () => {
                       key={index} 
                       className="group flex items-center gap-4 p-2 bg-secondary dark:bg-vyba-dark-secondary/70 rounded-2xl hover:bg-opacity-80 transition-colors duration-200 cursor-pointer hover:bg-secondary/90 dark:hover:bg-vyba-dark-secondary/90 relative"
                     >
-                      <div className="absolute left-4 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center mr-4">
+                      <div className="absolute opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center mr-4">
                         <div className="bg-primary rounded-full w-6 h-6 flex items-center justify-center">
                           <Play className="w-3 h-3 text-primary-foreground" fill="currentColor" />
                         </div>
