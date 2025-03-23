@@ -12,6 +12,7 @@ import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/component
 import { Separator } from "@/components/ui/separator";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import ArtistsList from "@/components/ArtistsList";
 
 const artistsData = [
   {
@@ -686,6 +687,23 @@ const ArtistProfilePage = () => {
             </div>
           </div>
         </div>
+
+        {/* Nueva sección de Recomendados */}
+        <div className="mb-16 -mx-6 md:-mx-10 lg:-mx-14 xl:-mx-16">
+          <div className="px-6 md:px-10 lg:px-14 xl:px-16 mb-6">
+            <h2 className="text-3xl font-black">Recomendados</h2>
+            <p className="text-base text-gray-500 dark:text-gray-400">Artistas similares que te podrían interesar</p>
+          </div>
+          
+          <ArtistsList 
+            artists={artistsData.filter(a => a.id !== id)} 
+            onArtistClick={(artist) => navigate(`/artista/${artist.id}`)}
+            onFavoriteToggle={(artist) => toast.success(artist.isFavorite ? "Eliminado de favoritos" : "Añadido a favoritos", {
+              icon: artist.isFavorite ? "👋" : "❤️",
+              position: "bottom-center",
+            })}
+          />
+        </div>
       </div>
       <Footer />
     </>
@@ -693,4 +711,3 @@ const ArtistProfilePage = () => {
 };
 
 export default ArtistProfilePage;
-

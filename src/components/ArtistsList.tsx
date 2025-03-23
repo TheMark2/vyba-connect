@@ -60,8 +60,8 @@ const ArtistsList = ({
       const container = carouselRef.current.querySelector('[data-carousel-content]');
       if (container) {
         const isScrollable = container.scrollWidth > container.clientWidth;
-        const isScrolledToEnd = container.scrollLeft + container.clientWidth >= container.scrollWidth - 20;
-        setShowGradient(isScrollable && !isScrolledToEnd);
+        // Siempre mantenemos el gradiente visible para indicar que hay más contenido
+        setShowGradient(isScrollable);
       }
     }
   };
