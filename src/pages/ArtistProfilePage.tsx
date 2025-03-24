@@ -281,7 +281,7 @@ export const ArtistProfilePage = () => {
                 <div className="bg-secondary dark:bg-vyba-dark-secondary/70 rounded-3xl overflow-hidden">
                   <Collapsible open={isInfoOpen} onOpenChange={setIsInfoOpen} className="w-full">
                     <CollapsibleTrigger asChild>
-                      <button className="flex items-center justify-between w-full p-8 text-xl bg-secondary font-bold hover:bg-secondary/80 dark:bg-vyba-dark-secondary/70 dark:hover:bg-vyba-dark-secondary/90 transition-colors duration-200">
+                      <button className="flex items-center justify-between w-full p-8 text-sm bg-secondary font-bold hover:bg-secondary/80 dark:bg-vyba-dark-secondary/70 dark:hover:bg-vyba-dark-secondary/90 transition-colors duration-200">
                         <span>Experiencia, Repertorio, Logística y Equipamiento, Tiempos</span>
                         <ChevronDown className={`h-6 w-6 transition-transform duration-500 ${isInfoOpen ? "rotate-180" : ""}`} />
                       </button>
