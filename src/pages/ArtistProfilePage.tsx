@@ -545,10 +545,12 @@ export const ArtistProfilePage = () => {
         </div>
 
         {/* Nueva sección de Recomendados con carrusel básico */}
-        <div className="mb-16 max-w-full mx-auto">
-          <h2 className="text-3xl font-black mb-6">Recomendados</h2>
+        <div className="mb-16 mx-auto">
+          <div>
+            <h2 className="text-3xl font-black mb-6 max-w-7xl">Recomendados</h2>
+          </div>
           
-          <div className="relative">
+          <div className="relative max-w-full ml-32">
             <Carousel opts={{
             align: "start",
             loop: false
