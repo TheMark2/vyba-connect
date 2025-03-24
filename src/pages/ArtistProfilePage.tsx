@@ -275,24 +275,28 @@ export const ArtistProfilePage = () => {
                   </Button>)}
               </div>
 
-              {/* Más información Section */}
+              {/* Más información Section - REDISEÑADO */}
               <div className="mt-8 mb-12">
                 <h2 className="text-3xl font-black mb-6">Más información</h2>
-                <div className="bg-secondary dark:bg-vyba-dark-secondary/70 rounded-3xl overflow-hidden">
+                <div className="bg-white dark:bg-vyba-dark-bg border border-gray-100 dark:border-vyba-dark-secondary/50 rounded-3xl overflow-hidden shadow-sm">
                   <Collapsible open={isInfoOpen} onOpenChange={setIsInfoOpen} className="w-full">
                     <CollapsibleTrigger asChild>
-                      <button className="flex items-center justify-between w-full p-8 text-xl bg-secondary font-bold hover:bg-secondary/80 dark:bg-vyba-dark-secondary/70 dark:hover:bg-vyba-dark-secondary/90 transition-colors duration-200">
-                        <span>Experiencia, Repertorio, Logística y Equipamiento, Tiempos</span>
-                        <ChevronDown className={`h-6 w-6 transition-transform duration-500 ${isInfoOpen ? "rotate-180" : ""}`} />
+                      <button className="flex items-center justify-between w-full p-6 text-lg bg-white hover:bg-gray-50 font-bold text-neutral-800 dark:bg-vyba-dark-bg dark:hover:bg-vyba-dark-secondary/30 dark:text-white transition-colors duration-200">
+                        <span className="flex items-center">
+                          <List className="mr-3 h-5 w-5 text-neutral-500 dark:text-neutral-400" />
+                          Experiencia, Repertorio, Logística y Equipamiento, Tiempos
+                        </span>
+                        <ChevronDown className={`h-5 w-5 text-neutral-500 dark:text-neutral-400 transition-transform duration-300 ${isInfoOpen ? "rotate-180" : ""}`} />
                       </button>
                     </CollapsibleTrigger>
-                    <CollapsibleContent className="p-8 pt-0 space-y-8 bg-secondary rounded-lg rounded-tr-none rounded-tl-none dark:bg-vyba-dark-secondary/70">
+                    <CollapsibleContent className="px-6 pt-0 pb-6 space-y-8 bg-white dark:bg-vyba-dark-bg">
                       {/* Experiencia */}
-                      <div>
-                        <h3 className="text-xl font-bold mb-3 flex items-center">
+                      <div className="pt-4 border-t border-gray-100 dark:border-vyba-dark-secondary/50">
+                        <h3 className="text-lg font-bold mb-3 flex items-center text-neutral-800 dark:text-white">
+                          <List className="mr-2 h-4 w-4 text-neutral-500 dark:text-neutral-400" />
                           Experiencia
                         </h3>
-                        <p className="mb-4">
+                        <p className="mb-4 text-neutral-700 dark:text-neutral-300">
                           ¿Buscas añadir un toque de elegancia y encanto musical a tu próximo evento? ¡Estás en el lugar indicado!
                           Soy Antonia Pedragosa, una apasionada DJ especializada en jazz, bossa nova y blues. ✨✨
                         </p>
@@ -302,11 +306,11 @@ export const ArtistProfilePage = () => {
                           const parts = exp.split(' - ');
                           const name = parts[0];
                           const location = parts.length > 1 ? parts[1] : '';
-                          return <UIBadge key={index} variant="outline" className="py-2 px-4 bg-white border-0 text-sm font-medium dark:bg-vyba-dark-secondary">
-                                <span className="text-black dark:text-white">{name}</span>
+                          return <UIBadge key={index} variant="outline" className="py-2 px-4 bg-gray-50 border-0 text-sm font-medium dark:bg-vyba-dark-secondary/40 dark:text-white">
+                                <span className="text-neutral-800 dark:text-white">{name}</span>
                                 {location && <>
-                                    <span className="mx-1 text-gray-500">·</span>
-                                    <span className="text-gray-500">{location}</span>
+                                    <span className="mx-1 text-gray-500 dark:text-gray-400">·</span>
+                                    <span className="text-gray-500 dark:text-gray-400">{location}</span>
                                   </>}
                               </UIBadge>;
                         })}
@@ -314,63 +318,66 @@ export const ArtistProfilePage = () => {
                       </div>
 
                       {/* Repertorio */}
-                      <div>
-                        <h3 className="text-xl font-bold mb-3 flex items-center">
+                      <div className="pt-4 border-t border-gray-100 dark:border-vyba-dark-secondary/50">
+                        <h3 className="text-lg font-bold mb-3 flex items-center text-neutral-800 dark:text-white">
+                          <Book className="mr-2 h-4 w-4 text-neutral-500 dark:text-neutral-400" />
                           Repertorio
                         </h3>
-                        <p className="mb-4">
+                        <p className="mb-4 text-neutral-700 dark:text-neutral-300">
                           ¿Buscas añadir un toque de elegancia y encanto musical a tu próximo evento? ¡Estás en el lugar indicado!
                           Soy Antonia Pedragosa, una apasionada DJ especializada en jazz, bossa nova y blues. ✨✨
                         </p>
                       </div>
 
                       {/* Logística y equipamiento */}
-                      <div>
-                        <h3 className="text-xl font-bold mb-3 flex items-center">
+                      <div className="pt-4 border-t border-gray-100 dark:border-vyba-dark-secondary/50">
+                        <h3 className="text-lg font-bold mb-3 flex items-center text-neutral-800 dark:text-white">
+                          <List className="mr-2 h-4 w-4 text-neutral-500 dark:text-neutral-400" />
                           Logística y equipamiento
                         </h3>
-                        <p className="mb-4">
+                        <p className="mb-4 text-neutral-700 dark:text-neutral-300">
                           ¿Buscas añadir un toque de elegancia y encanto musical a tu próximo evento? ¡Estás en el lugar indicado!
                           Soy Antonia Pedragosa, una apasionada DJ especializada en jazz, bossa nova y blues. ✨✨
                         </p>
                         <div className="flex gap-3 flex-wrap">
-                          {artist.equipment?.map((item, index) => <UIBadge key={index} variant="outline" className="py-2 px-4 bg-white border-0 text-sm font-medium flex items-center gap-2 dark:bg-vyba-dark-secondary">
-                              <List className="w-4 h-4" />                              
+                          {artist.equipment?.map((item, index) => <UIBadge key={index} variant="outline" className="py-2 px-4 bg-gray-50 border-0 text-sm font-medium flex items-center gap-2 dark:bg-vyba-dark-secondary/40 dark:text-white">
+                              <List className="w-4 h-4 text-neutral-500 dark:text-neutral-400" />                              
                               {item}
                             </UIBadge>)}
                         </div>
                       </div>
 
                       {/* Tiempos */}
-                      <div>
-                        <h3 className="text-xl font-bold mb-3 flex items-center">
+                      <div className="pt-4 border-t border-gray-100 dark:border-vyba-dark-secondary/50">
+                        <h3 className="text-lg font-bold mb-3 flex items-center text-neutral-800 dark:text-white">
+                          <Clock className="mr-2 h-4 w-4 text-neutral-500 dark:text-neutral-400" />
                           Tiempos
                         </h3>
-                        <p className="mb-4">
+                        <p className="mb-4 text-neutral-700 dark:text-neutral-300">
                           ¿Buscas añadir un toque de elegancia y encanto musical a tu próximo evento? ¡Estás en el lugar indicado!
                           Soy Antonia Pedragosa, una apasionada DJ especializada en jazz, bossa nova y blues. ✨✨
                         </p>
                         <div className="flex gap-3 flex-wrap">
-                          {artist.timeRequirements?.map((req, index) => <UIBadge key={index} variant="outline" className="py-2 px-4 bg-white border-0 text-sm font-medium flex items-center gap-2 dark:bg-vyba-dark-secondary">
-                              <Clock className="w-4 h-4" />
+                          {artist.timeRequirements?.map((req, index) => <UIBadge key={index} variant="outline" className="py-2 px-4 bg-gray-50 border-0 text-sm font-medium flex items-center gap-2 dark:bg-vyba-dark-secondary/40 dark:text-white">
+                              <Clock className="w-4 h-4 text-neutral-500 dark:text-neutral-400" />
                               {req}
                             </UIBadge>)}
                         </div>
                       </div>
 
                       {/* Formación */}
-                      <div>
-                        <h3 className="text-xl font-bold mb-3 flex items-center">
-                          <Badge className="mr-2 h-5 w-5" />
+                      <div className="pt-4 border-t border-gray-100 dark:border-vyba-dark-secondary/50">
+                        <h3 className="text-lg font-bold mb-3 flex items-center text-neutral-800 dark:text-white">
+                          <Badge className="mr-2 h-4 w-4 text-neutral-500 dark:text-neutral-400" />
                           Formación
                         </h3>
-                        <p className="mb-4">
+                        <p className="mb-4 text-neutral-700 dark:text-neutral-300">
                           ¿Buscas añadir un toque de elegancia y encanto musical a tu próximo evento? ¡Estás en el lugar indicado!
                           Soy Antonia Pedragosa, una apasionada DJ especializada en jazz, bossa nova y blues. ✨✨
                         </p>
                         <div className="flex gap-3 flex-wrap">
-                          {artist.education?.map((edu, index) => <UIBadge key={index} variant="outline" className="py-2 px-4 bg-white border-0 text-sm font-medium flex items-center gap-2 dark:bg-vyba-dark-secondary">
-                              <Book className="w-4 h-4" />
+                          {artist.education?.map((edu, index) => <UIBadge key={index} variant="outline" className="py-2 px-4 bg-gray-50 border-0 text-sm font-medium flex items-center gap-2 dark:bg-vyba-dark-secondary/40 dark:text-white">
+                              <Book className="w-4 h-4 text-neutral-500 dark:text-neutral-400" />
                               {edu}
                             </UIBadge>)}
                         </div>
@@ -591,3 +598,4 @@ export const ArtistProfilePage = () => {
       <Footer />
     </>;
 };
+
