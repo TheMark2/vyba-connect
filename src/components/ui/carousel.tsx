@@ -176,7 +176,7 @@ const CarouselContent = React.forwardRef<
 
   return (
     <div className="overflow-hidden" ref={carouselRef}>
-      <div className={cn("flex touch-pan-y", className)} {...props} />
+      <div className={cn("flex touch-pan-y gap-4", className)} {...props} />
     </div>
   )
 })
