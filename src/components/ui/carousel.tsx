@@ -1,4 +1,3 @@
-
 import * as React from "react"
 import { ChevronLeft, ChevronRight } from "lucide-react"
 import useEmblaCarousel, {
@@ -76,7 +75,6 @@ const Carousel = React.forwardRef<
     const [selectedIndex, setSelectedIndex] = React.useState(0)
     const [scrollSnaps, setScrollSnaps] = React.useState<number[]>([])
 
-    // Set API for external use
     React.useEffect(() => {
       if (api && setApi) {
         setApi(api)
@@ -93,7 +91,6 @@ const Carousel = React.forwardRef<
       }
     }, [api, selectedIndex, onSlideChange])
 
-    // Scroll to functions
     const scrollPrev = React.useCallback(() => {
       api?.scrollPrev()
     }, [api])
@@ -107,7 +104,6 @@ const Carousel = React.forwardRef<
       onScroll()
     }, [api, onScroll])
 
-    // Handle API changes
     const onSelect = React.useCallback(() => {
       if (!api) {
         return
@@ -118,7 +114,6 @@ const Carousel = React.forwardRef<
       setCanScrollNext(api.canScrollNext())
     }, [api])
 
-    // Get the scroll snap positions
     React.useEffect(() => {
       if (!api) return
       
@@ -192,7 +187,6 @@ const CarouselItem = React.forwardRef<
   HTMLDivElement,
   React.HTMLAttributes<HTMLDivElement>
 >(({ className, ...props }, ref) => {
-  // Simplificamos el componente para evitar la superposición de elementos
   return (
     <div
       ref={ref}
