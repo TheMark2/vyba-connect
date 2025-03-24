@@ -545,7 +545,7 @@ export const ArtistProfilePage = () => {
         </div>
 
         {/* Nueva sección de Recomendados con carrusel básico */}
-        <div className="mb-16 mx-auto">
+        <div className="mb-16">
           <div className="max-w-7xl mx-auto">
             <h2 className="text-3xl font-black mb-6">Recomendados</h2>
           </div>
