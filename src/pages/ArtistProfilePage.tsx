@@ -568,7 +568,7 @@ export const ArtistProfilePage = () => {
                 align: "start",
                 loop: false
               }} 
-              className="w-full"
+              className="max-w-7xl"
             >
               <CarouselContent>
                 {recommendedArtists.map(artist => (
