@@ -1,3 +1,4 @@
+
 import React, { useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import Navbar from "@/components/Navbar";
@@ -156,14 +157,16 @@ const ArtistProfilePage = () => {
   const [isInfoOpen, setIsInfoOpen] = useState(false);
   const artist = artistsData.find(artist => artist.id === id);
   if (!artist) {
-    return <>
+    return (
+      <>
         <Navbar />
         <div className="flex flex-col items-center justify-center min-h-[60vh] px-6">
           <h1 className="text-2xl font-bold mb-4">Artista no encontrado</h1>
           <Button onClick={() => navigate(-1)}>Volver</Button>
         </div>
         <Footer />
-      </>;
+      </>
+    );
   }
   const handleFavorite = () => {
     toast.success("Añadido a favoritos", {
@@ -202,7 +205,8 @@ const ArtistProfilePage = () => {
     // Aquí podríamos navegar a una página de búsqueda filtrada por tipo de evento
     // navigate(`/artistas?evento=${eventType}`);
   };
-  return <>
+  return (
+    <>
       <Navbar />
       <div className="px-6 md:px-10 lg:px-14 xl:px-16">
         {/* Banner Section with Blurred Background */}
@@ -237,7 +241,8 @@ const ArtistProfilePage = () => {
           </div>
           
           {/* Artist info overlay */}
-          {isMobile ? <div className="absolute bottom-12 left-5 right-0 flex flex-col items-start z-20">
+          {isMobile ? (
+            <div className="absolute bottom-12 left-5 right-0 flex flex-col items-start z-20">
               <div className="rounded-full overflow-hidden mb-4 w-24 h-24">
                 <img src={artist.images[0]} alt={artist.name} className="w-full h-full object-cover rounded-full" />
               </div>
@@ -246,7 +251,9 @@ const ArtistProfilePage = () => {
                 <h1 className="text-2xl font-black truncate">{artist.name}</h1>
                 <p className="text-lg opacity-90 line-clamp-2">{artist.type}</p>
               </div>
-            </div> : <div className="absolute bottom-12 left-5 md:left-10 lg:left-14 flex items-center z-20">
+            </div>
+          ) : (
+            <div className="absolute bottom-12 left-5 md:left-10 lg:left-14 flex items-center z-20">
               <div className="rounded-full overflow-hidden mr-4 md:mr-6 w-24 h-24 md:w-32 md:h-32">
                 <img src={artist.images[0]} alt={artist.name} className="w-full h-full object-cover rounded-full" />
               </div>
@@ -255,7 +262,8 @@ const ArtistProfilePage = () => {
                 <h1 className="text-3xl md:text-5xl font-black truncate">{artist.name}</h1>
                 <p className="text-xl md:text-2xl opacity-90 line-clamp-2">{artist.type}</p>
               </div>
-            </div>}
+            </div>
+          )}
         </div>
 
         {/* About Me Section */}
@@ -270,9 +278,11 @@ const ArtistProfilePage = () => {
               
               {/* Genres - Convertidos a botones */}
               <div className="flex flex-wrap gap-3 mb-10">
-                {artist.genres?.map((genre, index) => <Button key={index} variant="secondary" className="rounded-full text-sm font-medium" onClick={() => handleGenreClick(genre)}>
+                {artist.genres?.map((genre, index) => (
+                  <Button key={index} variant="secondary" className="rounded-full text-sm font-medium" onClick={() => handleGenreClick(genre)}>
                     {genre}
-                  </Button>)}
+                  </Button>
+                ))}
               </div>
 
               {/* Más información Section */}
@@ -302,13 +312,17 @@ const ArtistProfilePage = () => {
                           const parts = exp.split(' - ');
                           const name = parts[0];
                           const location = parts.length > 1 ? parts[1] : '';
-                          return <UIBadge key={index} variant="outline" className="py-2 px-4 bg-white border-0 text-sm font-medium dark:bg-vyba-dark-secondary">
+                          return (
+                            <UIBadge key={index} variant="outline" className="py-2 px-4 bg-white border-0 text-sm font-medium dark:bg-vyba-dark-secondary">
                                 <span className="text-black dark:text-white">{name}</span>
-                                {location && <>
+                                {location && (
+                                  <>
                                     <span className="mx-1 text-gray-500">·</span>
                                     <span className="text-gray-500">{location}</span>
-                                  </>}
-                              </UIBadge>;
+                                  </>
+                                )}
+                              </UIBadge>
+                          );
                         })}
                         </div>
                       </div>
@@ -334,10 +348,12 @@ const ArtistProfilePage = () => {
                           Soy Antonia Pedragosa, una apasionada DJ especializada en jazz, bossa nova y blues. ✨✨
                         </p>
                         <div className="flex gap-3 flex-wrap">
-                          {artist.equipment?.map((item, index) => <UIBadge key={index} variant="outline" className="py-2 px-4 bg-white border-0 text-sm font-medium flex items-center gap-2 dark:bg-vyba-dark-secondary">
+                          {artist.equipment?.map((item, index) => (
+                            <UIBadge key={index} variant="outline" className="py-2 px-4 bg-white border-0 text-sm font-medium flex items-center gap-2 dark:bg-vyba-dark-secondary">
                               <List className="w-4 h-4" />                              
                               {item}
-                            </UIBadge>)}
+                            </UIBadge>
+                          ))}
                         </div>
                       </div>
 
@@ -351,10 +367,12 @@ const ArtistProfilePage = () => {
                           Soy Antonia Pedragosa, una apasionada DJ especializada en jazz, bossa nova y blues. ✨✨
                         </p>
                         <div className="flex gap-3 flex-wrap">
-                          {artist.timeRequirements?.map((req, index) => <UIBadge key={index} variant="outline" className="py-2 px-4 bg-white border-0 text-sm font-medium flex items-center gap-2 dark:bg-vyba-dark-secondary">
+                          {artist.timeRequirements?.map((req, index) => (
+                            <UIBadge key={index} variant="outline" className="py-2 px-4 bg-white border-0 text-sm font-medium flex items-center gap-2 dark:bg-vyba-dark-secondary">
                               <Clock className="w-4 h-4" />
                               {req}
-                            </UIBadge>)}
+                            </UIBadge>
+                          ))}
                         </div>
                       </div>
 
@@ -369,10 +387,12 @@ const ArtistProfilePage = () => {
                           Soy Antonia Pedragosa, una apasionada DJ especializada en jazz, bossa nova y blues. ✨✨
                         </p>
                         <div className="flex gap-3 flex-wrap">
-                          {artist.education?.map((edu, index) => <UIBadge key={index} variant="outline" className="py-2 px-4 bg-white border-0 text-sm font-medium flex items-center gap-2 dark:bg-vyba-dark-secondary">
+                          {artist.education?.map((edu, index) => (
+                            <UIBadge key={index} variant="outline" className="py-2 px-4 bg-white border-0 text-sm font-medium flex items-center gap-2 dark:bg-vyba-dark-secondary">
                               <Book className="w-4 h-4" />
                               {edu}
-                            </UIBadge>)}
+                            </UIBadge>
+                          ))}
                         </div>
                       </div>
                     </CollapsibleContent>
@@ -384,7 +404,8 @@ const ArtistProfilePage = () => {
               <div className="mt-8 mb-16">
                 <h2 className="text-3xl font-black mb-6">Preview</h2>
                 <div className="space-y-4">
-                  {artist.musicPreviews?.map((preview, index) => <div key={index} className="group flex items-center gap-4 p-2 bg-secondary dark:bg-vyba-dark-secondary/70 rounded-2xl hover:bg-opacity-80 transition-colors duration-200 cursor-pointer hover:bg-secondary/90 dark:hover:bg-vyba-dark-secondary/90 relative">
+                  {artist.musicPreviews?.map((preview, index) => (
+                    <div key={index} className="group flex items-center gap-4 p-2 bg-secondary dark:bg-vyba-dark-secondary/70 rounded-2xl hover:bg-opacity-80 transition-colors duration-200 cursor-pointer hover:bg-secondary/90 dark:hover:bg-vyba-dark-secondary/90 relative">
                       <div className="absolute opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center ml-1">
                         <div className="bg-primary rounded-full w-6 h-6 flex items-center justify-center">
                           <Play className="w-3 h-3 text-primary-foreground" fill="currentColor" />
@@ -400,7 +421,8 @@ const ArtistProfilePage = () => {
                       <div className="text-right mr-4">
                         <span className="text-sm font-medium">{preview.duration}</span>
                       </div>
-                    </div>)}
+                    </div>
+                  ))}
                 </div>
               </div>
 
@@ -408,9 +430,11 @@ const ArtistProfilePage = () => {
               <div className="mt-8 mb-16">
                 <h2 className="text-3xl font-black mb-6">Tipos de Eventos</h2>
                 <div className="flex flex-wrap gap-3">
-                  {artist.eventTypes?.map((eventType, index) => <Button key={index} variant="secondary" className="rounded-full text-sm font-medium" onClick={() => handleEventTypeClick(eventType)}>
+                  {artist.eventTypes?.map((eventType, index) => (
+                    <Button key={index} variant="secondary" className="rounded-full text-sm font-medium" onClick={() => handleEventTypeClick(eventType)}>
                       {eventType}
-                    </Button>)}
+                    </Button>
+                  ))}
                 </div>
               </div>
 
@@ -471,4 +495,95 @@ const ArtistProfilePage = () => {
 
               {/* Nueva sección de Reseñas */}
               <div className="mt-8 mb-16">
-                <h2 className
+                <h2 className="text-3xl font-black mb-6">Reseñas</h2>
+                <div className="space-y-4">
+                  {artist.reviewsData?.map((review) => (
+                    <div key={review.id} className="bg-secondary dark:bg-vyba-dark-secondary/70 rounded-3xl p-6">
+                      <div className="flex items-start gap-4">
+                        <Avatar className="w-12 h-12">
+                          <AvatarImage src="/lovable-uploads/77591a97-10cd-4c8b-b768-5b17483c3d9f.png" alt={review.name} />
+                          <AvatarFallback>{review.name.substring(0, 2)}</AvatarFallback>
+                        </Avatar>
+                        <div className="flex-1">
+                          <div className="flex justify-between items-start">
+                            <div>
+                              <h4 className="font-bold">{review.name}</h4>
+                              <p className="text-sm text-gray-500 dark:text-gray-400">Hace {review.date}</p>
+                            </div>
+                            <div className="flex items-center">
+                              {Array.from({ length: 5 }).map((_, i) => (
+                                <Star key={i} className={`w-4 h-4 ${i < review.rating ? "fill-yellow-400 text-yellow-400" : "text-gray-300 dark:text-gray-600"}`} />
+                              ))}
+                            </div>
+                          </div>
+                          <div className="flex flex-wrap gap-2 my-3">
+                            {review.badges?.map((badge, index) => (
+                              <UIBadge key={index} variant="outline" className="bg-white border-0 py-1 px-3 text-xs dark:bg-vyba-dark-secondary">
+                                {badge}
+                              </UIBadge>
+                            ))}
+                          </div>
+                          <p className="text-sm mt-3">{review.comment}</p>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+
+            {/* Right Sidebar */}
+            <div className="lg:col-span-1">
+              <div className="sticky top-8">
+                <div className="bg-secondary dark:bg-vyba-dark-secondary/70 rounded-3xl p-6 mb-8">
+                  <h3 className="text-xl font-bold mb-4">Información de contacto</h3>
+                  <div className="flex items-start gap-2 mb-4">
+                    <MapPin className="w-5 h-5 mt-0.5 flex-shrink-0" />
+                    <div>
+                      <h4 className="font-semibold">Ubicación</h4>
+                      <p className="text-sm">{artist.location || "Barcelona, España"}</p>
+                    </div>
+                  </div>
+                  <div className="flex items-center gap-1 mb-6">
+                    <div className="w-3 h-3 rounded-full bg-green-500"></div>
+                    <span className="text-sm font-medium">{artist.availability || "Disponible esta semana"}</span>
+                  </div>
+                  <Button className="w-full font-bold" onClick={handleContact}>
+                    Contactar
+                  </Button>
+                </div>
+
+                <div className="bg-secondary dark:bg-vyba-dark-secondary/70 rounded-3xl p-6 mb-8">
+                  <h3 className="text-xl font-bold mb-4">Precio</h3>
+                  <p className="text-2xl font-black">{artist.priceRange}</p>
+                  <p className="text-sm text-gray-500 dark:text-gray-400 mt-1 mb-4">por evento</p>
+                  <div className="flex items-center gap-2 mb-2">
+                    <Star className="w-5 h-5 fill-yellow-400 text-yellow-400" />
+                    <span className="font-medium">{artist.rating} estrellas</span>
+                    <span className="text-sm text-gray-500 dark:text-gray-400">({artist.reviews} reseñas)</span>
+                  </div>
+                  <Separator className="my-4" />
+                  <p className="text-sm">Incluye actuación completa con equipo propio para hasta 100 personas</p>
+                </div>
+
+                {/* También te puede interesar */}
+                <div className="mb-8">
+                  <h3 className="text-xl font-bold mb-4">También te puede interesar</h3>
+                  <div className="w-full">
+                    <ArtistsList
+                      artists={recommendedArtists}
+                      onArtistClick={(artist) => navigate(`/artista/${artist.id}`)}
+                    />
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <Footer />
+    </>
+  );
+};
+
+export default ArtistProfilePage;
