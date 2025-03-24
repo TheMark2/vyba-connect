@@ -1,3 +1,4 @@
+
 import React, { useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import Navbar from "@/components/Navbar";
@@ -156,5 +157,124 @@ const ArtistProfilePage = () => {
   const [isInfoOpen, setIsInfoOpen] = useState(false);
   const artist = artistsData.find(artist => artist.id === id);
 
+  if (!artist) {
+    navigate('/404');
+    return null;
+  }
 
+  return (
+    <div className="min-h-screen bg-white dark:bg-vyba-dark-background">
+      <Navbar />
+      
+      {/* Artist Profile Header */}
+      <div className="container mx-auto px-4 md:px-8 lg:px-16 py-8">
+        {/* Main Artist Info */}
+        <div className="flex flex-col md:flex-row gap-8 items-start">
+          {/* Artist Images Carousel */}
+          <div className="w-full md:w-1/2 lg:w-2/5">
+            <Carousel>
+              <CarouselContent>
+                {artist.images.map((image, index) => (
+                  <CarouselItem key={index}>
+                    <img 
+                      src={image} 
+                      alt={`${artist.name} - Image ${index + 1}`} 
+                      className="w-full h-auto rounded-2xl object-cover"
+                    />
+                  </CarouselItem>
+                ))}
+              </CarouselContent>
+              <CarouselPrevious />
+              <CarouselNext />
+            </Carousel>
+          </div>
 
+          {/* Artist Details */}
+          <div className="w-full md:w-1/2 lg:w-3/5 space-y-4">
+            <div className="flex justify-between items-center">
+              <h1 className="text-3xl font-bold">{artist.name}</h1>
+              <div className="flex items-center gap-4">
+                <Button variant="ghost" size="icon">
+                  <Share2 className="h-6 w-6" />
+                </Button>
+                <Button variant="ghost" size="icon">
+                  <Flag className="h-6 w-6" />
+                </Button>
+                <Button 
+                  variant="ghost" 
+                  size="icon"
+                  onClick={() => {
+                    const newFavoriteState = !artist.isFavorite;
+                    artist.isFavorite = newFavoriteState;
+                    toast.success(newFavoriteState ? "Añadido a favoritos" : "Eliminado de favoritos", {
+                      icon: newFavoriteState ? "❤️" : "👋",
+                      duration: 1500,
+                      position: "bottom-center"
+                    });
+                  }}
+                >
+                  <Heart 
+                    className={`h-6 w-6 transition-colors ${artist.isFavorite ? 'fill-red-500 stroke-red-500' : 'fill-transparent stroke-black dark:stroke-white'}`} 
+                  />
+                </Button>
+              </div>
+            </div>
+
+            <div className="flex items-center gap-2">
+              <UIBadge variant="secondary">{artist.type}</UIBadge>
+              <div className="flex items-center gap-1">
+                <Star className="h-4 w-4 fill-black dark:fill-white stroke-black dark:stroke-white" />
+                <span className="text-sm font-medium">{artist.rating} ({artist.reviews || 0} reseñas)</span>
+              </div>
+            </div>
+
+            <Collapsible open={isInfoOpen} onOpenChange={setIsInfoOpen}>
+              <p className={`text-gray-600 dark:text-gray-300 ${!isInfoOpen ? 'line-clamp-3' : ''}`}>
+                {artist.description}
+              </p>
+              <CollapsibleTrigger asChild>
+                <Button variant="link" className="text-primary pl-0">
+                  {isInfoOpen ? 'Ver menos' : 'Ver más'}
+                </Button>
+              </CollapsibleTrigger>
+            </Collapsible>
+
+            <div className="grid grid-cols-2 gap-4">
+              <div>
+                <div className="flex items-center gap-2">
+                  <MapPin className="h-5 w-5" />
+                  <span>{artist.location}</span>
+                </div>
+                {artist.availability && (
+                  <div className="flex items-center gap-2 mt-2">
+                    <Clock className="h-5 w-5" />
+                    <span>{artist.availability}</span>
+                  </div>
+                )}
+              </div>
+              <div>
+                <div className="font-semibold text-lg">{artist.priceRange}</div>
+                <div className="text-gray-600 dark:text-gray-300">Precio por evento</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Recommended Artists */}
+        <div className="mt-12 pl-4 md:px-0">
+          <h2 className="text-2xl font-bold mb-6">Artistas Recomendados</h2>
+          <div className="-mr-4 md:-mr-8 lg:-mr-16">
+            <ArtistsList 
+              artists={recommendedArtists} 
+              onArtistClick={(artist) => navigate(`/artista/${artist.id}`)}
+            />
+          </div>
+        </div>
+      </div>
+
+      <Footer />
+    </div>
+  );
+};
+
+export default ArtistProfilePage;
