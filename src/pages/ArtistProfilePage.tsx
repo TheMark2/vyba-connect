@@ -384,23 +384,36 @@ export const ArtistProfilePage = () => {
               <div className="mt-8 mb-16">
                 <h2 className="text-3xl font-black mb-6">Preview</h2>
                 <div className="space-y-4">
-                  {artist.musicPreviews?.map((preview, index) => <div key={index} className="group flex items-center gap-4 p-2 bg-secondary dark:bg-vyba-dark-secondary/70 rounded-2xl hover:bg-opacity-80 transition-colors duration-200 cursor-pointer hover:bg-secondary/90 dark:hover:bg-vyba-dark-secondary/90 relative">
-                      <div className="absolute opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center ml-1">
-                        <div className="bg-primary rounded-full w-6 h-6 flex items-center justify-center">
-                          <Play className="w-3 h-3 text-primary-foreground" fill="currentColor" />
+                  {artist.musicPreviews?.map((preview, index) => (
+                    <div 
+                      key={index} 
+                      className="group flex items-center gap-4 p-2 bg-secondary dark:bg-vyba-dark-secondary/70 rounded-2xl hover:bg-opacity-80 transition-colors duration-200 cursor-pointer hover:bg-secondary/90 dark:hover:bg-vyba-dark-secondary/90 relative"
+                    >
+                      <div className="relative w-14 h-14 flex-shrink-0 rounded-md overflow-hidden">
+                        <img 
+                          src={preview.image} 
+                          alt={preview.title} 
+                          className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-110" 
+                        />
+                        
+                        <div className="absolute inset-0 bg-black opacity-0 group-hover:opacity-60 transition-opacity duration-300"></div>
+                        
+                        <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                          <div className="bg-primary rounded-full w-8 h-8 flex items-center justify-center shadow-lg">
+                            <Play className="w-4 h-4 text-primary-foreground ml-0.5" fill="currentColor" />
+                          </div>
                         </div>
                       </div>
-                      <div className="w-14 h-14 flex-shrink-0 rounded-md overflow-hidden transition-transform duration-300 group-hover:translate-x-10">
-                        <img src={preview.image} alt={preview.title} className="w-full h-full object-cover" />
-                      </div>
-                      <div className="flex-grow transition-transform duration-300 group-hover:translate-x-10">
+                      
+                      <div className="flex-grow">
                         <h3 className="text-base font-bold">{preview.title}</h3>
                         <p className="text-sm text-gray-500 dark:text-gray-400">{artist.name}</p>
                       </div>
                       <div className="text-right mr-4">
                         <span className="text-sm font-medium">{preview.duration}</span>
                       </div>
-                    </div>)}
+                    </div>
+                  ))}
                 </div>
               </div>
 
