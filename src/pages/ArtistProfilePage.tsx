@@ -145,7 +145,7 @@ const recommendedArtists = [{
   isFavorite: true
 }];
 
-const ArtistProfilePage = () => {
+export const ArtistProfilePage = () => {
   const {
     id
   } = useParams<{
@@ -572,6 +572,3 @@ const ArtistProfilePage = () => {
       <Footer />
     </>;
 };
-
-
-

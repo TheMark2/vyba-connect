@@ -8,7 +8,7 @@ import { useEffect } from "react";
 import Index from "./pages/Index";
 import NotFound from "./pages/NotFound";
 import ArtistsPage from "./pages/ArtistsPage";
-import ArtistProfilePage from "./pages/ArtistProfilePage";
+import { ArtistProfilePage } from "./pages/ArtistProfilePage";
 
 const queryClient = new QueryClient();
 
