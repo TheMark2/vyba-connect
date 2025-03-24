@@ -15,6 +15,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import ArtistsList from "@/components/ArtistsList";
 import ArtistProfileCard from "@/components/ArtistProfileCard";
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/carousel";
+
 const artistsData = [{
   id: "1",
   name: "Antonia Pedragosa",
@@ -96,6 +97,7 @@ const artistsData = [{
   education: ["Conservatorio Provincial de Música Luis Gianneo"],
   eventTypes: ["Fiestas Privadas", "Inauguraciones", "Aniversarios"]
 }];
+
 const recommendedArtists = [{
   id: "101",
   name: "Marco Olivera",
@@ -142,6 +144,7 @@ const recommendedArtists = [{
   priceRange: "180-350€",
   isFavorite: true
 }];
+
 const ArtistProfilePage = () => {
   const {
     id
@@ -542,7 +545,7 @@ const ArtistProfilePage = () => {
         </div>
 
         {/* Nueva sección de Recomendados con carrusel básico */}
-        <div className="mb-16 max-w-7xl mx-auto">
+        <div className="mb-16 max-w-full mx-auto">
           <h2 className="text-3xl font-black mb-6">Recomendados</h2>
           
           <div className="relative">
@@ -569,4 +572,6 @@ const ArtistProfilePage = () => {
       <Footer />
     </>;
 };
-export default ArtistProfilePage;
+
+
+
