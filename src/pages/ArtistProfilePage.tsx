@@ -557,7 +557,7 @@ export const ArtistProfilePage = () => {
               }} 
               className="w-full"
             >
-              <CarouselContent className="ml-[calc(((100vw-theme(maxWidth.7xl))/2))]">
+              <CarouselContent>
                 {recommendedArtists.map(artist => (
                   <CarouselItem 
                     key={artist.id} 
