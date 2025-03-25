@@ -388,18 +388,27 @@ export const ArtistProfilePage = () => {
                   {artist.musicPreviews?.map((preview, index) => (
                     <div 
                       key={index} 
-                      className="group flex items-center gap-4 p-2 bg-secondary dark:bg-vyba-dark-secondary/70 rounded-2xl hover:bg-opacity-80 transition-colors duration-200 cursor-pointer hover:bg-secondary/90 dark:hover:bg-vyba-dark-secondary/90 relative"
+                      className="group flex items-center gap-4 p-2 bg-secondary dark:bg-vyba-dark-secondary/70 rounded-2xl hover:bg-opacity-80 transition-colors duration-200 cursor-pointer hover:bg-secondary/90 dark:hover:bg-vyba-dark-secondary/90 relative overflow-hidden"
                     >
                       <div className="relative w-14 h-14 flex-shrink-0 rounded-md overflow-hidden">
                         {/* Blurred background image */}
                         <div 
-                          className="absolute -inset-4 bg-cover bg-center blur-xl opacity-40 scale-105" 
+                          className="absolute -top-1/2 -left-1/2 -right-1/2 -bottom-1/2 bg-cover bg-center blur-xl opacity-40" 
                           style={{ 
                             backgroundImage: `url(${preview.image})`,
+                            backgroundSize: 'cover',
+                            transform: 'scale(1.5)',
                             zIndex: 1 
                           }}
                         ></div>
-                                                
+                        
+                        {/* Main image */}
+                        <img 
+                          src={preview.image} 
+                          alt={preview.title} 
+                          className="relative z-10 w-full h-full object-cover transition-transform duration-300 group-hover:scale-110" 
+                        />
+                        
                         {/* Hover overlay */}
                         <div className="absolute inset-0 z-20 bg-black opacity-0 group-hover:opacity-60 transition-opacity duration-300"></div>
                         
