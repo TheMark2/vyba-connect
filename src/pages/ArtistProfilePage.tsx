@@ -370,7 +370,7 @@ export const ArtistProfilePage = () => {
                   </div>
                   
                   {/* Gradient overlay for truncated content */}
-                  {!showFullInfo && <div className="absolute bottom-0 left-0 right-0 h-40 bg-[#FAF8F6]-to-t from-background to-transparent pointer-events-none transition-opacity duration-500 ease-in-out"></div>}
+                  {!showFullInfo && <div className="absolute bottom-0 left-0 right-0 h-40 bg-gradient-to-t from-[#FAF8F6] to-transparent pointer-events-none transition-opacity duration-500 ease-in-out"></div>}
                 </div>
                 
                 {/* Button to toggle full content */}
