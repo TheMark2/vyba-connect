@@ -482,7 +482,7 @@ export const ArtistProfilePage = () => {
                 </Accordion>
               </div>
 
-              {/* Nueva sección de Reseñas - Rediseñada */}
+              {/* Nueva sección de Reseñas - Rediseñada según la imagen */}
               <div className="mt-8 mb-16">
                 <h2 className="text-3xl font-black mb-3">Reseñas</h2>
                 <div className="space-y-6">
@@ -501,14 +501,14 @@ export const ArtistProfilePage = () => {
                     </div>
                   </div>
                   
-                  {/* Individual reviews - Rediseñadas */}
+                  {/* Individual reviews - Rediseñadas según la imagen */}
                   <div className="space-y-10">
                     {artist.reviewsData?.map(review => (
                       <div key={review.id} className="pb-8 border-b border-gray-200 dark:border-gray-700">
-                        <div className="flex flex-col mb-4">
-                          <div className="flex items-start gap-4">
-                            {/* Foto de perfil con bordes redondeados pero no completamente circulares */}
-                            <div className="w-16 h-16 rounded-2xl overflow-hidden flex-shrink-0">
+                        <div className="flex gap-6">
+                          {/* Parte izquierda: Imagen de perfil e información básica */}
+                          <div className="w-[90px] flex-shrink-0">
+                            <div className="w-[72px] h-[72px] rounded-[16px] overflow-hidden mb-2">
                               <img 
                                 src={review.id === 1 ? "https://images.unsplash.com/photo-1580489944761-15a19d654956?q=80&w=1000" : 
                                      review.id === 2 ? "https://images.unsplash.com/photo-1633332755192-727a05c4013d?q=80&w=1000" :
@@ -517,25 +517,27 @@ export const ArtistProfilePage = () => {
                                 className="w-full h-full object-cover"
                               />
                             </div>
-                            
-                            <div className="flex-1">
-                              <h3 className="text-base font-bold">{review.name}</h3>
-                              <p className="text-sm text-gray-500">hace {review.date}</p>
-                              
-                              {/* Estrellas en fila - 5 estrellas con la cantidad correspondiente llenas */}
-                              <div className="flex items-center mt-1">
-                                {[...Array(5)].map((_, index) => (
-                                  <Star 
-                                    key={index} 
-                                    className={`h-5 w-5 ${index < review.rating ? "text-black fill-black dark:text-white dark:fill-white" : "text-gray-300 dark:text-gray-600"}`}
-                                  />
-                                ))}
-                              </div>
+                            <div className="text-left">
+                              <h4 className="text-sm font-bold">{review.name}</h4>
+                              <p className="text-xs text-gray-500">hace {review.date}</p>
                             </div>
                           </div>
                           
-                          {/* Comentario de la reseña */}
-                          <p className="text-base mt-3">{review.comment}</p>
+                          {/* Parte derecha: Estrellas y comentario */}
+                          <div className="flex-1">
+                            {/* Estrellas en fila - 5 estrellas con la cantidad correspondiente llenas */}
+                            <div className="flex items-center mb-2">
+                              {[...Array(5)].map((_, index) => (
+                                <Star 
+                                  key={index} 
+                                  className={`h-5 w-5 ${index < review.rating ? "text-black fill-black dark:text-white dark:fill-white" : "text-gray-300 dark:text-gray-600"}`}
+                                />
+                              ))}
+                            </div>
+                            
+                            {/* Comentario de la reseña */}
+                            <p className="text-base">{review.comment}</p>
+                          </div>
                         </div>
                       </div>
                     ))}
@@ -614,3 +616,4 @@ export const ArtistProfilePage = () => {
       <Footer />
     </>;
 };
+
