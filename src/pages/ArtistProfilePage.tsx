@@ -482,7 +482,7 @@ export const ArtistProfilePage = () => {
                 </Accordion>
               </div>
 
-              {/* Nueva sección de Reseñas */}
+              {/* Nueva sección de Reseñas - Rediseñada */}
               <div className="mt-8 mb-16">
                 <h2 className="text-3xl font-black mb-3">Reseñas</h2>
                 <div className="space-y-6">
@@ -493,42 +493,52 @@ export const ArtistProfilePage = () => {
                       <span className="text-3xl font-medium">({artist.reviews})</span>
                     </div>
                     <div className="flex flex-wrap gap-3">
-                      {artist.genres?.filter((_, i) => i < 2).map((genre, index) => <UIBadge key={index} variant="outline" className="py-2 px-4 bg-white border-0 text-sm font-medium flex items-center gap-2 dark:bg-vyba-dark-secondary">
+                      {artist.genres?.filter((_, i) => i < 2).map((genre, index) => (
+                        <UIBadge key={index} variant="outline" className="py-2 px-4 bg-white border-0 text-sm font-medium flex items-center gap-2 dark:bg-vyba-dark-secondary">
                           {genre}
-                        </UIBadge>)}
+                        </UIBadge>
+                      ))}
                     </div>
                   </div>
                   
-                  {/* Individual reviews */}
+                  {/* Individual reviews - Rediseñadas */}
                   <div className="space-y-10">
-                    {artist.reviewsData?.map(review => <div key={review.id} className="pb-8">
-                        <div className="flex items-start mb-4">
-                          <Avatar className="w-16 h-16 mr-4">
-                            <AvatarImage src="/lovable-uploads/77591a97-10cd-4c8b-b768-5b17483c3d9f.png" alt={review.name} />
-                            <AvatarFallback>{review.name.charAt(0)}</AvatarFallback>
-                          </Avatar>
-                          <div className="flex-1">
-                            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-1">
-                              <div>
-                                <h3 className="text-base font-bold">{review.name}</h3>
-                                <p className="text-sm text-gray-900 dark:text-white-900">hace {review.date}</p>
-                              </div>
-                              <div className="gap-4 flex">
-                                <div className="flex flex-wrap gap-2 my-3">
-                                    {review.badges.map((badge, idx) => <UIBadge key={idx} variant="outline" className="py-2 px-4 bg-white border-0 text-sm font-medium flex items-center gap-2 dark:bg-vyba-dark-secondary">
-                                        {badge}
-                                      </UIBadge>)}
-                                </div>
-                                <div className="flex items-center mt-2 sm:mt-0">
-                                  <Star className="h-4 w-4 text-black dark:text-white fill-current mr-1" />
-                                  <span className="text-base font-medium">{review.rating}</span>
-                                </div>
+                    {artist.reviewsData?.map(review => (
+                      <div key={review.id} className="pb-8 border-b border-gray-200 dark:border-gray-700">
+                        <div className="flex flex-col mb-4">
+                          <div className="flex items-start gap-4">
+                            {/* Foto de perfil con bordes redondeados pero no completamente circulares */}
+                            <div className="w-16 h-16 rounded-2xl overflow-hidden flex-shrink-0">
+                              <img 
+                                src={review.id === 1 ? "https://images.unsplash.com/photo-1580489944761-15a19d654956?q=80&w=1000" : 
+                                     review.id === 2 ? "https://images.unsplash.com/photo-1633332755192-727a05c4013d?q=80&w=1000" :
+                                                      "https://images.unsplash.com/photo-1494790108377-be9c29b29330?q=80&w=1000"} 
+                                alt={review.name} 
+                                className="w-full h-full object-cover"
+                              />
+                            </div>
+                            
+                            <div className="flex-1">
+                              <h3 className="text-base font-bold">{review.name}</h3>
+                              <p className="text-sm text-gray-500">hace {review.date}</p>
+                              
+                              {/* Estrellas en fila - 5 estrellas con la cantidad correspondiente llenas */}
+                              <div className="flex items-center mt-1">
+                                {[...Array(5)].map((_, index) => (
+                                  <Star 
+                                    key={index} 
+                                    className={`h-5 w-5 ${index < review.rating ? "text-black fill-black dark:text-white dark:fill-white" : "text-gray-300 dark:text-gray-600"}`}
+                                  />
+                                ))}
                               </div>
                             </div>
                           </div>
+                          
+                          {/* Comentario de la reseña */}
+                          <p className="text-base mt-3">{review.comment}</p>
                         </div>
-                        <p className="text-base">{review.comment}</p>
-                      </div>)}
+                      </div>
+                    ))}
                   </div>
                   
                   {/* Ver todas button */}
