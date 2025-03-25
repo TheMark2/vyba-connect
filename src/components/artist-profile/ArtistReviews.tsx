@@ -1,9 +1,10 @@
 
 import React, { useState } from "react";
-import { Star } from "lucide-react";
+import { Star, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { ScrollArea } from "@/components/ui/scroll-area";
 
 interface Review {
   id: number;
@@ -67,8 +68,55 @@ const ReviewItem = ({ review }: { review: Review }) => {
   );
 };
 
+// Datos de ejemplo para reseñas adicionales
+const moreReviewsData: Review[] = [
+  {
+    id: 4,
+    name: "Miguel López",
+    date: "2 semanas",
+    rating: 5,
+    badges: ["Bodas", "Eventos corporativos"],
+    comment: "¡Increíble actuación! Todos mis invitados quedaron encantados con su música. Definitivamente lo volvería a contratar para futuros eventos."
+  },
+  {
+    id: 5,
+    name: "Laura Gómez",
+    date: "1 mes",
+    rating: 4,
+    badges: ["Bodas", "Fiestas privadas"],
+    comment: "Muy profesional y puntual. La música fue perfecta para nuestra celebración de aniversario. Recomendado."
+  },
+  {
+    id: 6,
+    name: "Carlos Martínez",
+    date: "2 meses",
+    rating: 5,
+    badges: ["Eventos corporativos"],
+    comment: "Contratar a este artista fue la mejor decisión para nuestro evento corporativo. Su repertorio se adaptó perfectamente a nuestras necesidades."
+  },
+  {
+    id: 7,
+    name: "Sofía Rodríguez",
+    date: "3 meses",
+    rating: 4,
+    badges: ["Bodas"],
+    comment: "Nuestra boda fue especial gracias a su música. El ambiente que creó fue exactamente lo que buscábamos."
+  },
+  {
+    id: 8,
+    name: "David García",
+    date: "4 meses",
+    rating: 5,
+    badges: ["Fiestas privadas"],
+    comment: "Un profesional excepcional. Su energía contagió a todos los invitados y la fiesta fue un éxito rotundo."
+  }
+];
+
 const ArtistReviews = ({ rating, reviews, genres, reviewsData }: ArtistReviewsProps) => {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
+  
+  // Combinamos las reseñas existentes con las adicionales para el diálogo
+  const allReviews = reviewsData ? [...reviewsData, ...moreReviewsData] : [];
 
   return (
     <div className="mt-8 mb-16">
@@ -114,20 +162,28 @@ const ArtistReviews = ({ rating, reviews, genres, reviewsData }: ArtistReviewsPr
 
       {/* Dialog para mostrar todas las reseñas */}
       <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-        <DialogContent className="sm:max-w-[600px] max-h-[85vh] overflow-y-auto">
-          <DialogHeader>
+        <DialogContent className="sm:max-w-[700px] max-h-[85vh] border-0 bg-vyba-cream dark:bg-vyba-dark-bg rounded-2xl p-8">
+          <DialogHeader className="relative">
             <DialogTitle className="text-3xl font-bold">Reseñas</DialogTitle>
             <div className="flex items-baseline gap-2 mt-2">
               <span className="text-3xl font-medium">{rating}</span>
-              <span className="text-3xl font-medium">({reviews})</span>
+              <span className="text-3xl font-medium">({allReviews.length})</span>
             </div>
+            <button 
+              onClick={() => setIsDialogOpen(false)}
+              className="absolute right-0 top-0 p-2 hover:bg-black/5 rounded-full transition-colors"
+            >
+              <X className="h-6 w-6" />
+            </button>
           </DialogHeader>
 
-          <div className="space-y-8 mt-4">
-            {reviewsData?.map(review => (
-              <ReviewItem key={review.id} review={review} />
-            ))}
-          </div>
+          <ScrollArea className="h-[60vh] mt-6 pr-4">
+            <div className="space-y-8">
+              {allReviews.map(review => (
+                <ReviewItem key={review.id} review={review} />
+              ))}
+            </div>
+          </ScrollArea>
         </DialogContent>
       </Dialog>
     </div>
