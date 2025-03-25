@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { toast } from "sonner";
@@ -15,7 +14,6 @@ import ContactCard from "@/components/artist-profile/ContactCard";
 import RecommendedArtists from "@/components/artist-profile/RecommendedArtists";
 import NotFoundArtist from "@/components/artist-profile/NotFoundArtist";
 
-// Artist data would typically come from an API
 const artistsData = [
   {
     id: "1",
@@ -209,6 +207,13 @@ const ArtistProfilePage = () => {
     // navigate(`/artistas?evento=${eventType}`);
   };
 
+  const artistContactData = {
+    name: artist.name,
+    location: artist.location || "",
+    availability: artist.availability || "",
+    priceRange: artist.priceRange
+  };
+
   return (
     <>
       <Navbar />
@@ -257,7 +262,10 @@ const ArtistProfilePage = () => {
             </div>
             
             {/* Right Sticky Content */}
-            <ContactCard artist={artist} onContact={handleContact} />
+            <ContactCard 
+              artist={artistContactData} 
+              onContact={handleContact} 
+            />
           </div>
         </div>
 
