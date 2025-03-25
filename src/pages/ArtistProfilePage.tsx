@@ -402,12 +402,6 @@ export const ArtistProfilePage = () => {
                           }}
                         ></div>
                         
-                        {/* Main image */}
-                        <img 
-                          src={preview.image} 
-                          alt={preview.title} 
-                          className="relative z-10 w-full h-full object-cover transition-transform duration-300 group-hover:scale-110" 
-                        />
                         
                         {/* Hover overlay */}
                         <div className="absolute inset-0 z-20 bg-black opacity-0 group-hover:opacity-60 transition-opacity duration-300"></div>
