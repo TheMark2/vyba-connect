@@ -280,8 +280,8 @@ export const ArtistProfilePage = () => {
               <div className="mt-8 mb-12">
                 <h2 className="text-3xl font-black mb-6">Más información</h2>
                 
-                <div className={`bg-secondary dark:bg-vyba-dark-secondary/70 rounded-3xl overflow-hidden relative ${!showFullInfo ? "max-h-[400px]" : ""}`}>
-                  <div className="p-8 space-y-8">
+                <div className={`relative overflow-hidden transition-all duration-500 ease-in-out ${!showFullInfo ? "max-h-[400px]" : ""}`}>
+                  <div className="space-y-8">
                     {/* Experiencia */}
                     <div>
                       <h3 className="text-xl font-bold mb-3 flex items-center">
@@ -374,7 +374,7 @@ export const ArtistProfilePage = () => {
                   
                   {/* Gradient overlay for truncated content */}
                   {!showFullInfo && (
-                    <div className="absolute bottom-0 left-0 right-0 h-40 bg-gradient-to-t from-secondary dark:from-vyba-dark-secondary/70 to-transparent pointer-events-none"></div>
+                    <div className="absolute bottom-0 left-0 right-0 h-40 bg-gradient-to-t from-background to-transparent pointer-events-none transition-opacity duration-500 ease-in-out"></div>
                   )}
                 </div>
                 

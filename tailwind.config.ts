@@ -87,6 +87,14 @@ export default {
           "0%": { opacity: "1", transform: "scale(1)" },
           "100%": { opacity: "0", transform: "scale(1.05)" },
         },
+        "content-expand": {
+          "0%": { maxHeight: "400px" },
+          "100%": { maxHeight: "2000px" }
+        },
+        "content-collapse": {
+          "0%": { maxHeight: "2000px" },
+          "100%": { maxHeight: "400px" }
+        }
       },
       animation: {
         "accordion-down": "accordion-down 0.5s ease-out",
@@ -97,6 +105,8 @@ export default {
         "fade-out": "fade-out 0.3s ease-out",
         "image-fade-in": "image-fade-in 0.5s ease-out",
         "image-fade-out": "image-fade-out 0.3s ease-out",
+        "content-expand": "content-expand 0.5s ease-out forwards",
+        "content-collapse": "content-collapse 0.5s ease-out forwards"
       },
     },
   },
