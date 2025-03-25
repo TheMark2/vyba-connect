@@ -143,5 +143,215 @@ const recommendedArtists = [{
   rating: 4.5,
   priceRange: "180-350€",
   isFavorite: true
-}
+}];
 
+export const ArtistProfilePage = () => {
+  const { id } = useParams<{ id: string }>();
+  const navigate = useNavigate();
+  const isMobile = useIsMobile();
+
+  const artist = artistsData.find((artist) => artist.id === id);
+
+  if (!artist) {
+    return <div>Artista no encontrado</div>;
+  }
+
+  const [isFavorite, setIsFavorite] = useState(artist.isFavorite);
+
+  const toggleFavorite = () => {
+    setIsFavorite(!isFavorite);
+    toast.success(isFavorite ? "Eliminado de favoritos" : "Añadido a favoritos", {
+      icon: isFavorite ? "👋" : "❤️",
+      duration: 2000,
+      position: "bottom-center"
+    });
+  };
+
+  return (
+    <>
+      <Navbar />
+      <div className="container mx-auto py-10">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          {/* Columna principal */}
+          <div className="md:col-span-2">
+            {/* Sección de cabecera con imagen de portada y detalles */}
+            <div className="relative rounded-2xl overflow-hidden">
+              <img
+                src={artist.coverImage}
+                alt={`Cover de ${artist.name}`}
+                className="w-full h-64 object-cover"
+              />
+              <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-b from-black/60 to-transparent"></div>
+              <div className="absolute bottom-4 left-4 text-white">
+                <h1 className="text-3xl font-bold">{artist.name}</h1>
+                <p className="text-sm">{artist.type}</p>
+              </div>
+              <Button variant="secondary" className="absolute top-4 right-4">
+                Contratar
+              </Button>
+            </div>
+
+            {/* Sección de descripción */}
+            <div className="mt-6">
+              <h2 className="text-2xl font-bold mb-4">Acerca de</h2>
+              <p className="text-gray-700 dark:text-gray-300">{artist.description}</p>
+            </div>
+
+            {/* Carrusel de imágenes */}
+            <div className="mt-6">
+              <h2 className="text-2xl font-bold mb-4">Galería</h2>
+              <Carousel className="w-full">
+                <CarouselContent>
+                  {artist.images.map((image, index) => (
+                    <CarouselItem key={index} className="md:basis-1/2 lg:basis-1/3">
+                      <img
+                        src={image}
+                        alt={`${artist.name} - ${index + 1}`}
+                        className="w-full h-48 object-cover rounded-md"
+                      />
+                    </CarouselItem>
+                  ))}
+                </CarouselContent>
+                <CarouselPrevious />
+                <CarouselNext />
+              </Carousel>
+            </div>
+
+            {/* Sección de música (si aplica) */}
+            {artist.musicPreviews && artist.musicPreviews.length > 0 && (
+              <div className="mt-6">
+                <h2 className="text-2xl font-bold mb-4">Música</h2>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  {artist.musicPreviews.map((music, index) => (
+                    <div key={index} className="rounded-md overflow-hidden shadow-md">
+                      <img
+                        src={music.image}
+                        alt={`Preview de ${music.title}`}
+                        className="w-full h-32 object-cover"
+                      />
+                      <div className="p-4">
+                        <h3 className="font-bold">{music.title}</h3>
+                        <p className="text-gray-600 dark:text-gray-400">Duración: {music.duration}</p>
+                        <Button variant="outline" className="mt-2">
+                          <Play className="mr-2 h-4 w-4" />
+                          Escuchar
+                        </Button>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {/* Acordeón con detalles adicionales */}
+            <div className="mt-6">
+              <h2 className="text-2xl font-bold mb-4">Más detalles</h2>
+              <Accordion type="single" collapsible>
+                <AccordionItem value="event-types">
+                  <AccordionTrigger>Tipos de Evento</AccordionTrigger>
+                  <AccordionContent>
+                    <ul className="list-disc pl-5">
+                      {artist.eventTypes && artist.eventTypes.map((type, index) => (
+                        <li key={index} className="text-gray-700 dark:text-gray-300">{type}</li>
+                      ))}
+                    </ul>
+                  </AccordionContent>
+                </AccordionItem>
+                <AccordionItem value="experience">
+                  <AccordionTrigger>Experiencia</AccordionTrigger>
+                  <AccordionContent>
+                    <ul className="list-disc pl-5">
+                      {artist.experience && artist.experience.map((exp, index) => (
+                        <li key={index} className="text-gray-700 dark:text-gray-300">{exp}</li>
+                      ))}
+                    </ul>
+                  </AccordionContent>
+                </AccordionItem>
+                <AccordionItem value="equipment">
+                  <AccordionTrigger>Equipamiento</AccordionTrigger>
+                  <AccordionContent>
+                    <ul className="list-disc pl-5">
+                      {artist.equipment && artist.equipment.map((eq, index) => (
+                        <li key={index} className="text-gray-700 dark:text-gray-300">{eq}</li>
+                      ))}
+                    </ul>
+                  </AccordionContent>
+                </AccordionItem>
+                {artist.timeRequirements && (
+                  <AccordionItem value="time-requirements">
+                    <AccordionTrigger>Requisitos de Tiempo</AccordionTrigger>
+                    <AccordionContent>
+                      <ul className="list-disc pl-5">
+                        {artist.timeRequirements.map((req, index) => (
+                          <li key={index} className="text-gray-700 dark:text-gray-300">{req}</li>
+                        ))}
+                      </ul>
+                    </AccordionContent>
+                  </AccordionItem>
+                )}
+                {artist.education && (
+                  <AccordionItem value="education">
+                    <AccordionTrigger>Educación</AccordionTrigger>
+                    <AccordionContent>
+                      <ul className="list-disc pl-5">
+                        {artist.education.map((edu, index) => (
+                          <li key={index} className="text-gray-700 dark:text-gray-300">{edu}</li>
+                        ))}
+                      </ul>
+                    </AccordionContent>
+                  </AccordionItem>
+                )}
+                {artist.reviewsData && (
+                  <AccordionItem value="reviews">
+                    <AccordionTrigger>Reseñas</AccordionTrigger>
+                    <AccordionContent>
+                      {artist.reviewsData.map((review, index) => (
+                        <div key={index} className="mb-4 p-4 border rounded-md">
+                          <div className="flex items-center justify-between mb-2">
+                            <div className="flex items-center">
+                              <Avatar className="mr-2">
+                                <AvatarImage src="/placeholder-avatar.jpg" alt={review.name} />
+                                <AvatarFallback>{review.name.substring(0, 2)}</AvatarFallback>
+                              </Avatar>
+                              <div className="text-sm font-medium">{review.name}</div>
+                            </div>
+                            <div className="text-xs text-gray-500">{review.date}</div>
+                          </div>
+                          <div className="flex items-center mb-2">
+                            {[...Array(review.rating)].map((_, i) => (
+                              <Star key={i} className="h-4 w-4 fill-yellow-400 stroke-yellow-400" />
+                            ))}
+                          </div>
+                          <p className="text-sm text-gray-700 dark:text-gray-300">{review.comment}</p>
+                        </div>
+                      ))}
+                    </AccordionContent>
+                  </AccordionItem>
+                )}
+              </Accordion>
+            </div>
+          </div>
+
+          {/* Columna lateral */}
+          <div className="md:col-span-1">
+            <ArtistProfileCard
+              name={artist.name}
+              type={artist.type}
+              description={artist.description}
+              images={artist.images}
+              rating={artist.rating}
+              priceRange={artist.priceRange}
+              isFavorite={isFavorite}
+              onFavoriteToggle={toggleFavorite}
+            />
+            <div className="mt-6">
+              <h2 className="text-xl font-bold mb-4">Artistas Similares</h2>
+              <ArtistsList artists={recommendedArtists} />
+            </div>
+          </div>
+        </div>
+      </div>
+      <Footer />
+    </>
+  );
+};
