@@ -15,6 +15,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import ArtistsList from "@/components/ArtistsList";
 import ArtistProfileCard from "@/components/ArtistProfileCard";
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/carousel";
+
 const artistsData = [{
   id: "1",
   name: "Antonia Pedragosa",
@@ -96,6 +97,7 @@ const artistsData = [{
   education: ["Conservatorio Provincial de Música Luis Gianneo"],
   eventTypes: ["Fiestas Privadas", "Inauguraciones", "Aniversarios"]
 }];
+
 const recommendedArtists = [{
   id: "101",
   name: "Marco Olivera",
@@ -142,6 +144,7 @@ const recommendedArtists = [{
   priceRange: "180-350€",
   isFavorite: true
 }];
+
 export const ArtistProfilePage = () => {
   const {
     id
@@ -385,13 +388,33 @@ export const ArtistProfilePage = () => {
               <div className="mt-8 mb-16">
                 <h2 className="text-3xl font-black mb-6">Preview</h2>
                 <div className="space-y-4">
-                  {artist.musicPreviews?.map((preview, index) => <div key={index} className="group flex items-center gap-4 p-2 bg-secondary dark:bg-vyba-dark-secondary/70 rounded-2xl hover:bg-opacity-80 transition-colors duration-200 cursor-pointer hover:bg-secondary/90 dark:hover:bg-vyba-dark-secondary/90 relative">
+                  {artist.musicPreviews?.map((preview, index) => (
+                    <div 
+                      key={index} 
+                      className="group flex items-center gap-4 p-2 bg-secondary dark:bg-vyba-dark-secondary/70 rounded-2xl hover:bg-opacity-80 transition-colors duration-200 cursor-pointer hover:bg-secondary/90 dark:hover:bg-vyba-dark-secondary/90 relative overflow-hidden"
+                    >
+                      {/* Container para la imagen principal y el efecto */}
                       <div className="relative w-14 h-14 flex-shrink-0 rounded-md overflow-hidden">
-                        <img src={preview.image} alt={preview.title} className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-110" />
+                        {/* Imagen blureada con efecto que sobresale */}
+                        <div className="absolute -inset-3 z-0 opacity-0 group-hover:opacity-100 transition-all duration-500 scale-110 group-hover:scale-150">
+                          <img 
+                            src={preview.image} 
+                            alt="" 
+                            className="w-full h-full object-cover blur-xl"
+                          />
+                          <div className="absolute inset-0 bg-gradient-to-br from-primary/30 to-secondary/30 mix-blend-overlay"></div>
+                        </div>
                         
-                        <div className="absolute inset-0 bg-black opacity-0 group-hover:opacity-60 transition-opacity duration-300"></div>
+                        {/* Imagen principal */}
+                        <img 
+                          src={preview.image} 
+                          alt={preview.title} 
+                          className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-110 relative z-10"
+                        />
                         
-                        <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                        <div className="absolute inset-0 bg-black opacity-0 group-hover:opacity-60 transition-opacity duration-300 z-20"></div>
+                        
+                        <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-30">
                           <div className="bg-primary rounded-full w-8 h-8 flex items-center justify-center shadow-lg">
                             <Play className="w-4 h-4 text-primary-foreground ml-0.5" fill="currentColor" />
                           </div>
@@ -405,7 +428,8 @@ export const ArtistProfilePage = () => {
                       <div className="text-right mr-4">
                         <span className="text-sm font-medium">{preview.duration}</span>
                       </div>
-                    </div>)}
+                    </div>
+                  ))}
                 </div>
               </div>
 
@@ -422,7 +446,7 @@ export const ArtistProfilePage = () => {
               {/* Nueva sección de FAQ */}
               <div className="mt-8 mb-16">
                 <h2 className="text-3xl font-black mb-6">FAQ</h2>
-                <Accordion type="single" collapsible className="bg-secondary dark:bg-vyba-dark-secondary/70 rounded-3xl overflow-hidden">
+                <Accordion type="single" collapsible className="bg-secondary dark:bg-vyba-dark-bg rounded-3xl overflow-hidden">
                   <AccordionItem value="item-1" className="border-b-0">
                     <AccordionTrigger className="px-8 py-6 text-sm font-bold">
                       ¿Cómo puedo reservar una fecha?
