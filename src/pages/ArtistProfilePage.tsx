@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import Navbar from "@/components/Navbar";
@@ -16,7 +15,6 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import ArtistsList from "@/components/ArtistsList";
 import ArtistProfileCard from "@/components/ArtistProfileCard";
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/carousel";
-
 const artistsData = [{
   id: "1",
   name: "Antonia Pedragosa",
@@ -98,7 +96,6 @@ const artistsData = [{
   education: ["Conservatorio Provincial de Música Luis Gianneo"],
   eventTypes: ["Fiestas Privadas", "Inauguraciones", "Aniversarios"]
 }];
-
 const recommendedArtists = [{
   id: "101",
   name: "Marco Olivera",
@@ -145,341 +142,460 @@ const recommendedArtists = [{
   priceRange: "180-350€",
   isFavorite: true
 }];
-
-const ArtistProfilePage = () => {
-  const { id } = useParams();
+export const ArtistProfilePage = () => {
+  const {
+    id
+  } = useParams<{
+    id: string;
+  }>();
   const navigate = useNavigate();
   const isMobile = useIsMobile();
-  
-  // Encontrar el artista correspondiente al ID
-  const artist = artistsData.find(artist => artist.id === id) || artistsData[0];
-  
-  // Estado para controlar si el artista está marcado como favorito
-  const [isFavorite, setIsFavorite] = useState(artist.isFavorite);
-  
-  // Función para manejar el clic en el botón de favorito
-  const handleFavoriteClick = () => {
-    setIsFavorite(!isFavorite);
-    toast.success(isFavorite ? "Eliminado de favoritos" : "Añadido a favoritos");
-  };
-  
-  // Función para manejar el clic en el botón de compartir
-  const handleShareClick = () => {
-    navigator.clipboard.writeText(window.location.href);
-    toast.success("Enlace copiado al portapapeles");
-  };
-  
-  // Función para manejar el clic en el botón de reportar
-  const handleReportClick = () => {
-    toast.info("Reporte enviado. Gracias por tu feedback.");
-  };
-  
-  return (
-    <div className="bg-[#FDFBF9] dark:bg-vyba-dark-bg min-h-screen">
-      {/* Navbar */}
-      <Navbar />
-      
-      {/* Contenido principal */}
-      <main className="container mx-auto px-4 pt-24 pb-20">
-        {/* Sección de cabecera con imagen de portada */}
-        <div className="relative w-full h-64 md:h-80 lg:h-96 rounded-3xl overflow-hidden mb-8">
-          <img 
-            src={artist.coverImage} 
-            alt={artist.name} 
-            className="w-full h-full object-cover"
-          />
-          <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
-          
-          {/* Información básica superpuesta en la imagen */}
-          <div className="absolute bottom-0 left-0 right-0 p-6 text-white">
-            <div className="flex items-center gap-4">
-              <Avatar className="h-16 w-16 border-2 border-white">
-                <AvatarImage src={artist.images[0]} alt={artist.name} />
-                <AvatarFallback>{artist.name.slice(0, 2)}</AvatarFallback>
-              </Avatar>
-              <div>
-                <h1 className="text-2xl md:text-3xl font-bold">{artist.name}</h1>
-                <p className="text-white/80">{artist.type}</p>
-              </div>
-            </div>
-          </div>
+  const [isInfoOpen, setIsInfoOpen] = useState(false);
+  const [showFullInfo, setShowFullInfo] = useState(false);
+  const artist = artistsData.find(artist => artist.id === id);
+  if (!artist) {
+    return <>
+        <Navbar />
+        <div className="flex flex-col items-center justify-center min-h-[60vh] px-6">
+          <h1 className="text-2xl font-bold mb-4">Artista no encontrado</h1>
+          <Button onClick={() => navigate(-1)}>Volver</Button>
         </div>
-        
-        {/* Contenido en dos columnas para escritorio, una columna para móvil */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-          {/* Columna izquierda - Información detallada */}
-          <div className="lg:col-span-2 space-y-8">
-            {/* Barra de acciones */}
-            <div className="flex items-center justify-between bg-white dark:bg-vyba-dark-secondary p-4 rounded-2xl shadow-sm">
-              <div className="flex items-center gap-2">
-                <Button 
-                  variant="ghost" 
-                  size="icon" 
-                  className="rounded-full" 
-                  onClick={handleFavoriteClick}
-                >
-                  <Heart className={`h-5 w-5 ${isFavorite ? 'fill-red-500 text-red-500' : 'text-gray-600 dark:text-gray-400'}`} />
-                </Button>
-                <Button 
-                  variant="ghost" 
-                  size="icon" 
-                  className="rounded-full" 
-                  onClick={handleShareClick}
-                >
-                  <Share2 className="h-5 w-5 text-gray-600 dark:text-gray-400" />
-                </Button>
-                <Button 
-                  variant="ghost" 
-                  size="icon" 
-                  className="rounded-full" 
-                  onClick={handleReportClick}
-                >
-                  <Flag className="h-5 w-5 text-gray-600 dark:text-gray-400" />
-                </Button>
-              </div>
-              
-              <div className="flex items-center">
-                <div className="flex items-center mr-2">
-                  <Star className="h-5 w-5 text-yellow-400 fill-yellow-400" />
-                  <span className="ml-1 font-medium">{artist.rating}</span>
-                </div>
-                <span className="text-gray-500 dark:text-gray-400 text-sm">({artist.reviews || '0'} reseñas)</span>
-              </div>
+        <Footer />
+      </>;
+  }
+  const handleFavorite = () => {
+    toast.success("Añadido a favoritos", {
+      icon: "❤️",
+      position: "bottom-center"
+    });
+  };
+  const handleReport = () => {
+    toast.info("Gracias por informarnos", {
+      description: "Revisaremos el perfil lo antes posible",
+      position: "bottom-center"
+    });
+  };
+  const handleShare = () => {
+    toast.success("Enlace copiado al portapapeles", {
+      position: "bottom-center"
+    });
+  };
+  const handleContact = () => {
+    toast.success(`Contactando con ${artist.name}`, {
+      description: "Te conectaremos pronto",
+      position: "bottom-center"
+    });
+  };
+  const handleGenreClick = (genre: string) => {
+    toast.success(`Buscando más artistas de ${genre}`, {
+      position: "bottom-center"
+    });
+    // Aquí podríamos navegar a una página de búsqueda filtrada por género
+    // navigate(`/artistas?genero=${genre}`);
+  };
+  const handleEventTypeClick = (eventType: string) => {
+    toast.success(`Buscando artistas para ${eventType}`, {
+      position: "bottom-center"
+    });
+    // Aquí podríamos navegar a una página de búsqueda filtrada por tipo de evento
+    // navigate(`/artistas?evento=${eventType}`);
+  };
+  return <>
+      <Navbar />
+      <div className="px-6 md:px-10 lg:px-14 xl:px-16">
+        {/* Banner Section with Blurred Background */}
+        <div className="relative w-full h-[95vh] md:h-[calc(80vh)] overflow-hidden rounded-[25px] lg:rounded-[35px] mb-12">
+          {/* Blurred background image - Capa base */}
+          <div className="absolute inset-0 w-full h-full overflow-visible flex justify-center items-center" style={{
+          zIndex: 0
+        }}>
+            <div className="absolute w-[120%] h-[120%] opacity-70">
+              <img src={artist.coverImage} alt="" className="w-full h-full object-cover scale-150 filter blur-3xl" />
             </div>
+            <div className="absolute inset-0 bg-black/40"></div>
+          </div>          
+          {/* Main Banner Image - Capa principal */}
+          <div className="relative z-10 w-full h-full">
+            <img src={artist.coverImage} alt={`${artist.name} portada`} className="w-full h-full object-cover rounded-[25px] lg:rounded-[35px]" />
             
-            {/* Descripción */}
-            <div className="bg-white dark:bg-vyba-dark-secondary p-6 rounded-2xl shadow-sm">
-              <h2 className="text-xl font-bold mb-4 dark:text-white">Descripción</h2>
-              <p className="text-gray-700 dark:text-gray-300 whitespace-pre-line">{artist.description}</p>
+            <div className="absolute inset-0 bg-gradient-to-t from-black to-transparent"></div>
+          </div>
+          
+          {/* Buttons in top right corner */}
+          <div className="absolute top-4 right-4 sm:top-6 sm:right-6 flex space-x-2 z-20">
+            <Button variant="secondary" size="icon" className="w-10 h-10 rounded-full" onClick={handleFavorite}>
+              <Heart className="h-5 w-5 text-black dark:text-white" />
+            </Button>
+            <Button variant="secondary" size="icon" className="w-10 h-10 rounded-full" onClick={handleReport}>
+              <Flag className="h-5 w-5 text-black dark:text-white" />
+            </Button>
+            <Button variant="secondary" size="icon" className="w-10 h-10 rounded-full" onClick={handleShare}>
+              <Share2 className="h-5 w-5 text-black dark:text-white" />
+            </Button>
+          </div>
+          
+          {/* Artist info overlay */}
+          {isMobile ? <div className="absolute bottom-12 left-5 right-0 flex flex-col items-start z-20">
+              <div className="rounded-full overflow-hidden mb-4 w-24 h-24">
+                <img src={artist.images[0]} alt={artist.name} className="w-full h-full object-cover rounded-full" />
+              </div>
               
-              {/* Géneros musicales */}
-              {artist.genres && artist.genres.length > 0 && (
-                <div className="mt-6">
-                  <h3 className="text-lg font-semibold mb-3 dark:text-white">Géneros musicales</h3>
-                  <div className="flex flex-wrap gap-2">
-                    {artist.genres.map((genre, index) => (
-                      <UIBadge key={index} variant="secondary" className="rounded-full bg-[#F0E5D8] hover:bg-[#E7D3D3] text-black">
-                        {genre}
-                      </UIBadge>
-                    ))}
-                  </div>
-                </div>
-              )}
+              <div className="text-white space-y-2 max-w-[85%]">
+                <h1 className="text-2xl font-black truncate">{artist.name}</h1>
+                <p className="text-lg opacity-90 line-clamp-2">{artist.type}</p>
+              </div>
+            </div> : <div className="absolute bottom-12 left-5 md:left-10 lg:left-14 flex items-center z-20">
+              <div className="rounded-full overflow-hidden mr-4 md:mr-6 w-24 h-24 md:w-32 md:h-32">
+                <img src={artist.images[0]} alt={artist.name} className="w-full h-full object-cover rounded-full" />
+              </div>
               
-              {/* Ubicación y disponibilidad */}
-              <div className="mt-6 flex flex-wrap gap-6">
-                {artist.location && (
-                  <div className="flex items-center gap-2">
-                    <MapPin className="h-5 w-5 text-gray-600 dark:text-gray-400" />
-                    <span className="text-gray-700 dark:text-gray-300">{artist.location}</span>
-                  </div>
-                )}
+              <div className="text-white space-y-4 max-w-[80%]">
+                <h1 className="text-3xl md:text-5xl font-black truncate">{artist.name}</h1>
+                <p className="text-xl md:text-2xl opacity-90 line-clamp-2">{artist.type}</p>
+              </div>
+            </div>}
+        </div>
+
+        {/* About Me Section */}
+        <div className="pb-16 max-w-7xl mx-auto">
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-16">
+            {/* Left Content */}
+            <div className="lg:col-span-2">
+              <h2 className="text-3xl font-black mb-6">Sobre mi</h2>
+              <p className="text-base mb-5 leading-relaxed">
+                {artist.description}
+              </p>
+              
+              {/* Genres - Convertidos a botones */}
+              <div className="flex flex-wrap gap-3 mb-10">
+                {artist.genres?.map((genre, index) => <Button key={index} variant="secondary" className="rounded-full text-sm font-medium" onClick={() => handleGenreClick(genre)}>
+                    {genre}
+                  </Button>)}
+              </div>
+
+              {/* Más información Section - Redesigned */}
+              <div className="mt-8 mb-12">
+                <h2 className="text-3xl font-black mb-6">Más información</h2>
                 
-                {artist.availability && (
-                  <div className="flex items-center gap-2">
-                    <Clock className="h-5 w-5 text-gray-600 dark:text-gray-400" />
-                    <span className="text-gray-700 dark:text-gray-300">{artist.availability}</span>
+                <div className={`relative overflow-hidden transition-all duration-500 ease-in-out ${!showFullInfo ? "max-h-[400px]" : ""}`}>
+                  <div className="space-y-8">
+                    {/* Experiencia */}
+                    <div>
+                      <h3 className="text-xl font-bold mb-3 flex items-center">
+                        Experiencia
+                      </h3>
+                      <p className="mb-4">
+                        ¿Buscas añadir un toque de elegancia y encanto musical a tu próximo evento? ¡Estás en el lugar indicado!
+                        Soy Antonia Pedragosa, una apasionada DJ especializada en jazz, bossa nova y blues. ✨✨
+                      </p>
+                      <div className="flex gap-3 flex-wrap">
+                        {artist.experience?.map((exp, index) => {
+                        // Dividir la experiencia en nombre y ubicación (asumiendo formato "Nombre - Ubicación")
+                        const parts = exp.split(' - ');
+                        const name = parts[0];
+                        const location = parts.length > 1 ? parts[1] : '';
+                        return <UIBadge key={index} variant="outline" className="py-3 px-6 bg-white border-0 text-sm font-medium dark:bg-vyba-dark-secondary">
+                              <span className="text-black dark:text-white">{name}</span>
+                              {location && <>
+                                  <span className="mx-1 text-gray-500">·</span>
+                                  <span className="text-gray-500">{location}</span>
+                                </>}
+                            </UIBadge>;
+                      })}
+                      </div>
+                    </div>
+
+                    {/* Repertorio */}
+                    <div>
+                      <h3 className="text-xl font-bold mb-3 flex items-center">
+                        Repertorio
+                      </h3>
+                      <p className="mb-4">
+                        ¿Buscas añadir un toque de elegancia y encanto musical a tu próximo evento? ¡Estás en el lugar indicado!
+                        Soy Antonia Pedragosa, una apasionada DJ especializada en jazz, bossa nova y blues. ✨✨
+                      </p>
+                    </div>
+
+                    {/* Logística y equipamiento */}
+                    <div>
+                      <h3 className="text-xl font-bold mb-3 flex items-center">
+                        Logística y equipamiento
+                      </h3>
+                      <p className="mb-4">
+                        ¿Buscas añadir un toque de elegancia y encanto musical a tu próximo evento? ¡Estás en el lugar indicado!
+                        Soy Antonia Pedragosa, una apasionada DJ especializada en jazz, bossa nova y blues. ✨✨
+                      </p>
+                      <div className="flex gap-3 flex-wrap">
+                        {artist.equipment?.map((item, index) => <UIBadge key={index} variant="outline" className="py-2 px-4 bg-white border-0 text-sm font-medium flex items-center gap-2 dark:bg-vyba-dark-secondary">
+                            <List className="w-4 h-4" />                              
+                            {item}
+                          </UIBadge>)}
+                      </div>
+                    </div>
+
+                    {/* Tiempos */}
+                    <div>
+                      <h3 className="text-xl font-bold mb-3 flex items-center">
+                        Tiempos
+                      </h3>
+                      <p className="mb-4">
+                        ¿Buscas añadir un toque de elegancia y encanto musical a tu próximo evento? ¡Estás en el lugar indicado!
+                        Soy Antonia Pedragosa, una apasionada DJ especializada en jazz, bossa nova y blues. ✨✨
+                      </p>
+                      <div className="flex gap-3 flex-wrap">
+                        {artist.timeRequirements?.map((req, index) => <UIBadge key={index} variant="outline" className="py-2 px-4 bg-white border-0 text-sm font-medium flex items-center gap-2 dark:bg-vyba-dark-secondary">
+                            <Clock className="w-4 h-4" />
+                            {req}
+                          </UIBadge>)}
+                      </div>
+                    </div>
+
+                    {/* Formación */}
+                    <div>
+                      <h3 className="text-xl font-bold mb-3 flex items-center">
+                        <Badge className="mr-2 h-5 w-5" />
+                        Formación
+                      </h3>
+                      <p className="mb-4">
+                        ¿Buscas añadir un toque de elegancia y encanto musical a tu próximo evento? ¡Estás en el lugar indicado!
+                        Soy Antonia Pedragosa, una apasionada DJ especializada en jazz, bossa nova y blues. ✨✨
+                      </p>
+                      <div className="flex gap-3 flex-wrap">
+                        {artist.education?.map((edu, index) => <UIBadge key={index} variant="outline" className="py-2 px-4 bg-white border-0 text-sm font-medium flex items-center gap-2 dark:bg-vyba-dark-secondary">
+                            <Book className="w-4 h-4" />
+                            {edu}
+                          </UIBadge>)}
+                      </div>
+                    </div>
                   </div>
-                )}
+                  
+                  {/* Gradient overlay for truncated content */}
+                  {!showFullInfo && <div className="absolute bottom-0 left-0 right-0 h-40 bg-gradient-to-t from-[#FAF8F6] to-transparent pointer-events-none transition-opacity duration-500 ease-in-out"></div>}
+                </div>
+                
+                {/* Button to toggle full content */}
+                <div className="flex justify-center mt-6">
+                  <Button variant="secondary" className="px-6 rounded-full" onClick={() => setShowFullInfo(!showFullInfo)}>
+                    {showFullInfo ? "Ver menos" : "Ver toda la información"}
+                  </Button>
+                </div>
               </div>
-            </div>
-            
-            {/* Galería de imágenes */}
-            <div className="bg-white dark:bg-vyba-dark-secondary p-6 rounded-2xl shadow-sm">
-              <h2 className="text-xl font-bold mb-4 dark:text-white">Galería</h2>
-              <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
-                {artist.images.slice(0, 6).map((image, index) => (
-                  <div 
-                    key={index} 
-                    className="aspect-square rounded-xl overflow-hidden"
-                  >
-                    <img 
-                      src={image} 
-                      alt={`${artist.name} - Imagen ${index + 1}`} 
-                      className="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
-                    />
-                  </div>
-                ))}
-              </div>
-            </div>
-            
-            {/* Música y grabaciones */}
-            {artist.musicPreviews && artist.musicPreviews.length > 0 && (
-              <div className="bg-white dark:bg-vyba-dark-secondary p-6 rounded-2xl shadow-sm">
-                <h2 className="text-xl font-bold mb-4 dark:text-white">Música y grabaciones</h2>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  {artist.musicPreviews.map((preview, index) => (
+
+              {/* Sección de Preview Musical */}
+              <div className="mt-8 mb-16">
+                <h2 className="text-3xl font-black mb-6">Preview</h2>
+                <div className="space-y-4">
+                  {artist.musicPreviews?.map((preview, index) => (
                     <div 
                       key={index} 
-                      className="group relative bg-gray-100 dark:bg-gray-800 rounded-xl overflow-hidden"
+                      className="group flex items-center gap-4 p-2 bg-secondary dark:bg-vyba-dark-secondary/70 rounded-2xl hover:bg-opacity-80 transition-colors duration-200 cursor-pointer hover:bg-secondary/90 dark:hover:bg-vyba-dark-secondary/90 relative"
                     >
-                      <div className="flex items-center p-4">
-                        <div className="relative h-16 w-16 rounded-md overflow-hidden mr-4">
+                      <div className="relative flex items-center">
+                        {/* Blurred side image */}
+                        <div 
+                          className="absolute w-14 h-14 bg-cover bg-center blur-xl opacity-40 rounded-md" 
+                          style={{ 
+                            backgroundImage: `url(${preview.image})`,
+                            backgroundSize: 'cover',
+                            transform: 'scale(1.2)',
+                          }}
+                        ></div>
+
+                        <div className="relative w-14 h-14 flex-shrink-0 rounded-md overflow-hidden">
+                          {/* Main image */}
                           <img 
                             src={preview.image} 
                             alt={preview.title} 
-                            className="w-full h-full object-cover"
+                            className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-110" 
                           />
-                          <div className="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
-                            <Play className="h-8 w-8 text-white" />
+                          
+                          {/* Hover overlay */}
+                          <div className="absolute inset-0 bg-black opacity-0 group-hover:opacity-60 transition-opacity duration-300"></div>
+                          
+                          {/* Play button */}
+                          <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                            <div className="bg-primary rounded-full w-8 h-8 flex items-center justify-center shadow-lg">
+                              <Play className="w-4 h-4 text-primary-foreground ml-0.5" fill="currentColor" />
+                            </div>
                           </div>
                         </div>
-                        <div>
-                          <h3 className="font-medium dark:text-white">{preview.title}</h3>
-                          <p className="text-sm text-gray-600 dark:text-gray-400">{preview.duration}</p>
-                        </div>
+                      </div>
+                      
+                      <div className="flex-grow">
+                        <h3 className="text-base font-bold">{preview.title}</h3>
+                        <p className="text-sm text-gray-500 dark:text-gray-400">{artist.name}</p>
+                      </div>
+                      
+                      <div className="text-right mr-4">
+                        <span className="text-sm font-medium">{preview.duration}</span>
                       </div>
                     </div>
                   ))}
                 </div>
               </div>
-            )}
-            
-            {/* Detalles acordeón */}
-            <Accordion type="single" collapsible className="bg-white dark:bg-vyba-dark-secondary rounded-2xl shadow-sm">
-              {/* Experiencia */}
-              {artist.experience && artist.experience.length > 0 && (
-                <AccordionItem value="experience" className="border-b border-gray-200 dark:border-gray-700">
-                  <AccordionTrigger className="px-6 py-4 hover:no-underline">
-                    <div className="flex items-center">
-                      <Book className="h-5 w-5 mr-3 text-gray-600 dark:text-gray-400" />
-                      <span className="font-semibold dark:text-white">Experiencia</span>
-                    </div>
-                  </AccordionTrigger>
-                  <AccordionContent className="px-6 pb-4">
-                    <ul className="space-y-2">
-                      {artist.experience.map((exp, index) => (
-                        <li key={index} className="text-gray-700 dark:text-gray-300">{exp}</li>
-                      ))}
-                    </ul>
-                  </AccordionContent>
-                </AccordionItem>
-              )}
-              
-              {/* Equipamiento */}
-              {artist.equipment && artist.equipment.length > 0 && (
-                <AccordionItem value="equipment" className="border-b border-gray-200 dark:border-gray-700">
-                  <AccordionTrigger className="px-6 py-4 hover:no-underline">
-                    <div className="flex items-center">
-                      <List className="h-5 w-5 mr-3 text-gray-600 dark:text-gray-400" />
-                      <span className="font-semibold dark:text-white">Equipamiento</span>
-                    </div>
-                  </AccordionTrigger>
-                  <AccordionContent className="px-6 pb-4">
-                    <ul className="space-y-2">
-                      {artist.equipment.map((equip, index) => (
-                        <li key={index} className="text-gray-700 dark:text-gray-300">{equip}</li>
-                      ))}
-                    </ul>
-                  </AccordionContent>
-                </AccordionItem>
-              )}
-              
-              {/* Requerimientos de tiempo */}
-              {artist.timeRequirements && artist.timeRequirements.length > 0 && (
-                <AccordionItem value="timeRequirements" className="border-b border-gray-200 dark:border-gray-700">
-                  <AccordionTrigger className="px-6 py-4 hover:no-underline">
-                    <div className="flex items-center">
-                      <Clock className="h-5 w-5 mr-3 text-gray-600 dark:text-gray-400" />
-                      <span className="font-semibold dark:text-white">Requerimientos de tiempo</span>
-                    </div>
-                  </AccordionTrigger>
-                  <AccordionContent className="px-6 pb-4">
-                    <ul className="space-y-2">
-                      {artist.timeRequirements.map((req, index) => (
-                        <li key={index} className="text-gray-700 dark:text-gray-300">{req}</li>
-                      ))}
-                    </ul>
-                  </AccordionContent>
-                </AccordionItem>
-              )}
-              
-              {/* Formación */}
-              {artist.education && artist.education.length > 0 && (
-                <AccordionItem value="education" className="border-b-0">
-                  <AccordionTrigger className="px-6 py-4 hover:no-underline">
-                    <div className="flex items-center">
-                      <Badge className="h-5 w-5 mr-3 text-gray-600 dark:text-gray-400" />
-                      <span className="font-semibold dark:text-white">Formación</span>
-                    </div>
-                  </AccordionTrigger>
-                  <AccordionContent className="px-6 pb-4">
-                    <ul className="space-y-2">
-                      {artist.education.map((edu, index) => (
-                        <li key={index} className="text-gray-700 dark:text-gray-300">{edu}</li>
-                      ))}
-                    </ul>
-                  </AccordionContent>
-                </AccordionItem>
-              )}
-            </Accordion>
-            
-            {/* Reseñas */}
-            {artist.reviewsData && artist.reviewsData.length > 0 && (
-              <div className="bg-white dark:bg-vyba-dark-secondary p-6 rounded-2xl shadow-sm">
-                <h2 className="text-xl font-bold mb-4 dark:text-white">Reseñas</h2>
+              {/* Nueva sección de Tipos de Eventos */}
+              <div className="mt-8 mb-16">
+                <h2 className="text-3xl font-black mb-6">Tipos de Eventos</h2>
+                <div className="flex flex-wrap gap-3">
+                  {artist.eventTypes?.map((eventType, index) => <Button key={index} variant="secondary" className="rounded-full text-sm font-medium" onClick={() => handleEventTypeClick(eventType)}>
+                      {eventType}
+                    </Button>)}
+                </div>
+              </div>
+
+              {/* Nueva sección de FAQ */}
+              <div className="mt-8 mb-16">
+                <h2 className="text-3xl font-black mb-6">FAQ</h2>
+                <Accordion type="single" collapsible className="bg-secondary dark:bg-vyba-dark-secondary/70 rounded-3xl overflow-hidden">
+                  <AccordionItem value="item-1" className="border-b-0">
+                    <AccordionTrigger className="px-8 py-6 text-sm font-bold">
+                      ¿Cómo puedo reservar una fecha?
+                    </AccordionTrigger>
+                    <AccordionContent className="px-8 text-base">
+                      Para reservar una fecha con {artist.name}, simplemente haz clic en el botón "Contactar" y nuestro equipo te ayudará a coordinar los detalles de tu evento. Asegúrate de proporcionar toda la información relevante como fecha, ubicación y tipo de evento.
+                    </AccordionContent>
+                  </AccordionItem>
+                  <AccordionItem value="item-2" className="border-b-0">
+                    <AccordionTrigger className="px-8 py-6 text-sm font-bold">
+                      ¿Qué incluye el precio?
+                    </AccordionTrigger>
+                    <AccordionContent className="px-8 text-base">
+                      El precio incluye la actuación completa de {artist.name}, equipo de sonido básico para espacios pequeños y una consulta previa al evento para discutir tus preferencias musicales. Cualquier requisito adicional se cotizará por separado.
+                    </AccordionContent>
+                  </AccordionItem>
+                  <AccordionItem value="item-3" className="border-b-0">
+                    <AccordionTrigger className="px-8 py-6 text-sm font-bold">
+                      ¿Cuánto tiempo dura una actuación?
+                    </AccordionTrigger>
+                    <AccordionContent className="px-8 text-base">
+                      Las actuaciones estándar suelen durar entre 2 y 3 horas, con descansos breves. Sin embargo, podemos adaptar la duración según las necesidades específicas de tu evento.
+                    </AccordionContent>
+                  </AccordionItem>
+                  <AccordionItem value="item-4" className="border-b-0">
+                    <AccordionTrigger className="px-8 py-6 text-sm font-bold">
+                      ¿Puedo solicitar canciones específicas?
+                    </AccordionTrigger>
+                    <AccordionContent className="px-8 text-base">
+                      ¡Por supuesto! Puedes proporcionar una lista de canciones que te gustaría escuchar y haremos todo lo posible para incluirlas en el repertorio. Recomendamos compartir estas solicitudes con al menos dos semanas de anticipación.
+                    </AccordionContent>
+                  </AccordionItem>
+                  <AccordionItem value="item-5" className="border-b-0">
+                    <AccordionTrigger className="px-8 py-6 text-sm font-bold">
+                      ¿Qué pasa si necesito cancelar?
+                    </AccordionTrigger>
+                    <AccordionContent className="px-8 text-base">
+                      Nuestra política de cancelación requiere un aviso con 30 días de anticipación para un reembolso completo. Las cancelaciones con menos tiempo pueden estar sujetas a cargos parciales. Cada caso se evalúa individualmente.
+                    </AccordionContent>
+                  </AccordionItem>
+                  <AccordionItem value="item-6" className="border-b-0">
+                    <AccordionTrigger className="px-8 py-6 text-sm font-bold">
+                      ¿Cómo funciona el pago?
+                    </AccordionTrigger>
+                    <AccordionContent className="px-8 text-base">
+                      Requerimos un depósito del 50% para confirmar la reserva, y el saldo restante debe pagarse una semana antes del evento. Aceptamos transferencias bancarias y otros métodos de pago que se acordarán al momento de la reserva.
+                    </AccordionContent>
+                  </AccordionItem>
+                </Accordion>
+              </div>
+
+              {/* Nueva sección de Reseñas - Rediseñada según la imagen */}
+              <div className="mt-8 mb-16">
+                <h2 className="text-3xl font-black mb-3">Reseñas</h2>
                 <div className="space-y-6">
-                  {artist.reviewsData.map((review) => (
-                    <div key={review.id} className="border-b border-gray-200 dark:border-gray-700 pb-6 last:border-b-0 last:pb-0">
-                      <div className="flex items-center justify-between mb-2">
-                        <div className="flex items-center">
-                          <Avatar className="h-10 w-10 mr-3">
-                            <AvatarFallback>{review.name.slice(0, 2)}</AvatarFallback>
-                          </Avatar>
-                          <div>
-                            <p className="font-medium dark:text-white">{review.name}</p>
-                            <p className="text-sm text-gray-500 dark:text-gray-400">Hace {review.date}</p>
+                  {/* Rating summary */}
+                  <div className="flex flex-wrap items-center gap-6 mb-8 justify-between">
+                    <div className="flex items-baseline gap-2">
+                      <span className="text-3xl font-medium">{artist.rating}</span>
+                      <span className="text-3xl font-medium">({artist.reviews})</span>
+                    </div>
+                    <div className="flex flex-wrap gap-3">
+                      {artist.genres?.filter((_, i) => i < 2).map((genre, index) => <UIBadge key={index} variant="outline" className="py-2 px-4 bg-white border-0 text-sm font-medium flex items-center gap-2 dark:bg-vyba-dark-secondary">
+                          {genre}
+                        </UIBadge>)}
+                    </div>
+                  </div>
+                  
+                  {/* Individual reviews - Rediseñadas según la imagen */}
+                  <div className="space-y-10">
+                    {artist.reviewsData?.map(review => <div key={review.id} className="pb-8 border-b border-gray-200 dark:border-gray-700">
+                        <div className="flex gap-6">
+                          {/* Parte izquierda: Imagen de perfil e información básica */}
+                          <div className="w-[90px] flex-shrink-0">
+                            <div className="w-[72px] h-[72px] rounded-[16px] overflow-hidden mb-2">
+                              <img src={review.id === 1 ? "https://images.unsplash.com/photo-1580489944761-15a19d654956?q=80&w=1000" : review.id === 2 ? "https://images.unsplash.com/photo-1633332755192-727a05c4013d?q=80&w=1000" : "https://images.unsplash.com/photo-1494790108377-be9c29b29330?q=80&w=1000"} alt={review.name} className="w-full h-full object-cover" />
+                            </div>
+                            <div className="text-left">
+                              <h4 className="text-sm font-bold">{review.name}</h4>
+                              <p className="text-xs text-gray-500">hace {review.date}</p>
+                            </div>
+                          </div>
+                          
+                          {/* Parte derecha: Estrellas y comentario */}
+                          <div className="flex-1">
+                            {/* Estrellas en fila - 5 estrellas con la cantidad correspondiente llenas */}
+                            <div className="flex items-center mb-2">
+                              {[...Array(5)].map((_, index) => <Star key={index} className={`h-5 w-5 ${index < review.rating ? "text-black fill-black dark:text-white dark:fill-white" : "text-gray-300 dark:text-gray-600"}`} />)}
+                            </div>
+                            
+                            {/* Comentario de la reseña */}
+                            <p className="text-base">{review.comment}</p>
                           </div>
                         </div>
-                        <div className="flex items-center">
-                          {[...Array(5)].map((_, i) => (
-                            <Star 
-                              key={i} 
-                              className={`h-4 w-4 ${i < review.rating ? 'text-yellow-400 fill-yellow-400' : 'text-gray-300 dark:text-gray-600'}`}
-                            />
-                          ))}
-                        </div>
-                      </div>
-                      
-                      {review.badges && review.badges.length > 0 && (
-                        <div className="flex flex-wrap gap-2 my-2">
-                          {review.badges.map((badge, index) => (
-                            <UIBadge key={index} variant="outline" className="bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 rounded-full">
-                              {badge}
-                            </UIBadge>
-                          ))}
-                        </div>
-                      )}
-                      
-                      <p className="text-gray-700 dark:text-gray-300 mt-2">{review.comment}</p>
-                    </div>
-                  ))}
+                      </div>)}
+                  </div>
+                  
+                  {/* Ver todas button */}
+                  <div className="flex justify-center mt-8">
+                    <Button variant="secondary" className="px-12">
+                      Ver todas
+                    </Button>
+                  </div>
                 </div>
               </div>
-            )}
-          </div>
-          
-          {/* Columna derecha - Tarjeta de perfil y artistas similares */}
-          <div className="space-y-8">
-            {/* Tarjeta de perfil */}
-            <ArtistProfileCard 
-              priceRange={artist.priceRange}
-              eventTypes={artist.eventTypes}
-            />
+            </div>
             
-            {/* Artistas similares */}
-            <div className="bg-white dark:bg-vyba-dark-secondary p-6 rounded-2xl shadow-sm">
-              <h2 className="text-xl font-bold mb-4 dark:text-white">Artistas similares</h2>
-              <ArtistsList artists={recommendedArtists.slice(0, 3)} />
+            {/* Right Sticky Content */}
+            <div className="lg:sticky lg:top-24 h-fit bg-white dark:bg-vyba-dark-bg rounded-3xl px-6 py-4">
+              <div className="flex items-center gap-2 mb-2">
+                <p className="text-base text-neutral-600 dark:text-neutral-300">{artist.location} · {artist.availability}</p>
+              </div>
+              
+              <h3 className="text-lg font-black mb-6">{artist.priceRange}</h3>
+              <Separator className="-mx-6 w-[calc(100%+48px)]" />
+              
+              <Button className="w-full py-4 text-base font-bold mt-6" onClick={handleContact}>
+                Contactar con {artist.name}
+              </Button>
             </div>
           </div>
         </div>
-      </main>
-      
-      {/* Footer */}
-      <Footer />
-    </div>
-  );
-};
 
-export default ArtistProfilePage;
+        {/* Nueva sección de Recomendados con carrusel básico */}
+        <div className="mb-16">
+          <div className="max-w-7xl mx-auto">
+            <h2 className="text-3xl font-black mb-6">Recomendados</h2>
+          </div>
+          <div className="relative max-w-full mx-auto">
+            <Carousel opts={{
+            align: "start",
+            loop: false
+          }} className="max-w-7xl mx-auto">
+              <CarouselContent>
+                {recommendedArtists.map(artist => <CarouselItem key={artist.id} className="basis-full sm:basis-1/2 md:basis-1/3 lg:basis-1/4">
+                    <ArtistProfileCard name={artist.name} type={artist.type} description={artist.description} images={artist.images} rating={artist.rating} priceRange={artist.priceRange} isFavorite={artist.isFavorite} onClick={() => navigate(`/artista/${artist.id}`)} onFavoriteToggle={() => {
+                  toast.success(artist.isFavorite ? "Eliminado de favoritos" : "Añadido a favoritos", {
+                    icon: artist.isFavorite ? "👋" : "❤️",
+                    position: "bottom-center"
+                  });
+                }} />
+                  </CarouselItem>)}
+              </CarouselContent>
+              <CarouselPrevious className="left-2" />
+              <CarouselNext className="right-2" />
+            </Carousel>
+          </div>
+        </div>
+      </div>
+      <Footer />
+    </>;
+};
