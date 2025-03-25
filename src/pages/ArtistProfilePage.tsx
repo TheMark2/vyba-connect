@@ -1,3 +1,4 @@
+
 import React, { useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import Navbar from "@/components/Navbar";
@@ -143,5 +144,342 @@ const recommendedArtists = [{
   rating: 4.5,
   priceRange: "180-350€",
   isFavorite: true
-}
+}];
 
+const ArtistProfilePage = () => {
+  const { id } = useParams();
+  const navigate = useNavigate();
+  const isMobile = useIsMobile();
+  
+  // Encontrar el artista correspondiente al ID
+  const artist = artistsData.find(artist => artist.id === id) || artistsData[0];
+  
+  // Estado para controlar si el artista está marcado como favorito
+  const [isFavorite, setIsFavorite] = useState(artist.isFavorite);
+  
+  // Función para manejar el clic en el botón de favorito
+  const handleFavoriteClick = () => {
+    setIsFavorite(!isFavorite);
+    toast.success(isFavorite ? "Eliminado de favoritos" : "Añadido a favoritos");
+  };
+  
+  // Función para manejar el clic en el botón de compartir
+  const handleShareClick = () => {
+    navigator.clipboard.writeText(window.location.href);
+    toast.success("Enlace copiado al portapapeles");
+  };
+  
+  // Función para manejar el clic en el botón de reportar
+  const handleReportClick = () => {
+    toast.info("Reporte enviado. Gracias por tu feedback.");
+  };
+  
+  return (
+    <div className="bg-[#FDFBF9] dark:bg-vyba-dark-bg min-h-screen">
+      {/* Navbar */}
+      <Navbar />
+      
+      {/* Contenido principal */}
+      <main className="container mx-auto px-4 pt-24 pb-20">
+        {/* Sección de cabecera con imagen de portada */}
+        <div className="relative w-full h-64 md:h-80 lg:h-96 rounded-3xl overflow-hidden mb-8">
+          <img 
+            src={artist.coverImage} 
+            alt={artist.name} 
+            className="w-full h-full object-cover"
+          />
+          <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
+          
+          {/* Información básica superpuesta en la imagen */}
+          <div className="absolute bottom-0 left-0 right-0 p-6 text-white">
+            <div className="flex items-center gap-4">
+              <Avatar className="h-16 w-16 border-2 border-white">
+                <AvatarImage src={artist.images[0]} alt={artist.name} />
+                <AvatarFallback>{artist.name.slice(0, 2)}</AvatarFallback>
+              </Avatar>
+              <div>
+                <h1 className="text-2xl md:text-3xl font-bold">{artist.name}</h1>
+                <p className="text-white/80">{artist.type}</p>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        {/* Contenido en dos columnas para escritorio, una columna para móvil */}
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+          {/* Columna izquierda - Información detallada */}
+          <div className="lg:col-span-2 space-y-8">
+            {/* Barra de acciones */}
+            <div className="flex items-center justify-between bg-white dark:bg-vyba-dark-secondary p-4 rounded-2xl shadow-sm">
+              <div className="flex items-center gap-2">
+                <Button 
+                  variant="ghost" 
+                  size="icon" 
+                  className="rounded-full" 
+                  onClick={handleFavoriteClick}
+                >
+                  <Heart className={`h-5 w-5 ${isFavorite ? 'fill-red-500 text-red-500' : 'text-gray-600 dark:text-gray-400'}`} />
+                </Button>
+                <Button 
+                  variant="ghost" 
+                  size="icon" 
+                  className="rounded-full" 
+                  onClick={handleShareClick}
+                >
+                  <Share2 className="h-5 w-5 text-gray-600 dark:text-gray-400" />
+                </Button>
+                <Button 
+                  variant="ghost" 
+                  size="icon" 
+                  className="rounded-full" 
+                  onClick={handleReportClick}
+                >
+                  <Flag className="h-5 w-5 text-gray-600 dark:text-gray-400" />
+                </Button>
+              </div>
+              
+              <div className="flex items-center">
+                <div className="flex items-center mr-2">
+                  <Star className="h-5 w-5 text-yellow-400 fill-yellow-400" />
+                  <span className="ml-1 font-medium">{artist.rating}</span>
+                </div>
+                <span className="text-gray-500 dark:text-gray-400 text-sm">({artist.reviews || '0'} reseñas)</span>
+              </div>
+            </div>
+            
+            {/* Descripción */}
+            <div className="bg-white dark:bg-vyba-dark-secondary p-6 rounded-2xl shadow-sm">
+              <h2 className="text-xl font-bold mb-4 dark:text-white">Descripción</h2>
+              <p className="text-gray-700 dark:text-gray-300 whitespace-pre-line">{artist.description}</p>
+              
+              {/* Géneros musicales */}
+              {artist.genres && artist.genres.length > 0 && (
+                <div className="mt-6">
+                  <h3 className="text-lg font-semibold mb-3 dark:text-white">Géneros musicales</h3>
+                  <div className="flex flex-wrap gap-2">
+                    {artist.genres.map((genre, index) => (
+                      <UIBadge key={index} variant="secondary" className="rounded-full bg-[#F0E5D8] hover:bg-[#E7D3D3] text-black">
+                        {genre}
+                      </UIBadge>
+                    ))}
+                  </div>
+                </div>
+              )}
+              
+              {/* Ubicación y disponibilidad */}
+              <div className="mt-6 flex flex-wrap gap-6">
+                {artist.location && (
+                  <div className="flex items-center gap-2">
+                    <MapPin className="h-5 w-5 text-gray-600 dark:text-gray-400" />
+                    <span className="text-gray-700 dark:text-gray-300">{artist.location}</span>
+                  </div>
+                )}
+                
+                {artist.availability && (
+                  <div className="flex items-center gap-2">
+                    <Clock className="h-5 w-5 text-gray-600 dark:text-gray-400" />
+                    <span className="text-gray-700 dark:text-gray-300">{artist.availability}</span>
+                  </div>
+                )}
+              </div>
+            </div>
+            
+            {/* Galería de imágenes */}
+            <div className="bg-white dark:bg-vyba-dark-secondary p-6 rounded-2xl shadow-sm">
+              <h2 className="text-xl font-bold mb-4 dark:text-white">Galería</h2>
+              <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
+                {artist.images.slice(0, 6).map((image, index) => (
+                  <div 
+                    key={index} 
+                    className="aspect-square rounded-xl overflow-hidden"
+                  >
+                    <img 
+                      src={image} 
+                      alt={`${artist.name} - Imagen ${index + 1}`} 
+                      className="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
+                    />
+                  </div>
+                ))}
+              </div>
+            </div>
+            
+            {/* Música y grabaciones */}
+            {artist.musicPreviews && artist.musicPreviews.length > 0 && (
+              <div className="bg-white dark:bg-vyba-dark-secondary p-6 rounded-2xl shadow-sm">
+                <h2 className="text-xl font-bold mb-4 dark:text-white">Música y grabaciones</h2>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  {artist.musicPreviews.map((preview, index) => (
+                    <div 
+                      key={index} 
+                      className="group relative bg-gray-100 dark:bg-gray-800 rounded-xl overflow-hidden"
+                    >
+                      <div className="flex items-center p-4">
+                        <div className="relative h-16 w-16 rounded-md overflow-hidden mr-4">
+                          <img 
+                            src={preview.image} 
+                            alt={preview.title} 
+                            className="w-full h-full object-cover"
+                          />
+                          <div className="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+                            <Play className="h-8 w-8 text-white" />
+                          </div>
+                        </div>
+                        <div>
+                          <h3 className="font-medium dark:text-white">{preview.title}</h3>
+                          <p className="text-sm text-gray-600 dark:text-gray-400">{preview.duration}</p>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+            
+            {/* Detalles acordeón */}
+            <Accordion type="single" collapsible className="bg-white dark:bg-vyba-dark-secondary rounded-2xl shadow-sm">
+              {/* Experiencia */}
+              {artist.experience && artist.experience.length > 0 && (
+                <AccordionItem value="experience" className="border-b border-gray-200 dark:border-gray-700">
+                  <AccordionTrigger className="px-6 py-4 hover:no-underline">
+                    <div className="flex items-center">
+                      <Book className="h-5 w-5 mr-3 text-gray-600 dark:text-gray-400" />
+                      <span className="font-semibold dark:text-white">Experiencia</span>
+                    </div>
+                  </AccordionTrigger>
+                  <AccordionContent className="px-6 pb-4">
+                    <ul className="space-y-2">
+                      {artist.experience.map((exp, index) => (
+                        <li key={index} className="text-gray-700 dark:text-gray-300">{exp}</li>
+                      ))}
+                    </ul>
+                  </AccordionContent>
+                </AccordionItem>
+              )}
+              
+              {/* Equipamiento */}
+              {artist.equipment && artist.equipment.length > 0 && (
+                <AccordionItem value="equipment" className="border-b border-gray-200 dark:border-gray-700">
+                  <AccordionTrigger className="px-6 py-4 hover:no-underline">
+                    <div className="flex items-center">
+                      <List className="h-5 w-5 mr-3 text-gray-600 dark:text-gray-400" />
+                      <span className="font-semibold dark:text-white">Equipamiento</span>
+                    </div>
+                  </AccordionTrigger>
+                  <AccordionContent className="px-6 pb-4">
+                    <ul className="space-y-2">
+                      {artist.equipment.map((equip, index) => (
+                        <li key={index} className="text-gray-700 dark:text-gray-300">{equip}</li>
+                      ))}
+                    </ul>
+                  </AccordionContent>
+                </AccordionItem>
+              )}
+              
+              {/* Requerimientos de tiempo */}
+              {artist.timeRequirements && artist.timeRequirements.length > 0 && (
+                <AccordionItem value="timeRequirements" className="border-b border-gray-200 dark:border-gray-700">
+                  <AccordionTrigger className="px-6 py-4 hover:no-underline">
+                    <div className="flex items-center">
+                      <Clock className="h-5 w-5 mr-3 text-gray-600 dark:text-gray-400" />
+                      <span className="font-semibold dark:text-white">Requerimientos de tiempo</span>
+                    </div>
+                  </AccordionTrigger>
+                  <AccordionContent className="px-6 pb-4">
+                    <ul className="space-y-2">
+                      {artist.timeRequirements.map((req, index) => (
+                        <li key={index} className="text-gray-700 dark:text-gray-300">{req}</li>
+                      ))}
+                    </ul>
+                  </AccordionContent>
+                </AccordionItem>
+              )}
+              
+              {/* Formación */}
+              {artist.education && artist.education.length > 0 && (
+                <AccordionItem value="education" className="border-b-0">
+                  <AccordionTrigger className="px-6 py-4 hover:no-underline">
+                    <div className="flex items-center">
+                      <Badge className="h-5 w-5 mr-3 text-gray-600 dark:text-gray-400" />
+                      <span className="font-semibold dark:text-white">Formación</span>
+                    </div>
+                  </AccordionTrigger>
+                  <AccordionContent className="px-6 pb-4">
+                    <ul className="space-y-2">
+                      {artist.education.map((edu, index) => (
+                        <li key={index} className="text-gray-700 dark:text-gray-300">{edu}</li>
+                      ))}
+                    </ul>
+                  </AccordionContent>
+                </AccordionItem>
+              )}
+            </Accordion>
+            
+            {/* Reseñas */}
+            {artist.reviewsData && artist.reviewsData.length > 0 && (
+              <div className="bg-white dark:bg-vyba-dark-secondary p-6 rounded-2xl shadow-sm">
+                <h2 className="text-xl font-bold mb-4 dark:text-white">Reseñas</h2>
+                <div className="space-y-6">
+                  {artist.reviewsData.map((review) => (
+                    <div key={review.id} className="border-b border-gray-200 dark:border-gray-700 pb-6 last:border-b-0 last:pb-0">
+                      <div className="flex items-center justify-between mb-2">
+                        <div className="flex items-center">
+                          <Avatar className="h-10 w-10 mr-3">
+                            <AvatarFallback>{review.name.slice(0, 2)}</AvatarFallback>
+                          </Avatar>
+                          <div>
+                            <p className="font-medium dark:text-white">{review.name}</p>
+                            <p className="text-sm text-gray-500 dark:text-gray-400">Hace {review.date}</p>
+                          </div>
+                        </div>
+                        <div className="flex items-center">
+                          {[...Array(5)].map((_, i) => (
+                            <Star 
+                              key={i} 
+                              className={`h-4 w-4 ${i < review.rating ? 'text-yellow-400 fill-yellow-400' : 'text-gray-300 dark:text-gray-600'}`}
+                            />
+                          ))}
+                        </div>
+                      </div>
+                      
+                      {review.badges && review.badges.length > 0 && (
+                        <div className="flex flex-wrap gap-2 my-2">
+                          {review.badges.map((badge, index) => (
+                            <UIBadge key={index} variant="outline" className="bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 rounded-full">
+                              {badge}
+                            </UIBadge>
+                          ))}
+                        </div>
+                      )}
+                      
+                      <p className="text-gray-700 dark:text-gray-300 mt-2">{review.comment}</p>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+          </div>
+          
+          {/* Columna derecha - Tarjeta de perfil y artistas similares */}
+          <div className="space-y-8">
+            {/* Tarjeta de perfil */}
+            <ArtistProfileCard 
+              priceRange={artist.priceRange}
+              eventTypes={artist.eventTypes}
+            />
+            
+            {/* Artistas similares */}
+            <div className="bg-white dark:bg-vyba-dark-secondary p-6 rounded-2xl shadow-sm">
+              <h2 className="text-xl font-bold mb-4 dark:text-white">Artistas similares</h2>
+              <ArtistsList artists={recommendedArtists.slice(0, 3)} />
+            </div>
+          </div>
+        </div>
+      </main>
+      
+      {/* Footer */}
+      <Footer />
+    </div>
+  );
+};
+
+export default ArtistProfilePage;
