@@ -385,32 +385,32 @@ export const ArtistProfilePage = () => {
               <div className="mt-8 mb-16">
                 <h2 className="text-3xl font-black mb-6">Preview</h2>
                 <div className="space-y-4">
-                  {artist.musicPreviews?.map((preview, index) => (
+                  {artist.musicPreviews && artist.musicPreviews.map((preview, index) => (
                     <div 
                       key={index} 
                       className="group flex items-center gap-4 p-2 bg-secondary dark:bg-vyba-dark-secondary/70 rounded-2xl hover:bg-opacity-80 transition-colors duration-200 cursor-pointer hover:bg-secondary/90 dark:hover:bg-vyba-dark-secondary/90 relative"
                     >
                       <div className="relative w-14 h-14 flex-shrink-0 rounded-md overflow-hidden">
-                        {/* Blurred background image */}
-                        <div 
-                          className="absolute -inset-4 bg-cover bg-center blur-xl opacity-40 scale-105" 
-                          style={{ 
-                            backgroundImage: `url(${preview.image})`,
-                            zIndex: 1 
-                          }}
-                        ></div>
+                        {preview.image && (
+                          <>
+                            <div 
+                              className="absolute -inset-4 bg-cover bg-center blur-xl opacity-40 scale-105" 
+                              style={{ 
+                                backgroundImage: `url(${preview.image})`,
+                                zIndex: 1 
+                              }}
+                            ></div>
+                            
+                            <img 
+                              src={preview.image} 
+                              alt={preview.title || 'Preview'} 
+                              className="relative z-10 w-full h-full object-cover transition-transform duration-300 group-hover:scale-110" 
+                            />
+                          </>
+                        )}
                         
-                        {/* Main image */}
-                        <img 
-                          src={preview.image} 
-                          alt={preview.title} 
-                          className="relative z-10 w-full h-full object-cover transition-transform duration-300 group-hover:scale-110" 
-                        />
-                        
-                        {/* Hover overlay */}
                         <div className="absolute inset-0 z-20 bg-black opacity-0 group-hover:opacity-60 transition-opacity duration-300"></div>
                         
-                        {/* Play button */}
                         <div className="absolute inset-0 z-30 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
                           <div className="bg-primary rounded-full w-8 h-8 flex items-center justify-center shadow-lg">
                             <Play className="w-4 h-4 text-primary-foreground ml-0.5" fill="currentColor" />
