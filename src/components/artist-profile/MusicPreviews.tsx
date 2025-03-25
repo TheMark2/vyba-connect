@@ -24,7 +24,7 @@ const MusicPreviews = ({ previews, artistName }: MusicPreviewsProps) => {
             className="group flex items-center gap-4 p-2 bg-secondary dark:bg-vyba-dark-secondary/70 rounded-2xl hover:bg-opacity-80 transition-colors duration-200 cursor-pointer hover:bg-secondary/90 dark:hover:bg-vyba-dark-secondary/90 relative"
           >
             <div className="relative flex items-center">
-              {/* Blurred side image */}
+              {/* Blurred side image - eliminado el efecto hover */}
               <div 
                 className="absolute w-14 h-14 bg-cover bg-center blur-xl opacity-40 rounded-md" 
                 style={{ 
