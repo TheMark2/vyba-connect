@@ -15,7 +15,6 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import ArtistsList from "@/components/ArtistsList";
 import ArtistProfileCard from "@/components/ArtistProfileCard";
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/carousel";
-
 const artistsData = [{
   id: "1",
   name: "Antonia Pedragosa",
@@ -97,7 +96,6 @@ const artistsData = [{
   education: ["Conservatorio Provincial de Música Luis Gianneo"],
   eventTypes: ["Fiestas Privadas", "Inauguraciones", "Aniversarios"]
 }];
-
 const recommendedArtists = [{
   id: "101",
   name: "Marco Olivera",
@@ -144,7 +142,6 @@ const recommendedArtists = [{
   priceRange: "180-350€",
   isFavorite: true
 }];
-
 export const ArtistProfilePage = () => {
   const {
     id
@@ -297,7 +294,7 @@ export const ArtistProfilePage = () => {
                         const parts = exp.split(' - ');
                         const name = parts[0];
                         const location = parts.length > 1 ? parts[1] : '';
-                        return <UIBadge key={index} variant="outline" className="py-2 px-4 bg-white border-0 text-sm font-medium dark:bg-vyba-dark-secondary">
+                        return <UIBadge key={index} variant="outline" className="py-3 px-6 bg-white border-0 text-sm font-medium dark:bg-vyba-dark-secondary">
                               <span className="text-black dark:text-white">{name}</span>
                               {location && <>
                                   <span className="mx-1 text-gray-500">·</span>
@@ -373,18 +370,12 @@ export const ArtistProfilePage = () => {
                   </div>
                   
                   {/* Gradient overlay for truncated content */}
-                  {!showFullInfo && (
-                    <div className="absolute bottom-0 left-0 right-0 h-40 bg-gradient-to-t from-background to-transparent pointer-events-none transition-opacity duration-500 ease-in-out"></div>
-                  )}
+                  {!showFullInfo && <div className="absolute bottom-0 left-0 right-0 h-40 bg-gradient-to-t from-background to-transparent pointer-events-none transition-opacity duration-500 ease-in-out"></div>}
                 </div>
                 
                 {/* Button to toggle full content */}
                 <div className="flex justify-center mt-6">
-                  <Button 
-                    variant="secondary" 
-                    className="px-6 rounded-full"
-                    onClick={() => setShowFullInfo(!showFullInfo)}
-                  >
+                  <Button variant="secondary" className="px-6 rounded-full" onClick={() => setShowFullInfo(!showFullInfo)}>
                     {showFullInfo ? "Ver menos" : "Ver toda la información"}
                   </Button>
                 </div>
@@ -394,17 +385,9 @@ export const ArtistProfilePage = () => {
               <div className="mt-8 mb-16">
                 <h2 className="text-3xl font-black mb-6">Preview</h2>
                 <div className="space-y-4">
-                  {artist.musicPreviews?.map((preview, index) => (
-                    <div 
-                      key={index} 
-                      className="group flex items-center gap-4 p-2 bg-secondary dark:bg-vyba-dark-secondary/70 rounded-2xl hover:bg-opacity-80 transition-colors duration-200 cursor-pointer hover:bg-secondary/90 dark:hover:bg-vyba-dark-secondary/90 relative"
-                    >
+                  {artist.musicPreviews?.map((preview, index) => <div key={index} className="group flex items-center gap-4 p-2 bg-secondary dark:bg-vyba-dark-secondary/70 rounded-2xl hover:bg-opacity-80 transition-colors duration-200 cursor-pointer hover:bg-secondary/90 dark:hover:bg-vyba-dark-secondary/90 relative">
                       <div className="relative w-14 h-14 flex-shrink-0 rounded-md overflow-hidden">
-                        <img 
-                          src={preview.image} 
-                          alt={preview.title} 
-                          className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-110" 
-                        />
+                        <img src={preview.image} alt={preview.title} className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-110" />
                         
                         <div className="absolute inset-0 bg-black opacity-0 group-hover:opacity-60 transition-opacity duration-300"></div>
                         
@@ -422,8 +405,7 @@ export const ArtistProfilePage = () => {
                       <div className="text-right mr-4">
                         <span className="text-sm font-medium">{preview.duration}</span>
                       </div>
-                    </div>
-                  ))}
+                    </div>)}
                 </div>
               </div>
 
@@ -503,29 +485,20 @@ export const ArtistProfilePage = () => {
                       <span className="text-3xl font-medium">({artist.reviews})</span>
                     </div>
                     <div className="flex flex-wrap gap-3">
-                      {artist.genres?.filter((_, i) => i < 2).map((genre, index) => (
-                        <UIBadge key={index} variant="outline" className="py-2 px-4 bg-white border-0 text-sm font-medium flex items-center gap-2 dark:bg-vyba-dark-secondary">
+                      {artist.genres?.filter((_, i) => i < 2).map((genre, index) => <UIBadge key={index} variant="outline" className="py-2 px-4 bg-white border-0 text-sm font-medium flex items-center gap-2 dark:bg-vyba-dark-secondary">
                           {genre}
-                        </UIBadge>
-                      ))}
+                        </UIBadge>)}
                     </div>
                   </div>
                   
                   {/* Individual reviews - Rediseñadas según la imagen */}
                   <div className="space-y-10">
-                    {artist.reviewsData?.map(review => (
-                      <div key={review.id} className="pb-8 border-b border-gray-200 dark:border-gray-700">
+                    {artist.reviewsData?.map(review => <div key={review.id} className="pb-8 border-b border-gray-200 dark:border-gray-700">
                         <div className="flex gap-6">
                           {/* Parte izquierda: Imagen de perfil e información básica */}
                           <div className="w-[90px] flex-shrink-0">
                             <div className="w-[72px] h-[72px] rounded-[16px] overflow-hidden mb-2">
-                              <img 
-                                src={review.id === 1 ? "https://images.unsplash.com/photo-1580489944761-15a19d654956?q=80&w=1000" : 
-                                     review.id === 2 ? "https://images.unsplash.com/photo-1633332755192-727a05c4013d?q=80&w=1000" :
-                                                      "https://images.unsplash.com/photo-1494790108377-be9c29b29330?q=80&w=1000"} 
-                                alt={review.name} 
-                                className="w-full h-full object-cover"
-                              />
+                              <img src={review.id === 1 ? "https://images.unsplash.com/photo-1580489944761-15a19d654956?q=80&w=1000" : review.id === 2 ? "https://images.unsplash.com/photo-1633332755192-727a05c4013d?q=80&w=1000" : "https://images.unsplash.com/photo-1494790108377-be9c29b29330?q=80&w=1000"} alt={review.name} className="w-full h-full object-cover" />
                             </div>
                             <div className="text-left">
                               <h4 className="text-sm font-bold">{review.name}</h4>
@@ -537,20 +510,14 @@ export const ArtistProfilePage = () => {
                           <div className="flex-1">
                             {/* Estrellas en fila - 5 estrellas con la cantidad correspondiente llenas */}
                             <div className="flex items-center mb-2">
-                              {[...Array(5)].map((_, index) => (
-                                <Star 
-                                  key={index} 
-                                  className={`h-5 w-5 ${index < review.rating ? "text-black fill-black dark:text-white dark:fill-white" : "text-gray-300 dark:text-gray-600"}`}
-                                />
-                              ))}
+                              {[...Array(5)].map((_, index) => <Star key={index} className={`h-5 w-5 ${index < review.rating ? "text-black fill-black dark:text-white dark:fill-white" : "text-gray-300 dark:text-gray-600"}`} />)}
                             </div>
                             
                             {/* Comentario de la reseña */}
                             <p className="text-base">{review.comment}</p>
                           </div>
                         </div>
-                      </div>
-                    ))}
+                      </div>)}
                   </div>
                   
                   {/* Ver todas button */}
@@ -585,37 +552,19 @@ export const ArtistProfilePage = () => {
             <h2 className="text-3xl font-black mb-6">Recomendados</h2>
           </div>
           <div className="relative max-w-full mx-auto">
-            <Carousel 
-              opts={{
-                align: "start",
-                loop: false
-              }} 
-              className="max-w-7xl mx-auto"
-            >
+            <Carousel opts={{
+            align: "start",
+            loop: false
+          }} className="max-w-7xl mx-auto">
               <CarouselContent>
-                {recommendedArtists.map(artist => (
-                  <CarouselItem 
-                    key={artist.id} 
-                    className="basis-full sm:basis-1/2 md:basis-1/3 lg:basis-1/4"
-                  >
-                    <ArtistProfileCard 
-                      name={artist.name} 
-                      type={artist.type} 
-                      description={artist.description} 
-                      images={artist.images} 
-                      rating={artist.rating} 
-                      priceRange={artist.priceRange} 
-                      isFavorite={artist.isFavorite} 
-                      onClick={() => navigate(`/artista/${artist.id}`)} 
-                      onFavoriteToggle={() => {
-                        toast.success(artist.isFavorite ? "Eliminado de favoritos" : "Añadido a favoritos", {
-                          icon: artist.isFavorite ? "👋" : "❤️",
-                          position: "bottom-center"
-                        });
-                      }} 
-                    />
-                  </CarouselItem>
-                ))}
+                {recommendedArtists.map(artist => <CarouselItem key={artist.id} className="basis-full sm:basis-1/2 md:basis-1/3 lg:basis-1/4">
+                    <ArtistProfileCard name={artist.name} type={artist.type} description={artist.description} images={artist.images} rating={artist.rating} priceRange={artist.priceRange} isFavorite={artist.isFavorite} onClick={() => navigate(`/artista/${artist.id}`)} onFavoriteToggle={() => {
+                  toast.success(artist.isFavorite ? "Eliminado de favoritos" : "Añadido a favoritos", {
+                    icon: artist.isFavorite ? "👋" : "❤️",
+                    position: "bottom-center"
+                  });
+                }} />
+                  </CarouselItem>)}
               </CarouselContent>
               <CarouselPrevious className="left-2" />
               <CarouselNext className="right-2" />
