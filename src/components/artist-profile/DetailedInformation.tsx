@@ -1,7 +1,10 @@
+
 import React, { useState } from "react";
 import { Book, List, Clock, Badge } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge as UIBadge } from "@/components/ui/badge";
+import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/carousel";
+
 interface DetailedInformationProps {
   artist: {
     experience?: string[];
@@ -10,10 +13,12 @@ interface DetailedInformationProps {
     education?: string[];
   };
 }
+
 const DetailedInformation = ({
   artist
 }: DetailedInformationProps) => {
   const [showFullInfo, setShowFullInfo] = useState(false);
+  
   return <div className="mt-8 mb-12">
       <h2 className="text-3xl font-black mb-6">Más información</h2>
       
@@ -28,21 +33,33 @@ const DetailedInformation = ({
               ¿Buscas añadir un toque de elegancia y encanto musical a tu próximo evento? ¡Estás en el lugar indicado!
               Soy Antonia Pedragosa, una apasionada DJ especializada en jazz, bossa nova y blues. ✨✨
             </p>
-            <div className="flex gap-3 flex-wrap">
-              {artist.experience?.map((exp, index) => {
-              // Dividir la experiencia en nombre y ubicación (asumiendo formato "Nombre - Ubicación")
-              const parts = exp.split(' - ');
-              const name = parts[0];
-              const location = parts.length > 1 ? parts[1] : '';
-              return <UIBadge key={index} variant="outline" className="py-3 px-6 bg-white border-0 text-sm font-medium dark:bg-vyba-dark-secondary">
-                    <span className="text-black dark:text-white">{name}</span>
-                    {location && <>
-                        <span className="mx-1 text-gray-500">·</span>
-                        <span className="text-gray-500">{location}</span>
-                      </>}
-                  </UIBadge>;
-            })}
-            </div>
+            <Carousel
+              opts={{
+                align: "start",
+                dragFree: true,
+              }}
+              className="w-full"
+            >
+              <CarouselContent className="-ml-2 md:-ml-4">
+                {artist.experience?.map((exp, index) => {
+                  // Dividir la experiencia en nombre y ubicación (asumiendo formato "Nombre - Ubicación")
+                  const parts = exp.split(' - ');
+                  const name = parts[0];
+                  const location = parts.length > 1 ? parts[1] : '';
+                  return (
+                    <CarouselItem key={index} className="pl-2 md:pl-4 basis-auto">
+                      <UIBadge variant="outline" className="py-3 px-6 bg-white border-0 text-sm font-medium dark:bg-vyba-dark-secondary">
+                        <span className="text-black dark:text-white">{name}</span>
+                        {location && <>
+                          <span className="mx-1 text-gray-500">·</span>
+                          <span className="text-gray-500 dark:text-gray-300">{location}</span>
+                        </>}
+                      </UIBadge>
+                    </CarouselItem>
+                  );
+                })}
+              </CarouselContent>
+            </Carousel>
           </div>
 
           {/* Repertorio */}
@@ -65,12 +82,24 @@ const DetailedInformation = ({
               ¿Buscas añadir un toque de elegancia y encanto musical a tu próximo evento? ¡Estás en el lugar indicado!
               Soy Antonia Pedragosa, una apasionada DJ especializada en jazz, bossa nova y blues. ✨✨
             </p>
-            <div className="flex gap-3 flex-wrap">
-              {artist.equipment?.map((item, index) => <UIBadge key={index} variant="outline" className="py-3 px-6 bg-white border-0 text-sm font-medium flex items-center gap-2 dark:bg-vyba-dark-secondary">
-                  <List className="w-4 h-4" />                              
-                  {item}
-                </UIBadge>)}
-            </div>
+            <Carousel
+              opts={{
+                align: "start",
+                dragFree: true,
+              }}
+              className="w-full"
+            >
+              <CarouselContent className="-ml-2 md:-ml-4">
+                {artist.equipment?.map((item, index) => (
+                  <CarouselItem key={index} className="pl-2 md:pl-4 basis-auto">
+                    <UIBadge variant="outline" className="py-3 px-6 bg-white border-0 text-sm font-medium flex items-center gap-2 dark:bg-vyba-dark-secondary">
+                      <List className="w-4 h-4" />                              
+                      {item}
+                    </UIBadge>
+                  </CarouselItem>
+                ))}
+              </CarouselContent>
+            </Carousel>
           </div>
 
           {/* Tiempos */}
@@ -82,12 +111,24 @@ const DetailedInformation = ({
               ¿Buscas añadir un toque de elegancia y encanto musical a tu próximo evento? ¡Estás en el lugar indicado!
               Soy Antonia Pedragosa, una apasionada DJ especializada en jazz, bossa nova y blues. ✨✨
             </p>
-            <div className="flex gap-3 flex-wrap">
-              {artist.timeRequirements?.map((req, index) => <UIBadge key={index} variant="outline" className="py-3 px-6 bg-white border-0 text-sm font-medium flex items-center gap-2 dark:bg-vyba-dark-secondary">
-                  <Clock className="w-4 h-4" />
-                  {req}
-                </UIBadge>)}
-            </div>
+            <Carousel
+              opts={{
+                align: "start",
+                dragFree: true,
+              }}
+              className="w-full"
+            >
+              <CarouselContent className="-ml-2 md:-ml-4">
+                {artist.timeRequirements?.map((req, index) => (
+                  <CarouselItem key={index} className="pl-2 md:pl-4 basis-auto">
+                    <UIBadge variant="outline" className="py-3 px-6 bg-white border-0 text-sm font-medium flex items-center gap-2 dark:bg-vyba-dark-secondary">
+                      <Clock className="w-4 h-4" />
+                      {req}
+                    </UIBadge>
+                  </CarouselItem>
+                ))}
+              </CarouselContent>
+            </Carousel>
           </div>
 
           {/* Formación */}
@@ -99,12 +140,24 @@ const DetailedInformation = ({
               ¿Buscas añadir un toque de elegancia y encanto musical a tu próximo evento? ¡Estás en el lugar indicado!
               Soy Antonia Pedragosa, una apasionada DJ especializada en jazz, bossa nova y blues. ✨✨
             </p>
-            <div className="flex gap-3 flex-wrap">
-              {artist.education?.map((edu, index) => <UIBadge key={index} variant="outline" className="py-3 px-6 bg-white border-0 text-sm font-medium flex items-center gap-2 dark:bg-vyba-dark-secondary">
-                  <Book className="w-4 h-4" />
-                  {edu}
-                </UIBadge>)}
-            </div>
+            <Carousel
+              opts={{
+                align: "start",
+                dragFree: true,
+              }}
+              className="w-full"
+            >
+              <CarouselContent className="-ml-2 md:-ml-4">
+                {artist.education?.map((edu, index) => (
+                  <CarouselItem key={index} className="pl-2 md:pl-4 basis-auto">
+                    <UIBadge variant="outline" className="py-3 px-6 bg-white border-0 text-sm font-medium flex items-center gap-2 dark:bg-vyba-dark-secondary">
+                      <Book className="w-4 h-4" />
+                      {edu}
+                    </UIBadge>
+                  </CarouselItem>
+                ))}
+              </CarouselContent>
+            </Carousel>
           </div>
         </div>
         
@@ -120,4 +173,5 @@ const DetailedInformation = ({
       </div>
     </div>;
 };
+
 export default DetailedInformation;
