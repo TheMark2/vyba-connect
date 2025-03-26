@@ -169,12 +169,6 @@ const ArtistReviews = ({ rating, reviews, genres, reviewsData }: ArtistReviewsPr
               <span className="text-3xl font-medium">{rating}</span>
               <span className="text-3xl font-medium">({allReviews.length})</span>
             </div>
-            <button 
-              onClick={() => setIsDialogOpen(false)}
-              className="absolute right-0 top-0 p-2 hover:bg-black/5 rounded-full transition-colors"
-            >
-              <X className="h-6 w-6" />
-            </button>
           </DialogHeader>
 
           <ScrollArea className="h-[60vh] mt-6 pr-4">
