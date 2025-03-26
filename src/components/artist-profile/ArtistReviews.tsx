@@ -41,7 +41,7 @@ const ReviewItem = ({
           
           {/* Estrellas */}
           <div className="flex items-center mb-4">
-            {[...Array(5)].map((_, index) => <Star key={index} className={`h-5 w-5 ${index < review.rating ? "text-black fill-black dark:text-white dark:fill-white" : "text-gray-300 dark:text-gray-600"}`} />)}
+            {[...Array(5)].map((_, index) => <Star key={index} className={`h-3 w-3 ${index < review.rating ? "text-black fill-black dark:text-white dark:fill-white" : "text-gray-300 dark:text-gray-600"}`} />)}
           </div>
           
           {/* Comentario */}
