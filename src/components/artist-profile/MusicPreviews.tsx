@@ -32,7 +32,7 @@ const MusicPreviews = ({ previews, artistName }: MusicPreviewsProps) => {
                 <div className="relative flex items-center">
                   {/* Nuevo efecto de blur mejorado */}
                   <div 
-                    className="absolute inset-0 w-14 h-14 blur-xl opacity-50 scale-150 z-0"
+                    className="absolute inset-0 w-14 h-14 blur-xl opacity-30 scale-150 z-0"
                     style={{ 
                       backgroundImage: `url(${preview.image})`,
                       backgroundSize: 'cover',
