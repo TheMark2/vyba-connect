@@ -27,6 +27,16 @@ const ArtistBanner = ({ artist, onFavorite, onReport, onShare }: ArtistBannerPro
   const isMobile = useIsMobile();
   const [showCarousel, setShowCarousel] = useState(false);
 
+  // Imágenes de alta calidad para el carrusel
+  const highQualityImages = [
+    "https://images.unsplash.com/photo-1533174072545-7a4b6ad7a6c3?q=80&w=2070",
+    "https://images.unsplash.com/photo-1470225620780-dba8ba36b745?q=80&w=2070",
+    "https://images.unsplash.com/photo-1571330735066-03aaa9429d89?q=80&w=2070",
+    "https://images.unsplash.com/photo-1429962714451-bb934ecdc4ec?q=80&w=2070",
+    "https://images.unsplash.com/photo-1516450360452-9312f5e86fc7?q=80&w=2070",
+    "https://images.unsplash.com/photo-1526478806334-5fd488fcaabc?q=80&w=2070"
+  ];
+
   return (
     <div 
       className="relative w-full h-[95vh] md:h-[calc(80vh)] overflow-hidden rounded-[25px] lg:rounded-[35px] mb-12 group"
@@ -64,7 +74,7 @@ const ArtistBanner = ({ artist, onFavorite, onReport, onShare }: ArtistBannerPro
       >
         <Carousel className="w-full h-full">
           <CarouselContent className="h-full">
-            {artist.images.map((image, index) => (
+            {highQualityImages.map((image, index) => (
               <CarouselItem key={index} className="h-full">
                 <div className="w-full h-full relative">
                   <img 
