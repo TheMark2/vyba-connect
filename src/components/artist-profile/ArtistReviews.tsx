@@ -171,7 +171,7 @@ const ArtistReviews = ({ rating, reviews, genres, reviewsData }: ArtistReviewsPr
             </div>
           </DialogHeader>
 
-          <ScrollArea className="h-[60vh] mt-6 pr-4">
+          <ScrollArea className="h-[60vh] mt-4 pr-4">
             <div className="space-y-8">
               {allReviews.map(review => (
                 <ReviewItem key={review.id} review={review} />
