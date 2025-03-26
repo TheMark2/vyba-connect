@@ -169,30 +169,22 @@ const ArtistReviews = ({ rating, reviews, genres, reviewsData }: ArtistReviewsPr
         <DialogContent 
           className={`
             sm:max-w-[700px] 
-            max-h-[85vh] 
+            p-6
             border-none 
-            bg-vyba-cream 
+            bg-[#FAF8F6] 
             dark:bg-vyba-dark-bg 
-            ${isMobile ? 'rounded-none w-full h-full max-h-[100vh] p-6 pt-16' : 'rounded-[40px] pt-8 px-8 pb-0'}
+            ${isMobile ? 'pt-8 pb-16' : 'rounded-[40px] p-8'}
           `}
         >
-          <DialogHeader className="relative">
-            <DialogTitle className={`${isMobile ? 'text-2xl' : 'text-3xl'} font-black`}>Reseñas</DialogTitle>
-            <div className="flex items-baseline gap-2 mt-2">
-              <span className={`${isMobile ? 'text-2xl' : 'text-3xl'} font-medium`}>{rating}</span>
-              <span className={`${isMobile ? 'text-2xl' : 'text-3xl'} font-medium`}>({allReviews.length})</span>
+          <DialogHeader className="text-left mb-4">
+            <DialogTitle className="text-2xl font-black">Reseñas</DialogTitle>
+            <div className="flex items-baseline gap-2 mt-1">
+              <span className="text-2xl font-medium">{rating}</span>
+              <span className="text-2xl font-medium">({allReviews.length})</span>
             </div>
-            {isMobile && (
-              <button 
-                className="absolute right-0 top-0 p-0" 
-                onClick={() => setIsDialogOpen(false)}
-              >
-                <X className="h-7 w-7" />
-              </button>
-            )}
           </DialogHeader>
 
-          <ScrollArea className={`${isMobile ? 'h-[calc(100vh-180px)]' : 'h-[60vh]'} mt-4 pr-4`}>
+          <ScrollArea className={`${isMobile ? 'h-[calc(70vh)]' : 'h-[60vh]'} pr-4`}>
             <div className="space-y-8">
               {allReviews.map(review => (
                 <ReviewItem key={review.id} review={review} />
