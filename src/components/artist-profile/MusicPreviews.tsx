@@ -25,7 +25,7 @@ const MusicPreviews = ({ previews, artistName }: MusicPreviewsProps) => {
         {previews?.map((preview, index) => (
           <Card 
             key={index} 
-            className="group overflow-hidden p-2 bg-secondary dark:bg-vyba-dark-secondary/70 hover:bg-opacity-80 transition-colors duration-200 cursor-pointer hover:bg-secondary/90 dark:hover:bg-vyba-dark-secondary/90 relative"
+            className="group border-none overflow-hidden p-2 bg-secondary dark:bg-vyba-dark-secondary/70 hover:bg-opacity-80 transition-colors duration-200 cursor-pointer hover:bg-secondary/90 dark:hover:bg-vyba-dark-secondary/90 relative"
           >
             <CardContent className="p-0">
               <div className="flex items-center gap-4">
