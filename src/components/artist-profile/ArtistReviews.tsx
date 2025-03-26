@@ -28,45 +28,85 @@ const ReviewItem = ({ review }: { review: Review }) => {
   
   return (
     <div className="pb-8 border-b border-gray-200 dark:border-gray-700">
-      <div className="flex gap-6">
-        {/* Parte izquierda: Imagen de perfil e información básica */}
-        <div className={`${isMobile ? 'w-[60px]' : 'w-[90px]'} flex-shrink-0`}>
-          <div className={`${isMobile ? 'w-[48px] h-[48px] rounded-[12px]' : 'w-[72px] h-[72px] rounded-[16px]'} overflow-hidden mb-2`}>
-            <img 
-              src={review.id === 1 
-                ? "https://images.unsplash.com/photo-1580489944761-15a19d654956?q=80&w=1000" 
-                : review.id === 2 
-                  ? "https://images.unsplash.com/photo-1633332755192-727a05c4013d?q=80&w=1000" 
-                  : "https://images.unsplash.com/photo-1494790108377-be9c29b29330?q=80&w=1000"
-              } 
-              alt={review.name} 
-              className="w-full h-full object-cover" 
-            />
+      {isMobile ? (
+        // Diseño móvil según la imagen proporcionada
+        <div className="flex flex-col">
+          <div className="flex items-center mb-3">
+            <div className="w-[60px] h-[60px] rounded-[16px] overflow-hidden mr-4 flex-shrink-0">
+              <img 
+                src={review.id === 1 
+                  ? "https://images.unsplash.com/photo-1580489944761-15a19d654956?q=80&w=1000" 
+                  : review.id === 2 
+                    ? "https://images.unsplash.com/photo-1633332755192-727a05c4013d?q=80&w=1000" 
+                    : "https://images.unsplash.com/photo-1494790108377-be9c29b29330?q=80&w=1000"
+                } 
+                alt={review.name} 
+                className="w-full h-full object-cover" 
+              />
+            </div>
+            <div>
+              <h4 className="text-xl font-bold">{review.name}</h4>
+              <p className="text-base text-gray-500">hace {review.date}</p>
+            </div>
           </div>
-          <div className="text-left">
-            <h4 className={`${isMobile ? 'text-xs' : 'text-sm'} font-bold`}>{review.name}</h4>
-            <p className={`${isMobile ? 'text-[10px]' : 'text-xs'} text-gray-500`}>hace {review.date}</p>
-          </div>
-        </div>
-        
-        {/* Parte derecha: Estrellas y comentario */}
-        <div className="flex-1">
-          {/* Estrellas en fila - 5 estrellas con la cantidad correspondiente llenas */}
-          <div className="flex items-center mb-2">
+          
+          {/* Estrellas */}
+          <div className="flex items-center mb-4">
             {[...Array(5)].map((_, index) => (
               <Star 
                 key={index} 
-                className={`${isMobile ? 'h-3 w-3' : 'h-4 w-4'} ${index < review.rating 
+                className={`h-5 w-5 ${index < review.rating 
                   ? "text-black fill-black dark:text-white dark:fill-white" 
                   : "text-gray-300 dark:text-gray-600"}`} 
               />
             ))}
           </div>
           
-          {/* Comentario de la reseña */}
-          <p className={`${isMobile ? 'text-sm' : 'text-base'}`}>{review.comment}</p>
+          {/* Comentario */}
+          <p className="text-base">{review.comment}</p>
         </div>
-      </div>
+      ) : (
+        // Diseño de escritorio (mantener el existente)
+        <div className="flex gap-6">
+          {/* Parte izquierda: Imagen de perfil e información básica */}
+          <div className="w-[90px] flex-shrink-0">
+            <div className="w-[72px] h-[72px] rounded-[16px] overflow-hidden mb-2">
+              <img 
+                src={review.id === 1 
+                  ? "https://images.unsplash.com/photo-1580489944761-15a19d654956?q=80&w=1000" 
+                  : review.id === 2 
+                    ? "https://images.unsplash.com/photo-1633332755192-727a05c4013d?q=80&w=1000" 
+                    : "https://images.unsplash.com/photo-1494790108377-be9c29b29330?q=80&w=1000"
+                } 
+                alt={review.name} 
+                className="w-full h-full object-cover" 
+              />
+            </div>
+            <div className="text-left">
+              <h4 className="text-sm font-bold">{review.name}</h4>
+              <p className="text-xs text-gray-500">hace {review.date}</p>
+            </div>
+          </div>
+          
+          {/* Parte derecha: Estrellas y comentario */}
+          <div className="flex-1">
+            {/* Estrellas en fila - 5 estrellas con la cantidad correspondiente llenas */}
+            <div className="flex items-center mb-2">
+              {[...Array(5)].map((_, index) => (
+                <Star 
+                  key={index} 
+                  className={`h-4 w-4 ${index < review.rating 
+                    ? "text-black fill-black dark:text-white dark:fill-white" 
+                    : "text-gray-300 dark:text-gray-600"}`} 
+                />
+              ))}
+            </div>
+            
+            {/* Comentario de la reseña */}
+            <p className="text-base">{review.comment}</p>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
@@ -173,14 +213,14 @@ const ArtistReviews = ({ rating, reviews, genres, reviewsData }: ArtistReviewsPr
             border-none 
             bg-[#FAF8F6] 
             dark:bg-vyba-dark-bg 
-            ${isMobile ? 'pt-8 pb-16' : 'rounded-[40px] p-8'}
+            ${isMobile ? 'pt-8 pb-20' : 'rounded-[40px] p-8'}
           `}
         >
-          <DialogHeader className="text-left mb-4">
-            <DialogTitle className="text-2xl font-black">Reseñas</DialogTitle>
+          <DialogHeader className="text-left mb-6">
+            <DialogTitle className="text-3xl font-black">Reseñas</DialogTitle>
             <div className="flex items-baseline gap-2 mt-1">
-              <span className="text-2xl font-medium">{rating}</span>
-              <span className="text-2xl font-medium">({allReviews.length})</span>
+              <span className="text-3xl font-medium">{rating}</span>
+              <span className="text-3xl font-medium">({allReviews.length})</span>
             </div>
           </DialogHeader>
 
