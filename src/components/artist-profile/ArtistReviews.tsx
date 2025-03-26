@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import { useIsMobile } from "@/hooks/use-mobile";
 
 interface Review {
   id: number;
@@ -23,12 +24,14 @@ interface ArtistReviewsProps {
 }
 
 const ReviewItem = ({ review }: { review: Review }) => {
+  const isMobile = useIsMobile();
+  
   return (
     <div className="pb-8 border-b border-gray-200 dark:border-gray-700">
       <div className="flex gap-6">
         {/* Parte izquierda: Imagen de perfil e información básica */}
-        <div className="w-[90px] flex-shrink-0">
-          <div className="w-[72px] h-[72px] rounded-[16px] overflow-hidden mb-2">
+        <div className={`${isMobile ? 'w-[60px]' : 'w-[90px]'} flex-shrink-0`}>
+          <div className={`${isMobile ? 'w-[48px] h-[48px] rounded-[12px]' : 'w-[72px] h-[72px] rounded-[16px]'} overflow-hidden mb-2`}>
             <img 
               src={review.id === 1 
                 ? "https://images.unsplash.com/photo-1580489944761-15a19d654956?q=80&w=1000" 
@@ -41,8 +44,8 @@ const ReviewItem = ({ review }: { review: Review }) => {
             />
           </div>
           <div className="text-left">
-            <h4 className="text-sm font-bold">{review.name}</h4>
-            <p className="text-xs text-gray-500">hace {review.date}</p>
+            <h4 className={`${isMobile ? 'text-xs' : 'text-sm'} font-bold`}>{review.name}</h4>
+            <p className={`${isMobile ? 'text-[10px]' : 'text-xs'} text-gray-500`}>hace {review.date}</p>
           </div>
         </div>
         
@@ -53,7 +56,7 @@ const ReviewItem = ({ review }: { review: Review }) => {
             {[...Array(5)].map((_, index) => (
               <Star 
                 key={index} 
-                className={`h-4 w-4 ${index < review.rating 
+                className={`${isMobile ? 'h-3 w-3' : 'h-4 w-4'} ${index < review.rating 
                   ? "text-black fill-black dark:text-white dark:fill-white" 
                   : "text-gray-300 dark:text-gray-600"}`} 
               />
@@ -61,7 +64,7 @@ const ReviewItem = ({ review }: { review: Review }) => {
           </div>
           
           {/* Comentario de la reseña */}
-          <p className="text-base">{review.comment}</p>
+          <p className={`${isMobile ? 'text-sm' : 'text-base'}`}>{review.comment}</p>
         </div>
       </div>
     </div>
@@ -114,6 +117,7 @@ const moreReviewsData: Review[] = [
 
 const ArtistReviews = ({ rating, reviews, genres, reviewsData }: ArtistReviewsProps) => {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const isMobile = useIsMobile();
   
   // Combinamos las reseñas existentes con las adicionales para el diálogo
   const allReviews = reviewsData ? [...reviewsData, ...moreReviewsData] : [];
@@ -162,16 +166,33 @@ const ArtistReviews = ({ rating, reviews, genres, reviewsData }: ArtistReviewsPr
 
       {/* Dialog para mostrar todas las reseñas */}
       <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-        <DialogContent className="sm:max-w-[700px] max-h-[85vh] border-none bg-vyba-cream dark:bg-vyba-dark-bg rounded-[40px] pt-8 px-8 pb-0">
+        <DialogContent 
+          className={`
+            sm:max-w-[700px] 
+            max-h-[85vh] 
+            border-none 
+            bg-vyba-cream 
+            dark:bg-vyba-dark-bg 
+            ${isMobile ? 'rounded-none w-full h-full max-h-[100vh] p-6 pt-16' : 'rounded-[40px] pt-8 px-8 pb-0'}
+          `}
+        >
           <DialogHeader className="relative">
-            <DialogTitle className="text-3xl font-black">Reseñas</DialogTitle>
+            <DialogTitle className={`${isMobile ? 'text-2xl' : 'text-3xl'} font-black`}>Reseñas</DialogTitle>
             <div className="flex items-baseline gap-2 mt-2">
-              <span className="text-3xl font-medium">{rating}</span>
-              <span className="text-3xl font-medium">({allReviews.length})</span>
+              <span className={`${isMobile ? 'text-2xl' : 'text-3xl'} font-medium`}>{rating}</span>
+              <span className={`${isMobile ? 'text-2xl' : 'text-3xl'} font-medium`}>({allReviews.length})</span>
             </div>
+            {isMobile && (
+              <button 
+                className="absolute right-0 top-0 p-0" 
+                onClick={() => setIsDialogOpen(false)}
+              >
+                <X className="h-7 w-7" />
+              </button>
+            )}
           </DialogHeader>
 
-          <ScrollArea className="h-[60vh] mt-4 pr-4">
+          <ScrollArea className={`${isMobile ? 'h-[calc(100vh-180px)]' : 'h-[60vh]'} mt-4 pr-4`}>
             <div className="space-y-8">
               {allReviews.map(review => (
                 <ReviewItem key={review.id} review={review} />
