@@ -228,7 +228,7 @@ const ArtistReviews = ({
             border-none 
             bg-[#FAF8F6] 
             dark:bg-vyba-dark-bg 
-            ${isMobile ? 'pt-10 pb-24 px-6' : 'rounded-[40px] p-8'}
+            ${isMobile ? 'pt-10 pb-24 px-6' : 'rounded-[40px] pt-8 px-8 pb-0'}
           `}
         >
           <DialogHeader className="text-left mb-6">
