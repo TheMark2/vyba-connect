@@ -162,7 +162,7 @@ const ArtistReviews = ({ rating, reviews, genres, reviewsData }: ArtistReviewsPr
 
       {/* Dialog para mostrar todas las reseñas */}
       <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-        <DialogContent className="sm:max-w-[700px] max-h-[85vh] border-0 bg-vyba-cream dark:bg-vyba-dark-bg rounded-4xl p-8">
+        <DialogContent className="sm:max-w-[700px] max-h-[85vh] border-0 bg-vyba-cream dark:bg-vyba-dark-bg rounded-[30px] p-8">
           <DialogHeader className="relative">
             <DialogTitle className="text-3xl font-bold">Reseñas</DialogTitle>
             <div className="flex items-baseline gap-2 mt-2">
