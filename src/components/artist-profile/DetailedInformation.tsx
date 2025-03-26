@@ -116,7 +116,6 @@ const DetailedInformation = ({ artist }: DetailedInformationProps) => {
           {/* Formación */}
           <div>
             <h3 className="text-xl font-bold mb-3 flex items-center">
-              <Badge className="mr-2 h-5 w-5" />
               Formación
             </h3>
             <p className="mb-4">
