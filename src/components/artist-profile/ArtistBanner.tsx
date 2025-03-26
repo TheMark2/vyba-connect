@@ -39,7 +39,7 @@ const ArtistBanner = ({ artist, onFavorite, onReport, onShare }: ArtistBannerPro
 
   return (
     <div 
-      className="relative w-full h-[95vh] md:h-[calc(80vh)] overflow-hidden rounded-[25px] lg:rounded-[35px] mb-12 group"
+      className="relative w-full h-[80vh] overflow-hidden rounded-[25px] lg:rounded-[35px] mb-12 group"
       onMouseEnter={() => setShowCarousel(true)}
       onMouseLeave={() => setShowCarousel(false)}
     >
@@ -75,8 +75,8 @@ const ArtistBanner = ({ artist, onFavorite, onReport, onShare }: ArtistBannerPro
         <Carousel className="w-full h-full">
           <CarouselContent className="h-full">
             {highQualityImages.map((image, index) => (
-              <CarouselItem key={index} className="h-full">
-                <div className="w-full h-full relative">
+              <CarouselItem key={index} className="h-full flex items-center justify-center">
+                <div className="w-full h-full relative flex items-center justify-center">
                   <img 
                     src={image} 
                     alt={`${artist.name} imagen ${index + 1}`}
