@@ -76,11 +76,11 @@ const ArtistBanner = ({ artist, onFavorite, onReport, onShare }: ArtistBannerPro
           <CarouselContent className="h-full">
             {highQualityImages.map((image, index) => (
               <CarouselItem key={index} className="h-full">
-                <div className="w-full h-full relative">
+                <div className="w-full h-full relative flex items-center justify-center">
                   <img 
                     src={image} 
                     alt={`${artist.name} imagen ${index + 1}`}
-                    className="w-full h-full object-cover rounded-[25px] lg:rounded-[35px]"
+                    className="w-full h-full object-contain max-h-[90vh] md:max-h-[70vh] rounded-[25px] lg:rounded-[35px]"
                   />
                 </div>
               </CarouselItem>
