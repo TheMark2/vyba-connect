@@ -3,6 +3,7 @@ import React, { useState } from "react";
 import { Heart, Flag, Share2, ChevronLeft, ChevronRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useIsMobile } from "@/hooks/use-mobile";
+import { AspectRatio } from "@/components/ui/aspect-ratio";
 import { 
   Carousel,
   CarouselContent,
@@ -76,12 +77,14 @@ const ArtistBanner = ({ artist, onFavorite, onReport, onShare }: ArtistBannerPro
           <CarouselContent className="h-full">
             {highQualityImages.map((image, index) => (
               <CarouselItem key={index} className="h-full flex items-center justify-center">
-                <div className="w-full h-full relative flex items-center justify-center">
-                  <img 
-                    src={image} 
-                    alt={`${artist.name} imagen ${index + 1}`}
-                    className="w-full h-full object-cover rounded-[25px] lg:rounded-[35px]"
-                  />
+                <div className="w-full h-full relative">
+                  <AspectRatio ratio={16/9} className="h-full">
+                    <img 
+                      src={image} 
+                      alt={`${artist.name} imagen ${index + 1}`}
+                      className="w-full h-full object-cover rounded-[25px] lg:rounded-[35px]"
+                    />
+                  </AspectRatio>
                 </div>
               </CarouselItem>
             ))}
