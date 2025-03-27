@@ -24,7 +24,7 @@ interface ArtistBannerProps {
 
 const ArtistBanner = ({ artist, onFavorite, onReport, onShare }: ArtistBannerProps) => {
   const isMobile = useIsMobile();
-  const [isHovered, setIsHovered] = useState(false);
+  const [isCarouselActive, setIsCarouselActive] = useState(false);
 
   // Imágenes de alta calidad para el carrusel
   const highQualityImages = [
@@ -39,82 +39,68 @@ const ArtistBanner = ({ artist, onFavorite, onReport, onShare }: ArtistBannerPro
   return (
     <div 
       className="relative w-full h-[80vh] overflow-hidden rounded-[25px] lg:rounded-[35px] mb-12 group"
-      onMouseEnter={() => setIsHovered(true)}
-      onMouseLeave={() => setIsHovered(false)}
     >
-      {/* Blurred background image - Capa base */}
+      {/* Fondo principal */}
+      <div className="absolute inset-0 w-full h-full">
+        <img 
+          src={artist.coverImage} 
+          alt={`${artist.name} portada`} 
+          className="w-full h-full object-cover rounded-[25px] lg:rounded-[35px]" 
+        />
+        <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
+      </div>
+
+      {/* Contenedor del Carrusel */}
       <div 
-        className={`absolute inset-0 w-full h-full overflow-hidden transition-all duration-500 ease-in-out ${isHovered ? 'scale-105 opacity-50' : 'scale-100 opacity-100'}`}
+        className="absolute inset-0 z-10"
+        onMouseEnter={() => setIsCarouselActive(true)}
+        onMouseLeave={() => setIsCarouselActive(false)}
       >
-        <div className="absolute w-full h-full opacity-70">
-          <img 
-            src={artist.coverImage} 
-            alt="" 
-            className="w-full h-full object-cover scale-150 filter blur-lg" 
-          />
-        </div>
-        <div className="absolute inset-0 bg-black/30"></div>
-      </div>          
-
-      {/* Main Banner Image & Carousel - Single Layer Approach */}
-      <div className="absolute inset-0 w-full h-full overflow-hidden rounded-[25px] lg:rounded-[35px]">
-        {/* Main Image */}
-        <div 
-          className={`absolute inset-0 w-full h-full transition-all duration-500 ease-in-out 
-            ${isHovered ? 'scale-95 opacity-20' : 'scale-100 opacity-100'}`}
-        >
-          <img 
-            src={artist.coverImage} 
-            alt={`${artist.name} portada`} 
-            className="w-full h-full object-cover rounded-[25px] lg:rounded-[35px]" 
-          />
-          <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
-        </div>
-
-        {/* Carousel */}
-        <div 
-          className={`absolute inset-0 transition-all duration-500 ease-in-out 
-            ${isHovered ? 'opacity-100 scale-100' : 'opacity-0 scale-95'}`}
-        >
-          <Carousel className="w-full h-full">
-            <CarouselContent className="h-full">
-              {highQualityImages.map((image, index) => (
-                <CarouselItem key={index} className="h-full flex items-center justify-center">
-                  <div className="w-full h-full relative">
-                    <img 
-                      src={image} 
-                      alt={`${artist.name} imagen ${index + 1}`}
-                      className="absolute inset-0 w-full h-full object-cover rounded-[25px] lg:rounded-[35px]"
-                    />
-                  </div>
-                </CarouselItem>
-              ))}
-            </CarouselContent>
-            
-            <CarouselPrevious 
-              className={`absolute left-5 top-1/2 -translate-y-1/2 
-                bg-white/30 hover:bg-white/50 backdrop-blur-sm transition-all duration-300 
-                ${isHovered ? 'opacity-100 scale-100' : 'opacity-0 scale-90'}`}
-            >
-              <ChevronLeft className="h-6 w-6 text-white" />
-            </CarouselPrevious>
-            
-            <CarouselNext 
-              className={`absolute right-5 top-1/2 -translate-y-1/2 
-                bg-white/30 hover:bg-white/50 backdrop-blur-sm transition-all duration-300 
-                ${isHovered ? 'opacity-100 scale-100' : 'opacity-0 scale-90'}`}
-            >
-              <ChevronRight className="h-6 w-6 text-white" />
-            </CarouselNext>
-          </Carousel>
-        </div>
+        <Carousel className="w-full h-full">
+          <CarouselContent className="h-full">
+            {highQualityImages.map((image, index) => (
+              <CarouselItem 
+                key={index} 
+                className={`h-full flex items-center justify-center 
+                  transition-opacity duration-300 
+                  ${isCarouselActive ? 'opacity-100' : 'opacity-0'}`}
+              >
+                <div className="w-full h-full relative">
+                  <img 
+                    src={image} 
+                    alt={`${artist.name} imagen ${index + 1}`}
+                    className="absolute inset-0 w-full h-full object-cover rounded-[25px] lg:rounded-[35px]"
+                  />
+                </div>
+              </CarouselItem>
+            ))}
+          </CarouselContent>
+          
+          <CarouselPrevious 
+            className={`absolute left-5 top-1/2 -translate-y-1/2 
+              bg-white/30 hover:bg-white/50 backdrop-blur-sm 
+              transition-all duration-300 
+              ${isCarouselActive ? 'opacity-100 scale-100' : 'opacity-0 scale-90 pointer-events-none'}`}
+          >
+            <ChevronLeft className="h-6 w-6 text-white" />
+          </CarouselPrevious>
+          
+          <CarouselNext 
+            className={`absolute right-5 top-1/2 -translate-y-1/2 
+              bg-white/30 hover:bg-white/50 backdrop-blur-sm 
+              transition-all duration-300 
+              ${isCarouselActive ? 'opacity-100 scale-100' : 'opacity-0 scale-90 pointer-events-none'}`}
+          >
+            <ChevronRight className="h-6 w-6 text-white" />
+          </CarouselNext>
+        </Carousel>
       </div>
       
       {/* Buttons in top right corner */}
       <div 
-        className={`absolute top-4 right-4 sm:top-6 sm:right-6 flex space-x-2 z-30 
-          transition-all duration-500 ease-in-out 
-          ${isHovered ? 'opacity-0 translate-y-2' : 'opacity-100 translate-y-0'}`}
+        className={`absolute top-4 right-4 sm:top-6 sm:right-6 flex space-x-2 z-20 
+          transition-all duration-300 
+          ${isCarouselActive ? 'opacity-0 translate-y-2' : 'opacity-100 translate-y-0'}`}
       >
         <Button variant="secondary" size="icon" className="w-10 h-10 rounded-full bg-white/30 backdrop-blur-sm" onClick={onFavorite}>
           <Heart className="h-5 w-5 text-white" />
@@ -130,9 +116,9 @@ const ArtistBanner = ({ artist, onFavorite, onReport, onShare }: ArtistBannerPro
       {/* Artist info overlay */}
       {isMobile ? (
         <div 
-          className={`absolute bottom-12 left-5 right-0 flex flex-col items-start z-30 
-            transition-all duration-500 ease-in-out 
-            ${isHovered ? 'opacity-0 translate-y-2' : 'opacity-100 translate-y-0'}`}
+          className={`absolute bottom-12 left-5 right-0 flex flex-col items-start z-20 
+            transition-all duration-300 
+            ${isCarouselActive ? 'opacity-0 translate-y-2' : 'opacity-100 translate-y-0'}`}
         >
           <div className="rounded-full overflow-hidden mb-4 w-24 h-24">
             <img src={artist.images[0]} alt={artist.name} className="w-full h-full object-cover rounded-full" />
@@ -145,9 +131,9 @@ const ArtistBanner = ({ artist, onFavorite, onReport, onShare }: ArtistBannerPro
         </div>
       ) : (
         <div 
-          className={`absolute bottom-12 left-5 md:left-10 lg:left-14 flex items-center z-30 
-            transition-all duration-500 ease-in-out 
-            ${isHovered ? 'opacity-0 translate-y-2' : 'opacity-100 translate-y-0'}`}
+          className={`absolute bottom-12 left-5 md:left-10 lg:left-14 flex items-center z-20 
+            transition-all duration-300 
+            ${isCarouselActive ? 'opacity-0 translate-y-2' : 'opacity-100 translate-y-0'}`}
         >
           <div className="rounded-full overflow-hidden mr-4 md:mr-6 w-24 h-24 md:w-32 md:h-32">
             <img src={artist.images[0]} alt={artist.name} className="w-full h-full object-cover rounded-full" />
