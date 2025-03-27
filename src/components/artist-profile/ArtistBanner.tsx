@@ -71,7 +71,7 @@ const ArtistBanner = ({ artist, onFavorite, onReport, onShare }: ArtistBannerPro
       
       {/* Carousel view that appears on hover */}
       <div 
-        className={`absolute inset-0 z-20 transition-opacity duration-300 ${showCarousel ? 'opacity-100' : 'opacity-0 pointer-events-none'}`}
+        className={`absolute inset-0 z-20 transition-opacity duration-400 ${showCarousel ? 'opacity-100' : 'opacity-0 pointer-events-none'}`}
       >
         <Carousel className="w-full h-full">
           <CarouselContent className="h-full">
