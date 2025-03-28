@@ -1,5 +1,5 @@
 
-import React, { useState } from "react";
+import React from "react";
 import { Heart, Flag, Share2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useIsMobile } from "@/hooks/use-mobile";
@@ -30,41 +30,39 @@ const ArtistBanner = ({ artist, onFavorite, onReport, onShare }: ArtistBannerPro
   const carouselImages = [artist.coverImage, ...artist.images];
   
   return (
-    <div className="relative w-full h-[80vh] overflow-hidden rounded-[25px] lg:rounded-[35px] mb-12 group">
-      {/* Carrusel completo con todas las imágenes */}
-      <div className="absolute inset-0 w-full h-full">
-        <Carousel className="w-full h-full">
-          <CarouselContent className="h-full">
-            {carouselImages.map((image, index) => (
-              <CarouselItem 
-                key={index} 
-                className="h-full flex items-center justify-center"
-              >
-                <div className="w-full h-full relative">
-                  <img 
-                    src={image} 
-                    alt={`${artist.name} imagen ${index + 1}`}
-                    className="absolute inset-0 w-full h-full object-cover rounded-[25px] lg:rounded-[35px]"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
-                </div>
-              </CarouselItem>
-            ))}
-          </CarouselContent>
-          
-          <CarouselPrevious 
-            className="absolute left-5 top-1/2 -translate-y-1/2 
-              bg-white/50 hover:bg-white/70 backdrop-blur-sm z-20
-              transition-all duration-300"
-          />
-          
-          <CarouselNext 
-            className="absolute right-5 top-1/2 -translate-y-1/2 
-              bg-white/50 hover:bg-white/70 backdrop-blur-sm z-20
-              transition-all duration-300"
-          />
-        </Carousel>
-      </div>
+    <div className="relative w-full h-[80vh] overflow-hidden rounded-[25px] lg:rounded-[35px] mb-12">
+      {/* Carrusel integrado directamente en el banner */}
+      <Carousel className="w-full h-full">
+        <CarouselContent className="h-full">
+          {carouselImages.map((image, index) => (
+            <CarouselItem 
+              key={index} 
+              className="h-full"
+            >
+              <div className="w-full h-full relative">
+                <img 
+                  src={image} 
+                  alt={`${artist.name} imagen ${index + 1}`}
+                  className="absolute inset-0 w-full h-full object-cover rounded-[25px] lg:rounded-[35px]"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
+              </div>
+            </CarouselItem>
+          ))}
+        </CarouselContent>
+        
+        <CarouselPrevious 
+          className="absolute left-5 top-1/2 -translate-y-1/2 z-20
+            bg-white/60 hover:bg-white/80 backdrop-blur-sm
+            transition-all duration-300"
+        />
+        
+        <CarouselNext 
+          className="absolute right-5 top-1/2 -translate-y-1/2 z-20
+            bg-white/60 hover:bg-white/80 backdrop-blur-sm
+            transition-all duration-300"
+        />
+      </Carousel>
       
       {/* Buttons in top right corner */}
       <div 
