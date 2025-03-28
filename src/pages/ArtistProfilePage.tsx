@@ -238,15 +238,16 @@ const ArtistProfilePage = () => {
   return (
     <>
       <Navbar />
-      {/* Fondo blurreado para toda la página */}
-      <div className="relative">
-        {/* Capa de fondo blurreado */}
-        <div className="fixed inset-0 z-0 w-full h-full overflow-hidden">
+      <div className="relative min-h-screen">
+        {/* Capa de fondo blurreado con gradiente para desvanecer */}
+        <div className="fixed inset-x-0 top-0 h-[500px] overflow-hidden z-0">
           <div 
             className="absolute inset-0 w-full h-full bg-cover bg-center"
             style={{ backgroundImage: `url(${backgroundImage})` }}
           ></div>
           <div className="absolute inset-0 backdrop-blur-3xl bg-black/40"></div>
+          {/* Gradiente para desvanecer el fondo blurreado */}
+          <div className="absolute inset-x-0 bottom-0 h-64 bg-gradient-to-b from-transparent to-background z-10"></div>
         </div>
 
         <div className="relative z-10 px-6 md:px-10 lg:px-14 xl:px-16">
