@@ -62,7 +62,6 @@ const ImageGalleryDialog = ({
         <div className="fixed bottom-6 left-0 right-0 flex justify-center">
           <Button 
             variant="secondary" 
-            className="rounded-full px-8 py-2 bg-black/50 hover:bg-black/70 text-white"
             onClick={onClose}
           >
             Cerrar
