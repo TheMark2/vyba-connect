@@ -38,7 +38,7 @@ const SuccessDialog = ({
               className="absolute -bottom-4 left-1/2 transform -translate-x-1/2 w-[100px] h-[100px] rounded-2xl bg-contain bg-center"
               style={{
                 backgroundImage: `url(${artistImage})`,
-                filter: "blur(16px)",
+                filter: "blur(20px)",
                 opacity: 0.6,
                 zIndex: 0
               }}
