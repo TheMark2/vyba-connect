@@ -11,6 +11,7 @@ interface ContactCardProps {
     location?: string; // Make this optional
     availability?: string; // Make this optional
     priceRange: string;
+    image?: string; // Añadimos la imagen del artista
   };
   onContact: () => void;
 }
@@ -54,6 +55,7 @@ const ContactCard = ({
         open={dialogOpen}
         onOpenChange={setDialogOpen}
         artistName={artist.name}
+        artistImage={artist.image}
       />
     </>
   );
