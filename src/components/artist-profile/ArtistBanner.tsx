@@ -8,7 +8,8 @@ import {
   CarouselContent,
   CarouselItem,
   CarouselPrevious,
-  CarouselNext 
+  CarouselNext,
+  useCarousel 
 } from "@/components/ui/carousel";
 import { useNavigate } from "react-router-dom";
 
@@ -65,13 +66,10 @@ const ArtistBanner = ({ artist, onFavorite, onReport, onShare }: ArtistBannerPro
           ))}
         </CarouselContent>
         
-        <CarouselPrevious className={`absolute left-4 top-1/2 -translate-y-1/2 bg-[#FAF8F6] hover:bg-white z-30 w-10 h-10 transition-opacity duration-300 ${isHovering ? "opacity-100" : "opacity-0"}`}>
-          <ChevronLeft className="h-5 w-5 text-black" />
-        </CarouselPrevious>
+        {/* Utilizamos la clase hidden por defecto y la mostramos solo cuando hay hover y se puede navegar a la anterior */}
+        <CarouselPrevious className={`absolute left-4 top-1/2 -translate-y-1/2 bg-[#FAF8F6] hover:bg-white z-30 w-10 h-10 opacity-0 transition-opacity duration-300 ${isHovering ? "opacity-100" : ""}`} />
         
-        <CarouselNext className={`absolute right-4 top-1/2 -translate-y-1/2 bg-[#FAF8F6] hover:bg-white z-30 w-10 h-10 transition-opacity duration-300 ${isHovering ? "opacity-100" : "opacity-0"}`}>
-          <ChevronRight className="h-5 w-5 text-black" />
-        </CarouselNext>
+        <CarouselNext className={`absolute right-4 top-1/2 -translate-y-1/2 bg-[#FAF8F6] hover:bg-white z-30 w-10 h-10 opacity-0 transition-opacity duration-300 ${isHovering ? "opacity-100" : ""}`} />
       </Carousel>
       
       {/* Buttons in top right corner */}
