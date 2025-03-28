@@ -72,7 +72,7 @@ const SuccessDialog = ({
             >
               <Button 
                 onClick={() => onOpenChange(false)}
-                className="bg-blue-100 hover:bg-blue-200 text-black font-medium rounded-full px-8 py-6 text-lg"
+                variant="primary"
               >
                 Ver conversación
               </Button>
