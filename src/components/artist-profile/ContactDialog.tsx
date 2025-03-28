@@ -220,7 +220,7 @@ const ContactDialog = ({
                           >
                             <Badge 
                               variant="default" 
-                              className={`cursor-pointer px-4 py-2 bg-white hover:bg-gray-100 text-black rounded-full flex items-center gap-1 h-10 relative overflow-hidden focus:ring-0 focus:ring-offset-0 ${selectedDuration === durationOption ? 'bg-gray-200 font-bold' : ''}`} 
+                              className={`cursor-pointer px-4 py-2 bg-white hover:bg-gray-100 text-medium rounded-full flex items-center gap-1 h-10 relative overflow-hidden focus:ring-0 focus:ring-offset-0 ${selectedDuration === durationOption ? 'bg-gray-200 font-medium' : ''}`} 
                               onClick={(e) => {
                                 handleRippleEffect(e);
                                 handleDurationSelect(durationOption);
