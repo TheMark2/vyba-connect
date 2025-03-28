@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { toast } from "sonner";
@@ -14,6 +13,7 @@ import ArtistReviews from "@/components/artist-profile/ArtistReviews";
 import ContactCard from "@/components/artist-profile/ContactCard";
 import RecommendedArtists from "@/components/artist-profile/RecommendedArtists";
 import NotFoundArtist from "@/components/artist-profile/NotFoundArtist";
+import { useIsMobile } from "@/hooks/use-mobile";
 
 const artistsData = [
   {
@@ -176,6 +176,7 @@ const ArtistProfilePage = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const [isInfoOpen, setIsInfoOpen] = useState(false);
+  const isMobile = useIsMobile();
   
   const artist = artistsData.find(artist => artist.id === id);
   
@@ -230,7 +231,8 @@ const ArtistProfilePage = () => {
     name: artist.name,
     location: artist.location || "",
     availability: artist.availability || "",
-    priceRange: artist.priceRange
+    priceRange: artist.priceRange,
+    image: artist.images[0]
   };
 
   return (
@@ -280,16 +282,27 @@ const ArtistProfilePage = () => {
               />
             </div>
             
-            {/* Right Sticky Content */}
-            <ContactCard 
-              artist={artistContactData} 
-              onContact={handleContact} 
-            />
+            {/* Right Content - Solo se muestra en escritorio dentro del grid, en móvil se muestra como fixed */}
+            {!isMobile && (
+              <ContactCard 
+                artist={artistContactData} 
+                onContact={handleContact} 
+              />
+            )}
           </div>
         </div>
 
         <RecommendedArtists artists={recommendedArtists} />
       </div>
+      
+      {/* En móvil, la tarjeta de contacto se renderiza fuera del grid y del layout principal */}
+      {isMobile && (
+        <ContactCard 
+          artist={artistContactData} 
+          onContact={handleContact} 
+        />
+      )}
+      
       <Footer />
     </>
   );
