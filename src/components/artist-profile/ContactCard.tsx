@@ -55,7 +55,7 @@ const ContactCard = ({
         open={dialogOpen}
         onOpenChange={setDialogOpen}
         artistName={artist.name}
-        artistImage={artist.image || "/lovable-uploads/77591a97-10cd-4c8b-b768-5b17483c3d9f.png"}
+        artistImage={artist.image || "/lovable-uploads/64cabbe3-ce62-4190-830d-0e5defd31a1b.png"}
       />
     </>
   );

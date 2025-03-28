@@ -17,7 +17,7 @@ const SuccessDialog = ({
   open,
   onOpenChange,
   artistName,
-  artistImage = "/lovable-uploads/b1d87308-8791-4bd4-bd43-e4f7cf7d9042.png"
+  artistImage = "/lovable-uploads/64cabbe3-ce62-4190-830d-0e5defd31a1b.png" // Imagen más viva por defecto
 }: SuccessDialogProps) => {
   const isMobile = useIsMobile();
   
@@ -32,7 +32,7 @@ const SuccessDialog = ({
         <div className="text-center px-12 flex flex-col items-center">
           
           {/* Avatar del artista con efecto de sombra desenfocada */}
-          <div className="relative mb-10">
+          <div className={cn("relative", isMobile ? "mb-14" : "mb-10")}>
             {/* Imagen de fondo con desenfoque */}
             <div 
               className="absolute -bottom-4 left-1/2 transform -translate-x-1/2 w-[100px] h-[100px] rounded-2xl bg-contain bg-center"
@@ -70,7 +70,7 @@ const SuccessDialog = ({
               <h2 className="text-4xl font-black">{artistName}</h2>
             </div> 
 
-            <p className="text-base max-w-sm mx-auto mb-8">
+            <p className={cn("text-base max-w-sm mx-auto", isMobile ? "mb-16" : "mb-8")}>
               {artistName} te contactará en breves, para seguir la conversación entra en <span className="font-black">Mensajes</span>
             </p>
             
@@ -80,7 +80,7 @@ const SuccessDialog = ({
               transition={{ duration: 0.3, delay: 0.4 }}
               className={cn(
                 "mt-10",
-                isMobile ? "sticky bottom-12 pb-6 w-full" : ""
+                isMobile ? "fixed bottom-10 left-0 right-0 px-12 pb-6 w-full" : ""
               )}
             >
               <Button 
