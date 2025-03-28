@@ -123,42 +123,44 @@ const ContactDialog = ({
               <label htmlFor="duration" className="block text-sm font-medium mb-2">
                 Duración del evento
               </label>
-              <div className="relative py-2 w-full">
-                <Carousel 
-                  className="w-full"
-                  opts={{
-                    align: "start",
-                    containScroll: "trimSnaps"
-                  }}
-                >
-                  <CarouselContent className="-ml-1">
-                    {durations.map((durationOption, index) => (
-                      <CarouselItem key={index} className="pl-1 basis-auto">
-                        <motion.div 
-                          whileHover={{ scale: 1.05 }}
-                          whileTap={{ scale: 0.95 }}
-                        >
-                          <Badge 
-                            variant="default" 
-                            className={`cursor-pointer px-4 py-2 bg-white hover:bg-gray-100 text-black rounded-full flex items-center gap-1 h-10 ${selectedDuration === durationOption ? 'ring-2 ring-blue-500' : ''}`}
-                            onClick={() => handleDurationSelect(durationOption)}
+              <div className="relative py-2">
+                <div className="w-full overflow-hidden">
+                  <Carousel 
+                    className="w-full max-w-full"
+                    opts={{
+                      align: "start",
+                      containScroll: "trimSnaps"
+                    }}
+                  >
+                    <CarouselContent className="-ml-1">
+                      {durations.map((durationOption, index) => (
+                        <CarouselItem key={index} className="pl-1 basis-auto">
+                          <motion.div 
+                            whileHover={{ scale: 1.05 }}
+                            whileTap={{ scale: 0.95 }}
                           >
-                            {durationOption === "Personalizado" ? (
-                              "Personalizado"
-                            ) : (
-                              <>
-                                <Clock className="h-4 w-4 mr-1" />
-                                {durationOption}
-                              </>
-                            )}
-                          </Badge>
-                        </motion.div>
-                      </CarouselItem>
-                    ))}
-                  </CarouselContent>
-                  <CarouselPrevious className="left-0 -translate-x-1/2" />
-                  <CarouselNext className="right-0 translate-x-1/2" />
-                </Carousel>
+                            <Badge 
+                              variant="default" 
+                              className={`cursor-pointer px-4 py-2 bg-white hover:bg-gray-100 text-black rounded-full flex items-center gap-1 h-10 ${selectedDuration === durationOption ? 'ring-2 ring-blue-500' : ''}`}
+                              onClick={() => handleDurationSelect(durationOption)}
+                            >
+                              {durationOption === "Personalizado" ? (
+                                "Personalizado"
+                              ) : (
+                                <>
+                                  <Clock className="h-4 w-4 mr-1" />
+                                  {durationOption}
+                                </>
+                              )}
+                            </Badge>
+                          </motion.div>
+                        </CarouselItem>
+                      ))}
+                    </CarouselContent>
+                    <CarouselPrevious className="left-0 -translate-x-1/2" />
+                    <CarouselNext className="right-0 translate-x-1/2" />
+                  </Carousel>
+                </div>
               </div>
               
               {showCustomDuration && (
