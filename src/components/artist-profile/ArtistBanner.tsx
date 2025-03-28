@@ -40,7 +40,7 @@ const ArtistBanner = ({ artist, onFavorite, onReport, onShare }: ArtistBannerPro
                 <img 
                   src={image} 
                   alt={`${artist.name} imagen ${index + 1}`}
-                  className="absolute inset-0 w-full h-full object-cover object-center rounded-[25px] lg:rounded-[35px]" 
+                  className="w-full h-full object-cover object-center rounded-[25px] lg:rounded-[35px]" 
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black via-black/30 to-transparent"></div>
               </div>
