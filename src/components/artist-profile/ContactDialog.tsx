@@ -188,7 +188,7 @@ const ContactDialog = ({
           </DialogTitle>
           
           <button 
-            className={`flex justify-between items-center w-full p-3 rounded-xl transition-all duration-300 hover:bg-secondary cursor-pointer relative overflow-hidden ${isMobile ? 'mb-6' : 'mb-3'}`}
+            className={`flex justify-between items-center w-full p-3 rounded-xl transition-all duration-300 hover:bg-secondary cursor-pointer relative overflow-hidden ${isMobile ? 'mb-3' : 'mb-2'}`}
             onClick={handleRippleEffect}
           >
             <div className="flex items-center gap-4">
