@@ -125,9 +125,9 @@ const ContactDialog = ({
               </label>
               <div className="py-2">
                 <Carousel className="w-full">
-                  <CarouselContent className="-ml-1 gap-2">
+                  <CarouselContent className="gap-2">
                     {durations.map((durationOption, index) => (
-                      <CarouselItem key={index} className="pl-1 basis-auto">
+                      <CarouselItem key={index}>
                         <motion.div 
                           whileHover={{ scale: 1.05 }}
                           whileTap={{ scale: 0.95 }}
