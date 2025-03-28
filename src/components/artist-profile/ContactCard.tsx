@@ -15,14 +15,16 @@ interface ContactCardProps {
     image?: string;
   };
   onContact: () => void;
+  aboutMeRef?: React.RefObject<HTMLElement>;
 }
 
 const ContactCard = ({
   artist,
-  onContact
+  onContact,
+  aboutMeRef
 }: ContactCardProps) => {
   const [dialogOpen, setDialogOpen] = useState(false);
-  const [showFixedCard, setShowFixedCard] = useState(true);
+  const [showFixedCard, setShowFixedCard] = useState(false);
   const isMobile = useIsMobile();
   const footerRef = useRef<HTMLElement | null>(null);
   
@@ -33,8 +35,19 @@ const ContactCard = ({
     const handleScroll = () => {
       if (footerRef.current) {
         const footerRect = footerRef.current.getBoundingClientRect();
-        // Ocultar la tarjeta cuando el footer está visible en la pantalla
-        setShowFixedCard(footerRect.top > window.innerHeight);
+        // Verificar si se ha pasado la sección Sobre mi
+        let passedAboutMe = true;
+        
+        // Si hay una referencia a la sección "Sobre mi", comprobar si se ha pasado
+        if (aboutMeRef?.current) {
+          const aboutMeRect = aboutMeRef.current.getBoundingClientRect();
+          passedAboutMe = aboutMeRect.bottom < 0; // Ya se ha desplazado más allá de la sección
+        }
+        
+        // Mostrar la tarjeta solo si:
+        // 1. Se ha pasado la sección Sobre mi
+        // 2. El footer no está visible todavía
+        setShowFixedCard(passedAboutMe && footerRect.top > window.innerHeight);
       }
     };
     
@@ -45,7 +58,7 @@ const ContactCard = ({
     return () => {
       window.removeEventListener('scroll', handleScroll);
     };
-  }, []);
+  }, [aboutMeRef]);
   
   const handleContactClick = () => {
     setDialogOpen(true);

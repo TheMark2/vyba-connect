@@ -1,5 +1,5 @@
 
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 import Navbar from "@/components/Navbar";
@@ -178,6 +178,7 @@ const ArtistProfilePage = () => {
   const navigate = useNavigate();
   const [isInfoOpen, setIsInfoOpen] = useState(false);
   const isMobile = useIsMobile();
+  const aboutMeRef = useRef<HTMLDivElement>(null);
   
   const artist = artistsData.find(artist => artist.id === id);
   
@@ -252,6 +253,7 @@ const ArtistProfilePage = () => {
             {/* Left Content */}
             <div className="lg:col-span-2">
               <AboutArtist 
+                ref={aboutMeRef}
                 description={artist.description} 
                 genres={artist.genres} 
                 onGenreClick={handleGenreClick} 
@@ -301,7 +303,8 @@ const ArtistProfilePage = () => {
       {isMobile && (
         <ContactCard 
           artist={artistContactData} 
-          onContact={handleContact} 
+          onContact={handleContact}
+          aboutMeRef={aboutMeRef}
         />
       )}
       
