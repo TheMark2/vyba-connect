@@ -1,3 +1,4 @@
+
 import React, { useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { toast } from "sonner";
@@ -231,62 +232,77 @@ const ArtistProfilePage = () => {
     priceRange: artist.priceRange
   };
 
+  // Usamos una imagen fija de prueba para el fondo blurreado en lugar de la imagen de perfil
+  const backgroundImage = "https://images.unsplash.com/photo-1571330735066-03aaa9429d89?q=80&w=2070";
+
   return (
     <>
       <Navbar />
-      <div className="px-6 md:px-10 lg:px-14 xl:px-16">
-        <ArtistBanner 
-          artist={artist} 
-          onFavorite={handleFavorite} 
-          onReport={handleReport} 
-          onShare={handleShare} 
-        />
-
-        <div className="pb-16 max-w-7xl mx-auto">
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-16">
-            {/* Left Content */}
-            <div className="lg:col-span-2">
-              <AboutArtist 
-                description={artist.description} 
-                genres={artist.genres} 
-                onGenreClick={handleGenreClick} 
-              />
-              
-              <DetailedInformation artist={artist} />
-              
-              {artist.musicPreviews && (
-                <MusicPreviews 
-                  previews={artist.musicPreviews} 
-                  artistName={artist.name} 
-                />
-              )}
-              
-              {artist.eventTypes && (
-                <EventTypes 
-                  eventTypes={artist.eventTypes} 
-                  onEventTypeClick={handleEventTypeClick} 
-                />
-              )}
-              
-              <ArtistFAQ artistName={artist.name} />
-              
-              <ArtistReviews 
-                rating={artist.rating} 
-                reviews={artist.reviews || 0}
-                genres={artist.genres}
-                reviewsData={artist.reviewsData}
-              />
-            </div>
-            
-            {/* Right Sticky Content */}
-            <ContactCard 
-              artist={artistContactData} 
-              onContact={handleContact} 
-            />
-          </div>
+      {/* Fondo blurreado para toda la página */}
+      <div className="relative">
+        {/* Capa de fondo blurreado */}
+        <div className="fixed inset-0 z-0 w-full h-full overflow-hidden">
+          <div 
+            className="absolute inset-0 w-full h-full bg-cover bg-center"
+            style={{ backgroundImage: `url(${backgroundImage})` }}
+          ></div>
+          <div className="absolute inset-0 backdrop-blur-3xl bg-black/40"></div>
         </div>
 
-        <RecommendedArtists artists={recommendedArtists} />
+        <div className="relative z-10 px-6 md:px-10 lg:px-14 xl:px-16">
+          <ArtistBanner 
+            artist={artist} 
+            onFavorite={handleFavorite} 
+            onReport={handleReport} 
+            onShare={handleShare} 
+          />
+
+          <div className="pb-16 max-w-7xl mx-auto">
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-16">
+              {/* Left Content */}
+              <div className="lg:col-span-2">
+                <AboutArtist 
+                  description={artist.description} 
+                  genres={artist.genres} 
+                  onGenreClick={handleGenreClick} 
+                />
+                
+                <DetailedInformation artist={artist} />
+                
+                {artist.musicPreviews && (
+                  <MusicPreviews 
+                    previews={artist.musicPreviews} 
+                    artistName={artist.name} 
+                  />
+                )}
+                
+                {artist.eventTypes && (
+                  <EventTypes 
+                    eventTypes={artist.eventTypes} 
+                    onEventTypeClick={handleEventTypeClick} 
+                  />
+                )}
+                
+                <ArtistFAQ artistName={artist.name} />
+                
+                <ArtistReviews 
+                  rating={artist.rating} 
+                  reviews={artist.reviews || 0}
+                  genres={artist.genres}
+                  reviewsData={artist.reviewsData}
+                />
+              </div>
+              
+              {/* Right Sticky Content */}
+              <ContactCard 
+                artist={artistContactData} 
+                onContact={handleContact} 
+              />
+            </div>
+          </div>
+
+          <RecommendedArtists artists={recommendedArtists} />
+        </div>
       </div>
       <Footer />
     </>
