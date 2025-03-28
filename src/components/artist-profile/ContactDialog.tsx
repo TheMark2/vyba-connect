@@ -83,7 +83,7 @@ const ContactDialog = ({
               <AvatarImage src={userImage} alt={userName} />
               <AvatarFallback>{userName.charAt(0)}</AvatarFallback>
             </Avatar>
-            <div className="flex flex-col">
+            <div className="flex flex-col align-left">
               <span className="text-sm text-gray-500">Contactando como</span>
               <span className="font-black text-xl">{userName}</span>
             </div>
