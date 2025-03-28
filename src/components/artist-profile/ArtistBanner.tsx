@@ -32,7 +32,7 @@ const ArtistBanner = ({ artist, onFavorite, onReport, onShare }: ArtistBannerPro
   return (
     <div className="relative w-full h-[80vh] overflow-hidden rounded-[25px] lg:rounded-[35px] mb-12 group">
       {/* Carrusel integrado directamente en el banner */}
-      <Carousel className="w-full h-full">
+      <Carousel className="w-full h-[80vh]">
         <CarouselContent className="h-full">
           {allImages.map((image, index) => (
             <CarouselItem key={index} className="h-full w-full">
