@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { toast } from "sonner";
@@ -25,14 +24,13 @@ const artistsData = [
     location: "Barcelona",
     availability: "Esta semana disponible",
     images: [
-      "https://images.unsplash.com/photo-1533174072545-7a4b6ad7a6c3?q=80&w=2070",
+      "https://images.unsplash.com/photo-1514525253161-7a46d19cd819?q=80&w=2070",
       "https://images.unsplash.com/photo-1470225620780-dba8ba36b745?q=80&w=2070",
       "https://images.unsplash.com/photo-1571330735066-03aaa9429d89?q=80&w=2070",
       "https://images.unsplash.com/photo-1429962714451-bb934ecdc4ec?q=80&w=2070",
-      "https://images.unsplash.com/photo-1516450360452-9312f5e86fc7?q=80&w=2070",
-      "https://images.unsplash.com/photo-1526478806334-5fd488fcaabc?q=80&w=2070"
+      "https://images.unsplash.com/photo-1516450360452-9312f5e86fc7?q=80&w=2070"
     ],
-    coverImage: "https://images.unsplash.com/photo-1533174072545-7a4b6ad7a6c3?q=80&w=2070",
+    coverImage: "https://images.unsplash.com/photo-1514525253161-7a46d19cd819?q=80&w=2070",
     rating: 4.5,
     reviews: 34,
     priceRange: "150-400€",
