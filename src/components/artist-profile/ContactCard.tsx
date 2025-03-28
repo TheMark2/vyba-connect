@@ -34,7 +34,7 @@ const ContactCard = ({
       
       <Separator className="-mx-6 w-[calc(100%+48px)]" />
       
-      <Button className="w-full py-4 text-base font-bold mt-6" onClick={onContact}>
+      <Button onClick={onContact} className="w-full mt-6">
         Contactar con {artist.name}
       </Button>
     </div>;
