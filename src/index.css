@@ -1,3 +1,4 @@
+
 @import url('https://api.fontshare.com/v2/css?f[]=satoshi@900,700,500,400&display=swap');
 
 @tailwind base;
@@ -50,20 +51,20 @@
     --primary: 227 100% 98%;
     --primary-foreground: 224 35% 20%;
  
-    --secondary: 0 0% 9.4%;
+    --secondary: 0 0% 20%; /* Equivalente a #333333 (rgb(51, 51, 51)) */
     --secondary-foreground: 0 0% 98%;
  
-    --muted: 0 0% 9.4%;
+    --muted: 0 0% 20%; /* Equivalente a #333333 */
     --muted-foreground: 0 0% 63.9%;
  
-    --accent: 0 0% 9.4%;
+    --accent: 0 0% 20%; /* Equivalente a #333333 */
     --accent-foreground: 0 0% 98%;
  
     --destructive: 0 62.8% 30.6%;
     --destructive-foreground: 0 0% 98%;
 
-    --border: 0 0% 15%;
-    --input: 0 0% 15%;
+    --border: 0 0% 20%; /* Equivalente a #333333 */
+    --input: 0 0% 20%; /* Equivalente a #333333 */
     --ring: 0 0% 83.9%;
   }
 }
