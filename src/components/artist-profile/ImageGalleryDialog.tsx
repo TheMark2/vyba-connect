@@ -25,7 +25,7 @@ const ImageGalleryDialog = ({
   return (
     <Dialog open={isOpen} onOpenChange={(open) => !open && onClose()}>
       <DialogContent className={cn(
-        "p-0 w-full h-full max-w-none max-h-screen bg-black text-white",
+        "p-0 w-full h-full max-w-none max-h-screen bg-vyba-cream dark:bg-black text-black dark:text-white",
         isMobile ? "" : "rounded-none"
       )}>
         <div className="fixed top-4 right-4 z-50">
@@ -42,11 +42,11 @@ const ImageGalleryDialog = ({
         </div>
         
         <div className="h-full w-full overflow-y-auto p-8 pt-16">
-          <div className="flex flex-wrap gap-4 justify-center">
+          <div className="flex flex-wrap gap-6 justify-center">
             {images.map((image, index) => (
               <div 
                 key={index} 
-                className="w-[300px] flex-grow-0 flex-shrink-0 mb-4"
+                className="w-[350px] flex-grow-0 flex-shrink-0 mb-6"
                 id={index === activeImageIndex ? "active-image" : undefined}
                 ref={el => {
                   if (el && index === activeImageIndex) {
@@ -56,8 +56,8 @@ const ImageGalleryDialog = ({
                   }
                 }}
               >
-                <div className="rounded-xl overflow-hidden">
-                  <AspectRatio ratio={4/3} className="bg-black/30">
+                <div className="rounded-2xl overflow-hidden shadow-sm">
+                  <AspectRatio ratio={16/9} className="bg-black/10">
                     <img 
                       src={image} 
                       alt={`Imagen ${index + 1}`} 
