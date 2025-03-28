@@ -30,9 +30,9 @@ const ContactCard = ({
       </div>
       
       {/* Precio */}
-      <h3 className="text-lg font-black mb-6">{artist.priceRange}</h3>
+      <h3 className="text-lg font-black mb-4">{artist.priceRange}</h3>
             
-      <Button onClick={onContact} className="w-full mt-6 py-4">
+      <Button onClick={onContact} className="w-full mt-4 py-4">
         Contactar con {artist.name}
       </Button>
     </div>;
