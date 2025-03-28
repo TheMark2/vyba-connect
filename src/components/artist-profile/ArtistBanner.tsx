@@ -40,9 +40,11 @@ const ArtistBanner = ({ artist, onFavorite, onReport, onShare }: ArtistBannerPro
   return (
     <div 
       className="relative w-full h-[80vh] overflow-hidden rounded-[25px] lg:rounded-[35px] mb-12 group"
+      onMouseEnter={() => setIsCarouselActive(true)}
+      onMouseLeave={() => setIsCarouselActive(false)}
     >
       {/* Fondo principal */}
-      <div className="absolute inset-0 w-full h-full">
+      <div className={`absolute inset-0 w-full h-full transition-opacity duration-500 ${isCarouselActive ? 'opacity-0' : 'opacity-100'}`}>
         <img 
           src={artist.coverImage} 
           alt={`${artist.name} portada`} 
@@ -53,17 +55,14 @@ const ArtistBanner = ({ artist, onFavorite, onReport, onShare }: ArtistBannerPro
 
       {/* Contenedor del Carrusel */}
       <div 
-        className="absolute inset-0 z-10"
-        onMouseEnter={() => setIsCarouselActive(true)}
-        onMouseLeave={() => setIsCarouselActive(false)}
+        className={`absolute inset-0 z-10 transition-opacity duration-500 ${isCarouselActive ? 'opacity-100' : 'opacity-0'}`}
       >
         <Carousel className="w-full h-full">
           <CarouselContent className="h-full">
             {highQualityImages.map((image, index) => (
               <CarouselItem 
                 key={index} 
-                className={`h-full flex items-center justify-center 
-                  ${isCarouselActive ? 'opacity-100' : 'opacity-0'}`}
+                className="h-full flex items-center justify-center"
               >
                 <div className="w-full h-full relative">
                   <img 
@@ -71,6 +70,7 @@ const ArtistBanner = ({ artist, onFavorite, onReport, onShare }: ArtistBannerPro
                     alt={`${artist.name} imagen ${index + 1}`}
                     className="absolute inset-0 w-full h-full object-cover rounded-[25px] lg:rounded-[35px]"
                   />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
                 </div>
               </CarouselItem>
             ))}
@@ -79,14 +79,14 @@ const ArtistBanner = ({ artist, onFavorite, onReport, onShare }: ArtistBannerPro
           <CarouselPrevious 
             className={`absolute left-5 top-1/2 -translate-y-1/2 
               bg-white/30 hover:bg-white/50 backdrop-blur-sm 
-              transition-all duration-300 z-20
+              transition-all duration-300 z-30
               ${isCarouselActive ? 'opacity-100 scale-100' : 'opacity-0 scale-90'}`}
           />
           
           <CarouselNext 
             className={`absolute right-5 top-1/2 -translate-y-1/2 
               bg-white/30 hover:bg-white/50 backdrop-blur-sm 
-              transition-all duration-300 z-20
+              transition-all duration-300 z-30
               ${isCarouselActive ? 'opacity-100 scale-100' : 'opacity-0 scale-90'}`}
           />
         </Carousel>
