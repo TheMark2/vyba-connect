@@ -33,8 +33,8 @@ const ArtistBanner = ({ artist, onFavorite, onReport, onShare }: ArtistBannerPro
   // Combinamos la imagen de portada con el resto de las imágenes para el carrusel
   const allImages = [artist.coverImage, ...artist.images];
   
-  // Imagen de perfil para el fondo blurreado
-  const profileImage = artist.images[0];
+  // Usamos una imagen fija de prueba para el fondo blurreado en lugar de la imagen de perfil
+  const backgroundImage = "https://images.unsplash.com/photo-1571330735066-03aaa9429d89?q=80&w=2070";
 
   return (
     <div 
@@ -46,7 +46,7 @@ const ArtistBanner = ({ artist, onFavorite, onReport, onShare }: ArtistBannerPro
       <div className="absolute inset-0 z-0 w-full h-full">
         <div 
           className="absolute inset-0 w-full h-full bg-cover bg-center"
-          style={{ backgroundImage: `url(${profileImage})` }}
+          style={{ backgroundImage: `url(${backgroundImage})` }}
         ></div>
         <div className="absolute inset-0 backdrop-blur-3xl bg-black/50 dark:bg-black/70"></div>
       </div>
