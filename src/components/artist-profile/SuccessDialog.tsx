@@ -60,8 +60,8 @@ const SuccessDialog = ({
             <h3 className="text-xl text-gray-600">Has contactado con</h3>
             <h2 className="text-4xl font-black mb-8">{artistName}</h2>
             
-            <p className="text-lg text-gray-600 max-w-sm mx-auto">
-              {artistName} te contactará en breves, para seguir la conversación entra en <span className="font-bold">Mensajes</span>
+            <p className="text-base max-w-sm mx-auto">
+              {artistName} te contactará en breves, para seguir la conversación entra en <span className="font-black">Mensajes</span>
             </p>
             
             <motion.div
