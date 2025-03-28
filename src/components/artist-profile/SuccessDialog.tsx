@@ -4,6 +4,7 @@ import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { motion } from "framer-motion";
+import { useIsMobile } from "@/hooks/use-mobile";
 
 interface SuccessDialogProps {
   open: boolean;
@@ -18,10 +19,17 @@ const SuccessDialog = ({
   artistName,
   artistImage = "/lovable-uploads/b1d87308-8791-4bd4-bd43-e4f7cf7d9042.png"
 }: SuccessDialogProps) => {
+  const isMobile = useIsMobile();
+  
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-[500px] rounded-[40px] p-0 border-none bg-white overflow-hidden">
-        <div className="text-center p-12 pt-16 pb-20 flex flex-col items-center">
+      <DialogContent className={cn(
+        "max-w-[500px] p-0 border-none bg-white overflow-hidden",
+        isMobile ? 
+          "max-h-[85vh] bottom-0 top-auto rounded-t-[32px] pb-24 pt-10" : 
+          "rounded-[40px] pt-16 pb-20"
+      )}>
+        <div className="text-center px-12 flex flex-col items-center">
           
           {/* Avatar del artista con efecto de sombra desenfocada */}
           <div className="relative mb-8">
@@ -70,10 +78,14 @@ const SuccessDialog = ({
               initial={{ y: 10, opacity: 0 }}
               animate={{ y: 0, opacity: 1 }}
               transition={{ duration: 0.3, delay: 0.4 }}
-              className="mt-8"
+              className={cn(
+                "mt-8",
+                isMobile ? "sticky bottom-6 pb-6 w-full" : ""
+              )}
             >
               <Button 
                 onClick={() => onOpenChange(false)}
+                className={isMobile ? "w-full" : ""}
               >
                 Ver conversación
               </Button>
@@ -86,3 +98,6 @@ const SuccessDialog = ({
 };
 
 export default SuccessDialog;
+
+// Importación necesaria para la función cn
+import { cn } from "@/lib/utils";
