@@ -1,6 +1,6 @@
 
 import React from "react";
-import { Heart, Flag, Share2, ChevronLeft, ChevronRight } from "lucide-react";
+import { Heart, Flag, Share2, ChevronLeft, ChevronRight, ArrowLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { 
@@ -10,6 +10,7 @@ import {
   CarouselPrevious,
   CarouselNext 
 } from "@/components/ui/carousel";
+import { useNavigate } from "react-router-dom";
 
 interface ArtistBannerProps {
   artist: {
@@ -25,12 +26,23 @@ interface ArtistBannerProps {
 
 const ArtistBanner = ({ artist, onFavorite, onReport, onShare }: ArtistBannerProps) => {
   const isMobile = useIsMobile();
+  const navigate = useNavigate();
   
   // Combinamos la imagen de portada con el resto de las imágenes para el carrusel
   const allImages = [artist.coverImage, ...artist.images];
 
   return (
     <div className="relative w-full h-[80vh] overflow-hidden rounded-[25px] lg:rounded-[35px] mb-12 group">
+      {/* Botón de regreso que siempre permanece visible */}
+      <Button 
+        variant="secondary" 
+        size="icon" 
+        className="absolute top-4 left-4 sm:top-6 sm:left-6 z-40 w-10 h-10 rounded-full" 
+        onClick={() => navigate(-1)}
+      >
+        <ArrowLeft className="h-5 w-5 text-black dark:text-white" />
+      </Button>
+
       {/* Carrusel integrado directamente en el banner */}
       <Carousel className="w-full h-[80vh]">
         <CarouselContent className="h-[80vh] gap-0">
@@ -40,7 +52,7 @@ const ArtistBanner = ({ artist, onFavorite, onReport, onShare }: ArtistBannerPro
                 <img 
                   src={image} 
                   alt={`${artist.name} imagen ${index + 1}`}
-                  className="w-full h-[80vh] object-cover object-center" 
+                  className="w-full h-full object-cover object-center" 
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black via-black/30 to-transparent"></div>
               </div>
@@ -99,3 +111,4 @@ const ArtistBanner = ({ artist, onFavorite, onReport, onShare }: ArtistBannerPro
 };
 
 export default ArtistBanner;
+
