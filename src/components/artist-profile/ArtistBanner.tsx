@@ -35,7 +35,7 @@ const ArtistBanner = ({ artist, onFavorite, onReport, onShare }: ArtistBannerPro
 
   return (
     <div 
-      className="relative w-full h-[80vh] overflow-hidden rounded-[25px] lg:rounded-[35px] mb-12 group"
+      className={`relative w-full h-[80vh] overflow-hidden ${isMobile ? '' : 'rounded-[25px] lg:rounded-[35px]'} mb-12 group`}
       onMouseEnter={() => setIsHovering(true)}
       onMouseLeave={() => setIsHovering(false)}
     >
