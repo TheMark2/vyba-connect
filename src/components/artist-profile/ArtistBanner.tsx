@@ -50,7 +50,16 @@ const ArtistBanner = ({ artist, onFavorite, onReport, onShare }: ArtistBannerPro
       </Button>
 
       {/* Carrusel integrado directamente en el banner */}
-      <Carousel className="w-full h-[80vh]">
+      <Carousel 
+        className="w-full h-[80vh]"
+        opts={{
+          loop: true,
+          align: "start",
+          slidesToScroll: 1,
+          autoplay: true,
+          delay: 5000, // 5 segundos entre cada transición
+        }}
+      >
         <CarouselContent className="h-[80vh] gap-0">
           {allImages.map((image, index) => (
             <CarouselItem key={index} className="h-[80vh] w-full">
