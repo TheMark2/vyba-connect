@@ -55,11 +55,12 @@ const SuccessDialog = ({
             initial={{ y: 20, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
             transition={{ duration: 0.4, delay: 0.2, ease: "easeOut" }}
-            className="space-y-3"
           >
-            <h3 className="text-xl">Has contactado con</h3>
-            <h2 className="text-4xl font-black mb-10">{artistName}</h2>
-            
+            <div className="space-y-4 mb-10">
+              <h3 className="text-xl">Has contactado con</h3>
+              <h2 className="text-4xl font-black">{artistName}</h2>
+            </div> 
+
             <p className="text-base max-w-sm mx-auto">
               {artistName} te contactará en breves, para seguir la conversación entra en <span className="font-black">Mensajes</span>
             </p>
