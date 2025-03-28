@@ -75,14 +75,10 @@ const ContactDialog = ({
         </DialogTitle>
         
         <button 
-          className="relative flex justify-between items-center mb-3 w-full rounded-xl transition-all duration-300 cursor-pointer overflow-hidden group"
+          className="flex justify-between items-center mb-3 w-full p-3 rounded-xl transition-all duration-300 hover:bg-secondary cursor-pointer relative overflow-hidden"
           onClick={handleRippleEffect}
         >
-          {/* Fondo escalable */}
-          <span className="absolute inset-0 bg-secondary transition-transform duration-300 scale-100 group-hover:scale-105"></span>
-
-          {/* Contenido por encima del fondo */}
-          <div className="relative z-10 flex items-center gap-4">
+          <div className="flex items-center gap-4">
             <Avatar className="h-16 w-16 rounded-lg">
               <AvatarImage src={userImage} alt={userName} />
               <AvatarFallback>{userName.charAt(0)}</AvatarFallback>
@@ -92,8 +88,8 @@ const ContactDialog = ({
               <span className="font-black text-xl">{userName}</span>
             </div>
           </div>
-
-          <Button variant="secondary" size="icon" className="relative z-10 rounded-full h-7 w-7">
+          
+          <Button variant="secondary" size="icon" className="rounded-full h-7 w-7">
             <RefreshCw className="h-4 w-4" />
           </Button>
         </button>
