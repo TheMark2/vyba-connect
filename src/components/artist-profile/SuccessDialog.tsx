@@ -32,10 +32,10 @@ const SuccessDialog = ({
         <div className="text-center px-12 flex flex-col items-center">
           
           {/* Avatar del artista con efecto de sombra desenfocada */}
-          <div className="relative mb-8">
+          <div className="relative mb-10">
             {/* Imagen de fondo con desenfoque */}
             <div 
-              className="absolute -bottom-4 left-1/2 transform -translate-x-1/2 w-[90px] h-[90px] rounded-2xl bg-contain bg-center"
+              className="absolute -bottom-4 left-1/2 transform -translate-x-1/2 w-[100px] h-[100px] rounded-2xl bg-contain bg-center"
               style={{
                 backgroundImage: `url(${artistImage})`,
                 filter: "blur(16px)",
@@ -52,7 +52,7 @@ const SuccessDialog = ({
               className="relative z-10"
             >
               <div 
-                className="w-[120px] h-[120px] rounded-2xl bg-cover bg-center"
+                className="w-[140px] h-[140px] rounded-2xl bg-cover bg-center"
                 style={{ backgroundImage: `url(${artistImage})` }}
               />
             </motion.div>
@@ -65,12 +65,12 @@ const SuccessDialog = ({
             transition={{ duration: 0.4, delay: 0.2, ease: "easeOut" }}
             className="space-y-4"
           >
-            <div className="space-y-2 mb-10">
+            <div className="space-y-2 mb-12">
               <h3 className="text-xl">Has contactado con</h3>
               <h2 className="text-4xl font-black">{artistName}</h2>
             </div> 
 
-            <p className="text-base max-w-sm mx-auto">
+            <p className="text-base max-w-sm mx-auto mb-8">
               {artistName} te contactará en breves, para seguir la conversación entra en <span className="font-black">Mensajes</span>
             </p>
             
@@ -79,8 +79,8 @@ const SuccessDialog = ({
               animate={{ y: 0, opacity: 1 }}
               transition={{ duration: 0.3, delay: 0.4 }}
               className={cn(
-                "mt-8",
-                isMobile ? "sticky bottom-6 pb-6 w-full" : ""
+                "mt-10",
+                isMobile ? "sticky bottom-12 pb-6 w-full" : ""
               )}
             >
               <Button 
