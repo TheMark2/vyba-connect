@@ -150,10 +150,10 @@ const ContactDialog = ({
             p-0
             border-none 
             bg-[#FAF8F6] 
-            ${isMobile ? 'pt-10 pb-28 px-6 rounded-t-[32px] max-h-[85vh]' : 'rounded-[40px] p-8'}
+            ${isMobile ? 'pt-10 pb-28 px-6 rounded-t-[32px] max-h-[85vh]' : 'rounded-[40px] pt-12 px-8 pb-8'}
           `}
         >
-          <DialogTitle className={`text-3xl font-black ${isMobile ? 'mb-6 mt-4' : 'mb-6'}`}>
+          <DialogTitle className={`text-3xl font-black ${isMobile ? 'mb-6 mt-4' : 'mb-8 mt-2'}`}>
             Contacta con {artistName}
           </DialogTitle>
           
