@@ -65,12 +65,12 @@ const ArtistBanner = ({ artist, onFavorite, onReport, onShare }: ArtistBannerPro
           ))}
         </CarouselContent>
         
-        <CarouselPrevious className={`absolute left-5 top-1/2 -translate-y-1/2 bg-white/70 hover:bg-white z-30 w-12 h-12 transition-opacity duration-300 ${isHovering ? "opacity-100" : "opacity-0"}`}>
-          <ChevronLeft className="h-6 w-6 text-black" />
+        <CarouselPrevious className={`absolute left-5 top-1/2 -translate-y-1/2 bg-[#FAF8F6] hover:bg-white z-30 w-12 h-12 transition-opacity duration-300 ${isHovering ? "opacity-100" : "opacity-0"}`}>
+          <ChevronLeft className="h-5 w-5 text-black" />
         </CarouselPrevious>
         
-        <CarouselNext className={`absolute right-5 top-1/2 -translate-y-1/2 bg-white/70 hover:bg-white z-30 w-12 h-12 transition-opacity duration-300 ${isHovering ? "opacity-100" : "opacity-0"}`}>
-          <ChevronRight className="h-6 w-6 text-black" />
+        <CarouselNext className={`absolute right-5 top-1/2 -translate-y-1/2 bg-[#FAF8F6] hover:bg-white z-30 w-12 h-12 transition-opacity duration-300 ${isHovering ? "opacity-100" : "opacity-0"}`}>
+          <ChevronRight className="h-5 w-5 text-black" />
         </CarouselNext>
       </Carousel>
       
