@@ -123,9 +123,9 @@ const ContactDialog = ({
               <label htmlFor="duration" className="block text-sm font-medium mb-2">
                 Duración del evento
               </label>
-              <div className="mb-2">
+              <div className="py-2">
                 <Carousel className="w-full">
-                  <CarouselContent className="-ml-1">
+                  <CarouselContent className="-ml-1 gap-2">
                     {durations.map((durationOption, index) => (
                       <CarouselItem key={index} className="pl-1 basis-auto">
                         <motion.div 
