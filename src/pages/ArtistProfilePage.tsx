@@ -1,3 +1,4 @@
+
 import React, { useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { toast } from "sonner";
@@ -282,7 +283,7 @@ const ArtistProfilePage = () => {
               />
             </div>
             
-            {/* Right Content - Solo se muestra en escritorio dentro del grid, en móvil se muestra como fixed */}
+            {/* Right Content - Solo se muestra en escritorio dentro del grid */}
             {!isMobile && (
               <ContactCard 
                 artist={artistContactData} 
@@ -295,7 +296,8 @@ const ArtistProfilePage = () => {
         <RecommendedArtists artists={recommendedArtists} />
       </div>
       
-      {/* En móvil, la tarjeta de contacto se renderiza fuera del grid y del layout principal */}
+      {/* En dispositivos móviles y pantallas medianas, la tarjeta de contacto se renderiza 
+         fuera del grid y del layout principal como elemento fixed */}
       {isMobile && (
         <ContactCard 
           artist={artistContactData} 
