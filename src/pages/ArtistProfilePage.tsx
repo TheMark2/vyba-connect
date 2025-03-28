@@ -240,14 +240,18 @@ const ArtistProfilePage = () => {
   return (
     <>
       <Navbar />
-      <div className="px-6 md:px-10 lg:px-14 xl:px-16">
+      {/* Eliminamos el padding para el banner en móvil, pero mantenemos la estructura para el resto del contenido */}
+      <div className={`${isMobile ? 'px-0' : 'px-6 md:px-10 lg:px-14 xl:px-16'}`}>
         <ArtistBanner 
           artist={artist} 
           onFavorite={handleFavorite} 
           onReport={handleReport} 
           onShare={handleShare} 
         />
+      </div>
 
+      {/* Mantenemos el padding para el resto del contenido */}
+      <div className="px-6 md:px-10 lg:px-14 xl:px-16">
         <div className="pb-16 max-w-7xl mx-auto">
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-16">
             {/* Left Content */}
