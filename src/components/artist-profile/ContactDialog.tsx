@@ -1,3 +1,4 @@
+
 import React, { useState } from "react";
 import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
@@ -46,16 +47,36 @@ const ContactDialog = ({
     }
   };
 
+  // Función para manejar el efecto de onda desde el punto de clic
+  const handleRippleEffect = (event: React.MouseEvent<HTMLButtonElement>) => {
+    const button = event.currentTarget;
+    const rect = button.getBoundingClientRect();
+    
+    const x = event.clientX - rect.left;
+    const y = event.clientY - rect.top;
+    
+    const ripple = document.createElement('span');
+    ripple.className = 'ripple-effect';
+    ripple.style.left = `${x}px`;
+    ripple.style.top = `${y}px`;
+    
+    button.appendChild(ripple);
+    
+    // Eliminar el elemento después de la animación
+    setTimeout(() => {
+      ripple.remove();
+    }, 800);
+  };
+
   return <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="max-w-[500px] rounded-[40px] p-8 bg-[#FAF8F6] border-none">
         <DialogTitle className="text-3xl font-black mb-6">
           Contacta con {artistName}
         </DialogTitle>
         
-        <motion.button 
-          className="flex justify-between items-center mb-3 w-full p-3 rounded-xl transition-all duration-300 hover:bg-secondary hover:scale-105 cursor-pointer"
-          whileHover={{ scale: 1.05 }}
-          whileTap={{ scale: 0.98 }}
+        <button 
+          className="flex justify-between items-center mb-3 w-full p-3 rounded-xl transition-all duration-300 hover:bg-secondary cursor-pointer relative overflow-hidden"
+          onClick={handleRippleEffect}
         >
           <div className="flex items-center gap-4">
             <Avatar className="h-16 w-16 rounded-lg">
@@ -71,7 +92,7 @@ const ContactDialog = ({
           <Button variant="secondary" size="icon" className="rounded-full h-7 w-7">
             <RefreshCw className="h-4 w-4" />
           </Button>
-        </motion.button>
+        </button>
 
         <ScrollArea className="h-[50vh] pr-4">
           <div className="space-y-6">
