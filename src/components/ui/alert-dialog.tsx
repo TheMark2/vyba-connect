@@ -1,5 +1,7 @@
+
 import * as React from "react"
 import * as AlertDialogPrimitive from "@radix-ui/react-alert-dialog"
+import { X } from "lucide-react"
 
 import { cn } from "@/lib/utils"
 import { buttonVariants } from "@/components/ui/button"
@@ -38,7 +40,15 @@ const AlertDialogContent = React.forwardRef<
         className
       )}
       {...props}
-    />
+    >
+      {props.children}
+      <AlertDialogPrimitive.Cancel className={cn(
+        "absolute right-6 top-4 rounded-full p-1 transition-colors hover:bg-black/5"
+      )}>
+        <X className="h-6 w-6" />
+        <span className="sr-only">Close</span>
+      </AlertDialogPrimitive.Cancel>
+    </AlertDialogPrimitive.Content>
   </AlertDialogPortal>
 ))
 AlertDialogContent.displayName = AlertDialogPrimitive.Content.displayName
