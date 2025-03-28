@@ -150,10 +150,10 @@ const ContactDialog = ({
             p-0
             border-none 
             bg-[#FAF8F6] 
-            ${isMobile ? 'pt-10 pb-24 px-6 rounded-t-[32px] max-h-[85vh]' : 'rounded-[40px] p-8'}
+            ${isMobile ? 'pt-10 pb-28 px-6 rounded-t-[32px] max-h-[85vh]' : 'rounded-[40px] p-8'}
           `}
         >
-          <DialogTitle className={`text-3xl font-black ${isMobile ? 'mb-6 mt-2' : 'mb-6'}`}>
+          <DialogTitle className={`text-3xl font-black ${isMobile ? 'mb-6 mt-4' : 'mb-6'}`}>
             Contacta con {artistName}
           </DialogTitle>
           
@@ -179,7 +179,7 @@ const ContactDialog = ({
 
           {currentView === "form" ? (
             <>
-              <ScrollArea className={`${isMobile ? 'h-[calc(70vh-220px)]' : 'h-[50vh]'} pr-2`}>
+              <ScrollArea className={`${isMobile ? 'h-[calc(70vh-280px)]' : 'h-[50vh]'} pr-2`}>
                 <div className="space-y-6">
                   <div>
                     <label htmlFor="date" className="block text-sm font-medium mb-2">
@@ -273,7 +273,7 @@ const ContactDialog = ({
                 </div>
               </ScrollArea>
               
-              <div className={`flex justify-end mt-6 mb-4`}>
+              <div className={`flex justify-end mt-6 mb-4 ${isMobile ? 'sticky bottom-6 z-10 pt-4 bg-[#FAF8F6]' : ''}`}>
                 <Button className="bg-blue-100 hover:bg-blue-200 text-black font-medium rounded-full px-8" onClick={handleNextView}>
                   Siguiente
                 </Button>
@@ -281,7 +281,7 @@ const ContactDialog = ({
             </>
           ) : (
             <>
-              <ScrollArea className={`${isMobile ? 'h-[calc(70vh-220px)]' : 'h-[50vh]'} pr-2`}>
+              <ScrollArea className={`${isMobile ? 'h-[calc(70vh-280px)]' : 'h-[50vh]'} pr-2`}>
                 <div className="space-y-4">
                   <h3 className="text-lg font-bold mb-2">Políticas de contacto</h3>
                   
@@ -416,7 +416,7 @@ const ContactDialog = ({
                 </div>
               </ScrollArea>
               
-              <div className={`flex justify-between mt-6 mb-4`}>
+              <div className={`flex justify-between mt-6 mb-4 ${isMobile ? 'sticky bottom-6 z-10 pt-4 bg-[#FAF8F6]' : ''}`}>
                 <Button 
                   variant="secondary" 
                   className="bg-gray-100 hover:bg-gray-200 text-black font-medium rounded-full px-8"
