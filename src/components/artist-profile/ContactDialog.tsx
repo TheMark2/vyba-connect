@@ -9,7 +9,6 @@ import { RefreshCw, Clock } from "lucide-react";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Badge } from "@/components/ui/badge";
-import { Carousel, CarouselContent, CarouselItem, CarouselPrevious, CarouselNext } from "@/components/ui/carousel";
 import { motion } from "framer-motion";
 
 interface ContactDialogProps {
@@ -35,7 +34,8 @@ const ContactDialog = ({
   const [showCustomDuration, setShowCustomDuration] = useState(false);
   const [selectedDuration, setSelectedDuration] = useState("");
   
-  const durations = ["1 hora", "2 horas", "3 horas", "4 horas", "5 horas", "6 horas", "Personalizado"];
+  // Reducimos la cantidad de opciones de duración
+  const durations = ["1h", "2h", "3h", "4h", "Personalizado"];
   
   const handleDurationSelect = (duration: string) => {
     if (duration === "Personalizado") {
@@ -123,43 +123,30 @@ const ContactDialog = ({
               <label htmlFor="duration" className="block text-sm font-medium mb-2">
                 Duración del evento
               </label>
-              <div className="relative py-2">
-                <div className="w-full overflow-hidden">
-                  <Carousel 
-                    className="w-full max-w-full"
-                    opts={{
-                      align: "start",
-                      containScroll: "trimSnaps"
-                    }}
-                  >
-                    <CarouselContent className="-ml-1">
-                      {durations.map((durationOption, index) => (
-                        <CarouselItem key={index} className="pl-1 basis-auto">
-                          <motion.div 
-                            whileHover={{ scale: 1.05 }}
-                            whileTap={{ scale: 0.95 }}
-                          >
-                            <Badge 
-                              variant="default" 
-                              className={`cursor-pointer px-4 py-2 bg-white hover:bg-gray-100 text-black rounded-full flex items-center gap-1 h-10 ${selectedDuration === durationOption ? 'ring-2 ring-blue-500' : ''}`}
-                              onClick={() => handleDurationSelect(durationOption)}
-                            >
-                              {durationOption === "Personalizado" ? (
-                                "Personalizado"
-                              ) : (
-                                <>
-                                  <Clock className="h-4 w-4 mr-1" />
-                                  {durationOption}
-                                </>
-                              )}
-                            </Badge>
-                          </motion.div>
-                        </CarouselItem>
-                      ))}
-                    </CarouselContent>
-                    <CarouselPrevious className="left-0 -translate-x-1/2" />
-                    <CarouselNext className="right-0 translate-x-1/2" />
-                  </Carousel>
+              <div className="py-2">
+                <div className="flex flex-wrap gap-2">
+                  {durations.map((durationOption, index) => (
+                    <motion.div 
+                      key={index}
+                      whileHover={{ scale: 1.05 }}
+                      whileTap={{ scale: 0.95 }}
+                    >
+                      <Badge 
+                        variant="default" 
+                        className={`cursor-pointer px-4 py-2 bg-white hover:bg-gray-100 text-black rounded-full flex items-center gap-1 h-10 ${selectedDuration === durationOption ? 'ring-2 ring-blue-500' : ''}`}
+                        onClick={() => handleDurationSelect(durationOption)}
+                      >
+                        {durationOption === "Personalizado" ? (
+                          "Personalizado"
+                        ) : (
+                          <>
+                            <Clock className="h-4 w-4 mr-1" />
+                            {durationOption}
+                          </>
+                        )}
+                      </Badge>
+                    </motion.div>
+                  ))}
                 </div>
               </div>
               
