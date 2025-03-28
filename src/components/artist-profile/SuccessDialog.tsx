@@ -24,7 +24,7 @@ const SuccessDialog = ({
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className={cn(
-        "max-w-[500px] p-0 border-none bg-white overflow-hidden",
+        "max-w-[500px] p-0 border-none bg-white dark:bg-vyba-dark-secondary overflow-hidden",
         isMobile ? 
           "max-h-[85vh] bottom-0 top-auto rounded-t-[32px] pb-24 pt-10" : 
           "rounded-[40px] pt-16 pb-20"

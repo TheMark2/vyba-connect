@@ -179,7 +179,7 @@ const ContactDialog = ({
             max-w-[500px]
             p-0
             border-none 
-            bg-[#FAF8F6] 
+            bg-[#FAF8F6] dark:bg-vyba-dark-secondary
             ${isMobile ? 'pt-10 pb-28 px-6 rounded-t-[32px] max-h-[85vh]' : 'rounded-[40px] pt-12 px-8 pb-8'}
           `}
         >
