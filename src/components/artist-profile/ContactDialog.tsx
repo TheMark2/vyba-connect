@@ -358,7 +358,7 @@ const ContactDialog = ({
                         <div className="flex items-start justify-between mb-2">
                           <label 
                             htmlFor="contactTerms" 
-                            className="font-semibold text-base cursor-pointer"
+                            className="font-semibold text-sm cursor-pointer"
                             onClick={(e) => e.stopPropagation()}
                           >
                             Acepto las condiciones de contacto
