@@ -1,3 +1,4 @@
+
 import * as React from "react"
 import { cn } from "@/lib/utils"
 
@@ -23,7 +24,7 @@ const Input = React.forwardRef<HTMLInputElement, React.ComponentProps<"input">>(
         {props.placeholder && (
           <span
             className={cn(
-              "absolute left-3 font-bold pointer-events-none transition-all duration-300 text-muted-foreground",
+              "absolute left-3 pointer-events-none transition-all duration-300 text-muted-foreground",
               shouldFloatLabel 
                 ? "transform -translate-y-6 text-xs" 
                 : "transform translate-y-0 text-base"
@@ -36,7 +37,7 @@ const Input = React.forwardRef<HTMLInputElement, React.ComponentProps<"input">>(
           {...props}
           placeholder=""
           className={cn(
-            "flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-base file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm pt-4",
+            "flex h-10 w-full rounded-md bg-background px-3 py-2 text-base file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground focus-visible:outline-none focus-visible:ring-0 disabled:cursor-not-allowed disabled:opacity-50 md:text-sm pt-4",
             className
           )}
           ref={combinedRef}
