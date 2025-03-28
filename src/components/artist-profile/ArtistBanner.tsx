@@ -48,7 +48,7 @@ const ArtistBanner = ({ artist, onFavorite, onReport, onShare }: ArtistBannerPro
           className="absolute inset-0 w-full h-full bg-cover bg-center"
           style={{ backgroundImage: `url(${backgroundImage})` }}
         ></div>
-        <div className="absolute inset-0 backdrop-blur-3xl bg-black/50 dark:bg-black/70"></div>
+        <div className="absolute inset-0 backdrop-blur-3xl"></div>
       </div>
 
       {/* Botón de regreso que siempre permanece visible */}
