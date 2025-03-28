@@ -42,13 +42,13 @@ const ArtistBanner = ({ artist, onFavorite, onReport, onShare }: ArtistBannerPro
       onMouseEnter={() => setIsHovering(true)}
       onMouseLeave={() => setIsHovering(false)}
     >
-      {/* Fondo blurreado en modo oscuro */}
-      <div className="absolute inset-0 w-full h-full hidden dark:block">
+      {/* Fondo blurreado que ahora se muestra en ambos modos */}
+      <div className="absolute inset-0 w-full h-full">
         <div 
           className="absolute inset-0 w-full h-full bg-cover bg-center" 
           style={{ backgroundImage: `url(${profileImage})` }}
         ></div>
-        <div className="absolute inset-0 backdrop-blur-3xl bg-black/70"></div>
+        <div className="absolute inset-0 backdrop-blur-3xl bg-black/70 dark:bg-black/80"></div>
       </div>
 
       {/* Botón de regreso que siempre permanece visible */}
@@ -62,7 +62,7 @@ const ArtistBanner = ({ artist, onFavorite, onReport, onShare }: ArtistBannerPro
       </Button>
 
       {/* Carrusel integrado directamente en el banner */}
-      <Carousel className="w-full h-[80vh]">
+      <Carousel className="w-full h-[80vh] relative z-10">
         <CarouselContent className="h-[80vh] gap-0">
           {allImages.map((image, index) => (
             <CarouselItem key={index} className="h-[80vh] w-full">
