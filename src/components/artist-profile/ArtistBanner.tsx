@@ -1,9 +1,8 @@
 
-import React, { useState } from "react";
+import React from "react";
 import { Heart, Flag, Share2, ChevronLeft, ChevronRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useIsMobile } from "@/hooks/use-mobile";
-import { AspectRatio } from "@/components/ui/aspect-ratio";
 import { 
   Carousel,
   CarouselContent,
@@ -26,78 +25,40 @@ interface ArtistBannerProps {
 
 const ArtistBanner = ({ artist, onFavorite, onReport, onShare }: ArtistBannerProps) => {
   const isMobile = useIsMobile();
-  const [showCarousel, setShowCarousel] = useState(false);
-
-  // Imágenes de alta calidad para el carrusel
-  const highQualityImages = [
-    "https://images.unsplash.com/photo-1533174072545-7a4b6ad7a6c3?q=80&w=2070",
-    "https://images.unsplash.com/photo-1470225620780-dba8ba36b745?q=80&w=2070",
-    "https://images.unsplash.com/photo-1571330735066-03aaa9429d89?q=80&w=2070",
-    "https://images.unsplash.com/photo-1429962714451-bb934ecdc4ec?q=80&w=2070",
-    "https://images.unsplash.com/photo-1516450360452-9312f5e86fc7?q=80&w=2070",
-    "https://images.unsplash.com/photo-1526478806334-5fd488fcaabc?q=80&w=2070"
-  ];
+  
+  // Combinamos la imagen de portada con el resto de las imágenes para el carrusel
+  const allImages = [artist.coverImage, ...artist.images];
 
   return (
-    <div 
-      className="relative w-full h-[80vh] overflow-hidden rounded-[25px] lg:rounded-[35px] mb-12 group"
-      onMouseEnter={() => setShowCarousel(true)}
-      onMouseLeave={() => setShowCarousel(false)}
-    >
-      {/* Blurred background image - Capa base */}
-      <div className="absolute inset-0 w-full h-full overflow-visible flex justify-center items-center transition-opacity duration-300" 
-        style={{
-          zIndex: 0,
-          opacity: showCarousel ? 0 : 1
-        }}>
-        <div className="absolute w-[120%] h-[120%] opacity-70">
-          <img src={artist.coverImage} alt="" className="w-full h-full object-cover scale-150 filter blur-3xl" />
-        </div>
-        <div className="absolute inset-0 bg-black/40"></div>
-      </div>          
-
-      {/* Main Banner Image - Capa principal */}
-      <div 
-        className={`relative z-10 w-full h-full transition-opacity duration-300 ${showCarousel ? 'opacity-0' : 'opacity-100'}`}
-      >
-        <img 
-          src={artist.coverImage} 
-          alt={`${artist.name} portada`} 
-          className="w-full h-full object-cover rounded-[25px] lg:rounded-[35px]" 
-        />
-        
-        <div className="absolute inset-0 bg-gradient-to-t from-black to-transparent"></div>
-      </div>
-      
-      {/* Carousel view that appears on hover */}
-      <div 
-        className={`absolute inset-0 z-20 transition-opacity duration-400 ${showCarousel ? 'opacity-100' : 'opacity-0 pointer-events-none'}`}
-      >
-        <Carousel className="w-full h-full">
-          <CarouselContent className="h-full">
-            {highQualityImages.map((image, index) => (
-              <CarouselItem key={index} className="h-full flex items-center justify-center">
+    <div className="relative w-full h-[80vh] overflow-hidden rounded-[25px] lg:rounded-[35px] mb-12 group">
+      {/* Carrusel integrado directamente en el banner */}
+      <Carousel className="w-full h-full">
+        <CarouselContent className="h-full">
+          {allImages.map((image, index) => (
+            <CarouselItem key={index} className="h-full">
+              <div className="relative w-full h-full">
                 <img 
                   src={image} 
                   alt={`${artist.name} imagen ${index + 1}`}
-                  className="w-full h-full object-cover rounded-[25px] lg:rounded-[35px]"
+                  className="w-full h-full object-cover rounded-[25px] lg:rounded-[35px]" 
                 />
-              </CarouselItem>
-            ))}
-          </CarouselContent>
-          
-          <CarouselPrevious className={`absolute left-5 top-1/2 -translate-y-1/2 bg-white/70 hover:bg-white transition-all duration-200 ${showCarousel ? 'opacity-100' : 'opacity-0'}`}>
-            <ChevronLeft className="h-6 w-6 text-black" />
-          </CarouselPrevious>
-          
-          <CarouselNext className={`absolute right-5 top-1/2 -translate-y-1/2 bg-white/70 hover:bg-white transition-all duration-200 ${showCarousel ? 'opacity-100' : 'opacity-0'}`}>
-            <ChevronRight className="h-6 w-6 text-black" />
-          </CarouselNext>
-        </Carousel>
-      </div>
+                <div className="absolute inset-0 bg-gradient-to-t from-black to-transparent"></div>
+              </div>
+            </CarouselItem>
+          ))}
+        </CarouselContent>
+        
+        <CarouselPrevious className="absolute left-5 top-1/2 -translate-y-1/2 bg-white/70 hover:bg-white z-30">
+          <ChevronLeft className="h-6 w-6 text-black" />
+        </CarouselPrevious>
+        
+        <CarouselNext className="absolute right-5 top-1/2 -translate-y-1/2 bg-white/70 hover:bg-white z-30">
+          <ChevronRight className="h-6 w-6 text-black" />
+        </CarouselNext>
+      </Carousel>
       
       {/* Buttons in top right corner */}
-      <div className={`absolute top-4 right-4 sm:top-6 sm:right-6 flex space-x-2 z-30 transition-opacity duration-300 ${showCarousel ? 'opacity-0 pointer-events-none' : 'opacity-100'}`}>
+      <div className="absolute top-4 right-4 sm:top-6 sm:right-6 flex space-x-2 z-30">
         <Button variant="secondary" size="icon" className="w-10 h-10 rounded-full" onClick={onFavorite}>
           <Heart className="h-5 w-5 text-black dark:text-white" />
         </Button>
@@ -111,7 +72,7 @@ const ArtistBanner = ({ artist, onFavorite, onReport, onShare }: ArtistBannerPro
       
       {/* Artist info overlay */}
       {isMobile ? (
-        <div className={`absolute bottom-12 left-5 right-0 flex flex-col items-start z-30 transition-opacity duration-300 ${showCarousel ? 'opacity-0 pointer-events-none' : 'opacity-100'}`}>
+        <div className="absolute bottom-12 left-5 right-0 flex flex-col items-start z-30">
           <div className="rounded-full overflow-hidden mb-4 w-24 h-24">
             <img src={artist.images[0]} alt={artist.name} className="w-full h-full object-cover rounded-full" />
           </div>
@@ -122,7 +83,7 @@ const ArtistBanner = ({ artist, onFavorite, onReport, onShare }: ArtistBannerPro
           </div>
         </div>
       ) : (
-        <div className={`absolute bottom-12 left-5 md:left-10 lg:left-14 flex items-center z-30 transition-opacity duration-300 ${showCarousel ? 'opacity-0 pointer-events-none' : 'opacity-100'}`}>
+        <div className="absolute bottom-12 left-5 md:left-10 lg:left-14 flex items-center z-30">
           <div className="rounded-full overflow-hidden mr-4 md:mr-6 w-24 h-24 md:w-32 md:h-32">
             <img src={artist.images[0]} alt={artist.name} className="w-full h-full object-cover rounded-full" />
           </div>
