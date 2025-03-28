@@ -5,7 +5,6 @@ import { X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { useIsMobile } from "@/hooks/use-mobile";
-import { AspectRatio } from "@/components/ui/aspect-ratio";
 
 interface ImageGalleryDialogProps {
   images: string[];
@@ -56,14 +55,12 @@ const ImageGalleryDialog = ({
                   }
                 }}
               >
-                <div className="rounded-2xl overflow-hidden shadow-sm">
-                  <AspectRatio ratio={16/9} className="bg-black/10">
-                    <img 
-                      src={image} 
-                      alt={`Imagen ${index + 1}`} 
-                      className="object-contain h-full w-full"
-                    />
-                  </AspectRatio>
+                <div className="rounded-2xl overflow-hidden shadow-sm h-auto">
+                  <img 
+                    src={image} 
+                    alt={`Imagen ${index + 1}`} 
+                    className="w-full h-auto object-contain rounded-2xl"
+                  />
                 </div>
               </div>
             ))}
