@@ -1,37 +1,32 @@
-
 import React from "react";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { MapPin, Check } from "lucide-react";
-
 interface ContactCardProps {
   artist: {
     name: string;
-    location?: string;  // Make this optional
-    availability?: string;  // Make this optional
+    location?: string; // Make this optional
+    availability?: string; // Make this optional
     priceRange: string;
   };
   onContact: () => void;
 }
-
-const ContactCard = ({ artist, onContact }: ContactCardProps) => {
-  return (
-    <div className="lg:sticky lg:top-24 h-fit bg-white dark:bg-vyba-dark-bg rounded-3xl px-6 py-4">
+const ContactCard = ({
+  artist,
+  onContact
+}: ContactCardProps) => {
+  return <div className="lg:sticky lg:top-24 h-fit bg-[#F5F1EB] dark:bg-vyba-dark-bg rounded-3xl px-6 py-4">
       {/* Contenedor para ubicación y disponibilidad en línea */}
       <div className="flex flex-wrap gap-2 mb-4">
-        {artist.location && (
-          <div className="flex items-center gap-1.5 bg-white dark:bg-vyba-dark-secondary px-3 py-1.5 rounded-full">
+        {artist.location && <div className="flex items-center gap-1.5 bg-white dark:bg-vyba-dark-secondary px-3 py-1.5 rounded-full">
             <MapPin className="h-4 w-4" />
             <span className="text-sm font-medium">{artist.location}</span>
-          </div>
-        )}
+          </div>}
         
-        {artist.availability && (
-          <div className="flex items-center gap-1.5 bg-white dark:bg-vyba-dark-secondary px-3 py-1.5 rounded-full">
+        {artist.availability && <div className="flex items-center gap-1.5 bg-white dark:bg-vyba-dark-secondary px-3 py-1.5 rounded-full">
             <div className="h-2 w-2 bg-green-500 rounded-full"></div>
             <span className="text-sm font-medium">{artist.availability}</span>
-          </div>
-        )}
+          </div>}
       </div>
       
       {/* Precio */}
@@ -42,8 +37,6 @@ const ContactCard = ({ artist, onContact }: ContactCardProps) => {
       <Button className="w-full py-4 text-base font-bold mt-6" onClick={onContact}>
         Contactar con {artist.name}
       </Button>
-    </div>
-  );
+    </div>;
 };
-
 export default ContactCard;
