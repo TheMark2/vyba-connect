@@ -5,6 +5,7 @@ import { X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { useIsMobile } from "@/hooks/use-mobile";
+import { AspectRatio } from "@/components/ui/aspect-ratio";
 
 interface ImageGalleryDialogProps {
   images: string[];
@@ -41,25 +42,29 @@ const ImageGalleryDialog = ({
         </div>
         
         <div className="h-full w-full overflow-y-auto p-8 pt-16">
-          <div className="flex flex-wrap justify-center gap-6">
+          <div className="flex flex-wrap gap-4 justify-center">
             {images.map((image, index) => (
-              <div key={index} className={cn(
-                "flex-grow-0 flex-shrink-0",
-                index === activeImageIndex ? "scroll-mt-16" : ""
-              )}>
-                <img 
-                  src={image} 
-                  alt={`Imagen ${index + 1}`} 
-                  className="max-w-full object-contain"
-                  id={index === activeImageIndex ? "active-image" : undefined}
-                  ref={el => {
-                    if (el && index === activeImageIndex) {
-                      setTimeout(() => {
-                        el.scrollIntoView({ behavior: 'smooth', block: 'center' });
-                      }, 100);
-                    }
-                  }}
-                />
+              <div 
+                key={index} 
+                className="w-[300px] flex-grow-0 flex-shrink-0 mb-4"
+                id={index === activeImageIndex ? "active-image" : undefined}
+                ref={el => {
+                  if (el && index === activeImageIndex) {
+                    setTimeout(() => {
+                      el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    }, 100);
+                  }
+                }}
+              >
+                <div className="rounded-xl overflow-hidden">
+                  <AspectRatio ratio={4/3} className="bg-black/30">
+                    <img 
+                      src={image} 
+                      alt={`Imagen ${index + 1}`} 
+                      className="object-contain h-full w-full"
+                    />
+                  </AspectRatio>
+                </div>
               </div>
             ))}
           </div>
