@@ -1,3 +1,4 @@
+
 import React, { useState } from "react";
 import { Heart, Flag, Share2, ChevronLeft, ChevronRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -62,7 +63,6 @@ const ArtistBanner = ({ artist, onFavorite, onReport, onShare }: ArtistBannerPro
               <CarouselItem 
                 key={index} 
                 className={`h-full flex items-center justify-center 
-                  transition-opacity duration-300 
                   ${isCarouselActive ? 'opacity-100' : 'opacity-0'}`}
               >
                 <div className="w-full h-full relative">
@@ -79,20 +79,16 @@ const ArtistBanner = ({ artist, onFavorite, onReport, onShare }: ArtistBannerPro
           <CarouselPrevious 
             className={`absolute left-5 top-1/2 -translate-y-1/2 
               bg-white/30 hover:bg-white/50 backdrop-blur-sm 
-              transition-all duration-300 
-              ${isCarouselActive ? 'opacity-100 scale-100' : 'opacity-0 scale-90 pointer-events-none'}`}
-          >
-            <ChevronLeft className="h-6 w-6 text-white" />
-          </CarouselPrevious>
+              transition-all duration-300 z-20
+              ${isCarouselActive ? 'opacity-100 scale-100' : 'opacity-0 scale-90'}`}
+          />
           
           <CarouselNext 
             className={`absolute right-5 top-1/2 -translate-y-1/2 
               bg-white/30 hover:bg-white/50 backdrop-blur-sm 
-              transition-all duration-300 
-              ${isCarouselActive ? 'opacity-100 scale-100' : 'opacity-0 scale-90 pointer-events-none'}`}
-          >
-            <ChevronRight className="h-6 w-6 text-white" />
-          </CarouselNext>
+              transition-all duration-300 z-20
+              ${isCarouselActive ? 'opacity-100 scale-100' : 'opacity-0 scale-90'}`}
+          />
         </Carousel>
       </div>
       
