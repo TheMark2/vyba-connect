@@ -35,12 +35,12 @@ const ArtistBanner = ({ artist, onFavorite, onReport, onShare }: ArtistBannerPro
       <Carousel className="w-full h-full">
         <CarouselContent className="h-full">
           {allImages.map((image, index) => (
-            <CarouselItem key={index} className="h-full">
+            <CarouselItem key={index} className="h-full w-full">
               <div className="relative w-full h-full">
                 <img 
                   src={image} 
                   alt={`${artist.name} imagen ${index + 1}`}
-                  className="w-full h-full object-cover rounded-[25px] lg:rounded-[35px]" 
+                  className="w-full h-full object-cover object-center rounded-[25px] lg:rounded-[35px]" 
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black to-transparent"></div>
               </div>
