@@ -10,7 +10,6 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Badge } from "@/components/ui/badge";
 import { motion } from "framer-motion";
-import { Checkbox } from "@/components/ui/checkbox";
 import SuccessDialog from "./SuccessDialog";
 import { useToast } from "@/hooks/use-toast";
 
@@ -54,7 +53,7 @@ const ContactDialog = ({
   const handleDurationSelect = (duration: string) => {
     if (duration === "Personalizado") {
       setShowCustomDuration(true);
-      setSelectedDuration("");
+      setSelectedDuration(duration);
     } else {
       setShowCustomDuration(false);
       setSelectedDuration(duration);
@@ -114,9 +113,9 @@ const ContactDialog = ({
   };
 
   // Función para manejar el efecto de onda desde el punto de clic
-  const handleRippleEffect = (event: React.MouseEvent<HTMLButtonElement>) => {
-    const button = event.currentTarget;
-    const rect = button.getBoundingClientRect();
+  const handleRippleEffect = (event: React.MouseEvent<HTMLElement>) => {
+    const element = event.currentTarget;
+    const rect = element.getBoundingClientRect();
     
     const x = event.clientX - rect.left;
     const y = event.clientY - rect.top;
@@ -126,7 +125,7 @@ const ContactDialog = ({
     ripple.style.left = `${x}px`;
     ripple.style.top = `${y}px`;
     
-    button.appendChild(ripple);
+    element.appendChild(ripple);
     
     // Eliminar el elemento después de la animación
     setTimeout(() => {
@@ -208,48 +207,89 @@ const ContactDialog = ({
                     </label>
                     <div className="py-2">
                       <div className="flex flex-wrap gap-2">
-                        {durations.map((durationOption, index) => <motion.div key={index} whileHover={{
-                        scale: 1.05
-                      }} whileTap={{
-                        scale: 0.95
-                      }}>
-                            <Badge variant="default" className={`cursor-pointer px-4 py-2 bg-white hover:bg-gray-100 text-black rounded-full flex items-center gap-1 h-10 ${selectedDuration === durationOption ? 'ring-2 ring-blue-500' : ''}`} onClick={() => handleDurationSelect(durationOption)}>
-                              {durationOption === "Personalizado" ? "Personalizado" : <>
+                        {durations.map((durationOption, index) => (
+                          <motion.div 
+                            key={index} 
+                            whileHover={{
+                              scale: 1.05
+                            }} 
+                            whileTap={{
+                              scale: 0.95
+                            }}
+                          >
+                            <Badge 
+                              variant="default" 
+                              className={`cursor-pointer px-4 py-2 bg-white hover:bg-gray-100 text-black rounded-full flex items-center gap-1 h-10 relative overflow-hidden focus:ring-0 focus:ring-offset-0 ${selectedDuration === durationOption ? 'bg-gray-200 font-bold' : ''}`} 
+                              onClick={(e) => {
+                                handleRippleEffect(e);
+                                handleDurationSelect(durationOption);
+                              }}
+                            >
+                              {durationOption === "Personalizado" ? "Personalizado" : (
+                                <>
                                   <Clock className="h-4 w-4 mr-1" />
                                   {durationOption}
-                                </>}
+                                </>
+                              )}
                             </Badge>
-                          </motion.div>)}
+                          </motion.div>
+                        ))}
                       </div>
                     </div>
                     
-                    {showCustomDuration && <motion.div initial={{
-                    opacity: 0,
-                    height: 0
-                  }} animate={{
-                    opacity: 1,
-                    height: "auto"
-                  }} exit={{
-                    opacity: 0,
-                    height: 0
-                  }} transition={{
-                    duration: 0.3
-                  }}>
-                        <Input id="customDuration" type="text" placeholder="Ej: 2 horas y 30 minutos" value={duration} onChange={e => setDuration(e.target.value)} className="bg-white border-0 rounded-xl shadow-none h-12 focus-visible:ring-0 pl-4 mt-2 w-full" />
-                      </motion.div>}
+                    {showCustomDuration && (
+                      <motion.div 
+                        initial={{
+                          opacity: 0,
+                          height: 0
+                        }} 
+                        animate={{
+                          opacity: 1,
+                          height: "auto"
+                        }} 
+                        exit={{
+                          opacity: 0,
+                          height: 0
+                        }} 
+                        transition={{
+                          duration: 0.3
+                        }}
+                      >
+                        <Input 
+                          id="customDuration" 
+                          type="text" 
+                          placeholder="Ej: 2 horas y 30 minutos" 
+                          value={duration} 
+                          onChange={e => setDuration(e.target.value)} 
+                          className="bg-white border-0 rounded-xl shadow-none h-12 focus-visible:ring-0 pl-4 mt-2 w-full" 
+                        />
+                      </motion.div>
+                    )}
                   </div>
                   
                   <div>
                     <label htmlFor="message" className="block text-sm font-medium mb-2">
                       Mensaje (opcional)
                     </label>
-                    <Textarea id="message" placeholder="Escribe tu mensaje aquí..." value={message} onChange={e => setMessage(e.target.value)} className="bg-white border-0 rounded-xl shadow-none min-h-[120px] focus-visible:ring-0 pl-4 pt-4" />
+                    <Textarea 
+                      id="message" 
+                      placeholder="Escribe tu mensaje aquí..." 
+                      value={message} 
+                      onChange={e => setMessage(e.target.value)} 
+                      className="bg-white border-0 rounded-xl shadow-none min-h-[120px] focus-visible:ring-0 pl-4 pt-4" 
+                    />
                   </div>
                 </div>
               </ScrollArea>
               
-              <div className="flex justify-end mt-2">
-                <Button className="bg-blue-100 hover:bg-blue-200 text-black font-medium rounded-full px-8" onClick={handleNextView}>
+              <div className="flex justify-end mt-6 mb-2">
+                <Button 
+                  className="bg-blue-100 hover:bg-blue-200 text-black font-medium rounded-full px-8 py-6 relative overflow-hidden"
+                  onClick={(e) => {
+                    handleRippleEffect(e);
+                    handleNextView();
+                  }}
+                >
                   Siguiente
                 </Button>
               </div>
@@ -261,8 +301,11 @@ const ContactDialog = ({
                   <h3 className="text-lg font-bold mb-2">Políticas de contacto</h3>
                   
                   <div 
-                    className={`bg-white rounded-xl p-4 flex items-start gap-3 cursor-pointer transition-all duration-200 ${acceptedPolicies.contactTerms ? 'ring-2 ring-blue-500' : 'hover:bg-gray-50'}`}
-                    onClick={() => handlePolicyDivClick('contactTerms')}
+                    className={`bg-white rounded-xl p-4 flex items-start gap-3 cursor-pointer transition-all duration-200 relative overflow-hidden ${acceptedPolicies.contactTerms ? 'bg-gray-100' : 'hover:bg-gray-50'}`}
+                    onClick={(e) => {
+                      handleRippleEffect(e);
+                      handlePolicyDivClick('contactTerms');
+                    }}
                   >
                     <div className="mt-1">
                       <Edit className="h-5 w-5 text-black" />
@@ -301,8 +344,11 @@ const ContactDialog = ({
                   </div>
                   
                   <div 
-                    className={`bg-white rounded-xl p-4 flex items-start gap-3 cursor-pointer transition-all duration-200 ${acceptedPolicies.privacyPolicy ? 'ring-2 ring-blue-500' : 'hover:bg-gray-50'}`}
-                    onClick={() => handlePolicyDivClick('privacyPolicy')}
+                    className={`bg-white rounded-xl p-4 flex items-start gap-3 cursor-pointer transition-all duration-200 relative overflow-hidden ${acceptedPolicies.privacyPolicy ? 'bg-gray-100' : 'hover:bg-gray-50'}`}
+                    onClick={(e) => {
+                      handleRippleEffect(e);
+                      handlePolicyDivClick('privacyPolicy');
+                    }}
                   >
                     <div className="mt-1">
                       <BellRing className="h-5 w-5 text-black" />
@@ -341,8 +387,11 @@ const ContactDialog = ({
                   </div>
                   
                   <div 
-                    className={`bg-white rounded-xl p-4 flex items-start gap-3 cursor-pointer transition-all duration-200 ${acceptedPolicies.relatedArtists ? 'ring-2 ring-blue-500' : 'hover:bg-gray-50'}`}
-                    onClick={() => handlePolicyDivClick('relatedArtists')}
+                    className={`bg-white rounded-xl p-4 flex items-start gap-3 cursor-pointer transition-all duration-200 relative overflow-hidden ${acceptedPolicies.relatedArtists ? 'bg-gray-100' : 'hover:bg-gray-50'}`}
+                    onClick={(e) => {
+                      handleRippleEffect(e);
+                      handlePolicyDivClick('relatedArtists');
+                    }}
                   >
                     <div className="mt-1">
                       <Users className="h-5 w-5 text-black" />
@@ -382,17 +431,23 @@ const ContactDialog = ({
                 </div>
               </ScrollArea>
               
-              <div className="flex justify-between mt-4">
+              <div className="flex justify-between mt-6 mb-2">
                 <Button 
                   variant="secondary" 
-                  className="bg-gray-100 hover:bg-gray-200 text-black font-medium rounded-full px-8"
-                  onClick={handlePreviousView}
+                  className="bg-gray-100 hover:bg-gray-200 text-black font-medium rounded-full px-8 py-6 relative overflow-hidden"
+                  onClick={(e) => {
+                    handleRippleEffect(e);
+                    handlePreviousView();
+                  }}
                 >
                   Anterior
                 </Button>
                 <Button 
-                  className="bg-blue-100 hover:bg-blue-200 text-black font-medium rounded-full px-8"
-                  onClick={handleSubmit}
+                  className="bg-blue-100 hover:bg-blue-200 text-black font-medium rounded-full px-8 py-6 relative overflow-hidden"
+                  onClick={(e) => {
+                    handleRippleEffect(e);
+                    handleSubmit();
+                  }}
                   disabled={!acceptedPolicies.contactTerms || !acceptedPolicies.privacyPolicy}
                 >
                   Enviar
