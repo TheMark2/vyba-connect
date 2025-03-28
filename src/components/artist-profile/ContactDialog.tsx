@@ -5,9 +5,12 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
-import { RefreshCw } from "lucide-react";
+import { RefreshCw, Clock } from "lucide-react";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import { Badge } from "@/components/ui/badge";
+import { Carousel, CarouselContent, CarouselItem } from "@/components/ui/carousel";
+import { motion } from "framer-motion";
 
 interface ContactDialogProps {
   open: boolean;
@@ -29,6 +32,21 @@ const ContactDialog = ({
   const [location, setLocation] = useState("");
   const [duration, setDuration] = useState("");
   const [message, setMessage] = useState("");
+  const [showCustomDuration, setShowCustomDuration] = useState(false);
+  const [selectedDuration, setSelectedDuration] = useState("");
+  
+  const durations = ["1 hora", "2 horas", "3 horas", "4 horas", "5 horas", "6 horas", "Personalizado"];
+  
+  const handleDurationSelect = (duration: string) => {
+    if (duration === "Personalizado") {
+      setShowCustomDuration(true);
+      setSelectedDuration("");
+    } else {
+      setShowCustomDuration(false);
+      setSelectedDuration(duration);
+      setDuration(duration);
+    }
+  };
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
@@ -105,14 +123,53 @@ const ContactDialog = ({
               <label htmlFor="duration" className="block text-sm font-medium mb-2">
                 Duración del evento
               </label>
-              <Input
-                id="duration"
-                type="text"
-                placeholder="2 horas"
-                value={duration}
-                onChange={(e) => setDuration(e.target.value)}
-                className="bg-white border-0 rounded-xl shadow-none h-12 focus-visible:ring-0 pl-4"
-              />
+              <div className="mb-2">
+                <Carousel className="w-full">
+                  <CarouselContent className="-ml-1">
+                    {durations.map((durationOption, index) => (
+                      <CarouselItem key={index} className="pl-1 basis-auto">
+                        <motion.div 
+                          whileHover={{ scale: 1.05 }}
+                          whileTap={{ scale: 0.95 }}
+                        >
+                          <Badge 
+                            variant="default" 
+                            className={`cursor-pointer px-4 py-2 bg-white hover:bg-gray-100 text-black rounded-full flex items-center gap-1 h-10 ${selectedDuration === durationOption ? 'ring-2 ring-blue-500' : ''}`}
+                            onClick={() => handleDurationSelect(durationOption)}
+                          >
+                            {durationOption === "Personalizado" ? (
+                              "Personalizado"
+                            ) : (
+                              <>
+                                <Clock className="h-4 w-4 mr-1" />
+                                {durationOption}
+                              </>
+                            )}
+                          </Badge>
+                        </motion.div>
+                      </CarouselItem>
+                    ))}
+                  </CarouselContent>
+                </Carousel>
+              </div>
+              
+              {showCustomDuration && (
+                <motion.div
+                  initial={{ opacity: 0, height: 0 }}
+                  animate={{ opacity: 1, height: "auto" }}
+                  exit={{ opacity: 0, height: 0 }}
+                  transition={{ duration: 0.3 }}
+                >
+                  <Input
+                    id="customDuration"
+                    type="text"
+                    placeholder="Ej: 2 horas y 30 minutos"
+                    value={duration}
+                    onChange={(e) => setDuration(e.target.value)}
+                    className="bg-white border-0 rounded-xl shadow-none h-12 focus-visible:ring-0 pl-4 mt-2"
+                  />
+                </motion.div>
+              )}
             </div>
             
             <div>
