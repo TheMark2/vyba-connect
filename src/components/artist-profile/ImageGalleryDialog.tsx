@@ -29,11 +29,11 @@ const ImageGalleryDialog = ({
       )}>
         
         <div className="h-full w-full overflow-y-auto p-8 pt-16">
-          <div className="flex flex-wrap gap-6 justify-center">
+          <div className="flex flex-wrap gap-8 justify-center">
             {images.map((image, index) => (
               <div 
                 key={index} 
-                className="flex-shrink-0 mb-6"
+                className="mb-8"
                 id={index === activeImageIndex ? "active-image" : undefined}
                 ref={el => {
                   if (el && index === activeImageIndex) {
@@ -47,7 +47,11 @@ const ImageGalleryDialog = ({
                   <img 
                     src={image} 
                     alt={`Imagen ${index + 1}`} 
-                    className="max-h-[70vh] max-w-[450px] w-auto h-auto object-contain rounded-2xl"
+                    className="object-contain rounded-2xl"
+                    style={{ 
+                      maxWidth: '85vw',
+                      maxHeight: '85vh'
+                    }}
                   />
                 </div>
               </div>
