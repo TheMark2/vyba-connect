@@ -192,13 +192,13 @@ const ContactDialog = ({
             onClick={handleRippleEffect}
           >
             <div className="flex items-center gap-4">
-              <Avatar className="h-16 w-16 rounded-lg">
+              <Avatar className={`${isMobile ? 'h-12 w-12' : 'h-16 w-16'} rounded-lg`}>
                 <AvatarImage src={userImage} alt={userName} />
                 <AvatarFallback>{userName.charAt(0)}</AvatarFallback>
               </Avatar>
               <div className="flex flex-col text-left">
-                <span className="text-sm text-gray-500">Contactando como</span>
-                <span className="font-black text-xl">{userName}</span>
+                <span className={`text-sm text-gray-500 ${isMobile ? 'text-xs' : ''}`}>Contactando como</span>
+                <span className={`font-black ${isMobile ? 'text-lg' : 'text-xl'}`}>{userName}</span>
               </div>
             </div>
             
