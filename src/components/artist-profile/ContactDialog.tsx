@@ -32,7 +32,7 @@ const ContactDialog = ({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-[500px] rounded-[40px] p-8 bg-white border-none">
+      <DialogContent className="max-w-[500px] rounded-[40px] p-8 bg-[#FAF8F6] border-none">
         <DialogTitle className="text-3xl font-black mb-6">
           Contacta con {artistName}
         </DialogTitle>
