@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
@@ -46,14 +45,12 @@ const ContactDialog = ({
   const { toast } = useToast();
   const isMobile = useIsMobile();
   
-  // Estado para los checkbox de políticas
   const [acceptedPolicies, setAcceptedPolicies] = useState({
     contactTerms: false,
     privacyPolicy: false, 
     relatedArtists: false
   });
 
-  // Tipos de eventos disponibles
   const eventTypes = [
     { name: "Boda", value: "boda" },
     { name: "Cumpleaños", value: "cumpleanos" },
@@ -76,7 +73,6 @@ const ContactDialog = ({
     }
   };
 
-  // Función para manejar el cambio de vista
   const handleNextView = () => {
     setCurrentView("policies");
   };
@@ -85,7 +81,6 @@ const ContactDialog = ({
     setCurrentView("form");
   };
 
-  // Función para manejar los cambios en los checkbox
   const handlePolicyChange = (policyName: keyof typeof acceptedPolicies) => {
     setAcceptedPolicies({
       ...acceptedPolicies,
@@ -93,9 +88,7 @@ const ContactDialog = ({
     });
   };
 
-  // Función para manejar el envío del formulario
   const handleSubmit = () => {
-    // Aquí iría la lógica para enviar el formulario
     console.log("Formulario enviado", {
       date,
       eventType,
@@ -105,13 +98,10 @@ const ContactDialog = ({
       acceptedPolicies
     });
     
-    // Mostrar el diálogo de éxito
     setSuccessDialogOpen(true);
     
-    // Cerrar el diálogo de contacto
     onOpenChange(false);
     
-    // Resetear el formulario
     setDate("");
     setEventType("");
     setLocation("");
@@ -127,7 +117,6 @@ const ContactDialog = ({
     });
   };
 
-  // Función para manejar el efecto de onda desde el punto de clic
   const handleRippleEffect = (event: React.MouseEvent<HTMLElement>) => {
     const element = event.currentTarget;
     const rect = element.getBoundingClientRect();
@@ -142,23 +131,19 @@ const ContactDialog = ({
     
     element.appendChild(ripple);
     
-    // Eliminar el elemento después de la animación
     setTimeout(() => {
       ripple.remove();
     }, 800);
   };
 
-  // Función para hacer todo el div del policy clickeable
   const handlePolicyDivClick = (policyName: keyof typeof acceptedPolicies) => {
     handlePolicyChange(policyName);
   };
 
-  // Función para manejar la selección del tipo de evento
   const handleEventTypeSelect = (value: string) => {
     setEventType(value);
   };
 
-  // Obtener el nombre del tipo de evento seleccionado
   const getSelectedEventTypeName = () => {
     const selected = eventTypes.find(type => type.value === eventType);
     return selected ? selected.name : "Selecciona el tipo de evento";
@@ -227,7 +212,7 @@ const ContactDialog = ({
                       </DropdownMenuTrigger>
                       <DropdownMenuContent 
                         className="min-w-[225px] bg-white dark:bg-[#575654] border-none rounded-3xl p-3 shadow-none mb-2"
-                        align="center"
+                        align="start"
                       >
                         {eventTypes.map((type) => (
                           <DropdownMenuItem
