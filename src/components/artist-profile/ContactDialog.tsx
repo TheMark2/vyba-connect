@@ -9,6 +9,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Badge } from "@/components/ui/badge";
 import { motion } from "framer-motion";
+
 interface ContactDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
@@ -16,6 +17,7 @@ interface ContactDialogProps {
   userImage?: string;
   userName?: string;
 }
+
 const ContactDialog = ({
   open,
   onOpenChange,
@@ -31,8 +33,8 @@ const ContactDialog = ({
   const [showCustomDuration, setShowCustomDuration] = useState(false);
   const [selectedDuration, setSelectedDuration] = useState("");
 
-  // Reducimos la cantidad de opciones de duración
   const durations = ["1h", "2h", "3h", "4h", "Personalizado"];
+
   const handleDurationSelect = (duration: string) => {
     if (duration === "Personalizado") {
       setShowCustomDuration(true);
@@ -43,13 +45,18 @@ const ContactDialog = ({
       setDuration(duration);
     }
   };
+
   return <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="max-w-[500px] rounded-[40px] p-8 bg-[#FAF8F6] border-none">
         <DialogTitle className="text-3xl font-black mb-6">
           Contacta con {artistName}
         </DialogTitle>
         
-        <div className="flex justify-between items-center mb-3">
+        <motion.button 
+          className="flex justify-between items-center mb-3 w-full p-3 rounded-xl transition-all duration-300 hover:bg-secondary hover:scale-105 cursor-pointer"
+          whileHover={{ scale: 1.05 }}
+          whileTap={{ scale: 0.98 }}
+        >
           <div className="flex items-center gap-4">
             <Avatar className="h-16 w-16 border border-gray-200">
               <AvatarImage src={userImage} alt={userName} className="rounded-lg" />
@@ -64,7 +71,7 @@ const ContactDialog = ({
           <Button variant="secondary" size="icon" className="rounded-full h-7 w-7">
             <RefreshCw className="h-4 w-4" />
           </Button>
-        </div>
+        </motion.button>
 
         <ScrollArea className="h-[50vh] pr-4">
           <div className="space-y-6">
@@ -153,4 +160,5 @@ const ContactDialog = ({
       </DialogContent>
     </Dialog>;
 };
+
 export default ContactDialog;
