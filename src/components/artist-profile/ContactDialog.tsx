@@ -9,7 +9,7 @@ import { RefreshCw, Clock } from "lucide-react";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Badge } from "@/components/ui/badge";
-import { Carousel, CarouselContent, CarouselItem } from "@/components/ui/carousel";
+import { Carousel, CarouselContent, CarouselItem, CarouselPrevious, CarouselNext } from "@/components/ui/carousel";
 import { motion } from "framer-motion";
 
 interface ContactDialogProps {
@@ -123,11 +123,17 @@ const ContactDialog = ({
               <label htmlFor="duration" className="block text-sm font-medium mb-2">
                 Duración del evento
               </label>
-              <div className="py-2">
-                <Carousel className="w-full">
-                  <CarouselContent className="gap-2">
+              <div className="relative py-2 w-full">
+                <Carousel 
+                  className="w-full"
+                  opts={{
+                    align: "start",
+                    containScroll: "trimSnaps"
+                  }}
+                >
+                  <CarouselContent className="-ml-1">
                     {durations.map((durationOption, index) => (
-                      <CarouselItem key={index}>
+                      <CarouselItem key={index} className="pl-1 basis-auto">
                         <motion.div 
                           whileHover={{ scale: 1.05 }}
                           whileTap={{ scale: 0.95 }}
@@ -150,6 +156,8 @@ const ContactDialog = ({
                       </CarouselItem>
                     ))}
                   </CarouselContent>
+                  <CarouselPrevious className="left-0 -translate-x-1/2" />
+                  <CarouselNext className="right-0 translate-x-1/2" />
                 </Carousel>
               </div>
               
@@ -166,7 +174,7 @@ const ContactDialog = ({
                     placeholder="Ej: 2 horas y 30 minutos"
                     value={duration}
                     onChange={(e) => setDuration(e.target.value)}
-                    className="bg-white border-0 rounded-xl shadow-none h-12 focus-visible:ring-0 pl-4 mt-2"
+                    className="bg-white border-0 rounded-xl shadow-none h-12 focus-visible:ring-0 pl-4 mt-2 w-full"
                   />
                 </motion.div>
               )}
