@@ -33,7 +33,7 @@ const ImageGalleryDialog = ({
             {images.map((image, index) => (
               <div 
                 key={index} 
-                className="w-[450px] flex-grow-0 flex-shrink-0 mb-6"
+                className="flex-shrink-0 mb-6"
                 id={index === activeImageIndex ? "active-image" : undefined}
                 ref={el => {
                   if (el && index === activeImageIndex) {
@@ -43,11 +43,11 @@ const ImageGalleryDialog = ({
                   }
                 }}
               >
-                <div className="rounded-2xl overflow-hidden h-auto">
+                <div className="rounded-2xl overflow-hidden">
                   <img 
                     src={image} 
                     alt={`Imagen ${index + 1}`} 
-                    className="w-full h-auto object-contain rounded-2xl"
+                    className="max-h-[70vh] max-w-[450px] w-auto h-auto object-contain rounded-2xl"
                   />
                 </div>
               </div>

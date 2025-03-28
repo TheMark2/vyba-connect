@@ -1,4 +1,3 @@
-
 import React, { useState, useRef } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { toast } from "sonner";
@@ -31,6 +30,7 @@ const artistsData = [
       "https://images.unsplash.com/photo-1571330735066-03aaa9429d89?q=80&w=2070",
       "https://images.unsplash.com/photo-1429962714451-bb934ecdc4ec?q=80&w=2070",
       "https://images.unsplash.com/photo-1516450360452-9312f5e86fc7?q=80&w=2070",
+      "https://images.unsplash.com/photo-1581090464777-f3220bbe1b8b?q=80&w=1000",
       "https://images.unsplash.com/photo-1526478806334-5fd488fcaabc?q=80&w=2070"
     ],
     coverImage: "https://images.unsplash.com/photo-1533174072545-7a4b6ad7a6c3?q=80&w=2070",
