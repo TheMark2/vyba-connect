@@ -54,7 +54,7 @@ const ContactDialog = ({
           </Button>
         </div>
 
-        <ScrollArea className="h-[60vh] pr-4">
+        <ScrollArea className="h-[50vh] pr-4">
           <div className="space-y-6">
             <div>
               <label htmlFor="date" className="block text-sm font-medium mb-2">
