@@ -1,0 +1,82 @@
+
+import React from "react";
+import { Dialog, DialogContent, DialogClose } from "@/components/ui/dialog";
+import { X } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { cn } from "@/lib/utils";
+import { useIsMobile } from "@/hooks/use-mobile";
+
+interface ImageGalleryDialogProps {
+  images: string[];
+  isOpen: boolean;
+  onClose: () => void;
+  activeImageIndex?: number;
+}
+
+const ImageGalleryDialog = ({ 
+  images, 
+  isOpen, 
+  onClose,
+  activeImageIndex = 0 
+}: ImageGalleryDialogProps) => {
+  const isMobile = useIsMobile();
+  
+  return (
+    <Dialog open={isOpen} onOpenChange={(open) => !open && onClose()}>
+      <DialogContent className={cn(
+        "p-0 w-full h-full max-w-none max-h-screen bg-black text-white",
+        isMobile ? "" : "rounded-none"
+      )}>
+        <div className="fixed top-4 right-4 z-50">
+          <DialogClose asChild>
+            <Button 
+              variant="ghost" 
+              size="icon" 
+              className="rounded-full bg-black/50 hover:bg-black/70 text-white"
+              onClick={onClose}
+            >
+              <X className="h-6 w-6" />
+            </Button>
+          </DialogClose>
+        </div>
+        
+        <div className="h-full w-full overflow-y-auto p-8 pt-16">
+          <div className="flex flex-wrap justify-center gap-6">
+            {images.map((image, index) => (
+              <div key={index} className={cn(
+                "flex-grow-0 flex-shrink-0",
+                index === activeImageIndex ? "scroll-mt-16" : ""
+              )}>
+                <img 
+                  src={image} 
+                  alt={`Imagen ${index + 1}`} 
+                  className="max-w-full object-contain"
+                  id={index === activeImageIndex ? "active-image" : undefined}
+                  ref={el => {
+                    if (el && index === activeImageIndex) {
+                      setTimeout(() => {
+                        el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                      }, 100);
+                    }
+                  }}
+                />
+              </div>
+            ))}
+          </div>
+        </div>
+        
+        <div className="fixed bottom-6 left-0 right-0 flex justify-center">
+          <Button 
+            variant="secondary" 
+            className="rounded-full px-8 py-2 bg-black/50 hover:bg-black/70 text-white"
+            onClick={onClose}
+          >
+            Cerrar
+          </Button>
+        </div>
+      </DialogContent>
+    </Dialog>
+  );
+};
+
+export default ImageGalleryDialog;
