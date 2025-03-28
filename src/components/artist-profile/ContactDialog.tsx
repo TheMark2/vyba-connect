@@ -5,7 +5,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
-import { RefreshCw, Clock, Edit, BellRing, Users } from "lucide-react";
+import { RefreshCw, Clock, Edit, BellRing, Users, ChevronDown } from "lucide-react";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Badge } from "@/components/ui/badge";
@@ -14,6 +14,8 @@ import { Checkbox } from "@/components/ui/checkbox";
 import SuccessDialog from "./SuccessDialog";
 import { useToast } from "@/hooks/use-toast";
 import { useIsMobile } from "@/hooks/use-mobile";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
+import { cn } from "@/lib/utils";
 
 interface ContactDialogProps {
   open: boolean;
@@ -50,6 +52,16 @@ const ContactDialog = ({
     privacyPolicy: false, 
     relatedArtists: false
   });
+
+  // Tipos de eventos disponibles
+  const eventTypes = [
+    { name: "Boda", value: "boda" },
+    { name: "Cumpleaños", value: "cumpleanos" },
+    { name: "Fiesta privada", value: "fiesta" },
+    { name: "Evento corporativo", value: "corporativo" },
+    { name: "Inauguración", value: "inauguracion" },
+    { name: "Aniversario", value: "aniversario" }
+  ];
 
   const durations = ["1h", "2h", "3h", "4h", "Personalizado"];
 
@@ -141,6 +153,17 @@ const ContactDialog = ({
     handlePolicyChange(policyName);
   };
 
+  // Función para manejar la selección del tipo de evento
+  const handleEventTypeSelect = (value: string) => {
+    setEventType(value);
+  };
+
+  // Obtener el nombre del tipo de evento seleccionado
+  const getSelectedEventTypeName = () => {
+    const selected = eventTypes.find(type => type.value === eventType);
+    return selected ? selected.name : "Selecciona el tipo de evento";
+  };
+
   return (
     <>
       <Dialog open={open} onOpenChange={onOpenChange}>
@@ -192,17 +215,36 @@ const ContactDialog = ({
                     <label htmlFor="eventType" className="block text-sm font-medium mb-2">
                       Tipo de evento
                     </label>
-                    <Select value={eventType} onValueChange={setEventType}>
-                      <SelectTrigger className="bg-white border-0 rounded-xl shadow-none h-12 focus-visible:ring-0 pl-4">
-                        <SelectValue placeholder="Selecciona el tipo de evento" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="boda">Boda</SelectItem>
-                        <SelectItem value="cumpleanos">Cumpleaños</SelectItem>
-                        <SelectItem value="fiesta">Fiesta privada</SelectItem>
-                        <SelectItem value="corporativo">Evento corporativo</SelectItem>
-                      </SelectContent>
-                    </Select>
+                    <DropdownMenu>
+                      <DropdownMenuTrigger asChild>
+                        <Button 
+                          variant="outline" 
+                          className="text-sm px-4 py-3 h-12 w-full flex items-center justify-between bg-white border-0 rounded-xl shadow-none focus-visible:ring-0 font-normal"
+                        >
+                          {eventType ? getSelectedEventTypeName() : "Selecciona el tipo de evento"}
+                          <ChevronDown className="w-4 h-4 ml-2 opacity-50" />
+                        </Button>
+                      </DropdownMenuTrigger>
+                      <DropdownMenuContent 
+                        className="min-w-[225px] bg-white dark:bg-[#575654] border-none rounded-3xl p-3 shadow-none mb-2"
+                        align="center"
+                      >
+                        {eventTypes.map((type) => (
+                          <DropdownMenuItem
+                            key={type.value}
+                            className={cn(
+                              "rounded-md px-3 py-3 text-sm font-medium mb-1 focus:bg-[#F8F8F8] hover:bg-[#F8F8F8] dark:text-white dark:focus:bg-[#444341] dark:hover:bg-[#444341] cursor-pointer transition-colors duration-300",
+                              eventType === type.value && (
+                                "bg-[#F8F8F8] dark:bg-[#444341]"
+                              )
+                            )}
+                            onClick={() => handleEventTypeSelect(type.value)}
+                          >
+                            {type.name}
+                          </DropdownMenuItem>
+                        ))}
+                      </DropdownMenuContent>
+                    </DropdownMenu>
                   </div>
                   
                   <div>
