@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
@@ -10,7 +9,6 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Badge } from "@/components/ui/badge";
 import { motion } from "framer-motion";
-
 interface ContactDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
@@ -18,7 +16,6 @@ interface ContactDialogProps {
   userImage?: string;
   userName?: string;
 }
-
 const ContactDialog = ({
   open,
   onOpenChange,
@@ -33,10 +30,9 @@ const ContactDialog = ({
   const [message, setMessage] = useState("");
   const [showCustomDuration, setShowCustomDuration] = useState(false);
   const [selectedDuration, setSelectedDuration] = useState("");
-  
+
   // Reducimos la cantidad de opciones de duración
   const durations = ["1h", "2h", "3h", "4h", "Personalizado"];
-  
   const handleDurationSelect = (duration: string) => {
     if (duration === "Personalizado") {
       setShowCustomDuration(true);
@@ -47,9 +43,7 @@ const ContactDialog = ({
       setDuration(duration);
     }
   };
-
-  return (
-    <Dialog open={open} onOpenChange={onOpenChange}>
+  return <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="max-w-[500px] rounded-[40px] p-8 bg-[#FAF8F6] border-none">
         <DialogTitle className="text-3xl font-black mb-6">
           Contacta con {artistName}
@@ -63,7 +57,7 @@ const ContactDialog = ({
             </Avatar>
             <div className="flex flex-col">
               <span className="text-sm text-gray-500">Contactando como</span>
-              <span className="font-bold text-base">{userName}</span>
+              <span className="font-black text-xl">{userName}</span>
             </div>
           </div>
           
@@ -78,14 +72,7 @@ const ContactDialog = ({
               <label htmlFor="date" className="block text-sm font-medium mb-2">
                 Fecha del evento
               </label>
-              <Input
-                id="date"
-                type="text"
-                placeholder="Fecha del evento"
-                value={date}
-                onChange={(e) => setDate(e.target.value)}
-                className="bg-white border-0 rounded-xl shadow-none h-12 focus-visible:ring-0 pl-4"
-              />
+              <Input id="date" type="text" placeholder="Fecha del evento" value={date} onChange={e => setDate(e.target.value)} className="bg-white border-0 rounded-xl shadow-none h-12 focus-visible:ring-0 pl-4" />
             </div>
             
             <div>
@@ -109,14 +96,7 @@ const ContactDialog = ({
               <label htmlFor="location" className="block text-sm font-medium mb-2">
                 Ubicación del evento
               </label>
-              <Input
-                id="location"
-                type="text"
-                placeholder="Sant Feliu de Codines"
-                value={location}
-                onChange={(e) => setLocation(e.target.value)}
-                className="bg-white border-0 rounded-xl shadow-none h-12 focus-visible:ring-0 pl-4"
-              />
+              <Input id="location" type="text" placeholder="Sant Feliu de Codines" value={location} onChange={e => setLocation(e.target.value)} className="bg-white border-0 rounded-xl shadow-none h-12 focus-visible:ring-0 pl-4" />
             </div>
             
             <div>
@@ -125,61 +105,42 @@ const ContactDialog = ({
               </label>
               <div className="py-2">
                 <div className="flex flex-wrap gap-2">
-                  {durations.map((durationOption, index) => (
-                    <motion.div 
-                      key={index}
-                      whileHover={{ scale: 1.05 }}
-                      whileTap={{ scale: 0.95 }}
-                    >
-                      <Badge 
-                        variant="default" 
-                        className={`cursor-pointer px-4 py-2 bg-white hover:bg-gray-100 text-black rounded-full flex items-center gap-1 h-10 ${selectedDuration === durationOption ? 'ring-2 ring-blue-500' : ''}`}
-                        onClick={() => handleDurationSelect(durationOption)}
-                      >
-                        {durationOption === "Personalizado" ? (
-                          "Personalizado"
-                        ) : (
-                          <>
+                  {durations.map((durationOption, index) => <motion.div key={index} whileHover={{
+                  scale: 1.05
+                }} whileTap={{
+                  scale: 0.95
+                }}>
+                      <Badge variant="default" className={`cursor-pointer px-4 py-2 bg-white hover:bg-gray-100 text-black rounded-full flex items-center gap-1 h-10 ${selectedDuration === durationOption ? 'ring-2 ring-blue-500' : ''}`} onClick={() => handleDurationSelect(durationOption)}>
+                        {durationOption === "Personalizado" ? "Personalizado" : <>
                             <Clock className="h-4 w-4 mr-1" />
                             {durationOption}
-                          </>
-                        )}
+                          </>}
                       </Badge>
-                    </motion.div>
-                  ))}
+                    </motion.div>)}
                 </div>
               </div>
               
-              {showCustomDuration && (
-                <motion.div
-                  initial={{ opacity: 0, height: 0 }}
-                  animate={{ opacity: 1, height: "auto" }}
-                  exit={{ opacity: 0, height: 0 }}
-                  transition={{ duration: 0.3 }}
-                >
-                  <Input
-                    id="customDuration"
-                    type="text"
-                    placeholder="Ej: 2 horas y 30 minutos"
-                    value={duration}
-                    onChange={(e) => setDuration(e.target.value)}
-                    className="bg-white border-0 rounded-xl shadow-none h-12 focus-visible:ring-0 pl-4 mt-2 w-full"
-                  />
-                </motion.div>
-              )}
+              {showCustomDuration && <motion.div initial={{
+              opacity: 0,
+              height: 0
+            }} animate={{
+              opacity: 1,
+              height: "auto"
+            }} exit={{
+              opacity: 0,
+              height: 0
+            }} transition={{
+              duration: 0.3
+            }}>
+                  <Input id="customDuration" type="text" placeholder="Ej: 2 horas y 30 minutos" value={duration} onChange={e => setDuration(e.target.value)} className="bg-white border-0 rounded-xl shadow-none h-12 focus-visible:ring-0 pl-4 mt-2 w-full" />
+                </motion.div>}
             </div>
             
             <div>
               <label htmlFor="message" className="block text-sm font-medium mb-2">
                 Mensaje (opcional)
               </label>
-              <Textarea
-                id="message"
-                placeholder="Escribe tu mensaje aquí..."
-                value={message}
-                onChange={(e) => setMessage(e.target.value)}
-                className="bg-white border-0 rounded-xl shadow-none min-h-[120px] focus-visible:ring-0 pl-4 pt-4"
-              />
+              <Textarea id="message" placeholder="Escribe tu mensaje aquí..." value={message} onChange={e => setMessage(e.target.value)} className="bg-white border-0 rounded-xl shadow-none min-h-[120px] focus-visible:ring-0 pl-4 pt-4" />
             </div>
           </div>
         </ScrollArea>
@@ -190,8 +151,6 @@ const ContactDialog = ({
           </Button>
         </div>
       </DialogContent>
-    </Dialog>
-  );
+    </Dialog>;
 };
-
 export default ContactDialog;
