@@ -22,14 +22,6 @@ const SuccessDialog = ({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="max-w-[500px] rounded-[40px] p-0 border-none bg-white overflow-hidden">
         <div className="text-center p-12 pt-16 pb-20 flex flex-col items-center">
-          {/* Botón de cerrar personalizado */}
-          <button
-            className="absolute right-6 top-6 p-1 rounded-full hover:bg-black/5 transition-colors"
-            onClick={() => onOpenChange(false)}
-          >
-            <X className="h-6 w-6" />
-            <span className="sr-only">Cerrar</span>
-          </button>
           
           {/* Avatar del artista con efecto de sombra desenfocada */}
           <div className="relative mb-8">
@@ -52,7 +44,7 @@ const SuccessDialog = ({
               className="relative z-10"
             >
               <div 
-                className="w-[120px] h-[120px] rounded-2xl bg-cover bg-center shadow-lg"
+                className="w-[120px] h-[120px] rounded-2xl bg-cover bg-center"
                 style={{ backgroundImage: `url(${artistImage})` }}
               />
             </motion.div>
