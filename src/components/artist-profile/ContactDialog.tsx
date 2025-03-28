@@ -58,8 +58,8 @@ const ContactDialog = ({
           whileTap={{ scale: 0.98 }}
         >
           <div className="flex items-center gap-4">
-            <Avatar className="h-16 w-16 border border-gray-200">
-              <AvatarImage src={userImage} alt={userName} className="rounded-lg" />
+            <Avatar className="h-16 w-16 rounded-lg">
+              <AvatarImage src={userImage} alt={userName} />
               <AvatarFallback>{userName.charAt(0)}</AvatarFallback>
             </Avatar>
             <div className="flex flex-col">
