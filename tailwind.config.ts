@@ -26,8 +26,8 @@ export default {
           beige: "#F5F1EB",
           navy: "#222845",
           dark: {
-            bg: "#2C2C2B",
-            secondary: "#444341"
+            bg: "#000000", // Cambiado a negro puro
+            secondary: "#181818" // Cambiado a un negro menos intenso para elementos secundarios
           }
         },
         border: "hsl(var(--border))",
