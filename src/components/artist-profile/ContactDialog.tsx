@@ -37,7 +37,7 @@ const ContactDialog = ({
           Contacta con {artistName}
         </DialogTitle>
         
-        <div className="flex justify-between items-center mb-5">
+        <div className="flex justify-between items-center mb-3">
           <div className="flex items-center gap-4">
             <Avatar className="h-16 w-16 border border-gray-200">
               <AvatarImage src={userImage} alt={userName} />
@@ -54,7 +54,7 @@ const ContactDialog = ({
           </Button>
         </div>
 
-        <ScrollArea className="h-[50vh] pr-4">
+        <ScrollArea className="h-[60vh] pr-4">
           <div className="space-y-6">
             <div>
               <label htmlFor="date" className="block text-sm font-medium mb-2">
@@ -139,7 +139,7 @@ const ContactDialog = ({
           </div>
         </ScrollArea>
         
-        <div className="flex justify-end mt-3">
+        <div className="flex justify-end mt-2">
           <Button className="bg-blue-100 hover:bg-blue-200 text-black font-medium rounded-full px-8">
             Siguiente
           </Button>
