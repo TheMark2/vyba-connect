@@ -55,8 +55,9 @@ const SuccessDialog = ({
             initial={{ y: 20, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
             transition={{ duration: 0.4, delay: 0.2, ease: "easeOut" }}
+            className="space-y-4"
           >
-            <div className="space-y-4 mb-10">
+            <div className="space-y-2 mb-10">
               <h3 className="text-xl">Has contactado con</h3>
               <h2 className="text-4xl font-black">{artistName}</h2>
             </div> 
