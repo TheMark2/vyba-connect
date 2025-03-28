@@ -25,13 +25,14 @@ const artistsData = [
     location: "Barcelona",
     availability: "Esta semana disponible",
     images: [
-      "https://images.unsplash.com/photo-1514525253161-7a46d19cd819?q=80&w=2070",
+      "https://images.unsplash.com/photo-1533174072545-7a4b6ad7a6c3?q=80&w=2070",
       "https://images.unsplash.com/photo-1470225620780-dba8ba36b745?q=80&w=2070",
       "https://images.unsplash.com/photo-1571330735066-03aaa9429d89?q=80&w=2070",
       "https://images.unsplash.com/photo-1429962714451-bb934ecdc4ec?q=80&w=2070",
-      "https://images.unsplash.com/photo-1516450360452-9312f5e86fc7?q=80&w=2070"
+      "https://images.unsplash.com/photo-1516450360452-9312f5e86fc7?q=80&w=2070",
+      "https://images.unsplash.com/photo-1526478806334-5fd488fcaabc?q=80&w=2070"
     ],
-    coverImage: "https://images.unsplash.com/photo-1514525253161-7a46d19cd819?q=80&w=2070",
+    coverImage: "https://images.unsplash.com/photo-1533174072545-7a4b6ad7a6c3?q=80&w=2070",
     rating: 4.5,
     reviews: 34,
     priceRange: "150-400€",
@@ -232,81 +233,62 @@ const ArtistProfilePage = () => {
     priceRange: artist.priceRange
   };
 
-  // Usamos una imagen fija de prueba para el fondo blurreado en lugar de la imagen de perfil
-  const backgroundImage = "https://images.unsplash.com/photo-1571330735066-03aaa9429d89?q=80&w=2070";
-
   return (
     <>
       <Navbar />
-      <div className="relative min-h-screen">
-        {/* Capa de fondo normal con opacidad */}
-        <div className="fixed inset-0 bg-background/60 z-0"></div>
-        
-        {/* Capa de fondo blurreado sticky */}
-        <div className="sticky top-0 h-[500px] overflow-hidden z-[1]">
-          <div 
-            className="absolute inset-0 w-full h-full bg-cover bg-center"
-            style={{ backgroundImage: `url(${backgroundImage})` }}
-          ></div>
-          <div className="absolute inset-0 backdrop-blur-3xl bg-black/40"></div>
-          {/* Gradiente para desvanecer el fondo blurreado */}
-          <div className="absolute inset-x-0 bottom-0 h-64 bg-gradient-to-b from-transparent to-background/90 z-10"></div>
-        </div>
+      <div className="px-6 md:px-10 lg:px-14 xl:px-16">
+        <ArtistBanner 
+          artist={artist} 
+          onFavorite={handleFavorite} 
+          onReport={handleReport} 
+          onShare={handleShare} 
+        />
 
-        <div className="relative z-10 px-6 md:px-10 lg:px-14 xl:px-16 -mt-[500px]">
-          <ArtistBanner 
-            artist={artist} 
-            onFavorite={handleFavorite} 
-            onReport={handleReport} 
-            onShare={handleShare} 
-          />
-
-          <div className="pb-16 max-w-7xl mx-auto">
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-16">
-              {/* Left Content */}
-              <div className="lg:col-span-2">
-                <AboutArtist 
-                  description={artist.description} 
-                  genres={artist.genres} 
-                  onGenreClick={handleGenreClick} 
-                />
-                
-                <DetailedInformation artist={artist} />
-                
-                {artist.musicPreviews && (
-                  <MusicPreviews 
-                    previews={artist.musicPreviews} 
-                    artistName={artist.name} 
-                  />
-                )}
-                
-                {artist.eventTypes && (
-                  <EventTypes 
-                    eventTypes={artist.eventTypes} 
-                    onEventTypeClick={handleEventTypeClick} 
-                  />
-                )}
-                
-                <ArtistFAQ artistName={artist.name} />
-                
-                <ArtistReviews 
-                  rating={artist.rating} 
-                  reviews={artist.reviews || 0}
-                  genres={artist.genres}
-                  reviewsData={artist.reviewsData}
-                />
-              </div>
+        <div className="pb-16 max-w-7xl mx-auto">
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-16">
+            {/* Left Content */}
+            <div className="lg:col-span-2">
+              <AboutArtist 
+                description={artist.description} 
+                genres={artist.genres} 
+                onGenreClick={handleGenreClick} 
+              />
               
-              {/* Right Sticky Content */}
-              <ContactCard 
-                artist={artistContactData} 
-                onContact={handleContact} 
+              <DetailedInformation artist={artist} />
+              
+              {artist.musicPreviews && (
+                <MusicPreviews 
+                  previews={artist.musicPreviews} 
+                  artistName={artist.name} 
+                />
+              )}
+              
+              {artist.eventTypes && (
+                <EventTypes 
+                  eventTypes={artist.eventTypes} 
+                  onEventTypeClick={handleEventTypeClick} 
+                />
+              )}
+              
+              <ArtistFAQ artistName={artist.name} />
+              
+              <ArtistReviews 
+                rating={artist.rating} 
+                reviews={artist.reviews || 0}
+                genres={artist.genres}
+                reviewsData={artist.reviewsData}
               />
             </div>
+            
+            {/* Right Sticky Content */}
+            <ContactCard 
+              artist={artistContactData} 
+              onContact={handleContact} 
+            />
           </div>
-
-          <RecommendedArtists artists={recommendedArtists} />
         </div>
+
+        <RecommendedArtists artists={recommendedArtists} />
       </div>
       <Footer />
     </>

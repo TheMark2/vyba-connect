@@ -43,14 +43,14 @@ const ArtistBanner = ({ artist, onFavorite, onReport, onShare }: ArtistBannerPro
       <Button 
         variant="secondary" 
         size="icon" 
-        className="absolute top-4 left-4 sm:top-6 sm:left-6 z-50 w-10 h-10 rounded-full" 
+        className="absolute top-4 left-4 sm:top-6 sm:left-6 z-40 w-10 h-10 rounded-full" 
         onClick={() => navigate(-1)}
       >
         <ArrowLeft className="h-5 w-5 text-black dark:text-white" />
       </Button>
 
       {/* Carrusel integrado directamente en el banner */}
-      <Carousel className="w-full h-[80vh] relative">
+      <Carousel className="w-full h-[80vh]">
         <CarouselContent className="h-[80vh] gap-0">
           {allImages.map((image, index) => (
             <CarouselItem key={index} className="h-[80vh] w-full">
@@ -67,13 +67,13 @@ const ArtistBanner = ({ artist, onFavorite, onReport, onShare }: ArtistBannerPro
         </CarouselContent>
         
         {/* Utilizamos la clase hidden por defecto y la mostramos solo cuando hay hover y se puede navegar a la anterior */}
-        <CarouselPrevious className={`absolute left-4 top-1/2 -translate-y-1/2 bg-[#FAF8F6] hover:bg-white z-40 w-10 h-10 opacity-0 transition-opacity duration-300 ${isHovering ? "opacity-100" : ""}`} />
+        <CarouselPrevious className={`absolute left-4 top-1/2 -translate-y-1/2 bg-[#FAF8F6] hover:bg-white z-30 w-10 h-10 opacity-0 transition-opacity duration-300 ${isHovering ? "opacity-100" : ""}`} />
         
-        <CarouselNext className={`absolute right-4 top-1/2 -translate-y-1/2 bg-[#FAF8F6] hover:bg-white z-40 w-10 h-10 opacity-0 transition-opacity duration-300 ${isHovering ? "opacity-100" : ""}`} />
+        <CarouselNext className={`absolute right-4 top-1/2 -translate-y-1/2 bg-[#FAF8F6] hover:bg-white z-30 w-10 h-10 opacity-0 transition-opacity duration-300 ${isHovering ? "opacity-100" : ""}`} />
       </Carousel>
       
       {/* Buttons in top right corner */}
-      <div className={`absolute top-4 right-4 sm:top-6 sm:right-6 flex space-x-2 z-50 transition-opacity duration-300 ${isHovering ? "opacity-0" : "opacity-100"}`}>
+      <div className={`absolute top-4 right-4 sm:top-6 sm:right-6 flex space-x-2 z-30 transition-opacity duration-300 ${isHovering ? "opacity-0" : "opacity-100"}`}>
         <Button variant="secondary" size="icon" className="w-10 h-10 rounded-full" onClick={onFavorite}>
           <Heart className="h-5 w-5 text-black dark:text-white" />
         </Button>
@@ -87,7 +87,7 @@ const ArtistBanner = ({ artist, onFavorite, onReport, onShare }: ArtistBannerPro
       
       {/* Artist info overlay */}
       {isMobile ? (
-        <div className={`absolute bottom-12 left-5 right-0 flex flex-col items-start z-40 transform transition-all duration-300 ${isHovering ? "opacity-0 translate-y-10" : "opacity-100 translate-y-0"}`}>
+        <div className={`absolute bottom-12 left-5 right-0 flex flex-col items-start z-30 transform transition-all duration-300 ${isHovering ? "opacity-0 translate-y-10" : "opacity-100 translate-y-0"}`}>
           <div className="rounded-full overflow-hidden mb-4 w-24 h-24">
             <img src={artist.images[0]} alt={artist.name} className="w-full h-full object-cover rounded-full" />
           </div>
@@ -98,7 +98,7 @@ const ArtistBanner = ({ artist, onFavorite, onReport, onShare }: ArtistBannerPro
           </div>
         </div>
       ) : (
-        <div className={`absolute bottom-12 left-5 md:left-10 lg:left-14 flex items-center z-40 transform transition-all duration-300 ${isHovering ? "opacity-0 translate-y-10" : "opacity-100 translate-y-0"}`}>
+        <div className={`absolute bottom-12 left-5 md:left-10 lg:left-14 flex items-center z-30 transform transition-all duration-300 ${isHovering ? "opacity-0 translate-y-10" : "opacity-100 translate-y-0"}`}>
           <div className="rounded-full overflow-hidden mr-4 md:mr-6 w-24 h-24 md:w-32 md:h-32">
             <img src={artist.images[0]} alt={artist.name} className="w-full h-full object-cover rounded-full" />
           </div>
