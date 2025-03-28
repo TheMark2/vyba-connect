@@ -80,7 +80,7 @@ const SuccessDialog = ({
               transition={{ duration: 0.3, delay: 0.4 }}
               className={cn(
                 "mt-10",
-                isMobile ? "fixed bottom-10 left-0 right-0 px-12 pb-6 w-full" : ""
+                isMobile ? "" : ""
               )}
             >
               <Button 
