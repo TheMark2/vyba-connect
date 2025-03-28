@@ -58,17 +58,17 @@ const ContactDialog = ({
         <div className="flex justify-between items-center mb-3">
           <div className="flex items-center gap-4">
             <Avatar className="h-16 w-16 border border-gray-200">
-              <AvatarImage src={userImage} alt={userName} />
+              <AvatarImage src={userImage} alt={userName} className="rounded-lg" />
               <AvatarFallback>{userName.charAt(0)}</AvatarFallback>
             </Avatar>
             <div className="flex flex-col">
               <span className="text-sm text-gray-500">Contactando como</span>
-              <span className="font-semibold text-lg">{userName}</span>
+              <span className="font-bold text-base">{userName}</span>
             </div>
           </div>
           
-          <Button variant="outline" size="icon" className="rounded-full h-10 w-10 border-gray-200">
-            <RefreshCw className="h-5 w-5" />
+          <Button variant="secondary" size="icon" className="rounded-full h-7 w-7">
+            <RefreshCw className="h-4 w-4" />
           </Button>
         </div>
 
