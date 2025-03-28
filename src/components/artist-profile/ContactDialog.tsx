@@ -108,11 +108,6 @@ const ContactDialog = ({
     }, 800);
   };
 
-  // Crea una función para manejar el clic en toda la política
-  const handlePolicyClick = (policyName: keyof typeof acceptedPolicies) => {
-    handlePolicyChange(policyName);
-  };
-
   return <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="max-w-[500px] rounded-[40px] p-8 bg-[#FAF8F6] border-none">
         <DialogTitle className="text-3xl font-black mb-6">
@@ -221,13 +216,7 @@ const ContactDialog = ({
             </ScrollArea>
             
             <div className="flex justify-end mt-2">
-              <Button 
-                className="bg-blue-100 hover:bg-blue-200 text-black font-medium rounded-full px-8 relative overflow-hidden" 
-                onClick={(e) => {
-                  handleRippleEffect(e);
-                  handleNextView();
-                }}
-              >
+              <Button className="bg-blue-100 hover:bg-blue-200 text-black font-medium rounded-full px-8" onClick={handleNextView}>
                 Siguiente
               </Button>
             </div>
@@ -238,12 +227,7 @@ const ContactDialog = ({
               <div className="space-y-4">
                 <h3 className="text-lg font-bold mb-2">Políticas de contacto</h3>
                 
-                <motion.div 
-                  className={`bg-white rounded-xl p-4 flex items-start gap-3 cursor-pointer transition-all duration-200 ${acceptedPolicies.contactTerms ? 'ring-2 ring-blue-500' : ''}`}
-                  onClick={() => handlePolicyClick('contactTerms')}
-                  whileHover={{ scale: 1.02 }}
-                  whileTap={{ scale: 0.98 }}
-                >
+                <div className="bg-white rounded-xl p-4 flex items-start gap-3">
                   <div className="mt-1">
                     <Edit className="h-5 w-5 text-black" />
                   </div>
@@ -251,22 +235,16 @@ const ContactDialog = ({
                     <div className="flex items-start justify-between mb-2">
                       <label 
                         htmlFor="contactTerms" 
-                        className="font-semibold text-base cursor-pointer select-none"
+                        className="font-semibold text-base cursor-pointer"
                       >
                         Acepto las condiciones de contacto
                       </label>
-                      <motion.div
-                        whileTap={{ scale: 1.2 }}
-                        transition={{ type: "spring", stiffness: 400, damping: 17 }}
-                      >
-                        <Checkbox 
-                          id="contactTerms" 
-                          checked={acceptedPolicies.contactTerms}
-                          onCheckedChange={() => handlePolicyChange('contactTerms')}
-                          className="h-5 w-5 data-[state=checked]:bg-black data-[state=checked]:text-white border-2 border-black rounded"
-                          onClick={(e) => e.stopPropagation()}
-                        />
-                      </motion.div>
+                      <Checkbox 
+                        id="contactTerms" 
+                        checked={acceptedPolicies.contactTerms}
+                        onCheckedChange={() => handlePolicyChange('contactTerms')}
+                        className="h-5 w-5 data-[state=checked]:bg-black data-[state=checked]:text-white border-2 border-black rounded"
+                      />
                     </div>
                     <p className="text-sm text-gray-500">
                       La mayoría de los músicos toman un descanso de 15 minutos 
@@ -274,14 +252,9 @@ const ContactDialog = ({
                       significa 2 sets de 45 minutos, con descansos.
                     </p>
                   </div>
-                </motion.div>
+                </div>
                 
-                <motion.div 
-                  className={`bg-white rounded-xl p-4 flex items-start gap-3 cursor-pointer transition-all duration-200 ${acceptedPolicies.privacyPolicy ? 'ring-2 ring-blue-500' : ''}`}
-                  onClick={() => handlePolicyClick('privacyPolicy')}
-                  whileHover={{ scale: 1.02 }}
-                  whileTap={{ scale: 0.98 }}
-                >
+                <div className="bg-white rounded-xl p-4 flex items-start gap-3">
                   <div className="mt-1">
                     <BellRing className="h-5 w-5 text-black" />
                   </div>
@@ -289,22 +262,16 @@ const ContactDialog = ({
                     <div className="flex items-start justify-between mb-2">
                       <label 
                         htmlFor="privacyPolicy" 
-                        className="font-semibold text-base cursor-pointer select-none"
+                        className="font-semibold text-base cursor-pointer"
                       >
                         Acepto las políticas de privacidad
                       </label>
-                      <motion.div
-                        whileTap={{ scale: 1.2 }}
-                        transition={{ type: "spring", stiffness: 400, damping: 17 }}
-                      >
-                        <Checkbox 
-                          id="privacyPolicy" 
-                          checked={acceptedPolicies.privacyPolicy}
-                          onCheckedChange={() => handlePolicyChange('privacyPolicy')}
-                          className="h-5 w-5 data-[state=checked]:bg-black data-[state=checked]:text-white border-2 border-black rounded"
-                          onClick={(e) => e.stopPropagation()}
-                        />
-                      </motion.div>
+                      <Checkbox 
+                        id="privacyPolicy" 
+                        checked={acceptedPolicies.privacyPolicy}
+                        onCheckedChange={() => handlePolicyChange('privacyPolicy')}
+                        className="h-5 w-5 data-[state=checked]:bg-black data-[state=checked]:text-white border-2 border-black rounded"
+                      />
                     </div>
                     <p className="text-sm text-gray-500">
                       La mayoría de los músicos toman un descanso de 15 minutos 
@@ -312,14 +279,9 @@ const ContactDialog = ({
                       significa 2 sets de 45 minutos, con descansos.
                     </p>
                   </div>
-                </motion.div>
+                </div>
                 
-                <motion.div 
-                  className={`bg-white rounded-xl p-4 flex items-start gap-3 cursor-pointer transition-all duration-200 ${acceptedPolicies.relatedArtists ? 'ring-2 ring-blue-500' : ''}`}
-                  onClick={() => handlePolicyClick('relatedArtists')}
-                  whileHover={{ scale: 1.02 }}
-                  whileTap={{ scale: 0.98 }}
-                >
+                <div className="bg-white rounded-xl p-4 flex items-start gap-3">
                   <div className="mt-1">
                     <Users className="h-5 w-5 text-black" />
                   </div>
@@ -327,22 +289,16 @@ const ContactDialog = ({
                     <div className="flex items-start justify-between mb-2">
                       <label 
                         htmlFor="relatedArtists" 
-                        className="font-semibold text-base cursor-pointer select-none"
+                        className="font-semibold text-base cursor-pointer"
                       >
                         Acepto recibir información sobre artistas relacionados
                       </label>
-                      <motion.div
-                        whileTap={{ scale: 1.2 }}
-                        transition={{ type: "spring", stiffness: 400, damping: 17 }}
-                      >
-                        <Checkbox 
-                          id="relatedArtists" 
-                          checked={acceptedPolicies.relatedArtists}
-                          onCheckedChange={() => handlePolicyChange('relatedArtists')}
-                          className="h-5 w-5 data-[state=checked]:bg-black data-[state=checked]:text-white border-2 border-black rounded"
-                          onClick={(e) => e.stopPropagation()}
-                        />
-                      </motion.div>
+                      <Checkbox 
+                        id="relatedArtists" 
+                        checked={acceptedPolicies.relatedArtists}
+                        onCheckedChange={() => handlePolicyChange('relatedArtists')}
+                        className="h-5 w-5 data-[state=checked]:bg-black data-[state=checked]:text-white border-2 border-black rounded"
+                      />
                     </div>
                     <p className="text-sm text-gray-500">
                       La mayoría de los músicos toman un descanso de 15 minutos 
@@ -350,27 +306,21 @@ const ContactDialog = ({
                       significa 2 sets de 45 minutos, con descansos.
                     </p>
                   </div>
-                </motion.div>
+                </div>
               </div>
             </ScrollArea>
             
             <div className="flex justify-between mt-4">
               <Button 
                 variant="secondary" 
-                className="bg-gray-100 hover:bg-gray-200 text-black font-medium rounded-full px-8 relative overflow-hidden"
-                onClick={(e) => {
-                  handleRippleEffect(e);
-                  handlePreviousView();
-                }}
+                className="bg-gray-100 hover:bg-gray-200 text-black font-medium rounded-full px-8"
+                onClick={handlePreviousView}
               >
                 Anterior
               </Button>
               <Button 
-                className="bg-blue-100 hover:bg-blue-200 text-black font-medium rounded-full px-8 relative overflow-hidden"
-                onClick={(e) => {
-                  handleRippleEffect(e);
-                  handleSubmit();
-                }}
+                className="bg-blue-100 hover:bg-blue-200 text-black font-medium rounded-full px-8"
+                onClick={handleSubmit}
                 disabled={!acceptedPolicies.contactTerms || !acceptedPolicies.privacyPolicy}
               >
                 Enviar
