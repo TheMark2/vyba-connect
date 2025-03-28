@@ -101,15 +101,6 @@ const ContactDialog = ({
               />
             </div>
             
-            {/* Placeholder para el mapa */}
-            <div className="rounded-2xl overflow-hidden h-[200px] bg-gray-200 my-4">
-              <img 
-                src="/lovable-uploads/e5b6825a-d587-49ec-bd58-853dfffeb371.png"
-                alt="Mapa de ubicación"
-                className="w-full h-full object-cover"
-              />
-            </div>
-            
             <div>
               <label htmlFor="duration" className="block text-sm font-medium mb-2">
                 Duración del evento
