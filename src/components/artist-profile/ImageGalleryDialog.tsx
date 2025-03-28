@@ -25,15 +25,15 @@ const ImageGalleryDialog = ({
     <Dialog open={isOpen} onOpenChange={(open) => !open && onClose()}>
       <DialogContent className={cn(
         "p-0 w-full h-full max-w-none max-h-screen bg-vyba-cream dark:bg-black text-black dark:text-white",
-        isMobile ? "" : "rounded-none"
+        isMobile ? "rounded-none" : "rounded-[40px]"
       )}>
         
         <div className="h-full w-full overflow-y-auto p-8 pt-16">
-          <div className="flex flex-wrap gap-4 justify-center">
+          <div className="flex flex-wrap gap-2 justify-center">
             {images.map((image, index) => (
               <div 
                 key={index} 
-                className="mb-4"
+                className="mb-2"
                 id={index === activeImageIndex ? "active-image" : undefined}
                 ref={el => {
                   if (el && index === activeImageIndex) {
@@ -49,8 +49,8 @@ const ImageGalleryDialog = ({
                     alt={`Imagen ${index + 1}`} 
                     className="object-contain rounded-3xl"
                     style={{ 
-                      maxWidth: '70vw',
-                      maxHeight: '70vh'
+                      maxWidth: isMobile ? '85vw' : '70vw',
+                      maxHeight: isMobile ? '85vh' : '70vh'
                     }}
                   />
                 </div>
