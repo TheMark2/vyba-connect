@@ -49,14 +49,7 @@ const AuthPage = () => {
       return;
     }
     
-    toast.success("Registro exitoso", {
-      description: "Tu cuenta ha sido creada. Redirigiendo...",
-      position: "bottom-center"
-    });
-    
-    setTimeout(() => {
-      navigate('/');
-    }, 1500);
+    navigate('/profile-info', { state: { role: registerForm.role } });
   };
 
   const handleSocialLogin = (provider: string) => {

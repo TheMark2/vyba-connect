@@ -49,11 +49,11 @@ const RoleSelector = React.forwardRef<
     features?: string[];
   }
 >(({ className, icon, label, features = [], ...props }, ref) => {
-  // Usar useEffect para monitorear el cambio en checked
+  // Usar useState para controlar el estado de selección
   const [isSelected, setIsSelected] = React.useState(false);
   
+  // Usar useEffect para monitorear cambios en la prop checked
   React.useEffect(() => {
-    // Verificar si está seleccionado basado en la prop checked
     setIsSelected(!!props.checked);
   }, [props.checked]);
   
@@ -82,7 +82,7 @@ const RoleSelector = React.forwardRef<
         
         {/* Sección expandible con features cuando está seleccionado */}
         <div className={cn(
-          "overflow-hidden transition-max-height duration-300 ease-in-out bg-white dark:bg-white",
+          "overflow-hidden transition-all duration-300 ease-in-out bg-white dark:bg-white",
           isSelected 
             ? "max-h-48 opacity-100 translate-y-0 rounded-b-md" 
             : "max-h-0 opacity-0 -translate-y-2"

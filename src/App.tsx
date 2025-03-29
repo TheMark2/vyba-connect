@@ -10,6 +10,7 @@ import NotFound from "./pages/NotFound";
 import ArtistsPage from "./pages/ArtistsPage";
 import ArtistProfilePage from "./pages/ArtistProfilePage";
 import AuthPage from "./pages/AuthPage";
+import ProfileInfoPage from "./pages/ProfileInfoPage";
 
 const queryClient = new QueryClient();
 
@@ -76,6 +77,7 @@ const App = () => {
             <Route path="/artista/:id" element={<ArtistProfilePage />} />
             <Route path="/todos-generos" element={<Index />} />
             <Route path="/auth" element={<AuthPage />} />
+            <Route path="/profile-info" element={<ProfileInfoPage />} />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
           </Routes>

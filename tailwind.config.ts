@@ -1,3 +1,4 @@
+
 import type { Config } from "tailwindcss";
 
 export default {
@@ -43,6 +44,10 @@ export default {
           DEFAULT: "#F5F1EB",
           hover: "#EDE8E0",
           foreground: "#222845",
+        },
+        muted: {
+          DEFAULT: "hsl(var(--muted))",
+          foreground: "hsl(var(--muted-foreground))",
         },
       },
       borderRadius: {
