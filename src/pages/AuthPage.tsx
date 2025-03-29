@@ -182,7 +182,7 @@ const AuthPage = () => {
                     </div>
                   </div>
                   
-                  <div className="flex justify-center mt-6">
+                  <div className="flex justify-center mt-8">
                     <Button 
                       type="submit" 
                     >
@@ -292,10 +292,9 @@ const AuthPage = () => {
                         </div>
                       </div>
                       
-                      <div className="flex justify-center">
+                      <div className="flex justify-center mt-8">
                         <Button 
                           type="button" 
-                          className="rounded-2xl bg-blue-100 hover:bg-blue-200 text-blue-900 font-semibold py-2.5 px-12"
                           onClick={handleNextStep}
                         >
                           Siguiente
@@ -368,10 +367,9 @@ const AuthPage = () => {
                         </div>
                       </div>
                       
-                      <div className="flex justify-center">
+                      <div className="flex justify-center mt-8">
                         <Button 
                           type="submit" 
-                          className="rounded-2xl bg-blue-100 hover:bg-blue-200 text-blue-900 font-semibold py-2.5 px-12"
                         >
                           Registrarse
                         </Button>
