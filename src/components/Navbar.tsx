@@ -1,6 +1,5 @@
-
 import { Button } from "@/components/ui/button";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { cn } from "@/lib/utils";
 import { Menu, Moon, Sun, LaptopIcon } from "lucide-react";
 import { useIsMobile } from "@/hooks/use-mobile";
@@ -21,11 +20,13 @@ const Navbar = ({
   className
 }: NavbarProps) => {
   const location = useLocation();
+  const navigate = useNavigate();
   const isActive = (path: string) => location.pathname === path;
   const isMobile = useIsMobile();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const [currentTheme, setCurrentTheme] = useState<'light' | 'dark' | 'system'>('system');
+  const isAuthPage = location.pathname === '/auth';
 
   // Limpiar overflow en caso de que el componente se desmonte con el menú abierto
   useEffect(() => {
@@ -105,6 +106,14 @@ const Navbar = ({
     }
   };
 
+  const handleAuthClick = () => {
+    navigate('/auth');
+  };
+
+  const handlePromoteClick = () => {
+    navigate('/auth');
+  };
+
   return (
     <div 
       className={cn(
@@ -117,9 +126,9 @@ const Navbar = ({
       {/* Logo y enlaces alineados a la izquierda */}
       <div className="flex items-center space-x-12">
         {/* Logo */}
-        <h1 className="text-3xl font-bold dark:text-white">
+        <Link to="/" className="text-3xl font-bold dark:text-white">
           VYBA
-        </h1>
+        </Link>
 
         {/* Enlaces de navegación */}
         <div className="hidden md:flex items-center space-x-2">
@@ -198,6 +207,7 @@ const Navbar = ({
             {/* Botón de iniciar sesión en móvil */}
             <Button 
               variant="default" 
+              onClick={handleAuthClick}
             >
               Iniciar sesión
             </Button>
@@ -223,10 +233,14 @@ const Navbar = ({
             <Button 
               variant="secondary" 
               className="text-sm hidden sm:flex bg-[#E7D3D3] dark:bg-vyba-dark-secondary dark:text-white"
+              onClick={handlePromoteClick}
             >
               Promocionarse como artista
             </Button>
-            <Button className="text-sm">
+            <Button 
+              className="text-sm"
+              onClick={handleAuthClick}
+            >
               Entrar/Registrarse
             </Button>
           </>
