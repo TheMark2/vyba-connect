@@ -203,7 +203,7 @@ const ArtistProfileCard = ({
               <button 
                 key={index} 
                 className={cn(
-                  "w-1.7 h-1.7 rounded-full transition-all duration-300",
+                  "w-1.5 h-1.5 rounded-full transition-all duration-300",
                   currentImageIndex === index 
                     ? "bg-white" 
                     : "bg-white/40"
