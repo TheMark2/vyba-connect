@@ -53,13 +53,10 @@ const RoleSelector = React.forwardRef<
   const [isSelected, setIsSelected] = React.useState(false);
   
   React.useEffect(() => {
-    // Comprobar si el valor actual coincide con el valor del RoleSelector
-    if (props.value === props.checked) {
-      setIsSelected(true);
-    } else {
-      setIsSelected(false);
-    }
-  }, [props.value, props.checked]);
+    // Corregido: Comprobar si el valor actual coincide con el valor del RoleSelector
+    // usando la propiedad checked directamente que es un booleano
+    setIsSelected(!!props.checked);
+  }, [props.checked]);
   
   return (
     <label className="cursor-pointer">
@@ -77,12 +74,6 @@ const RoleSelector = React.forwardRef<
               className
             )}
             {...props}
-            onCheckedChange={(checked) => {
-              setIsSelected(checked);
-              if (props.onCheckedChange) {
-                props.onCheckedChange(checked);
-              }
-            }}
           >
             <RadioGroupPrimitive.Indicator className="flex items-center justify-center">
               <Circle className="h-2.5 w-2.5 fill-black text-black" />
