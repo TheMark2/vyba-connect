@@ -73,7 +73,7 @@ const ProfileInfoPage = () => {
     navigate('/auth', { 
       state: { 
         defaultTab: 'register', 
-        registerStep: 2 
+        registerStep: 2  // Este es el paso de selección de roles 
       } 
     });
   };
