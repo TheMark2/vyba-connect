@@ -27,7 +27,7 @@ const SuccessDialog = ({
             <div style={{
             backgroundImage: `url(${artistImage})`,
             filter: "blur(20px)",
-            opacity: 0.8,
+            opacity: 0.6,
             zIndex: 0
           }} className="absolute -bottom-4 left-1/2 transform -translate-x-1/2 w-[150px] h-[150px] rounded-2xl bg-contain bg-center" />
             
