@@ -38,10 +38,8 @@ const ArtistProfileCard = ({
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const isMobile = useIsMobile();
   const lastClickTimeRef = useRef<number>(0);
-
-  // Referencias para el carrusel con touch
   const touchStartX = useRef<number>(0);
-  const imageContainerRef = useRef<HTMLDivElement>(null);
+  const touchEndX = useRef<number>(0);
   const isDragging = useRef<boolean>(false);
   
   const handleFavoriteClick = (e: React.MouseEvent) => {
@@ -108,13 +106,25 @@ const ArtistProfileCard = ({
     isDragging.current = true;
   };
 
+  const handleTouchMove = (e: TouchEvent) => {
+    if (!isDragging.current || images.length <= 1) return;
+    
+    const currentX = e.touches[0].clientX;
+    const diffX = Math.abs(currentX - touchStartX.current);
+    
+    if (diffX > 10) {
+      e.preventDefault();
+    }
+  };
+
   const handleTouchEnd = (e: TouchEvent) => {
     if (!isDragging.current) return;
-    isDragging.current = false;
     
-    const touchEndX = e.changedTouches[0].clientX;
-    const diff = touchEndX - touchStartX.current;
+    touchEndX.current = e.changedTouches[0].clientX;
+    const diff = touchEndX.current - touchStartX.current;
     const threshold = 50; // Umbral para cambiar de imagen
+    
+    isDragging.current = false;
     
     if (diff > threshold) {
       // Deslizar a la izquierda (imagen anterior)
@@ -122,20 +132,6 @@ const ArtistProfileCard = ({
     } else if (diff < -threshold) {
       // Deslizar a la derecha (imagen siguiente)
       setCurrentImageIndex(prev => (prev < images.length - 1 ? prev + 1 : 0));
-    }
-  };
-  
-  // Prevenir el comportamiento predeterminado de desplazamiento
-  const handleTouchMove = (e: TouchEvent) => {
-    if (isDragging.current && images.length > 1) {
-      // Solo prevenir el comportamiento predeterminado si hay más de una imagen
-      // y estamos arrastrando horizontalmente
-      const currentX = e.touches[0].clientX;
-      const diffX = Math.abs(currentX - touchStartX.current);
-      
-      if (diffX > 10) {
-        e.preventDefault();
-      }
     }
   };
 
@@ -150,41 +146,35 @@ const ArtistProfileCard = ({
       }}
     >
       <div className={cn("relative w-full overflow-hidden rounded-2xl", "aspect-[1/1]")}>
-        {/* Carrusel de imágenes */}
+        {/* Carrusel de imágenes mejorado */}
         <div 
-          ref={imageContainerRef}
           className="relative w-full h-full overflow-hidden" 
           onTouchStart={handleTouchStart} 
           onTouchMove={handleTouchMove} 
           onTouchEnd={handleTouchEnd}
         >
-          <div 
-            className={cn(
-              "flex transition-transform duration-300 ease-out h-full w-full",
-              isHovered ? "scale-105" : ""
-            )} 
-            style={{
-              transform: `translateX(-${currentImageIndex * 100}%)`,
-              width: `${images.length * 100}%`
-            }}
-          >
-            {images.map((image, index) => (
-              <div 
-                key={index} 
-                className="relative h-full" 
-                style={{ width: `${100 / images.length}%` }}
-              >
-                <img 
-                  src={image} 
-                  alt={`${name} - ${index + 1}`} 
-                  className="w-full h-full object-cover" 
-                  draggable="false" 
-                  loading={index === 0 ? "eager" : "lazy"} 
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-black via-black/40 to-transparent opacity-60 pointer-events-none" />
-              </div>
-            ))}
-          </div>
+          {images.map((image, index) => (
+            <div 
+              key={index} 
+              className="absolute inset-0 w-full h-full transition-transform duration-300 ease-out"
+              style={{
+                transform: `translateX(${(index - currentImageIndex) * 100}%)`,
+                zIndex: index === currentImageIndex ? 1 : 0
+              }}
+            >
+              <img 
+                src={image} 
+                alt={`${name} - ${index + 1}`} 
+                className={cn(
+                  "w-full h-full object-cover transition-transform duration-300",
+                  isHovered ? "scale-105" : ""
+                )}
+                draggable="false" 
+                loading={index === 0 ? "eager" : "lazy"} 
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-black via-black/40 to-transparent opacity-60 pointer-events-none" />
+            </div>
+          ))}
         </div>
         
         {images.length > 1 && (
@@ -216,7 +206,7 @@ const ArtistProfileCard = ({
         {images.length > 1 && (
           <div className="absolute bottom-3 left-1/2 transform -translate-x-1/2 flex gap-1.5 z-20">
             {images.map((_, index) => (
-              <span 
+              <button 
                 key={index} 
                 className={cn(
                   "rounded-full transition-all",
@@ -228,9 +218,7 @@ const ArtistProfileCard = ({
                   e.stopPropagation();
                   handleSlideChange(index);
                 }} 
-                style={{
-                  cursor: 'pointer'
-                }} 
+                aria-label={`Ir a imagen ${index + 1}`}
               />
             ))}
           </div>
