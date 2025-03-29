@@ -1,9 +1,7 @@
 
-import * as React from "react"
-import * as RadioGroupPrimitive from "@radix-ui/react-radio-group"
-import { Circle } from "lucide-react"
-
-import { cn } from "@/lib/utils"
+import * as React from "react";
+import * as RadioGroupPrimitive from "@radix-ui/react-radio-group";
+import { cn } from "@/lib/utils";
 
 const RadioGroup = React.forwardRef<
   React.ElementRef<typeof RadioGroupPrimitive.Root>,
@@ -15,95 +13,89 @@ const RadioGroup = React.forwardRef<
       {...props}
       ref={ref}
     />
-  )
-})
-RadioGroup.displayName = RadioGroupPrimitive.Root.displayName
+  );
+});
+RadioGroup.displayName = RadioGroupPrimitive.Root.displayName;
 
-const RadioGroupItem = React.forwardRef<
-  React.ElementRef<typeof RadioGroupPrimitive.Item>,
-  React.ComponentPropsWithoutRef<typeof RadioGroupPrimitive.Item>
->(({ className, ...props }, ref) => {
-  return (
-    <RadioGroupPrimitive.Item
-      ref={ref}
-      className={cn(
-        "aspect-square h-5 w-5 rounded-full border-2 border-black text-primary ring-offset-background focus:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 disabled:cursor-not-allowed disabled:opacity-50 dark:border-white",
-        className
-      )}
-      {...props}
-    >
-      <RadioGroupPrimitive.Indicator className="flex items-center justify-center">
-        <Circle className="h-2.5 w-2.5 fill-black text-black dark:fill-white dark:text-white" />
-      </RadioGroupPrimitive.Indicator>
-    </RadioGroupPrimitive.Item>
-  )
-})
-RadioGroupItem.displayName = RadioGroupPrimitive.Item.displayName
+interface RoleSelectorProps extends React.ComponentPropsWithoutRef<typeof RadioGroupPrimitive.Item> {
+  label: string;
+  icon: React.ReactNode;
+  features?: string[];
+}
 
-// Componente personalizado para la selección de rol con fondo blanco y animación
 const RoleSelector = React.forwardRef<
   React.ElementRef<typeof RadioGroupPrimitive.Item>,
-  React.ComponentPropsWithoutRef<typeof RadioGroupPrimitive.Item> & {
-    icon?: React.ReactNode;
-    label: string;
-    features?: string[];
-  }
->(({ className, icon, label, features = [], ...props }, ref) => {
-  // Usar useEffect para monitorear el cambio en checked
-  const [isSelected, setIsSelected] = React.useState(false);
-  
-  React.useEffect(() => {
-    // Verificar si está seleccionado basado en la prop checked
-    setIsSelected(!!props.checked);
-  }, [props.checked]);
-  
+  RoleSelectorProps
+>(({ className, label, icon, features = [], ...props }, ref) => {
+  const { value } = props;
+  const isSelected = value === props.value;
+
   return (
-    <label className="cursor-pointer">
-      <div className={cn(
-        "transition-all duration-300",
-        isSelected ? "rounded-t-md" : "rounded-md"
-      )}>
-        <div className="flex items-center gap-3 bg-white dark:bg-white rounded-md px-5 py-3.5">
-          {icon && <div className="flex-shrink-0">{icon}</div>}
-          <span className="text-black text-sm font-medium flex-grow">{label}</span>
-          <RadioGroupPrimitive.Item
-            ref={ref}
-            className={cn(
-              "aspect-square h-5 w-5 rounded-full border-2 border-black text-sm ring-offset-background focus:outline-none focus-visible:ring-0 disabled:cursor-not-allowed disabled:opacity-50",
-              className
-            )}
-            {...props}
-          >
+    <div className="relative">
+      <RadioGroupPrimitive.Item
+        ref={ref}
+        className={cn(
+          "border-2 border-[#F5F1EB] dark:border-vyba-dark-secondary rounded-xl w-full p-5 relative ring-offset-background focus:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 transition-all duration-300",
+          isSelected ? "bg-[#F5F1EB] dark:bg-vyba-dark-secondary" : "bg-white dark:bg-vyba-dark-bg",
+          className
+        )}
+        {...props}
+      >
+        <div className="flex items-center space-x-3">
+          <div className="flex items-center justify-center w-10 h-10 rounded-full bg-[#F5F1EB] dark:bg-vyba-dark-secondary">
+            {icon}
+          </div>
+          <span className="text-lg font-bold">{label}</span>
+          <div className="absolute right-4 top-5 flex items-center justify-center w-5 h-5 rounded-full border border-primary">
             <RadioGroupPrimitive.Indicator className="flex items-center justify-center">
-              <Circle className="h-2.5 w-2.5 fill-black text-black" />
+              <div className="w-3 h-3 bg-primary rounded-full" />
             </RadioGroupPrimitive.Indicator>
-          </RadioGroupPrimitive.Item>
+          </div>
         </div>
-        
-        {/* Sección expandible con features cuando está seleccionado */}
-        <div className={cn(
-          "overflow-hidden transition-max-height duration-300 ease-in-out bg-white dark:bg-white",
-          isSelected 
-            ? "max-h-48 opacity-100 translate-y-0 rounded-b-md" 
-            : "max-h-0 opacity-0 -translate-y-2"
-        )}>
-          {features.length > 0 && (
-            <div className="px-5 py-3 border-t border-gray-100">
-              <ul className="space-y-1.5">
-                {features.map((feature, index) => (
-                  <li key={index} className="flex items-center gap-2 text-gray-600">
-                    <div className="w-1 h-1 bg-black rounded-full"></div>
-                    <span className="text-sm">{feature}</span>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          )}
+      </RadioGroupPrimitive.Item>
+
+      {/* Features list with animation */}
+      <div 
+        className={cn(
+          "grid transition-all duration-300 ease-in-out overflow-hidden",
+          isSelected ? "grid-rows-[1fr] mt-3 opacity-100" : "grid-rows-[0fr] opacity-0"
+        )}
+      >
+        <div className="overflow-hidden min-h-0">
+          <ul className="pl-12 space-y-2">
+            {features.map((feature, index) => (
+              <li 
+                key={index} 
+                className="flex items-center text-sm text-muted-foreground"
+                style={{ 
+                  animationDelay: `${index * 50}ms`,
+                  animation: isSelected ? 'fadeInUp 0.4s forwards' : 'none'
+                }}
+              >
+                <svg 
+                  className="w-4 h-4 mr-2 text-primary" 
+                  viewBox="0 0 24 24" 
+                  fill="none" 
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path 
+                    d="M7.5 12L10.5 15L16.5 9" 
+                    stroke="currentColor" 
+                    strokeWidth="2" 
+                    strokeLinecap="round" 
+                    strokeLinejoin="round"
+                  />
+                </svg>
+                {feature}
+              </li>
+            ))}
+          </ul>
         </div>
       </div>
-    </label>
-  )
-})
-RoleSelector.displayName = "RoleSelector"
+    </div>
+  );
+});
+RoleSelector.displayName = "RoleSelector";
 
-export { RadioGroup, RadioGroupItem, RoleSelector }
+export { RadioGroup, RoleSelector };
+
