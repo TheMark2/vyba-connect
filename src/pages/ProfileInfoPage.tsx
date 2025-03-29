@@ -1,9 +1,10 @@
+
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card } from "@/components/ui/card";
-import { ArrowLeft, Music, Search } from 'lucide-react';
+import { ArrowLeft, Music, Search, RotateCw } from 'lucide-react';
 import Navbar from '@/components/Navbar';
 import { toast } from "sonner";
 import { Link } from 'react-router-dom';
@@ -11,6 +12,7 @@ const ProfileInfoPage = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const [role, setRole] = useState<'artist' | 'seeker'>('artist');
+  const [isHovering, setIsHovering] = useState(false);
 
   // Formulario para artistas
   const [artistForm, setArtistForm] = useState({
@@ -65,6 +67,17 @@ const ProfileInfoPage = () => {
   const handleBack = () => {
     navigate(-1);
   };
+
+  const handleRoleClick = () => {
+    // Navegar a la página de autenticación con el paso de registro de roles activo
+    navigate('/auth', { 
+      state: { 
+        defaultTab: 'register', 
+        registerStep: 2 
+      } 
+    });
+  };
+
   return <>
       <Navbar />
       <div className="bg-vyba-cream dark:bg-vyba-dark-bg flex items-center justify-center min-h-[90vh] px-6 md:px-10 lg:px-14 xl:px-16">
@@ -73,7 +86,12 @@ const ProfileInfoPage = () => {
             <h1 className="text-6xl font-black mb-10 text-center dark:text-white">Rellena tu información</h1>
             
             <div className="flex justify-center mb-12">
-              <div className="inline-flex items-center gap-6 px-6 py-2 rounded-full bg-white dark:bg-vyba-dark-secondary">
+              <div 
+                className={`inline-flex items-center gap-6 px-6 py-2 rounded-full bg-white dark:bg-vyba-dark-secondary transition-all duration-300 cursor-pointer relative overflow-hidden ${isHovering ? 'pr-12' : ''}`}
+                onMouseEnter={() => setIsHovering(true)}
+                onMouseLeave={() => setIsHovering(false)}
+                onClick={handleRoleClick}
+              >
                 {role === 'artist' ? <>
                     <Music size={20} className="text-black dark:text-white" />
                     <div className="flex flex-col">                    
@@ -84,6 +102,13 @@ const ProfileInfoPage = () => {
                     <Search size={20} className="text-black dark:text-white" />
                     <span className="text-sm font-medium text-black dark:text-white">Registrado como Buscador</span>
                   </>}
+                
+                <div className={`absolute right-3 transform transition-all duration-300 ${isHovering ? 'opacity-100 translate-x-0' : 'opacity-0 translate-x-5'}`}>
+                  <RotateCw 
+                    size={18} 
+                    className={`text-black dark:text-white ${isHovering ? 'animate-spin-slow' : ''}`} 
+                  />
+                </div>
               </div>
             </div>
             

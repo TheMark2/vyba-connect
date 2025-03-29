@@ -1,4 +1,3 @@
-
 import type { Config } from "tailwindcss";
 
 export default {
@@ -118,7 +117,8 @@ export default {
         "image-fade-out": "image-fade-out 0.3s ease-out",
         "content-expand": "content-expand 0.3s ease-out forwards",
         "content-collapse": "content-collapse 0.3s ease-out forwards",
-        "feature-item-appear": "feature-item-appear 0.4s ease-out forwards"
+        "feature-item-appear": "feature-item-appear 0.4s ease-out forwards",
+        "spin-slow": "spin 3s linear infinite",
       },
     },
   },
