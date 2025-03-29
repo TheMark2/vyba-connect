@@ -87,7 +87,7 @@ const AuthPage = () => {
                   <Button 
                     type="button" 
                     variant="outline" 
-                    className="w-full flex items-center justify-center gap-2 bg-white text-black dark:bg-white dark:text-black dark:hover:bg-gray-100 hover:bg-gray-100"
+                    className="border-none w-full flex items-center justify-center gap-2 bg-white text-black dark:bg-white dark:text-black dark:hover:bg-gray-100 hover:bg-gray-100"
                     onClick={() => handleSocialLogin('Google')}
                   >
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" width="20px" height="20px">
@@ -101,7 +101,7 @@ const AuthPage = () => {
                   <Button 
                     type="button" 
                     variant="outline" 
-                    className="w-full flex items-center justify-center gap-2 bg-white text-black dark:bg-white dark:text-black dark:hover:bg-gray-100 hover:bg-gray-100"
+                    className="border-none w-full flex items-center justify-center gap-2 bg-white text-black dark:bg-white dark:text-black dark:hover:bg-gray-100 hover:bg-gray-100"
                     onClick={() => handleSocialLogin('Facebook')}
                   >
                     <Facebook size={20} color="#1877F2" />
