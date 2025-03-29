@@ -4,10 +4,16 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card } from "@/components/ui/card";
-import { Music, Search, RotateCw } from 'lucide-react';
+import { Music, Search, RotateCw, ChevronDown } from 'lucide-react';
 import Navbar from '@/components/Navbar';
 import { toast } from "sonner";
 import { Link } from 'react-router-dom';
+import { 
+  DropdownMenu, 
+  DropdownMenuContent, 
+  DropdownMenuItem,
+  DropdownMenuTrigger
+} from "@/components/ui/dropdown-menu";
 
 const ProfileInfoPage = () => {
   const navigate = useNavigate();
@@ -70,14 +76,22 @@ const ProfileInfoPage = () => {
     }, 1500);
   };
 
-  const handleRoleClick = () => {
-    // Navegar a la página de autenticación con el paso de registro de roles activo
-    navigate('/auth', { 
-      state: { 
-        defaultTab: 'register', 
-        registerStep: 2  // Este es el paso de selección de roles 
-      } 
-    });
+  const handleRoleChange = (newRole: 'artist' | 'seeker') => {
+    setRole(newRole);
+    // Limpiamos los campos al cambiar de rol
+    if (newRole === 'artist') {
+      setArtistForm({
+        artistName: '',
+        mainGenres: '',
+        artistType: ''
+      });
+    } else {
+      setSeekerForm({
+        fullName: '',
+        musicalTastes: '',
+        mobile: ''
+      });
+    }
   };
 
   return (
@@ -89,33 +103,53 @@ const ProfileInfoPage = () => {
             <h1 className="text-6xl font-black mb-10 text-center dark:text-white">Rellena tu información</h1>
             
             <div className="flex justify-center mb-12">
-              <div 
-                className={`inline-flex items-center gap-6 px-6 py-2 rounded-full bg-white dark:bg-vyba-dark-secondary transition-all duration-300 cursor-pointer relative overflow-hidden ${isHovering ? 'pr-12' : ''}`}
-                onMouseEnter={() => setIsHovering(true)}
-                onMouseLeave={() => setIsHovering(false)}
-                onClick={handleRoleClick}
-              >
-                {role === 'artist' ? <>
-                    <Music size={20} className="text-black dark:text-white" />
-                    <div className="flex flex-col">                    
-                      <span className="text-xs dark:text-white">Registrado como</span>
-                      <span className="text-sm font-bold dark:text-white">Artista</span>
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <div 
+                    className={`inline-flex items-center gap-6 px-6 py-2 rounded-full bg-white dark:bg-vyba-dark-secondary transition-all duration-300 cursor-pointer relative overflow-hidden ${isHovering ? 'pr-12' : ''}`}
+                    onMouseEnter={() => setIsHovering(true)}
+                    onMouseLeave={() => setIsHovering(false)}
+                  >
+                    {role === 'artist' ? <>
+                        <Music size={20} className="text-black dark:text-white" />
+                        <div className="flex flex-col">                    
+                          <span className="text-xs dark:text-white">Registrado como</span>
+                          <span className="text-sm font-bold dark:text-white">Artista</span>
+                        </div>
+                      </> : <>
+                        <Search size={20} className="text-black dark:text-white" />
+                        <div className="flex flex-col">                    
+                          <span className="text-xs dark:text-white">Registrado como</span>
+                          <span className="text-sm font-bold dark:text-white">Buscador</span>
+                        </div>
+                      </>}
+                    
+                    <div className={`absolute right-3 transform transition-all duration-300 ${isHovering ? 'opacity-100 translate-x-0' : 'opacity-0 translate-x-5'}`}>
+                      <ChevronDown 
+                        size={18} 
+                        className="text-black dark:text-white" 
+                      />
                     </div>
-                  </> : <>
-                    <Search size={20} className="text-black dark:text-white" />
-                    <div className="flex flex-col">                    
-                      <span className="text-xs dark:text-white">Registrado como</span>
-                      <span className="text-sm font-bold dark:text-white">Buscador</span>
-                    </div>
-                  </>}
-                
-                <div className={`absolute right-3 transform transition-all duration-300 ${isHovering ? 'opacity-100 translate-x-0' : 'opacity-0 translate-x-5'}`}>
-                  <RotateCw 
-                    size={18} 
-                    className={`text-black dark:text-white ${isHovering ? 'animate-spin-slow' : ''}`} 
-                  />
-                </div>
-              </div>
+                  </div>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent>
+                  {role === 'artist' ? (
+                    <DropdownMenuItem onClick={() => handleRoleChange('seeker')}>
+                      <div className="flex items-center gap-3">
+                        <Search size={16} />
+                        <span>Buscador</span>
+                      </div>
+                    </DropdownMenuItem>
+                  ) : (
+                    <DropdownMenuItem onClick={() => handleRoleChange('artist')}>
+                      <div className="flex items-center gap-3">
+                        <Music size={16} />
+                        <span>Artista</span>
+                      </div>
+                    </DropdownMenuItem>
+                  )}
+                </DropdownMenuContent>
+              </DropdownMenu>
             </div>
             
             <form onSubmit={handleSubmit} className="space-y-6">
