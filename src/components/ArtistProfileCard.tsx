@@ -247,7 +247,7 @@ const ArtistProfileCard = ({
       
       <div className="pt-3 flex flex-col gap-1 bg-transparent">
         <div className="flex justify-between items-center">
-          <h3 className="text-base font-semiblod">{name}</h3>
+          <h3 className="text-base font-bold">{name}</h3>
           <div className="flex items-center gap-1">
             <Star className="h-4 w-4 fill-black stroke-black dark:fill-white dark:stroke-white" />
             <span className="text-sm font-medium">{rating.toFixed(1)}</span>
