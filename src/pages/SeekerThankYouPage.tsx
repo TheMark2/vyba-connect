@@ -116,7 +116,8 @@ const SeekerThankYouPage = () => {
                 </div>
               </div>
             </div>
-
+          </div>
+          <div className="w-full">
             {/* Marquee de ArtistProfileCards */}
             <div className="w-full mb-16">
               <Marquee 
@@ -140,7 +141,8 @@ const SeekerThankYouPage = () => {
                 ))}
               </Marquee>
             </div>
-            
+          </div>
+          <div className="max-w-3xl mx-auto px-6 md:px-12 flex flex-col items-center"> 
             <div className="flex flex-col sm:flex-row justify-center w-full gap-4 items-center">
               <Button variant="outline" onClick={handleGoBack} className="w-full sm:w-auto order-2 sm:order-1 border-none bg-white dark:bg-vyba-dark-secondary">
                 <ArrowLeft className="mr-2" size={20} strokeWidth={3} />
