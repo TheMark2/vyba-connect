@@ -40,7 +40,7 @@ const RadioGroupItem = React.forwardRef<
 })
 RadioGroupItem.displayName = RadioGroupPrimitive.Item.displayName
 
-// Componente personalizado para la selección de rol con fondo blanco
+// Componente personalizado para la selección de rol con fondo blanco y animación
 const RoleSelector = React.forwardRef<
   React.ElementRef<typeof RadioGroupPrimitive.Item>,
   React.ComponentPropsWithoutRef<typeof RadioGroupPrimitive.Item> & {
@@ -49,12 +49,11 @@ const RoleSelector = React.forwardRef<
     features?: string[];
   }
 >(({ className, icon, label, features = [], ...props }, ref) => {
-  // Verificar si este item está seleccionado
+  // Usar useEffect para monitorear el cambio en checked
   const [isSelected, setIsSelected] = React.useState(false);
   
   React.useEffect(() => {
-    // Corregido: Comprobar si el valor actual coincide con el valor del RoleSelector
-    // usando la propiedad checked directamente que es un booleano
+    // Verificar si está seleccionado basado en la prop checked
     setIsSelected(!!props.checked);
   }, [props.checked]);
   
@@ -81,19 +80,26 @@ const RoleSelector = React.forwardRef<
           </RadioGroupPrimitive.Item>
         </div>
         
-        {/* Sección extendida con features cuando está seleccionado */}
-        {isSelected && features.length > 0 && (
-          <div className="bg-white dark:bg-white px-5 py-3 rounded-b-md border-t border-gray-100">
-            <ul className="space-y-1.5">
-              {features.map((feature, index) => (
-                <li key={index} className="flex items-center gap-2 text-gray-600">
-                  <div className="w-1 h-1 bg-black rounded-full"></div>
-                  <span className="text-sm">{feature}</span>
-                </li>
-              ))}
-            </ul>
-          </div>
-        )}
+        {/* Sección expandible con features cuando está seleccionado */}
+        <div className={cn(
+          "overflow-hidden transition-max-height duration-300 ease-in-out bg-white dark:bg-white",
+          isSelected 
+            ? "max-h-48 opacity-100 translate-y-0 rounded-b-md" 
+            : "max-h-0 opacity-0 -translate-y-2"
+        )}>
+          {features.length > 0 && (
+            <div className="px-5 py-3 border-t border-gray-100">
+              <ul className="space-y-1.5">
+                {features.map((feature, index) => (
+                  <li key={index} className="flex items-center gap-2 text-gray-600">
+                    <div className="w-1 h-1 bg-black rounded-full"></div>
+                    <span className="text-sm">{feature}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
+        </div>
       </div>
     </label>
   )

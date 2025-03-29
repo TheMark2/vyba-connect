@@ -53,6 +53,9 @@ export default {
       fontFamily: {
         satoshi: ["Satoshi", "sans-serif"],
       },
+      transitionProperty: {
+        'max-height': 'max-height',
+      },
       keyframes: {
         "accordion-down": {
           from: { height: "0", opacity: "0" },
@@ -87,12 +90,16 @@ export default {
           "100%": { opacity: "0", transform: "scale(1.05)" },
         },
         "content-expand": {
-          "0%": { maxHeight: "400px" },
-          "100%": { maxHeight: "2000px" }
+          "0%": { maxHeight: "0" },
+          "100%": { maxHeight: "200px" }
         },
         "content-collapse": {
-          "0%": { maxHeight: "2000px" },
-          "100%": { maxHeight: "400px" }
+          "0%": { maxHeight: "200px" },
+          "100%": { maxHeight: "0" }
+        },
+        "feature-item-appear": {
+          "0%": { opacity: "0", transform: "translateY(5px)" },
+          "100%": { opacity: "1", transform: "translateY(0)" }
         }
       },
       animation: {
@@ -104,8 +111,9 @@ export default {
         "fade-out": "fade-out 0.3s ease-out",
         "image-fade-in": "image-fade-in 0.5s ease-out",
         "image-fade-out": "image-fade-out 0.3s ease-out",
-        "content-expand": "content-expand 0.5s ease-out forwards",
-        "content-collapse": "content-collapse 0.5s ease-out forwards"
+        "content-expand": "content-expand 0.3s ease-out forwards",
+        "content-collapse": "content-collapse 0.3s ease-out forwards",
+        "feature-item-appear": "feature-item-appear 0.4s ease-out forwards"
       },
     },
   },
