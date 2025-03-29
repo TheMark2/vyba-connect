@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { Button } from "@/components/ui/button";
@@ -70,8 +71,7 @@ const ProfileInfoPage = () => {
   };
 
   const handleBack = () => {
-    // Navegar a la pantalla anterior
-    navigate(-1);
+    navigate(-1); // Esto navega a la pantalla anterior
   };
 
   const handleRoleClick = () => {
