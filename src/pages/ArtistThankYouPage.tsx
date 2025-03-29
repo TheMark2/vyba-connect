@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { Button } from "@/components/ui/button";
@@ -5,6 +6,8 @@ import { Card } from "@/components/ui/card";
 import { ArrowLeft, FileText, Music } from 'lucide-react';
 import Navbar from '@/components/Navbar';
 import { Link } from 'react-router-dom';
+import { PageTransition } from '@/components/ui/page-transition';
+
 const ArtistThankYouPage = () => {
   const navigate = useNavigate();
   const location = useLocation();
@@ -37,7 +40,8 @@ const ArtistThankYouPage = () => {
     document.body.removeChild(a);
     URL.revokeObjectURL(url);
   };
-  return <>
+  return (
+    <PageTransition>
       <Navbar />
       <div className="bg-vyba-cream dark:bg-vyba-dark-bg flex items-center justify-center min-h-[90vh] px-6 md:px-10 lg:px-14 xl:px-16">
         <Card className="border-none shadow-none bg-secondary dark:bg-vyba-dark-bg dark:border-vyba-dark-secondary rounded-3xl overflow-hidden w-full py-16 mx-auto">
@@ -93,6 +97,7 @@ const ArtistThankYouPage = () => {
           </div>
         </Card>
       </div>
-    </>;
+    </PageTransition>
+  );
 };
 export default ArtistThankYouPage;
