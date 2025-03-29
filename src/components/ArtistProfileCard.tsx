@@ -177,22 +177,22 @@ const ArtistProfileCard = ({
             <button 
               onClick={handlePrevImage} 
               className={cn(
-                "absolute left-2 top-1/2 transform -translate-y-1/2 bg-white p-1.5 rounded-full opacity-90 hover:opacity-100 transition-opacity z-10 shadow-md w-6 h-6 flex items-center justify-center", 
+                "absolute left-2 top-1/2 transform -translate-y-1/2 bg-white p-1.5 rounded-full opacity-90 hover:opacity-100 transition-opacity z-10 w-7 h-7 flex items-center justify-center", 
                 isMobile ? "opacity-90" : isHovered ? "opacity-90" : "opacity-0"
               )} 
               aria-label="Imagen anterior"
             >
-              <ChevronLeft className="h-3 w-3 text-black" />
+              <ChevronLeft className="h-4 w-4 text-black" />
             </button>
             <button 
               onClick={handleNextImage} 
               className={cn(
-                "absolute right-2 top-1/2 transform -translate-y-1/2 bg-white p-1.5 rounded-full opacity-90 hover:opacity-100 transition-opacity z-10 shadow-md w-8 h-8 flex items-center justify-center", 
+                "absolute right-2 top-1/2 transform -translate-y-1/2 bg-white p-1.5 rounded-full opacity-90 hover:opacity-100 transition-opacity z-10 w-7 h-7 flex items-center justify-center", 
                 isMobile ? "opacity-90" : isHovered ? "opacity-90" : "opacity-0"
               )} 
               aria-label="Siguiente imagen"
             >
-              <ChevronRight className="h-3 w-3 text-black" />
+              <ChevronRight className="h-4 w-4 text-black" />
             </button>
           </>
         )}
