@@ -154,7 +154,7 @@ const AuthPage = () => {
                       onChange={(e) => setLoginForm({...loginForm, email: e.target.value})}
                       placeholder="Escribe tu correo"
                       required
-                      className="rounded-xl h-12 py-5 bg-white dark:bg-white dark:text-black"
+                      className="rounded-xl h-12 bg-white dark:bg-white dark:text-black"
                     />
                   </div>
                   
@@ -170,7 +170,7 @@ const AuthPage = () => {
                         onChange={(e) => setLoginForm({...loginForm, password: e.target.value})}
                         placeholder="Escribe tu contraseña"
                         required
-                        className="rounded-xl h-12 py-5 pr-10 bg-white dark:bg-white dark:text-black"
+                        className="rounded-xl h-12 pr-10 bg-white dark:bg-white dark:text-black"
                       />
                       <button
                         type="button"
@@ -236,6 +236,21 @@ const AuthPage = () => {
                     </div>
 
                     <form onSubmit={handleRegisterSubmit} className="space-y-4">
+                      <div className="space-y-1.5">
+                        <label htmlFor="register-name" className="block text-sm font-medium dark:text-white">
+                          Nombre completo
+                        </label>
+                        <Input
+                          id="register-name"
+                          type="text"
+                          value={registerForm.fullName}
+                          onChange={(e) => setRegisterForm({...registerForm, fullName: e.target.value})}
+                          placeholder="Escribe tu nombre completo"
+                          required
+                          className="rounded-xl h-12 bg-white dark:bg-white dark:text-black"
+                        />
+                      </div>
+                      
                       <div className="grid grid-cols-2 gap-4">
                         <div className="space-y-1.5">
                           <label htmlFor="register-email" className="block text-sm font-medium dark:text-white">
@@ -248,7 +263,7 @@ const AuthPage = () => {
                             onChange={(e) => setRegisterForm({...registerForm, email: e.target.value})}
                             placeholder="Escribe tu correo"
                             required
-                            className="rounded-xl px-4 py-5 h-auto bg-white dark:bg-white dark:text-black"
+                            className="rounded-xl h-12 bg-white dark:bg-white dark:text-black"
                           />
                         </div>
                         
@@ -264,7 +279,7 @@ const AuthPage = () => {
                               onChange={(e) => setRegisterForm({...registerForm, password: e.target.value})}
                               placeholder="Escribe tu contraseña"
                               required
-                              className="rounded-xl px-4 py-5 h-auto pr-10 bg-white dark:bg-white dark:text-black"
+                              className="rounded-xl h-12 pr-10 bg-white dark:bg-white dark:text-black"
                             />
                             <button
                               type="button"
@@ -308,7 +323,7 @@ const AuthPage = () => {
                           onChange={(e) => setRegisterForm({...registerForm, fullName: e.target.value})}
                           placeholder="Escribe tu nombre completo"
                           required
-                          className="rounded-xl px-4 py-5 h-auto bg-white dark:bg-white dark:text-black"
+                          className="rounded-xl h-12 bg-white dark:bg-white dark:text-black"
                         />
                       </div>
                       
@@ -324,7 +339,7 @@ const AuthPage = () => {
                             onChange={(e) => setRegisterForm({...registerForm, email: e.target.value})}
                             placeholder="Escribe tu correo"
                             required
-                            className="rounded-xl px-4 py-5 h-auto bg-white dark:bg-white dark:text-black"
+                            className="rounded-xl h-12 bg-white dark:bg-white dark:text-black"
                           />
                         </div>
                         
@@ -340,7 +355,7 @@ const AuthPage = () => {
                               onChange={(e) => setRegisterForm({...registerForm, password: e.target.value})}
                               placeholder="Escribe tu contraseña"
                               required
-                              className="rounded-xl px-4 py-5 h-auto pr-10 bg-white dark:bg-white dark:text-black"
+                              className="rounded-xl h-12 pr-10 bg-white dark:bg-white dark:text-black"
                             />
                             <button
                               type="button"
