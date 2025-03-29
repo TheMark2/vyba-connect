@@ -48,6 +48,7 @@ const AuthPage = () => {
     e.preventDefault();
     
     if (!showFullRegisterForm) {
+      // Importante: Debemos activar el formulario completo cuando se envía el primer paso
       setShowFullRegisterForm(true);
       return;
     }
@@ -83,6 +84,12 @@ const AuthPage = () => {
   const switchToRegister = () => {
     setDefaultTab("register");
     setShowFullRegisterForm(false);
+  };
+
+  // Función para simular el botón de siguiente en el formulario de registro
+  const handleNextStep = (e: React.MouseEvent) => {
+    e.preventDefault(); // Prevenir el comportamiento predeterminado del botón
+    setShowFullRegisterForm(true);
   };
 
   return (
@@ -267,8 +274,9 @@ const AuthPage = () => {
                       
                       <div className="flex justify-center">
                         <Button 
-                          type="submit" 
+                          type="button" 
                           className="rounded-2xl bg-blue-100 hover:bg-blue-200 text-blue-900 font-semibold py-2.5 px-12"
+                          onClick={handleNextStep}
                         >
                           Siguiente
                         </Button>
@@ -367,4 +375,3 @@ const AuthPage = () => {
 };
 
 export default AuthPage;
-
