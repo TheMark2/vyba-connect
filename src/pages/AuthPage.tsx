@@ -78,7 +78,7 @@ const AuthPage = () => {
           <Card className="border-none shadow-none bg-secondary dark:bg-vyba-dark-bg dark:border-vyba-dark-secondary rounded-3xl overflow-hidden py-16 px-32">
             <div className="text-center mb-10">
               <h1 className="text-6xl font-black mb-2 dark:text-white">Bienvenido/a a VYBA</h1>
-              <p className="text-lg font-medium dark:text-gray-300">Inicia sesión o regístrate</p>
+              <p className="text-2xl font-medium dark:text-gray-300">Inicia sesión o regístrate</p>
             </div>
 
             <Tabs defaultValue={defaultTab} onValueChange={handleTabChange} className="w-full">
