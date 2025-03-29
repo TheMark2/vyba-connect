@@ -1,4 +1,3 @@
-
 import React, { useState, useRef, useEffect, TouchEvent } from "react";
 import { Heart, ChevronLeft, ChevronRight, Star } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
@@ -100,7 +99,6 @@ const ArtistProfileCard = ({
     setCurrentImageIndex(index);
   };
 
-  // Funciones mejoradas para el deslizamiento táctil
   const handleTouchStart = (e: TouchEvent) => {
     touchStartX.current = e.touches[0].clientX;
     isDragging.current = true;
@@ -127,10 +125,8 @@ const ArtistProfileCard = ({
     isDragging.current = false;
     
     if (diff > threshold) {
-      // Deslizar a la izquierda (imagen anterior)
       setCurrentImageIndex(prev => (prev > 0 ? prev - 1 : images.length - 1));
     } else if (diff < -threshold) {
-      // Deslizar a la derecha (imagen siguiente)
       setCurrentImageIndex(prev => (prev < images.length - 1 ? prev + 1 : 0));
     }
   };
@@ -146,7 +142,6 @@ const ArtistProfileCard = ({
       }}
     >
       <div className={cn("relative w-full overflow-hidden rounded-2xl", "aspect-[1/1]")}>
-        {/* Carrusel de imágenes mejorado */}
         <div 
           className="relative w-full h-full overflow-hidden" 
           onTouchStart={handleTouchStart} 
@@ -202,17 +197,16 @@ const ArtistProfileCard = ({
           </>
         )}
 
-        {/* Indicadores de posición con puntos */}
         {images.length > 1 && (
-          <div className="absolute bottom-3 left-1/2 transform -translate-x-1/2 flex gap-1.5 z-20">
+          <div className="absolute bottom-3 left-1/2 transform -translate-x-1/2 flex gap-1 z-20">
             {images.map((_, index) => (
               <button 
                 key={index} 
                 className={cn(
                   "rounded-full transition-all",
                   currentImageIndex === index 
-                    ? "w-2.5 h-2.5 bg-white" 
-                    : "w-2 h-2 bg-white/60"
+                    ? "w-1.5 h-1.5 bg-white" 
+                    : "w-1 h-1 bg-white/60"
                 )} 
                 onClick={e => {
                   e.stopPropagation();
@@ -226,19 +220,19 @@ const ArtistProfileCard = ({
         
         {showCenterHeart && (
           <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-            <Heart className={cn("h-20 w-20 fill-white stroke-white opacity-0 animate-fadeInOut z-10")} />
+            <Heart className={cn("h-20 w-20 fill-black stroke-white opacity-0 animate-fadeInOut z-10")} />
           </div>
         )}
         
         <button 
           onClick={handleFavoriteClick} 
-          className="absolute top-3 right-3 z-10 shadow-sm" 
+          className="absolute top-3 right-3 z-10 bg-white rounded-full p-1.5 shadow-sm" 
           aria-label={favorite ? "Quitar de favoritos" : "Añadir a favoritos"}
         >
           <Heart 
             className={cn(
-              "h-6 w-6 transition-colors duration-300", 
-              favorite ? "fill-red-500 stroke-white" : "fill-transparent stroke-white stroke-[1.5px]"
+              "h-4 w-4 transition-colors duration-300", 
+              favorite ? "fill-black stroke-black" : "fill-transparent stroke-black stroke-[1.5px]"
             )} 
           />
         </button>
