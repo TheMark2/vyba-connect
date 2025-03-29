@@ -4,7 +4,7 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card } from "@/components/ui/card";
-import { Music, Search, RotateCw, ChevronDown } from 'lucide-react';
+import { Music, Search, ChevronDown } from 'lucide-react';
 import Navbar from '@/components/Navbar';
 import { toast } from "sonner";
 import { Link } from 'react-router-dom';
@@ -71,7 +71,9 @@ const ProfileInfoPage = () => {
           state: { artistInfo: artistForm }
         });
       } else {
-        navigate('/');
+        navigate('/seeker-thank-you', {
+          state: { seekerInfo: seekerForm }
+        });
       }
     }, 1500);
   };
