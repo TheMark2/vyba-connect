@@ -102,7 +102,7 @@ const AuthPage = () => {
             <p className="text-4xl dark:text-gray-300">Inicia sesión o regístrate</p>
           </div>
 
-          <Tabs defaultValue={defaultTab} onValueChange={handleTabChange} className="max-w-2xl mx-auto px-12">
+          <Tabs defaultValue={defaultTab} value={defaultTab} onValueChange={handleTabChange} className="max-w-2xl mx-auto px-12">
             <TabsList className="hidden">
               <TabsTrigger value="login">Iniciar sesión</TabsTrigger>
               <TabsTrigger value="register">Registrarse</TabsTrigger>
@@ -193,7 +193,7 @@ const AuthPage = () => {
 
                 <div className="text-center">
                   <p className="text-sm text-gray-600 dark:text-gray-400">
-                    No tienes cuenta? <button type="button" onClick={switchToRegister} className="text-blue-600 font-medium">Regístrate</button>
+                    No tienes cuenta? <Button variant="link" className="p-0 h-auto font-medium" onClick={switchToRegister}>Regístrate</Button>
                   </p>
                 </div>
               </div>
@@ -367,7 +367,7 @@ const AuthPage = () => {
 
                 <div className="text-center">
                   <p className="text-sm text-gray-600 dark:text-gray-400">
-                    Ya tienes una cuenta? <button onClick={() => setDefaultTab("login")} className="text-blue-600 font-medium">Iniciar Sesión</button>
+                    Ya tienes una cuenta? <Button variant="link" className="p-0 h-auto font-medium" onClick={() => setDefaultTab("login")}>Iniciar Sesión</Button>
                   </p>
                 </div>
               </div>
