@@ -226,13 +226,13 @@ const ArtistProfileCard = ({
         
         <button 
           onClick={handleFavoriteClick} 
-          className="absolute top-2 right-2 z-10 bg-white rounded-full p-1.5 shadow-sm w-8 h-8 flex items-center justify-center" 
+          className="absolute top-2 right-2 z-10 bg-white rounded-full p-1.5 shadow-sm w-9 h-9 flex items-center justify-center" 
           aria-label={favorite ? "Quitar de favoritos" : "Añadir a favoritos"}
         >
           <Heart 
             className={cn(
               "h-4 w-4 transition-colors duration-300", 
-              favorite ? "fill-black stroke-black" : "fill-transparent stroke-black stroke-[1.5px]"
+              favorite ? "fill-black stroke-black" : "fill-transparent stroke-black stroke-[2px]"
             )} 
           />
         </button>
