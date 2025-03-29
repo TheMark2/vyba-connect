@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { Button } from "@/components/ui/button";
@@ -8,6 +7,7 @@ import { ArrowLeft, Music, Search, RotateCw } from 'lucide-react';
 import Navbar from '@/components/Navbar';
 import { toast } from "sonner";
 import { Link } from 'react-router-dom';
+
 const ProfileInfoPage = () => {
   const navigate = useNavigate();
   const location = useLocation();
@@ -27,31 +27,29 @@ const ProfileInfoPage = () => {
     musicalTastes: '',
     mobile: ''
   });
+
   useEffect(() => {
     // Obtener el rol del state de la navegación o usar 'artist' por defecto
     const userRole = location.state?.role || 'artist';
     setRole(userRole);
   }, [location.state]);
+
   const handleArtistFormChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const {
-      name,
-      value
-    } = e.target;
+    const { name, value } = e.target;
     setArtistForm({
       ...artistForm,
       [name]: value
     });
   };
+
   const handleSeekerFormChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const {
-      name,
-      value
-    } = e.target;
+    const { name, value } = e.target;
     setSeekerForm({
       ...seekerForm,
       [name]: value
     });
   };
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     toast.success("Información guardada correctamente", {
@@ -61,9 +59,16 @@ const ProfileInfoPage = () => {
 
     // En un caso real, aquí guardaríamos la información en una base de datos
     setTimeout(() => {
-      navigate('/');
+      if (role === 'artist') {
+        navigate('/thank-you', {
+          state: { artistInfo: artistForm }
+        });
+      } else {
+        navigate('/');
+      }
     }, 1500);
   };
+
   const handleBack = () => {
     navigate(-1);
   };
@@ -78,7 +83,8 @@ const ProfileInfoPage = () => {
     });
   };
 
-  return <>
+  return (
+    <>
       <Navbar />
       <div className="bg-vyba-cream dark:bg-vyba-dark-bg flex items-center justify-center min-h-[90vh] px-6 md:px-10 lg:px-14 xl:px-16">
         <Card className="border-none shadow-none bg-secondary dark:bg-vyba-dark-bg dark:border-vyba-dark-secondary rounded-3xl overflow-hidden w-full py-16 mx-auto">
@@ -186,6 +192,8 @@ const ProfileInfoPage = () => {
           </div>
         </Card>
       </div>
-    </>;
+    </>
+  );
 };
+
 export default ProfileInfoPage;

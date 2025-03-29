@@ -1,4 +1,3 @@
-
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as SonnerToaster } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -11,16 +10,14 @@ import ArtistsPage from "./pages/ArtistsPage";
 import ArtistProfilePage from "./pages/ArtistProfilePage";
 import AuthPage from "./pages/AuthPage";
 import ProfileInfoPage from "./pages/ProfileInfoPage";
+import ArtistThankYouPage from "./pages/ArtistThankYouPage";
 
 const queryClient = new QueryClient();
 
 const App = () => {
-  // Comprobar el tema del sistema al iniciar la aplicación
   useEffect(() => {
-    // Añadir la clase de transición para suavizar el cambio inicial
     document.documentElement.classList.add('theme-transition');
     
-    // Comprobar preferencias guardadas
     const savedTheme = localStorage.getItem('theme');
     
     if (savedTheme === 'dark') {
@@ -28,7 +25,6 @@ const App = () => {
     } else if (savedTheme === 'light') {
       document.documentElement.classList.remove('dark');
     } else {
-      // Si no hay tema guardado o es 'system', usar la preferencia del sistema
       const isDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches;
       if (isDarkMode) {
         document.documentElement.classList.add('dark');
@@ -37,12 +33,10 @@ const App = () => {
       }
     }
     
-    // Quitar la clase de transición después de aplicar el tema inicial
     setTimeout(() => {
       document.documentElement.classList.remove('theme-transition');
     }, 500);
     
-    // Escuchar cambios en la preferencia del sistema
     const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
     
     const handleChange = (e: MediaQueryListEvent) => {
@@ -67,7 +61,6 @@ const App = () => {
   return (
     <QueryClientProvider client={queryClient}>
       <TooltipProvider>
-        {/* Use only SonnerToaster to avoid conflicts */}
         <SonnerToaster />
         <BrowserRouter>
           <Routes>
@@ -78,7 +71,7 @@ const App = () => {
             <Route path="/todos-generos" element={<Index />} />
             <Route path="/auth" element={<AuthPage />} />
             <Route path="/profile-info" element={<ProfileInfoPage />} />
-            {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
+            <Route path="/thank-you" element={<ArtistThankYouPage />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </BrowserRouter>
