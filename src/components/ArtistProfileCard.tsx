@@ -1,9 +1,11 @@
+
 import React, { useState, useRef, useEffect, TouchEvent } from "react";
 import { Heart, ChevronLeft, ChevronRight, Star } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
 import { toast } from "sonner";
 import { useIsMobile } from "@/hooks/use-mobile";
+
 interface ArtistProfileCardProps {
   name: string;
   type: string;
@@ -16,6 +18,7 @@ interface ArtistProfileCardProps {
   className?: string;
   onClick?: () => void;
 }
+
 const ArtistProfileCard = ({
   name,
   type,
@@ -43,10 +46,12 @@ const ArtistProfileCard = ({
   const isDragging = useRef<boolean>(false);
   const dragStartX = useRef<number>(0);
   const [dragTransform, setDragTransform] = useState<number>(0);
+
   const handleFavoriteClick = (e: React.MouseEvent) => {
     e.stopPropagation();
     toggleFavorite();
   };
+
   const toggleFavorite = () => {
     const newFavoriteState = !favorite;
     setFavorite(newFavoriteState);
@@ -69,6 +74,7 @@ const ArtistProfileCard = ({
       onFavoriteToggle();
     }
   };
+
   const handleCardClick = (e: React.MouseEvent) => {
     const currentTime = new Date().getTime();
     const timeSinceLastClick = currentTime - lastClickTimeRef.current;
@@ -81,32 +87,21 @@ const ArtistProfileCard = ({
     }
     lastClickTimeRef.current = currentTime;
   };
-  const handleRippleEffect = (event: React.MouseEvent<HTMLButtonElement>) => {
-    const button = event.currentTarget;
-    const rect = button.getBoundingClientRect();
-    const x = event.clientX - rect.left;
-    const y = event.clientY - rect.top;
-    const ripple = document.createElement('span');
-    ripple.className = 'ripple-effect';
-    ripple.style.left = `${x}px`;
-    ripple.style.top = `${y}px`;
-    button.appendChild(ripple);
-    setTimeout(() => {
-      ripple.remove();
-    }, 800);
-  };
+
   const handlePrevImage = (e: React.MouseEvent) => {
     e.stopPropagation();
     if (images.length <= 1) return;
     const newIndex = currentImageIndex > 0 ? currentImageIndex - 1 : images.length - 1;
     setCurrentImageIndex(newIndex);
   };
+
   const handleNextImage = (e: React.MouseEvent) => {
     e.stopPropagation();
     if (images.length <= 1) return;
     const newIndex = currentImageIndex < images.length - 1 ? currentImageIndex + 1 : 0;
     setCurrentImageIndex(newIndex);
   };
+
   const handleSlideChange = (index: number) => {
     if (index === currentImageIndex || index < 0 || index >= images.length) return;
     setCurrentImageIndex(index);
@@ -123,6 +118,7 @@ const ArtistProfileCard = ({
       imageContainerRef.current.style.transition = "none";
     }
   };
+
   const handleTouchMove = (e: TouchEvent) => {
     if (!isDragging.current) return;
     const currentX = e.touches[0].clientX;
@@ -143,6 +139,7 @@ const ArtistProfileCard = ({
     }
     setDragTransform(newOffset);
   };
+
   const handleTouchEnd = (e: TouchEvent) => {
     if (!isDragging.current) return;
 
@@ -196,51 +193,128 @@ const ArtistProfileCard = ({
       isDragging.current = false;
     };
   }, []);
-  return <div className={cn("flex flex-col overflow-hidden bg-transparent transition-all duration-300", className)} onClick={handleCardClick} onMouseEnter={() => setIsHovered(true)} onMouseLeave={() => setIsHovered(false)} style={{
-    cursor: isHovered ? 'pointer' : 'default'
-  }}>
+
+  return (
+    <div 
+      className={cn("flex flex-col overflow-hidden bg-transparent transition-all duration-300", className)} 
+      onClick={handleCardClick} 
+      onMouseEnter={() => setIsHovered(true)} 
+      onMouseLeave={() => setIsHovered(false)} 
+      style={{
+        cursor: isHovered ? 'pointer' : 'default'
+      }}
+    >
       <div className={cn("relative w-full overflow-hidden rounded-2xl", "aspect-[1/1]")}>
-        <div className="w-full h-full relative overflow-hidden" onTouchStart={handleTouchStart} onTouchMove={handleTouchMove} onTouchEnd={handleTouchEnd}>
-          <div ref={imageContainerRef} className={cn("flex h-full w-full", isHovered ? "scale-105" : "", isDragging.current ? "" : "transition-transform duration-300 ease-out")} style={{
-          width: `${images.length * 100}%`,
-          transform: `translateX(${dragTransform}%)`
-        }}>
-            {images.map((image, index) => <div key={index} className="relative h-full flex-shrink-0" style={{
-            width: `${100 / images.length}%`
-          }}>
-                <img src={image} alt={`${name} - ${index + 1}`} className="w-full h-full object-cover" draggable="false" loading={index === 0 ? "eager" : "lazy"} />
+        <div 
+          className="w-full h-full relative overflow-hidden" 
+          onTouchStart={handleTouchStart} 
+          onTouchMove={handleTouchMove} 
+          onTouchEnd={handleTouchEnd}
+        >
+          <div 
+            ref={imageContainerRef} 
+            className={cn("flex h-full w-full", 
+              isHovered ? "scale-105" : "", 
+              isDragging.current ? "" : "transition-transform duration-300 ease-out"
+            )} 
+            style={{
+              width: `${images.length * 100}%`,
+              transform: `translateX(${dragTransform}%)`
+            }}
+          >
+            {images.map((image, index) => (
+              <div 
+                key={index} 
+                className="relative h-full flex-shrink-0" 
+                style={{
+                  width: `${100 / images.length}%`
+                }}
+              >
+                <img 
+                  src={image} 
+                  alt={`${name} - ${index + 1}`} 
+                  className="w-full h-full object-cover" 
+                  draggable="false" 
+                  loading={index === 0 ? "eager" : "lazy"} 
+                />
                 <div className="absolute inset-0 bg-gradient-to-t from-black via-black/40 to-transparent opacity-60 pointer-events-none" />
-              </div>)}
+              </div>
+            ))}
           </div>
         </div>
         
-        {images.length > 1 && <>
-            <button onClick={handlePrevImage} className={cn("absolute left-3 top-1/2 transform -translate-y-1/2 bg-white p-1.5 rounded-full opacity-90 hover:opacity-100 transition-opacity z-10 shadow-md", isMobile ? "opacity-90" : isHovered ? "opacity-90" : "opacity-0")} aria-label="Imagen anterior">
+        {images.length > 1 && (
+          <>
+            <button 
+              onClick={handlePrevImage} 
+              className={cn(
+                "absolute left-3 top-1/2 transform -translate-y-1/2 bg-white p-1.5 rounded-full opacity-90 hover:opacity-100 transition-opacity z-10 shadow-md", 
+                isMobile ? "opacity-90" : isHovered ? "opacity-90" : "opacity-0"
+              )} 
+              aria-label="Imagen anterior"
+            >
               <ChevronLeft className="h-4 w-4 text-black" />
             </button>
-            <button onClick={handleNextImage} className={cn("absolute right-3 top-1/2 transform -translate-y-1/2 bg-white p-1.5 rounded-full opacity-90 hover:opacity-100 transition-opacity z-10 shadow-md", isMobile ? "opacity-90" : isHovered ? "opacity-90" : "opacity-0")} aria-label="Siguiente imagen">
+            <button 
+              onClick={handleNextImage} 
+              className={cn(
+                "absolute right-3 top-1/2 transform -translate-y-1/2 bg-white p-1.5 rounded-full opacity-90 hover:opacity-100 transition-opacity z-10 shadow-md", 
+                isMobile ? "opacity-90" : isHovered ? "opacity-90" : "opacity-0"
+              )} 
+              aria-label="Siguiente imagen"
+            >
               <ChevronRight className="h-4 w-4 text-black" />
             </button>
-          </>}
+          </>
+        )}
 
-        {images.length > 1 && <div className="absolute bottom-3 left-1/2 transform -translate-x-1/2 flex gap-1.5 z-20">
-            {images.map((_, index) => <span key={index} className={cn("h-1.5 rounded-full transition-all", currentImageIndex === index ? "w-6 bg-white" : "w-1.5 bg-white/60")} onClick={e => {
-          e.stopPropagation();
-          handleSlideChange(index);
-        }} style={{
-          cursor: 'pointer'
-        }} />)}
-          </div>}
+        {/* Indicadores de posición con puntos en lugar de rectángulos */}
+        {images.length > 1 && (
+          <div className="absolute bottom-3 left-1/2 transform -translate-x-1/2 flex gap-1.5 z-20">
+            {images.map((_, index) => (
+              <span 
+                key={index} 
+                className={cn(
+                  "rounded-full transition-all",
+                  currentImageIndex === index 
+                    ? "w-2.5 h-2.5 bg-white" 
+                    : "w-2 h-2 bg-white/60"
+                )} 
+                onClick={e => {
+                  e.stopPropagation();
+                  handleSlideChange(index);
+                }} 
+                style={{
+                  cursor: 'pointer'
+                }} 
+              />
+            ))}
+          </div>
+        )}
         
-        {showCenterHeart && <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+        {showCenterHeart && (
+          <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
             <Heart className={cn("h-20 w-20 fill-white stroke-white opacity-0 animate-fadeInOut z-10")} />
-          </div>}
+          </div>
+        )}
         
-        <button onClick={handleFavoriteClick} className="absolute top-3 right-3 z-10 shadow-sm" aria-label={favorite ? "Quitar de favoritos" : "Añadir a favoritos"}>
-          <Heart className={cn("h-6 w-6 transition-colors duration-300", favorite ? "fill-red-500 stroke-white" : "fill-transparent stroke-white stroke-[1.5px]")} />
+        <button 
+          onClick={handleFavoriteClick} 
+          className="absolute top-3 right-3 z-10 shadow-sm" 
+          aria-label={favorite ? "Quitar de favoritos" : "Añadir a favoritos"}
+        >
+          <Heart 
+            className={cn(
+              "h-6 w-6 transition-colors duration-300", 
+              favorite ? "fill-red-500 stroke-white" : "fill-transparent stroke-white stroke-[1.5px]"
+            )} 
+          />
         </button>
         
-        <Badge variant="secondary" className="absolute top-3 left-3 font-medium text-sm bg-white text-black z-10 shadow-sm px-3 py-1">
+        <Badge 
+          variant="secondary" 
+          className="absolute top-3 left-3 font-medium text-sm bg-white text-black z-10 shadow-sm px-3 py-1 dark:bg-black dark:text-white"
+        >
           {type}
         </Badge>
       </div>
@@ -249,7 +323,7 @@ const ArtistProfileCard = ({
         <div className="flex justify-between items-center">
           <h3 className="text-base font-medium">{name}</h3>
           <div className="flex items-center gap-1">
-            <Star className="h-4 w-4 fill-black stroke-black" />
+            <Star className="h-4 w-4 fill-black stroke-black dark:fill-white dark:stroke-white" />
             <span className="text-sm font-medium">{rating.toFixed(1)}</span>
           </div>
         </div>
@@ -258,6 +332,8 @@ const ArtistProfileCard = ({
           <span className="font-bold">{priceRange}</span>
         </p>
       </div>
-    </div>;
+    </div>
+  );
 };
+
 export default ArtistProfileCard;
