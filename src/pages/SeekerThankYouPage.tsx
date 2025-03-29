@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { Button } from "@/components/ui/button";
@@ -71,10 +72,18 @@ const SeekerThankYouPage = () => {
     musicalTastes: ""
   };
   const [seekerNumber, setSeekerNumber] = useState(0);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    // Simulamos un tiempo de carga
+    const timer = setTimeout(() => {
+      setLoading(false);
+    }, 1500);
+    
     const randomSeekerNumber = Math.floor(Math.random() * 100) + 1;
     setSeekerNumber(randomSeekerNumber);
+    
+    return () => clearTimeout(timer);
   }, []);
 
   const handleFinalize = () => {
@@ -102,7 +111,7 @@ const SeekerThankYouPage = () => {
   };
 
   return (
-    <PageTransition>
+    <PageTransition loading={loading} loadingDelay={1000}>
       <Navbar />
       <div className="bg-vyba-cream dark:bg-vyba-dark-bg flex items-center justify-center min-h-[90vh] px-6 md:px-10 lg:px-14 xl:px-16">
         <Card className="border-none shadow-none bg-secondary dark:bg-vyba-dark-bg dark:border-vyba-dark-secondary rounded-3xl overflow-hidden w-full py-16 mx-auto">
