@@ -1,11 +1,11 @@
-
 import React, { useState, useEffect } from "react";
-import { Star, X } from "lucide-react";
+import { Star, X, MessageSquare } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { useIsMobile } from "@/hooks/use-mobile";
+import { toast } from "sonner";
 
 interface Review {
   id: number;
@@ -33,7 +33,6 @@ const ReviewItem = ({
   return (
     <div className="pb-8 border-b border-gray-200 dark:border-gray-700">
       {isMobile ? (
-        // Diseño móvil según la imagen proporcionada
         <div className="flex flex-col">
           <div className="flex items-center mb-3">
             <div className="w-[60px] h-[60px] rounded-[16px] overflow-hidden mr-4 flex-shrink-0">
@@ -51,7 +50,6 @@ const ReviewItem = ({
             </div>
           </div>
           
-          {/* Estrellas */}
           <div className="flex items-center mb-4">
             {[...Array(5)].map((_, index) => (
               <Star 
@@ -61,13 +59,10 @@ const ReviewItem = ({
             ))}
           </div>
           
-          {/* Comentario */}
           <p className="text-base">{review.comment}</p>
         </div>
       ) : (
-        // Diseño de escritorio (mantener el existente)
         <div className="flex gap-6">
-          {/* Parte izquierda: Imagen de perfil e información básica */}
           <div className="w-[90px] flex-shrink-0">
             <div className="w-[72px] h-[72px] rounded-[16px] overflow-hidden mb-2">
               <img 
@@ -84,9 +79,7 @@ const ReviewItem = ({
             </div>
           </div>
           
-          {/* Parte derecha: Estrellas y comentario */}
           <div className="flex-1">
-            {/* Estrellas en fila - 5 estrellas con la cantidad correspondiente llenas */}
             <div className="flex items-center mb-2">
               {[...Array(5)].map((_, index) => (
                 <Star 
@@ -96,7 +89,6 @@ const ReviewItem = ({
               ))}
             </div>
             
-            {/* Comentario de la reseña */}
             <p className="text-base">{review.comment}</p>
           </div>
         </div>
@@ -105,7 +97,6 @@ const ReviewItem = ({
   );
 };
 
-// Datos de ejemplo para reseñas adicionales
 const moreReviewsData: Review[] = [
   {
     id: 4,
@@ -158,7 +149,6 @@ const ArtistReviews = ({
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const isMobile = useIsMobile();
 
-  // Efecto para cerrar el diálogo al recargar la página
   useEffect(() => {
     const handleBeforeUnload = () => {
       setIsDialogOpen(false);
@@ -171,40 +161,42 @@ const ArtistReviews = ({
     };
   }, []);
 
-  // Combinamos las reseñas existentes con las adicionales para el diálogo
   const allReviews = reviewsData ? [...reviewsData, ...moreReviewsData] : [];
+  
+  const handleWriteReview = () => {
+    toast.success("Función escribir reseña", {
+      description: "Esta función estará disponible próximamente",
+      position: "bottom-center"
+    });
+  };
   
   return (
     <div className="mt-8 mb-16">
       <h2 className="text-3xl font-black mb-3">Reseñas</h2>
       <div className="space-y-6">
-        {/* Rating summary */}
         <div className="flex flex-wrap items-center gap-6 mb-8 justify-between">
           <div className="flex items-baseline gap-2">
             <span className="text-3xl font-medium">{rating}</span>
             <span className="text-3xl font-medium">({reviews})</span>
           </div>
-          <div className="flex flex-wrap gap-3">
-            {genres?.filter((_, i) => i < 2).map((genre, index) => (
-              <Badge 
-                key={index} 
-                variant="outline" 
-                className="py-2 px-4 bg-white border-0 text-sm font-medium flex items-center gap-2 dark:bg-vyba-dark-secondary"
-              >
-                {genre}
-              </Badge>
-            ))}
+          <div>
+            <Button
+              variant="secondary"
+              className="flex items-center gap-2"
+              onClick={handleWriteReview}
+            >
+              <MessageSquare className="h-4 w-4" />
+              Escribir una reseña
+            </Button>
           </div>
         </div>
         
-        {/* Individual reviews (mostrar solo los primeros 3 en la vista principal) */}
         <div className="space-y-10">
           {reviewsData?.slice(0, 3).map(review => (
             <ReviewItem key={review.id} review={review} />
           ))}
         </div>
         
-        {/* Ver todas button */}
         <div className="flex justify-center mt-8">
           <Button 
             variant="secondary" 
@@ -216,7 +208,6 @@ const ArtistReviews = ({
         </div>
       </div>
 
-      {/* Dialog para mostrar todas las reseñas */}
       <Dialog 
         open={isDialogOpen} 
         onOpenChange={setIsDialogOpen}
