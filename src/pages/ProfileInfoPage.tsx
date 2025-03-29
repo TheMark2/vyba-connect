@@ -73,7 +73,7 @@ const ProfileInfoPage = () => {
             <h1 className="text-6xl font-black mb-10 text-center dark:text-white">Rellena tu información</h1>
             
             <div className="flex justify-center mb-12">
-              <div className="inline-flex items-center gap-4 px-6 py-2 rounded-full bg-white dark:bg-vyba-dark-secondary">
+              <div className="inline-flex items-center gap-6 px-6 py-2 rounded-full bg-white dark:bg-vyba-dark-secondary">
                 {role === 'artist' ? <>
                     <Music size={20} className="text-black dark:text-white" />
                     <div className="flex flex-col">                    
