@@ -1,5 +1,5 @@
 import { Button } from "@/components/ui/button";
-import { BrainCircuit } from "lucide-react";
+import { Search as SearchIcon, BrainCircuit } from "lucide-react";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { motion, useScroll, useTransform } from "framer-motion";
@@ -14,7 +14,6 @@ import ArtistsList from "@/components/ArtistsList";
 import StatsSummary from "@/components/StatsSummary";
 import HelpSection from "@/components/HelpSection";
 import { useIsMobile } from "@/hooks/use-mobile";
-import * as HugeIcons from '@hugeicons/react';
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/carousel";
 
 const Input = React.forwardRef<HTMLInputElement, React.ComponentProps<"input">>(({
@@ -60,7 +59,7 @@ const Input = React.forwardRef<HTMLInputElement, React.ComponentProps<"input">>(
 });
 Input.displayName = "Input";
 
-const BoldSearch = () => <HugeIcons.Search className="h-5 w-5 stroke-[2.5px]" />;
+const BoldSearch = () => <SearchIcon className="h-5 w-5 stroke-[2.5px]" />;
 
 const Index = () => {
   const scrollRef = useRef(null);

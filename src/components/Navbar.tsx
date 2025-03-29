@@ -1,12 +1,10 @@
-
 import { Button } from "@/components/ui/button";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { cn } from "@/lib/utils";
-import { Facebook, Menu } from "lucide-react";
+import { Facebook, Menu, Moon, Sun, Monitor } from "lucide-react";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { useState, useEffect } from "react";
 import MobileMenu from "@/components/MobileMenu";
-import * as HugeIcons from '@hugeicons/react';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -90,12 +88,12 @@ const Navbar = ({
 
   const getThemeIcon = () => {
     if (currentTheme === 'dark') {
-      return <HugeIcons.Moon className="h-5 w-5" />;
+      return <Moon className="h-5 w-5" />;
     } else if (currentTheme === 'light') {
-      return <HugeIcons.Sun className="h-5 w-5" />;
+      return <Sun className="h-5 w-5" />;
     } else {
       const isSystemDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-      return isSystemDark ? <HugeIcons.Moon className="h-5 w-5" /> : <HugeIcons.Sun className="h-5 w-5" />;
+      return isSystemDark ? <Moon className="h-5 w-5" /> : <Sun className="h-5 w-5" />;
     }
   };
 
@@ -163,7 +161,7 @@ const Navbar = ({
                 )}
                 onClick={() => setTheme('light')}
               >
-                <HugeIcons.Sun className="h-5 w-5" />
+                <Sun className="h-5 w-5" />
                 <span className="text-sm font-medium">Claro</span>
               </DropdownMenuItem>
               <DropdownMenuItem 
@@ -173,7 +171,7 @@ const Navbar = ({
                 )}
                 onClick={() => setTheme('dark')}
               >
-                <HugeIcons.Moon className="h-5 w-5" />
+                <Moon className="h-5 w-5" />
                 <span className="text-sm font-medium">Oscuro</span>
               </DropdownMenuItem>
               <DropdownMenuItem 
@@ -183,7 +181,7 @@ const Navbar = ({
                 )}
                 onClick={() => setTheme('system')}
               >
-                <HugeIcons.Monitor className="h-5 w-5" />
+                <Monitor className="h-5 w-5" />
                 <span className="text-sm font-medium">Sistema</span>
               </DropdownMenuItem>
             </DropdownMenuContent>
