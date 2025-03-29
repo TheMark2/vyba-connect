@@ -7,7 +7,7 @@ import { Input } from "@/components/ui/input";
 import { Card } from "@/components/ui/card";
 import { toast } from "sonner";
 import Navbar from '@/components/Navbar';
-import { Eye, EyeOff, Facebook, Github } from 'lucide-react';
+import { Eye, EyeOff, Facebook } from 'lucide-react';
 
 const AuthPage = () => {
   const navigate = useNavigate();
@@ -77,6 +77,11 @@ const AuthPage = () => {
   const handleTabChange = (value: string) => {
     setDefaultTab(value);
     // Resetear el formulario de registro cuando se cambia de pestaña
+    setShowFullRegisterForm(false);
+  };
+
+  const switchToRegister = () => {
+    setDefaultTab("register");
     setShowFullRegisterForm(false);
   };
 
@@ -176,7 +181,7 @@ const AuthPage = () => {
 
                 <div className="text-center">
                   <p className="text-sm text-gray-600 dark:text-gray-400">
-                    No tienes cuenta? <button onClick={() => setDefaultTab("register")} className="text-blue-600 font-medium">Regístrate</button>
+                    No tienes cuenta? <button onClick={switchToRegister} className="text-blue-600 font-medium">Regístrate</button>
                   </p>
                 </div>
               </div>
@@ -362,3 +367,4 @@ const AuthPage = () => {
 };
 
 export default AuthPage;
+
