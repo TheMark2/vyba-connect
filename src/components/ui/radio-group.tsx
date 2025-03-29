@@ -50,7 +50,7 @@ const RoleSelector = React.forwardRef<
 >(({ className, icon, label, ...props }, ref) => {
   return (
     <label className="cursor-pointer">
-      <div className="flex items-center gap-3 bg-white dark:bg-white rounded-full px-5 py-3.5">
+      <div className="flex items-center gap-3 bg-white dark:bg-white rounded-md px-5 py-3.5">
         {icon && <div className="flex-shrink-0">{icon}</div>}
         <span className="text-black font-medium flex-grow">{label}</span>
         <RadioGroupPrimitive.Item

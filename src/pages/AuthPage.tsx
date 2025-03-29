@@ -14,27 +14,23 @@ const AuthPage = () => {
   const [defaultTab, setDefaultTab] = useState<string>("login");
   const [showPassword, setShowPassword] = useState(false);
   
-  // Estados para el formulario de inicio de sesión
   const [loginForm, setLoginForm] = useState({
     email: '',
     password: ''
   });
 
-  // Estados para el formulario de registro
   const [registerForm, setRegisterForm] = useState({
     fullName: '',
     email: '',
     password: '',
-    role: 'artist' // Por defecto artista
+    role: 'artist'
   });
 
-  // Estados para controlar los pasos del formulario de registro
   const [registerStep, setRegisterStep] = useState(1);
 
   const handleLoginSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     
-    // Aquí iría la lógica de autenticación real
     toast.success("Inicio de sesión exitoso", {
       description: "Redirigiendo a la página principal...",
       position: "bottom-center"
@@ -49,12 +45,10 @@ const AuthPage = () => {
     e.preventDefault();
     
     if (registerStep < 2) {
-      // Avanzar al siguiente paso
       setRegisterStep(registerStep + 1);
       return;
     }
     
-    // Aquí iría la lógica de registro real
     toast.success("Registro exitoso", {
       description: "Tu cuenta ha sido creada. Redirigiendo...",
       position: "bottom-center"
@@ -78,7 +72,6 @@ const AuthPage = () => {
 
   const handleTabChange = (value: string) => {
     setDefaultTab(value);
-    // Resetear el formulario de registro cuando se cambia de pestaña
     setRegisterStep(1);
   };
 
@@ -87,7 +80,6 @@ const AuthPage = () => {
     setRegisterStep(1);
   };
 
-  // Función para ir atrás en el formulario de registro
   const handleBackStep = () => {
     setRegisterStep(1);
   };
@@ -338,7 +330,7 @@ const AuthPage = () => {
                           className="rounded-full p-2 border-none bg-white"
                           onClick={handleBackStep}
                         >
-                          <ArrowLeft size={20} />
+                          <ArrowLeft size={20} strokeWidth={3} />
                         </Button>
                         <Button 
                           type="submit"
