@@ -226,7 +226,7 @@ const ArtistProfileCard = ({
         
         <button 
           onClick={handleFavoriteClick} 
-          className="absolute top-2 right-2 z-10 bg-white rounded-full p-1.5 shadow-sm w-9 h-9 flex items-center justify-center" 
+          className="absolute top-2 right-2 z-10 bg-white rounded-full p-1.5 w-9 h-9 flex items-center justify-center" 
           aria-label={favorite ? "Quitar de favoritos" : "Añadir a favoritos"}
         >
           <Heart 
@@ -239,7 +239,7 @@ const ArtistProfileCard = ({
         
         <Badge 
           variant="secondary" 
-          className="absolute top-2 left-2 font-medium text-sm bg-white text-black z-10 shadow-sm px-4 py-1.5 dark:bg-black dark:text-white"
+          className="absolute top-2 left-2 font-medium text-sm bg-white text-black z-10 px-4 py-1.5 dark:bg-black dark:text-white"
         >
           {type}
         </Badge>
