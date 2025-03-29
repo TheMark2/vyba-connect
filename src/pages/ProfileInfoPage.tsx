@@ -76,9 +76,9 @@ const ProfileInfoPage = () => {
               <div className="inline-flex items-center gap-4 px-6 py-2 rounded-full bg-white dark:bg-vyba-dark-secondary">
                 {role === 'artist' ? <>
                     <Music size={20} className="text-black dark:text-white" />
-                    <div className="space-y-1 flex flex-col">                    
+                    <div className="flex flex-col">                    
                       <span className="text-xs dark:text-white">Registrado como</span>
-                      <span className="text-sm font-medium text-black dark:text-white">Artista</span>
+                      <span className="text-sm font-bold dark:text-white">Artista</span>
                     </div>
                   </> : <>
                     <Search size={20} className="text-black dark:text-white" />
