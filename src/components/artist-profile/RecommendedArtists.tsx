@@ -36,24 +36,31 @@ const RecommendedArtists = ({ artists }: RecommendedArtistsProps) => {
         clearInterval(autoScrollRef.current);
       }
       
-      // Establecer un desplazamiento suave continuo 
-      let scrollAmount = 1; // Cantidad de píxeles a desplazar en cada paso
-      const scrollInterval = 30; // Intervalo entre cada paso (ms)
+      // Crear un intervalo para mover la animación
+      const scrollSpeed = 30; // ms entre cada movimiento (menor = más rápido)
       
       autoScrollRef.current = setInterval(() => {
         if (api && !isPaused) {
-          const scrollSnap = api.scrollSnapList();
-          const scrollProgress = api.scrollProgress();
+          // Verificar si estamos al final del carrusel
+          const isAtEnd = api.internalEngine().scrollProgress() >= 0.99;
           
-          // Si hemos llegado al final, volver al principio suavemente
-          if (scrollProgress >= 0.98) {
-            api.scrollTo(0, true);
+          if (isAtEnd) {
+            // Si estamos al final, volver al principio suavemente
+            api.scrollTo(0);
           } else {
-            // De lo contrario, desplazar suavemente
-            api.scrollBy(scrollAmount, false);
+            // Avanzar un paso pequeño (el método scrollNext() avanza al siguiente slide completo,
+            // en lugar usamos scrollSnaps y scrollProgress para un movimiento continuo)
+            const progress = api.internalEngine().scrollProgress();
+            const next = api.scrollSnapList()[Math.min(
+              Math.floor(progress * api.scrollSnapList().length) + 1,
+              api.scrollSnapList().length - 1
+            )];
+            
+            // Usa scrollTo con animación (no saltamos directamente)
+            api.scrollTo(next, { duration: scrollSpeed * 10 });
           }
         }
-      }, scrollInterval);
+      }, scrollSpeed);
     };
     
     startAutoScroll();
@@ -115,8 +122,8 @@ const RecommendedArtists = ({ artists }: RecommendedArtistsProps) => {
               </CarouselItem>
             ))}
           </CarouselContent>
-          <CarouselPrevious className="left-2 w-10 h-10" />
-          <CarouselNext className="right-2 w-10 h-10" />
+          <CarouselPrevious className="left-2 w-12 h-12" />
+          <CarouselNext className="right-2 w-12 h-12" />
         </Carousel>
       </div>
     </div>
