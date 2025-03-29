@@ -132,7 +132,10 @@ const ProfileInfoPage = () => {
                     </div>
                   </div>
                 </DropdownMenuTrigger>
-                <DropdownMenuContent>
+                <DropdownMenuContent 
+                  className="min-w-[225px] bg-white dark:bg-[#575654] border-none rounded-3xl p-3 shadow-none mb-2"
+                  align="center"
+                >
                   {role === 'artist' ? (
                     <DropdownMenuItem onClick={() => handleRoleChange('seeker')}>
                       <div className="flex items-center gap-3">
