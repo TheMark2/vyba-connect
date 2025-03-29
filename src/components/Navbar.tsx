@@ -1,7 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { cn } from "@/lib/utils";
-import { Facebook, Menu, Moon, Sun, Monitor } from "lucide-react";
+import { Menu, Moon, Sun, LaptopIcon } from "lucide-react";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { useState, useEffect } from "react";
 import MobileMenu from "@/components/MobileMenu";
@@ -28,12 +28,14 @@ const Navbar = ({
   const [currentTheme, setCurrentTheme] = useState<'light' | 'dark' | 'system'>('system');
   const isAuthPage = location.pathname === '/auth';
 
+  // Limpiar overflow en caso de que el componente se desmonte con el menú abierto
   useEffect(() => {
     return () => {
       document.body.style.overflow = '';
     };
   }, []);
 
+  // Detectar el tema inicial del sistema
   useEffect(() => {
     const savedTheme = localStorage.getItem('theme');
     if (savedTheme === 'dark') {
@@ -45,8 +47,10 @@ const Navbar = ({
     }
   }, []);
 
+  // Detectar el scroll y cambiar el estado
   useEffect(() => {
     const handleScroll = () => {
+      // En dispositivos móviles, cambiamos el color después de 20px de scroll
       if (window.scrollY > 20) {
         setScrolled(true);
       } else {
@@ -59,14 +63,17 @@ const Navbar = ({
     };
   }, []);
 
+  // Manejar apertura del menú
   const handleOpenMenu = () => {
     setIsMenuOpen(true);
   };
 
+  // Manejar cierre del menú
   const handleCloseMenu = () => {
     setIsMenuOpen(false);
   };
 
+  // Función para cambiar el tema
   const setTheme = (theme: 'light' | 'dark' | 'system') => {
     const root = window.document.documentElement;
     
@@ -86,12 +93,14 @@ const Navbar = ({
     setCurrentTheme(theme);
   };
 
+  // Función para obtener el icono correcto según el tema actual
   const getThemeIcon = () => {
     if (currentTheme === 'dark') {
       return <Moon className="h-5 w-5" />;
     } else if (currentTheme === 'light') {
       return <Sun className="h-5 w-5" />;
     } else {
+      // Para 'system', comprobar la preferencia actual del sistema
       const isSystemDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
       return isSystemDark ? <Moon className="h-5 w-5" /> : <Sun className="h-5 w-5" />;
     }
@@ -114,11 +123,14 @@ const Navbar = ({
         className
       )}
     >
+      {/* Logo y enlaces alineados a la izquierda */}
       <div className="flex items-center space-x-12">
+        {/* Logo */}
         <Link to="/" className="text-3xl font-bold dark:text-white">
           VYBA
         </Link>
 
+        {/* Enlaces de navegación */}
         <div className="hidden md:flex items-center space-x-2">
           <Link to="/" className={cn("px-6 py-3 text-sm rounded-full text-black dark:text-white font-medium relative overflow-hidden transition-colors duration-300", isActive("/") ? "bg-[#F5F1EB] dark:bg-vyba-dark-secondary" : "hover:bg-[#F9F6F2] dark:hover:bg-vyba-dark-secondary")}>
             Inicio
@@ -138,7 +150,9 @@ const Navbar = ({
         </div>
       </div>
 
+      {/* Botones de acción */}
       <div className="flex items-center space-x-3">
+        {/* Dropdown para cambio de tema (solo en pantallas grandes) */}
         {!isMobile && (
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
@@ -181,7 +195,7 @@ const Navbar = ({
                 )}
                 onClick={() => setTheme('system')}
               >
-                <Monitor className="h-5 w-5" />
+                <LaptopIcon className="h-5 w-5" />
                 <span className="text-sm font-medium">Sistema</span>
               </DropdownMenuItem>
             </DropdownMenuContent>
@@ -190,6 +204,7 @@ const Navbar = ({
 
         {isMobile ? (
           <>
+            {/* Botón de iniciar sesión en móvil */}
             <Button 
               variant="default" 
               onClick={handleAuthClick}
@@ -197,6 +212,7 @@ const Navbar = ({
               Iniciar sesión
             </Button>
             
+            {/* Botón de menú hamburguesa */}
             <Button 
               variant="ghost" 
               size="icon" 
@@ -206,6 +222,7 @@ const Navbar = ({
               <Menu className="h-6 w-6" />
             </Button>
 
+            {/* Menú móvil como componente independiente */}
             <MobileMenu 
               isOpen={isMenuOpen} 
               onClose={handleCloseMenu} 

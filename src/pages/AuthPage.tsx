@@ -6,10 +6,8 @@ import { Input } from "@/components/ui/input";
 import { Card } from "@/components/ui/card";
 import { toast } from "sonner";
 import Navbar from '@/components/Navbar';
-import { Eye, EyeOff, Facebook, ArrowLeft } from 'lucide-react';
+import { Eye, EyeOff, Facebook, Search, Music, ArrowLeft } from 'lucide-react';
 import { RadioGroup, RoleSelector } from '@/components/ui/radio-group';
-import { HugeiconsIcon } from '@hugeicons/react';
-import { Audit02Icon, Audit01Icon } from '@hugeicons/react';
 
 const AuthPage = () => {
   const navigate = useNavigate();
@@ -326,13 +324,13 @@ const AuthPage = () => {
                         <RoleSelector 
                           value="seeker" 
                           label="Entrar como buscador" 
-                          icon={<HugeiconsIcon icon={Audit02Icon} size={22} color="currentColor" />}
+                          icon={<Search size={20} />}
                           features={seekerFeatures}
                         />
                         <RoleSelector 
                           value="artist" 
                           label="Entrar como artista" 
-                          icon={<HugeiconsIcon icon={Audit01Icon} size={22} color="currentColor" />}
+                          icon={<Music size={20} />}
                           features={artistFeatures}
                         />
                       </RadioGroup>
