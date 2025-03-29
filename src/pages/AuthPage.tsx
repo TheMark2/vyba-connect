@@ -75,7 +75,7 @@ const AuthPage = () => {
       <Navbar />
       <div className="min-h-screen bg-vyba-cream dark:bg-vyba-dark-bg flex flex-col px-6 md:px-10 lg:px-14 xl:px-16">
         <div className="w-full h-[80vh]">
-          <Card className="bg-white dark:bg-vyba-dark-bg dark:border-vyba-dark-secondary rounded-3xl overflow-hidden p-32">
+          <Card className="bg-white dark:bg-vyba-dark-bg dark:border-vyba-dark-secondary rounded-3xl overflow-hidden pt-16 px-32">
             <div className="text-center mb-10">
               <h1 className="text-4xl font-black mb-2 dark:text-white">Bienvenido/a a VYBA</h1>
               <p className="text-lg text-gray-600 dark:text-gray-300">Inicia sesión o regístrate</p>
