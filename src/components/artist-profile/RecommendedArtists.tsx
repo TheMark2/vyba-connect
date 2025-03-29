@@ -1,5 +1,5 @@
 
-import React from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 import { Carousel, CarouselContent, CarouselItem, CarouselPrevious, CarouselNext } from "@/components/ui/carousel";
@@ -22,19 +22,76 @@ interface RecommendedArtistsProps {
 
 const RecommendedArtists = ({ artists }: RecommendedArtistsProps) => {
   const navigate = useNavigate();
+  const [api, setApi] = useState<any>(null);
+  const autoScrollRef = useRef<NodeJS.Timeout | null>(null);
+  const [isPaused, setIsPaused] = useState(false);
+  
+  // Configurar el desplazamiento automático continuo
+  useEffect(() => {
+    if (!api || artists.length <= 4) return;
+    
+    const startAutoScroll = () => {
+      // Limpiar cualquier intervalo anterior
+      if (autoScrollRef.current) {
+        clearInterval(autoScrollRef.current);
+      }
+      
+      // Establecer un desplazamiento suave continuo 
+      let scrollAmount = 1; // Cantidad de píxeles a desplazar en cada paso
+      const scrollInterval = 30; // Intervalo entre cada paso (ms)
+      
+      autoScrollRef.current = setInterval(() => {
+        if (api && !isPaused) {
+          const scrollSnap = api.scrollSnapList();
+          const scrollProgress = api.scrollProgress();
+          
+          // Si hemos llegado al final, volver al principio suavemente
+          if (scrollProgress >= 0.98) {
+            api.scrollTo(0, true);
+          } else {
+            // De lo contrario, desplazar suavemente
+            api.scrollBy(scrollAmount, false);
+          }
+        }
+      }, scrollInterval);
+    };
+    
+    startAutoScroll();
+    
+    return () => {
+      if (autoScrollRef.current) {
+        clearInterval(autoScrollRef.current);
+      }
+    };
+  }, [api, artists.length, isPaused]);
+  
+  // Pausar el desplazamiento cuando el usuario interactúa con el carrusel
+  const handleMouseEnter = () => {
+    setIsPaused(true);
+  };
+  
+  const handleMouseLeave = () => {
+    setIsPaused(false);
+  };
 
   return (
     <div className="mb-16">
       <div className="max-w-7xl mx-auto">
         <h2 className="text-3xl font-black mb-6">Recomendados</h2>
       </div>
-      <div className="relative max-w-full mx-auto">
+      <div 
+        className="relative max-w-full mx-auto"
+        onMouseEnter={handleMouseEnter}
+        onMouseLeave={handleMouseLeave}
+      >
         <Carousel 
           opts={{
             align: "start",
-            loop: false
+            loop: true,
+            dragFree: true
           }} 
           className="max-w-7xl mx-auto"
+          setApi={setApi}
         >
           <CarouselContent>
             {artists.map(artist => (
@@ -58,8 +115,8 @@ const RecommendedArtists = ({ artists }: RecommendedArtistsProps) => {
               </CarouselItem>
             ))}
           </CarouselContent>
-          <CarouselPrevious className="left-2" />
-          <CarouselNext className="right-2" />
+          <CarouselPrevious className="left-2 w-10 h-10" />
+          <CarouselNext className="right-2 w-10 h-10" />
         </Carousel>
       </div>
     </div>
