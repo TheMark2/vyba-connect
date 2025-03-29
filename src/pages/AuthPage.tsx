@@ -84,6 +84,19 @@ const AuthPage = () => {
     setRegisterStep(1);
   };
 
+  const seekerFeatures = [
+    "Encuentra artistas según tus necesidades",
+    "Acceso completo al catálogo de profesionales",
+    "Comunícate directamente con los artistas"
+  ];
+
+  const artistFeatures = [
+    "Crea tu perfil profesional",
+    "Recibe solicitudes de eventos",
+    "Gestiona tu calendario de actuaciones",
+    "Muestra tu portafolio a posibles clientes"
+  ];
+
   return (
     <>
       <Navbar />
@@ -312,11 +325,13 @@ const AuthPage = () => {
                           value="seeker" 
                           label="Entrar como buscador" 
                           icon={<Search size={20} />}
+                          features={seekerFeatures}
                         />
                         <RoleSelector 
                           value="artist" 
                           label="Entrar como artista" 
                           icon={<Music size={20} />}
+                          features={artistFeatures}
                         />
                       </RadioGroup>
                       
