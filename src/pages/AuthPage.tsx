@@ -7,7 +7,7 @@ import { Input } from "@/components/ui/input";
 import { Card } from "@/components/ui/card";
 import { toast } from "sonner";
 import Navbar from '@/components/Navbar';
-import { Eye, EyeOff } from 'lucide-react';
+import { Eye, EyeOff, Facebook, Github } from 'lucide-react';
 
 const AuthPage = () => {
   const navigate = useNavigate();
@@ -74,8 +74,8 @@ const AuthPage = () => {
     <>
       <Navbar />
       <div className="bg-vyba-cream dark:bg-vyba-dark-bg flex flex-col px-6 md:px-10 lg:px-14 xl:px-16">
-        <div className="w-full h-[90vh]">
-          <Card className="border-none shadow-none bg-secondary dark:bg-vyba-dark-bg dark:border-vyba-dark-secondary rounded-3xl overflow-hidden py-16 px-32">
+        <div className="w-full h-[90vh] flex items-center justify-center">
+          <Card className="border-none shadow-none bg-secondary dark:bg-vyba-dark-bg dark:border-vyba-dark-secondary rounded-3xl overflow-hidden py-16 px-12 md:px-24 max-w-3xl mx-auto">
             <div className="text-center mb-10">
               <h1 className="text-6xl font-black mb-4 dark:text-white">Bienvenido/a a VYBA</h1>
               <p className="text-4xl dark:text-gray-300">Inicia sesión o regístrate</p>
@@ -88,17 +88,24 @@ const AuthPage = () => {
                     <Button 
                       type="button" 
                       variant="outline" 
-                      className="w-full flex items-center justify-center gap-2"
+                      className="w-full flex items-center justify-center gap-2 bg-white text-black dark:bg-white dark:text-black dark:hover:bg-gray-100 hover:bg-gray-100"
                       onClick={() => handleSocialLogin('Google')}
                     >
+                      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" width="20px" height="20px">
+                        <path fill="#FFC107" d="M43.611,20.083H42V20H24v8h11.303c-1.649,4.657-6.08,8-11.303,8c-6.627,0-12-5.373-12-12c0-6.627,5.373-12,12-12c3.059,0,5.842,1.154,7.961,3.039l5.657-5.657C34.046,6.053,29.268,4,24,4C12.955,4,4,12.955,4,24c0,11.045,8.955,20,20,20c11.045,0,20-8.955,20-20C44,22.659,43.862,21.35,43.611,20.083z"/>
+                        <path fill="#FF3D00" d="M6.306,14.691l6.571,4.819C14.655,15.108,18.961,12,24,12c3.059,0,5.842,1.154,7.961,3.039l5.657-5.657C34.046,6.053,29.268,4,24,4C16.318,4,9.656,8.337,6.306,14.691z"/>
+                        <path fill="#4CAF50" d="M24,44c5.166,0,9.86-1.977,13.409-5.192l-6.19-5.238C29.211,35.091,26.715,36,24,36c-5.202,0-9.619-3.317-11.283-7.946l-6.522,5.025C9.505,39.556,16.227,44,24,44z"/>
+                        <path fill="#1976D2" d="M43.611,20.083H42V20H24v8h11.303c-0.792,2.237-2.231,4.166-4.087,5.571c0.001-0.001,0.002-0.001,0.003-0.002l6.19,5.238C36.971,39.205,44,34,44,24C44,22.659,43.862,21.35,43.611,20.083z"/>
+                      </svg>
                       Continuar con Google
                     </Button>
                     <Button 
                       type="button" 
                       variant="outline" 
-                      className="w-full flex items-center justify-center gap-2"
+                      className="w-full flex items-center justify-center gap-2 bg-white text-black dark:bg-white dark:text-black dark:hover:bg-gray-100 hover:bg-gray-100"
                       onClick={() => handleSocialLogin('Facebook')}
                     >
+                      <Facebook size={20} color="#1877F2" />
                       Continuar con Facebook
                     </Button>
                   </div>
@@ -121,7 +128,7 @@ const AuthPage = () => {
                         onChange={(e) => setLoginForm({...loginForm, email: e.target.value})}
                         placeholder="Escribe tu correo"
                         required
-                        className="rounded-xl px-4 py-5 h-auto"
+                        className="rounded-xl px-4 py-5 h-auto bg-white dark:bg-white dark:text-black"
                       />
                     </div>
                     
@@ -137,7 +144,7 @@ const AuthPage = () => {
                           onChange={(e) => setLoginForm({...loginForm, password: e.target.value})}
                           placeholder="Escribe tu contraseña"
                           required
-                          className="rounded-xl px-4 py-5 h-auto pr-10"
+                          className="rounded-xl px-4 py-5 h-auto pr-10 bg-white dark:bg-white dark:text-black"
                         />
                         <button
                           type="button"
@@ -149,12 +156,14 @@ const AuthPage = () => {
                       </div>
                     </div>
                     
-                    <Button 
-                      type="submit" 
-                      className="w-full rounded-2xl bg-blue-100 hover:bg-blue-200 text-blue-900 font-semibold py-2.5"
-                    >
-                      Iniciar sesión
-                    </Button>
+                    <div className="flex justify-center">
+                      <Button 
+                        type="submit" 
+                        className="rounded-2xl bg-blue-100 hover:bg-blue-200 text-blue-900 font-semibold py-2.5 px-12"
+                      >
+                        Iniciar sesión
+                      </Button>
+                    </div>
                   </form>
 
                   <div className="text-center">
@@ -171,17 +180,24 @@ const AuthPage = () => {
                     <Button 
                       type="button" 
                       variant="outline" 
-                      className="w-full flex items-center justify-center gap-2"
+                      className="w-full flex items-center justify-center gap-2 bg-white text-black dark:bg-white dark:text-black dark:hover:bg-gray-100 hover:bg-gray-100"
                       onClick={() => handleSocialLogin('Google')}
                     >
+                      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" width="20px" height="20px">
+                        <path fill="#FFC107" d="M43.611,20.083H42V20H24v8h11.303c-1.649,4.657-6.08,8-11.303,8c-6.627,0-12-5.373-12-12c0-6.627,5.373-12,12-12c3.059,0,5.842,1.154,7.961,3.039l5.657-5.657C34.046,6.053,29.268,4,24,4C12.955,4,4,12.955,4,24c0,11.045,8.955,20,20,20c11.045,0,20-8.955,20-20C44,22.659,43.862,21.35,43.611,20.083z"/>
+                        <path fill="#FF3D00" d="M6.306,14.691l6.571,4.819C14.655,15.108,18.961,12,24,12c3.059,0,5.842,1.154,7.961,3.039l5.657-5.657C34.046,6.053,29.268,4,24,4C16.318,4,9.656,8.337,6.306,14.691z"/>
+                        <path fill="#4CAF50" d="M24,44c5.166,0,9.86-1.977,13.409-5.192l-6.19-5.238C29.211,35.091,26.715,36,24,36c-5.202,0-9.619-3.317-11.283-7.946l-6.522,5.025C9.505,39.556,16.227,44,24,44z"/>
+                        <path fill="#1976D2" d="M43.611,20.083H42V20H24v8h11.303c-0.792,2.237-2.231,4.166-4.087,5.571c0.001-0.001,0.002-0.001,0.003-0.002l6.19,5.238C36.971,39.205,44,34,44,24C44,22.659,43.862,21.35,43.611,20.083z"/>
+                      </svg>
                       Continuar con Google
                     </Button>
                     <Button 
                       type="button" 
                       variant="outline" 
-                      className="w-full flex items-center justify-center gap-2"
+                      className="w-full flex items-center justify-center gap-2 bg-white text-black dark:bg-white dark:text-black dark:hover:bg-gray-100 hover:bg-gray-100"
                       onClick={() => handleSocialLogin('Facebook')}
                     >
+                      <Facebook size={20} color="#1877F2" />
                       Continuar con Facebook
                     </Button>
                   </div>
@@ -204,7 +220,7 @@ const AuthPage = () => {
                         onChange={(e) => setRegisterForm({...registerForm, fullName: e.target.value})}
                         placeholder="Escribe tu nombre"
                         required
-                        className="rounded-xl px-4 py-5 h-auto"
+                        className="rounded-xl px-4 py-5 h-auto bg-white dark:bg-white dark:text-black"
                       />
                     </div>
                     
@@ -220,7 +236,7 @@ const AuthPage = () => {
                           onChange={(e) => setRegisterForm({...registerForm, email: e.target.value})}
                           placeholder="Escribe tu correo"
                           required
-                          className="rounded-xl px-4 py-5 h-auto"
+                          className="rounded-xl px-4 py-5 h-auto bg-white dark:bg-white dark:text-black"
                         />
                       </div>
                       
@@ -236,7 +252,7 @@ const AuthPage = () => {
                             onChange={(e) => setRegisterForm({...registerForm, password: e.target.value})}
                             placeholder="Escribe tu contraseña"
                             required
-                            className="rounded-xl px-4 py-5 h-auto pr-10"
+                            className="rounded-xl px-4 py-5 h-auto pr-10 bg-white dark:bg-white dark:text-black"
                           />
                           <button
                             type="button"
@@ -249,12 +265,14 @@ const AuthPage = () => {
                       </div>
                     </div>
                     
-                    <Button 
-                      type="submit" 
-                      className="w-full rounded-2xl bg-blue-100 hover:bg-blue-200 text-blue-900 font-semibold py-2.5"
-                    >
-                      Siguiente
-                    </Button>
+                    <div className="flex justify-center">
+                      <Button 
+                        type="submit" 
+                        className="rounded-2xl bg-blue-100 hover:bg-blue-200 text-blue-900 font-semibold py-2.5 px-12"
+                      >
+                        Siguiente
+                      </Button>
+                    </div>
                   </form>
 
                   <div className="text-center">
