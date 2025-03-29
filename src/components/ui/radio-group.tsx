@@ -56,7 +56,7 @@ const RoleSelector = React.forwardRef<
         <RadioGroupPrimitive.Item
           ref={ref}
           className={cn(
-            "aspect-square h-5 w-5 rounded-full border-2 border-black text-primary ring-offset-background focus:outline-none focus-visible:ring-0 disabled:cursor-not-allowed disabled:opacity-50",
+            "aspect-square h-5 w-5 rounded-full border-2 border-black text-sm ring-offset-background focus:outline-none focus-visible:ring-0 disabled:cursor-not-allowed disabled:opacity-50",
             className
           )}
           {...props}
