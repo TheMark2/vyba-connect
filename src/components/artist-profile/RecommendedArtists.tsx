@@ -31,11 +31,11 @@ const RecommendedArtists = ({ artists }: RecommendedArtistsProps) => {
       <div className="relative max-w-full mx-auto overflow-hidden">
         <Marquee 
           pauseOnHover 
-          className="py-6" 
-          gap="2rem"
+          className="py-4" 
+          gap="1rem"
         >
           {artists.map(artist => (
-            <div key={artist.id} className="w-[280px] flex-shrink-0">
+            <div key={artist.id} className="w-[300px] flex-shrink-0">
               <ArtistProfileCard 
                 name={artist.name}
                 type={artist.type}

@@ -178,22 +178,22 @@ const ArtistProfileCard = ({
             <button 
               onClick={handlePrevImage} 
               className={cn(
-                "absolute left-3 top-1/2 transform -translate-y-1/2 bg-white p-2 rounded-full opacity-90 hover:opacity-100 transition-opacity z-10 shadow-md w-10 h-10 flex items-center justify-center", 
+                "absolute left-2 top-1/2 transform -translate-y-1/2 bg-white p-1.5 rounded-full opacity-90 hover:opacity-100 transition-opacity z-10 shadow-md w-8 h-8 flex items-center justify-center", 
                 isMobile ? "opacity-90" : isHovered ? "opacity-90" : "opacity-0"
               )} 
               aria-label="Imagen anterior"
             >
-              <ChevronLeft className="h-5 w-5 text-black" />
+              <ChevronLeft className="h-4 w-4 text-black" />
             </button>
             <button 
               onClick={handleNextImage} 
               className={cn(
-                "absolute right-3 top-1/2 transform -translate-y-1/2 bg-white p-2 rounded-full opacity-90 hover:opacity-100 transition-opacity z-10 shadow-md w-10 h-10 flex items-center justify-center", 
+                "absolute right-2 top-1/2 transform -translate-y-1/2 bg-white p-1.5 rounded-full opacity-90 hover:opacity-100 transition-opacity z-10 shadow-md w-8 h-8 flex items-center justify-center", 
                 isMobile ? "opacity-90" : isHovered ? "opacity-90" : "opacity-0"
               )} 
               aria-label="Siguiente imagen"
             >
-              <ChevronRight className="h-5 w-5 text-black" />
+              <ChevronRight className="h-4 w-4 text-black" />
             </button>
           </>
         )}
@@ -221,18 +221,18 @@ const ArtistProfileCard = ({
         
         {showCenterHeart && (
           <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-            <Heart className={cn("h-20 w-20 fill-black stroke-white opacity-0 animate-fadeInOut z-10")} />
+            <Heart className={cn("h-16 w-16 fill-black stroke-white opacity-0 animate-fadeInOut z-10")} />
           </div>
         )}
         
         <button 
           onClick={handleFavoriteClick} 
-          className="absolute top-3 right-3 z-10 bg-white rounded-full p-2 shadow-sm w-10 h-10 flex items-center justify-center" 
+          className="absolute top-2 right-2 z-10 bg-white rounded-full p-1.5 shadow-sm w-8 h-8 flex items-center justify-center" 
           aria-label={favorite ? "Quitar de favoritos" : "Añadir a favoritos"}
         >
           <Heart 
             className={cn(
-              "h-5 w-5 transition-colors duration-300", 
+              "h-4 w-4 transition-colors duration-300", 
               favorite ? "fill-black stroke-black" : "fill-transparent stroke-black stroke-[1.5px]"
             )} 
           />
@@ -240,7 +240,7 @@ const ArtistProfileCard = ({
         
         <Badge 
           variant="secondary" 
-          className="absolute top-3 left-3 font-medium text-sm bg-white text-black z-10 shadow-sm px-3 py-1 dark:bg-black dark:text-white"
+          className="absolute top-2 left-2 font-medium text-xs bg-white text-black z-10 shadow-sm px-2 py-0.5 dark:bg-black dark:text-white"
         >
           {type}
         </Badge>
