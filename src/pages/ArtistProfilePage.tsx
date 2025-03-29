@@ -251,7 +251,7 @@ const ArtistProfilePage = () => {
       </div>
 
       {/* Mantenemos el padding para el resto del contenido */}
-      <div className="px-6 md:px-10 lg:px-14 xl:px-16">
+      <div className="px-6 md:px-10 lg:px-14 xl:px-16 max-w-7xl">
         <div className="pb-16 max-w-7xl mx-auto">
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-16">
             {/* Left Content */}
