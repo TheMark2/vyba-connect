@@ -32,7 +32,7 @@ const RecommendedArtists = ({ artists }: RecommendedArtistsProps) => {
         <Marquee 
           pauseOnHover 
           className="py-4" 
-          gap="1rem"
+          gap="0.75rem"
         >
           {artists.map(artist => (
             <div key={artist.id} className="w-[300px] flex-shrink-0">

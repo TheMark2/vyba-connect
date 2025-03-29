@@ -1,4 +1,3 @@
-
 import React, { useState, useRef, useEffect, TouchEvent } from "react";
 import { Heart, ChevronLeft, ChevronRight, Star } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
@@ -199,15 +198,15 @@ const ArtistProfileCard = ({
         )}
 
         {images.length > 1 && (
-          <div className="absolute bottom-3 left-1/2 transform -translate-x-1/2 flex gap-1 z-20">
+          <div className="absolute bottom-3 left-1/2 transform -translate-x-1/2 flex gap-1.5 z-20">
             {images.map((_, index) => (
               <button 
                 key={index} 
                 className={cn(
-                  "rounded-full transition-all",
+                  "w-2 h-2 rounded-full transition-all duration-300",
                   currentImageIndex === index 
-                    ? "w-1.5 h-1.5 bg-white" 
-                    : "w-1 h-1 bg-white/60"
+                    ? "bg-white" 
+                    : "bg-white/40"
                 )} 
                 onClick={e => {
                   e.stopPropagation();
