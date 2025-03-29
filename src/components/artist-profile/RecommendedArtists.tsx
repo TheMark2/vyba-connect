@@ -28,7 +28,7 @@ const RecommendedArtists = ({ artists }: RecommendedArtistsProps) => {
       <div className="max-w-7xl mx-auto">
         <h2 className="text-3xl font-black mb-6">Recomendados</h2>
       </div>
-      <div className="relative max-w-full mx-auto overflow-hidden">
+      <div className="relative max-w-7xl mx-auto overflow-hidden">
         <Marquee 
           pauseOnHover 
           className="py-4" 
