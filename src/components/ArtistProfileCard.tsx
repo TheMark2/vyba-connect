@@ -240,7 +240,7 @@ const ArtistProfileCard = ({
         
         <Badge 
           variant="secondary" 
-          className="absolute top-2 left-2 font-medium text-xs bg-white text-black z-10 shadow-sm px-2 py-0.5 dark:bg-black dark:text-white"
+          className="absolute top-2 left-2 font-medium text-sm bg-white text-black z-10 shadow-sm px-4 py-2 dark:bg-black dark:text-white"
         >
           {type}
         </Badge>
