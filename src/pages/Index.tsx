@@ -14,7 +14,7 @@ import ArtistsList from "@/components/ArtistsList";
 import StatsSummary from "@/components/StatsSummary";
 import HelpSection from "@/components/HelpSection";
 import { useIsMobile } from "@/hooks/use-mobile";
-import { SearchAlt01 } from "@hugeicons/react";
+import { Search } from '@hugeicons/react';
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/carousel";
 
 const Input = React.forwardRef<HTMLInputElement, React.ComponentProps<"input">>(({
@@ -60,7 +60,7 @@ const Input = React.forwardRef<HTMLInputElement, React.ComponentProps<"input">>(
 });
 Input.displayName = "Input";
 
-const BoldSearch = () => <SearchAlt01 className="h-5 w-5 stroke-[2.5px]" />;
+const BoldSearch = () => <Search className="h-5 w-5 stroke-[2.5px]" />;
 
 const Index = () => {
   const scrollRef = useRef(null);

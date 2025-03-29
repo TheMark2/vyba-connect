@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Button } from "@/components/ui/button";
@@ -9,7 +8,7 @@ import { toast } from "sonner";
 import Navbar from '@/components/Navbar';
 import { Eye, EyeOff, Facebook } from 'lucide-react';
 import { RadioGroup, RoleSelector } from '@/components/ui/radio-group';
-import { MusicNote02, SearchAlt01, ArrowLeft01 } from '@hugeicons/react';
+import { MusicNote, Search, ArrowLeft } from '@hugeicons/react';
 
 const AuthPage = () => {
   const navigate = useNavigate();
@@ -326,13 +325,13 @@ const AuthPage = () => {
                         <RoleSelector 
                           value="seeker" 
                           label="Entrar como buscador" 
-                          icon={<SearchAlt01 size={20} />}
+                          icon={<Search size={20} />}
                           features={seekerFeatures}
                         />
                         <RoleSelector 
                           value="artist" 
                           label="Entrar como artista" 
-                          icon={<MusicNote02 size={20} />}
+                          icon={<MusicNote size={20} />}
                           features={artistFeatures}
                         />
                       </RadioGroup>
@@ -344,7 +343,7 @@ const AuthPage = () => {
                           className="rounded-full p-2 border-none bg-white"
                           onClick={handleBackStep}
                         >
-                          <ArrowLeft01 size={20} strokeWidth={3} />
+                          <ArrowLeft size={20} strokeWidth={3} />
                         </Button>
                         <Button 
                           type="submit"
