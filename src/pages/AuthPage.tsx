@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Button } from "@/components/ui/button";
@@ -7,7 +6,7 @@ import { Input } from "@/components/ui/input";
 import { Card } from "@/components/ui/card";
 import { toast } from "sonner";
 import Navbar from '@/components/Navbar';
-import { Eye, EyeOff, Facebook, ArrowLeft } from 'lucide-react';
+import { Eye, EyeOff, Facebook, Search, Music, ArrowLeft } from 'lucide-react';
 import { RadioGroup, RoleSelector } from '@/components/ui/radio-group';
 
 const AuthPage = () => {
@@ -320,22 +319,18 @@ const AuthPage = () => {
                       <RadioGroup 
                         value={registerForm.role} 
                         onValueChange={(value) => setRegisterForm({...registerForm, role: value})}
-                        className="space-y-4"
+                        className="space-y-2"
                       >
                         <RoleSelector 
                           value="seeker" 
                           label="Entrar como buscador" 
-                          icon={<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M11 6C13.7614 6 16 8.23858 16 11M16.6588 16.6549L21 21M19 11C19 15.4183 15.4183 19 11 19C6.58172 19 3 15.4183 3 11C3 6.58172 6.58172 3 11 3C15.4183 3 19 6.58172 19 11Z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                          </svg>}
+                          icon={<Search size={20} />}
                           features={seekerFeatures}
                         />
                         <RoleSelector 
                           value="artist" 
                           label="Entrar como artista" 
-                          icon={<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M9 19C9 20.1046 7.65685 21 6 21C4.34315 21 3 20.1046 3 19C3 17.8954 4.34315 17 6 17C7.65685 17 9 17.8954 9 19ZM9 19V5L21 3V17M21 17C21 18.1046 19.6569 19 18 19C16.3431 19 15 18.1046 15 17C15 15.8954 16.3431 15 18 15C19.6569 15 21 15.8954 21 17ZM9 9L21 7" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                          </svg>}
+                          icon={<Music size={20} />}
                           features={artistFeatures}
                         />
                       </RadioGroup>
@@ -352,7 +347,7 @@ const AuthPage = () => {
                         <Button 
                           type="submit"
                         >
-                          Registrarse
+                          Siguiente
                         </Button>
                       </div>
                     </form>

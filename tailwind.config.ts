@@ -44,22 +44,6 @@ export default {
           hover: "#EDE8E0",
           foreground: "#222845",
         },
-        muted: {
-          DEFAULT: "#F5F1EB",
-          foreground: "#8E9196", // Adding the muted-foreground color
-        },
-        accent: {
-          DEFAULT: "hsl(var(--accent))",
-          foreground: "hsl(var(--accent-foreground))",
-        },
-        popover: {
-          DEFAULT: "hsl(var(--popover))",
-          foreground: "hsl(var(--popover-foreground))",
-        },
-        card: {
-          DEFAULT: "hsl(var(--card))",
-          foreground: "hsl(var(--card-foreground))",
-        },
       },
       borderRadius: {
         lg: "1rem",
