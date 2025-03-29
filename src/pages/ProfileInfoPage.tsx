@@ -4,7 +4,7 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card } from "@/components/ui/card";
-import { ArrowLeft, Music, Search, RotateCw } from 'lucide-react';
+import { Music, Search, RotateCw } from 'lucide-react';
 import Navbar from '@/components/Navbar';
 import { toast } from "sonner";
 import { Link } from 'react-router-dom';
@@ -68,10 +68,6 @@ const ProfileInfoPage = () => {
         navigate('/');
       }
     }, 1500);
-  };
-
-  const handleBack = () => {
-    navigate(-1); // Esto navega a la pantalla anterior
   };
 
   const handleRoleClick = () => {
@@ -173,10 +169,7 @@ const ProfileInfoPage = () => {
                   </div>
                 </>}
               
-              <div className="flex justify-center items-center gap-3 mt-12">
-                <Button type="button" variant="outline" onClick={handleBack} className="rounded-full p-3 border-none bg-white dark:bg-vyba-dark-secondary">
-                  <ArrowLeft size={20} strokeWidth={3} />
-                </Button>
+              <div className="flex justify-center items-center mt-12">
                 <Button type="submit">
                   Siguiente
                 </Button>
