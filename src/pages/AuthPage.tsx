@@ -127,7 +127,7 @@ const AuthPage = () => {
                       onChange={(e) => setLoginForm({...loginForm, email: e.target.value})}
                       placeholder="Escribe tu correo"
                       required
-                      className="rounded-xl px-3 py-5 bg-white dark:bg-white dark:text-black"
+                      className="rounded-xl h-7 py-5 bg-white dark:bg-white dark:text-black"
                     />
                   </div>
                   
@@ -143,7 +143,7 @@ const AuthPage = () => {
                         onChange={(e) => setLoginForm({...loginForm, password: e.target.value})}
                         placeholder="Escribe tu contraseña"
                         required
-                        className="rounded-xl px-3 py-5 h-auto pr-10 bg-white dark:bg-white dark:text-black"
+                        className="rounded-xl h-7 py-5 h-auto pr-10 bg-white dark:bg-white dark:text-black"
                       />
                       <button
                         type="button"
