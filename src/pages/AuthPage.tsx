@@ -8,7 +8,7 @@ import { toast } from "sonner";
 import Navbar from '@/components/Navbar';
 import { Eye, EyeOff, Facebook } from 'lucide-react';
 import { RadioGroup, RoleSelector } from '@/components/ui/radio-group';
-import { MusicNote, Search, ArrowLeft } from '@hugeicons/react';
+import * as HugeIcons from '@hugeicons/react';
 
 const AuthPage = () => {
   const navigate = useNavigate();
@@ -325,13 +325,13 @@ const AuthPage = () => {
                         <RoleSelector 
                           value="seeker" 
                           label="Entrar como buscador" 
-                          icon={<Search size={20} />}
+                          icon={<HugeIcons.SearchOutline size={20} />}
                           features={seekerFeatures}
                         />
                         <RoleSelector 
                           value="artist" 
                           label="Entrar como artista" 
-                          icon={<MusicNote size={20} />}
+                          icon={<HugeIcons.MusicNoteOutline size={20} />}
                           features={artistFeatures}
                         />
                       </RadioGroup>
@@ -343,7 +343,7 @@ const AuthPage = () => {
                           className="rounded-full p-2 border-none bg-white"
                           onClick={handleBackStep}
                         >
-                          <ArrowLeft size={20} strokeWidth={3} />
+                          <HugeIcons.ArrowLeftOutline size={20} strokeWidth={3} />
                         </Button>
                         <Button 
                           type="submit"

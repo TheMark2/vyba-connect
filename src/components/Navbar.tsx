@@ -1,3 +1,4 @@
+
 import { Button } from "@/components/ui/button";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { cn } from "@/lib/utils";
@@ -5,7 +6,7 @@ import { Facebook, Menu } from "lucide-react";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { useState, useEffect } from "react";
 import MobileMenu from "@/components/MobileMenu";
-import { Moon, Sun, Monitor } from '@hugeicons/react';
+import * as HugeIcons from '@hugeicons/react';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -89,12 +90,12 @@ const Navbar = ({
 
   const getThemeIcon = () => {
     if (currentTheme === 'dark') {
-      return <Moon className="h-5 w-5" />;
+      return <HugeIcons.MoonOutline className="h-5 w-5" />;
     } else if (currentTheme === 'light') {
-      return <Sun className="h-5 w-5" />;
+      return <HugeIcons.SunOutline className="h-5 w-5" />;
     } else {
       const isSystemDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-      return isSystemDark ? <Moon className="h-5 w-5" /> : <Sun className="h-5 w-5" />;
+      return isSystemDark ? <HugeIcons.MoonOutline className="h-5 w-5" /> : <HugeIcons.SunOutline className="h-5 w-5" />;
     }
   };
 
@@ -162,7 +163,7 @@ const Navbar = ({
                 )}
                 onClick={() => setTheme('light')}
               >
-                <Sun className="h-5 w-5" />
+                <HugeIcons.SunOutline className="h-5 w-5" />
                 <span className="text-sm font-medium">Claro</span>
               </DropdownMenuItem>
               <DropdownMenuItem 
@@ -172,7 +173,7 @@ const Navbar = ({
                 )}
                 onClick={() => setTheme('dark')}
               >
-                <Moon className="h-5 w-5" />
+                <HugeIcons.MoonOutline className="h-5 w-5" />
                 <span className="text-sm font-medium">Oscuro</span>
               </DropdownMenuItem>
               <DropdownMenuItem 
@@ -182,7 +183,7 @@ const Navbar = ({
                 )}
                 onClick={() => setTheme('system')}
               >
-                <Monitor className="h-5 w-5" />
+                <HugeIcons.MonitorOutline className="h-5 w-5" />
                 <span className="text-sm font-medium">Sistema</span>
               </DropdownMenuItem>
             </DropdownMenuContent>
