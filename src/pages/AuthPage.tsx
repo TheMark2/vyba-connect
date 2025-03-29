@@ -7,7 +7,8 @@ import { Input } from "@/components/ui/input";
 import { Card } from "@/components/ui/card";
 import { toast } from "sonner";
 import Navbar from '@/components/Navbar';
-import { Eye, EyeOff, Facebook } from 'lucide-react';
+import { Eye, EyeOff, Facebook, Search, Music, ArrowLeft } from 'lucide-react';
+import { RadioGroup, RoleSelector } from '@/components/ui/radio-group';
 
 const AuthPage = () => {
   const navigate = useNavigate();
@@ -24,11 +25,12 @@ const AuthPage = () => {
   const [registerForm, setRegisterForm] = useState({
     fullName: '',
     email: '',
-    password: ''
+    password: '',
+    role: 'artist' // Por defecto artista
   });
 
-  // Estado para controlar si se muestra el formulario completo de registro
-  const [showFullRegisterForm, setShowFullRegisterForm] = useState(false);
+  // Estados para controlar los pasos del formulario de registro
+  const [registerStep, setRegisterStep] = useState(1);
 
   const handleLoginSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -47,9 +49,9 @@ const AuthPage = () => {
   const handleRegisterSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     
-    if (!showFullRegisterForm) {
-      // Importante: Debemos activar el formulario completo cuando se envía el primer paso
-      setShowFullRegisterForm(true);
+    if (registerStep < 2) {
+      // Avanzar al siguiente paso
+      setRegisterStep(registerStep + 1);
       return;
     }
     
@@ -78,18 +80,17 @@ const AuthPage = () => {
   const handleTabChange = (value: string) => {
     setDefaultTab(value);
     // Resetear el formulario de registro cuando se cambia de pestaña
-    setShowFullRegisterForm(false);
+    setRegisterStep(1);
   };
 
   const switchToRegister = () => {
     setDefaultTab("register");
-    setShowFullRegisterForm(false);
+    setRegisterStep(1);
   };
 
-  // Función para simular el botón de siguiente en el formulario de registro
-  const handleNextStep = (e: React.MouseEvent) => {
-    e.preventDefault(); // Prevenir el comportamiento predeterminado del botón
-    setShowFullRegisterForm(true);
+  // Función para ir atrás en el formulario de registro
+  const handleBackStep = () => {
+    setRegisterStep(1);
   };
 
   return (
@@ -201,7 +202,7 @@ const AuthPage = () => {
 
             <TabsContent value="register">
               <div className="space-y-6">
-                {!showFullRegisterForm ? (
+                {registerStep === 1 ? (
                   <>
                     <div className="grid grid-cols-2 gap-4">
                       <Button 
@@ -294,95 +295,61 @@ const AuthPage = () => {
                       
                       <div className="flex justify-center mt-8">
                         <Button 
-                          type="button" 
-                          onClick={handleNextStep}
+                          type="submit"
                         >
                           Siguiente
                         </Button>
                       </div>
                     </form>
                   </>
-                ) : (
-                  <>
-                    <div className="relative flex items-center">
-                      <div className="flex-grow border-t border-gray-300 dark:border-gray-600"></div>
-                      <span className="flex-shrink mx-4 text-gray-400 text-sm uppercase font-medium">INFORMACIÓN PERSONAL</span>
-                      <div className="flex-grow border-t border-gray-300 dark:border-gray-600"></div>
+                ) : registerStep === 2 ? (
+                  <div className="space-y-6">
+                    <div className="text-center mb-8">
+                      <h2 className="text-4xl font-bold dark:text-white">¿Cómo quieres usar VYBA?</h2>
                     </div>
-
-                    <form onSubmit={handleRegisterSubmit} className="space-y-4">
-                      <div className="space-y-1.5">
-                        <label htmlFor="register-name" className="block text-sm font-medium dark:text-white">
-                          Nombre completo
-                        </label>
-                        <Input
-                          id="register-name"
-                          type="text"
-                          value={registerForm.fullName}
-                          onChange={(e) => setRegisterForm({...registerForm, fullName: e.target.value})}
-                          placeholder="Escribe tu nombre completo"
-                          required
-                          className="rounded-xl h-12 bg-white dark:bg-white dark:text-black"
+                    
+                    <form onSubmit={handleRegisterSubmit} className="space-y-8">
+                      <RadioGroup 
+                        value={registerForm.role} 
+                        onValueChange={(value) => setRegisterForm({...registerForm, role: value})}
+                        className="space-y-4"
+                      >
+                        <RoleSelector 
+                          value="seeker" 
+                          label="Entrar como buscador" 
+                          icon={<Search size={20} />}
                         />
-                      </div>
+                        <RoleSelector 
+                          value="artist" 
+                          label="Entrar como artista" 
+                          icon={<Music size={20} />}
+                        />
+                      </RadioGroup>
                       
-                      <div className="flex flex-col space-y-4">
-                        <div className="space-y-1.5">
-                          <label htmlFor="register-email-full" className="block text-sm font-medium dark:text-white">
-                            Email
-                          </label>
-                          <Input
-                            id="register-email-full"
-                            type="email"
-                            value={registerForm.email}
-                            onChange={(e) => setRegisterForm({...registerForm, email: e.target.value})}
-                            placeholder="Escribe tu correo"
-                            required
-                            className="rounded-xl h-12 bg-white dark:bg-white dark:text-black"
-                          />
-                        </div>
-                        
-                        <div className="space-y-1.5">
-                          <label htmlFor="register-password-full" className="block text-sm font-medium dark:text-white">
-                            Contraseña
-                          </label>
-                          <div className="relative">
-                            <Input
-                              id="register-password-full"
-                              type={showPassword ? "text" : "password"}
-                              value={registerForm.password}
-                              onChange={(e) => setRegisterForm({...registerForm, password: e.target.value})}
-                              placeholder="Escribe tu contraseña"
-                              required
-                              className="rounded-xl h-12 pr-10 bg-white dark:bg-white dark:text-black"
-                            />
-                            <button
-                              type="button"
-                              onClick={togglePasswordVisibility}
-                              className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500"
-                            >
-                              {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
-                            </button>
-                          </div>
-                        </div>
-                      </div>
-                      
-                      <div className="flex justify-center mt-8">
+                      <div className="flex justify-center items-center gap-4 mt-8">
                         <Button 
-                          type="submit" 
+                          type="button"
+                          variant="outline"
+                          className="rounded-full p-2 border-none bg-white"
+                          onClick={handleBackStep}
                         >
-                          Registrarse
+                          <ArrowLeft size={20} />
+                        </Button>
+                        <Button 
+                          type="submit"
+                        >
+                          Siguiente
                         </Button>
                       </div>
                     </form>
-                  </>
-                )}
-
-                <div className="text-center">
-                  <p className="text-sm text-gray-600 dark:text-gray-400">
-                    Ya tienes una cuenta? <Button variant="link" className="p-0 h-auto font-medium" onClick={() => setDefaultTab("login")}>Iniciar Sesión</Button>
-                  </p>
-                </div>
+                    
+                    <div className="text-center mt-6">
+                      <p className="text-sm text-gray-600 dark:text-gray-400">
+                        Ya tienes una cuenta? <Button variant="link" className="p-0 h-auto font-medium" onClick={() => setDefaultTab("login")}>Iniciar Sesión</Button>
+                      </p>
+                    </div>
+                  </div>
+                ) : null}
               </div>
             </TabsContent>
           </Tabs>

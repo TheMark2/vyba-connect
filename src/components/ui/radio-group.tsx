@@ -1,3 +1,4 @@
+
 import * as React from "react"
 import * as RadioGroupPrimitive from "@radix-ui/react-radio-group"
 import { Circle } from "lucide-react"
@@ -26,17 +27,48 @@ const RadioGroupItem = React.forwardRef<
     <RadioGroupPrimitive.Item
       ref={ref}
       className={cn(
-        "aspect-square h-4 w-4 rounded-full border border-primary text-primary ring-offset-background focus:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50",
+        "aspect-square h-5 w-5 rounded-full border-2 border-black text-primary ring-offset-background focus:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 disabled:cursor-not-allowed disabled:opacity-50 dark:border-white",
         className
       )}
       {...props}
     >
       <RadioGroupPrimitive.Indicator className="flex items-center justify-center">
-        <Circle className="h-2.5 w-2.5 fill-current text-current" />
+        <Circle className="h-2.5 w-2.5 fill-black text-black dark:fill-white dark:text-white" />
       </RadioGroupPrimitive.Indicator>
     </RadioGroupPrimitive.Item>
   )
 })
 RadioGroupItem.displayName = RadioGroupPrimitive.Item.displayName
 
-export { RadioGroup, RadioGroupItem }
+// Componente personalizado para la selección de rol con fondo blanco
+const RoleSelector = React.forwardRef<
+  React.ElementRef<typeof RadioGroupPrimitive.Item>,
+  React.ComponentPropsWithoutRef<typeof RadioGroupPrimitive.Item> & {
+    icon?: React.ReactNode;
+    label: string;
+  }
+>(({ className, icon, label, ...props }, ref) => {
+  return (
+    <label className="cursor-pointer">
+      <div className="flex items-center gap-3 bg-white dark:bg-white rounded-full px-5 py-3.5">
+        {icon && <div className="flex-shrink-0">{icon}</div>}
+        <span className="text-black font-medium flex-grow">{label}</span>
+        <RadioGroupPrimitive.Item
+          ref={ref}
+          className={cn(
+            "aspect-square h-5 w-5 rounded-full border-2 border-black text-primary ring-offset-background focus:outline-none focus-visible:ring-0 disabled:cursor-not-allowed disabled:opacity-50",
+            className
+          )}
+          {...props}
+        >
+          <RadioGroupPrimitive.Indicator className="flex items-center justify-center">
+            <Circle className="h-2.5 w-2.5 fill-black text-black" />
+          </RadioGroupPrimitive.Indicator>
+        </RadioGroupPrimitive.Item>
+      </div>
+    </label>
+  )
+})
+RoleSelector.displayName = "RoleSelector"
+
+export { RadioGroup, RadioGroupItem, RoleSelector }
