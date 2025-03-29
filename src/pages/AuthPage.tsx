@@ -127,7 +127,6 @@ const AuthPage = () => {
                       onChange={(e) => setLoginForm({...loginForm, email: e.target.value})}
                       placeholder="Escribe tu correo"
                       required
-                      className="rounded-xl px-4 py-5 h-auto bg-white dark:bg-white dark:text-black"
                     />
                   </div>
                   
@@ -143,7 +142,6 @@ const AuthPage = () => {
                         onChange={(e) => setLoginForm({...loginForm, password: e.target.value})}
                         placeholder="Escribe tu contraseña"
                         required
-                        className="rounded-xl px-4 py-5 h-auto pr-10 bg-white dark:bg-white dark:text-black"
                       />
                       <button
                         type="button"
@@ -158,7 +156,6 @@ const AuthPage = () => {
                   <div className="flex justify-center">
                     <Button 
                       type="submit" 
-                      className="rounded-2xl bg-blue-100 hover:bg-blue-200 text-blue-900 font-semibold py-2.5 px-12"
                     >
                       Iniciar sesión
                     </Button>
