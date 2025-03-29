@@ -325,13 +325,13 @@ const AuthPage = () => {
                         <RoleSelector 
                           value="seeker" 
                           label="Entrar como buscador" 
-                          icon={<HugeIcons.SearchOutline size={20} />}
+                          icon={<HugeIcons.Search size={20} />}
                           features={seekerFeatures}
                         />
                         <RoleSelector 
                           value="artist" 
                           label="Entrar como artista" 
-                          icon={<HugeIcons.MusicNoteOutline size={20} />}
+                          icon={<HugeIcons.MusicNote size={20} />}
                           features={artistFeatures}
                         />
                       </RadioGroup>
@@ -343,7 +343,7 @@ const AuthPage = () => {
                           className="rounded-full p-2 border-none bg-white"
                           onClick={handleBackStep}
                         >
-                          <HugeIcons.ArrowLeftOutline size={20} strokeWidth={3} />
+                          <HugeIcons.ArrowLeft size={20} strokeWidth={3} />
                         </Button>
                         <Button 
                           type="submit"

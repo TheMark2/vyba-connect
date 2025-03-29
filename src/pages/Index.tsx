@@ -60,7 +60,7 @@ const Input = React.forwardRef<HTMLInputElement, React.ComponentProps<"input">>(
 });
 Input.displayName = "Input";
 
-const BoldSearch = () => <HugeIcons.SearchOutline className="h-5 w-5 stroke-[2.5px]" />;
+const BoldSearch = () => <HugeIcons.Search className="h-5 w-5 stroke-[2.5px]" />;
 
 const Index = () => {
   const scrollRef = useRef(null);

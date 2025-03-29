@@ -90,12 +90,12 @@ const Navbar = ({
 
   const getThemeIcon = () => {
     if (currentTheme === 'dark') {
-      return <HugeIcons.MoonOutline className="h-5 w-5" />;
+      return <HugeIcons.Moon className="h-5 w-5" />;
     } else if (currentTheme === 'light') {
-      return <HugeIcons.SunOutline className="h-5 w-5" />;
+      return <HugeIcons.Sun className="h-5 w-5" />;
     } else {
       const isSystemDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-      return isSystemDark ? <HugeIcons.MoonOutline className="h-5 w-5" /> : <HugeIcons.SunOutline className="h-5 w-5" />;
+      return isSystemDark ? <HugeIcons.Moon className="h-5 w-5" /> : <HugeIcons.Sun className="h-5 w-5" />;
     }
   };
 
@@ -163,7 +163,7 @@ const Navbar = ({
                 )}
                 onClick={() => setTheme('light')}
               >
-                <HugeIcons.SunOutline className="h-5 w-5" />
+                <HugeIcons.Sun className="h-5 w-5" />
                 <span className="text-sm font-medium">Claro</span>
               </DropdownMenuItem>
               <DropdownMenuItem 
@@ -173,7 +173,7 @@ const Navbar = ({
                 )}
                 onClick={() => setTheme('dark')}
               >
-                <HugeIcons.MoonOutline className="h-5 w-5" />
+                <HugeIcons.Moon className="h-5 w-5" />
                 <span className="text-sm font-medium">Oscuro</span>
               </DropdownMenuItem>
               <DropdownMenuItem 
@@ -183,7 +183,7 @@ const Navbar = ({
                 )}
                 onClick={() => setTheme('system')}
               >
-                <HugeIcons.MonitorOutline className="h-5 w-5" />
+                <HugeIcons.Monitor className="h-5 w-5" />
                 <span className="text-sm font-medium">Sistema</span>
               </DropdownMenuItem>
             </DropdownMenuContent>
