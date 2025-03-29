@@ -100,7 +100,10 @@ const ProfileInfoPage = () => {
                     </div>
                   </> : <>
                     <Search size={20} className="text-black dark:text-white" />
-                    <span className="text-sm font-medium text-black dark:text-white">Registrado como Buscador</span>
+                    <div className="flex flex-col">                    
+                      <span className="text-xs dark:text-white">Registrado como</span>
+                      <span className="text-sm font-bold dark:text-white">Buscador</span>
+                    </div>
                   </>}
                 
                 <div className={`absolute right-3 transform transition-all duration-300 ${isHovering ? 'opacity-100 translate-x-0' : 'opacity-0 translate-x-5'}`}>
