@@ -306,7 +306,7 @@ const AuthPage = () => {
                       <RadioGroup 
                         value={registerForm.role} 
                         onValueChange={(value) => setRegisterForm({...registerForm, role: value})}
-                        className="space-y-4"
+                        className="space-y-2"
                       >
                         <RoleSelector 
                           value="seeker" 
