@@ -70,6 +70,7 @@ const ProfileInfoPage = () => {
   };
 
   const handleBack = () => {
+    // Navegar a la pantalla anterior
     navigate(-1);
   };
 
@@ -123,8 +124,7 @@ const ProfileInfoPage = () => {
             
             <form onSubmit={handleSubmit} className="space-y-6">
               {role === 'artist' ?
-            // Formulario para artistas
-            <>
+                <>
                   <div className="space-y-1.5">
                     <label htmlFor="artistName" className="block text-sm font-medium dark:text-white">
                       Nombre de artista
@@ -148,8 +148,7 @@ const ProfileInfoPage = () => {
                     </div>
                   </div>
                 </> :
-            // Formulario para buscadores
-            <>
+                <>
                   <div className="space-y-1.5">
                     <label htmlFor="fullName" className="block text-sm font-medium dark:text-white">
                       Nombre completo
