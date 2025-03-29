@@ -7,26 +7,7 @@ import { Input } from "@/components/ui/input";
 import { Card } from "@/components/ui/card";
 import { toast } from "sonner";
 import Navbar from '@/components/Navbar';
-import { Eye, EyeOff, Facebook, LucideProps } from 'lucide-react';
-
-// Google icon no está disponible en lucide-react, así que lo creamos
-const Google = (props: LucideProps) => (
-  <svg
-    xmlns="http://www.w3.org/2000/svg"
-    viewBox="0 0 24 24"
-    width="24"
-    height="24"
-    fill="none"
-    stroke="currentColor"
-    strokeWidth="2"
-    strokeLinecap="round"
-    strokeLinejoin="round"
-    {...props}
-  >
-    <path d="M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10z" />
-    <path d="M17.5 12c0-3.038-2.462-5.5-5.5-5.5s-5.5 2.462-5.5 5.5c0 2.568 1.763 4.733 4.138 5.307C12.274 17.866 13.5 16.803 13.5 15c0-1.657-1.343-3-3-3s-3 1.343-3 3c0 .353.072.686.184 1" />
-  </svg>
-);
+import { Eye, EyeOff } from 'lucide-react';
 
 const AuthPage = () => {
   const navigate = useNavigate();
@@ -92,14 +73,14 @@ const AuthPage = () => {
   return (
     <>
       <Navbar />
-      <div className="flex items-center justify-center min-h-screen bg-vyba-cream dark:bg-vyba-dark-bg px-4 sm:px-6">
-        <div className="w-full max-w-md">
-          <div className="text-center mb-8">
-            <h1 className="text-4xl sm:text-5xl font-black mb-3 dark:text-white">Bienvenido/a a VYBA</h1>
-            <p className="text-xl dark:text-gray-300">Inicia sesión o regístrate</p>
-          </div>
-          
-          <div className="bg-white dark:bg-vyba-dark-bg rounded-2xl p-8 shadow-sm">
+      <div className="bg-vyba-cream dark:bg-vyba-dark-bg flex flex-col px-6 md:px-10 lg:px-14 xl:px-16">
+        <div className="w-full h-[90vh]">
+          <Card className="border-none shadow-none bg-secondary dark:bg-vyba-dark-bg dark:border-vyba-dark-secondary rounded-3xl overflow-hidden py-16 px-32">
+            <div className="text-center mb-10">
+              <h1 className="text-6xl font-black mb-4 dark:text-white">Bienvenido/a a VYBA</h1>
+              <p className="text-4xl dark:text-gray-300">Inicia sesión o regístrate</p>
+            </div>
+
             <Tabs defaultValue={defaultTab} onValueChange={handleTabChange} className="w-full">
               <TabsContent value="login">
                 <div className="space-y-6">
@@ -107,19 +88,17 @@ const AuthPage = () => {
                     <Button 
                       type="button" 
                       variant="outline" 
-                      className="w-full flex items-center justify-center gap-2 bg-white hover:bg-gray-50 text-black"
+                      className="w-full flex items-center justify-center gap-2"
                       onClick={() => handleSocialLogin('Google')}
                     >
-                      <Google className="h-5 w-5" />
                       Continuar con Google
                     </Button>
                     <Button 
                       type="button" 
                       variant="outline" 
-                      className="w-full flex items-center justify-center gap-2 bg-white hover:bg-gray-50 text-black"
+                      className="w-full flex items-center justify-center gap-2"
                       onClick={() => handleSocialLogin('Facebook')}
                     >
-                      <Facebook className="h-5 w-5" />
                       Continuar con Facebook
                     </Button>
                   </div>
@@ -142,7 +121,7 @@ const AuthPage = () => {
                         onChange={(e) => setLoginForm({...loginForm, email: e.target.value})}
                         placeholder="Escribe tu correo"
                         required
-                        className="rounded-xl px-4 py-5 h-auto bg-white dark:bg-vyba-dark-secondary"
+                        className="rounded-xl px-4 py-5 h-auto"
                       />
                     </div>
                     
@@ -158,7 +137,7 @@ const AuthPage = () => {
                           onChange={(e) => setLoginForm({...loginForm, password: e.target.value})}
                           placeholder="Escribe tu contraseña"
                           required
-                          className="rounded-xl px-4 py-5 h-auto pr-10 bg-white dark:bg-vyba-dark-secondary"
+                          className="rounded-xl px-4 py-5 h-auto pr-10"
                         />
                         <button
                           type="button"
@@ -170,17 +149,15 @@ const AuthPage = () => {
                       </div>
                     </div>
                     
-                    <div className="flex justify-center mt-6">
-                      <Button 
-                        type="submit" 
-                        className="rounded-2xl bg-blue-100 hover:bg-blue-200 text-blue-900 font-semibold py-2.5 px-12"
-                      >
-                        Iniciar sesión
-                      </Button>
-                    </div>
+                    <Button 
+                      type="submit" 
+                      className="w-full rounded-2xl bg-blue-100 hover:bg-blue-200 text-blue-900 font-semibold py-2.5"
+                    >
+                      Iniciar sesión
+                    </Button>
                   </form>
 
-                  <div className="text-center mt-6">
+                  <div className="text-center">
                     <p className="text-sm text-gray-600 dark:text-gray-400">
                       No tienes cuenta? <button onClick={() => setDefaultTab("register")} className="text-blue-600 font-medium">Regístrate</button>
                     </p>
@@ -194,19 +171,17 @@ const AuthPage = () => {
                     <Button 
                       type="button" 
                       variant="outline" 
-                      className="w-full flex items-center justify-center gap-2 bg-white hover:bg-gray-50 text-black"
+                      className="w-full flex items-center justify-center gap-2"
                       onClick={() => handleSocialLogin('Google')}
                     >
-                      <Google className="h-5 w-5" />
                       Continuar con Google
                     </Button>
                     <Button 
                       type="button" 
                       variant="outline" 
-                      className="w-full flex items-center justify-center gap-2 bg-white hover:bg-gray-50 text-black"
+                      className="w-full flex items-center justify-center gap-2"
                       onClick={() => handleSocialLogin('Facebook')}
                     >
-                      <Facebook className="h-5 w-5" />
                       Continuar con Facebook
                     </Button>
                   </div>
@@ -229,7 +204,7 @@ const AuthPage = () => {
                         onChange={(e) => setRegisterForm({...registerForm, fullName: e.target.value})}
                         placeholder="Escribe tu nombre"
                         required
-                        className="rounded-xl px-4 py-5 h-auto bg-white dark:bg-vyba-dark-secondary"
+                        className="rounded-xl px-4 py-5 h-auto"
                       />
                     </div>
                     
@@ -245,7 +220,7 @@ const AuthPage = () => {
                           onChange={(e) => setRegisterForm({...registerForm, email: e.target.value})}
                           placeholder="Escribe tu correo"
                           required
-                          className="rounded-xl px-4 py-5 h-auto bg-white dark:bg-vyba-dark-secondary"
+                          className="rounded-xl px-4 py-5 h-auto"
                         />
                       </div>
                       
@@ -261,7 +236,7 @@ const AuthPage = () => {
                             onChange={(e) => setRegisterForm({...registerForm, password: e.target.value})}
                             placeholder="Escribe tu contraseña"
                             required
-                            className="rounded-xl px-4 py-5 h-auto pr-10 bg-white dark:bg-vyba-dark-secondary"
+                            className="rounded-xl px-4 py-5 h-auto pr-10"
                           />
                           <button
                             type="button"
@@ -274,17 +249,15 @@ const AuthPage = () => {
                       </div>
                     </div>
                     
-                    <div className="flex justify-center mt-6">
-                      <Button 
-                        type="submit" 
-                        className="rounded-2xl bg-blue-100 hover:bg-blue-200 text-blue-900 font-semibold py-2.5 px-12"
-                      >
-                        Siguiente
-                      </Button>
-                    </div>
+                    <Button 
+                      type="submit" 
+                      className="w-full rounded-2xl bg-blue-100 hover:bg-blue-200 text-blue-900 font-semibold py-2.5"
+                    >
+                      Siguiente
+                    </Button>
                   </form>
 
-                  <div className="text-center mt-6">
+                  <div className="text-center">
                     <p className="text-sm text-gray-600 dark:text-gray-400">
                       Ya tienes una cuenta? <button onClick={() => setDefaultTab("login")} className="text-blue-600 font-medium">Iniciar Sesión</button>
                     </p>
@@ -292,7 +265,7 @@ const AuthPage = () => {
                 </div>
               </TabsContent>
             </Tabs>
-          </div>
+          </Card>
         </div>
       </div>
     </>
