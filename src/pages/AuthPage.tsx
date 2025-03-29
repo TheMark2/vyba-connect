@@ -75,12 +75,12 @@ const AuthPage = () => {
       <Navbar />
       <div className="bg-vyba-cream dark:bg-vyba-dark-bg flex items-center justify-center min-h-[90vh] px-6 md:px-10 lg:px-14 xl:px-16">
         <Card className="border-none shadow-none bg-secondary dark:bg-vyba-dark-bg dark:border-vyba-dark-secondary rounded-3xl overflow-hidden w-full py-16 mx-auto">
-          <div className="text-center mb-10 max-w-3xl">
+          <div className="text-center mb-10 max-w-3xl mx-auto">
             <h1 className="text-6xl font-black mb-4 dark:text-white">Bienvenido/a a VYBA</h1>
             <p className="text-4xl dark:text-gray-300">Inicia sesión o regístrate</p>
           </div>
 
-          <Tabs defaultValue={defaultTab} onValueChange={handleTabChange} className="max-w-3xl">
+          <Tabs defaultValue={defaultTab} onValueChange={handleTabChange} className="max-w-3xl mx-auto">
             <TabsContent value="login">
               <div className="space-y-6">
                 <div className="grid grid-cols-2 gap-4">
