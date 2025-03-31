@@ -2,11 +2,12 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import { ArrowLeft, FileText, Music, GraduationCap, FileArchive } from 'lucide-react';
+import { ArrowLeft, FileText, Music, GraduationCap, FileArchive, Download } from 'lucide-react';
 import Navbar from '@/components/Navbar';
 import { Link } from 'react-router-dom';
 import { PageTransition } from '@/components/ui/page-transition';
 import { motion } from 'framer-motion';
+
 const ArtistThankYouPage = () => {
   const navigate = useNavigate();
   const location = useLocation();
@@ -17,16 +18,20 @@ const ArtistThankYouPage = () => {
   };
   const [artistNumber, setArtistNumber] = useState(0);
   const [isHovered, setIsHovered] = useState(false);
+
   useEffect(() => {
     const randomArtistNumber = Math.floor(Math.random() * 100) + 1;
     setArtistNumber(randomArtistNumber);
   }, []);
+
   const handleFinalize = () => {
     navigate('/');
   };
+
   const handleGoBack = () => {
     navigate(-1);
   };
+
   const handleDownloadDiploma = () => {
     const blob = new Blob(['Diploma personalizado para ' + artistInfo.artistName], {
       type: 'text/plain'
@@ -40,6 +45,7 @@ const ArtistThankYouPage = () => {
     document.body.removeChild(a);
     URL.revokeObjectURL(url);
   };
+
   const containerVariants = {
     hidden: {
       opacity: 0
@@ -52,6 +58,7 @@ const ArtistThankYouPage = () => {
       }
     }
   };
+
   const itemVariants = {
     hidden: {
       opacity: 0,
@@ -62,6 +69,7 @@ const ArtistThankYouPage = () => {
       y: 0
     }
   };
+
   return <PageTransition>
       <Navbar />
       <div className="bg-vyba-cream dark:bg-vyba-dark-bg flex items-center justify-center min-h-[90vh] px-6 md:px-10 lg:px-14 xl:px-16">
@@ -94,13 +102,12 @@ const ArtistThankYouPage = () => {
               </div>
             </motion.div>
             
-            <motion.div variants={itemVariants} className="w-full bg-white dark:bg-vyba-dark-secondary rounded-[40px] p-6 mb-12 cursor-pointer transition-all duration-300 hover:shadow-lg hover:translate-y-[-4px]" onClick={handleDownloadDiploma} whileHover={{
-            scale: 1.02
-          }} transition={{
-            type: "spring",
-            stiffness: 300,
-            damping: 20
-          }}>
+            <motion.div 
+              variants={itemVariants} 
+              className="w-full bg-white dark:bg-vyba-dark-secondary rounded-[40px] p-6 mb-12 relative overflow-hidden"
+              onMouseEnter={() => setIsHovered(true)}
+              onMouseLeave={() => setIsHovered(false)}
+            >
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="space-y-4">
                   <div className="bg-gray-50 content-center dark:bg-vyba-dark-secondary/80 p-6 rounded-2xl transition-all duration-300">
@@ -135,13 +142,28 @@ const ArtistThankYouPage = () => {
                     </p>
                   </div>
                   <div className="flex justify-center items-center p-6">
-                    <div className="flex items-center gap-2 text-black dark:text-white">
-                      <FileArchive size={20} />
+                    <Button 
+                      onClick={handleDownloadDiploma} 
+                      className="flex items-center gap-2 bg-gray-50 hover:bg-gray-100 text-black dark:bg-vyba-dark-secondary/80 dark:hover:bg-vyba-dark-secondary/60 dark:text-white"
+                    >
+                      <Download size={20} />
                       Descargar diploma
-                    </div>
+                    </Button>
                   </div>
                 </div>
               </div>
+              
+              {isHovered && (
+                <div className="absolute inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center transition-all duration-300 animate-fade-in">
+                  <Button 
+                    onClick={handleDownloadDiploma}
+                    className="bg-primary hover:bg-primary/90 text-primary-foreground flex items-center gap-2"
+                  >
+                    <Download size={20} />
+                    Descargar diploma
+                  </Button>
+                </div>
+              )}
             </motion.div>
             
             <motion.div variants={itemVariants} className="flex flex-col sm:flex-row justify-center w-full gap-4 items-center">
@@ -162,4 +184,5 @@ const ArtistThankYouPage = () => {
       </div>
     </PageTransition>;
 };
+
 export default ArtistThankYouPage;
