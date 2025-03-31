@@ -9,6 +9,7 @@ import { Marquee } from "@/components/ui/marquee";
 import ArtistProfileCard from '@/components/ArtistProfileCard';
 import { PageTransition } from '@/components/ui/page-transition';
 import { motion } from 'framer-motion';
+import { Progress } from "@/components/ui/progress";
 
 const dummyArtists = [
   {
@@ -71,10 +72,27 @@ const SeekerThankYouPage = () => {
     musicalTastes: ""
   };
   const [seekerNumber, setSeekerNumber] = useState(0);
+  const [progress, setProgress] = useState(0);
 
   useEffect(() => {
     const randomSeekerNumber = Math.floor(Math.random() * 100) + 1;
     setSeekerNumber(randomSeekerNumber);
+    
+    const timer = setTimeout(() => {
+      const interval = setInterval(() => {
+        setProgress(oldProgress => {
+          if (oldProgress >= 100) {
+            clearInterval(interval);
+            return 100;
+          }
+          return oldProgress + 5;
+        });
+      }, 100);
+      
+      return () => clearInterval(interval);
+    }, 300);
+
+    return () => clearTimeout(timer);
   }, []);
 
   const handleFinalize = () => {
@@ -118,6 +136,13 @@ const SeekerThankYouPage = () => {
             <motion.h2 variants={itemVariants} className="text-2xl mb-8 text-center dark:text-gray-300">
               Empieza a buscar ahora mismo
             </motion.h2>
+            
+            <motion.div variants={itemVariants} className="w-full mb-8 px-4">
+              <h3 className="text-center text-lg mb-4 text-black/80 dark:text-white/80">
+                VYBA te da las gracias
+              </h3>
+              <Progress value={progress} className="max-w-md mx-auto h-2" />
+            </motion.div>
             
             <motion.div variants={itemVariants} className="flex flex-wrap gap-4 mb-12 justify-center">
               <div className="flex items-center gap-6 px-6 py-2 rounded-full bg-white dark:bg-vyba-dark-secondary">

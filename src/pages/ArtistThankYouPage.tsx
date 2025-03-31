@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { Button } from "@/components/ui/button";
@@ -7,6 +8,7 @@ import Navbar from '@/components/Navbar';
 import { Link } from 'react-router-dom';
 import { PageTransition } from '@/components/ui/page-transition';
 import { motion } from 'framer-motion';
+import { Progress } from "@/components/ui/progress";
 
 const ArtistThankYouPage = () => {
   const navigate = useNavigate();
@@ -19,10 +21,28 @@ const ArtistThankYouPage = () => {
   
   const [artistNumber, setArtistNumber] = useState(0);
   const [isHovered, setIsHovered] = useState(false);
+  const [progress, setProgress] = useState(0);
 
   useEffect(() => {
     const randomArtistNumber = Math.floor(Math.random() * 100) + 1;
     setArtistNumber(randomArtistNumber);
+    
+    // Incrementar la barra de progreso gradualmente
+    const timer = setTimeout(() => {
+      const interval = setInterval(() => {
+        setProgress(oldProgress => {
+          if (oldProgress >= 100) {
+            clearInterval(interval);
+            return 100;
+          }
+          return oldProgress + 5;
+        });
+      }, 100);
+      
+      return () => clearInterval(interval);
+    }, 300);
+
+    return () => clearTimeout(timer);
   }, []);
 
   const handleFinalize = () => {
@@ -83,6 +103,12 @@ const ArtistThankYouPage = () => {
               Artista #{artistNumber}
             </motion.h2>
             
+            <motion.div variants={itemVariants} className="w-full mb-12 px-4">
+              <h3 className="text-center text-lg mb-4 text-black/80 dark:text-white/80">
+                VYBA te da las gracias
+              </h3>
+              <Progress value={progress} className="max-w-md mx-auto h-2" />
+            </motion.div>
             
             <motion.div 
               variants={itemVariants} 
