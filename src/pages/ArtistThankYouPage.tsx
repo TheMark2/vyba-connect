@@ -16,6 +16,7 @@ const ArtistThankYouPage = () => {
     artistType: "DJ",
     genres: "House, Reggaeton..."
   };
+  
   const [artistNumber, setArtistNumber] = useState(0);
   const [isHovered, setIsHovered] = useState(false);
 
@@ -82,25 +83,6 @@ const ArtistThankYouPage = () => {
               Artista #{artistNumber}
             </motion.h2>
             
-            <motion.div variants={itemVariants} className="flex flex-wrap gap-4 mb-8 justify-center">
-              <div className="flex items-center gap-3 px-6 py-3 rounded-full bg-white dark:bg-vyba-dark-secondary">
-                <Music size={20} className="text-black dark:text-white" />
-                <div className="flex flex-col">                    
-                  <span className="text-xs dark:text-white">Registrado como</span>
-                  <span className="text-sm font-bold dark:text-white">Artista</span>
-                </div>
-              </div>
-              
-              <div className="flex items-center gap-3 px-6 py-3 rounded-full bg-white dark:bg-vyba-dark-secondary">
-                <Music size={20} className="text-black dark:text-white" />
-                <div className="flex flex-col">                    
-                  <span className="text-xs dark:text-white">DJ</span>
-                  <span className="text-sm font-bold dark:text-white">
-                    {artistInfo.artistName}
-                  </span>
-                </div>
-              </div>
-            </motion.div>
             
             <motion.div 
               variants={itemVariants} 
