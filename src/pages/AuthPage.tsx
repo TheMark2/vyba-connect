@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Button } from "@/components/ui/button";
@@ -317,20 +318,36 @@ const AuthPage = () => {
                       exit="exit"
                     >
                       <motion.form variants={itemVariants} onSubmit={handleRegisterSubmit} className="space-y-8">
-                        <RadioGroup value={registerForm.role} onValueChange={value => setRegisterForm({
-                          ...registerForm,
-                          role: value
-                        })} className="space-y-2">
-                          <RoleSelector value="seeker" label="Entrar como buscador" icon={<Search size={20} />} features={seekerFeatures} />
-                          <RoleSelector value="artist" label="Entrar como artista" icon={<Music size={20} />} features={artistFeatures} />
-                        </RadioGroup>
+                        <div className="overflow-hidden rounded-2xl">
+                          <RadioGroup value={registerForm.role} onValueChange={value => setRegisterForm({
+                            ...registerForm,
+                            role: value
+                          })} className="space-y-0">
+                            <RoleSelector 
+                              value="artist" 
+                              label="Entrar como artista" 
+                              icon={<Music size={20} />} 
+                              features={artistFeatures}
+                              isFirst={true}
+                              isLast={false}
+                            />
+                            <RoleSelector 
+                              value="seeker" 
+                              label="Entrar como buscador" 
+                              icon={<Search size={20} />} 
+                              features={seekerFeatures}
+                              isFirst={false}
+                              isLast={true}
+                            />
+                          </RadioGroup>
+                        </div>
                         
                         <div className="flex justify-center items-center gap-3 mt-8">
                           <Button 
                             type="button" 
                             variant="outline" 
                             onClick={handleBackStep} 
-                            className="rounded-full p-3 border-none bg-white"
+                            className="rounded-full p-3 border-none bg-white dark:bg-vyba-dark-secondary"
                             disabled={isLoading}
                           >
                             <ArrowLeft size={20} strokeWidth={3} />

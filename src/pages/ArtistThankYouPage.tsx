@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { Button } from "@/components/ui/button";
@@ -88,15 +89,6 @@ const ArtistThankYouPage = () => {
     }
   };
 
-  const getRadialGradient = () => {
-    if (!elementSize.width || !elementSize.height) return 'radial-gradient(circle at center, rgba(0,0,0,0.9) 0%, rgba(0,0,0,0.6) 100%)';
-    
-    const x = (mousePosition.x / elementSize.width) * 100;
-    const y = (mousePosition.y / elementSize.height) * 100;
-    
-    return `radial-gradient(circle at ${x}% ${y}%, rgba(0,0,0,0.5) 0%, rgba(0,0,0,0.9) 70%)`;
-  };
-
   return <PageTransition>
       <Navbar />
       <div className="bg-vyba-cream dark:bg-vyba-dark-bg flex items-center justify-center min-h-[90vh] px-6 md:px-10 lg:px-14 xl:px-16">
@@ -165,12 +157,11 @@ const ArtistThankYouPage = () => {
               
               {isHovered && (
                 <div 
-                  className="absolute inset-0 backdrop-blur-sm flex items-center justify-center transition-all duration-300"
                   style={{
                     '--x': `${mousePosition.x}px`,
                     '--y': `${mousePosition.y}px`
                   } as React.CSSProperties}
-                  className={`absolute inset-0 backdrop-blur-sm flex items-center justify-center transition-all duration-300 animate-radial-in`}
+                  className="absolute inset-0 backdrop-blur-sm flex items-center justify-center transition-all duration-300 animate-radial-in"
                 >
                   <Button 
                     onClick={handleDownloadDiploma}
