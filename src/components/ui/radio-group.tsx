@@ -11,7 +11,7 @@ const RadioGroup = React.forwardRef<
 >(({ className, ...props }, ref) => {
   return (
     <RadioGroupPrimitive.Root
-      className={cn("grid gap-2", className)}
+      className={cn("grid gap-0", className)} // Changed gap-2 to gap-0
       {...props}
       ref={ref}
     />
@@ -66,7 +66,7 @@ const RoleSelector = React.forwardRef<
         isSelected ? "bg-secondary dark:bg-vyba-dark-secondary/40" : "bg-white dark:bg-vyba-dark-bg",
         isFirst ? "rounded-t-2xl" : "",
         isLast ? "rounded-b-2xl" : "",
-        !isFirst && !isLast ? "" : ""
+        !isFirst && !isLast ? "border-t-0" : "" // Added this to ensure no border at connecting points
       )}>
         <div className="flex items-center gap-3 px-5 py-3.5">
           {icon && <div className="flex-shrink-0">{icon}</div>}
