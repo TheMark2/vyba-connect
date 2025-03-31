@@ -110,7 +110,7 @@ const ArtistThankYouPage = () => {
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="space-y-4">
                   <div className="bg-gray-50 dark:bg-vyba-dark-secondary/80 p-6 rounded-2xl transition-all duration-300">
-                    <div className="flex flex-col items-center justify-center mb-4">
+                    <div className="flex items-center justify-center mb-4">
                       <GraduationCap size={48} className="text-black dark:text-white mb-3" />
                       <h3 className="text-5xl font-bold text-center text-black dark:text-white">
                         {artistInfo.artistName}
