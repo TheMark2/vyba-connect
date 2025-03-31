@@ -7,7 +7,6 @@ import Navbar from '@/components/Navbar';
 import { Link } from 'react-router-dom';
 import { PageTransition } from '@/components/ui/page-transition';
 import { motion } from 'framer-motion';
-
 const ArtistThankYouPage = () => {
   const navigate = useNavigate();
   const location = useLocation();
@@ -18,20 +17,16 @@ const ArtistThankYouPage = () => {
   };
   const [artistNumber, setArtistNumber] = useState(0);
   const [isHovered, setIsHovered] = useState(false);
-  
   useEffect(() => {
     const randomArtistNumber = Math.floor(Math.random() * 100) + 1;
     setArtistNumber(randomArtistNumber);
   }, []);
-  
   const handleFinalize = () => {
     navigate('/');
   };
-  
   const handleGoBack = () => {
     navigate(-1);
   };
-  
   const handleDownloadDiploma = () => {
     const blob = new Blob(['Diploma personalizado para ' + artistInfo.artistName], {
       type: 'text/plain'
@@ -45,9 +40,10 @@ const ArtistThankYouPage = () => {
     document.body.removeChild(a);
     URL.revokeObjectURL(url);
   };
-  
   const containerVariants = {
-    hidden: { opacity: 0 },
+    hidden: {
+      opacity: 0
+    },
     visible: {
       opacity: 1,
       transition: {
@@ -56,23 +52,21 @@ const ArtistThankYouPage = () => {
       }
     }
   };
-
   const itemVariants = {
-    hidden: { opacity: 0, y: 20 },
-    visible: { opacity: 1, y: 0 }
+    hidden: {
+      opacity: 0,
+      y: 20
+    },
+    visible: {
+      opacity: 1,
+      y: 0
+    }
   };
-  
-  return (
-    <PageTransition>
+  return <PageTransition>
       <Navbar />
       <div className="bg-vyba-cream dark:bg-vyba-dark-bg flex items-center justify-center min-h-[90vh] px-6 md:px-10 lg:px-14 xl:px-16">
         <Card className="border-none shadow-none bg-secondary dark:bg-vyba-dark-bg dark:border-vyba-dark-secondary rounded-3xl overflow-hidden w-full py-16 mx-auto">
-          <motion.div 
-            className="max-w-3xl mx-auto px-6 flex flex-col items-center"
-            variants={containerVariants}
-            initial="hidden"
-            animate="visible"
-          >
+          <motion.div className="max-w-3xl mx-auto px-6 flex flex-col items-center" variants={containerVariants} initial="hidden" animate="visible">
             <motion.h1 variants={itemVariants} className="text-6xl font-black mb-4 text-center dark:text-white">
               Gracias por formar parte de VYBA
             </motion.h1>
@@ -100,16 +94,16 @@ const ArtistThankYouPage = () => {
               </div>
             </motion.div>
             
-            <motion.div
-              variants={itemVariants}
-              className="w-full bg-white dark:bg-vyba-dark-secondary rounded-[40px] p-6 mb-12 cursor-pointer transition-all duration-300 hover:shadow-lg hover:translate-y-[-4px]"
-              onClick={handleDownloadDiploma}
-              whileHover={{ scale: 1.02 }}
-              transition={{ type: "spring", stiffness: 300, damping: 20 }}
-            >
+            <motion.div variants={itemVariants} className="w-full bg-white dark:bg-vyba-dark-secondary rounded-[40px] p-6 mb-12 cursor-pointer transition-all duration-300 hover:shadow-lg hover:translate-y-[-4px]" onClick={handleDownloadDiploma} whileHover={{
+            scale: 1.02
+          }} transition={{
+            type: "spring",
+            stiffness: 300,
+            damping: 20
+          }}>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="space-y-4">
-                  <div className="bg-gray-50 items-center dark:bg-vyba-dark-secondary/80 p-4 rounded-2xl transition-all duration-300">
+                  <div className="bg-gray-50 content-start dark:bg-vyba-dark-secondary/80 p-4 rounded-2xl transition-all duration-300">
                     <div className="flex gap-6 items-center justify-center mb-4">
                       <GraduationCap size={48} className="text-black dark:text-white" />
                       <h3 className="text-5xl font-black text-center text-black dark:text-white">
@@ -151,18 +145,11 @@ const ArtistThankYouPage = () => {
             </motion.div>
             
             <motion.div variants={itemVariants} className="flex flex-col sm:flex-row justify-center w-full gap-4 items-center">
-              <Button 
-                variant="outline" 
-                onClick={handleGoBack} 
-                className="w-12 h-12 rounded-full flex items-center justify-center p-0 order-2 sm:order-1 border-none bg-white dark:bg-vyba-dark-secondary"
-              >
+              <Button variant="outline" onClick={handleGoBack} className="w-12 h-12 rounded-full flex items-center justify-center p-0 order-2 sm:order-1 border-none bg-white dark:bg-vyba-dark-secondary">
                 <ArrowLeft size={20} strokeWidth={3} />
               </Button>
               
-              <Button 
-                onClick={handleFinalize} 
-                className="w-full sm:w-auto order-1 sm:order-2 bg-blue-200 text-black hover:bg-blue-300 dark:bg-blue-200 dark:text-black dark:hover:bg-blue-300"
-              >
+              <Button onClick={handleFinalize} className="w-full sm:w-auto order-1 sm:order-2 bg-blue-200 text-black hover:bg-blue-300 dark:bg-blue-200 dark:text-black dark:hover:bg-blue-300">
                 Finalizar
               </Button>
             </motion.div>
@@ -173,8 +160,6 @@ const ArtistThankYouPage = () => {
           </motion.div>
         </Card>
       </div>
-    </PageTransition>
-  );
+    </PageTransition>;
 };
-
 export default ArtistThankYouPage;
