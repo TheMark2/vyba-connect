@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { Button } from "@/components/ui/button";
@@ -168,13 +167,14 @@ const ArtistThankYouPage = () => {
                 <div 
                   className="absolute inset-0 backdrop-blur-sm flex items-center justify-center transition-all duration-300"
                   style={{
-                    background: getRadialGradient(),
-                    animation: isHovered ? 'radialAppear 0.3s ease-out forwards' : 'radialDisappear 0.3s ease-out forwards'
-                  }}
+                    '--x': `${mousePosition.x}px`,
+                    '--y': `${mousePosition.y}px`
+                  } as React.CSSProperties}
+                  className={`absolute inset-0 backdrop-blur-sm flex items-center justify-center transition-all duration-300 animate-radial-in`}
                 >
                   <Button 
                     onClick={handleDownloadDiploma}
-                    className="bg-primary hover:bg-primary/90 text-primary-foreground flex items-center gap-2 scale-in"
+                    className="bg-primary hover:bg-primary/90 text-primary-foreground flex items-center gap-2 animate-scale-in"
                   >
                     <Download size={20} />
                     Descargar diploma

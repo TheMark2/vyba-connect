@@ -25,8 +25,8 @@ export default {
           beige: "#F5F1EB",
           navy: "#222845",
           dark: {
-            bg: "#000000", // Negro puro para fondos principales
-            secondary: "#333333" // Color gris oscuro (rgb(51, 51, 51)) para elementos secundarios
+            bg: "#000000",
+            secondary: "#333333"
           }
         },
         border: "hsl(var(--border))",
