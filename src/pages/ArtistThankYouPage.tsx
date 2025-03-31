@@ -125,8 +125,8 @@ const ArtistThankYouPage = () => {
                       </p>
                     </div>
                   </div>
-                  <div className="bg-gray-50 dark:bg-vyba-dark-secondary/80 p-6 rounded-xl transition-all duration-300 flex justify-center">
-                    <span className="px-4 py-2 bg-blue-500 text-white rounded-full text-sm font-medium">
+                  <div className="pt-6 transition-all duration-300 flex justify-center">
+                    <span className="px-4 py-2 bg-gray-50 dark:bg-vyba-dark-secondary/80 rounded-full text-sm font-medium">
                       {artistInfo.artistType || "DJ"}
                     </span>
                   </div>
@@ -136,7 +136,7 @@ const ArtistThankYouPage = () => {
                     <h4 className="text-xl font-bold mb-2 text-black dark:text-white">
                       Agradecimiento
                     </h4>
-                    <p className="text-black dark:text-white">
+                    <p className="text-sm dark:text-white">
                       De parte del equipo de VYBA queremos agradecerte con un diploma personalizado
                     </p>
                   </div>
