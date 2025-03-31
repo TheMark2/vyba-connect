@@ -71,10 +71,9 @@ const AuthPage = () => {
 
   const handleRegisterSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+    setIsLoading(true);
     
     if (registerStep < 2) {
-      setIsLoading(true);
-      
       setTimeout(() => {
         setIsLoading(false);
         setRegisterStep(registerStep + 1);
@@ -82,10 +81,7 @@ const AuthPage = () => {
       return;
     }
     
-    setIsLoading(true);
-    
     setTimeout(() => {
-      setIsLoading(false);
       navigate('/profile-info', {
         state: {
           role: registerForm.role
@@ -322,9 +318,9 @@ const AuthPage = () => {
                     >
                       <motion.form variants={itemVariants} onSubmit={handleRegisterSubmit} className="space-y-8">
                         <RadioGroup value={registerForm.role} onValueChange={value => setRegisterForm({
-                      ...registerForm,
-                      role: value
-                    })} className="space-y-2">
+                          ...registerForm,
+                          role: value
+                        })} className="space-y-2">
                           <RoleSelector value="seeker" label="Entrar como buscador" icon={<Search size={20} />} features={seekerFeatures} />
                           <RoleSelector value="artist" label="Entrar como artista" icon={<Music size={20} />} features={artistFeatures} />
                         </RadioGroup>
