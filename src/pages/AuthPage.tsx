@@ -39,6 +39,7 @@ const AuthPage = () => {
   const navigate = useNavigate();
   const [defaultTab, setDefaultTab] = useState<string>("login");
   const [showPassword, setShowPassword] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const [loginForm, setLoginForm] = useState({
     email: '',
     password: ''
@@ -53,26 +54,44 @@ const AuthPage = () => {
 
   const handleLoginSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    toast.success("Inicio de sesión exitoso", {
-      description: "Redirigiendo a la página principal...",
-      position: "bottom-center"
-    });
+    setIsLoading(true);
+    
     setTimeout(() => {
-      navigate('/');
-    }, 1500);
+      toast.success("Inicio de sesión exitoso", {
+        description: "Redirigiendo a la página principal...",
+        position: "bottom-center"
+      });
+      
+      setTimeout(() => {
+        setIsLoading(false);
+        navigate('/');
+      }, 500);
+    }, 1000);
   };
 
   const handleRegisterSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+    
     if (registerStep < 2) {
-      setRegisterStep(registerStep + 1);
+      setIsLoading(true);
+      
+      setTimeout(() => {
+        setIsLoading(false);
+        setRegisterStep(registerStep + 1);
+      }, 800);
       return;
     }
-    navigate('/profile-info', {
-      state: {
-        role: registerForm.role
-      }
-    });
+    
+    setIsLoading(true);
+    
+    setTimeout(() => {
+      setIsLoading(false);
+      navigate('/profile-info', {
+        state: {
+          role: registerForm.role
+        }
+      });
+    }, 1000);
   };
 
   const handleSocialLogin = (provider: string) => {
@@ -181,7 +200,7 @@ const AuthPage = () => {
                       <Input id="login-email" type="email" value={loginForm.email} onChange={e => setLoginForm({
                       ...loginForm,
                       email: e.target.value
-                    })} placeholder="Escribe tu correo" required className="rounded-xl h-12 bg-white dark:bg-white dark:text-black" />
+                    })} placeholder="Escribe tu correo" required className="rounded-xl h-12 bg-white dark:bg-black dark:text-white" />
                     </div>
                     
                     <div className="space-y-1.5">
@@ -192,7 +211,7 @@ const AuthPage = () => {
                         <Input id="login-password" type={showPassword ? "text" : "password"} value={loginForm.password} onChange={e => setLoginForm({
                         ...loginForm,
                         password: e.target.value
-                      })} placeholder="Escribe tu contraseña" required className="rounded-xl h-12 pr-10 bg-white dark:bg-white dark:text-black" />
+                      })} placeholder="Escribe tu contraseña" required className="rounded-xl h-12 pr-10 bg-white dark:bg-black dark:text-white" />
                         <button type="button" onClick={togglePasswordVisibility} className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500">
                           {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
                         </button>
@@ -200,7 +219,7 @@ const AuthPage = () => {
                     </div>
                     
                     <div className="flex justify-center mt-8">
-                      <Button type="submit">
+                      <Button type="submit" isLoading={isLoading}>
                         Iniciar sesión
                       </Button>
                     </div>
@@ -255,7 +274,7 @@ const AuthPage = () => {
                           <Input id="register-name" type="text" value={registerForm.fullName} onChange={e => setRegisterForm({
                         ...registerForm,
                         fullName: e.target.value
-                      })} placeholder="Escribe tu nombre completo" required className="rounded-xl h-12 bg-white dark:bg-white dark:text-black" />
+                      })} placeholder="Escribe tu nombre completo" required className="rounded-xl h-12 bg-white dark:bg-black dark:text-white" />
                         </div>
                         
                         <div className="grid grid-cols-2 gap-4">
@@ -266,7 +285,7 @@ const AuthPage = () => {
                             <Input id="register-email" type="email" value={registerForm.email} onChange={e => setRegisterForm({
                           ...registerForm,
                           email: e.target.value
-                        })} placeholder="Escribe tu correo" required className="rounded-xl h-12 bg-white dark:bg-white dark:text-black" />
+                        })} placeholder="Escribe tu correo" required className="rounded-xl h-12 bg-white dark:bg-black dark:text-white" />
                           </div>
                           
                           <div className="space-y-1.5">
@@ -277,7 +296,7 @@ const AuthPage = () => {
                               <Input id="register-password" type={showPassword ? "text" : "password"} value={registerForm.password} onChange={e => setRegisterForm({
                             ...registerForm,
                             password: e.target.value
-                          })} placeholder="Escribe tu contraseña" required className="rounded-xl h-12 pr-10 bg-white dark:bg-white dark:text-black" />
+                          })} placeholder="Escribe tu contraseña" required className="rounded-xl h-12 pr-10 bg-white dark:bg-black dark:text-white" />
                               <button type="button" onClick={togglePasswordVisibility} className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500">
                                 {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
                               </button>
@@ -286,7 +305,7 @@ const AuthPage = () => {
                         </div>
                         
                         <div className="flex justify-center mt-8">
-                          <Button type="submit">
+                          <Button type="submit" isLoading={isLoading}>
                             Siguiente
                           </Button>
                         </div>
@@ -311,10 +330,16 @@ const AuthPage = () => {
                         </RadioGroup>
                         
                         <div className="flex justify-center items-center gap-3 mt-8">
-                          <Button type="button" variant="outline" onClick={handleBackStep} className="rounded-full p-3 border-none bg-white">
+                          <Button 
+                            type="button" 
+                            variant="outline" 
+                            onClick={handleBackStep} 
+                            className="rounded-full p-3 border-none bg-white"
+                            disabled={isLoading}
+                          >
                             <ArrowLeft size={20} strokeWidth={3} />
                           </Button>
-                          <Button type="submit">
+                          <Button type="submit" isLoading={isLoading}>
                             Siguiente
                           </Button>
                         </div>
