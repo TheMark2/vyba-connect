@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { Button } from "@/components/ui/button";
@@ -19,6 +20,9 @@ const ArtistThankYouPage = () => {
   
   const [artistNumber, setArtistNumber] = useState(0);
   const [isHovered, setIsHovered] = useState(false);
+  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
+  const [elementSize, setElementSize] = useState({ width: 0, height: 0 });
+  const [elementRef, setElementRef] = useState<HTMLDivElement | null>(null);
 
   useEffect(() => {
     const randomArtistNumber = Math.floor(Math.random() * 100) + 1;
@@ -47,6 +51,20 @@ const ArtistThankYouPage = () => {
     URL.revokeObjectURL(url);
   };
 
+  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
+    if (elementRef) {
+      const rect = elementRef.getBoundingClientRect();
+      setMousePosition({
+        x: e.clientX - rect.left,
+        y: e.clientY - rect.top
+      });
+      setElementSize({
+        width: rect.width,
+        height: rect.height
+      });
+    }
+  };
+
   const containerVariants = {
     hidden: {
       opacity: 0
@@ -71,6 +89,15 @@ const ArtistThankYouPage = () => {
     }
   };
 
+  const getRadialGradient = () => {
+    if (!elementSize.width || !elementSize.height) return 'radial-gradient(circle at center, rgba(0,0,0,0.9) 0%, rgba(0,0,0,0.6) 100%)';
+    
+    const x = (mousePosition.x / elementSize.width) * 100;
+    const y = (mousePosition.y / elementSize.height) * 100;
+    
+    return `radial-gradient(circle at ${x}% ${y}%, rgba(0,0,0,0.5) 0%, rgba(0,0,0,0.9) 70%)`;
+  };
+
   return <PageTransition>
       <Navbar />
       <div className="bg-vyba-cream dark:bg-vyba-dark-bg flex items-center justify-center min-h-[90vh] px-6 md:px-10 lg:px-14 xl:px-16">
@@ -89,6 +116,8 @@ const ArtistThankYouPage = () => {
               className="w-full bg-white dark:bg-vyba-dark-secondary rounded-[40px] p-6 mb-12 relative overflow-hidden"
               onMouseEnter={() => setIsHovered(true)}
               onMouseLeave={() => setIsHovered(false)}
+              onMouseMove={handleMouseMove}
+              ref={(el) => setElementRef(el)}
             >
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="space-y-4">
@@ -136,10 +165,16 @@ const ArtistThankYouPage = () => {
               </div>
               
               {isHovered && (
-                <div className="absolute inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center transition-all duration-300 animate-fade-in">
+                <div 
+                  className="absolute inset-0 backdrop-blur-sm flex items-center justify-center transition-all duration-300"
+                  style={{
+                    background: getRadialGradient(),
+                    animation: isHovered ? 'radialAppear 0.3s ease-out forwards' : 'radialDisappear 0.3s ease-out forwards'
+                  }}
+                >
                   <Button 
                     onClick={handleDownloadDiploma}
-                    className="bg-primary hover:bg-primary/90 text-primary-foreground flex items-center gap-2"
+                    className="bg-primary hover:bg-primary/90 text-primary-foreground flex items-center gap-2 scale-in"
                   >
                     <Download size={20} />
                     Descargar diploma

@@ -104,7 +104,19 @@ export default {
         "feature-item-appear": {
           "0%": { opacity: "0", transform: "translateY(5px)" },
           "100%": { opacity: "1", transform: "translateY(0)" }
-        }
+        },
+        "radial-in": {
+          "0%": { opacity: "0", background: "radial-gradient(circle at var(--x) var(--y), rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 0) 0%)" },
+          "100%": { opacity: "1", background: "radial-gradient(circle at var(--x) var(--y), rgba(0, 0, 0, 0.7) 0%, rgba(0, 0, 0, 0.9) 80%)" },
+        },
+        "radial-out": {
+          "0%": { opacity: "1", background: "radial-gradient(circle at var(--x) var(--y), rgba(0, 0, 0, 0.7) 0%, rgba(0, 0, 0, 0.9) 80%)" },
+          "100%": { opacity: "0", background: "radial-gradient(circle at var(--x) var(--y), rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 0) 0%)" },
+        },
+        "scale-in": {
+          "0%": { transform: "scale(0.9)", opacity: "0" },
+          "100%": { transform: "scale(1)", opacity: "1" },
+        },
       },
       animation: {
         "accordion-down": "accordion-down 0.5s ease-out",
@@ -118,6 +130,9 @@ export default {
         "content-expand": "content-expand 0.3s ease-out forwards",
         "content-collapse": "content-collapse 0.3s ease-out forwards",
         "feature-item-appear": "feature-item-appear 0.4s ease-out forwards",
+        "radial-in": "radial-in 0.3s ease-out forwards",
+        "radial-out": "radial-out 0.3s ease-out forwards",
+        "scale-in": "scale-in 0.2s ease-out",
         "spin-slow": "spin 3s linear infinite",
       },
     },
