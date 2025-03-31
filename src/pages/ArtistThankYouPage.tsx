@@ -102,14 +102,14 @@ const ArtistThankYouPage = () => {
             
             <motion.div 
               variants={itemVariants}
-              className="w-full bg-white dark:bg-vyba-dark-secondary rounded-3xl p-6 mb-12"
+              className="w-full bg-white dark:bg-vyba-dark-secondary rounded-[40px] p-6 mb-12"
               onMouseEnter={() => setIsHovered(true)}
               onMouseLeave={() => setIsHovered(false)}
             >
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="space-y-4">
-                  <div className={`bg-gray-50 dark:bg-vyba-dark-secondary/80 p-6 rounded-xl transition-all duration-300 ${isHovered ? 'opacity-60' : ''}`}>
-                    <div className="flex content-center gap-3 mb-4">
+                  <div className={`bg-gray-50 content-center dark:bg-vyba-dark-secondary/80 p-6 rounded-2xl transition-all duration-300 ${isHovered ? 'opacity-60' : ''}`}>
+                    <div className="flex items-center gap-3 mb-4">
                       <GraduationCap size={34} className={`${isHovered ? 'text-gray-400' : 'text-black'} dark:text-white`} />
                       <h3 className={`text-5xl font-bold ${isHovered ? 'text-gray-400' : 'text-black'} dark:text-white`}>
                         {artistInfo.artistName}
@@ -117,7 +117,7 @@ const ArtistThankYouPage = () => {
                     </div>
                   </div>
                   
-                  <div className={`bg-gray-50 dark:bg-vyba-dark-secondary/80 p-6 rounded-xl transition-all duration-300 ${isHovered ? 'opacity-60' : ''}`}>
+                  <div className={`bg-gray-50 dark:bg-vyba-dark-secondary/80 p-6 rounded-2xl transition-all duration-300 ${isHovered ? 'opacity-60' : ''}`}>
                     <p className={`font-bold mb-1 ${isHovered ? 'text-gray-400' : 'text-black'} dark:text-white`}>Géneros</p>
                     <p className={`${isHovered ? 'text-gray-400' : 'text-black'} dark:text-white`}>
                       {artistInfo.genres || "House, Reggaeton..."}
@@ -132,7 +132,7 @@ const ArtistThankYouPage = () => {
                 </div>
                 
                 <div className="space-y-4">
-                  <div className={`bg-gray-50 dark:bg-vyba-dark-secondary/80 p-6 rounded-xl transition-all duration-300 ${isHovered ? 'opacity-60' : ''}`}>
+                  <div className={`bg-gray-50 dark:bg-vyba-dark-secondary/80 p-6 rounded-2xl transition-all duration-300 ${isHovered ? 'opacity-60' : ''}`}>
                     <h4 className={`text-xl font-bold mb-2 ${isHovered ? 'text-gray-400' : 'text-black'} dark:text-white`}>
                       Agradecimiento
                     </h4>
