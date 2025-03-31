@@ -109,8 +109,8 @@ const ArtistThankYouPage = () => {
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="space-y-4">
                   <div className={`bg-gray-50 dark:bg-vyba-dark-secondary/80 p-6 rounded-xl transition-all duration-300 ${isHovered ? 'opacity-60' : ''}`}>
-                    <div className="flex items-center gap-3 mb-4">
-                      <GraduationCap size={28} className={`${isHovered ? 'text-gray-400' : 'text-black'} dark:text-white`} />
+                    <div className="flex content-center gap-3 mb-4">
+                      <GraduationCap size={34} className={`${isHovered ? 'text-gray-400' : 'text-black'} dark:text-white`} />
                       <h3 className={`text-5xl font-bold ${isHovered ? 'text-gray-400' : 'text-black'} dark:text-white`}>
                         {artistInfo.artistName}
                       </h3>
