@@ -100,55 +100,51 @@ const ArtistThankYouPage = () => {
               </div>
             </motion.div>
             
-            <motion.div 
+            <motion.div
               variants={itemVariants}
-              className="w-full bg-white dark:bg-vyba-dark-secondary rounded-[40px] p-6 mb-12"
-              onMouseEnter={() => setIsHovered(true)}
-              onMouseLeave={() => setIsHovered(false)}
+              className="w-full bg-white dark:bg-vyba-dark-secondary rounded-[40px] p-6 mb-12 cursor-pointer transition-all duration-300 hover:shadow-lg hover:translate-y-[-4px]"
+              onClick={handleDownloadDiploma}
+              whileHover={{ scale: 1.02 }}
+              transition={{ type: "spring", stiffness: 300, damping: 20 }}
             >
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="space-y-4">
-                  <div className={`bg-gray-50 content-center dark:bg-vyba-dark-secondary/80 p-6 rounded-2xl transition-all duration-300 ${isHovered ? 'opacity-60' : ''}`}>
-                    <div className="flex items-center gap-3 mb-4">
-                      <GraduationCap size={34} className={`${isHovered ? 'text-gray-400' : 'text-black'} dark:text-white`} />
-                      <h3 className={`text-5xl font-bold ${isHovered ? 'text-gray-400' : 'text-black'} dark:text-white`}>
+                  <div className="bg-gray-50 dark:bg-vyba-dark-secondary/80 p-6 rounded-2xl transition-all duration-300">
+                    <div className="flex flex-col items-center justify-center mb-4">
+                      <GraduationCap size={48} className="text-black dark:text-white mb-3" />
+                      <h3 className="text-5xl font-bold text-center text-black dark:text-white">
                         {artistInfo.artistName}
                       </h3>
                     </div>
                   </div>
-                  
-                  <div className={`bg-gray-50 dark:bg-vyba-dark-secondary/80 p-6 rounded-2xl transition-all duration-300 ${isHovered ? 'opacity-60' : ''}`}>
-                    <p className={`font-bold mb-1 ${isHovered ? 'text-gray-400' : 'text-black'} dark:text-white`}>Géneros</p>
-                    <p className={`${isHovered ? 'text-gray-400' : 'text-black'} dark:text-white`}>
-                      {artistInfo.genres || "House, Reggaeton..."}
-                    </p>
+                  <div className="bg-gray-50 dark:bg-vyba-dark-secondary/80 p-6 rounded-2xl transition-all duration-300">
+                    <div className="flex items-center gap-2">
+                      <p className="font-bold text-black dark:text-white">Géneros:</p>
+                      <p className="text-black dark:text-white">
+                        {artistInfo.genres || "House, Reggaeton..."}
+                      </p>
+                    </div>
                   </div>
-                  
-                  <div className={`bg-gray-50 dark:bg-vyba-dark-secondary/80 p-6 rounded-xl transition-all duration-300 ${isHovered ? 'opacity-60' : ''}`}>
-                    <p className={`${isHovered ? 'text-gray-400' : 'text-black'} dark:text-white`}>
+                  <div className="bg-gray-50 dark:bg-vyba-dark-secondary/80 p-6 rounded-xl transition-all duration-300 flex justify-center">
+                    <span className="px-4 py-2 bg-blue-500 text-white rounded-full text-sm font-medium">
                       {artistInfo.artistType || "DJ"}
-                    </p>
+                    </span>
                   </div>
                 </div>
-                
                 <div className="space-y-4">
-                  <div className={`bg-gray-50 dark:bg-vyba-dark-secondary/80 p-6 rounded-2xl transition-all duration-300 ${isHovered ? 'opacity-60' : ''}`}>
-                    <h4 className={`text-xl font-bold mb-2 ${isHovered ? 'text-gray-400' : 'text-black'} dark:text-white`}>
+                  <div className="bg-gray-50 dark:bg-vyba-dark-secondary/80 p-6 rounded-2xl transition-all duration-300">
+                    <h4 className="text-xl font-bold mb-2 text-black dark:text-white">
                       Agradecimiento
                     </h4>
-                    <p className={`${isHovered ? 'text-gray-400' : 'text-black'} dark:text-white`}>
+                    <p className="text-black dark:text-white">
                       De parte del equipo de VYBA queremos agradecerte con un diploma personalizado
                     </p>
                   </div>
-                  
-                  <div className={`flex justify-center items-center p-6 ${isHovered ? 'opacity-60' : ''}`}>
-                    <button 
-                      onClick={handleDownloadDiploma} 
-                      className={`flex items-center gap-2 ${isHovered ? 'text-gray-400' : 'text-black'} dark:text-white transition-all duration-300`}
-                    >
+                  <div className="flex justify-center items-center p-6">
+                    <div className="flex items-center gap-2 text-black dark:text-white">
                       <FileArchive size={20} />
                       Descargar diploma
-                    </button>
+                    </div>
                   </div>
                 </div>
               </div>
