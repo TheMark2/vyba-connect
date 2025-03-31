@@ -1,9 +1,8 @@
-
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import { ArrowLeft, FileText, Music, Graduation, FileArchive } from 'lucide-react';
+import { ArrowLeft, FileText, Music, GraduationCap, FileArchive } from 'lucide-react';
 import Navbar from '@/components/Navbar';
 import { Link } from 'react-router-dom';
 import { PageTransition } from '@/components/ui/page-transition';
@@ -21,7 +20,6 @@ const ArtistThankYouPage = () => {
   const [isHovered, setIsHovered] = useState(false);
   
   useEffect(() => {
-    // Simulamos obtener un número de artista aleatorio entre 1 y 100
     const randomArtistNumber = Math.floor(Math.random() * 100) + 1;
     setArtistNumber(randomArtistNumber);
   }, []);
@@ -31,11 +29,10 @@ const ArtistThankYouPage = () => {
   };
   
   const handleGoBack = () => {
-    navigate(-1); // Esto navega a la pantalla anterior
+    navigate(-1);
   };
   
   const handleDownloadDiploma = () => {
-    // En una implementación real, esto descargaría un PDF
     const blob = new Blob(['Diploma personalizado para ' + artistInfo.artistName], {
       type: 'text/plain'
     });
@@ -83,7 +80,6 @@ const ArtistThankYouPage = () => {
               Artista #{artistNumber}
             </motion.h2>
             
-            {/* Tags superiores */}
             <motion.div variants={itemVariants} className="flex flex-wrap gap-4 mb-8 justify-center">
               <div className="flex items-center gap-3 px-6 py-3 rounded-full bg-white dark:bg-vyba-dark-secondary">
                 <Music size={20} className="text-black dark:text-white" />
@@ -104,7 +100,6 @@ const ArtistThankYouPage = () => {
               </div>
             </motion.div>
             
-            {/* Tarjeta principal con grid de información */}
             <motion.div 
               variants={itemVariants}
               className="w-full bg-white dark:bg-vyba-dark-secondary rounded-3xl p-6 mb-12"
@@ -112,11 +107,10 @@ const ArtistThankYouPage = () => {
               onMouseLeave={() => setIsHovered(false)}
             >
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                {/* Columna izquierda */}
                 <div className="space-y-4">
                   <div className={`bg-gray-50 dark:bg-vyba-dark-secondary/80 p-6 rounded-xl transition-all duration-300 ${isHovered ? 'opacity-60' : ''}`}>
                     <div className="flex items-center gap-3 mb-4">
-                      <Graduation size={28} className={`${isHovered ? 'text-gray-400' : 'text-black'} dark:text-white`} />
+                      <GraduationCap size={28} className={`${isHovered ? 'text-gray-400' : 'text-black'} dark:text-white`} />
                       <h3 className={`text-3xl font-bold ${isHovered ? 'text-gray-400' : 'text-black'} dark:text-white`}>
                         {artistInfo.artistName}
                       </h3>
@@ -137,7 +131,6 @@ const ArtistThankYouPage = () => {
                   </div>
                 </div>
                 
-                {/* Columna derecha */}
                 <div className="space-y-4">
                   <div className={`bg-gray-50 dark:bg-vyba-dark-secondary/80 p-6 rounded-xl transition-all duration-300 ${isHovered ? 'opacity-60' : ''}`}>
                     <h4 className={`text-xl font-bold mb-2 ${isHovered ? 'text-gray-400' : 'text-black'} dark:text-white`}>
@@ -161,7 +154,6 @@ const ArtistThankYouPage = () => {
               </div>
             </motion.div>
             
-            {/* Botones de navegación */}
             <motion.div variants={itemVariants} className="flex flex-col sm:flex-row justify-center w-full gap-4 items-center">
               <Button 
                 variant="outline" 
