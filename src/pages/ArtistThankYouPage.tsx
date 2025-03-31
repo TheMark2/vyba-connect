@@ -125,9 +125,11 @@ const ArtistThankYouPage = () => {
                       </p>
                     </div>
                   </div>
-                  <span className="px-6 py-3 bg-gray-50 mt-4 dark:bg-vyba-dark-secondary/80 rounded-full text-sm font-medium">
-                    {artistInfo.artistType || "DJ"}
-                  </span>
+                  <div className="mt-4">
+                    <span className="px-6 py-3 bg-gray-50 dark:bg-vyba-dark-secondary/80 rounded-full text-sm font-medium">
+                      {artistInfo.artistType || "DJ"}
+                    </span>
+                  </div>
                 </div>
                 <div className="space-y-4">
                   <div className="bg-gray-50 dark:bg-vyba-dark-secondary/80 p-6 rounded-2xl transition-all duration-300">
