@@ -69,21 +69,32 @@ const RoleSelector = React.forwardRef<
         !isFirst && !isLast ? "border-t-0" : "" // Added this to ensure no border at connecting points
       )}>
         <div className="flex items-center gap-3 px-5 py-3.5">
-          {icon && <div className="flex-shrink-0">{icon}</div>}
+          {icon && (
+            <div className={cn(
+              "flex-shrink-0 transition-transform duration-300",
+              isSelected ? "scale-110" : "scale-100"
+            )}>
+              {icon}
+            </div>
+          )}
           <span className={cn(
-            "text-sm font-medium flex-grow",
-            isSelected ? "text-black dark:text-white" : "text-gray-700 dark:text-gray-300"
+            "text-sm font-medium flex-grow transition-all duration-300",
+            isSelected ? "text-black dark:text-white font-bold" : "text-gray-700 dark:text-gray-300"
           )}>{label}</span>
           <RadioGroupPrimitive.Item
             ref={ref}
             className={cn(
-              "aspect-square h-5 w-5 rounded-full border-2 border-black text-sm ring-offset-background focus:outline-none focus-visible:ring-0 disabled:cursor-not-allowed disabled:opacity-50 dark:border-white",
+              "aspect-square h-5 w-5 rounded-full border-2 border-black text-sm ring-offset-background focus:outline-none focus-visible:ring-0 disabled:cursor-not-allowed disabled:opacity-50 dark:border-white transition-all duration-300",
+              isSelected ? "border-[3px]" : "",
               className
             )}
             {...props}
           >
             <RadioGroupPrimitive.Indicator className="flex items-center justify-center">
-              <Circle className="h-2.5 w-2.5 fill-black text-black dark:fill-white dark:text-white" />
+              <Circle className={cn(
+                "fill-black text-black dark:fill-white dark:text-white transition-all duration-300",
+                isSelected ? "h-2.5 w-2.5 animate-pulse" : "h-2 w-2"
+              )} />
             </RadioGroupPrimitive.Indicator>
           </RadioGroupPrimitive.Item>
         </div>
@@ -99,8 +110,14 @@ const RoleSelector = React.forwardRef<
             <ul className="space-y-1.5">
               {features.map((feature, index) => (
                 <li key={index} className="flex items-center gap-2 text-gray-600 dark:text-gray-400">
-                  <div className="w-1 h-1 bg-black dark:bg-white rounded-full"></div>
-                  <span className="text-sm">{feature}</span>
+                  <div className={cn(
+                    "w-1 h-1 bg-black dark:bg-white rounded-full transition-all duration-300",
+                    isSelected ? "scale-100" : "scale-0"
+                  )}></div>
+                  <span className={cn(
+                    "text-sm transition-all duration-300",
+                    isSelected ? "translate-x-0" : "-translate-x-2"
+                  )}>{feature}</span>
                 </li>
               ))}
             </ul>
