@@ -125,7 +125,7 @@ const ArtistThankYouPage = () => {
                       </p>
                     </div>
                   </div>
-                  <span className="px-6 py-3 bg-gray-50 dark:bg-vyba-dark-secondary/80 rounded-full text-sm font-medium">
+                  <span className="px-6 py-3 bg-gray-50 mt-4 dark:bg-vyba-dark-secondary/80 rounded-full text-sm font-medium">
                     {artistInfo.artistType || "DJ"}
                   </span>
                 </div>
