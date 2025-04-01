@@ -47,39 +47,35 @@ const RegisterSection: React.FC<RegisterSectionProps> = ({
 }) => {
   if (registerStep === 1) {
     return (
-      <div className="bg-secondary dark:bg-vyba-dark-secondary/30 rounded-3xl p-6">
-        <div className="space-y-6">
-          <SocialAuthButtons onSocialLogin={handleSocialLogin} />
-          <EmailDivider />
-          <RegisterFormStep1 
-            registerForm={registerForm}
-            setRegisterForm={setRegisterForm}
-            isLoading={isLoading}
-            showPassword={showPassword}
-            togglePasswordVisibility={togglePasswordVisibility}
-            handleRegisterSubmit={handleRegisterSubmit}
-            switchToLogin={switchToLogin}
-          />
-        </div>
+      <div className="space-y-6">
+        <SocialAuthButtons onSocialLogin={handleSocialLogin} />
+        <EmailDivider />
+        <RegisterFormStep1 
+          registerForm={registerForm}
+          setRegisterForm={setRegisterForm}
+          isLoading={isLoading}
+          showPassword={showPassword}
+          togglePasswordVisibility={togglePasswordVisibility}
+          handleRegisterSubmit={handleRegisterSubmit}
+          switchToLogin={switchToLogin}
+        />
       </div>
     );
   }
   
   if (registerStep === 2) {
     return (
-      <div className="bg-secondary dark:bg-vyba-dark-secondary/30 rounded-3xl p-6">
-        <div className="space-y-6">
-          <RegisterFormStep2 
-            registerForm={registerForm}
-            setRegisterForm={setRegisterForm}
-            isLoading={isLoading}
-            handleRegisterSubmit={handleRegisterSubmit}
-            handleBackStep={handleBackStep}
-            switchToLogin={switchToLogin}
-            artistFeatures={artistFeatures}
-            seekerFeatures={seekerFeatures}
-          />
-        </div>
+      <div className="space-y-6">
+        <RegisterFormStep2 
+          registerForm={registerForm}
+          setRegisterForm={setRegisterForm}
+          isLoading={isLoading}
+          handleRegisterSubmit={handleRegisterSubmit}
+          handleBackStep={handleBackStep}
+          switchToLogin={switchToLogin}
+          artistFeatures={artistFeatures}
+          seekerFeatures={seekerFeatures}
+        />
       </div>
     );
   }
