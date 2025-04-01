@@ -153,12 +153,12 @@ const ArtistThankYouPage = () => {
                 </div>}
             </motion.div>
             
-            <motion.div variants={itemVariants} className="flex flex-col sm:flex-row justify-center w-full gap-4 items-center px-4">
+            <motion.div variants={itemVariants} className="flex flex-row justify-center w-full gap-4 items-center px-4">
               <Button variant="outline" onClick={handleGoBack} className="w-12 h-12 rounded-full flex items-center justify-center p-0 order-2 sm:order-1 border-none bg-white dark:bg-vyba-dark-secondary">
                 <ArrowLeft size={isMobile ? 16 : 20} strokeWidth={3} />
               </Button>
               
-              <Button onClick={handleFinalize} className="w-full sm:w-auto order-1 sm:order-2 bg-blue-200 text-black hover:bg-blue-300 dark:bg-blue-200 dark:text-black dark:hover:bg-blue-300">
+              <Button onClick={handleFinalize} className="w-auto order-2">
                 Finalizar
               </Button>
             </motion.div>
