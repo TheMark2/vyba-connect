@@ -11,7 +11,7 @@ interface SocialAuthButtonsProps {
 
 const SocialAuthButtons: React.FC<SocialAuthButtonsProps> = ({ onSocialLogin }) => {
   return (
-    <motion.div variants={itemVariants} className="grid grid-cols-2 gap-4">
+    <motion.div variants={itemVariants} className="flex flex-cols gap-4 md:flex">
       <Button 
         type="button" 
         variant="outline" 
