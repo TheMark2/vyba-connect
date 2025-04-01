@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { motion } from "framer-motion";
 import { itemVariants } from './animation-variants';
+import { useIsMobile } from "@/hooks/use-mobile";
 
 interface LoginFormProps {
   loginForm: {
@@ -29,12 +30,20 @@ const LoginForm: React.FC<LoginFormProps> = ({
   togglePasswordVisibility, 
   handleLoginSubmit 
 }) => {
+  const isMobile = useIsMobile();
+  
   return (
     <motion.form variants={itemVariants} onSubmit={handleLoginSubmit} className="space-y-4">
       <div className="space-y-1.5">
-        <label htmlFor="login-email" className="block text-sm font-medium dark:text-white">
-          Email
-        </label>
+        {!isMobile ? (
+          <label htmlFor="login-email" className="block text-sm font-medium dark:text-white">
+            Email
+          </label>
+        ) : (
+          <label htmlFor="login-email" className="block text-sm font-medium text-black">
+            Email
+          </label>
+        )}
         <Input 
           id="login-email" 
           type="email" 
@@ -43,16 +52,22 @@ const LoginForm: React.FC<LoginFormProps> = ({
             ...loginForm,
             email: e.target.value
           })} 
-          placeholder="Escribe tu correo" 
+          placeholder={isMobile ? "Escribe tu correo" : "Email"} 
           required 
-          className="rounded-xl h-12 bg-white dark:bg-black dark:text-white" 
+          className={`${isMobile ? 'rounded-full border-none h-12' : 'rounded-xl h-12'} bg-white dark:bg-black dark:text-white`} 
         />
       </div>
       
       <div className="space-y-1.5">
-        <label htmlFor="login-password" className="block text-sm font-medium dark:text-white">
-          Contraseña
-        </label>
+        {!isMobile ? (
+          <label htmlFor="login-password" className="block text-sm font-medium dark:text-white">
+            Contraseña
+          </label>
+        ) : (
+          <label htmlFor="login-password" className="block text-sm font-medium text-black">
+            Contraseña
+          </label>
+        )}
         <div className="relative">
           <Input 
             id="login-password" 
@@ -62,9 +77,9 @@ const LoginForm: React.FC<LoginFormProps> = ({
               ...loginForm,
               password: e.target.value
             })} 
-            placeholder="Escribe tu contraseña" 
+            placeholder={isMobile ? "Escribe tu contraseña" : "Contraseña"}
             required 
-            className="rounded-xl h-12 pr-10 bg-white dark:bg-black dark:text-white" 
+            className={`${isMobile ? 'rounded-full border-none h-12' : 'rounded-xl h-12'} pr-10 bg-white dark:bg-black dark:text-white`}
           />
           <button 
             type="button" 
@@ -77,7 +92,7 @@ const LoginForm: React.FC<LoginFormProps> = ({
       </div>
       
       <div className="flex justify-center mt-8">
-        <Button type="submit" isLoading={isLoading}>
+        <Button type="submit" isLoading={isLoading} className={isMobile ? "w-full rounded-full" : ""}>
           Iniciar sesión
         </Button>
       </div>
