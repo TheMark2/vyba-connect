@@ -40,7 +40,7 @@ const LoginSection: React.FC<LoginSectionProps> = ({
       <Button 
         type="button" 
         variant="secondary" 
-        className="w-full flex items-center justify-center gap-2 bg-white text-black hover:bg-gray-50 h-12 rounded-full" 
+        className="w-full flex items-center justify-center gap-2" 
         onClick={handleLoginSubmit}
       >
         <Mail size={20} />
