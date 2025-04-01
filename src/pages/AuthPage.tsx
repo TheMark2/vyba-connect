@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Button } from "@/components/ui/button";
@@ -216,6 +217,14 @@ const AuthPage = () => {
   const handleBackToOptions = useCallback(() => {
     console.log("[AuthPage] handleBackToOptions - Volviendo a opciones");
     setShowEmailLogin(false);
+  }, []);
+
+  const updateLoginForm = useCallback((field: keyof typeof loginForm, value: string) => {
+    setLoginForm(prev => ({ ...prev, [field]: value }));
+  }, []);
+
+  const updateRegisterForm = useCallback((field: keyof typeof registerForm, value: string) => {
+    setRegisterForm(prev => ({ ...prev, [field]: value }));
   }, []);
 
   const seekerFeatures = ["Encuentra artistas según tus necesidades", "Acceso completo al catálogo de profesionales", "Comunícate directamente con los artistas"];
@@ -463,7 +472,7 @@ const AuthPage = () => {
                       variants={itemVariants} 
                       onSubmit={(e) => {
                         e.preventDefault();
-                        handleLoginSubmit(e);
+                        loginFormHook.handleSubmit(handleLoginSubmit)(e);
                       }} 
                       className="space-y-4"
                     >
@@ -581,7 +590,7 @@ const AuthPage = () => {
                           variants={itemVariants} 
                           onSubmit={(e) => {
                             e.preventDefault();
-                            handleRegisterSubmit(e);
+                            registerFormHook.handleSubmit(handleRegisterStepOne)(e);
                           }} 
                           className="space-y-4"
                         >
@@ -663,7 +672,7 @@ const AuthPage = () => {
                           variants={itemVariants} 
                           onSubmit={(e) => {
                             e.preventDefault();
-                            handleRegisterSubmit(e);
+                            handleRegisterSubmit(registerForm);
                           }} 
                           className="space-y-8"
                         >
@@ -675,4 +684,50 @@ const AuthPage = () => {
                               }} 
                               className="space-y-0"
                             >
-                              <RoleSelector value="artist"
+                              <RoleSelector 
+                                value="artist" 
+                                label="Soy artista" 
+                                icon={<Music size={20} />} 
+                                features={artistFeatures} 
+                                isFirst={true} 
+                              />
+                              <RoleSelector 
+                                value="seeker" 
+                                label="Busco artistas" 
+                                icon={<Search size={20} />} 
+                                features={seekerFeatures} 
+                                isLast={true} 
+                              />
+                            </RadioGroup>
+                          </div>
+                          
+                          <div className="flex justify-between">
+                            <Button 
+                              type="button" 
+                              variant="outline" 
+                              onClick={handleBackStep}
+                            >
+                              Atrás
+                            </Button>
+                            <Button 
+                              type="submit" 
+                              isLoading={isLoading}
+                            >
+                              Completar registro
+                            </Button>
+                          </div>
+                        </motion.form>
+                      </motion.div>
+                    ) : null}
+                  </AnimatePresence>
+                </TabsContent>
+              </AnimatePresence>
+            </Tabs>
+          </Card>
+        </div>
+      )}
+    </PageTransition>
+  );
+};
+
+export default AuthPage;
