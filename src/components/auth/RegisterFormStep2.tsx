@@ -20,6 +20,7 @@ interface RegisterFormStep2Props {
   isLoading: boolean;
   handleRegisterSubmit: (e: React.FormEvent) => void;
   handleBackStep: () => void;
+  switchToLogin: () => void; // Añadido el prop switchToLogin
   artistFeatures: string[];
   seekerFeatures: string[];
 }
@@ -30,6 +31,7 @@ const RegisterFormStep2: React.FC<RegisterFormStep2Props> = ({
   isLoading, 
   handleRegisterSubmit, 
   handleBackStep,
+  switchToLogin, // Añadido el prop
   artistFeatures,
   seekerFeatures,
 }) => {
@@ -70,7 +72,7 @@ const RegisterFormStep2: React.FC<RegisterFormStep2Props> = ({
           Siguiente
         </Button>
       </div>
-            <div className="text-center mt-4 pt-2">
+      <div className="text-center mt-4 pt-2">
         <p className="text-sm text-gray-600 dark:text-gray-400">
           ¿Tienes cuenta?
         </p>
