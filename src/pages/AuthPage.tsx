@@ -130,7 +130,7 @@ const AuthPage = () => {
         <Card className="border-none shadow-none bg-secondary dark:bg-vyba-dark-bg dark:border-vyba-dark-secondary rounded-3xl overflow-hidden w-full py-12 md:py-16 mx-auto">
           <div className="text-center mb-6 md:mb-10 max-w-2xl mx-auto px-4 md:px-12">
             <AnimatePresence mode="wait">
-              {registerStep === 2 && defaultTab === "register" ? <motion.h1 key="role-selection" className="text-4xl md:text-5xl font-black mb-2 md:mb-4 dark:text-white" initial={{
+              {registerStep === 2 && defaultTab === "register" ? <motion.h1 key="role-selection" initial={{
               opacity: 0,
               y: -20
             }} animate={{
@@ -141,7 +141,7 @@ const AuthPage = () => {
               y: 20
             }} transition={{
               duration: 0.5
-            }}>
+            }} className="text-5xl md:text-5xl font-black mb-2 md:mb-4 dark:text-white">
                   ¿Cómo quieres usar VYBA?
                 </motion.h1> : <motion.div key="welcome" initial={{
               opacity: 0,
