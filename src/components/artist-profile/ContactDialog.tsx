@@ -1,3 +1,4 @@
+
 import React, { useState } from "react";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { Drawer, DrawerContent } from "@/components/ui/drawer";
@@ -168,6 +169,17 @@ const ContactDialog = ({
       }
     }
   };
+
+  const eventTypes = [
+    { name: "Boda", value: "boda" },
+    { name: "Cumpleaños", value: "cumpleanos" },
+    { name: "Fiesta privada", value: "fiesta" },
+    { name: "Evento corporativo", value: "corporativo" },
+    { name: "Inauguración", value: "inauguracion" },
+    { name: "Aniversario", value: "aniversario" }
+  ];
+
+  const durations = ["1h", "2h", "3h", "4h", "Personalizado"];
 
   const dialogContent = (
     <>
