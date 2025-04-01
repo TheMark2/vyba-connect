@@ -11,7 +11,7 @@ const RadioGroup = React.forwardRef<
 >(({ className, ...props }, ref) => {
   return (
     <RadioGroupPrimitive.Root
-      className={cn("grid gap-4", className)} // Cambiado a gap-4 para mayor separación
+      className={cn("grid gap-4", className)} 
       {...props}
       ref={ref}
     />
@@ -44,13 +44,10 @@ RadioGroupItem.displayName = RadioGroupPrimitive.Item.displayName
 const RoleSelector = React.forwardRef<
   React.ElementRef<typeof RadioGroupPrimitive.Item>,
   React.ComponentPropsWithoutRef<typeof RadioGroupPrimitive.Item> & {
-    icon?: React.ReactNode;
     label: string;
     features?: string[];
-    isFirst?: boolean;
-    isLast?: boolean;
   }
->(({ className, icon, label, features = [], isFirst = false, isLast = false, ...props }, ref) => {
+>(({ className, label, features = [], ...props }, ref) => {
   const [isSelected, setIsSelected] = React.useState(false);
   
   React.useEffect(() => {
@@ -60,26 +57,17 @@ const RoleSelector = React.forwardRef<
   return (
     <div 
       className={cn(
-        "rounded-2xl border transition-all duration-200",
+        "py-3.5 px-4 rounded-xl transition-all duration-200",
         isSelected 
-          ? "border-black dark:border-white bg-white dark:bg-vyba-dark-secondary/20" 
-          : "border-gray-200 dark:border-vyba-dark-secondary bg-white/90 dark:bg-vyba-dark-bg"
+          ? "bg-white/90 dark:bg-vyba-dark-secondary/30" 
+          : "bg-transparent hover:bg-white/50 dark:hover:bg-vyba-dark-secondary/10"
       )}
     >
-      <label className="cursor-pointer block p-4">
+      <label className="cursor-pointer block">
         <div className="flex items-center gap-4">
-          {icon && (
-            <div className={cn(
-              "flex-shrink-0 transition-all duration-200",
-              isSelected ? "text-black dark:text-white" : "text-gray-500 dark:text-gray-400"
-            )}>
-              {icon}
-            </div>
-          )}
-          
           <span className={cn(
-            "text-base flex-grow transition-all duration-200",
-            isSelected ? "font-medium text-black dark:text-white" : "text-gray-700 dark:text-gray-300"
+            "text-base flex-grow font-bold transition-all duration-200",
+            isSelected ? "text-black dark:text-white" : "text-gray-700 dark:text-gray-300"
           )}>
             {label}
           </span>
@@ -101,7 +89,7 @@ const RoleSelector = React.forwardRef<
         
         {features.length > 0 && (
           <div className={cn(
-            "overflow-hidden transition-all duration-300 ease-in-out mt-3 pl-9",
+            "overflow-hidden transition-all duration-300 ease-in-out mt-3",
             isSelected 
               ? "max-h-48 opacity-100" 
               : "max-h-0 opacity-0"

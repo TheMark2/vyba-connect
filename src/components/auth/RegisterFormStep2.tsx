@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { Music, Search, ArrowLeft } from 'lucide-react';
+import { ArrowLeft } from 'lucide-react';
 import { Button } from "@/components/ui/button";
 import { RadioGroup, RoleSelector } from '@/components/ui/radio-group';
 
@@ -35,24 +35,26 @@ const RegisterFormStep2: React.FC<RegisterFormStep2Props> = ({
 }) => {
   return (
     <form onSubmit={handleRegisterSubmit} className="space-y-8">
+      <div className="mb-6">
+        <h2 className="text-2xl font-bold text-center mb-6">¿Cómo quieres usar VYBA?</h2>
+      </div>
+      
       <RadioGroup 
         value={registerForm.role} 
         onValueChange={value => setRegisterForm({
           ...registerForm,
           role: value
         })} 
-        className="space-y-4 py-2"
+        className="space-y-3 py-2"
       >
         <RoleSelector 
           value="artist" 
           label="Entrar como artista" 
-          icon={<Music size={20} />} 
           features={artistFeatures}
         />
         <RoleSelector 
           value="seeker" 
           label="Entrar como buscador" 
-          icon={<Search size={20} />} 
           features={seekerFeatures}
         />
       </RadioGroup>
