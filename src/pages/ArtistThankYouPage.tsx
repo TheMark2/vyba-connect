@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { Button } from "@/components/ui/button";
@@ -8,7 +7,6 @@ import Navbar from '@/components/Navbar';
 import { Link } from 'react-router-dom';
 import { PageTransition } from '@/components/ui/page-transition';
 import { motion } from 'framer-motion';
-
 const ArtistThankYouPage = () => {
   const navigate = useNavigate();
   const location = useLocation();
@@ -17,26 +15,27 @@ const ArtistThankYouPage = () => {
     artistType: "DJ",
     genres: "House, Reggaeton..."
   };
-  
   const [artistNumber, setArtistNumber] = useState(0);
   const [isHovered, setIsHovered] = useState(false);
-  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
-  const [elementSize, setElementSize] = useState({ width: 0, height: 0 });
+  const [mousePosition, setMousePosition] = useState({
+    x: 0,
+    y: 0
+  });
+  const [elementSize, setElementSize] = useState({
+    width: 0,
+    height: 0
+  });
   const [elementRef, setElementRef] = useState<HTMLDivElement | null>(null);
-
   useEffect(() => {
     const randomArtistNumber = Math.floor(Math.random() * 100) + 1;
     setArtistNumber(randomArtistNumber);
   }, []);
-
   const handleFinalize = () => {
     navigate('/');
   };
-
   const handleGoBack = () => {
     navigate(-1);
   };
-
   const handleDownloadDiploma = () => {
     const blob = new Blob(['Diploma personalizado para ' + artistInfo.artistName], {
       type: 'text/plain'
@@ -50,7 +49,6 @@ const ArtistThankYouPage = () => {
     document.body.removeChild(a);
     URL.revokeObjectURL(url);
   };
-
   const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
     if (elementRef) {
       const rect = elementRef.getBoundingClientRect();
@@ -64,7 +62,6 @@ const ArtistThankYouPage = () => {
       });
     }
   };
-
   const containerVariants = {
     hidden: {
       opacity: 0
@@ -77,7 +74,6 @@ const ArtistThankYouPage = () => {
       }
     }
   };
-
   const itemVariants = {
     hidden: {
       opacity: 0,
@@ -88,7 +84,6 @@ const ArtistThankYouPage = () => {
       y: 0
     }
   };
-
   return <PageTransition>
       <Navbar />
       <div className="bg-vyba-cream dark:bg-vyba-dark-bg flex items-center justify-center min-h-[90vh] px-6 md:px-10 lg:px-14 xl:px-16">
@@ -102,14 +97,7 @@ const ArtistThankYouPage = () => {
             </motion.h2>
             
             
-            <motion.div 
-              variants={itemVariants} 
-              className="w-full bg-white dark:bg-vyba-dark-secondary rounded-[40px] p-6 mb-12 relative overflow-hidden"
-              onMouseEnter={() => setIsHovered(true)}
-              onMouseLeave={() => setIsHovered(false)}
-              onMouseMove={handleMouseMove}
-              ref={(el) => setElementRef(el)}
-            >
+            <motion.div variants={itemVariants} className="w-full bg-white dark:bg-vyba-dark-secondary rounded-[40px] p-6 mb-12 relative overflow-hidden" onMouseEnter={() => setIsHovered(true)} onMouseLeave={() => setIsHovered(false)} onMouseMove={handleMouseMove} ref={el => setElementRef(el)}>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="space-y-4">
                   <div className="bg-gray-50 content-center dark:bg-vyba-dark-secondary/80 p-6 rounded-2xl transition-all duration-300">
@@ -144,10 +132,7 @@ const ArtistThankYouPage = () => {
                     </p>
                   </div>
                   <div className="flex justify-center items-center p-6">
-                    <Button 
-                      onClick={handleDownloadDiploma} 
-                      className="flex items-center gap-2 bg-gray-50 hover:bg-gray-100 text-black dark:bg-vyba-dark-secondary/80 dark:hover:bg-vyba-dark-secondary/60 dark:text-white"
-                    >
+                    <Button onClick={handleDownloadDiploma} className="flex items-center gap-2 bg-gray-50 hover:bg-gray-100 text-black dark:bg-vyba-dark-secondary/80 dark:hover:bg-vyba-dark-secondary/60 dark:text-white">
                       <Download size={20} />
                       Descargar diploma
                     </Button>
@@ -155,23 +140,15 @@ const ArtistThankYouPage = () => {
                 </div>
               </div>
               
-              {isHovered && (
-                <div 
-                  style={{
-                    '--x': `${mousePosition.x}px`,
-                    '--y': `${mousePosition.y}px`
-                  } as React.CSSProperties}
-                  className="absolute inset-0 backdrop-blur-sm flex items-center justify-center transition-all duration-300 animate-radial-in"
-                >
-                  <Button 
-                    onClick={handleDownloadDiploma}
-                    className="bg-primary hover:bg-primary/90 text-primary-foreground flex items-center gap-2 animate-scale-in"
-                  >
+              {isHovered && <div style={{
+              '--x': `${mousePosition.x}px`,
+              '--y': `${mousePosition.y}px`
+            } as React.CSSProperties} className="absolute inset-0 backdrop-blur-sm flex items-center justify-center transition-all duration-300 animate-radial-in">
+                  <Button onClick={handleDownloadDiploma} className="bg-primary hover:bg-primary/90 text-primary-foreground flex items-center gap-2 animate-scale-in">
                     <Download size={20} />
                     Descargar diploma
                   </Button>
-                </div>
-              )}
+                </div>}
             </motion.div>
             
             <motion.div variants={itemVariants} className="flex flex-col sm:flex-row justify-center w-full gap-4 items-center">
@@ -179,7 +156,7 @@ const ArtistThankYouPage = () => {
                 <ArrowLeft size={20} strokeWidth={3} />
               </Button>
               
-              <Button onClick={handleFinalize} className="w-full sm:w-auto order-1 sm:order-2 bg-blue-200 text-black hover:bg-blue-300 dark:bg-blue-200 dark:text-black dark:hover:bg-blue-300">
+              <Button onClick={handleFinalize} className="w-auto order-1 ">
                 Finalizar
               </Button>
             </motion.div>
@@ -192,5 +169,4 @@ const ArtistThankYouPage = () => {
       </div>
     </PageTransition>;
 };
-
 export default ArtistThankYouPage;
