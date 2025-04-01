@@ -313,7 +313,7 @@ const ContactDialog = ({
               </div>
             </ScrollArea>
             
-            <div className={`flex justify-end mt-6 mb-4 ${isMobile ? 'sticky bottom-6 z-10 pt-4 bg-[#FAF8F6] dark:bg-vyba-dark-secondary' : ''}`}>
+            <div className={`flex justify-end mt-6 ${isMobile ? 'sticky bottom-0 z-10 pt-4 bg-[#FAF8F6] dark:bg-vyba-dark-secondary' : 'mb-4'}`}>
               <Button className="bg-blue-100 hover:bg-blue-200 text-black font-medium rounded-full px-8" onClick={handleNextView}>
                 Siguiente
               </Button>
@@ -463,7 +463,7 @@ const ContactDialog = ({
               </div>
             </ScrollArea>
             
-            <div className={`flex justify-between mt-6 mb-4 ${isMobile ? 'sticky bottom-6 z-10 pt-4 bg-[#FAF8F6] dark:bg-vyba-dark-secondary' : ''}`}>
+            <div className={`flex justify-between mt-6 ${isMobile ? 'sticky bottom-0 z-10 pt-4 bg-[#FAF8F6] dark:bg-vyba-dark-secondary' : 'mb-4'}`}>
               <Button 
                 variant="secondary" 
                 className="bg-gray-100 hover:bg-gray-200 text-black font-medium rounded-full px-8"
@@ -489,7 +489,7 @@ const ContactDialog = ({
     <>
       {isMobile ? (
         <Drawer open={open} onOpenChange={onOpenChange}>
-          <DrawerContent className="bg-[#FAF8F6] dark:bg-vyba-dark-secondary pt-10 pb-28 px-6 rounded-t-[32px]">
+          <DrawerContent className="bg-[#FAF8F6] dark:bg-vyba-dark-secondary pt-10 pb-12 px-6 rounded-t-[32px]">
             <div className="w-16 h-1 bg-gray-300 dark:bg-gray-600 rounded-full mx-auto mb-4"></div>
             {dialogContent}
           </DrawerContent>

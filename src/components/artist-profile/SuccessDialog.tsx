@@ -70,7 +70,7 @@ const SuccessDialog = ({
           <h2 className="text-4xl font-black">{artistName}</h2>
         </div> 
 
-        <p className={cn("text-base max-w-sm mx-auto", isMobile ? "mb-16" : "mb-8")}>
+        <p className={cn("text-base max-w-sm mx-auto", isMobile ? "mb-8" : "mb-8")}>
           {artistName} te contactará en breves, para seguir la conversación entra en <span className="font-black">Mensajes</span>
         </p>
         
@@ -83,7 +83,7 @@ const SuccessDialog = ({
         }} transition={{
           duration: 0.3,
           delay: 0.4
-        }} className={cn("mt-10", isMobile ? "" : "")}>
+        }}>
           <Button onClick={() => onOpenChange(false)} className={isMobile ? "w-full" : ""}>
             Ver conversación
           </Button>
@@ -96,7 +96,7 @@ const SuccessDialog = ({
     <>
       {isMobile ? (
         <Drawer open={open} onOpenChange={onOpenChange}>
-          <DrawerContent className="bg-white dark:bg-vyba-dark-secondary p-0 border-none rounded-t-[32px] pb-24 pt-10 max-h-[85vh]">
+          <DrawerContent className="bg-white dark:bg-vyba-dark-secondary p-0 border-none rounded-t-[32px] pb-12 pt-10 max-h-[85vh]">
             <div className="mx-auto mt-4 h-2 w-[100px] rounded-full bg-muted mb-6" />
             {ContentComponent}
           </DrawerContent>
