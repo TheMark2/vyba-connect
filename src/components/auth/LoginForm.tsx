@@ -73,15 +73,26 @@ const LoginForm: React.FC<LoginFormProps> = ({
           </button>
         </div>
       </div>
-      
-      <div className="pt-4">
-        <Button 
-          type="submit" 
-          className="w-full" 
-          isLoading={isLoading}
-        >
-          Iniciar sesión
-        </Button>
+      <div className="flex">
+        <div className="pt-4">
+          <Button 
+            type="submit" 
+            className="w-full" 
+            isLoading={isLoading}
+          >
+            Iniciar sesión
+          </Button>
+        </div>
+        <div className="flex justify-between items-center mt-4">
+          <Button 
+            type="button" 
+            variant="ghost" 
+            className="p-2" 
+            onClick={handleBackToOptions}
+          >
+            <ArrowLeft size={20} />
+          </Button>
+        </div>
       </div>
     </form>
   );
