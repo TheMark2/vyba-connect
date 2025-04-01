@@ -59,14 +59,14 @@ const RegisterFormStep2: React.FC<RegisterFormStep2Props> = ({
       <div className="flex justify-center items-center gap-3 mt-8">
         <Button 
           type="button" 
-          variant="outline" 
+          variant="secondary" 
           onClick={handleBackStep} 
           className="rounded-full p-3 border-none bg-white dark:bg-vyba-dark-secondary"
           disabled={isLoading}
         >
-          <ArrowLeft size={20} strokeWidth={3} />
+          <ArrowLeft size={20}/>
         </Button>
-        <Button type="submit" isLoading={isLoading}>
+        <Button type="submit" isLoading={isLoading} className="w-full">
           Siguiente
         </Button>
       </div>
