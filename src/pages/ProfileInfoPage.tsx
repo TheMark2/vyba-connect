@@ -147,7 +147,7 @@ const ProfileInfoPage = () => {
                     <label htmlFor="artistName" className="block text-sm font-medium dark:text-white">
                       Nombre de artista
                     </label>
-                    <Input id="artistName" name="artistName" value={artistForm.artistName} onChange={handleArtistFormChange} placeholder="Escribe tu nombre artístico" className="rounded-xl h-10 md:h-12 bg-white dark:bg-white dark:text-black text-sm" required />
+                    <Input id="artistName" name="artistName" value={artistForm.artistName} onChange={handleArtistFormChange} placeholder="Escribe tu nombre artístico" required className="rounded-xl h-12 bg-white dark:bg-white dark:text-black text-sm" />
                   </div>
                   
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -155,14 +155,14 @@ const ProfileInfoPage = () => {
                       <label htmlFor="mainGenres" className="block text-sm font-medium dark:text-white">
                         Géneros principales
                       </label>
-                      <Input id="mainGenres" name="mainGenres" value={artistForm.mainGenres} onChange={handleArtistFormChange} placeholder="Ej: Rock, Pop, Jazz" className="rounded-xl h-10 md:h-12 bg-white dark:bg-white dark:text-black text-sm" required />
+                      <Input id="mainGenres" name="mainGenres" value={artistForm.mainGenres} onChange={handleArtistFormChange} placeholder="Ej: Rock, Pop, Jazz" required className="rounded-xl h-12 bg-white dark:bg-white dark:text-black text-sm" />
                     </div>
                     
                     <div className="space-y-1.5">
                       <label htmlFor="artistType" className="block text-sm font-medium dark:text-white">
                         Tipo de artista
                       </label>
-                      <Input id="artistType" name="artistType" value={artistForm.artistType} onChange={handleArtistFormChange} placeholder="Ej: Solista, Banda, DJ" className="rounded-xl h-10 md:h-12 bg-white dark:bg-white dark:text-black text-sm" required />
+                      <Input id="artistType" name="artistType" value={artistForm.artistType} onChange={handleArtistFormChange} placeholder="Ej: Solista, Banda, DJ" required className="rounded-xl h-12 bg-white dark:bg-white dark:text-black text-sm" />
                     </div>
                   </div>
                 </> : <>
