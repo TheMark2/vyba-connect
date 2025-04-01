@@ -11,6 +11,7 @@ import { RadioGroup, RoleSelector } from '@/components/ui/radio-group';
 import { motion, AnimatePresence } from "framer-motion";
 import { PageTransition } from '@/components/ui/page-transition';
 import { useIsMobile } from '@/hooks/use-mobile';
+
 const formVariants = {
   hidden: {
     opacity: 0,
@@ -33,6 +34,7 @@ const formVariants = {
     }
   }
 };
+
 const itemVariants = {
   hidden: {
     opacity: 0,
@@ -47,6 +49,7 @@ const itemVariants = {
     y: -10
   }
 };
+
 const AuthPage = () => {
   const navigate = useNavigate();
   const isMobile = useIsMobile();
@@ -64,6 +67,7 @@ const AuthPage = () => {
     role: 'artist' as 'artist' | 'seeker'
   });
   const [registerStep, setRegisterStep] = useState(1);
+
   const handleLoginSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
@@ -78,6 +82,7 @@ const AuthPage = () => {
       }, 500);
     }, 1000);
   };
+
   const handleRegisterSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
@@ -96,38 +101,53 @@ const AuthPage = () => {
       });
     }, 1000);
   };
+
   const handleSocialLogin = (provider: string) => {
     toast.info(`Iniciando sesión con ${provider}`, {
       description: "Esta función estará disponible próximamente",
       position: "bottom-center"
     });
   };
+
   const togglePasswordVisibility = () => {
     setShowPassword(!showPassword);
   };
+
   const handleTabChange = (value: string) => {
     setDefaultTab(value);
     setRegisterStep(1);
   };
+
   const switchToRegister = () => {
     setDefaultTab("register");
     setRegisterStep(1);
   };
+
   const handleBackStep = () => {
     setRegisterStep(1);
   };
+
   const handleRoleChange = (value: 'artist' | 'seeker') => {
     setRegisterForm({
       ...registerForm,
       role: value
     });
   };
+
   const seekerFeatures = ["Encuentra artistas según tus necesidades", "Acceso completo al catálogo de profesionales", "Comunícate directamente con los artistas"];
   const artistFeatures = ["Crea tu perfil profesional", "Recibe solicitudes de eventos", "Gestiona tu calendario de actuaciones", "Muestra tu portafolio a posibles clientes"];
+
   return <PageTransition>
       <Navbar />
       <div className="bg-vyba-cream dark:bg-vyba-dark-bg flex items-center justify-center min-h-[90vh] px-4 py-8 md:px-10 lg:px-14 xl:px-16">
-        <Card className="border-none shadow-none bg-secondary dark:bg-vyba-dark-bg dark:border-vyba-dark-secondary rounded-3xl overflow-hidden w-full py-12 md:py-16 mx-auto">
+        <Card className={`
+          border-none shadow-none bg-secondary dark:bg-vyba-dark-bg dark:border-vyba-dark-secondary 
+          rounded-3xl overflow-hidden w-full mx-auto
+          ${isMobile && registerStep === 2 && defaultTab === "register" ? 
+            'fixed top-0 left-0 right-0 bottom-0 h-screen rounded-none z-50 py-4 pt-16 overflow-y-auto' : 
+            'py-12 md:py-16'
+          }
+        `}>
           <div className="text-center mb-6 md:mb-10 max-w-2xl mx-auto px-4 md:px-12">
             <AnimatePresence mode="wait">
               {registerStep === 2 && defaultTab === "register" ? <motion.h1 key="role-selection" initial={{
@@ -335,4 +355,5 @@ const AuthPage = () => {
       </div>
     </PageTransition>;
 };
+
 export default AuthPage;

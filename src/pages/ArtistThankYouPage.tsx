@@ -9,6 +9,7 @@ import { PageTransition } from '@/components/ui/page-transition';
 import { motion } from 'framer-motion';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { cn } from "@/lib/utils";
+
 const ArtistThankYouPage = () => {
   const navigate = useNavigate();
   const location = useLocation();
@@ -29,16 +30,20 @@ const ArtistThankYouPage = () => {
     height: 0
   });
   const [elementRef, setElementRef] = useState<HTMLDivElement | null>(null);
+
   useEffect(() => {
     const randomArtistNumber = Math.floor(Math.random() * 100) + 1;
     setArtistNumber(randomArtistNumber);
   }, []);
+
   const handleFinalize = () => {
     navigate('/');
   };
+
   const handleGoBack = () => {
     navigate(-1);
   };
+
   const handleDownloadDiploma = () => {
     const blob = new Blob(['Diploma personalizado para ' + artistInfo.artistName], {
       type: 'text/plain'
@@ -52,6 +57,7 @@ const ArtistThankYouPage = () => {
     document.body.removeChild(a);
     URL.revokeObjectURL(url);
   };
+
   const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
     if (elementRef) {
       const rect = elementRef.getBoundingClientRect();
@@ -65,6 +71,7 @@ const ArtistThankYouPage = () => {
       });
     }
   };
+
   const containerVariants = {
     hidden: {
       opacity: 0
@@ -77,6 +84,7 @@ const ArtistThankYouPage = () => {
       }
     }
   };
+
   const itemVariants = {
     hidden: {
       opacity: 0,
@@ -87,10 +95,18 @@ const ArtistThankYouPage = () => {
       y: 0
     }
   };
+
   return <PageTransition>
       <Navbar />
       <div className="bg-vyba-cream dark:bg-vyba-dark-bg flex items-center justify-center min-h-[90vh] px-4 sm:px-6 md:px-10 lg:px-14 xl:px-16">
-        <Card className="border-none shadow-none bg-secondary dark:bg-vyba-dark-bg dark:border-vyba-dark-secondary rounded-3xl overflow-hidden w-full py-12 sm:py-16 mx-auto">
+        <Card className={`
+          border-none shadow-none bg-secondary dark:bg-vyba-dark-bg dark:border-vyba-dark-secondary 
+          rounded-3xl overflow-hidden w-full mx-auto
+          ${isMobile ? 
+            'fixed top-0 left-0 right-0 bottom-0 h-screen rounded-none z-50 py-4 pt-16 overflow-y-auto' : 
+            'py-12 sm:py-16'
+          }
+        `}>
           <motion.div className="max-w-3xl mx-auto px-4 sm:px-6 md:px-12 flex flex-col items-center" variants={containerVariants} initial="hidden" animate="visible">
             <motion.h1 variants={itemVariants} className="text-5xl sm:text-5xl md:text-6xl font-black mb-2 sm:mb-4 text-center dark:text-white px-2">
               Gracias por formar parte de VYBA
@@ -171,4 +187,5 @@ const ArtistThankYouPage = () => {
       </div>
     </PageTransition>;
 };
+
 export default ArtistThankYouPage;
