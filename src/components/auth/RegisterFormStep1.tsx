@@ -110,15 +110,15 @@ const RegisterFormStep1: React.FC<RegisterFormStep1Props> = ({
       </form>
       
       <div className="text-center mt-4 pt-2">
-        <p className="text-sm text-gray-600">
-          No tienes cuenta?
+        <p className="text-sm text-gray-600 dark:text-gray-400">
+          ¿Tienes cuenta?
         </p>
         <Button 
-          variant="secondary" 
-          className="mt-2 text-xs" 
-          onClick={switchToRegister}
+          variant="link" 
+          className="mt-2 text-xs font-medium" 
+          onClick={switchToLogin}
         >
-          Regístrate
+          Iniciar Sesión
         </Button>
       </div>
     </div>
