@@ -52,9 +52,9 @@ const LoginForm: React.FC<LoginFormProps> = ({
             ...loginForm,
             email: e.target.value
           })} 
-          placeholder={isMobile ? "Escribe tu correo" : "Email"} 
+          placeholder="Email" 
           required 
-          className={`${isMobile ? 'rounded-full border-none h-12' : 'rounded-xl h-12'} bg-white dark:bg-black dark:text-white`} 
+          className={`rounded-xl h-12 bg-white dark:bg-black dark:text-white`} 
         />
       </div>
       
@@ -77,9 +77,9 @@ const LoginForm: React.FC<LoginFormProps> = ({
               ...loginForm,
               password: e.target.value
             })} 
-            placeholder={isMobile ? "Escribe tu contraseña" : "Contraseña"}
+            placeholder="Contraseña"
             required 
-            className={`${isMobile ? 'rounded-full border-none h-12' : 'rounded-xl h-12'} pr-10 bg-white dark:bg-black dark:text-white`}
+            className={`rounded-xl h-12 pr-10 bg-white dark:bg-black dark:text-white`}
           />
           <button 
             type="button" 
@@ -92,7 +92,7 @@ const LoginForm: React.FC<LoginFormProps> = ({
       </div>
       
       <div className="flex justify-center mt-8">
-        <Button type="submit" isLoading={isLoading} className={isMobile ? "w-full rounded-full" : ""}>
+        <Button type="submit" isLoading={isLoading} className={isMobile ? "w-full" : ""}>
           Iniciar sesión
         </Button>
       </div>
