@@ -57,6 +57,7 @@ const RegisterSection: React.FC<RegisterSectionProps> = ({
           showPassword={showPassword}
           togglePasswordVisibility={togglePasswordVisibility}
           handleRegisterSubmit={handleRegisterSubmit}
+          switchToLogin={switchToLogin}
         />
       </div>
     );
@@ -77,7 +78,7 @@ const RegisterSection: React.FC<RegisterSectionProps> = ({
         
         <div className="text-center mt-6">
           <p className="text-sm text-gray-600 dark:text-gray-400">
-            Ya tienes una cuenta? <Button variant="link" className="p-0 h-auto font-medium" onClick={switchToLogin}>Iniciar Sesión</Button>
+            ¿Tienes cuenta? <Button variant="link" className="p-0 h-auto font-medium" onClick={switchToLogin}>Iniciar Sesión</Button>
           </p>
         </div>
       </div>

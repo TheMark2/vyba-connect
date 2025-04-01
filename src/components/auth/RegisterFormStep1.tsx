@@ -22,6 +22,7 @@ interface RegisterFormStep1Props {
   showPassword: boolean;
   togglePasswordVisibility: () => void;
   handleRegisterSubmit: (e: React.FormEvent) => void;
+  switchToLogin: () => void;
 }
 
 const RegisterFormStep1: React.FC<RegisterFormStep1Props> = ({ 
@@ -30,132 +31,141 @@ const RegisterFormStep1: React.FC<RegisterFormStep1Props> = ({
   isLoading, 
   showPassword, 
   togglePasswordVisibility, 
-  handleRegisterSubmit 
+  handleRegisterSubmit,
+  switchToLogin
 }) => {
   const isMobile = useIsMobile();
 
   return (
-    <form onSubmit={handleRegisterSubmit} className="space-y-4 mb-8">
-      <div className="space-y-1.5">
-        <label htmlFor="register-name" className="block text-sm font-medium dark:text-white">
-          Nombre completo
-        </label>
-        <Input 
-          id="register-name" 
-          type="text" 
-          value={registerForm.fullName} 
-          onChange={e => setRegisterForm({
-            ...registerForm,
-            fullName: e.target.value
-          })} 
-          placeholder="Escribe tu nombre completo" 
-          required 
-          className="rounded-xl h-12 bg-white dark:bg-black dark:text-white" 
-        />
-      </div>
-      
-      {isMobile ? (
-        <>
-          <div className="space-y-1.5">
-            <label htmlFor="register-email" className="block text-sm font-medium dark:text-white">
-              Email
-            </label>
-            <Input 
-              id="register-email" 
-              type="email" 
-              value={registerForm.email} 
-              onChange={e => setRegisterForm({
-                ...registerForm,
-                email: e.target.value
-              })} 
-              placeholder="Escribe tu correo" 
-              required 
-              className="rounded-xl h-12 bg-white dark:bg-black dark:text-white" 
-            />
-          </div>
-          
-          <div className="space-y-1.5">
-            <label htmlFor="register-password" className="block text-sm font-medium dark:text-white">
-              Contraseña
-            </label>
-            <div className="relative">
-              <Input 
-                id="register-password" 
-                type={showPassword ? "text" : "password"} 
-                value={registerForm.password} 
-                onChange={e => setRegisterForm({
-                  ...registerForm,
-                  password: e.target.value
-                })} 
-                placeholder="Escribe tu contraseña" 
-                required 
-                className="rounded-xl h-12 pr-10 bg-white dark:bg-black dark:text-white" 
-              />
-              <button 
-                type="button" 
-                onClick={togglePasswordVisibility} 
-                className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500"
-              >
-                {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
-              </button>
-            </div>
-          </div>
-        </>
-      ) : (
-        <div className="grid grid-cols-2 gap-4">
-          <div className="space-y-1.5">
-            <label htmlFor="register-email" className="block text-sm font-medium dark:text-white">
-              Email
-            </label>
-            <Input 
-              id="register-email" 
-              type="email" 
-              value={registerForm.email} 
-              onChange={e => setRegisterForm({
-                ...registerForm,
-                email: e.target.value
-              })} 
-              placeholder="Escribe tu correo" 
-              required 
-              className="rounded-xl h-12 bg-white dark:bg-black dark:text-white" 
-            />
-          </div>
-          
-          <div className="space-y-1.5">
-            <label htmlFor="register-password" className="block text-sm font-medium dark:text-white">
-              Contraseña
-            </label>
-            <div className="relative">
-              <Input 
-                id="register-password" 
-                type={showPassword ? "text" : "password"} 
-                value={registerForm.password} 
-                onChange={e => setRegisterForm({
-                  ...registerForm,
-                  password: e.target.value
-                })} 
-                placeholder="Escribe tu contraseña" 
-                required 
-                className="rounded-xl h-12 pr-10 bg-white dark:bg-black dark:text-white" 
-              />
-              <button 
-                type="button" 
-                onClick={togglePasswordVisibility} 
-                className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500"
-              >
-                {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
-              </button>
-            </div>
-          </div>
+    <div>
+      <form onSubmit={handleRegisterSubmit} className="space-y-4 mb-8">
+        <div className="space-y-1.5">
+          <label htmlFor="register-name" className="block text-sm font-medium dark:text-white">
+            Nombre completo
+          </label>
+          <Input 
+            id="register-name" 
+            type="text" 
+            value={registerForm.fullName} 
+            onChange={e => setRegisterForm({
+              ...registerForm,
+              fullName: e.target.value
+            })} 
+            placeholder="Escribe tu nombre completo" 
+            required 
+            className="rounded-xl h-12 bg-white dark:bg-black dark:text-white" 
+          />
         </div>
-      )}
+        
+        {isMobile ? (
+          <>
+            <div className="space-y-1.5">
+              <label htmlFor="register-email" className="block text-sm font-medium dark:text-white">
+                Email
+              </label>
+              <Input 
+                id="register-email" 
+                type="email" 
+                value={registerForm.email} 
+                onChange={e => setRegisterForm({
+                  ...registerForm,
+                  email: e.target.value
+                })} 
+                placeholder="Escribe tu correo" 
+                required 
+                className="rounded-xl h-12 bg-white dark:bg-black dark:text-white" 
+              />
+            </div>
+            
+            <div className="space-y-1.5">
+              <label htmlFor="register-password" className="block text-sm font-medium dark:text-white">
+                Contraseña
+              </label>
+              <div className="relative">
+                <Input 
+                  id="register-password" 
+                  type={showPassword ? "text" : "password"} 
+                  value={registerForm.password} 
+                  onChange={e => setRegisterForm({
+                    ...registerForm,
+                    password: e.target.value
+                  })} 
+                  placeholder="Escribe tu contraseña" 
+                  required 
+                  className="rounded-xl h-12 pr-10 bg-white dark:bg-black dark:text-white" 
+                />
+                <button 
+                  type="button" 
+                  onClick={togglePasswordVisibility} 
+                  className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500"
+                >
+                  {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+                </button>
+              </div>
+            </div>
+          </>
+        ) : (
+          <div className="grid grid-cols-2 gap-4">
+            <div className="space-y-1.5">
+              <label htmlFor="register-email" className="block text-sm font-medium dark:text-white">
+                Email
+              </label>
+              <Input 
+                id="register-email" 
+                type="email" 
+                value={registerForm.email} 
+                onChange={e => setRegisterForm({
+                  ...registerForm,
+                  email: e.target.value
+                })} 
+                placeholder="Escribe tu correo" 
+                required 
+                className="rounded-xl h-12 bg-white dark:bg-black dark:text-white" 
+              />
+            </div>
+            
+            <div className="space-y-1.5">
+              <label htmlFor="register-password" className="block text-sm font-medium dark:text-white">
+                Contraseña
+              </label>
+              <div className="relative">
+                <Input 
+                  id="register-password" 
+                  type={showPassword ? "text" : "password"} 
+                  value={registerForm.password} 
+                  onChange={e => setRegisterForm({
+                    ...registerForm,
+                    password: e.target.value
+                  })} 
+                  placeholder="Escribe tu contraseña" 
+                  required 
+                  className="rounded-xl h-12 pr-10 bg-white dark:bg-black dark:text-white" 
+                />
+                <button 
+                  type="button" 
+                  onClick={togglePasswordVisibility} 
+                  className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500"
+                >
+                  {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
+        
+        <div className="flex justify-center mt-8">
+          <Button type="submit" isLoading={isLoading} className="w-full">
+            Siguiente
+          </Button>
+        </div>
+      </form>
       
-      <div className="flex justify-center mt-8">
-        <Button type="submit" isLoading={isLoading} className="w-full">
-          Siguiente
-        </Button>
+      <div className="text-center">
+        <p className="text-sm text-gray-600 dark:text-gray-400">
+          ¿Tienes cuenta? <Button variant="link" className="p-0 h-auto font-medium" onClick={switchToLogin}>Iniciar Sesión</Button>
+        </p>
       </div>
-    </form>
+    </div>
   );
 };
 
