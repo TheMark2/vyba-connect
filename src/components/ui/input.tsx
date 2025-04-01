@@ -2,14 +2,13 @@
 import * as React from "react"
 import { cn } from "@/lib/utils"
 
-const Input = React.forwardRef<HTMLInputElement, React.ComponentProps<"input">>(
+const Input = React.forwardRef<HTMLInputElement, React.ComponentPropsWithoutRef<"input">>(
   ({ className, onChange, ...props }, ref) => {
     const inputRef = React.useRef<HTMLInputElement>(null)
     const combinedRef = useCombinedRefs(ref, inputRef)
     
-    // Create a safe onChange handler that prevents default
+    // Eliminamos el preventDefault del onChange para que no interrumpa la escritura
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-      e.preventDefault();
       if (onChange) {
         onChange(e);
       }

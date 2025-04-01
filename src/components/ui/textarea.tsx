@@ -7,9 +7,8 @@ export interface TextareaProps
 
 const Textarea = React.forwardRef<HTMLTextAreaElement, TextareaProps>(
   ({ className, onChange, ...props }, ref) => {
-    // Create a safe onChange handler that prevents default
+    // Eliminamos el preventDefault del onChange para que no interrumpa la escritura
     const handleChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-      e.preventDefault();
       if (onChange) {
         onChange(e);
       }
