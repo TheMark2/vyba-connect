@@ -79,7 +79,7 @@ const LoginForm: React.FC<LoginFormProps> = ({
         <Button 
           type="button" 
           variant="ghost" 
-          className="p-2 bg-white hover:bg-gray-100 dark:bg-white dark:hover:bg-gray-100 dark:text-black" 
+          className="p-3 bg-white hover:bg-gray-100 dark:bg-white dark:hover:bg-gray-100 dark:text-black" 
           onClick={handleBackToOptions}
         >
           <ArrowLeft size={20} />
