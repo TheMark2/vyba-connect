@@ -170,17 +170,6 @@ const ContactDialog = ({
     }
   };
 
-  const eventTypes = [
-    { name: "Boda", value: "boda" },
-    { name: "Cumpleaños", value: "cumpleanos" },
-    { name: "Fiesta privada", value: "fiesta" },
-    { name: "Evento corporativo", value: "corporativo" },
-    { name: "Inauguración", value: "inauguracion" },
-    { name: "Aniversario", value: "aniversario" }
-  ];
-
-  const durations = ["1h", "2h", "3h", "4h", "Personalizado"];
-
   const dialogContent = (
     <>
       <div className={`text-3xl font-black ${isMobile ? 'mb-6 mt-4' : 'mb-8 mt-2'}`}>
