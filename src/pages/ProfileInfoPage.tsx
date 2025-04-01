@@ -9,6 +9,7 @@ import { toast } from "sonner";
 import { Link } from 'react-router-dom';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
+
 const ProfileInfoPage = () => {
   const navigate = useNavigate();
   const location = useLocation();
@@ -29,11 +30,13 @@ const ProfileInfoPage = () => {
     musicalTastes: '',
     mobile: ''
   });
+
   useEffect(() => {
     // Obtener el rol del state de la navegación o usar 'artist' por defecto
     const userRole = location.state?.role || 'artist';
     setRole(userRole);
   }, [location.state]);
+
   const handleArtistFormChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const {
       name,
@@ -44,6 +47,7 @@ const ProfileInfoPage = () => {
       [name]: value
     });
   };
+
   const handleSeekerFormChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const {
       name,
@@ -54,6 +58,7 @@ const ProfileInfoPage = () => {
       [name]: value
     });
   };
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     toast.success("Información guardada correctamente", {
@@ -78,6 +83,7 @@ const ProfileInfoPage = () => {
       }
     }, 1500);
   };
+
   const handleRoleChange = (newRole: 'artist' | 'seeker') => {
     setRole(newRole);
     // Limpiamos los campos al cambiar de rol
@@ -95,10 +101,18 @@ const ProfileInfoPage = () => {
       });
     }
   };
+
   return <>
       <Navbar />
       <div className="bg-vyba-cream dark:bg-vyba-dark-bg flex items-center justify-center min-h-[90vh] px-4 sm:px-6 md:px-10 lg:px-14 xl:px-16 py-8">
-        <Card className="border-none shadow-none bg-secondary dark:bg-vyba-dark-bg dark:border-vyba-dark-secondary rounded-3xl overflow-hidden w-full py-8 md:py-16 mx-auto">
+        <Card className={`
+          border-none shadow-none bg-secondary dark:bg-vyba-dark-bg dark:border-vyba-dark-secondary 
+          rounded-3xl overflow-hidden w-full mx-auto
+          ${isMobile ? 
+            'fixed top-0 left-0 right-0 bottom-0 h-screen rounded-none z-50 py-4 pt-16 overflow-y-auto' : 
+            'py-8 md:py-16'
+          }
+        `}>
           <div className="max-w-2xl mx-auto px-5 md:px-12">
             <h1 className="text-5xl md:text-5xl lg:text-6xl font-black mb-6 md:mb-10 text-center dark:text-white">Rellena tu información</h1>
             
@@ -207,4 +221,5 @@ const ProfileInfoPage = () => {
       </div>
     </>;
 };
+
 export default ProfileInfoPage;
