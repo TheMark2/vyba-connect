@@ -93,7 +93,7 @@ const LoginSection: React.FC<LoginSectionProps> = ({
             </p>
             <Button 
               variant="secondary" 
-              className="mt-2" 
+              className="mt-2 text-xs" 
               onClick={switchToRegister}
             >
               Regístrate
