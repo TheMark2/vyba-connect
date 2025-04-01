@@ -12,7 +12,7 @@ const SocialAuthButtons: React.FC<SocialAuthButtonsProps> = ({ onSocialLogin }) 
       <Button 
         type="button" 
         variant="secondary" 
-        className="w-full flex items-center justify-center gap-2 bg-white text-black hover:bg-gray-50 h-12 rounded-full" 
+        className="w-full flex items-center justify-center gap-2" 
         onClick={() => onSocialLogin('Google')}
       >
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" width="20px" height="20px">
@@ -27,7 +27,7 @@ const SocialAuthButtons: React.FC<SocialAuthButtonsProps> = ({ onSocialLogin }) 
       <Button 
         type="button" 
         variant="secondary" 
-        className="w-full flex items-center justify-center gap-2 bg-white text-black hover:bg-gray-50 h-12 rounded-full" 
+        className="w-full flex items-center justify-center gap-2" 
         onClick={() => onSocialLogin('Facebook')}
       >
         <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="#1877F2">
@@ -39,7 +39,7 @@ const SocialAuthButtons: React.FC<SocialAuthButtonsProps> = ({ onSocialLogin }) 
       <Button 
         type="button" 
         variant="secondary" 
-        className="w-full flex items-center justify-center gap-2 bg-white text-black hover:bg-gray-50 h-12 rounded-full" 
+        className="w-full flex items-center justify-center gap-2" 
         onClick={() => onSocialLogin('Apple')}
       >
         <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
