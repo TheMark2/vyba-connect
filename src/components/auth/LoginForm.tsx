@@ -1,10 +1,11 @@
 
-import React, { useState } from 'react';
+import React from 'react';
 import { Eye, EyeOff } from 'lucide-react';
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { motion } from "framer-motion";
 import { itemVariants } from './animation-variants';
+import { useIsMobile } from '@/hooks/use-mobile';
 
 interface LoginFormProps {
   loginForm: {
@@ -29,6 +30,8 @@ const LoginForm: React.FC<LoginFormProps> = ({
   togglePasswordVisibility, 
   handleLoginSubmit 
 }) => {
+  const isMobile = useIsMobile();
+  
   return (
     <motion.form variants={itemVariants} onSubmit={handleLoginSubmit} className="space-y-4">
       <div className="space-y-1.5">
@@ -50,9 +53,14 @@ const LoginForm: React.FC<LoginFormProps> = ({
       </div>
       
       <div className="space-y-1.5">
-        <label htmlFor="login-password" className="block text-sm font-medium dark:text-white">
-          Contraseña
-        </label>
+        <div className="flex justify-between">
+          <label htmlFor="login-password" className="block text-sm font-medium dark:text-white">
+            Contraseña
+          </label>
+          <a href="#" className="text-sm text-gray-600 hover:underline dark:text-gray-400">
+            ¿Olvidaste tu contraseña?
+          </a>
+        </div>
         <div className="relative">
           <Input 
             id="login-password" 
@@ -77,7 +85,11 @@ const LoginForm: React.FC<LoginFormProps> = ({
       </div>
       
       <div className="flex justify-center mt-8">
-        <Button type="submit" isLoading={isLoading}>
+        <Button 
+          type="submit" 
+          isLoading={isLoading}
+          className={isMobile ? 'w-full' : ''}
+        >
           Iniciar sesión
         </Button>
       </div>
