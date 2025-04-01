@@ -92,16 +92,18 @@ const AuthContent: React.FC<AuthContentProps> = ({
           </TabsList>
           
           <TabsContent value="login" key="login">
-            <LoginSection 
-              loginForm={loginForm} 
-              setLoginForm={setLoginForm} 
-              isLoading={isLoading} 
-              showPassword={showPassword} 
-              togglePasswordVisibility={togglePasswordVisibility} 
-              handleLoginSubmit={handleLoginSubmit} 
-              handleSocialLogin={handleSocialLogin} 
-              switchToRegister={switchToRegister} 
-            />
+            <div className="bg-secondary dark:bg-vyba-dark-secondary/30 rounded-3xl p-6">
+              <LoginSection 
+                loginForm={loginForm} 
+                setLoginForm={setLoginForm} 
+                isLoading={isLoading} 
+                showPassword={showPassword} 
+                togglePasswordVisibility={togglePasswordVisibility} 
+                handleLoginSubmit={handleLoginSubmit} 
+                handleSocialLogin={handleSocialLogin} 
+                switchToRegister={switchToRegister} 
+              />
+            </div>
           </TabsContent>
 
           <TabsContent value="register" key="register">
