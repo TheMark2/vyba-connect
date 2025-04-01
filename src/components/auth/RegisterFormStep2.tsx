@@ -35,9 +35,6 @@ const RegisterFormStep2: React.FC<RegisterFormStep2Props> = ({
 }) => {
   return (
     <form onSubmit={handleRegisterSubmit} className="space-y-8">
-      <div className="mb-6">
-        <h2 className="text-2xl font-bold text-center mb-6">¿Cómo quieres usar VYBA?</h2>
-      </div>
       
       <RadioGroup 
         value={registerForm.role} 
