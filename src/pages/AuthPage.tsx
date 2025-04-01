@@ -1,5 +1,5 @@
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -70,10 +70,40 @@ const AuthPage = () => {
   const [showEmailLogin, setShowEmailLogin] = useState(false);
   const isMobile = useIsMobile();
 
+  useEffect(() => {
+    console.log("[AuthPage] Componente montado");
+    console.log("[AuthPage] Estado inicial - isMobile:", isMobile);
+    console.log("[AuthPage] Estado inicial - showEmailLogin:", showEmailLogin);
+    console.log("[AuthPage] Estado inicial - defaultTab:", defaultTab);
+    console.log("[AuthPage] Estado inicial - registerStep:", registerStep);
+    
+    return () => {
+      console.log("[AuthPage] Componente desmontado");
+    };
+  }, []);
+
+  useEffect(() => {
+    console.log("[AuthPage] Cambio en vista móvil:", isMobile);
+  }, [isMobile]);
+
+  useEffect(() => {
+    console.log("[AuthPage] Cambio en showEmailLogin:", showEmailLogin);
+  }, [showEmailLogin]);
+
+  useEffect(() => {
+    console.log("[AuthPage] Cambio en defaultTab:", defaultTab);
+  }, [defaultTab]);
+
+  useEffect(() => {
+    console.log("[AuthPage] Cambio en registerStep:", registerStep);
+  }, [registerStep]);
+
   const handleLoginSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+    console.log("[AuthPage] handleLoginSubmit - Iniciando login con:", loginForm);
     setIsLoading(true);
     setTimeout(() => {
+      console.log("[AuthPage] handleLoginSubmit - Login exitoso");
       toast.success("Inicio de sesión exitoso", {
         description: "Redirigiendo a la página principal...",
         position: "bottom-center"
@@ -87,15 +117,19 @@ const AuthPage = () => {
 
   const handleRegisterSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+    console.log("[AuthPage] handleRegisterSubmit - Paso actual:", registerStep);
+    console.log("[AuthPage] handleRegisterSubmit - Datos:", registerForm);
     setIsLoading(true);
     if (registerStep < 2) {
       setTimeout(() => {
         setIsLoading(false);
         setRegisterStep(registerStep + 1);
+        console.log("[AuthPage] handleRegisterSubmit - Avanzando al paso:", registerStep + 1);
       }, 800);
       return;
     }
     setTimeout(() => {
+      console.log("[AuthPage] handleRegisterSubmit - Registro completado, redirigiendo a profile-info");
       navigate('/profile-info', {
         state: {
           role: registerForm.role
@@ -105,6 +139,7 @@ const AuthPage = () => {
   };
 
   const handleSocialLogin = (provider: string) => {
+    console.log("[AuthPage] handleSocialLogin - Intentando login con:", provider);
     toast.info(`Iniciando sesión con ${provider}`, {
       description: "Esta función estará disponible próximamente",
       position: "bottom-center"
@@ -112,30 +147,36 @@ const AuthPage = () => {
   };
 
   const togglePasswordVisibility = () => {
+    console.log("[AuthPage] togglePasswordVisibility - Cambiando visibilidad:", !showPassword);
     setShowPassword(!showPassword);
   };
 
   const handleTabChange = (value: string) => {
+    console.log("[AuthPage] handleTabChange - Cambiando a tab:", value);
     setDefaultTab(value);
     setRegisterStep(1);
     setShowEmailLogin(false);
   };
 
   const switchToRegister = () => {
+    console.log("[AuthPage] switchToRegister - Cambiando a registro");
     setDefaultTab("register");
     setRegisterStep(1);
     setShowEmailLogin(false);
   };
 
   const handleBackStep = () => {
+    console.log("[AuthPage] handleBackStep - Volviendo al paso 1");
     setRegisterStep(1);
   };
 
   const handleShowEmailLogin = () => {
+    console.log("[AuthPage] handleShowEmailLogin - Mostrando login por email");
     setShowEmailLogin(true);
   };
 
   const handleBackToOptions = () => {
+    console.log("[AuthPage] handleBackToOptions - Volviendo a opciones");
     setShowEmailLogin(false);
   };
 
@@ -143,6 +184,8 @@ const AuthPage = () => {
   const artistFeatures = ["Crea tu perfil profesional", "Recibe solicitudes de eventos", "Gestiona tu calendario de actuaciones", "Muestra tu portafolio a posibles clientes"];
 
   const MobileAuthView = () => {
+    console.log("[AuthPage] Renderizando MobileAuthView - showEmailLogin:", showEmailLogin);
+    
     return <div className="min-h-[85vh] flex flex-col justify-center p-6 bg-secondary dark:bg-vyba-dark-bg">
         <AnimatePresence mode="wait">
           {!showEmailLogin ? (
@@ -165,18 +208,21 @@ const AuthPage = () => {
               <div className="w-full space-y-4">
                 <Button variant="outline" className="w-full border-none bg-white text-black hover:bg-gray-100" onClick={(e) => {
                   e.preventDefault();
+                  console.log("[MobileAuthView] Click en botón Google");
                   handleSocialLogin('Google');
                 }}>
                   Continuar con Google
                 </Button>
                 <Button variant="outline" className="w-full border-none bg-white text-black hover:bg-gray-100" onClick={(e) => {
                   e.preventDefault();
+                  console.log("[MobileAuthView] Click en botón Facebook");
                   handleSocialLogin('Facebook');
                 }}>
                   Continuar con Facebook
                 </Button>
                 <Button variant="outline" className="w-full border-none bg-white text-black hover:bg-gray-100" onClick={(e) => {
                   e.preventDefault();
+                  console.log("[MobileAuthView] Click en botón email");
                   handleShowEmailLogin();
                 }}>
                   Continuar con mail
@@ -187,6 +233,7 @@ const AuthPage = () => {
                 <p className="text-sm">
                   No tienes cuenta? <span className="font-bold" onClick={(e) => {
                     e.preventDefault();
+                    console.log("[MobileAuthView] Click en regístrate");
                     switchToRegister();
                   }}>Regístrate</span>
                 </p>
@@ -211,6 +258,7 @@ const AuthPage = () => {
               
               <form onSubmit={(e) => {
                 e.preventDefault();
+                console.log("[MobileAuthView] Formulario móvil enviado");
                 handleLoginSubmit(e);
               }} className="w-full space-y-6 max-w-2xl">
                 <div className="space-y-2">
@@ -223,9 +271,11 @@ const AuthPage = () => {
                     value={loginForm.email} 
                     onChange={(e) => {
                       e.preventDefault();
+                      const newEmail = e.target.value;
+                      console.log("[MobileAuthView] Email cambiado:", newEmail);
                       setLoginForm({
                         ...loginForm,
-                        email: e.target.value
+                        email: newEmail
                       });
                     }} 
                     placeholder="Email" 
@@ -245,9 +295,11 @@ const AuthPage = () => {
                       value={loginForm.password} 
                       onChange={(e) => {
                         e.preventDefault();
+                        const newPassword = e.target.value;
+                        console.log("[MobileAuthView] Contraseña cambiada:", newPassword.length > 0 ? '*'.repeat(newPassword.length) : '');
                         setLoginForm({
                           ...loginForm,
-                          password: e.target.value
+                          password: newPassword
                         });
                       }} 
                       placeholder="Contraseña" 
@@ -258,6 +310,7 @@ const AuthPage = () => {
                       type="button" 
                       onClick={(e) => {
                         e.preventDefault();
+                        console.log("[MobileAuthView] Toggle visibilidad contraseña");
                         togglePasswordVisibility();
                       }} 
                       className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500"
@@ -268,7 +321,7 @@ const AuthPage = () => {
                 </div>
                 
                 <div className="pt-4 content-center">
-                  <Button type="submit" isLoading={isLoading}>
+                  <Button type="submit" isLoading={isLoading} onClick={() => console.log("[MobileAuthView] Botón de iniciar sesión presionado")}>
                     Iniciar sesión
                   </Button>
                 </div>
@@ -278,6 +331,7 @@ const AuthPage = () => {
                 <p className="text-sm">
                   No tienes cuenta? <span className="font-bold" onClick={(e) => {
                     e.preventDefault();
+                    console.log("[MobileAuthView] Click en cambiar a registro desde email");
                     switchToRegister();
                   }}>Regístrate</span>
                 </p>
@@ -287,6 +341,8 @@ const AuthPage = () => {
         </AnimatePresence>
       </div>;
   };
+
+  console.log("[AuthPage] Renderizando AuthPage - isMobile:", isMobile);
 
   return (
     <PageTransition>
