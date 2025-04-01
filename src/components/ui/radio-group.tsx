@@ -74,7 +74,7 @@ const RoleSelector = React.forwardRef<
           <RadioGroupPrimitive.Item
             ref={ref}
             className={cn(
-              "aspect-square h-5 w-5 rounded-full transition-all duration-200 focus:outline-none",
+              "aspect-square py-3.5 px-6 rounded-full transition-all duration-200 focus:outline-none",
               isSelected 
                 ? "border-[1.5px] border-black dark:border-white" 
                 : "border-0 bg-gray-200 dark:bg-gray-700",
