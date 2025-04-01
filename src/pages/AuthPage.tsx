@@ -1,5 +1,4 @@
-
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -12,6 +11,7 @@ import { RadioGroup, RoleSelector } from '@/components/ui/radio-group';
 import { motion, AnimatePresence } from "framer-motion";
 import { PageTransition } from '@/components/ui/page-transition';
 import { useIsMobile } from '@/hooks/use-mobile';
+import { Drawer, DrawerContent, DrawerTrigger } from "@/components/ui/drawer";
 
 const formVariants = {
   hidden: {
@@ -98,7 +98,7 @@ const AuthPage = () => {
     console.log("[AuthPage] Cambio en registerStep:", registerStep);
   }, [registerStep]);
 
-  const handleLoginSubmit = (e: React.FormEvent) => {
+  const handleLoginSubmit = useCallback((e: React.FormEvent) => {
     e.preventDefault();
     console.log("[AuthPage] handleLoginSubmit - Iniciando login con:", loginForm);
     setIsLoading(true);
@@ -113,9 +113,9 @@ const AuthPage = () => {
         navigate('/');
       }, 500);
     }, 1000);
-  };
+  }, [loginForm, navigate]);
 
-  const handleRegisterSubmit = (e: React.FormEvent) => {
+  const handleRegisterSubmit = useCallback((e: React.FormEvent) => {
     e.preventDefault();
     console.log("[AuthPage] handleRegisterSubmit - Paso actual:", registerStep);
     console.log("[AuthPage] handleRegisterSubmit - Datos:", registerForm);
@@ -136,49 +136,65 @@ const AuthPage = () => {
         }
       });
     }, 1000);
-  };
+  }, [registerStep, registerForm, navigate]);
 
-  const handleSocialLogin = (provider: string) => {
+  const handleSocialLogin = useCallback((provider: string) => {
     console.log("[AuthPage] handleSocialLogin - Intentando login con:", provider);
     toast.info(`Iniciando sesión con ${provider}`, {
       description: "Esta función estará disponible próximamente",
       position: "bottom-center"
     });
-  };
+  }, []);
 
-  const togglePasswordVisibility = () => {
+  const togglePasswordVisibility = useCallback(() => {
     console.log("[AuthPage] togglePasswordVisibility - Cambiando visibilidad:", !showPassword);
     setShowPassword(!showPassword);
-  };
+  }, [showPassword]);
 
-  const handleTabChange = (value: string) => {
+  const handleTabChange = useCallback((value: string) => {
     console.log("[AuthPage] handleTabChange - Cambiando a tab:", value);
     setDefaultTab(value);
     setRegisterStep(1);
     setShowEmailLogin(false);
-  };
+  }, []);
 
-  const switchToRegister = () => {
+  const switchToRegister = useCallback(() => {
     console.log("[AuthPage] switchToRegister - Cambiando a registro");
     setDefaultTab("register");
     setRegisterStep(1);
     setShowEmailLogin(false);
-  };
+  }, []);
 
-  const handleBackStep = () => {
+  const handleBackStep = useCallback(() => {
     console.log("[AuthPage] handleBackStep - Volviendo al paso 1");
     setRegisterStep(1);
-  };
+  }, []);
 
-  const handleShowEmailLogin = () => {
+  const handleShowEmailLogin = useCallback(() => {
     console.log("[AuthPage] handleShowEmailLogin - Mostrando login por email");
     setShowEmailLogin(true);
-  };
+  }, []);
 
-  const handleBackToOptions = () => {
+  const handleBackToOptions = useCallback(() => {
     console.log("[AuthPage] handleBackToOptions - Volviendo a opciones");
     setShowEmailLogin(false);
-  };
+  }, []);
+
+  const updateLoginForm = useCallback((field: 'email' | 'password', value: string) => {
+    console.log(`[AuthPage] updateLoginForm - Actualizando ${field}:`, field === 'password' ? '*'.repeat(value.length) : value);
+    setLoginForm(prevState => ({
+      ...prevState,
+      [field]: value
+    }));
+  }, []);
+
+  const updateRegisterForm = useCallback((field: 'fullName' | 'email' | 'password' | 'role', value: string) => {
+    console.log(`[AuthPage] updateRegisterForm - Actualizando ${field}:`, field === 'password' ? '*'.repeat(value.length) : value);
+    setRegisterForm(prevState => ({
+      ...prevState,
+      [field]: value
+    }));
+  }, []);
 
   const seekerFeatures = ["Encuentra artistas según tus necesidades", "Acceso completo al catálogo de profesionales", "Comunícate directamente con los artistas"];
   const artistFeatures = ["Crea tu perfil profesional", "Recibe solicitudes de eventos", "Gestiona tu calendario de actuaciones", "Muestra tu portafolio a posibles clientes"];
@@ -186,7 +202,8 @@ const AuthPage = () => {
   const MobileAuthView = () => {
     console.log("[AuthPage] Renderizando MobileAuthView - showEmailLogin:", showEmailLogin);
     
-    return <div className="min-h-[85vh] flex flex-col justify-center p-6 bg-secondary dark:bg-vyba-dark-bg">
+    return (
+      <div className="min-h-[85vh] flex flex-col justify-center p-6 bg-secondary dark:bg-vyba-dark-bg">
         <AnimatePresence mode="wait">
           {!showEmailLogin ? (
             <motion.div key="options" initial={{
@@ -252,6 +269,19 @@ const AuthPage = () => {
             }} transition={{
               duration: 0.3
             }} className="flex flex-col items-center">
+              <div className="w-full flex mb-6">
+                <Button 
+                  variant="ghost" 
+                  className="p-2 -ml-2" 
+                  onClick={(e) => {
+                    e.preventDefault();
+                    handleBackToOptions();
+                  }}
+                >
+                  <ArrowLeft size={24} />
+                </Button>
+              </div>
+              
               <h1 className="text-5xl font-black mb-2">Bienvenido/a</h1>
               <h1 className="text-5xl font-black mb-6">a VYBA</h1>
               <p className="text-2xl mb-8">Inicia sesión o regístrate</p>
@@ -270,13 +300,9 @@ const AuthPage = () => {
                     type="email" 
                     value={loginForm.email} 
                     onChange={(e) => {
-                      e.preventDefault();
                       const newEmail = e.target.value;
                       console.log("[MobileAuthView] Email cambiado:", newEmail);
-                      setLoginForm({
-                        ...loginForm,
-                        email: newEmail
-                      });
+                      updateLoginForm('email', newEmail);
                     }} 
                     placeholder="Email" 
                     className="bg-white" 
@@ -294,13 +320,9 @@ const AuthPage = () => {
                       type={showPassword ? "text" : "password"} 
                       value={loginForm.password} 
                       onChange={(e) => {
-                        e.preventDefault();
                         const newPassword = e.target.value;
                         console.log("[MobileAuthView] Contraseña cambiada:", newPassword.length > 0 ? '*'.repeat(newPassword.length) : '');
-                        setLoginForm({
-                          ...loginForm,
-                          password: newPassword
-                        });
+                        updateLoginForm('password', newPassword);
                       }} 
                       placeholder="Contraseña" 
                       className="bg-white" 
@@ -339,7 +361,8 @@ const AuthPage = () => {
             </motion.div>
           )}
         </AnimatePresence>
-      </div>;
+      </div>
+    );
   };
 
   console.log("[AuthPage] Renderizando AuthPage - isMobile:", isMobile);
@@ -453,11 +476,7 @@ const AuthPage = () => {
                           type="email" 
                           value={loginForm.email} 
                           onChange={(e) => {
-                            e.preventDefault();
-                            setLoginForm({
-                              ...loginForm,
-                              email: e.target.value
-                            });
+                            updateLoginForm('email', e.target.value);
                           }} 
                           placeholder="Escribe tu correo" 
                           required 
@@ -475,11 +494,7 @@ const AuthPage = () => {
                             type={showPassword ? "text" : "password"} 
                             value={loginForm.password} 
                             onChange={(e) => {
-                              e.preventDefault();
-                              setLoginForm({
-                                ...loginForm,
-                                password: e.target.value
-                              });
+                              updateLoginForm('password', e.target.value);
                             }} 
                             placeholder="Escribe tu contraseña" 
                             required 
@@ -579,11 +594,7 @@ const AuthPage = () => {
                               type="text" 
                               value={registerForm.fullName} 
                               onChange={(e) => {
-                                e.preventDefault();
-                                setRegisterForm({
-                                  ...registerForm,
-                                  fullName: e.target.value
-                                });
+                                updateRegisterForm('fullName', e.target.value);
                               }} 
                               placeholder="Escribe tu nombre completo" 
                               required 
@@ -601,11 +612,7 @@ const AuthPage = () => {
                                 type="email" 
                                 value={registerForm.email} 
                                 onChange={(e) => {
-                                  e.preventDefault();
-                                  setRegisterForm({
-                                    ...registerForm,
-                                    email: e.target.value
-                                  });
+                                  updateRegisterForm('email', e.target.value);
                                 }} 
                                 placeholder="Escribe tu correo" 
                                 required 
@@ -623,11 +630,7 @@ const AuthPage = () => {
                                   type={showPassword ? "text" : "password"} 
                                   value={registerForm.password} 
                                   onChange={(e) => {
-                                    e.preventDefault();
-                                    setRegisterForm({
-                                      ...registerForm,
-                                      password: e.target.value
-                                    });
+                                    updateRegisterForm('password', e.target.value);
                                   }} 
                                   placeholder="Escribe tu contraseña" 
                                   required 
@@ -668,10 +671,7 @@ const AuthPage = () => {
                             <RadioGroup 
                               value={registerForm.role} 
                               onValueChange={(value) => {
-                                setRegisterForm({
-                                  ...registerForm,
-                                  role: value
-                                });
+                                updateRegisterForm('role', value);
                               }} 
                               className="space-y-0"
                             >
