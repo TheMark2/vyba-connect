@@ -72,15 +72,10 @@ const RegisterSection: React.FC<RegisterSectionProps> = ({
           isLoading={isLoading}
           handleRegisterSubmit={handleRegisterSubmit}
           handleBackStep={handleBackStep}
+          switchToLogin={switchToLogin}
           artistFeatures={artistFeatures}
           seekerFeatures={seekerFeatures}
         />
-        
-        <div className="text-center mt-6">
-          <p className="text-sm text-gray-600 dark:text-gray-400">
-            ¿Tienes cuenta? <Button variant="link" className="p-0 h-auto font-medium" onClick={switchToLogin}>Iniciar Sesión</Button>
-          </p>
-        </div>
       </div>
     );
   }
