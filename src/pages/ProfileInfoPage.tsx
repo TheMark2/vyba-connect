@@ -86,8 +86,8 @@ const ProfileInfoPage = () => {
     <PageTransition>
       <Navbar />
       <div className="bg-vyba-cream dark:bg-vyba-dark-bg min-h-[90vh] px-6 py-16 md:px-10 lg:px-14 xl:px-16">
-        <div className="max-w-2xl mx-auto">
-          <Card className="border-none shadow-none bg-secondary dark:bg-vyba-dark-secondary/30 rounded-3xl overflow-hidden max-w-2xl mx-auto px-6 md:px-12 py-16">
+        <div className="bg-secondary dark:bg-vyba-dark-secondary/30 rounded-3xl max-w-2xl mx-auto overflow-hidden">
+          <Card className="border-none shadow-none dark:bg-transparent dark:border-vyba-dark-secondary rounded-3xl overflow-hidden max-w-2xl mx-auto px-6 md:px-12 py-16">
             <h1 className="text-4xl md:text-6xl font-black mb-10 text-center dark:text-white">Rellena tu información</h1>
             
             <div className="flex justify-center mb-12">

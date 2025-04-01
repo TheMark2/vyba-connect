@@ -73,7 +73,7 @@ const ArtistThankYouPage = () => {
     <PageTransition>
       <Navbar />
       <div className="bg-vyba-cream dark:bg-vyba-dark-bg flex items-center justify-center min-h-[90vh] px-6 md:px-10 lg:px-14 xl:px-16">
-        <Card className="border-none shadow-none bg-secondary dark:bg-vyba-dark-secondary/30 rounded-3xl overflow-hidden w-full py-16 mx-auto">
+        <Card className="border-none shadow-none bg-secondary dark:bg-vyba-dark-bg dark:border-vyba-dark-secondary rounded-3xl overflow-hidden w-full py-16 mx-auto">
           <div className="max-w-3xl mx-auto px-6 flex flex-col items-center">
             <h1 className="text-4xl md:text-6xl font-black mb-4 text-center dark:text-white">
               Gracias por formar parte de VYBA
@@ -156,7 +156,7 @@ const ArtistThankYouPage = () => {
                 <ArrowLeft size={20} strokeWidth={3} />
               </Button>
               
-              <Button onClick={handleFinalize} className="w-full order-1 ">
+              <Button onClick={handleFinalize} className="w-auto order-1 ">
                 Finalizar
               </Button>
             </div>
