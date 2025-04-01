@@ -37,8 +37,8 @@ const RegisterFormStep1: React.FC<RegisterFormStep1Props> = ({
   const isMobile = useIsMobile();
 
   return (
-    <div>
-      <form onSubmit={handleRegisterSubmit} className="space-y-4 mb-8">
+    <div className="mb-8">
+      <form onSubmit={handleRegisterSubmit} className="space-y-4">
         <div className="space-y-1.5">
           <label htmlFor="register-name" className="block text-sm font-medium dark:text-white">
             Nombre completo
@@ -109,10 +109,17 @@ const RegisterFormStep1: React.FC<RegisterFormStep1Props> = ({
         </div>
       </form>
       
-      <div className="text-center">
-        <p className="text-sm text-gray-600 dark:text-gray-400">
-          ¿Tienes cuenta? <Button variant="link" className="p-0 h-auto font-medium" onClick={switchToLogin}>Iniciar Sesión</Button>
+      <div className="text-center mt-4 pt-2">
+        <p className="text-sm text-gray-600">
+          No tienes cuenta?
         </p>
+        <Button 
+          variant="secondary" 
+          className="mt-2 text-xs" 
+          onClick={switchToRegister}
+        >
+          Regístrate
+        </Button>
       </div>
     </div>
   );
