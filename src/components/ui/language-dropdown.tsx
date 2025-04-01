@@ -46,12 +46,9 @@ export function LanguageDropdown({ className }: LanguageDropdownProps) {
       <DropdownMenuContent 
         className={cn(
           "min-w-[225px] bg-white dark:bg-[#575654] border-none rounded-3xl p-3 shadow-none mb-2",
-          isMobile && "ml-6", // Increased left margin on mobile
-          "absolute" // Aseguramos posicionamiento absoluto
+          isMobile && "ml-6" // Increased left margin on mobile
         )}
         align="center"
-        avoidCollisions={true} // Evitar colisiones
-        sideOffset={8} // Mayor distancia del trigger
       >
         {languages.map((language) => (
           <DropdownMenuItem
