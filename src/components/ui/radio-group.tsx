@@ -62,7 +62,7 @@ const RoleSelector = React.forwardRef<
           : "bg-white dark:bg-vyba-dark-secondary/20 hover:bg-white/90 dark:hover:bg-vyba-dark-secondary/25"
       )}
     >
-      <label className="cursor-pointer block mb-0">
+      <label className="cursor-pointer block pb-0">
         <div className="flex items-center gap-4">
           <span className={cn(
             "text-base flex-grow font-bold transition-all duration-200",
