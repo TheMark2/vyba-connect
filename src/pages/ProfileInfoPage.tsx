@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { Button } from "@/components/ui/button";
@@ -9,13 +8,7 @@ import Navbar from '@/components/Navbar';
 import { toast } from "sonner";
 import { Link } from 'react-router-dom';
 import { useIsMobile } from '@/hooks/use-mobile';
-import { 
-  DropdownMenu, 
-  DropdownMenuContent, 
-  DropdownMenuItem,
-  DropdownMenuTrigger
-} from "@/components/ui/dropdown-menu";
-
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 const ProfileInfoPage = () => {
   const navigate = useNavigate();
   const location = useLocation();
@@ -36,29 +29,31 @@ const ProfileInfoPage = () => {
     musicalTastes: '',
     mobile: ''
   });
-
   useEffect(() => {
     // Obtener el rol del state de la navegación o usar 'artist' por defecto
     const userRole = location.state?.role || 'artist';
     setRole(userRole);
   }, [location.state]);
-
   const handleArtistFormChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
+    const {
+      name,
+      value
+    } = e.target;
     setArtistForm({
       ...artistForm,
       [name]: value
     });
   };
-
   const handleSeekerFormChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
+    const {
+      name,
+      value
+    } = e.target;
     setSeekerForm({
       ...seekerForm,
       [name]: value
     });
   };
-
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     toast.success("Información guardada correctamente", {
@@ -70,16 +65,19 @@ const ProfileInfoPage = () => {
     setTimeout(() => {
       if (role === 'artist') {
         navigate('/thank-you', {
-          state: { artistInfo: artistForm }
+          state: {
+            artistInfo: artistForm
+          }
         });
       } else {
         navigate('/seeker-thank-you', {
-          state: { seekerInfo: seekerForm }
+          state: {
+            seekerInfo: seekerForm
+          }
         });
       }
     }, 1500);
   };
-
   const handleRoleChange = (newRole: 'artist' | 'seeker') => {
     setRole(newRole);
     // Limpiamos los campos al cambiar de rol
@@ -97,9 +95,7 @@ const ProfileInfoPage = () => {
       });
     }
   };
-
-  return (
-    <>
+  return <>
       <Navbar />
       <div className="bg-vyba-cream dark:bg-vyba-dark-bg flex items-center justify-center min-h-[90vh] px-4 sm:px-6 md:px-10 lg:px-14 xl:px-16 py-8">
         <Card className="border-none shadow-none bg-secondary dark:bg-vyba-dark-bg dark:border-vyba-dark-secondary rounded-3xl overflow-hidden w-full py-8 md:py-16 mx-auto">
@@ -109,11 +105,7 @@ const ProfileInfoPage = () => {
             <div className="flex justify-center mb-8 md:mb-12">
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
-                  <div 
-                    className={`inline-flex items-center gap-3 md:gap-6 px-4 md:px-6 py-2 rounded-full bg-white dark:bg-vyba-dark-secondary transition-all duration-300 cursor-pointer relative overflow-hidden ${isHovering ? 'pr-10 md:pr-12' : ''}`}
-                    onMouseEnter={() => setIsHovering(true)}
-                    onMouseLeave={() => setIsHovering(false)}
-                  >
+                  <div className={`inline-flex items-center gap-3 md:gap-6 px-4 md:px-6 py-2 rounded-full bg-white dark:bg-vyba-dark-secondary transition-all duration-300 cursor-pointer relative overflow-hidden ${isHovering ? 'pr-10 md:pr-12' : ''}`} onMouseEnter={() => setIsHovering(true)} onMouseLeave={() => setIsHovering(false)}>
                     {role === 'artist' ? <>
                         <Music size={isMobile ? 16 : 20} className="text-black dark:text-white" />
                         <div className="flex flex-col">                    
@@ -129,39 +121,28 @@ const ProfileInfoPage = () => {
                       </>}
                     
                     <div className={`absolute right-3 transform transition-all duration-300 ${isHovering ? 'opacity-100 translate-x-0' : 'opacity-0 translate-x-5'}`}>
-                      <ChevronDown 
-                        size={isMobile ? 16 : 18} 
-                        className="text-black dark:text-white" 
-                      />
+                      <ChevronDown size={isMobile ? 16 : 18} className="text-black dark:text-white" />
                     </div>
                   </div>
                 </DropdownMenuTrigger>
-                <DropdownMenuContent 
-                  className="min-w-[180px] md:min-w-[225px] bg-white dark:bg-[#575654] border-none rounded-3xl p-3 shadow-none mb-2"
-                  align="center"
-                >
-                  {role === 'artist' ? (
-                    <DropdownMenuItem onClick={() => handleRoleChange('seeker')}>
+                <DropdownMenuContent className="min-w-[180px] md:min-w-[225px] bg-white dark:bg-[#575654] border-none rounded-3xl p-3 shadow-none mb-2" align="center">
+                  {role === 'artist' ? <DropdownMenuItem onClick={() => handleRoleChange('seeker')}>
                       <div className="flex items-center gap-3">
                         <Search size={16} />
                         <span>Buscador</span>
                       </div>
-                    </DropdownMenuItem>
-                  ) : (
-                    <DropdownMenuItem onClick={() => handleRoleChange('artist')}>
+                    </DropdownMenuItem> : <DropdownMenuItem onClick={() => handleRoleChange('artist')}>
                       <div className="flex items-center gap-3">
                         <Music size={16} />
                         <span>Artista</span>
                       </div>
-                    </DropdownMenuItem>
-                  )}
+                    </DropdownMenuItem>}
                 </DropdownMenuContent>
               </DropdownMenu>
             </div>
             
             <form onSubmit={handleSubmit} className="space-y-5 md:space-y-6">
-              {role === 'artist' ?
-                <>
+              {role === 'artist' ? <>
                   <div className="space-y-1.5">
                     <label htmlFor="artistName" className="block text-sm font-medium dark:text-white">
                       Nombre de artista
@@ -184,13 +165,12 @@ const ProfileInfoPage = () => {
                       <Input id="artistType" name="artistType" value={artistForm.artistType} onChange={handleArtistFormChange} placeholder="Ej: Solista, Banda, DJ" className="rounded-xl h-10 md:h-12 bg-white dark:bg-white dark:text-black text-sm" required />
                     </div>
                   </div>
-                </> :
-                <>
+                </> : <>
                   <div className="space-y-1.5">
                     <label htmlFor="fullName" className="block text-sm font-medium dark:text-white">
                       Nombre completo
                     </label>
-                    <Input id="fullName" name="fullName" value={seekerForm.fullName} onChange={handleSeekerFormChange} placeholder="Escribe tu nombre completo" className="rounded-xl h-10 md:h-12 bg-white dark:bg-white dark:text-black text-sm" required />
+                    <Input id="fullName" name="fullName" value={seekerForm.fullName} onChange={handleSeekerFormChange} placeholder="Escribe tu nombre completo" required className="rounded-xl h-12 bg-white dark:bg-white dark:text-black text-sm" />
                   </div>
                   
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -198,14 +178,14 @@ const ProfileInfoPage = () => {
                       <label htmlFor="musicalTastes" className="block text-sm font-medium dark:text-white">
                         Gustos musicales
                       </label>
-                      <Input id="musicalTastes" name="musicalTastes" value={seekerForm.musicalTastes} onChange={handleSeekerFormChange} placeholder="Ej: Rock, Jazz, Clásica" className="rounded-xl h-10 md:h-12 bg-white dark:bg-white dark:text-black text-sm" required />
+                      <Input id="musicalTastes" name="musicalTastes" value={seekerForm.musicalTastes} onChange={handleSeekerFormChange} placeholder="Ej: Rock, Jazz, Clásica" required className="rounded-xl h-12 bg-white dark:bg-white dark:text-black text-sm" />
                     </div>
                     
                     <div className="space-y-1.5">
                       <label htmlFor="mobile" className="block text-sm font-medium dark:text-white">
                         Móvil
                       </label>
-                      <Input id="mobile" name="mobile" type="tel" value={seekerForm.mobile} onChange={handleSeekerFormChange} placeholder="Tu número de teléfono" className="rounded-xl h-10 md:h-12 bg-white dark:bg-white dark:text-black text-sm" required />
+                      <Input id="mobile" name="mobile" type="tel" value={seekerForm.mobile} onChange={handleSeekerFormChange} placeholder="Tu número de teléfono" required className="rounded-xl h-12 bg-white dark:bg-white dark:text-black text-sm" />
                     </div>
                   </div>
                 </>}
@@ -225,8 +205,6 @@ const ProfileInfoPage = () => {
           </div>
         </Card>
       </div>
-    </>
-  );
+    </>;
 };
-
 export default ProfileInfoPage;
