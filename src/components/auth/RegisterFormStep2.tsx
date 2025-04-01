@@ -3,8 +3,6 @@ import React from 'react';
 import { Music, Search, ArrowLeft } from 'lucide-react';
 import { Button } from "@/components/ui/button";
 import { RadioGroup, RoleSelector } from '@/components/ui/radio-group';
-import { motion } from "framer-motion";
-import { itemVariants } from './animation-variants';
 
 interface RegisterFormStep2Props {
   registerForm: {
@@ -36,7 +34,7 @@ const RegisterFormStep2: React.FC<RegisterFormStep2Props> = ({
   seekerFeatures
 }) => {
   return (
-    <motion.form variants={itemVariants} onSubmit={handleRegisterSubmit} className="space-y-8">
+    <form onSubmit={handleRegisterSubmit} className="space-y-8">
       <div className="overflow-hidden rounded-2xl">
         <RadioGroup 
           value={registerForm.role} 
@@ -79,7 +77,7 @@ const RegisterFormStep2: React.FC<RegisterFormStep2Props> = ({
           Siguiente
         </Button>
       </div>
-    </motion.form>
+    </form>
   );
 };
 

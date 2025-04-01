@@ -1,10 +1,8 @@
 
-import React, { useState } from 'react';
+import React from 'react';
 import { Eye, EyeOff } from 'lucide-react';
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { motion } from "framer-motion";
-import { itemVariants } from './animation-variants';
 
 interface LoginFormProps {
   loginForm: {
@@ -30,7 +28,7 @@ const LoginForm: React.FC<LoginFormProps> = ({
   handleLoginSubmit 
 }) => {
   return (
-    <motion.form variants={itemVariants} onSubmit={handleLoginSubmit} className="space-y-4">
+    <form onSubmit={handleLoginSubmit} className="space-y-4">
       <div className="space-y-1.5">
         <label htmlFor="login-email" className="block text-sm font-medium dark:text-white">
           Email
@@ -81,7 +79,7 @@ const LoginForm: React.FC<LoginFormProps> = ({
           Iniciar sesión
         </Button>
       </div>
-    </motion.form>
+    </form>
   );
 };
 

@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { Button } from "@/components/ui/button";
@@ -6,7 +7,7 @@ import { ArrowLeft, FileText, Music, GraduationCap, FileArchive, Download } from
 import Navbar from '@/components/Navbar';
 import { Link } from 'react-router-dom';
 import { PageTransition } from '@/components/ui/page-transition';
-import { motion } from 'framer-motion';
+
 const ArtistThankYouPage = () => {
   const navigate = useNavigate();
   const location = useLocation();
@@ -26,16 +27,20 @@ const ArtistThankYouPage = () => {
     height: 0
   });
   const [elementRef, setElementRef] = useState<HTMLDivElement | null>(null);
+  
   useEffect(() => {
     const randomArtistNumber = Math.floor(Math.random() * 100) + 1;
     setArtistNumber(randomArtistNumber);
   }, []);
+  
   const handleFinalize = () => {
     navigate('/');
   };
+  
   const handleGoBack = () => {
     navigate(-1);
   };
+  
   const handleDownloadDiploma = () => {
     const blob = new Blob(['Diploma personalizado para ' + artistInfo.artistName], {
       type: 'text/plain'
@@ -49,6 +54,7 @@ const ArtistThankYouPage = () => {
     document.body.removeChild(a);
     URL.revokeObjectURL(url);
   };
+  
   const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
     if (elementRef) {
       const rect = elementRef.getBoundingClientRect();
@@ -62,42 +68,27 @@ const ArtistThankYouPage = () => {
       });
     }
   };
-  const containerVariants = {
-    hidden: {
-      opacity: 0
-    },
-    visible: {
-      opacity: 1,
-      transition: {
-        when: "beforeChildren",
-        staggerChildren: 0.2
-      }
-    }
-  };
-  const itemVariants = {
-    hidden: {
-      opacity: 0,
-      y: 20
-    },
-    visible: {
-      opacity: 1,
-      y: 0
-    }
-  };
-  return <PageTransition>
+
+  return (
+    <PageTransition>
       <Navbar />
       <div className="bg-vyba-cream dark:bg-vyba-dark-bg flex items-center justify-center min-h-[90vh] px-6 md:px-10 lg:px-14 xl:px-16">
         <Card className="border-none shadow-none bg-secondary dark:bg-vyba-dark-bg dark:border-vyba-dark-secondary rounded-3xl overflow-hidden w-full py-16 mx-auto">
-          <motion.div className="max-w-3xl mx-auto px-6 flex flex-col items-center" variants={containerVariants} initial="hidden" animate="visible">
-            <motion.h1 variants={itemVariants} className="text-4xl md:text-6xl font-black mb-4 text-center dark:text-white">
+          <div className="max-w-3xl mx-auto px-6 flex flex-col items-center">
+            <h1 className="text-4xl md:text-6xl font-black mb-4 text-center dark:text-white">
               Gracias por formar parte de VYBA
-            </motion.h1>
-            <motion.h2 variants={itemVariants} className="text-4xl mb-8 text-center dark:text-gray-300">
+            </h1>
+            <h2 className="text-4xl mb-8 text-center dark:text-gray-300">
               Artista #{artistNumber}
-            </motion.h2>
+            </h2>
             
-            
-            <motion.div variants={itemVariants} className="w-full bg-white dark:bg-vyba-dark-secondary rounded-[40px] p-6 mb-12 relative overflow-hidden" onMouseEnter={() => setIsHovered(true)} onMouseLeave={() => setIsHovered(false)} onMouseMove={handleMouseMove} ref={el => setElementRef(el)}>
+            <div 
+              className="w-full bg-white dark:bg-vyba-dark-secondary rounded-[40px] p-6 mb-12 relative overflow-hidden" 
+              onMouseEnter={() => setIsHovered(true)} 
+              onMouseLeave={() => setIsHovered(false)} 
+              onMouseMove={handleMouseMove} 
+              ref={el => setElementRef(el)}
+            >
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="space-y-4">
                   <div className="bg-gray-50 content-center dark:bg-vyba-dark-secondary/80 p-6 rounded-2xl transition-all duration-300">
@@ -140,33 +131,44 @@ const ArtistThankYouPage = () => {
                 </div>
               </div>
               
-              {isHovered && <div style={{
-              '--x': `${mousePosition.x}px`,
-              '--y': `${mousePosition.y}px`
-            } as React.CSSProperties} className="absolute inset-0 backdrop-blur-sm flex items-center justify-center transition-all duration-300 animate-radial-in">
-                  <Button onClick={handleDownloadDiploma} className="bg-primary hover:bg-primary/90 text-primary-foreground flex items-center gap-2 animate-scale-in">
+              {isHovered && (
+                <div 
+                  style={{
+                    '--x': `${mousePosition.x}px`,
+                    '--y': `${mousePosition.y}px`
+                  } as React.CSSProperties} 
+                  className="absolute inset-0 backdrop-blur-sm flex items-center justify-center transition-all duration-300"
+                >
+                  <Button onClick={handleDownloadDiploma} className="bg-primary hover:bg-primary/90 text-primary-foreground flex items-center gap-2">
                     <Download size={20} />
                     Descargar diploma
                   </Button>
-                </div>}
-            </motion.div>
+                </div>
+              )}
+            </div>
             
-            <motion.div variants={itemVariants} className="flex flex-col sm:flex-row justify-center w-full gap-4 items-center">
-              <Button variant="outline" onClick={handleGoBack} className="w-12 h-12 rounded-full flex items-center justify-center p-0 order-2 sm:order-1 border-none bg-white dark:bg-vyba-dark-secondary">
+            <div className="flex flex-col sm:flex-row justify-center w-full gap-4 items-center">
+              <Button 
+                variant="outline" 
+                onClick={handleGoBack} 
+                className="w-12 h-12 rounded-full flex items-center justify-center p-0 order-2 sm:order-1 border-none bg-white dark:bg-vyba-dark-secondary"
+              >
                 <ArrowLeft size={20} strokeWidth={3} />
               </Button>
               
               <Button onClick={handleFinalize} className="w-auto order-1 ">
                 Finalizar
               </Button>
-            </motion.div>
+            </div>
             
-            <motion.p variants={itemVariants} className="mt-10 text-sm text-gray-600 dark:text-gray-400">
+            <p className="mt-10 text-sm text-gray-600 dark:text-gray-400">
               Ya tienes una cuenta? <Link to="/auth" className="font-medium text-primary-foreground">Iniciar Sesión</Link>
-            </motion.p>
-          </motion.div>
+            </p>
+          </div>
         </Card>
       </div>
-    </PageTransition>;
+    </PageTransition>
+  );
 };
+
 export default ArtistThankYouPage;

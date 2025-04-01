@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { Button } from "@/components/ui/button";
@@ -8,7 +9,6 @@ import { Link } from 'react-router-dom';
 import { Marquee } from "@/components/ui/marquee";
 import ArtistProfileCard from '@/components/ArtistProfileCard';
 import { PageTransition } from '@/components/ui/page-transition';
-import { motion } from 'framer-motion';
 
 const dummyArtists = [
   {
@@ -85,41 +85,20 @@ const SeekerThankYouPage = () => {
     navigate(-1);
   };
 
-  const containerVariants = {
-    hidden: { opacity: 0 },
-    visible: {
-      opacity: 1,
-      transition: {
-        when: "beforeChildren",
-        staggerChildren: 0.2
-      }
-    }
-  };
-
-  const itemVariants = {
-    hidden: { opacity: 0, y: 20 },
-    visible: { opacity: 1, y: 0 }
-  };
-
   return (
     <PageTransition>
       <Navbar />
       <div className="bg-vyba-cream dark:bg-vyba-dark-bg flex items-center justify-center min-h-[90vh] px-6 md:px-10 lg:px-14 xl:px-16">
         <Card className="border-none shadow-none bg-secondary dark:bg-vyba-dark-bg dark:border-vyba-dark-secondary rounded-3xl overflow-hidden w-full py-16 mx-auto">
-          <motion.div 
-            className="max-w-3xl mx-auto px-6 md:px-12 flex flex-col items-center"
-            variants={containerVariants}
-            initial="hidden"
-            animate="visible"
-          >
-            <motion.h1 variants={itemVariants} className="text-6xl font-black mb-4 text-center dark:text-white">
+          <div className="max-w-3xl mx-auto px-6 md:px-12 flex flex-col items-center">
+            <h1 className="text-6xl font-black mb-4 text-center dark:text-white">
               Gracias por formar parte de VYBA
-            </motion.h1>
-            <motion.h2 variants={itemVariants} className="text-2xl mb-8 text-center dark:text-gray-300">
+            </h1>
+            <h2 className="text-2xl mb-8 text-center dark:text-gray-300">
               Empieza a buscar ahora mismo
-            </motion.h2>
+            </h2>
             
-            <motion.div variants={itemVariants} className="flex flex-wrap gap-4 mb-12 justify-center">
+            <div className="flex flex-wrap gap-4 mb-12 justify-center">
               <div className="flex items-center gap-6 px-6 py-2 rounded-full bg-white dark:bg-vyba-dark-secondary">
                 <Search size={20} className="text-black dark:text-white" />
                 <div className="flex flex-col">                    
@@ -137,14 +116,9 @@ const SeekerThankYouPage = () => {
                   </span>
                 </div>
               </div>
-            </motion.div>
-          </motion.div>
-          <motion.div 
-            className="w-full"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 0.3, duration: 0.5 }}
-          >
+            </div>
+          </div>
+          <div className="w-full">
             <div className="w-full mb-16">
               <Marquee 
                 pauseOnHover 
@@ -167,15 +141,9 @@ const SeekerThankYouPage = () => {
                 ))}
               </Marquee>
             </div>
-          </motion.div>
-          <motion.div 
-            className="max-w-3xl mx-auto px-6 md:px-12 flex flex-col items-center"
-            variants={containerVariants}
-            initial="hidden"
-            animate="visible"
-            transition={{ delay: 0.4 }}
-          > 
-            <motion.div variants={itemVariants} className="flex flex-col sm:flex-row justify-center w-full gap-4 items-center">
+          </div>
+          <div className="max-w-3xl mx-auto px-6 md:px-12 flex flex-col items-center"> 
+            <div className="flex flex-col sm:flex-row justify-center w-full gap-4 items-center">
               <Button variant="outline" onClick={handleGoBack} className="w-full sm:w-auto order-2 sm:order-1 border-none bg-white dark:bg-vyba-dark-secondary">
                 <ArrowLeft className="mr-2" size={20} strokeWidth={3} />
                 Volver
@@ -184,12 +152,12 @@ const SeekerThankYouPage = () => {
               <Button onClick={handleFinalize} className="w-full sm:w-auto order-1 sm:order-2">
                 Finalizar
               </Button>
-            </motion.div>
+            </div>
             
-            <motion.p variants={itemVariants} className="mt-10 text-sm text-gray-600 dark:text-gray-400">
+            <p className="mt-10 text-sm text-gray-600 dark:text-gray-400">
               Ya tienes una cuenta? <Link to="/auth" className="font-medium text-primary-foreground">Iniciar Sesión</Link>
-            </motion.p>
-          </motion.div>
+            </p>
+          </div>
         </Card>
       </div>
     </PageTransition>

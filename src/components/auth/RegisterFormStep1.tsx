@@ -1,10 +1,8 @@
 
-import React, { useState } from 'react';
+import React from 'react';
 import { Eye, EyeOff } from 'lucide-react';
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { motion } from "framer-motion";
-import { itemVariants } from './animation-variants';
 
 interface RegisterFormStep1Props {
   registerForm: {
@@ -34,7 +32,7 @@ const RegisterFormStep1: React.FC<RegisterFormStep1Props> = ({
   handleRegisterSubmit 
 }) => {
   return (
-    <motion.form variants={itemVariants} onSubmit={handleRegisterSubmit} className="space-y-4">
+    <form onSubmit={handleRegisterSubmit} className="space-y-4">
       <div className="space-y-1.5">
         <label htmlFor="register-name" className="block text-sm font-medium dark:text-white">
           Nombre completo
@@ -105,7 +103,7 @@ const RegisterFormStep1: React.FC<RegisterFormStep1Props> = ({
           Siguiente
         </Button>
       </div>
-    </motion.form>
+    </form>
   );
 };
 

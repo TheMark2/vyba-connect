@@ -1,8 +1,6 @@
 
 import React from 'react';
 import { Button } from "@/components/ui/button";
-import { motion } from "framer-motion";
-import { formVariants, itemVariants } from './animation-variants';
 import SocialAuthButtons from './SocialAuthButtons';
 import EmailDivider from './EmailDivider';
 import LoginForm from './LoginForm';
@@ -35,13 +33,7 @@ const LoginSection: React.FC<LoginSectionProps> = ({
   switchToRegister
 }) => {
   return (
-    <motion.div 
-      className="space-y-6"
-      variants={formVariants}
-      initial="hidden"
-      animate="visible"
-      exit="exit"
-    >
+    <div className="space-y-6">
       <SocialAuthButtons onSocialLogin={handleSocialLogin} />
       <EmailDivider />
       <LoginForm 
@@ -53,12 +45,12 @@ const LoginSection: React.FC<LoginSectionProps> = ({
         handleLoginSubmit={handleLoginSubmit}
       />
 
-      <motion.div variants={itemVariants} className="text-center">
+      <div className="text-center">
         <p className="text-sm text-gray-600 dark:text-gray-400">
           No tienes cuenta? <Button variant="link" className="p-0 h-auto font-medium" onClick={switchToRegister}>Regístrate</Button>
         </p>
-      </motion.div>
-    </motion.div>
+      </div>
+    </div>
   );
 };
 

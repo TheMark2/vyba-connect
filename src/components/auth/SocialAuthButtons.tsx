@@ -1,8 +1,7 @@
+
 import React from 'react';
 import { Facebook } from 'lucide-react';
 import { Button } from "@/components/ui/button";
-import { motion } from "framer-motion";
-import { itemVariants } from './animation-variants';
 
 interface SocialAuthButtonsProps {
   onSocialLogin: (provider: string) => void;
@@ -10,10 +9,7 @@ interface SocialAuthButtonsProps {
 
 const SocialAuthButtons: React.FC<SocialAuthButtonsProps> = ({ onSocialLogin }) => {
   return (
-    <motion.div 
-      variants={itemVariants} 
-      className="flex flex-col md:flex-row gap-4 w-full"
-    >
+    <div className="flex flex-col md:flex-row gap-4 w-full">
       <Button 
         type="button" 
         variant="outline" 
@@ -37,7 +33,7 @@ const SocialAuthButtons: React.FC<SocialAuthButtonsProps> = ({ onSocialLogin }) 
         <Facebook size={20} color="#1877F2" />
         Continuar con Facebook
       </Button>
-    </motion.div>
+    </div>
   );
 };
 
