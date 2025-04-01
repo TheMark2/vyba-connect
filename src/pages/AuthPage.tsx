@@ -207,7 +207,7 @@ const AuthPage = () => {
                   </div>
                 </div>
                 
-                <div className="pt-4 items-center">
+                <div className="pt-4 justify-center">
                   <Button type="submit" isLoading={isLoading} className="">
                     Iniciar sesión
                   </Button>
