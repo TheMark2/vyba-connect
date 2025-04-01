@@ -100,7 +100,7 @@ const ProfileInfoPage = () => {
       <div className="bg-vyba-cream dark:bg-vyba-dark-bg flex items-center justify-center min-h-[90vh] px-4 sm:px-6 md:px-10 lg:px-14 xl:px-16 py-8">
         <Card className="border-none shadow-none bg-secondary dark:bg-vyba-dark-bg dark:border-vyba-dark-secondary rounded-3xl overflow-hidden w-full py-8 md:py-16 mx-auto">
           <div className="max-w-2xl mx-auto px-5 md:px-12">
-            <h1 className="text-4xl md:text-5xl lg:text-6xl font-black mb-6 md:mb-10 text-center dark:text-white">Rellena tu información</h1>
+            <h1 className="text-5xl md:text-5xl lg:text-6xl font-black mb-6 md:mb-10 text-center dark:text-white">Rellena tu información</h1>
             
             <div className="flex justify-center mb-8 md:mb-12">
               <DropdownMenu>
