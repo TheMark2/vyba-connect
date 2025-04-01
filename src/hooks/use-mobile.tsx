@@ -1,51 +1,55 @@
 
 import * as React from "react"
 
-// Ajustamos los breakpoints para que las columnas se reduzcan más rápido
+// Ajustamos los breakpoints para una mejor detección de dispositivos móviles
 const MOBILE_BREAKPOINT = 768
-const SMALL_MOBILE_BREAKPOINT = 550 // Mantenemos el valor para móviles pequeños
+const SMALL_MOBILE_BREAKPOINT = 550
 
 export function useIsMobile() {
-  const [isMobile, setIsMobile] = React.useState<boolean>(window.innerWidth < MOBILE_BREAKPOINT);
+  const [isMobile, setIsMobile] = React.useState<boolean>(
+    typeof window !== "undefined" ? window.innerWidth < MOBILE_BREAKPOINT : false
+  );
 
   React.useEffect(() => {
-    const mql = window.matchMedia(`(max-width: ${MOBILE_BREAKPOINT - 1}px)`)
+    if (typeof window === "undefined") return;
     
-    const onChange = () => {
+    const handleResize = () => {
       setIsMobile(window.innerWidth < MOBILE_BREAKPOINT)
     }
     
     // Establecer el valor inicial
-    onChange()
+    handleResize()
     
     // Añadir el listener para cambios de tamaño
-    mql.addEventListener("change", onChange)
+    window.addEventListener("resize", handleResize)
     
     // Limpieza al desmontar el componente
-    return () => mql.removeEventListener("change", onChange)
+    return () => window.removeEventListener("resize", handleResize)
   }, [])
 
   return isMobile
 }
 
 export function useIsSmallMobile() {
-  const [isSmallMobile, setIsSmallMobile] = React.useState<boolean>(window.innerWidth < SMALL_MOBILE_BREAKPOINT);
+  const [isSmallMobile, setIsSmallMobile] = React.useState<boolean>(
+    typeof window !== "undefined" ? window.innerWidth < SMALL_MOBILE_BREAKPOINT : false
+  );
 
   React.useEffect(() => {
-    const mql = window.matchMedia(`(max-width: ${SMALL_MOBILE_BREAKPOINT - 1}px)`)
+    if (typeof window === "undefined") return;
     
-    const onChange = () => {
+    const handleResize = () => {
       setIsSmallMobile(window.innerWidth < SMALL_MOBILE_BREAKPOINT)
     }
     
     // Establecer el valor inicial
-    onChange()
+    handleResize()
     
     // Añadir el listener para cambios de tamaño
-    mql.addEventListener("change", onChange)
+    window.addEventListener("resize", handleResize)
     
     // Limpieza al desmontar el componente
-    return () => mql.removeEventListener("change", onChange)
+    return () => window.removeEventListener("resize", handleResize)
   }, [])
 
   return isSmallMobile
