@@ -86,7 +86,7 @@ const LoginForm: React.FC<LoginFormProps> = ({
         <div className="flex justify-between items-center mt-4">
           <Button 
             type="button" 
-            variant="ghost" 
+            variant="bg-white" 
             className="p-2" 
             onClick={handleBackToOptions}
           >
