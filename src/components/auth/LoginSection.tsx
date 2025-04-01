@@ -6,7 +6,6 @@ import { formVariants, itemVariants } from './animation-variants';
 import SocialAuthButtons from './SocialAuthButtons';
 import EmailDivider from './EmailDivider';
 import LoginForm from './LoginForm';
-import { useIsMobile } from "@/hooks/use-mobile";
 
 interface LoginSectionProps {
   loginForm: {
@@ -35,8 +34,6 @@ const LoginSection: React.FC<LoginSectionProps> = ({
   handleSocialLogin,
   switchToRegister
 }) => {
-  const isMobile = useIsMobile();
-  
   return (
     <motion.div 
       className="space-y-6"
@@ -57,11 +54,8 @@ const LoginSection: React.FC<LoginSectionProps> = ({
       />
 
       <motion.div variants={itemVariants} className="text-center">
-        <p className={`${isMobile ? 'text-xs' : 'text-sm'} text-gray-600 dark:text-gray-400`}>
-          {isMobile ? "No tienes cuenta. " : "No tienes cuenta? "}
-          <Button variant="link" className="p-0 h-auto font-medium" onClick={switchToRegister}>
-            {isMobile ? "Regístrate" : "Regístrate"}
-          </Button>
+        <p className="text-sm text-gray-600 dark:text-gray-400">
+          No tienes cuenta? <Button variant="link" className="p-0 h-auto font-medium" onClick={switchToRegister}>Regístrate</Button>
         </p>
       </motion.div>
     </motion.div>

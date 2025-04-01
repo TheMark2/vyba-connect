@@ -4,24 +4,18 @@ import { Facebook } from 'lucide-react';
 import { Button } from "@/components/ui/button";
 import { motion } from "framer-motion";
 import { itemVariants } from './animation-variants';
-import { useIsMobile } from "@/hooks/use-mobile";
 
 interface SocialAuthButtonsProps {
   onSocialLogin: (provider: string) => void;
 }
 
 const SocialAuthButtons: React.FC<SocialAuthButtonsProps> = ({ onSocialLogin }) => {
-  const isMobile = useIsMobile();
-  
   return (
-    <motion.div 
-      variants={itemVariants} 
-      className={`grid ${isMobile ? 'grid-cols-1 gap-3' : 'grid-cols-2 gap-4'}`}
-    >
+    <motion.div variants={itemVariants} className="grid grid-cols-2 gap-4">
       <Button 
         type="button" 
         variant="outline" 
-        className="border-none w-full flex items-center justify-center gap-2 bg-white text-black dark:bg-white dark:text-black dark:hover:bg-gray-100 hover:bg-gray-100 rounded-full" 
+        className="border-none w-full flex items-center justify-center gap-2 bg-white text-black dark:bg-white dark:text-black dark:hover:bg-gray-100 hover:bg-gray-100" 
         onClick={() => onSocialLogin('Google')}
       >
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" width="20px" height="20px">
@@ -35,7 +29,7 @@ const SocialAuthButtons: React.FC<SocialAuthButtonsProps> = ({ onSocialLogin }) 
       <Button 
         type="button" 
         variant="outline" 
-        className="border-none w-full flex items-center justify-center gap-2 bg-white text-black dark:bg-white dark:text-black dark:hover:bg-gray-100 hover:bg-gray-100 rounded-full" 
+        className="border-none w-full flex items-center justify-center gap-2 bg-white text-black dark:bg-white dark:text-black dark:hover:bg-gray-100 hover:bg-gray-100" 
         onClick={() => onSocialLogin('Facebook')}
       >
         <Facebook size={20} color="#1877F2" />

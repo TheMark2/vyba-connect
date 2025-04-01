@@ -47,7 +47,7 @@ const RegisterFormStep1: React.FC<RegisterFormStep1Props> = ({
             ...registerForm,
             fullName: e.target.value
           })} 
-          placeholder="Nombre completo" 
+          placeholder="Escribe tu nombre completo" 
           required 
           className="rounded-xl h-12 bg-white dark:bg-black dark:text-white" 
         />
@@ -66,7 +66,7 @@ const RegisterFormStep1: React.FC<RegisterFormStep1Props> = ({
               ...registerForm,
               email: e.target.value
             })} 
-            placeholder="Email" 
+            placeholder="Escribe tu correo" 
             required 
             className="rounded-xl h-12 bg-white dark:bg-black dark:text-white" 
           />
@@ -85,7 +85,7 @@ const RegisterFormStep1: React.FC<RegisterFormStep1Props> = ({
                 ...registerForm,
                 password: e.target.value
               })} 
-              placeholder="Contraseña" 
+              placeholder="Escribe tu contraseña" 
               required 
               className="rounded-xl h-12 pr-10 bg-white dark:bg-black dark:text-white" 
             />
