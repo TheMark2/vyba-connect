@@ -35,7 +35,7 @@ const RegisterFormStep1: React.FC<RegisterFormStep1Props> = ({
   const isMobile = useIsMobile();
 
   return (
-    <form onSubmit={handleRegisterSubmit} className="space-y-4">
+    <form onSubmit={handleRegisterSubmit} className="space-y-4 mb-8">
       <div className="space-y-1.5">
         <label htmlFor="register-name" className="block text-sm font-medium dark:text-white">
           Nombre completo
