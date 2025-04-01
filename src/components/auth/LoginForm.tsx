@@ -3,7 +3,6 @@ import React from 'react';
 import { Eye, EyeOff, ArrowLeft } from 'lucide-react';
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { useIsMobile } from "@/hooks/use-mobile";
 
 interface LoginFormProps {
   loginForm: {
@@ -30,8 +29,6 @@ const LoginForm: React.FC<LoginFormProps> = ({
   handleLoginSubmit,
   handleBackToOptions
 }) => {
-  const isMobile = useIsMobile();
-  
   return (
     <form onSubmit={handleLoginSubmit} className="space-y-4">
       <div className="space-y-1.5">
@@ -78,12 +75,11 @@ const LoginForm: React.FC<LoginFormProps> = ({
           </button>
         </div>
       </div>
-      
-      <div className={`flex ${isMobile ? 'flex-col' : 'items-center'} gap-3`}>
+      <div className="flex items-center gap-3">
         <Button 
           type="button" 
           variant="ghost" 
-          className={`p-3 bg-white hover:bg-gray-100 dark:bg-white dark:hover:bg-gray-100 dark:text-black ${isMobile ? 'w-full' : ''}`} 
+          className="p-3 bg-white hover:bg-gray-100 dark:bg-white dark:hover:bg-gray-100 dark:text-black" 
           onClick={handleBackToOptions}
         >
           <ArrowLeft size={20} />
