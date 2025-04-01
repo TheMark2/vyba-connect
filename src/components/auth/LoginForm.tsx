@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { Eye, EyeOff } from 'lucide-react';
+import { Eye, EyeOff, ArrowLeft } from 'lucide-react';
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 
@@ -17,6 +17,7 @@ interface LoginFormProps {
   showPassword: boolean;
   togglePasswordVisibility: () => void;
   handleLoginSubmit: (e: React.FormEvent) => void;
+  handleBackToOptions: () => void;
 }
 
 const LoginForm: React.FC<LoginFormProps> = ({ 
@@ -25,7 +26,8 @@ const LoginForm: React.FC<LoginFormProps> = ({
   isLoading, 
   showPassword, 
   togglePasswordVisibility, 
-  handleLoginSubmit 
+  handleLoginSubmit,
+  handleBackToOptions
 }) => {
   return (
     <form onSubmit={handleLoginSubmit} className="space-y-4">
@@ -86,7 +88,7 @@ const LoginForm: React.FC<LoginFormProps> = ({
         <div className="flex justify-between items-center mt-4">
           <Button 
             type="button" 
-            variant="bg-white" 
+            variant="ghost" 
             className="p-2" 
             onClick={handleBackToOptions}
           >

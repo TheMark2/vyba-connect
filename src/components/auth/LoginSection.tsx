@@ -77,18 +77,9 @@ const LoginSection: React.FC<LoginSectionProps> = ({
             showPassword={showPassword}
             togglePasswordVisibility={togglePasswordVisibility}
             handleLoginSubmit={handleLoginSubmit}
+            handleBackToOptions={handleBackToOptions}
           />
           
-          <div className="flex justify-between items-center mt-4">
-            <Button 
-              type="button" 
-              variant="ghost" 
-              className="p-2" 
-              onClick={handleBackToOptions}
-            >
-              <ArrowLeft size={20} />
-            </Button>
-          </div>
           <div className="text-center mt-4 pt-2">
             <p className="text-sm text-gray-600">
               No tienes cuenta? <Button variant="secondary" className="h-auto font-bold text-black bg-transparent hover:font-black ml-4" onClick={switchToRegister}>Regístrate</Button>
