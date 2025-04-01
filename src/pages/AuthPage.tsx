@@ -155,14 +155,14 @@ const AuthPage = () => {
     console.log("[AuthPage] handleTabChange - Cambiando a tab:", value);
     setDefaultTab(value);
     setRegisterStep(1);
-    // Mantenemos showEmailLogin invariante durante los cambios de tab
+    setShowEmailLogin(false);
   };
 
   const switchToRegister = () => {
     console.log("[AuthPage] switchToRegister - Cambiando a registro");
     setDefaultTab("register");
     setRegisterStep(1);
-    // No cambiamos el estado showEmailLogin aquí para mantener la consistencia
+    setShowEmailLogin(false);
   };
 
   const handleBackStep = () => {
@@ -186,95 +186,81 @@ const AuthPage = () => {
   const MobileAuthView = () => {
     console.log("[AuthPage] Renderizando MobileAuthView - showEmailLogin:", showEmailLogin);
     
-    return (
-      <div className="min-h-[85vh] flex flex-col justify-center p-6 bg-secondary dark:bg-vyba-dark-bg">
+    return <div className="min-h-[85vh] flex flex-col justify-center p-6 bg-secondary dark:bg-vyba-dark-bg">
         <AnimatePresence mode="wait">
           {!showEmailLogin ? (
-            <motion.div 
-              key="options" 
-              initial={{ opacity: 0, y: 20 }} 
-              animate={{ opacity: 1, y: 0 }} 
-              exit={{ opacity: 0, y: -20 }} 
-              transition={{ duration: 0.3 }}
-              className="flex flex-col items-center"
-            >
+            <motion.div key="options" initial={{
+              opacity: 0,
+              y: 20
+            }} animate={{
+              opacity: 1,
+              y: 0
+            }} exit={{
+              opacity: 0,
+              y: -20
+            }} transition={{
+              duration: 0.3
+            }} className="flex flex-col items-center">
               <h1 className="text-5xl font-black mb-2">Bienvenido/a</h1>
               <h1 className="text-5xl font-black mb-6">a VYBA</h1>
               <p className="text-2xl mb-8">Inicia sesión o regístrate</p>
               
               <div className="w-full space-y-4">
-                <Button 
-                  variant="outline" 
-                  className="w-full border-none bg-white text-black hover:bg-gray-100" 
-                  onClick={(e) => {
-                    e.preventDefault();
-                    console.log("[MobileAuthView] Click en botón Google");
-                    handleSocialLogin('Google');
-                  }}
-                >
+                <Button variant="outline" className="w-full border-none bg-white text-black hover:bg-gray-100" onClick={(e) => {
+                  e.preventDefault();
+                  console.log("[MobileAuthView] Click en botón Google");
+                  handleSocialLogin('Google');
+                }}>
                   Continuar con Google
                 </Button>
-                <Button 
-                  variant="outline" 
-                  className="w-full border-none bg-white text-black hover:bg-gray-100" 
-                  onClick={(e) => {
-                    e.preventDefault();
-                    console.log("[MobileAuthView] Click en botón Facebook");
-                    handleSocialLogin('Facebook');
-                  }}
-                >
+                <Button variant="outline" className="w-full border-none bg-white text-black hover:bg-gray-100" onClick={(e) => {
+                  e.preventDefault();
+                  console.log("[MobileAuthView] Click en botón Facebook");
+                  handleSocialLogin('Facebook');
+                }}>
                   Continuar con Facebook
                 </Button>
-                <Button 
-                  variant="outline" 
-                  className="w-full border-none bg-white text-black hover:bg-gray-100" 
-                  onClick={(e) => {
-                    e.preventDefault();
-                    console.log("[MobileAuthView] Click en botón email");
-                    handleShowEmailLogin();
-                  }}
-                >
+                <Button variant="outline" className="w-full border-none bg-white text-black hover:bg-gray-100" onClick={(e) => {
+                  e.preventDefault();
+                  console.log("[MobileAuthView] Click en botón email");
+                  handleShowEmailLogin();
+                }}>
                   Continuar con mail
                 </Button>
               </div>
               
               <div className="mt-12 text-center">
                 <p className="text-sm">
-                  No tienes cuenta?{" "}
-                  <span 
-                    className="font-bold" 
-                    onClick={(e) => {
-                      e.preventDefault();
-                      console.log("[MobileAuthView] Click en regístrate");
-                      switchToRegister();
-                    }}
-                  >
-                    Regístrate
-                  </span>
+                  No tienes cuenta? <span className="font-bold" onClick={(e) => {
+                    e.preventDefault();
+                    console.log("[MobileAuthView] Click en regístrate");
+                    switchToRegister();
+                  }}>Regístrate</span>
                 </p>
               </div>
             </motion.div>
           ) : (
-            <motion.div 
-              key="email-login" 
-              initial={{ opacity: 0, y: 20 }} 
-              animate={{ opacity: 1, y: 0 }} 
-              exit={{ opacity: 0, y: -20 }} 
-              transition={{ duration: 0.3 }}
-              className="flex flex-col items-center"
-            >
+            <motion.div key="email-login" initial={{
+              opacity: 0,
+              y: 20
+            }} animate={{
+              opacity: 1,
+              y: 0
+            }} exit={{
+              opacity: 0,
+              y: -20
+            }} transition={{
+              duration: 0.3
+            }} className="flex flex-col items-center">
               <h1 className="text-5xl font-black mb-2">Bienvenido/a</h1>
               <h1 className="text-5xl font-black mb-6">a VYBA</h1>
               <p className="text-2xl mb-8">Inicia sesión o regístrate</p>
               
-              <form 
-                onSubmit={(e) => {
-                  e.preventDefault();
-                  console.log("[MobileAuthView] Formulario móvil enviado");
-                  handleLoginSubmit(e);
-                }} 
-                className="w-full space-y-6 max-w-2xl"
-              >
+              <form onSubmit={(e) => {
+                e.preventDefault();
+                console.log("[MobileAuthView] Formulario móvil enviado");
+                handleLoginSubmit(e);
+              }} className="w-full space-y-6 max-w-2xl">
                 <div className="space-y-2">
                   <label htmlFor="mobile-email" className="block text-sm font-medium">
                     Email
@@ -284,12 +270,13 @@ const AuthPage = () => {
                     type="email" 
                     value={loginForm.email} 
                     onChange={(e) => {
+                      e.preventDefault();
                       const newEmail = e.target.value;
                       console.log("[MobileAuthView] Email cambiado:", newEmail);
-                      setLoginForm(prev => ({
-                        ...prev,
+                      setLoginForm({
+                        ...loginForm,
                         email: newEmail
-                      }));
+                      });
                     }} 
                     placeholder="Email" 
                     className="bg-white" 
@@ -307,12 +294,13 @@ const AuthPage = () => {
                       type={showPassword ? "text" : "password"} 
                       value={loginForm.password} 
                       onChange={(e) => {
+                        e.preventDefault();
                         const newPassword = e.target.value;
                         console.log("[MobileAuthView] Contraseña cambiada:", newPassword.length > 0 ? '*'.repeat(newPassword.length) : '');
-                        setLoginForm(prev => ({
-                          ...prev,
+                        setLoginForm({
+                          ...loginForm,
                           password: newPassword
-                        }));
+                        });
                       }} 
                       placeholder="Contraseña" 
                       className="bg-white" 
@@ -333,61 +321,28 @@ const AuthPage = () => {
                 </div>
                 
                 <div className="pt-4 content-center">
-                  <Button 
-                    type="submit" 
-                    isLoading={isLoading} 
-                    onClick={() => console.log("[MobileAuthView] Botón de iniciar sesión presionado")}
-                  >
+                  <Button type="submit" isLoading={isLoading} onClick={() => console.log("[MobileAuthView] Botón de iniciar sesión presionado")}>
                     Iniciar sesión
-                  </Button>
-                </div>
-                
-                <div className="pt-2 content-center">
-                  <Button 
-                    type="button"
-                    variant="secondary"
-                    onClick={(e) => {
-                      e.preventDefault();
-                      console.log("[MobileAuthView] Volviendo a opciones de login");
-                      handleBackToOptions();
-                    }}
-                  >
-                    Volver
                   </Button>
                 </div>
               </form>
               
               <div className="mt-8 text-center">
                 <p className="text-sm">
-                  No tienes cuenta?{" "}
-                  <span 
-                    className="font-bold" 
-                    onClick={(e) => {
-                      e.preventDefault();
-                      console.log("[MobileAuthView] Click en cambiar a registro desde email");
-                      switchToRegister();
-                    }}
-                  >
-                    Regístrate
-                  </span>
+                  No tienes cuenta? <span className="font-bold" onClick={(e) => {
+                    e.preventDefault();
+                    console.log("[MobileAuthView] Click en cambiar a registro desde email");
+                    switchToRegister();
+                  }}>Regístrate</span>
                 </p>
               </div>
             </motion.div>
           )}
         </AnimatePresence>
-      </div>
-    );
+      </div>;
   };
 
   console.log("[AuthPage] Renderizando AuthPage - isMobile:", isMobile);
-
-  // Si estamos en la versión móvil y en la pestaña de registro, 
-  // mantenemos showEmailLogin en false para asegurar consistencia
-  useEffect(() => {
-    if (isMobile && defaultTab === "register") {
-      setShowEmailLogin(false);
-    }
-  }, [isMobile, defaultTab]);
 
   return (
     <PageTransition>
