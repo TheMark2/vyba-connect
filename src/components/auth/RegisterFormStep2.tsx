@@ -5,7 +5,6 @@ import { Button } from "@/components/ui/button";
 import { RadioGroup, RoleSelector } from '@/components/ui/radio-group';
 import { motion } from "framer-motion";
 import { itemVariants } from './animation-variants';
-import { useIsMobile } from '@/hooks/use-mobile';
 
 interface RegisterFormStep2Props {
   registerForm: {
@@ -36,8 +35,6 @@ const RegisterFormStep2: React.FC<RegisterFormStep2Props> = ({
   artistFeatures,
   seekerFeatures
 }) => {
-  const isMobile = useIsMobile();
-
   return (
     <motion.form variants={itemVariants} onSubmit={handleRegisterSubmit} className="space-y-8">
       <div className="overflow-hidden rounded-2xl">
@@ -56,7 +53,6 @@ const RegisterFormStep2: React.FC<RegisterFormStep2Props> = ({
             features={artistFeatures}
             isFirst={true}
             isLast={false}
-            isMobile={isMobile}
           />
           <RoleSelector 
             value="seeker" 
@@ -65,7 +61,6 @@ const RegisterFormStep2: React.FC<RegisterFormStep2Props> = ({
             features={seekerFeatures}
             isFirst={false}
             isLast={true}
-            isMobile={isMobile}
           />
         </RadioGroup>
       </div>

@@ -1,11 +1,10 @@
 
-import React from 'react';
+import React, { useState } from 'react';
 import { Eye, EyeOff } from 'lucide-react';
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { motion } from "framer-motion";
 import { itemVariants } from './animation-variants';
-import { useIsMobile } from '@/hooks/use-mobile';
 
 interface RegisterFormStep1Props {
   registerForm: {
@@ -34,8 +33,6 @@ const RegisterFormStep1: React.FC<RegisterFormStep1Props> = ({
   togglePasswordVisibility, 
   handleRegisterSubmit 
 }) => {
-  const isMobile = useIsMobile();
-
   return (
     <motion.form variants={itemVariants} onSubmit={handleRegisterSubmit} className="space-y-4">
       <div className="space-y-1.5">
@@ -56,7 +53,7 @@ const RegisterFormStep1: React.FC<RegisterFormStep1Props> = ({
         />
       </div>
       
-      <div className={`${isMobile ? 'space-y-4' : 'grid grid-cols-2 gap-4'}`}>
+      <div className="grid grid-cols-2 gap-4">
         <div className="space-y-1.5">
           <label htmlFor="register-email" className="block text-sm font-medium dark:text-white">
             Email

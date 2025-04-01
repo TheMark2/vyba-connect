@@ -79,13 +79,13 @@ const AuthContent: React.FC<AuthContentProps> = ({
   ];
 
   return (
-    <Card className={`border-none shadow-none bg-secondary dark:bg-vyba-dark-bg dark:border-vyba-dark-secondary rounded-3xl overflow-hidden w-full py-12 mx-auto ${isMobile ? 'px-4 py-6' : 'py-16'}`}>
-      <div className={`text-center mb-8 max-w-2xl mx-auto ${isMobile ? 'px-4' : 'px-12'}`}>
+    <Card className={`border-none shadow-none bg-secondary dark:bg-vyba-dark-bg dark:border-vyba-dark-secondary rounded-3xl overflow-hidden w-full py-16 mx-auto ${isMobile ? 'py-8' : ''}`}>
+      <div className="text-center mb-10 max-w-2xl mx-auto px-12">
         <AnimatePresence mode="wait">
           {registerStep === 2 && defaultTab === "register" ? (
             <motion.h1
               key="role-selection"
-              className={`font-black mb-4 dark:text-white ${isMobile ? 'text-3xl' : 'text-6xl'}`}
+              className={`text-6xl font-black mb-4 dark:text-white ${isMobile ? 'text-4xl' : ''}`}
               initial={{ opacity: 0, y: -20 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: 20 }}
@@ -101,14 +101,14 @@ const AuthContent: React.FC<AuthContentProps> = ({
               exit={{ opacity: 0, y: 20 }}
               transition={{ duration: 0.5 }}
             >
-              <h1 className={`font-black mb-4 dark:text-white ${isMobile ? 'text-3xl' : 'text-6xl'}`}>Bienvenido/a a VYBA</h1>
-              <p className={`dark:text-gray-300 ${isMobile ? 'text-xl' : 'text-4xl'}`}>Inicia sesión o regístrate</p>
+              <h1 className={`text-6xl font-black mb-4 dark:text-white ${isMobile ? 'text-4xl' : ''}`}>Bienvenido/a a VYBA</h1>
+              <p className={`text-4xl dark:text-gray-300 ${isMobile ? 'text-2xl' : ''}`}>Inicia sesión o regístrate</p>
             </motion.div>
           )}
         </AnimatePresence>
       </div>
 
-      <Tabs defaultValue={defaultTab} value={defaultTab} onValueChange={handleTabChange} className={`mx-auto ${isMobile ? 'max-w-[90%] px-2' : 'max-w-2xl px-12'}`}>
+      <Tabs defaultValue={defaultTab} value={defaultTab} onValueChange={handleTabChange} className="max-w-2xl mx-auto px-12">
         <TabsList className="hidden">
           <TabsTrigger value="login">Iniciar sesión</TabsTrigger>
           <TabsTrigger value="register">Registrarse</TabsTrigger>

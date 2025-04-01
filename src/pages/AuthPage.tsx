@@ -94,7 +94,7 @@ const AuthPage = () => {
   return (
     <PageTransition>
       <Navbar />
-      <div className={`bg-vyba-cream dark:bg-vyba-dark-bg flex items-center justify-center min-h-[90vh] ${isMobile ? 'px-4' : 'px-6 md:px-10 lg:px-14 xl:px-16'}`}>
+      <div className="bg-vyba-cream dark:bg-vyba-dark-bg flex items-center justify-center min-h-[90vh] px-6 md:px-10 lg:px-14 xl:px-16">
         <AuthContent 
           defaultTab={defaultTab}
           setDefaultTab={setDefaultTab}
