@@ -1,15 +1,13 @@
 
 import React from 'react';
-import { motion } from "framer-motion";
-import { itemVariants } from './animation-variants';
 
 const EmailDivider: React.FC = () => {
   return (
-    <motion.div variants={itemVariants} className="relative flex items-center">
+    <div className="relative flex items-center py-2">
       <div className="flex-grow border-t border-gray-300 dark:border-gray-600"></div>
-      <span className="flex-shrink mx-4 text-gray-400 text-sm uppercase font-medium">O CONTINÚA CON EMAIL</span>
+      <span className="flex-shrink mx-4 text-gray-500 text-sm uppercase">o</span>
       <div className="flex-grow border-t border-gray-300 dark:border-gray-600"></div>
-    </motion.div>
+    </div>
   );
 };
 

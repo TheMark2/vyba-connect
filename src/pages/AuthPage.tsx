@@ -94,27 +94,25 @@ const AuthPage = () => {
   return (
     <PageTransition>
       <Navbar />
-      <div className="bg-vyba-cream dark:bg-vyba-dark-bg flex items-center justify-center min-h-[90vh] px-6 md:px-10 lg:px-14 xl:px-16">
-        <AuthContent 
-          defaultTab={defaultTab}
-          setDefaultTab={setDefaultTab}
-          loginForm={loginForm}
-          setLoginForm={setLoginForm}
-          registerForm={registerForm}
-          setRegisterForm={setRegisterForm}
-          registerStep={registerStep}
-          setRegisterStep={setRegisterStep}
-          isLoading={isLoading}
-          showPassword={showPassword}
-          togglePasswordVisibility={togglePasswordVisibility}
-          handleLoginSubmit={handleLoginSubmit}
-          handleRegisterSubmit={handleRegisterSubmit}
-          handleSocialLogin={handleSocialLogin}
-          handleTabChange={handleTabChange}
-          switchToRegister={switchToRegister}
-          handleBackStep={handleBackStep}
-        />
-      </div>
+      <AuthContent 
+        defaultTab={defaultTab}
+        setDefaultTab={setDefaultTab}
+        loginForm={loginForm}
+        setLoginForm={setLoginForm}
+        registerForm={registerForm}
+        setRegisterForm={setRegisterForm}
+        registerStep={registerStep}
+        setRegisterStep={setRegisterStep}
+        isLoading={isLoading}
+        showPassword={showPassword}
+        togglePasswordVisibility={togglePasswordVisibility}
+        handleLoginSubmit={handleLoginSubmit}
+        handleRegisterSubmit={handleRegisterSubmit}
+        handleSocialLogin={handleSocialLogin}
+        handleTabChange={handleTabChange}
+        switchToRegister={switchToRegister}
+        handleBackStep={handleBackStep}
+      />
     </PageTransition>
   );
 };

@@ -1,6 +1,5 @@
 
 import React from 'react';
-import { Facebook } from 'lucide-react';
 import { Button } from "@/components/ui/button";
 
 interface SocialAuthButtonsProps {
@@ -9,11 +8,11 @@ interface SocialAuthButtonsProps {
 
 const SocialAuthButtons: React.FC<SocialAuthButtonsProps> = ({ onSocialLogin }) => {
   return (
-    <div className="flex flex-col md:flex-row gap-4 w-full">
+    <div className="flex flex-col gap-3 w-full">
       <Button 
         type="button" 
         variant="outline" 
-        className="border-none w-full flex items-center justify-center gap-2 bg-white text-black dark:bg-white dark:text-black dark:hover:bg-gray-100 hover:bg-gray-100" 
+        className="w-full flex items-center justify-center gap-2 bg-white text-black hover:bg-gray-50 h-12 rounded-full" 
         onClick={() => onSocialLogin('Google')}
       >
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" width="20px" height="20px">
@@ -24,14 +23,29 @@ const SocialAuthButtons: React.FC<SocialAuthButtonsProps> = ({ onSocialLogin }) 
         </svg>
         Continuar con Google
       </Button>
+
       <Button 
         type="button" 
         variant="outline" 
-        className="border-none w-full flex items-center justify-center gap-2 bg-white text-black dark:bg-white dark:text-black dark:hover:bg-gray-100 hover:bg-gray-100" 
+        className="w-full flex items-center justify-center gap-2 bg-white text-black hover:bg-gray-50 h-12 rounded-full" 
         onClick={() => onSocialLogin('Facebook')}
       >
-        <Facebook size={20} color="#1877F2" />
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="#1877F2">
+          <path d="M9.198 21.5h4v-8.01h3.604l.396-3.98h-4V7.5a1 1 0 0 1 1-1h3v-4h-3a5 5 0 0 0-5 5v2.01h-2l-.396 3.98h2.396v8.01Z" />
+        </svg>
         Continuar con Facebook
+      </Button>
+
+      <Button 
+        type="button" 
+        variant="outline" 
+        className="w-full flex items-center justify-center gap-2 bg-white text-black hover:bg-gray-50 h-12 rounded-full" 
+        onClick={() => onSocialLogin('Apple')}
+      >
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+          <path d="M16.5 3a4.42 4.42 0 0 1 2.042.463 4.5 4.5 0 0 1 1.682 1.313 4.5 4.5 0 0 1 .98 1.858c.13.435.195.878.196 1.32a3.79 3.79 0 0 1-.141 1.04 4.19 4.19 0 0 1-.917 1.73 4.39 4.39 0 0 1-.507.507 4.3 4.3 0 0 1-.676.444 4.27 4.27 0 0 1-.786.295c-.275.07-.558.105-.84.106a3.67 3.67 0 0 1-1.228-.201 5.61 5.61 0 0 1-.917-.452 4.78 4.78 0 0 0-.7-.343 2.65 2.65 0 0 0-.762-.122 2.82 2.82 0 0 0-.743.101 5.35 5.35 0 0 0-.706.29l-.243.123c-.192.096-.373.173-.546.228a3.81 3.81 0 0 1-.852.114 4.05 4.05 0 0 1-1.624-.333 4.26 4.26 0 0 1-1.351-.952A4.3 4.3 0 0 1 5.5 9.965c-.2-.666-.3-1.358-.3-2.058a5.63 5.63 0 0 1 .362-2.03 5.12 5.12 0 0 1 1.018-1.652c.431-.47.954-.841 1.58-1.097a5.05 5.05 0 0 1 1.91-.387 5.4 5.4 0 0 1 .953.086c.293.057.596.151.896.275l.402.165c.282.116.561.174.838.174.22-.002.438-.033.648-.093.2-.058.397-.14.59-.243l.463-.197c.344-.14.671-.234.98-.28.31-.044.639-.053.993-.024a5.16 5.16 0 0 1 1.592.383L18 3.22a.534.534 0 0 1-.199-.156.406.406 0 0 1-.086-.25.42.42 0 0 1 .086-.252.57.57 0 0 1 .227-.175l.127-.052A2.5 2.5 0 0 0 16.5 3Zm-.028 10c.329 0 .669.021 1.017.065.348.042.614.084.797.124l.274.06a.509.509 0 0 1 .172.08c.05.035.093.088.125.159.267.333.483.7.648 1.1.164.399.299.798.403 1.199.104.4.182.782.232 1.15.05.365.075.684.075.957 0 .496-.094.949-.282 1.357-.187.406-.457.755-.813 1.041a3.83 3.83 0 0 1-1.271.651c-.49.15-1.035.226-1.636.226-.35 0-.65-.023-.897-.067a3.57 3.57 0 0 1-.614-.167 3.2 3.2 0 0 1-.436-.201 5.56 5.56 0 0 1-.35-.201 3.78 3.78 0 0 0-.438-.201 1.78 1.78 0 0 0-.511-.082c-.178 0-.339.023-.485.067a2.59 2.59 0 0 0-.397.172c-.116.067-.24.134-.37.2-.13.066-.28.127-.446.183-.166.055-.362.1-.59.133a4.88 4.88 0 0 1-.814.052c-.601 0-1.146-.072-1.636-.218a3.83 3.83 0 0 1-1.27-.651 3.07 3.07 0 0 1-.814-1.037c-.187-.404-.282-.856-.282-1.353 0-.3.028-.613.083-.94.055-.329.133-.661.232-.996.1-.336.226-.67.378-1.002.153-.333.334-.64.544-.917.21-.28.45-.508.724-.686.274-.177.581-.265.922-.265.225 0 .425.023.601.067.176.043.335.1.477.167.143.067.273.127.39.183.118.056.235.087.351.095.114-.008.228-.039.342-.095.115-.056.243-.116.385-.183.142-.067.305-.124.488-.167a2.69 2.69 0 0 1 .607-.067c.267 0 .511.041.731.124.22.082.418.194.593.336.175.14.334.302.475.486.142.183.28.374.42.572.092.13.179.24.26.327.08.088.203.178.365.272Z" />
+        </svg>
+        Continuar con Apple
       </Button>
     </div>
   );

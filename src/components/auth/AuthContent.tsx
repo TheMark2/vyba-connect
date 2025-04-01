@@ -68,61 +68,53 @@ const AuthContent: React.FC<AuthContentProps> = ({
   const artistFeatures = ["Crea tu perfil profesional", "Recibe solicitudes de eventos", "Gestiona tu calendario de actuaciones", "Muestra tu portafolio a posibles clientes"];
   
   return (
-    <Card className={`border-none shadow-none bg-secondary dark:bg-vyba-dark-bg dark:border-vyba-dark-secondary rounded-3xl overflow-hidden w-full py-16 mx-auto ${isMobile ? 'py-8' : ''}`}>
-      <div className="text-center mb-10 max-w-2xl mx-auto px-12">
-        {registerStep === 2 && defaultTab === "register" ? (
-          <h1 className={`text-6xl font-black mb-4 dark:text-white ${isMobile ? 'text-4xl' : ''}`}>
-            ¿Cómo quieres usar VYBA?
-          </h1>
-        ) : (
-          <div>
-            <h1 className={`text-4xl md:text-6xl font-black mb-4 dark:text-white ${isMobile ? 'text-4xl' : ''}`}>
-              Bienvenido/a a VYBA
-            </h1>
-            <p className={`text-2xl md:text-4xl dark:text-gray-300 ${isMobile ? 'text-2xl' : ''}`}>
-              Inicia sesión o regístrate
-            </p>
-          </div>
-        )}
+    <div className={`w-full max-w-screen min-h-screen bg-[#f9f7f3] dark:bg-vyba-dark-bg ${isMobile ? 'py-8' : 'py-0'}`}>
+      <div className="max-w-md mx-auto px-6 md:px-0 pt-10">
+        <h1 className="text-3xl md:text-4xl font-bold text-center mb-2">
+          Bienvenido/a a VYBA
+        </h1>
+        <p className="text-xl text-center mb-8">
+          Inicia sesión o regístrate
+        </p>
+
+        <Tabs defaultValue={defaultTab} value={defaultTab} onValueChange={handleTabChange}>
+          <TabsList className="hidden">
+            <TabsTrigger value="login">Iniciar sesión</TabsTrigger>
+            <TabsTrigger value="register">Registrarse</TabsTrigger>
+          </TabsList>
+          
+          <TabsContent value="login" key="login">
+            <LoginSection 
+              loginForm={loginForm} 
+              setLoginForm={setLoginForm} 
+              isLoading={isLoading} 
+              showPassword={showPassword} 
+              togglePasswordVisibility={togglePasswordVisibility} 
+              handleLoginSubmit={handleLoginSubmit} 
+              handleSocialLogin={handleSocialLogin} 
+              switchToRegister={switchToRegister} 
+            />
+          </TabsContent>
+
+          <TabsContent value="register" key="register">
+            <RegisterSection 
+              registerStep={registerStep}
+              registerForm={registerForm}
+              setRegisterForm={setRegisterForm}
+              isLoading={isLoading}
+              showPassword={showPassword}
+              togglePasswordVisibility={togglePasswordVisibility}
+              handleRegisterSubmit={handleRegisterSubmit}
+              handleSocialLogin={handleSocialLogin}
+              handleBackStep={handleBackStep}
+              switchToLogin={() => setDefaultTab("login")}
+              artistFeatures={artistFeatures}
+              seekerFeatures={seekerFeatures}
+            />
+          </TabsContent>
+        </Tabs>
       </div>
-
-      <Tabs defaultValue={defaultTab} value={defaultTab} onValueChange={handleTabChange} className="max-w-2xl mx-auto px-6 md:px-12">
-        <TabsList className="hidden">
-          <TabsTrigger value="login">Iniciar sesión</TabsTrigger>
-          <TabsTrigger value="register">Registrarse</TabsTrigger>
-        </TabsList>
-        
-        <TabsContent value="login" key="login">
-          <LoginSection 
-            loginForm={loginForm} 
-            setLoginForm={setLoginForm} 
-            isLoading={isLoading} 
-            showPassword={showPassword} 
-            togglePasswordVisibility={togglePasswordVisibility} 
-            handleLoginSubmit={handleLoginSubmit} 
-            handleSocialLogin={handleSocialLogin} 
-            switchToRegister={switchToRegister} 
-          />
-        </TabsContent>
-
-        <TabsContent value="register" key="register">
-          <RegisterSection 
-            registerStep={registerStep}
-            registerForm={registerForm}
-            setRegisterForm={setRegisterForm}
-            isLoading={isLoading}
-            showPassword={showPassword}
-            togglePasswordVisibility={togglePasswordVisibility}
-            handleRegisterSubmit={handleRegisterSubmit}
-            handleSocialLogin={handleSocialLogin}
-            handleBackStep={handleBackStep}
-            switchToLogin={() => setDefaultTab("login")}
-            artistFeatures={artistFeatures}
-            seekerFeatures={seekerFeatures}
-          />
-        </TabsContent>
-      </Tabs>
-    </Card>
+    </div>
   );
 };
 

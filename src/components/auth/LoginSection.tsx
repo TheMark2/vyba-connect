@@ -3,7 +3,7 @@ import React from 'react';
 import { Button } from "@/components/ui/button";
 import SocialAuthButtons from './SocialAuthButtons';
 import EmailDivider from './EmailDivider';
-import LoginForm from './LoginForm';
+import { Mail } from 'lucide-react';
 
 interface LoginSectionProps {
   loginForm: {
@@ -33,21 +33,23 @@ const LoginSection: React.FC<LoginSectionProps> = ({
   switchToRegister
 }) => {
   return (
-    <div className="space-y-6">
+    <div className="space-y-3">
       <SocialAuthButtons onSocialLogin={handleSocialLogin} />
       <EmailDivider />
-      <LoginForm 
-        loginForm={loginForm}
-        setLoginForm={setLoginForm}
-        isLoading={isLoading}
-        showPassword={showPassword}
-        togglePasswordVisibility={togglePasswordVisibility}
-        handleLoginSubmit={handleLoginSubmit}
-      />
+      
+      <Button 
+        type="button" 
+        variant="outline" 
+        className="w-full flex items-center justify-center gap-2 bg-white text-black hover:bg-gray-50 h-12 rounded-full" 
+        onClick={handleLoginSubmit}
+      >
+        <Mail size={20} />
+        Continuar con Mail
+      </Button>
 
-      <div className="text-center">
-        <p className="text-sm text-gray-600 dark:text-gray-400">
-          No tienes cuenta? <Button variant="link" className="p-0 h-auto font-medium" onClick={switchToRegister}>Regístrate</Button>
+      <div className="text-center mt-4 pt-2">
+        <p className="text-sm text-gray-600">
+          No tienes cuenta? <Button variant="link" className="p-0 h-auto font-medium text-black" onClick={switchToRegister}>Regístrate</Button>
         </p>
       </div>
     </div>
