@@ -77,7 +77,7 @@ const LoginForm: React.FC<LoginFormProps> = ({
       <div className="pt-4">
         <Button 
           type="submit" 
-          className="w-full bg-blue-100 text-black hover:bg-blue-200" 
+          className="w-full" 
           isLoading={isLoading}
         >
           Iniciar sesión
