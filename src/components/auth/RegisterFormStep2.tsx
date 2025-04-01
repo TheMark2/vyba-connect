@@ -35,33 +35,27 @@ const RegisterFormStep2: React.FC<RegisterFormStep2Props> = ({
 }) => {
   return (
     <form onSubmit={handleRegisterSubmit} className="space-y-8">
-      <div className="overflow-hidden rounded-2xl">
-        <RadioGroup 
-          value={registerForm.role} 
-          onValueChange={value => setRegisterForm({
-            ...registerForm,
-            role: value
-          })} 
-          className="space-y-0"
-        >
-          <RoleSelector 
-            value="artist" 
-            label="Entrar como artista" 
-            icon={<Music size={20} />} 
-            features={artistFeatures}
-            isFirst={true}
-            isLast={false}
-          />
-          <RoleSelector 
-            value="seeker" 
-            label="Entrar como buscador" 
-            icon={<Search size={20} />} 
-            features={seekerFeatures}
-            isFirst={false}
-            isLast={true}
-          />
-        </RadioGroup>
-      </div>
+      <RadioGroup 
+        value={registerForm.role} 
+        onValueChange={value => setRegisterForm({
+          ...registerForm,
+          role: value
+        })} 
+        className="space-y-4 py-2"
+      >
+        <RoleSelector 
+          value="artist" 
+          label="Entrar como artista" 
+          icon={<Music size={20} />} 
+          features={artistFeatures}
+        />
+        <RoleSelector 
+          value="seeker" 
+          label="Entrar como buscador" 
+          icon={<Search size={20} />} 
+          features={seekerFeatures}
+        />
+      </RadioGroup>
       
       <div className="flex justify-center items-center gap-3 mt-8">
         <Button 

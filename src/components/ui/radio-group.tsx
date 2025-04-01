@@ -11,7 +11,7 @@ const RadioGroup = React.forwardRef<
 >(({ className, ...props }, ref) => {
   return (
     <RadioGroupPrimitive.Root
-      className={cn("grid gap-0", className)} // Changed gap-2 to gap-0
+      className={cn("grid gap-4", className)} // Cambiado a gap-4 para mayor separación
       {...props}
       ref={ref}
     />
@@ -27,20 +27,20 @@ const RadioGroupItem = React.forwardRef<
     <RadioGroupPrimitive.Item
       ref={ref}
       className={cn(
-        "aspect-square h-5 w-5 rounded-full border-2 border-black text-primary ring-offset-background focus:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 disabled:cursor-not-allowed disabled:opacity-50 dark:border-white",
+        "aspect-square h-5 w-5 rounded-full border border-black text-primary ring-offset-background transition-all focus:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 disabled:cursor-not-allowed disabled:opacity-50 dark:border-white hover:border-2",
         className
       )}
       {...props}
     >
       <RadioGroupPrimitive.Indicator className="flex items-center justify-center">
-        <Circle className="h-2.5 w-2.5 fill-black text-black dark:fill-white dark:text-white" />
+        <Circle className="h-2.5 w-2.5 fill-current text-current" />
       </RadioGroupPrimitive.Indicator>
     </RadioGroupPrimitive.Item>
   )
 })
 RadioGroupItem.displayName = RadioGroupPrimitive.Item.displayName
 
-// Componente personalizado para la selección de rol con fondo blanco y animación
+// Componente personalizado para la selección de rol con diseño minimalista
 const RoleSelector = React.forwardRef<
   React.ElementRef<typeof RadioGroupPrimitive.Item>,
   React.ComponentPropsWithoutRef<typeof RadioGroupPrimitive.Item> & {
@@ -51,80 +51,73 @@ const RoleSelector = React.forwardRef<
     isLast?: boolean;
   }
 >(({ className, icon, label, features = [], isFirst = false, isLast = false, ...props }, ref) => {
-  // Usar useState para controlar el estado de selección
   const [isSelected, setIsSelected] = React.useState(false);
   
-  // Usar useEffect para monitorear cambios en la prop checked
   React.useEffect(() => {
     setIsSelected(!!props.checked);
   }, [props.checked]);
 
   return (
-    <label className="cursor-pointer">
-      <div className={cn(
-        "transition-all duration-300",
-        isSelected ? "bg-secondary dark:bg-vyba-dark-secondary/40" : "bg-white dark:bg-vyba-dark-bg",
-        isFirst ? "rounded-t-2xl" : "",
-        isLast ? "rounded-b-2xl" : "",
-        !isFirst && !isLast ? "border-t-0" : "" // Added this to ensure no border at connecting points
-      )}>
-        <div className="flex items-center gap-3 px-5 py-3.5">
+    <div 
+      className={cn(
+        "rounded-2xl border transition-all duration-200",
+        isSelected 
+          ? "border-black dark:border-white bg-white dark:bg-vyba-dark-secondary/20" 
+          : "border-gray-200 dark:border-vyba-dark-secondary bg-white/90 dark:bg-vyba-dark-bg"
+      )}
+    >
+      <label className="cursor-pointer block p-4">
+        <div className="flex items-center gap-4">
           {icon && (
             <div className={cn(
-              "flex-shrink-0 transition-transform duration-300",
-              isSelected ? "scale-110" : "scale-100"
+              "flex-shrink-0 transition-all duration-200",
+              isSelected ? "text-black dark:text-white" : "text-gray-500 dark:text-gray-400"
             )}>
               {icon}
             </div>
           )}
+          
           <span className={cn(
-            "text-sm font-medium flex-grow transition-all duration-300",
-            isSelected ? "text-black dark:text-white font-bold" : "text-gray-700 dark:text-gray-300"
-          )}>{label}</span>
+            "text-base flex-grow transition-all duration-200",
+            isSelected ? "font-medium text-black dark:text-white" : "text-gray-700 dark:text-gray-300"
+          )}>
+            {label}
+          </span>
+          
           <RadioGroupPrimitive.Item
             ref={ref}
             className={cn(
-              "aspect-square h-5 w-5 rounded-full border-2 border-black text-sm ring-offset-background focus:outline-none focus-visible:ring-0 disabled:cursor-not-allowed disabled:opacity-50 dark:border-white transition-all duration-300",
-              isSelected ? "border-[3px]" : "",
+              "aspect-square h-5 w-5 rounded-full border border-black dark:border-white transition-all duration-200 focus:outline-none",
+              isSelected ? "border-[1.5px]" : "border-gray-400 dark:border-gray-500",
               className
             )}
             {...props}
           >
             <RadioGroupPrimitive.Indicator className="flex items-center justify-center">
-              <Circle className={cn(
-                "fill-black text-black dark:fill-white dark:text-white transition-all duration-300",
-                isSelected ? "h-2.5 w-2.5 animate-pulse" : "h-2 w-2"
-              )} />
+              <Circle className="h-2.5 w-2.5 fill-current text-current" />
             </RadioGroupPrimitive.Indicator>
           </RadioGroupPrimitive.Item>
         </div>
         
-        {/* Sección expandible con features cuando está seleccionado */}
         {features.length > 0 && (
           <div className={cn(
-            "overflow-hidden transition-all duration-300 ease-in-out px-5 py-3",
+            "overflow-hidden transition-all duration-300 ease-in-out mt-3 pl-9",
             isSelected 
-              ? "max-h-48 opacity-100 translate-y-0" 
-              : "max-h-0 opacity-0 -translate-y-2 py-0"
+              ? "max-h-48 opacity-100" 
+              : "max-h-0 opacity-0"
           )}>
-            <ul className="space-y-1.5">
+            <ul className="space-y-2">
               {features.map((feature, index) => (
-                <li key={index} className="flex items-center gap-2 text-gray-600 dark:text-gray-400">
-                  <div className={cn(
-                    "w-1 h-1 bg-black dark:bg-white rounded-full transition-all duration-300",
-                    isSelected ? "scale-100" : "scale-0"
-                  )}></div>
-                  <span className={cn(
-                    "text-sm transition-all duration-300",
-                    isSelected ? "translate-x-0" : "-translate-x-2"
-                  )}>{feature}</span>
+                <li key={index} className="flex items-center gap-2.5 text-gray-600 dark:text-gray-400">
+                  <div className="w-1.5 h-1.5 bg-black/70 dark:bg-white/70 rounded-full"></div>
+                  <span className="text-sm">{feature}</span>
                 </li>
               ))}
             </ul>
           </div>
         )}
-      </div>
-    </label>
+      </label>
+    </div>
   )
 })
 RoleSelector.displayName = "RoleSelector"
