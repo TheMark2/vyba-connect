@@ -135,7 +135,7 @@ const AuthPage = () => {
   // Mobile View Component
   const MobileAuthView = () => {
     return (
-      <div className="min-h-[85vh] flex flex-col justify-center p-6">
+      <div className="min-h-[85vh] flex flex-col justify-center p-6 bg-secondary dark:bg-vyba-dark-bg">
         <AnimatePresence mode="wait">
           {!showEmailLogin ? (
             <motion.div
