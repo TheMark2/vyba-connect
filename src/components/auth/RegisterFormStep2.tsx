@@ -45,7 +45,7 @@ const RegisterFormStep2: React.FC<RegisterFormStep2Props> = ({
           ...registerForm,
           role: value
         })} 
-        className="space-y-3"
+        className="gap-2"
       >
         <RoleSelector 
           value="artist" 
