@@ -61,7 +61,7 @@ const RegisterFormStep2: React.FC<RegisterFormStep2Props> = ({
           type="button" 
           variant="secondary" 
           onClick={handleBackStep} 
-          className="rounded-full p-3 border-none bg-white dark:bg-vyba-dark-secondary"
+          className="p-3 bg-white hover:bg-gray-100 dark:bg-white dark:hover:bg-gray-100 dark:text-black"
           disabled={isLoading}
         >
           <ArrowLeft size={20}/>
