@@ -12,6 +12,10 @@ import { motion, AnimatePresence } from "framer-motion";
 import { PageTransition } from '@/components/ui/page-transition';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { Drawer, DrawerContent, DrawerTrigger } from "@/components/ui/drawer";
+import { Form, FormField, FormItem, FormLabel, FormControl, FormMessage } from "@/components/ui/form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
+import * as z from "zod";
 
 const formVariants = {
   hidden: {
@@ -98,9 +102,42 @@ const AuthPage = () => {
     console.log("[AuthPage] Cambio en registerStep:", registerStep);
   }, [registerStep]);
 
-  const handleLoginSubmit = useCallback((e: React.FormEvent) => {
-    e.preventDefault();
-    console.log("[AuthPage] handleLoginSubmit - Iniciando login con:", loginForm);
+  // Esquema de validación para el formulario de login
+  const loginSchema = z.object({
+    email: z.string().email("Ingresa un email válido"),
+    password: z.string().min(1, "La contraseña es obligatoria")
+  });
+
+  // Esquema para el formulario de registro
+  const registerSchema = z.object({
+    fullName: z.string().min(1, "El nombre completo es obligatorio"),
+    email: z.string().email("Ingresa un email válido"),
+    password: z.string().min(6, "La contraseña debe tener al menos 6 caracteres"),
+    role: z.enum(["artist", "seeker"]).default("artist")
+  });
+
+  // Formulario para login utilizando react-hook-form
+  const loginFormHook = useForm<z.infer<typeof loginSchema>>({
+    resolver: zodResolver(loginSchema),
+    defaultValues: {
+      email: '',
+      password: ''
+    }
+  });
+
+  // Formulario para registro utilizando react-hook-form
+  const registerFormHook = useForm<z.infer<typeof registerSchema>>({
+    resolver: zodResolver(registerSchema),
+    defaultValues: {
+      fullName: '',
+      email: '',
+      password: '',
+      role: 'artist'
+    }
+  });
+
+  const handleLoginSubmit = useCallback((values: z.infer<typeof loginSchema>) => {
+    console.log("[AuthPage] handleLoginSubmit - Iniciando login con:", values);
     setIsLoading(true);
     setTimeout(() => {
       console.log("[AuthPage] handleLoginSubmit - Login exitoso");
@@ -113,30 +150,31 @@ const AuthPage = () => {
         navigate('/');
       }, 500);
     }, 1000);
-  }, [loginForm, navigate]);
+  }, [navigate]);
 
-  const handleRegisterSubmit = useCallback((e: React.FormEvent) => {
-    e.preventDefault();
-    console.log("[AuthPage] handleRegisterSubmit - Paso actual:", registerStep);
-    console.log("[AuthPage] handleRegisterSubmit - Datos:", registerForm);
+  const handleRegisterStepOne = useCallback((values: z.infer<typeof registerSchema>) => {
+    console.log("[AuthPage] handleRegisterStepOne - Datos:", values);
+    setRegisterForm(values);
     setIsLoading(true);
-    if (registerStep < 2) {
-      setTimeout(() => {
-        setIsLoading(false);
-        setRegisterStep(registerStep + 1);
-        console.log("[AuthPage] handleRegisterSubmit - Avanzando al paso:", registerStep + 1);
-      }, 800);
-      return;
-    }
+    setTimeout(() => {
+      setIsLoading(false);
+      setRegisterStep(2);
+      console.log("[AuthPage] handleRegisterStepOne - Avanzando al paso 2");
+    }, 800);
+  }, []);
+
+  const handleRegisterSubmit = useCallback((values: z.infer<typeof registerSchema>) => {
+    console.log("[AuthPage] handleRegisterSubmit - Datos:", values);
+    setIsLoading(true);
     setTimeout(() => {
       console.log("[AuthPage] handleRegisterSubmit - Registro completado, redirigiendo a profile-info");
       navigate('/profile-info', {
         state: {
-          role: registerForm.role
+          role: values.role
         }
       });
     }, 1000);
-  }, [registerStep, registerForm, navigate]);
+  }, [navigate]);
 
   const handleSocialLogin = useCallback((provider: string) => {
     console.log("[AuthPage] handleSocialLogin - Intentando login con:", provider);
@@ -180,22 +218,6 @@ const AuthPage = () => {
     setShowEmailLogin(false);
   }, []);
 
-  const updateLoginForm = useCallback((field: 'email' | 'password', value: string) => {
-    console.log(`[AuthPage] updateLoginForm - Actualizando ${field}:`, field === 'password' ? '*'.repeat(value.length) : value);
-    setLoginForm(prevState => ({
-      ...prevState,
-      [field]: value
-    }));
-  }, []);
-
-  const updateRegisterForm = useCallback((field: 'fullName' | 'email' | 'password' | 'role', value: string) => {
-    console.log(`[AuthPage] updateRegisterForm - Actualizando ${field}:`, field === 'password' ? '*'.repeat(value.length) : value);
-    setRegisterForm(prevState => ({
-      ...prevState,
-      [field]: value
-    }));
-  }, []);
-
   const seekerFeatures = ["Encuentra artistas según tus necesidades", "Acceso completo al catálogo de profesionales", "Comunícate directamente con los artistas"];
   const artistFeatures = ["Crea tu perfil profesional", "Recibe solicitudes de eventos", "Gestiona tu calendario de actuaciones", "Muestra tu portafolio a posibles clientes"];
 
@@ -206,77 +228,62 @@ const AuthPage = () => {
       <div className="min-h-[85vh] flex flex-col justify-center p-6 bg-secondary dark:bg-vyba-dark-bg">
         <AnimatePresence mode="wait">
           {!showEmailLogin ? (
-            <motion.div key="options" initial={{
-              opacity: 0,
-              y: 20
-            }} animate={{
-              opacity: 1,
-              y: 0
-            }} exit={{
-              opacity: 0,
-              y: -20
-            }} transition={{
-              duration: 0.3
-            }} className="flex flex-col items-center">
+            <motion.div 
+              key="options" 
+              initial={{ opacity: 0, y: 20 }} 
+              animate={{ opacity: 1, y: 0 }} 
+              exit={{ opacity: 0, y: -20 }} 
+              transition={{ duration: 0.3 }} 
+              className="flex flex-col items-center"
+            >
               <h1 className="text-5xl font-black mb-2">Bienvenido/a</h1>
               <h1 className="text-5xl font-black mb-6">a VYBA</h1>
               <p className="text-2xl mb-8">Inicia sesión o regístrate</p>
               
               <div className="w-full space-y-4">
-                <Button variant="outline" className="w-full border-none bg-white text-black hover:bg-gray-100" onClick={(e) => {
-                  e.preventDefault();
-                  console.log("[MobileAuthView] Click en botón Google");
-                  handleSocialLogin('Google');
-                }}>
+                <Button 
+                  variant="outline" 
+                  className="w-full border-none bg-white text-black hover:bg-gray-100" 
+                  onClick={() => handleSocialLogin('Google')}
+                >
                   Continuar con Google
                 </Button>
-                <Button variant="outline" className="w-full border-none bg-white text-black hover:bg-gray-100" onClick={(e) => {
-                  e.preventDefault();
-                  console.log("[MobileAuthView] Click en botón Facebook");
-                  handleSocialLogin('Facebook');
-                }}>
+                <Button 
+                  variant="outline" 
+                  className="w-full border-none bg-white text-black hover:bg-gray-100" 
+                  onClick={() => handleSocialLogin('Facebook')}
+                >
                   Continuar con Facebook
                 </Button>
-                <Button variant="outline" className="w-full border-none bg-white text-black hover:bg-gray-100" onClick={(e) => {
-                  e.preventDefault();
-                  console.log("[MobileAuthView] Click en botón email");
-                  handleShowEmailLogin();
-                }}>
+                <Button 
+                  variant="outline" 
+                  className="w-full border-none bg-white text-black hover:bg-gray-100" 
+                  onClick={handleShowEmailLogin}
+                >
                   Continuar con mail
                 </Button>
               </div>
               
               <div className="mt-12 text-center">
                 <p className="text-sm">
-                  No tienes cuenta? <span className="font-bold" onClick={(e) => {
-                    e.preventDefault();
-                    console.log("[MobileAuthView] Click en regístrate");
-                    switchToRegister();
-                  }}>Regístrate</span>
+                  No tienes cuenta? <span className="font-bold cursor-pointer" onClick={switchToRegister}>Regístrate</span>
                 </p>
               </div>
             </motion.div>
           ) : (
-            <motion.div key="email-login" initial={{
-              opacity: 0,
-              y: 20
-            }} animate={{
-              opacity: 1,
-              y: 0
-            }} exit={{
-              opacity: 0,
-              y: -20
-            }} transition={{
-              duration: 0.3
-            }} className="flex flex-col items-center">
+            <motion.div 
+              key="email-login" 
+              initial={{ opacity: 0, y: 20 }} 
+              animate={{ opacity: 1, y: 0 }} 
+              exit={{ opacity: 0, y: -20 }} 
+              transition={{ duration: 0.3 }} 
+              className="flex flex-col items-center"
+            >
               <div className="w-full flex mb-6">
                 <Button 
                   variant="ghost" 
                   className="p-2 -ml-2" 
-                  onClick={(e) => {
-                    e.preventDefault();
-                    handleBackToOptions();
-                  }}
+                  onClick={handleBackToOptions}
                 >
                   <ArrowLeft size={24} />
                 </Button>
@@ -286,76 +293,69 @@ const AuthPage = () => {
               <h1 className="text-5xl font-black mb-6">a VYBA</h1>
               <p className="text-2xl mb-8">Inicia sesión o regístrate</p>
               
-              <form onSubmit={(e) => {
-                e.preventDefault();
-                console.log("[MobileAuthView] Formulario móvil enviado");
-                handleLoginSubmit(e);
-              }} className="w-full space-y-6 max-w-2xl">
-                <div className="space-y-2">
-                  <label htmlFor="mobile-email" className="block text-sm font-medium">
-                    Email
-                  </label>
-                  <Input 
-                    id="mobile-email" 
-                    type="email" 
-                    value={loginForm.email} 
-                    onChange={(e) => {
-                      const newEmail = e.target.value;
-                      console.log("[MobileAuthView] Email cambiado:", newEmail);
-                      updateLoginForm('email', newEmail);
-                    }} 
-                    placeholder="Email" 
-                    className="bg-white" 
-                    required 
+              <Form {...loginFormHook}>
+                <form 
+                  onSubmit={loginFormHook.handleSubmit(handleLoginSubmit)} 
+                  className="w-full space-y-6 max-w-2xl"
+                >
+                  <FormField
+                    control={loginFormHook.control}
+                    name="email"
+                    render={({ field }) => (
+                      <FormItem className="space-y-2">
+                        <FormLabel>Email</FormLabel>
+                        <FormControl>
+                          <Input 
+                            placeholder="Email" 
+                            className="bg-white" 
+                            type="email" 
+                            {...field} 
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
                   />
-                </div>
-                
-                <div className="space-y-2">
-                  <label htmlFor="mobile-password" className="block text-sm font-medium">
-                    Contraseña
-                  </label>
-                  <div className="relative">
-                    <Input 
-                      id="mobile-password" 
-                      type={showPassword ? "text" : "password"} 
-                      value={loginForm.password} 
-                      onChange={(e) => {
-                        const newPassword = e.target.value;
-                        console.log("[MobileAuthView] Contraseña cambiada:", newPassword.length > 0 ? '*'.repeat(newPassword.length) : '');
-                        updateLoginForm('password', newPassword);
-                      }} 
-                      placeholder="Contraseña" 
-                      className="bg-white" 
-                      required 
-                    />
-                    <button 
-                      type="button" 
-                      onClick={(e) => {
-                        e.preventDefault();
-                        console.log("[MobileAuthView] Toggle visibilidad contraseña");
-                        togglePasswordVisibility();
-                      }} 
-                      className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500"
-                    >
-                      {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
-                    </button>
+                  
+                  <FormField
+                    control={loginFormHook.control}
+                    name="password"
+                    render={({ field }) => (
+                      <FormItem className="space-y-2">
+                        <FormLabel>Contraseña</FormLabel>
+                        <FormControl>
+                          <div className="relative">
+                            <Input 
+                              placeholder="Contraseña" 
+                              className="bg-white" 
+                              type={showPassword ? "text" : "password"} 
+                              {...field} 
+                            />
+                            <button 
+                              type="button" 
+                              onClick={() => togglePasswordVisibility()} 
+                              className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500"
+                            >
+                              {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+                            </button>
+                          </div>
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  
+                  <div className="flex justify-center pt-4">
+                    <Button type="submit" disabled={isLoading} isLoading={isLoading}>
+                      Iniciar sesión
+                    </Button>
                   </div>
-                </div>
-                
-                <div className="pt-4 flex justify-center">
-                  <Button type="submit" isLoading={isLoading} onClick={() => console.log("[MobileAuthView] Botón de iniciar sesión presionado")}>
-                    Iniciar sesión
-                  </Button>
-                </div>
-              </form>
+                </form>
+              </Form>
               
               <div className="mt-8 text-center">
                 <p className="text-sm">
-                  No tienes cuenta? <span className="font-bold" onClick={(e) => {
-                    e.preventDefault();
-                    console.log("[MobileAuthView] Click en cambiar a registro desde email");
-                    switchToRegister();
-                  }}>Regístrate</span>
+                  No tienes cuenta? <span className="font-bold cursor-pointer" onClick={switchToRegister}>Regístrate</span>
                 </p>
               </div>
             </motion.div>
@@ -675,53 +675,4 @@ const AuthPage = () => {
                               }} 
                               className="space-y-0"
                             >
-                              <RoleSelector value="artist" label="Entrar como artista" icon={<Music size={20} />} features={artistFeatures} isFirst={true} isLast={false} />
-                              <RoleSelector value="seeker" label="Entrar como buscador" icon={<Search size={20} />} features={seekerFeatures} isFirst={false} isLast={true} />
-                            </RadioGroup>
-                          </div>
-                          
-                          <div className="flex justify-center items-center gap-3 mt-8">
-                            <Button 
-                              type="button" 
-                              variant="outline" 
-                              onClick={(e) => {
-                                e.preventDefault();
-                                handleBackStep();
-                              }} 
-                              className="rounded-full p-3 border-none bg-white dark:bg-vyba-dark-secondary" 
-                              disabled={isLoading}
-                            >
-                              <ArrowLeft size={20} strokeWidth={3} />
-                            </Button>
-                            <Button type="submit" isLoading={isLoading}>
-                              Siguiente
-                            </Button>
-                          </div>
-                        </motion.form>
-                        
-                        <motion.div variants={itemVariants} className="text-center mt-6">
-                          <p className="text-sm text-gray-600 dark:text-gray-400">
-                            Ya tienes una cuenta? <Button 
-                              variant="link" 
-                              className="p-0 h-auto font-medium" 
-                              onClick={(e) => {
-                                e.preventDefault();
-                                setDefaultTab("login");
-                              }}
-                            >Iniciar Sesión</Button>
-                          </p>
-                        </motion.div>
-                      </motion.div>
-                    ) : null}
-                  </AnimatePresence>
-                </TabsContent>
-              </AnimatePresence>
-            </Tabs>
-          </Card>
-        </div>
-      )}
-    </PageTransition>
-  );
-};
-
-export default AuthPage;
+                              <RoleSelector value="artist"
