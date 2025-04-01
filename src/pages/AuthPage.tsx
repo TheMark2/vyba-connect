@@ -155,7 +155,7 @@ const AuthPage = () => {
             }} transition={{
               duration: 0.5
             }}>
-                  <h1 className="text-4xl md:text-5xl font-black mb-2 md:mb-4 dark:text-white">Bienvenido/a a VYBA</h1>
+                  <h1 className="text-5xl md:text-5xl font-black mb-2 md:mb-4 dark:text-white">Bienvenido/a a VYBA</h1>
                   <p className="text-xl md:text-2xl dark:text-gray-300">Inicia sesión o regístrate</p>
                 </motion.div>}
             </AnimatePresence>
