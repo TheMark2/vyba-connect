@@ -70,13 +70,6 @@ const LoginSection: React.FC<LoginSectionProps> = ({
       ) : (
         // Formulario de inicio de sesión
         <div className="space-y-5">
-          <h1 className="text-4xl font-black text-center">
-            Bienvenido/a a VYBA
-          </h1>
-          <p className="text-xl text-center mb-8">
-            Inicia sesión o regístrate
-          </p>
-          
           <LoginForm 
             loginForm={loginForm}
             setLoginForm={setLoginForm}
@@ -95,8 +88,10 @@ const LoginSection: React.FC<LoginSectionProps> = ({
             >
               <ArrowLeft size={20} />
             </Button>
-            <p className="text-sm">
-              No tienes cuenta? <Button onClick={switchToRegister} variant="link" className="p-0 h-auto">Regístrate</Button>
+          </div>
+          <div className="text-center mt-4 pt-2">
+            <p className="text-sm text-gray-600">
+              No tienes cuenta? <Button variant="secondary" className="h-auto font-bold text-black bg-transparent hover:font-black ml-4" onClick={switchToRegister}>Regístrate</Button>
             </p>
           </div>
         </div>
