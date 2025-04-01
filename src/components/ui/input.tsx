@@ -3,14 +3,23 @@ import * as React from "react"
 import { cn } from "@/lib/utils"
 
 const Input = React.forwardRef<HTMLInputElement, React.ComponentProps<"input">>(
-  ({ className, ...props }, ref) => {
+  ({ className, onChange, ...props }, ref) => {
     const inputRef = React.useRef<HTMLInputElement>(null)
     const combinedRef = useCombinedRefs(ref, inputRef)
+    
+    // Create a safe onChange handler that prevents default
+    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+      e.preventDefault();
+      if (onChange) {
+        onChange(e);
+      }
+    };
 
     return (
       <div className="relative">
         <input
           {...props}
+          onChange={handleChange}
           className={cn(
             "flex h-12 w-full rounded-md bg-background px-3 py-2 text-base file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground focus-visible:outline-none focus-visible:ring-0 disabled:cursor-not-allowed disabled:opacity-50 md:text-sm text-black font-medium placeholder:font-medium placeholder:text-muted-foreground dark:text-white dark:bg-black dark:placeholder:text-gray-400 placeholder:text-sm",
             className
