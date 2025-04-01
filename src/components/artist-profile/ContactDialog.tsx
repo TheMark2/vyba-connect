@@ -1,13 +1,11 @@
-
 import React, { useState } from "react";
-import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
+import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { Drawer, DrawerContent } from "@/components/ui/drawer";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { RefreshCw, Clock, Edit, BellRing, Users, ChevronDown } from "lucide-react";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Badge } from "@/components/ui/badge";
 import { motion, AnimatePresence } from "framer-motion";
@@ -171,12 +169,11 @@ const ContactDialog = ({
     }
   };
 
-  // Contenido común del diálogo/drawer
-  const DialogContent = (
+  const dialogContent = (
     <>
-      <DialogTitle className={`text-3xl font-black ${isMobile ? 'mb-6 mt-4' : 'mb-8 mt-2'}`}>
+      <div className={`text-3xl font-black ${isMobile ? 'mb-6 mt-4' : 'mb-8 mt-2'}`}>
         Contacta con {artistName}
-      </DialogTitle>
+      </div>
       
       <button 
         className={`flex justify-between items-center w-full p-3 rounded-xl transition-all duration-300 hover:bg-secondary dark:hover:bg-black/40 cursor-pointer relative overflow-hidden ${isMobile ? 'mb-3' : 'mb-2'}`}
@@ -494,15 +491,13 @@ const ContactDialog = ({
         <Drawer open={open} onOpenChange={onOpenChange}>
           <DrawerContent className="bg-[#FAF8F6] dark:bg-vyba-dark-secondary pt-10 pb-28 px-6 rounded-t-[32px]">
             <div className="w-16 h-1 bg-gray-300 dark:bg-gray-600 rounded-full mx-auto mb-4"></div>
-            {DialogContent}
+            {dialogContent}
           </DrawerContent>
         </Drawer>
       ) : (
         <Dialog open={open} onOpenChange={onOpenChange}>
-          <DialogContent 
-            className="max-w-[500px] p-0 border-none bg-[#FAF8F6] dark:bg-vyba-dark-secondary rounded-[40px] pt-12 px-8 pb-8"
-          >
-            {DialogContent}
+          <DialogContent className="max-w-[500px] p-0 border-none bg-[#FAF8F6] dark:bg-vyba-dark-secondary rounded-[40px] pt-12 px-8 pb-8">
+            {dialogContent}
           </DialogContent>
         </Dialog>
       )}
