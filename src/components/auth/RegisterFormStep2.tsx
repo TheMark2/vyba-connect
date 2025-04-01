@@ -70,6 +70,18 @@ const RegisterFormStep2: React.FC<RegisterFormStep2Props> = ({
           Siguiente
         </Button>
       </div>
+      <div className="text-center mt-4 pt-2">
+        <p className="text-sm text-gray-600 dark:text-gray-400">
+          ¿Tienes cuenta?
+        </p>
+        <Button 
+          variant="secondary" 
+          className="mt-2 text-xs font-bold" 
+          onClick={switchToLogin}
+        >
+          Iniciar Sesión
+        </Button>
+      </div>
     </form>
   );
 };
