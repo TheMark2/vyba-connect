@@ -73,7 +73,7 @@ const LoginForm: React.FC<LoginFormProps> = ({
           </button>
         </div>
       </div>
-      <div className="flex">
+      <div className="flex gap-4">
         <div className="pt-4">
           <Button 
             type="submit" 
