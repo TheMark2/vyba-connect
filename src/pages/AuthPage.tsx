@@ -11,6 +11,7 @@ import { RadioGroup, RoleSelector } from '@/components/ui/radio-group';
 import { motion, AnimatePresence } from "framer-motion";
 import { PageTransition } from '@/components/ui/page-transition';
 import { useIsMobile } from '@/hooks/use-mobile';
+
 const formVariants = {
   hidden: {
     opacity: 0,
@@ -33,6 +34,7 @@ const formVariants = {
     }
   }
 };
+
 const itemVariants = {
   hidden: {
     opacity: 0,
@@ -47,6 +49,7 @@ const itemVariants = {
     y: -10
   }
 };
+
 const AuthPage = () => {
   const navigate = useNavigate();
   const [defaultTab, setDefaultTab] = useState<string>("login");
@@ -65,6 +68,7 @@ const AuthPage = () => {
   const [registerStep, setRegisterStep] = useState(1);
   const [showEmailLogin, setShowEmailLogin] = useState(false);
   const isMobile = useIsMobile();
+
   const handleLoginSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
@@ -79,6 +83,7 @@ const AuthPage = () => {
       }, 500);
     }, 1000);
   };
+
   const handleRegisterSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
@@ -97,38 +102,45 @@ const AuthPage = () => {
       });
     }, 1000);
   };
+
   const handleSocialLogin = (provider: string) => {
     toast.info(`Iniciando sesión con ${provider}`, {
       description: "Esta función estará disponible próximamente",
       position: "bottom-center"
     });
   };
+
   const togglePasswordVisibility = () => {
     setShowPassword(!showPassword);
   };
+
   const handleTabChange = (value: string) => {
     setDefaultTab(value);
     setRegisterStep(1);
     setShowEmailLogin(false);
   };
+
   const switchToRegister = () => {
     setDefaultTab("register");
     setRegisterStep(1);
     setShowEmailLogin(false);
   };
+
   const handleBackStep = () => {
     setRegisterStep(1);
   };
+
   const handleShowEmailLogin = () => {
     setShowEmailLogin(true);
   };
+
   const handleBackToOptions = () => {
     setShowEmailLogin(false);
   };
+
   const seekerFeatures = ["Encuentra artistas según tus necesidades", "Acceso completo al catálogo de profesionales", "Comunícate directamente con los artistas"];
   const artistFeatures = ["Crea tu perfil profesional", "Recibe solicitudes de eventos", "Gestiona tu calendario de actuaciones", "Muestra tu portafolio a posibles clientes"];
 
-  // Mobile View Component
   const MobileAuthView = () => {
     return <div className="min-h-[85vh] flex flex-col justify-center p-6 bg-secondary dark:bg-vyba-dark-bg">
         <AnimatePresence mode="wait">
@@ -186,10 +198,21 @@ const AuthPage = () => {
                   <label htmlFor="mobile-email" className="block text-sm font-medium">
                     Email
                   </label>
-                  <Input id="mobile-email" type="email" value={loginForm.email} onChange={e => setLoginForm({
-                ...loginForm,
-                email: e.target.value
-              })} placeholder="Email" className="bg-white" required />
+                  <Input 
+                    id="mobile-email" 
+                    type="email" 
+                    value={loginForm.email} 
+                    onChange={(e) => {
+                      e.preventDefault();
+                      setLoginForm({
+                        ...loginForm,
+                        email: e.target.value
+                      });
+                    }} 
+                    placeholder="Email" 
+                    className="bg-white" 
+                    required 
+                  />
                 </div>
                 
                 <div className="space-y-2">
@@ -197,11 +220,29 @@ const AuthPage = () => {
                     Contraseña
                   </label>
                   <div className="relative">
-                    <Input id="mobile-password" type={showPassword ? "text" : "password"} value={loginForm.password} onChange={e => setLoginForm({
-                  ...loginForm,
-                  password: e.target.value
-                })} placeholder="Contraseña" className="bg-white" required />
-                    <button type="button" onClick={togglePasswordVisibility} className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500">
+                    <Input 
+                      id="mobile-password" 
+                      type={showPassword ? "text" : "password"} 
+                      value={loginForm.password} 
+                      onChange={(e) => {
+                        e.preventDefault();
+                        setLoginForm({
+                          ...loginForm,
+                          password: e.target.value
+                        });
+                      }} 
+                      placeholder="Contraseña" 
+                      className="bg-white" 
+                      required 
+                    />
+                    <button 
+                      type="button" 
+                      onClick={(e) => {
+                        e.preventDefault();
+                        togglePasswordVisibility();
+                      }} 
+                      className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500"
+                    >
                       {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
                     </button>
                   </div>
@@ -223,6 +264,7 @@ const AuthPage = () => {
         </AnimatePresence>
       </div>;
   };
+
   return <PageTransition>
       <Navbar />
       {isMobile ? <MobileAuthView /> : <div className="bg-vyba-cream dark:bg-vyba-dark-bg flex items-center justify-center min-h-[90vh] px-6 md:px-10 lg:px-14 xl:px-16">
@@ -437,4 +479,5 @@ const AuthPage = () => {
         </div>}
     </PageTransition>;
 };
+
 export default AuthPage;
