@@ -181,7 +181,7 @@ const AuthPage = () => {
               <h1 className="text-5xl font-black mb-6">a VYBA</h1>
               <p className="text-2xl mb-8">Inicia sesión o regístrate</p>
               
-              <form onSubmit={handleLoginSubmit} className="w-full space-y-6">
+              <form onSubmit={handleLoginSubmit} className="w-full space-y-6 max-w-2xl">
                 <div className="space-y-2">
                   <label htmlFor="mobile-email" className="block text-sm font-medium">
                     Email
