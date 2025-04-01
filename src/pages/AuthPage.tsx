@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Button } from "@/components/ui/button";
@@ -10,49 +11,33 @@ import { Eye, EyeOff, Facebook, Search, Music, ArrowLeft } from 'lucide-react';
 import { RadioGroup, RoleSelector } from '@/components/ui/radio-group';
 import { motion, AnimatePresence } from "framer-motion";
 import { PageTransition } from '@/components/ui/page-transition';
-import { useIsMobile } from '@/hooks/use-mobile';
 
 const formVariants = {
-  hidden: {
-    opacity: 0,
-    y: 20
-  },
-  visible: {
-    opacity: 1,
+  hidden: { opacity: 0, y: 20 },
+  visible: { 
+    opacity: 1, 
     y: 0,
-    transition: {
+    transition: { 
       duration: 0.4,
       when: "beforeChildren",
       staggerChildren: 0.1
     }
   },
-  exit: {
-    opacity: 0,
-    y: -20,
-    transition: {
-      duration: 0.2
-    }
+  exit: { 
+    opacity: 0, 
+    y: -20, 
+    transition: { duration: 0.2 } 
   }
 };
 
 const itemVariants = {
-  hidden: {
-    opacity: 0,
-    y: 10
-  },
-  visible: {
-    opacity: 1,
-    y: 0
-  },
-  exit: {
-    opacity: 0,
-    y: -10
-  }
+  hidden: { opacity: 0, y: 10 },
+  visible: { opacity: 1, y: 0 },
+  exit: { opacity: 0, y: -10 }
 };
 
 const AuthPage = () => {
   const navigate = useNavigate();
-  const isMobile = useIsMobile();
   const [defaultTab, setDefaultTab] = useState<string>("login");
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
@@ -64,18 +49,20 @@ const AuthPage = () => {
     fullName: '',
     email: '',
     password: '',
-    role: 'artist' as 'artist' | 'seeker'
+    role: 'artist'
   });
   const [registerStep, setRegisterStep] = useState(1);
 
   const handleLoginSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
+    
     setTimeout(() => {
       toast.success("Inicio de sesión exitoso", {
         description: "Redirigiendo a la página principal...",
         position: "bottom-center"
       });
+      
       setTimeout(() => {
         setIsLoading(false);
         navigate('/');
@@ -86,6 +73,7 @@ const AuthPage = () => {
   const handleRegisterSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
+    
     if (registerStep < 2) {
       setTimeout(() => {
         setIsLoading(false);
@@ -93,6 +81,7 @@ const AuthPage = () => {
       }, 800);
       return;
     }
+    
     setTimeout(() => {
       navigate('/profile-info', {
         state: {
@@ -127,61 +116,43 @@ const AuthPage = () => {
     setRegisterStep(1);
   };
 
-  const handleRoleChange = (value: 'artist' | 'seeker') => {
-    setRegisterForm({
-      ...registerForm,
-      role: value
-    });
-  };
-
   const seekerFeatures = ["Encuentra artistas según tus necesidades", "Acceso completo al catálogo de profesionales", "Comunícate directamente con los artistas"];
   const artistFeatures = ["Crea tu perfil profesional", "Recibe solicitudes de eventos", "Gestiona tu calendario de actuaciones", "Muestra tu portafolio a posibles clientes"];
 
-  return <PageTransition>
+  return (
+    <PageTransition>
       <Navbar />
-      <div className="bg-vyba-cream dark:bg-vyba-dark-bg flex items-center justify-center min-h-[90vh] px-4 py-8 md:px-10 lg:px-14 xl:px-16">
-        <Card className={`
-          border-none shadow-none bg-secondary dark:bg-vyba-dark-bg dark:border-vyba-dark-secondary 
-          rounded-3xl overflow-hidden w-full mx-auto
-          ${isMobile && registerStep === 2 && defaultTab === "register" ? 
-            'fixed top-0 left-0 right-0 bottom-0 h-screen rounded-none z-50 py-4 pt-16 overflow-y-auto' : 
-            'py-12 md:py-16'
-          }
-        `}>
-          <div className="text-center mb-6 md:mb-10 max-w-2xl mx-auto px-4 md:px-12">
+      <div className="bg-vyba-cream dark:bg-vyba-dark-bg flex items-center justify-center min-h-[90vh] px-6 md:px-10 lg:px-14 xl:px-16">
+        <Card className="border-none shadow-none bg-secondary dark:bg-vyba-dark-bg dark:border-vyba-dark-secondary rounded-3xl overflow-hidden w-full py-16 mx-auto">
+          <div className="text-center mb-10 max-w-2xl mx-auto px-12">
             <AnimatePresence mode="wait">
-              {registerStep === 2 && defaultTab === "register" ? <motion.h1 key="role-selection" initial={{
-              opacity: 0,
-              y: -20
-            }} animate={{
-              opacity: 1,
-              y: 0
-            }} exit={{
-              opacity: 0,
-              y: 20
-            }} transition={{
-              duration: 0.5
-            }} className="text-5xl md:text-5xl font-black mb-2 md:mb-4 dark:text-white">
+              {registerStep === 2 && defaultTab === "register" ? (
+                <motion.h1
+                  key="role-selection"
+                  className="text-6xl font-black mb-4 dark:text-white"
+                  initial={{ opacity: 0, y: -20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: 20 }}
+                  transition={{ duration: 0.5 }}
+                >
                   ¿Cómo quieres usar VYBA?
-                </motion.h1> : <motion.div key="welcome" initial={{
-              opacity: 0,
-              y: -20
-            }} animate={{
-              opacity: 1,
-              y: 0
-            }} exit={{
-              opacity: 0,
-              y: 20
-            }} transition={{
-              duration: 0.5
-            }}>
-                  <h1 className="text-5xl md:text-5xl font-black mb-2 md:mb-4 dark:text-white">Bienvenido/a a VYBA</h1>
-                  <p className="text-xl md:text-2xl dark:text-gray-300">Inicia sesión o regístrate</p>
-                </motion.div>}
+                </motion.h1>
+              ) : (
+                <motion.div
+                  key="welcome"
+                  initial={{ opacity: 0, y: -20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: 20 }}
+                  transition={{ duration: 0.5 }}
+                >
+                  <h1 className="text-6xl font-black mb-4 dark:text-white">Bienvenido/a a VYBA</h1>
+                  <p className="text-4xl dark:text-gray-300">Inicia sesión o regístrate</p>
+                </motion.div>
+              )}
             </AnimatePresence>
           </div>
 
-          <Tabs defaultValue={defaultTab} value={defaultTab} onValueChange={handleTabChange} className="max-w-2xl mx-auto px-4 md:px-12">
+          <Tabs defaultValue={defaultTab} value={defaultTab} onValueChange={handleTabChange} className="max-w-2xl mx-auto px-12">
             <TabsList className="hidden">
               <TabsTrigger value="login">Iniciar sesión</TabsTrigger>
               <TabsTrigger value="register">Registrarse</TabsTrigger>
@@ -189,8 +160,14 @@ const AuthPage = () => {
             
             <AnimatePresence mode="wait">
               <TabsContent value="login" key="login">
-                <motion.div className="space-y-6" variants={formVariants} initial="hidden" animate="visible" exit="exit">
-                  <motion.div variants={itemVariants} className={`grid ${isMobile ? 'grid-cols-1 gap-3' : 'grid-cols-2 gap-4'}`}>
+                <motion.div 
+                  className="space-y-6"
+                  variants={formVariants}
+                  initial="hidden"
+                  animate="visible"
+                  exit="exit"
+                >
+                  <motion.div variants={itemVariants} className="grid grid-cols-2 gap-4">
                     <Button type="button" variant="outline" className="border-none w-full flex items-center justify-center gap-2 bg-white text-black dark:bg-white dark:text-black dark:hover:bg-gray-100 hover:bg-gray-100" onClick={() => handleSocialLogin('Google')}>
                       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" width="20px" height="20px">
                         <path fill="#FFC107" d="M43.611,20.083H42V20H24v8h11.303c-1.649,4.657-6.08,8-11.303,8c-6.627,0-12-5.373-12-12c0-6.627,5.373-12,12-12c3.059,0,5.842,1.154,7.961,3.039l5.657-5.657C34.046,6.053,29.268,4,24,4C12.955,4,4,12.955,4,24c0,11.045,8.955,20,20,20c11.045,0,20-8.955,20-20C44,22.659,43.862,21.35,43.611,20.083z" />
@@ -220,7 +197,7 @@ const AuthPage = () => {
                       <Input id="login-email" type="email" value={loginForm.email} onChange={e => setLoginForm({
                       ...loginForm,
                       email: e.target.value
-                    })} placeholder="Escribe tu correo" required className="rounded-xl h-12 bg-white dark:bg-black dark:text-white text-sm" />
+                    })} placeholder="Escribe tu correo" required className="rounded-xl h-12 bg-white dark:bg-black dark:text-white" />
                     </div>
                     
                     <div className="space-y-1.5">
@@ -231,7 +208,7 @@ const AuthPage = () => {
                         <Input id="login-password" type={showPassword ? "text" : "password"} value={loginForm.password} onChange={e => setLoginForm({
                         ...loginForm,
                         password: e.target.value
-                      })} placeholder="Escribe tu contraseña" required className="rounded-xl h-12 pr-10 bg-white dark:bg-black dark:text-white text-sm" />
+                      })} placeholder="Escribe tu contraseña" required className="rounded-xl h-12 pr-10 bg-white dark:bg-black dark:text-white" />
                         <button type="button" onClick={togglePasswordVisibility} className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500">
                           {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
                         </button>
@@ -239,7 +216,7 @@ const AuthPage = () => {
                     </div>
                     
                     <div className="flex justify-center mt-8">
-                      <Button type="submit" isLoading={isLoading} className="w-full md:w-auto">
+                      <Button type="submit" isLoading={isLoading}>
                         Iniciar sesión
                       </Button>
                     </div>
@@ -255,8 +232,16 @@ const AuthPage = () => {
 
               <TabsContent value="register" key="register">
                 <AnimatePresence mode="wait">
-                  {registerStep === 1 ? <motion.div className="space-y-6" key="register-step-1" variants={formVariants} initial="hidden" animate="visible" exit="exit">
-                      <motion.div variants={itemVariants} className={`grid ${isMobile ? 'grid-cols-1 gap-3' : 'grid-cols-2 gap-4'}`}>
+                  {registerStep === 1 ? (
+                    <motion.div 
+                      className="space-y-6"
+                      key="register-step-1"
+                      variants={formVariants}
+                      initial="hidden"
+                      animate="visible"
+                      exit="exit"
+                    >
+                      <motion.div variants={itemVariants} className="grid grid-cols-2 gap-4">
                         <Button type="button" variant="outline" className="w-full flex items-center justify-center gap-2 bg-white text-black dark:bg-white dark:text-black dark:hover:bg-gray-100 hover:bg-gray-100" onClick={() => handleSocialLogin('Google')}>
                           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" width="20px" height="20px">
                             <path fill="#FFC107" d="M43.611,20.083H42V20H24v8h11.303c-1.649,4.657-6.08,8-11.303,8c-6.627,0-12-5.373-12-12c0-6.627,5.373-12,12-12c3.059,0,5.842,1.154,7.961,3.039l5.657-5.657C34.046,6.053,29.268,4,24,4C12.955,4,4,12.955,4,24c0,11.045,8.955,20,20,20c11.045,0,20-8.955,20-20C44,22.659,43.862,21.35,43.611,20.083z" />
@@ -286,10 +271,10 @@ const AuthPage = () => {
                           <Input id="register-name" type="text" value={registerForm.fullName} onChange={e => setRegisterForm({
                         ...registerForm,
                         fullName: e.target.value
-                      })} placeholder="Escribe tu nombre completo" required className="rounded-xl h-12 bg-white dark:bg-black dark:text-white text-sm" />
+                      })} placeholder="Escribe tu nombre completo" required className="rounded-xl h-12 bg-white dark:bg-black dark:text-white" />
                         </div>
                         
-                        <div className={`grid ${isMobile ? 'grid-cols-1 gap-4' : 'grid-cols-2 gap-4'}`}>
+                        <div className="grid grid-cols-2 gap-4">
                           <div className="space-y-1.5">
                             <label htmlFor="register-email" className="block text-sm font-medium dark:text-white">
                               Email
@@ -297,7 +282,7 @@ const AuthPage = () => {
                             <Input id="register-email" type="email" value={registerForm.email} onChange={e => setRegisterForm({
                           ...registerForm,
                           email: e.target.value
-                        })} placeholder="Escribe tu correo" required className="rounded-xl h-12 bg-white dark:bg-black dark:text-white text-sm" />
+                        })} placeholder="Escribe tu correo" required className="rounded-xl h-12 bg-white dark:bg-black dark:text-white" />
                           </div>
                           
                           <div className="space-y-1.5">
@@ -308,7 +293,7 @@ const AuthPage = () => {
                               <Input id="register-password" type={showPassword ? "text" : "password"} value={registerForm.password} onChange={e => setRegisterForm({
                             ...registerForm,
                             password: e.target.value
-                          })} placeholder="Escribe tu contraseña" required className="rounded-xl h-12 pr-10 bg-white dark:bg-black dark:text-white text-sm" />
+                          })} placeholder="Escribe tu contraseña" required className="rounded-xl h-12 pr-10 bg-white dark:bg-black dark:text-white" />
                               <button type="button" onClick={togglePasswordVisibility} className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500">
                                 {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
                               </button>
@@ -317,25 +302,57 @@ const AuthPage = () => {
                         </div>
                         
                         <div className="flex justify-center mt-8">
-                          <Button type="submit" isLoading={isLoading} className="w-full md:w-auto">
+                          <Button type="submit" isLoading={isLoading}>
                             Siguiente
                           </Button>
                         </div>
                       </motion.form>
-                    </motion.div> : registerStep === 2 ? <motion.div className="space-y-6" key="register-step-2" variants={formVariants} initial="hidden" animate="visible" exit="exit">
+                    </motion.div>
+                  ) : registerStep === 2 ? (
+                    <motion.div 
+                      className="space-y-6"
+                      key="register-step-2"
+                      variants={formVariants}
+                      initial="hidden"
+                      animate="visible"
+                      exit="exit"
+                    >
                       <motion.form variants={itemVariants} onSubmit={handleRegisterSubmit} className="space-y-8">
                         <div className="overflow-hidden rounded-2xl">
-                          <RadioGroup value={registerForm.role} onValueChange={handleRoleChange} className="space-y-0">
-                            <RoleSelector value="artist" label="Entrar como artista" icon={<Music size={20} />} features={artistFeatures} isFirst={true} isLast={false} />
-                            <RoleSelector value="seeker" label="Entrar como buscador" icon={<Search size={20} />} features={seekerFeatures} isFirst={false} isLast={true} />
+                          <RadioGroup value={registerForm.role} onValueChange={value => setRegisterForm({
+                            ...registerForm,
+                            role: value
+                          })} className="space-y-0">
+                            <RoleSelector 
+                              value="artist" 
+                              label="Entrar como artista" 
+                              icon={<Music size={20} />} 
+                              features={artistFeatures}
+                              isFirst={true}
+                              isLast={false}
+                            />
+                            <RoleSelector 
+                              value="seeker" 
+                              label="Entrar como buscador" 
+                              icon={<Search size={20} />} 
+                              features={seekerFeatures}
+                              isFirst={false}
+                              isLast={true}
+                            />
                           </RadioGroup>
                         </div>
                         
-                        <div className="flex flex-row justify-center items-center gap-3 mt-8">
-                          <Button type="button" variant="outline" onClick={handleBackStep} className="rounded-full p-3 border-none bg-white dark:bg-vyba-dark-secondary w-full md:w-auto" disabled={isLoading}>
+                        <div className="flex justify-center items-center gap-3 mt-8">
+                          <Button 
+                            type="button" 
+                            variant="outline" 
+                            onClick={handleBackStep} 
+                            className="rounded-full p-3 border-none bg-white dark:bg-vyba-dark-secondary"
+                            disabled={isLoading}
+                          >
                             <ArrowLeft size={20} strokeWidth={3} />
                           </Button>
-                          <Button type="submit" isLoading={isLoading} className="w-full md:w-auto">
+                          <Button type="submit" isLoading={isLoading}>
                             Siguiente
                           </Button>
                         </div>
@@ -346,14 +363,16 @@ const AuthPage = () => {
                           Ya tienes una cuenta? <Button variant="link" className="p-0 h-auto font-medium" onClick={() => setDefaultTab("login")}>Iniciar Sesión</Button>
                         </p>
                       </motion.div>
-                    </motion.div> : null}
+                    </motion.div>
+                  ) : null}
                 </AnimatePresence>
               </TabsContent>
             </AnimatePresence>
           </Tabs>
         </Card>
       </div>
-    </PageTransition>;
+    </PageTransition>
+  );
 };
 
 export default AuthPage;

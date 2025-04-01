@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { Button } from "@/components/ui/button";
@@ -7,15 +8,18 @@ import { Music, Search, ChevronDown } from 'lucide-react';
 import Navbar from '@/components/Navbar';
 import { toast } from "sonner";
 import { Link } from 'react-router-dom';
-import { useIsMobile } from '@/hooks/use-mobile';
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
+import { 
+  DropdownMenu, 
+  DropdownMenuContent, 
+  DropdownMenuItem,
+  DropdownMenuTrigger
+} from "@/components/ui/dropdown-menu";
 
 const ProfileInfoPage = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const [role, setRole] = useState<'artist' | 'seeker'>('artist');
   const [isHovering, setIsHovering] = useState(false);
-  const isMobile = useIsMobile();
 
   // Formulario para artistas
   const [artistForm, setArtistForm] = useState({
@@ -38,10 +42,7 @@ const ProfileInfoPage = () => {
   }, [location.state]);
 
   const handleArtistFormChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const {
-      name,
-      value
-    } = e.target;
+    const { name, value } = e.target;
     setArtistForm({
       ...artistForm,
       [name]: value
@@ -49,10 +50,7 @@ const ProfileInfoPage = () => {
   };
 
   const handleSeekerFormChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const {
-      name,
-      value
-    } = e.target;
+    const { name, value } = e.target;
     setSeekerForm({
       ...seekerForm,
       [name]: value
@@ -70,15 +68,11 @@ const ProfileInfoPage = () => {
     setTimeout(() => {
       if (role === 'artist') {
         navigate('/thank-you', {
-          state: {
-            artistInfo: artistForm
-          }
+          state: { artistInfo: artistForm }
         });
       } else {
         navigate('/seeker-thank-you', {
-          state: {
-            seekerInfo: seekerForm
-          }
+          state: { seekerInfo: seekerForm }
         });
       }
     }, 1500);
@@ -102,66 +96,75 @@ const ProfileInfoPage = () => {
     }
   };
 
-  return <>
+  return (
+    <>
       <Navbar />
-      <div className="bg-vyba-cream dark:bg-vyba-dark-bg flex items-center justify-center min-h-[90vh] px-4 sm:px-6 md:px-10 lg:px-14 xl:px-16 py-8">
-        <Card className={`
-          border-none shadow-none bg-secondary dark:bg-vyba-dark-bg dark:border-vyba-dark-secondary 
-          rounded-3xl overflow-hidden w-full mx-auto
-          ${isMobile ? 
-            'fixed top-0 left-0 right-0 bottom-0 h-screen rounded-none z-50 py-4 pt-16 overflow-y-auto' : 
-            'py-8 md:py-16'
-          }
-        `}>
-          <div className="max-w-2xl mx-auto px-5 md:px-12">
-            <h1 className="text-5xl md:text-5xl lg:text-6xl font-black mb-6 md:mb-10 text-center dark:text-white">Rellena tu información</h1>
+      <div className="bg-vyba-cream dark:bg-vyba-dark-bg flex items-center justify-center min-h-[90vh] px-6 md:px-10 lg:px-14 xl:px-16">
+        <Card className="border-none shadow-none bg-secondary dark:bg-vyba-dark-bg dark:border-vyba-dark-secondary rounded-3xl overflow-hidden w-full py-16 mx-auto">
+          <div className="max-w-2xl mx-auto px-12">
+            <h1 className="text-6xl font-black mb-10 text-center dark:text-white">Rellena tu información</h1>
             
-            <div className="flex justify-center mb-8 md:mb-12">
+            <div className="flex justify-center mb-12">
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
-                  <div className={`inline-flex items-center gap-3 md:gap-6 px-4 md:px-6 py-2 rounded-full bg-white dark:bg-vyba-dark-secondary transition-all duration-300 cursor-pointer relative overflow-hidden ${isHovering ? 'pr-10 md:pr-12' : ''}`} onMouseEnter={() => setIsHovering(true)} onMouseLeave={() => setIsHovering(false)}>
+                  <div 
+                    className={`inline-flex items-center gap-6 px-6 py-2 rounded-full bg-white dark:bg-vyba-dark-secondary transition-all duration-300 cursor-pointer relative overflow-hidden ${isHovering ? 'pr-12' : ''}`}
+                    onMouseEnter={() => setIsHovering(true)}
+                    onMouseLeave={() => setIsHovering(false)}
+                  >
                     {role === 'artist' ? <>
-                        <Music size={isMobile ? 16 : 20} className="text-black dark:text-white" />
+                        <Music size={20} className="text-black dark:text-white" />
                         <div className="flex flex-col">                    
                           <span className="text-xs dark:text-white">Registrado como</span>
-                          <span className="text-xs md:text-sm font-bold dark:text-white">Artista</span>
+                          <span className="text-sm font-bold dark:text-white">Artista</span>
                         </div>
                       </> : <>
-                        <Search size={isMobile ? 16 : 20} className="text-black dark:text-white" />
+                        <Search size={20} className="text-black dark:text-white" />
                         <div className="flex flex-col">                    
                           <span className="text-xs dark:text-white">Registrado como</span>
-                          <span className="text-xs md:text-sm font-bold dark:text-white">Buscador</span>
+                          <span className="text-sm font-bold dark:text-white">Buscador</span>
                         </div>
                       </>}
                     
                     <div className={`absolute right-3 transform transition-all duration-300 ${isHovering ? 'opacity-100 translate-x-0' : 'opacity-0 translate-x-5'}`}>
-                      <ChevronDown size={isMobile ? 16 : 18} className="text-black dark:text-white" />
+                      <ChevronDown 
+                        size={18} 
+                        className="text-black dark:text-white" 
+                      />
                     </div>
                   </div>
                 </DropdownMenuTrigger>
-                <DropdownMenuContent className="min-w-[180px] md:min-w-[225px] bg-white dark:bg-[#575654] border-none rounded-3xl p-3 shadow-none mb-2" align="center">
-                  {role === 'artist' ? <DropdownMenuItem onClick={() => handleRoleChange('seeker')}>
+                <DropdownMenuContent 
+                  className="min-w-[225px] bg-white dark:bg-[#575654] border-none rounded-3xl p-3 shadow-none mb-2"
+                  align="center"
+                >
+                  {role === 'artist' ? (
+                    <DropdownMenuItem onClick={() => handleRoleChange('seeker')}>
                       <div className="flex items-center gap-3">
                         <Search size={16} />
                         <span>Buscador</span>
                       </div>
-                    </DropdownMenuItem> : <DropdownMenuItem onClick={() => handleRoleChange('artist')}>
+                    </DropdownMenuItem>
+                  ) : (
+                    <DropdownMenuItem onClick={() => handleRoleChange('artist')}>
                       <div className="flex items-center gap-3">
                         <Music size={16} />
                         <span>Artista</span>
                       </div>
-                    </DropdownMenuItem>}
+                    </DropdownMenuItem>
+                  )}
                 </DropdownMenuContent>
               </DropdownMenu>
             </div>
             
-            <form onSubmit={handleSubmit} className="space-y-5 md:space-y-6">
-              {role === 'artist' ? <>
+            <form onSubmit={handleSubmit} className="space-y-6">
+              {role === 'artist' ?
+                <>
                   <div className="space-y-1.5">
                     <label htmlFor="artistName" className="block text-sm font-medium dark:text-white">
                       Nombre de artista
                     </label>
-                    <Input id="artistName" name="artistName" value={artistForm.artistName} onChange={handleArtistFormChange} placeholder="Escribe tu nombre artístico" required className="rounded-xl h-12 bg-white dark:bg-white dark:text-black text-sm" />
+                    <Input id="artistName" name="artistName" value={artistForm.artistName} onChange={handleArtistFormChange} placeholder="Escribe tu nombre artístico" className="rounded-xl h-12 bg-white dark:bg-white dark:text-black" required />
                   </div>
                   
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -169,22 +172,23 @@ const ProfileInfoPage = () => {
                       <label htmlFor="mainGenres" className="block text-sm font-medium dark:text-white">
                         Géneros principales
                       </label>
-                      <Input id="mainGenres" name="mainGenres" value={artistForm.mainGenres} onChange={handleArtistFormChange} placeholder="Ej: Rock, Pop, Jazz" required className="rounded-xl h-12 bg-white dark:bg-white dark:text-black text-sm" />
+                      <Input id="mainGenres" name="mainGenres" value={artistForm.mainGenres} onChange={handleArtistFormChange} placeholder="Ej: Rock, Pop, Jazz" className="rounded-xl h-12 bg-white dark:bg-white dark:text-black" required />
                     </div>
                     
                     <div className="space-y-1.5">
                       <label htmlFor="artistType" className="block text-sm font-medium dark:text-white">
                         Tipo de artista
                       </label>
-                      <Input id="artistType" name="artistType" value={artistForm.artistType} onChange={handleArtistFormChange} placeholder="Ej: Solista, Banda, DJ" required className="rounded-xl h-12 bg-white dark:bg-white dark:text-black text-sm" />
+                      <Input id="artistType" name="artistType" value={artistForm.artistType} onChange={handleArtistFormChange} placeholder="Ej: Solista, Banda, DJ" className="rounded-xl h-12 bg-white dark:bg-white dark:text-black" required />
                     </div>
                   </div>
-                </> : <>
+                </> :
+                <>
                   <div className="space-y-1.5">
                     <label htmlFor="fullName" className="block text-sm font-medium dark:text-white">
                       Nombre completo
                     </label>
-                    <Input id="fullName" name="fullName" value={seekerForm.fullName} onChange={handleSeekerFormChange} placeholder="Escribe tu nombre completo" required className="rounded-xl h-12 bg-white dark:bg-white dark:text-black text-sm" />
+                    <Input id="fullName" name="fullName" value={seekerForm.fullName} onChange={handleSeekerFormChange} placeholder="Escribe tu nombre completo" className="rounded-xl h-12 bg-white dark:bg-white dark:text-black" required />
                   </div>
                   
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -192,25 +196,25 @@ const ProfileInfoPage = () => {
                       <label htmlFor="musicalTastes" className="block text-sm font-medium dark:text-white">
                         Gustos musicales
                       </label>
-                      <Input id="musicalTastes" name="musicalTastes" value={seekerForm.musicalTastes} onChange={handleSeekerFormChange} placeholder="Ej: Rock, Jazz, Clásica" required className="rounded-xl h-12 bg-white dark:bg-white dark:text-black text-sm" />
+                      <Input id="musicalTastes" name="musicalTastes" value={seekerForm.musicalTastes} onChange={handleSeekerFormChange} placeholder="Ej: Rock, Jazz, Clásica" className="rounded-xl h-12 bg-white dark:bg-white dark:text-black" required />
                     </div>
                     
                     <div className="space-y-1.5">
                       <label htmlFor="mobile" className="block text-sm font-medium dark:text-white">
                         Móvil
                       </label>
-                      <Input id="mobile" name="mobile" type="tel" value={seekerForm.mobile} onChange={handleSeekerFormChange} placeholder="Tu número de teléfono" required className="rounded-xl h-12 bg-white dark:bg-white dark:text-black text-sm" />
+                      <Input id="mobile" name="mobile" type="tel" value={seekerForm.mobile} onChange={handleSeekerFormChange} placeholder="Tu número de teléfono" className="rounded-xl h-12 bg-white dark:bg-white dark:text-black" required />
                     </div>
                   </div>
                 </>}
               
-              <div className="flex flex-col justify-center items-center mt-8 md:mt-12">
-                <Button type="submit" className="w-full md:w-auto">
+              <div className="flex justify-center items-center mt-12">
+                <Button type="submit">
                   Siguiente
                 </Button>
               </div>
               
-              <div className="text-center mt-4 md:mt-6">
+              <div className="text-center mt-6">
                 <p className="text-sm text-gray-600 dark:text-gray-400">
                   Ya tienes una cuenta? <Link to="/auth" className="font-medium text-primary-foreground">Iniciar Sesión</Link>
                 </p>
@@ -219,7 +223,8 @@ const ProfileInfoPage = () => {
           </div>
         </Card>
       </div>
-    </>;
+    </>
+  );
 };
 
 export default ProfileInfoPage;
