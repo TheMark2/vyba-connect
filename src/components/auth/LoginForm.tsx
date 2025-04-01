@@ -74,8 +74,12 @@ const LoginForm: React.FC<LoginFormProps> = ({
         </div>
       </div>
       
-      <div className="flex justify-center mt-8">
-        <Button type="submit" isLoading={isLoading}>
+      <div className="pt-4">
+        <Button 
+          type="submit" 
+          className="w-full bg-blue-100 text-black hover:bg-blue-200" 
+          isLoading={isLoading}
+        >
           Iniciar sesión
         </Button>
       </div>
