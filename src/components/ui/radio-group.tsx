@@ -68,24 +68,24 @@ const RoleSelector = React.forwardRef<
         isLast ? "rounded-b-2xl" : "",
         !isFirst && !isLast ? "border-t-0" : "" // Added this to ensure no border at connecting points
       )}>
-        <div className="flex items-center gap-3 px-5 py-3.5">
+        <div className="flex items-center gap-3 px-5 py-3.5 relative overflow-hidden group">
           {icon && (
             <div className={cn(
-              "flex-shrink-0 transition-transform duration-300",
-              isSelected ? "scale-110" : "scale-100"
+              "flex-shrink-0 transition-transform duration-500",
+              isSelected ? "scale-110 rotate-3" : "scale-100 group-hover:scale-105 group-hover:rotate-1"
             )}>
               {icon}
             </div>
           )}
           <span className={cn(
             "text-sm font-medium flex-grow transition-all duration-300",
-            isSelected ? "text-black dark:text-white font-bold" : "text-gray-700 dark:text-gray-300"
+            isSelected ? "text-black dark:text-white font-bold" : "text-gray-700 dark:text-gray-300 group-hover:translate-x-0.5"
           )}>{label}</span>
           <RadioGroupPrimitive.Item
             ref={ref}
             className={cn(
-              "aspect-square h-5 w-5 rounded-full border-2 border-black text-sm ring-offset-background focus:outline-none focus-visible:ring-0 disabled:cursor-not-allowed disabled:opacity-50 dark:border-white transition-all duration-300",
-              isSelected ? "border-[3px]" : "",
+              "aspect-square h-5 w-5 rounded-full border-2 border-black text-sm ring-offset-background focus:outline-none focus-visible:ring-0 disabled:cursor-not-allowed disabled:opacity-50 dark:border-white transition-all duration-300 relative",
+              isSelected ? "border-[3px]" : "group-hover:scale-105",
               className
             )}
             {...props}
@@ -93,7 +93,7 @@ const RoleSelector = React.forwardRef<
             <RadioGroupPrimitive.Indicator className="flex items-center justify-center">
               <Circle className={cn(
                 "fill-black text-black dark:fill-white dark:text-white transition-all duration-300",
-                isSelected ? "h-2.5 w-2.5 animate-pulse" : "h-2 w-2"
+                isSelected ? "h-2.5 w-2.5 animate-pulse" : "h-2 w-2 opacity-0 group-hover:opacity-50"
               )} />
             </RadioGroupPrimitive.Indicator>
           </RadioGroupPrimitive.Item>
@@ -102,22 +102,28 @@ const RoleSelector = React.forwardRef<
         {/* Sección expandible con features cuando está seleccionado */}
         {features.length > 0 && (
           <div className={cn(
-            "overflow-hidden transition-all duration-300 ease-in-out px-5 py-3",
+            "overflow-hidden transition-all duration-500 ease-in-out px-5",
             isSelected 
-              ? "max-h-48 opacity-100 translate-y-0" 
-              : "max-h-0 opacity-0 -translate-y-2 py-0"
+              ? "max-h-52 opacity-100" 
+              : "max-h-0 opacity-0"
           )}>
-            <ul className="space-y-1.5">
+            <ul className="space-y-1.5 pb-4">
               {features.map((feature, index) => (
-                <li key={index} className="flex items-center gap-2 text-gray-600 dark:text-gray-400">
+                <li 
+                  key={index} 
+                  className="flex items-center gap-2 text-gray-600 dark:text-gray-400"
+                  style={{
+                    transitionDelay: `${index * 100}ms`,
+                    transform: isSelected ? 'translateX(0)' : 'translateX(-10px)',
+                    opacity: isSelected ? 1 : 0,
+                    transition: 'transform 0.4s ease, opacity 0.4s ease'
+                  }}
+                >
                   <div className={cn(
                     "w-1 h-1 bg-black dark:bg-white rounded-full transition-all duration-300",
                     isSelected ? "scale-100" : "scale-0"
                   )}></div>
-                  <span className={cn(
-                    "text-sm transition-all duration-300",
-                    isSelected ? "translate-x-0" : "-translate-x-2"
-                  )}>{feature}</span>
+                  <span className="text-sm">{feature}</span>
                 </li>
               ))}
             </ul>

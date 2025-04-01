@@ -70,12 +70,9 @@ const AuthContent: React.FC<AuthContentProps> = ({
   return (
     <div className={`w-full max-w-screen bg-[#FAF8F6] dark:bg-vyba-dark-bg ${isMobile ? 'py-8' : 'py-8'}`}>
       <div className="max-w-md mx-auto px-6 md:px-0 pt-10">
-        <h1 className="text-4xl md:text-6xl font-black text-center mb-2">
-          Bienvenido/a a VYBA
+        <h1 className="text-4xl md:text-6xl font-black text-center mb-8 md:mb-12">
+          ¿Cómo quieres usar VYBA?
         </h1>
-        <p className="text-2xl md:text-4xl text-center mb-8 md:mb-12">
-          Inicia sesión o regístrate
-        </p>
 
         <Tabs defaultValue={defaultTab} value={defaultTab} onValueChange={handleTabChange}>
           <TabsList className="hidden">
