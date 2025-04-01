@@ -29,6 +29,16 @@ interface AuthContentProps {
     password: string;
     role: string;
   }>>;
+  artistForm: {
+    artistName: string;
+    mainGenres: string;
+    artistType: string;
+  };
+  setArtistForm: React.Dispatch<React.SetStateAction<{
+    artistName: string;
+    mainGenres: string;
+    artistType: string;
+  }>>;
   registerStep: number;
   setRegisterStep: React.Dispatch<React.SetStateAction<number>>;
   isLoading: boolean;
@@ -49,6 +59,8 @@ const AuthContent: React.FC<AuthContentProps> = ({
   setLoginForm,
   registerForm,
   setRegisterForm,
+  artistForm,
+  setArtistForm,
   registerStep,
   setRegisterStep,
   isLoading,
@@ -67,23 +79,47 @@ const AuthContent: React.FC<AuthContentProps> = ({
   const seekerFeatures = ["Encuentra artistas según tus necesidades", "Acceso completo al catálogo de profesionales", "Comunícate directamente con los artistas"];
   const artistFeatures = ["Crea tu perfil profesional", "Recibe solicitudes de eventos", "Gestiona tu calendario de actuaciones", "Muestra tu portafolio a posibles clientes"];
   
+  // Determine qué título mostrar basado en el paso actual
+  let headerContent;
+  if (defaultTab === "register") {
+    if (registerStep === 2) {
+      headerContent = (
+        <h1 className="text-4xl md:text-6xl font-black text-center mb-12">
+          ¿Cómo quieres usar VYBA?
+        </h1>
+      );
+    } else if (registerStep === 3) {
+      // No mostrar título aquí ya que se muestra dentro del componente
+      headerContent = null;
+    } else {
+      headerContent = (
+        <>
+          <h1 className="text-4xl md:text-6xl font-black text-center mb-2">
+            Bienvenido/a a VYBA
+          </h1>
+          <p className="text-2xl md:text-4xl text-center mb-8 md:mb-12">
+            Inicia sesión o regístrate
+          </p>
+        </>
+      );
+    }
+  } else {
+    headerContent = (
+      <>
+        <h1 className="text-4xl md:text-6xl font-black text-center mb-2">
+          Bienvenido/a a VYBA
+        </h1>
+        <p className="text-2xl md:text-4xl text-center mb-8 md:mb-12">
+          Inicia sesión o regístrate
+        </p>
+      </>
+    );
+  }
+  
   return (
     <div className={`w-full max-w-screen bg-[#FAF8F6] dark:bg-vyba-dark-bg ${isMobile ? 'py-8' : 'py-8'}`}>
       <div className="max-w-md mx-auto px-6 md:px-0 pt-10">
-        {registerStep === 2 && defaultTab === "register" ? (
-          <h1 className="text-4xl md:text-6xl font-black text-center mb-12">
-            ¿Cómo quieres usar VYBA?
-          </h1>
-        ) : (
-          <>
-            <h1 className="text-4xl md:text-6xl font-black text-center mb-2">
-              Bienvenido/a a VYBA
-            </h1>
-            <p className="text-2xl md:text-4xl text-center mb-8 md:mb-12">
-              Inicia sesión o regístrate
-            </p>
-          </>
-        )}
+        {headerContent}
 
         <Tabs defaultValue={defaultTab} value={defaultTab} onValueChange={handleTabChange}>
           <TabsList className="hidden">
@@ -109,6 +145,8 @@ const AuthContent: React.FC<AuthContentProps> = ({
               registerStep={registerStep}
               registerForm={registerForm}
               setRegisterForm={setRegisterForm}
+              artistForm={artistForm}
+              setArtistForm={setArtistForm}
               isLoading={isLoading}
               showPassword={showPassword}
               togglePasswordVisibility={togglePasswordVisibility}

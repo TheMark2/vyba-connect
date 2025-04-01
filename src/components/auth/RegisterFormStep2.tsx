@@ -69,7 +69,7 @@ const RegisterFormStep2: React.FC<RegisterFormStep2Props> = ({
           <ArrowLeft size={20}/>
         </Button>
         <Button type="submit" isLoading={isLoading} className="w-full">
-          Registrarse
+          Siguiente
         </Button>
       </div>
       <div className="text-center mt-4 pt-2">

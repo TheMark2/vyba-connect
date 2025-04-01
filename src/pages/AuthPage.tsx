@@ -25,6 +25,11 @@ const AuthPage = () => {
     password: '',
     role: 'artist'
   });
+  const [artistForm, setArtistForm] = useState({
+    artistName: '',
+    mainGenres: '',
+    artistType: ''
+  });
   const [registerStep, setRegisterStep] = useState(1);
 
   // Handlers
@@ -49,7 +54,7 @@ const AuthPage = () => {
     e.preventDefault();
     setIsLoading(true);
     
-    if (registerStep < 2) {
+    if (registerStep < 3) {
       setTimeout(() => {
         setIsLoading(false);
         setRegisterStep(registerStep + 1);
@@ -58,11 +63,30 @@ const AuthPage = () => {
     }
     
     setTimeout(() => {
-      navigate('/profile-info', {
-        state: {
-          role: registerForm.role
-        }
+      toast.success("Registro completado exitosamente", {
+        description: "Gracias por registrarte en VYBA",
+        position: "bottom-center"
       });
+      
+      setTimeout(() => {
+        setIsLoading(false);
+        if (registerForm.role === 'artist') {
+          navigate('/thank-you', {
+            state: {
+              artistInfo: {
+                ...registerForm,
+                ...artistForm
+              }
+            }
+          });
+        } else {
+          navigate('/seeker-thank-you', {
+            state: {
+              seekerInfo: registerForm
+            }
+          });
+        }
+      }, 500);
     }, 1000);
   };
 
@@ -88,7 +112,9 @@ const AuthPage = () => {
   };
 
   const handleBackStep = () => {
-    setRegisterStep(1);
+    if (registerStep > 1) {
+      setRegisterStep(registerStep - 1);
+    }
   };
 
   return (
@@ -101,6 +127,8 @@ const AuthPage = () => {
         setLoginForm={setLoginForm}
         registerForm={registerForm}
         setRegisterForm={setRegisterForm}
+        artistForm={artistForm}
+        setArtistForm={setArtistForm}
         registerStep={registerStep}
         setRegisterStep={setRegisterStep}
         isLoading={isLoading}
