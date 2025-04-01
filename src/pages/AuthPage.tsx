@@ -177,9 +177,9 @@ const AuthPage = () => {
         }} transition={{
           duration: 0.3
         }} className="flex flex-col items-center">
-              <h1 className="text-4xl font-black mb-2">Bienvenido/a</h1>
-              <h1 className="text-4xl font-black mb-6">a VYBA</h1>
-              <p className="text-lg mb-8">Inicia sesión o regístrate</p>
+              <h1 className="text-5xl font-black mb-2">Bienvenido/a</h1>
+              <h1 className="text-5xl font-black mb-6">a VYBA</h1>
+              <p className="text-2xl mb-8">Inicia sesión o regístrate</p>
               
               <form onSubmit={handleLoginSubmit} className="w-full space-y-6">
                 <div className="space-y-2">
