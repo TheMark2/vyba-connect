@@ -11,7 +11,7 @@ const SocialAuthButtons: React.FC<SocialAuthButtonsProps> = ({ onSocialLogin }) 
     <div className="flex flex-col gap-3 w-full">
       <Button 
         type="button" 
-        variant="outline" 
+        variant="secondary" 
         className="w-full flex items-center justify-center gap-2 bg-white text-black hover:bg-gray-50 h-12 rounded-full" 
         onClick={() => onSocialLogin('Google')}
       >
@@ -26,7 +26,7 @@ const SocialAuthButtons: React.FC<SocialAuthButtonsProps> = ({ onSocialLogin }) 
 
       <Button 
         type="button" 
-        variant="outline" 
+        variant="secondary" 
         className="w-full flex items-center justify-center gap-2 bg-white text-black hover:bg-gray-50 h-12 rounded-full" 
         onClick={() => onSocialLogin('Facebook')}
       >
@@ -38,7 +38,7 @@ const SocialAuthButtons: React.FC<SocialAuthButtonsProps> = ({ onSocialLogin }) 
 
       <Button 
         type="button" 
-        variant="outline" 
+        variant="secondary" 
         className="w-full flex items-center justify-center gap-2 bg-white text-black hover:bg-gray-50 h-12 rounded-full" 
         onClick={() => onSocialLogin('Apple')}
       >
