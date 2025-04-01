@@ -127,7 +127,7 @@ const AuthPage = () => {
   return <PageTransition>
       <Navbar />
       <div className="bg-vyba-cream dark:bg-vyba-dark-bg flex items-center justify-center min-h-[90vh] px-4 py-8 md:px-10 lg:px-14 xl:px-16">
-        <Card className="border-none shadow-none bg-secondary dark:bg-vyba-dark-bg dark:border-vyba-dark-secondary rounded-3xl overflow-hidden w-full py-8 md:py-16 mx-auto">
+        <Card className="border-none shadow-none bg-secondary dark:bg-vyba-dark-bg dark:border-vyba-dark-secondary rounded-3xl overflow-hidden w-full py-8 md:py-16 mx-auto h-[100vh]">
           <div className="text-center mb-6 md:mb-10 max-w-2xl mx-auto px-4 md:px-12">
             <AnimatePresence mode="wait">
               {registerStep === 2 && defaultTab === "register" ? <motion.h1 key="role-selection" className="text-4xl md:text-5xl font-black mb-2 md:mb-4 dark:text-white" initial={{
