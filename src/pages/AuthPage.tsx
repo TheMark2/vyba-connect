@@ -208,7 +208,7 @@ const AuthPage = () => {
                 </div>
                 
                 <div className="pt-4">
-                  <Button type="submit" className="w-full bg-blue-200 text-blue-900 hover:bg-blue-300" isLoading={isLoading}>
+                  <Button type="submit" isLoading={isLoading} className="">
                     Iniciar sesión
                   </Button>
                 </div>
