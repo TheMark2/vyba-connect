@@ -49,7 +49,7 @@ const LoginSection: React.FC<LoginSectionProps> = ({
 
       <div className="text-center mt-4 pt-2">
         <p className="text-sm text-gray-600">
-          No tienes cuenta? <Button variant="secondary" className="p-0 h-auto font-medium text-black bg-white px-2 py-1" onClick={switchToRegister}>Regístrate</Button>
+          No tienes cuenta? <Button variant="secondary" className="h-auto font-medium text-black bg-white px-3 py-1.5 ml-4" onClick={switchToRegister}>Regístrate</Button>
         </p>
       </div>
     </div>
