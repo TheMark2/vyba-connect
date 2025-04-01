@@ -1,3 +1,4 @@
+
 @import url('https://api.fontshare.com/v2/css?f[]=satoshi@900,700,500,400&display=swap');
 
 @tailwind base;
@@ -227,17 +228,6 @@
   }
 }
 
-@keyframes feature-item-appear {
-  from { 
-    opacity: 0; 
-    transform: translateY(5px);
-  }
-  to { 
-    opacity: 1; 
-    transform: translateY(0); 
-  }
-}
-
 @layer utilities {
   .animate-marquee {
     animation: marquee var(--duration) linear infinite;
@@ -260,8 +250,5 @@
   .animate-menu-item {
     opacity: 0;
     animation: fadeIn 350ms cubic-bezier(0.16, 1, 0.3, 1) forwards;
-  }
-  .animate-feature-item-appear {
-    animation: feature-item-appear 0.4s ease-out forwards;
   }
 }
