@@ -92,7 +92,7 @@ const AuthContent: React.FC<AuthContentProps> = ({
         }} transition={{
           duration: 0.5
         }}>
-              <h1 className={`text-6xl font-black mb-4 dark:text-white ${isMobile ? 'text-4xl' : ''}`}>Bienvenido/a a VYBA</h1>
+              <h1 className={`text-xl font-black mb-4 dark:text-white ${isMobile ? 'text-4xl' : ''}`}>Bienvenido/a a VYBA</h1>
               <p className={`text-4xl dark:text-gray-300 ${isMobile ? 'text-2xl' : ''}`}>Inicia sesión o regístrate</p>
             </motion.div>}
         </AnimatePresence>
