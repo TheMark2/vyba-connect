@@ -342,7 +342,7 @@ const AuthPage = () => {
                   </div>
                 </div>
                 
-                <div className="pt-4 content-center">
+                <div className="pt-4 flex justify-center">
                   <Button type="submit" isLoading={isLoading} onClick={() => console.log("[MobileAuthView] Botón de iniciar sesión presionado")}>
                     Iniciar sesión
                   </Button>
