@@ -73,7 +73,7 @@ const AuthContent: React.FC<AuthContentProps> = ({
         <h1 className="text-4xl md:text-6xl font-black text-center mb-2">
           Bienvenido/a a VYBA
         </h1>
-        <p className="text-2xl md:text-4xl text-center mb-8">
+        <p className="text-2xl md:text-4xl text-center mb-8 md:mb-12">
           Inicia sesión o regístrate
         </p>
 
