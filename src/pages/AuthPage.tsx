@@ -7,11 +7,10 @@ import { Input } from "@/components/ui/input";
 import { Card } from "@/components/ui/card";
 import { toast } from "sonner";
 import Navbar from '@/components/Navbar';
-import { Eye, EyeOff, Facebook, Search, Music, ArrowLeft, X } from 'lucide-react';
+import { Eye, EyeOff, Facebook, Search, Music, ArrowLeft } from 'lucide-react';
 import { RadioGroup, RoleSelector } from '@/components/ui/radio-group';
 import { motion, AnimatePresence } from "framer-motion";
 import { PageTransition } from '@/components/ui/page-transition';
-import { useIsMobile, useIsSmallMobile } from '@/hooks/use-mobile';
 
 const formVariants = {
   hidden: { opacity: 0, y: 20 },
@@ -37,180 +36,6 @@ const itemVariants = {
   exit: { opacity: 0, y: -10 }
 };
 
-// Componente específico para móvil
-const MobileAuthPage = () => {
-  const navigate = useNavigate();
-  const [showLoginForm, setShowLoginForm] = useState(false);
-  const [showPassword, setShowPassword] = useState(false);
-  const [loginForm, setLoginForm] = useState({
-    email: '',
-    password: ''
-  });
-  const [isLoading, setIsLoading] = useState(false);
-
-  const handleLogin = (e: React.FormEvent) => {
-    e.preventDefault();
-    setIsLoading(true);
-    
-    setTimeout(() => {
-      toast.success("Inicio de sesión exitoso", {
-        description: "Redirigiendo a la página principal...",
-        position: "bottom-center"
-      });
-      
-      setTimeout(() => {
-        setIsLoading(false);
-        navigate('/');
-      }, 500);
-    }, 1000);
-  };
-
-  const handleSocialLogin = (provider: string) => {
-    toast.info(`Iniciando sesión con ${provider}`, {
-      description: "Esta función estará disponible próximamente",
-      position: "bottom-center"
-    });
-  };
-
-  const togglePasswordVisibility = () => {
-    setShowPassword(!showPassword);
-  };
-
-  const handleToRegister = () => {
-    navigate('/auth', { state: { initialTab: 'register' } });
-  };
-
-  if (showLoginForm) {
-    return (
-      <div className="fixed inset-0 flex items-center justify-center bg-black/50 z-50">
-        <div className="w-full max-w-md px-6 py-8 bg-[#F5F1EB] rounded-3xl mx-4">
-          <div className="flex justify-end">
-            <Button 
-              variant="ghost" 
-              size="icon" 
-              onClick={() => setShowLoginForm(false)} 
-              className="mb-2"
-            >
-              <X size={24} />
-            </Button>
-          </div>
-          
-          <form onSubmit={handleLogin} className="space-y-6">
-            <div className="space-y-1.5">
-              <label htmlFor="email" className="block text-sm font-medium">
-                Email
-              </label>
-              <Input 
-                id="email" 
-                type="email" 
-                value={loginForm.email} 
-                onChange={e => setLoginForm({ ...loginForm, email: e.target.value })} 
-                placeholder="Correo electrónico" 
-                required 
-                className="bg-white h-12 rounded-full"
-              />
-            </div>
-            
-            <div className="space-y-1.5">
-              <label htmlFor="password" className="block text-sm font-medium">
-                Contraseña
-              </label>
-              <div className="relative">
-                <Input 
-                  id="password" 
-                  type={showPassword ? "text" : "password"} 
-                  value={loginForm.password} 
-                  onChange={e => setLoginForm({ ...loginForm, password: e.target.value })} 
-                  placeholder="Contraseña" 
-                  required 
-                  className="bg-white h-12 pr-10 rounded-full"
-                />
-                <button 
-                  type="button" 
-                  onClick={togglePasswordVisibility} 
-                  className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500"
-                >
-                  {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
-                </button>
-              </div>
-            </div>
-            
-            <Button 
-              type="submit" 
-              className="w-full rounded-full bg-black text-white" 
-              isLoading={isLoading}
-            >
-              Iniciar sesión
-            </Button>
-          </form>
-        </div>
-      </div>
-    );
-  }
-
-  return (
-    <div className="fixed inset-0 flex flex-col z-50">
-      <div className="flex-1 bg-white flex flex-col">
-        <div className="p-4">
-          <div className="text-2xl font-bold">VYBA</div>
-        </div>
-        
-        <div className="flex-1 flex items-center justify-center p-4">
-          <div className="w-full bg-[#F5F1EB] rounded-3xl px-6 py-10 flex flex-col items-center">
-            <h1 className="text-3xl font-bold mb-2">Bienvenido/a</h1>
-            <h1 className="text-3xl font-bold mb-6">a VYBA</h1>
-            <p className="text-xl mb-10">Inicia sesión o regístrate</p>
-            
-            <div className="w-full space-y-4">
-              <Button 
-                variant="outline" 
-                onClick={() => handleSocialLogin('Google')} 
-                className="w-full rounded-full bg-white border-none"
-              >
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" width="20px" height="20px" className="mr-2">
-                  <path fill="#FFC107" d="M43.611,20.083H42V20H24v8h11.303c-1.649,4.657-6.08,8-11.303,8c-6.627,0-12-5.373-12-12c0-6.627,5.373-12,12-12c3.059,0,5.842,1.154,7.961,3.039l5.657-5.657C34.046,6.053,29.268,4,24,4C12.955,4,4,12.955,4,24c0,11.045,8.955,20,20,20c11.045,0,20-8.955,20-20C44,22.659,43.862,21.35,43.611,20.083z" />
-                  <path fill="#FF3D00" d="M6.306,14.691l6.571,4.819C14.655,15.108,18.961,12,24,12c3.059,0,5.842,1.154,7.961,3.039l5.657-5.657C34.046,6.053,29.268,4,24,4C16.318,4,9.656,8.337,6.306,14.691z" />
-                  <path fill="#4CAF50" d="M24,44c5.166,0,9.86-1.977,13.409-5.192l-6.19-5.238C29.211,35.091,26.715,36,24,36c-5.202,0-9.619-3.317-11.283-7.946l-6.522,5.025C9.505,39.556,16.227,44,24,44z" />
-                  <path fill="#1976D2" d="M43.611,20.083H42V20H24v8h11.303c-0.792,2.237-2.231,4.166-4.087,5.571c0.001-0.001,0.002-0.001,0.003-0.002l6.19,5.238C36.971,39.205,44,34,44,24C44,22.659,43.862,21.35,43.611,20.083z" />
-                </svg>
-                Continuar con Google
-              </Button>
-              
-              <Button 
-                variant="outline" 
-                onClick={() => handleSocialLogin('Facebook')} 
-                className="w-full rounded-full bg-white border-none"
-              >
-                <Facebook size={20} color="#1877F2" className="mr-2" />
-                Continuar con Facebook
-              </Button>
-              
-              <Button 
-                onClick={() => setShowLoginForm(true)} 
-                variant="outline" 
-                className="w-full rounded-full bg-white border-none"
-              >
-                Continuar con mail
-              </Button>
-            </div>
-            
-            <div className="mt-10 text-sm">
-              <span>No tienes cuenta? </span>
-              <button 
-                onClick={handleToRegister} 
-                className="font-bold"
-              >
-                Regístrate
-              </button>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  );
-};
-
-// Componente principal de autenticación
 const AuthPage = () => {
   const navigate = useNavigate();
   const [defaultTab, setDefaultTab] = useState<string>("login");
@@ -227,12 +52,6 @@ const AuthPage = () => {
     role: 'artist'
   });
   const [registerStep, setRegisterStep] = useState(1);
-  const isMobile = useIsMobile();
-
-  // Si es móvil, mostrar la versión móvil
-  if (isMobile) {
-    return <MobileAuthPage />;
-  }
 
   const handleLoginSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -300,7 +119,6 @@ const AuthPage = () => {
   const seekerFeatures = ["Encuentra artistas según tus necesidades", "Acceso completo al catálogo de profesionales", "Comunícate directamente con los artistas"];
   const artistFeatures = ["Crea tu perfil profesional", "Recibe solicitudes de eventos", "Gestiona tu calendario de actuaciones", "Muestra tu portafolio a posibles clientes"];
 
-  // Versión desktop
   return (
     <PageTransition>
       <Navbar />
