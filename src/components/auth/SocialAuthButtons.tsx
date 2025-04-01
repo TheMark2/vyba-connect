@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Facebook } from 'lucide-react';
 import { Button } from "@/components/ui/button";
@@ -11,7 +10,10 @@ interface SocialAuthButtonsProps {
 
 const SocialAuthButtons: React.FC<SocialAuthButtonsProps> = ({ onSocialLogin }) => {
   return (
-    <motion.div variants={itemVariants} className="flex flex-cols gap-4 md:flex">
+    <motion.div 
+      variants={itemVariants} 
+      className="flex flex-col md:flex-row gap-4 w-full"
+    >
       <Button 
         type="button" 
         variant="outline" 
