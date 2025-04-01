@@ -86,7 +86,7 @@ const LoginForm: React.FC<LoginFormProps> = ({
         </Button>
         <Button 
           type="submit" 
-          className="text-xs" 
+          className="w-full" 
           isLoading={isLoading}
         >
           Iniciar sesión
