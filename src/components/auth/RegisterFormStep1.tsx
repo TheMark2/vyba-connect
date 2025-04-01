@@ -115,7 +115,7 @@ const RegisterFormStep1: React.FC<RegisterFormStep1Props> = ({
         </p>
         <Button 
           variant="secondary" 
-          className="mt-2 text-xs font-medium" 
+          className="mt-2 text-xs font-bold" 
           onClick={switchToLogin}
         >
           Iniciar Sesión
