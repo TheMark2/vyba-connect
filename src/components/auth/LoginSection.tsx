@@ -63,8 +63,15 @@ const LoginSection: React.FC<LoginSectionProps> = ({
 
           <div className="text-center mt-4 pt-2">
             <p className="text-sm text-gray-600">
-              No tienes cuenta? <Button variant="secondary" className="h-auto font-bold text-black bg-transparent hover:font-black ml-4" onClick={switchToRegister}>Regístrate</Button>
+              No tienes cuenta?
             </p>
+            <Button 
+              variant="secondary" 
+              className="mt-2 w-full" 
+              onClick={switchToRegister}
+            >
+              Regístrate
+            </Button>
           </div>
         </div>
       ) : (
@@ -82,8 +89,15 @@ const LoginSection: React.FC<LoginSectionProps> = ({
           
           <div className="text-center mt-4 pt-2">
             <p className="text-sm text-gray-600">
-              No tienes cuenta? <Button variant="secondary" className="h-auto font-bold text-black bg-transparent hover:font-black ml-4" onClick={switchToRegister}>Regístrate</Button>
+              No tienes cuenta?
             </p>
+            <Button 
+              variant="secondary" 
+              className="mt-2 w-full" 
+              onClick={switchToRegister}
+            >
+              Regístrate
+            </Button>
           </div>
         </div>
       )}
