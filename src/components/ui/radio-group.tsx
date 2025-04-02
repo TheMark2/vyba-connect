@@ -50,10 +50,15 @@ const RoleSelector = React.forwardRef<
     features?: string[];
   }
 >(({ className, label, description, icon, features = [], ...props }, ref) => {
-  const [isSelected, setIsSelected] = React.useState(false);
+  // El problema está en cómo manejamos el estado isSelected
+  // Necesitamos usar props.checked para determinar el estado inicial y también actualizarlo cuando cambia
   
+  // Usar un estado que se actualice con el valor de checked
+  const [isSelected, setIsSelected] = React.useState(props.checked || false);
+  
+  // Actualizar el estado cuando cambia el prop checked
   React.useEffect(() => {
-    setIsSelected(!!props.checked);
+    setIsSelected(props.checked === true);
   }, [props.checked]);
 
   return (
@@ -88,6 +93,7 @@ const RoleSelector = React.forwardRef<
               ref={ref}
               className="hidden"
               {...props}
+              onClick={() => setIsSelected(true)} // Aseguramos que se actualice el estado al hacer click
             >
               <RadioGroupPrimitive.Indicator />
             </RadioGroupPrimitive.Item>

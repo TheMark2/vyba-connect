@@ -48,6 +48,7 @@ const RegisterFormStep2: React.FC<RegisterFormStep2Props> = ({
       >
         <RoleSelector 
           value="seeker" 
+          checked={registerForm.role === "seeker"} 
           label="Entrar como buscador" 
           description="Estadísticas, Controla todos tus eventos..."
           icon={<Search size={32} />}
@@ -55,6 +56,7 @@ const RegisterFormStep2: React.FC<RegisterFormStep2Props> = ({
         />
         <RoleSelector 
           value="artist" 
+          checked={registerForm.role === "artist"} 
           label="Entrar como artista" 
           description="Estadísticas, Controla todos tus eventos..."
           icon={<Music size={32} />}
