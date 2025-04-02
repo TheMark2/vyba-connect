@@ -40,7 +40,7 @@ const WelcomePage = () => {
             <div className="relative w-full max-w-md flex gap-4">
               <Button 
                 onClick={handlePromoteArtist} 
-                className="w-full bg-[#F2D4DC] text-black hover:bg-[#EBBFCC]"
+                className="w-full p-3 bg-[#F2D4DC] text-black hover:bg-[#EBBFCC]"
               >
                 Promocionarse como artista
               </Button>
