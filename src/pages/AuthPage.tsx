@@ -11,13 +11,12 @@ const AuthPage = () => {
       <Navbar />
       
       <div className="container mx-auto flex flex-col items-center justify-center px-6 py-20">
-        <div className="w-full max-w-md space-y-6">
+        <div className="w-full space-y-6">
           <div className="text-center">
             <h1 className="text-6xl font-black">Bienvenido/a a VYBA</h1>
             <p className="mt-3 text-4xl">Inicia sesión o regístrate</p>
           </div>
-          
-          <div className="space-y-4 mt-8">
+          <div className="space-y-4 mt-8 max-w-md">
             <Button 
               variant="secondary" 
               className="w-full flex items-center justify-center gap-2 bg-[#F7F7F7] text-black"
