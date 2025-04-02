@@ -56,7 +56,7 @@ const AuthPage = () => {
                 <Input id="password" type="password" placeholder="••••••••" className="w-full h-14 bg-[#F7F7F7]" />
               </div>
 
-              <Button className="w-full">
+              <Button className="w-xs">
                 Iniciar sesión
               </Button>
 
