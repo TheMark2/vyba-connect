@@ -64,9 +64,9 @@ const RoleSelector = React.forwardRef<
   return (
     <div 
       className={cn(
-        "py-4 px-6 rounded-2xl transition-all duration-500 flex flex-col bg-white",
+        "p-6 rounded-2xl transition-all duration-500 flex flex-col bg-white",
         isSelected 
-          ? "outline outline-4 outline-gray-500 dark:outline-black" 
+          ? "outline outline-2 outline-gray-100 dark:outline-black" 
           : "outline-none"
       )}
     >
