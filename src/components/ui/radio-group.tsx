@@ -1,3 +1,4 @@
+
 import * as React from "react"
 import * as RadioGroupPrimitive from "@radix-ui/react-radio-group"
 import { Circle } from "lucide-react"
@@ -44,9 +45,11 @@ const RoleSelector = React.forwardRef<
   React.ElementRef<typeof RadioGroupPrimitive.Item>,
   React.ComponentPropsWithoutRef<typeof RadioGroupPrimitive.Item> & {
     label: string;
+    description?: string;
+    icon?: React.ReactNode;
     features?: string[];
   }
->(({ className, label, features = [], ...props }, ref) => {
+>(({ className, label, description, icon, features = [], ...props }, ref) => {
   const [isSelected, setIsSelected] = React.useState(false);
   
   React.useEffect(() => {
@@ -56,53 +59,57 @@ const RoleSelector = React.forwardRef<
   return (
     <div 
       className={cn(
-        "py-3.5 px-6 rounded-xl transition-all duration-200 bg-white dark:bg-vyba-dark-secondary/30",
+        "p-6 rounded-3xl transition-all duration-200 flex flex-col",
         isSelected 
-          ? "bg-white dark:bg-vyba-dark-secondary/30" 
-          : "bg-white dark:bg-vyba-dark-secondary/20 hover:bg-white/90 dark:hover:bg-vyba-dark-secondary/25"
+          ? "bg-white dark:bg-white border-0" 
+          : "bg-transparent border-[1.5px] border-black dark:border-white hover:border-[2px] hover:shadow-sm"
       )}
     >
-      <label className="cursor-pointer block pb-0">
-        <div className="flex items-center gap-4">
-          <span className={cn(
-            "text-base flex-grow font-bold transition-all duration-200",
-            isSelected ? "text-black dark:text-white" : "text-gray-700 dark:text-gray-300"
-          )}>
-            {label}
-          </span>
-          
-          <RadioGroupPrimitive.Item
-            ref={ref}
-            className={cn(
-              "aspect-square h-5 w-5 rounded-full transition-all duration-200 focus:outline-none",
-              isSelected 
-                ? "border-[1.5px] border-black dark:border-white" 
-                : "border-0 bg-gray-200 dark:bg-gray-700",
-              className
+      <label className="cursor-pointer block w-full">
+        <div className="flex items-center justify-between mb-3">
+          <div className="flex flex-col">
+            <span className={cn(
+              "text-xl font-bold transition-all duration-200",
+              isSelected ? "text-black dark:text-black" : "text-black dark:text-white"
+            )}>
+              {label}
+            </span>
+            {description && (
+              <span className="text-sm text-gray-500 dark:text-gray-400 mt-1">
+                {description}
+              </span>
             )}
-            {...props}
-          >
-            <RadioGroupPrimitive.Indicator className="flex items-center justify-center">
-              <Circle className="h-2.5 w-2.5 fill-current text-current" />
-            </RadioGroupPrimitive.Indicator>
-          </RadioGroupPrimitive.Item>
+          </div>
+          
+          <div className="flex items-center">
+            {icon && (
+              <span className={cn(
+                "text-3xl",
+                isSelected ? "text-black dark:text-black" : "text-black dark:text-white"
+              )}>
+                {icon}
+              </span>
+            )}
+            <RadioGroupPrimitive.Item
+              ref={ref}
+              className="hidden"
+              {...props}
+            >
+              <RadioGroupPrimitive.Indicator />
+            </RadioGroupPrimitive.Item>
+          </div>
         </div>
         
         {features.length > 0 && (
           <div className={cn(
-            "overflow-hidden transition-all duration-300 ease-in-out mt-3",
+            "overflow-hidden transition-all duration-300 ease-in-out",
             isSelected 
               ? "max-h-48 opacity-100" 
-              : "max-h-0 opacity-0"
+              : "max-h-48 opacity-80"
           )}>
-            <ul className="space-y-2">
-              {features.map((feature, index) => (
-                <li key={index} className="flex items-center gap-2.5 text-gray-600 dark:text-gray-400">
-                  <div className="w-1.5 h-1.5 bg-black/70 dark:bg-white/70 rounded-full"></div>
-                  <span className="text-sm">{feature}</span>
-                </li>
-              ))}
-            </ul>
+            <p className="text-sm text-gray-500 dark:text-gray-400">
+              {features.join(', ')}
+            </p>
           </div>
         )}
       </label>

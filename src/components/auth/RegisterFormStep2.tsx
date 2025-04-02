@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { ArrowLeft } from 'lucide-react';
+import { ArrowLeft, Music, Search } from 'lucide-react';
 import { Button } from "@/components/ui/button";
 import { RadioGroup, RoleSelector } from '@/components/ui/radio-group';
 
@@ -44,17 +44,21 @@ const RegisterFormStep2: React.FC<RegisterFormStep2Props> = ({
           ...registerForm,
           role: value
         })} 
-        className="gap-2"
+        className="gap-4"
       >
-        <RoleSelector 
-          value="artist" 
-          label="Entrar como artista" 
-          features={artistFeatures}
-        />
         <RoleSelector 
           value="seeker" 
           label="Entrar como buscador" 
+          description="Estadísticas, Controla todos tus eventos..."
+          icon={<Search size={32} />}
           features={seekerFeatures}
+        />
+        <RoleSelector 
+          value="artist" 
+          label="Entrar como artista" 
+          description="Estadísticas, Controla todos tus eventos..."
+          icon={<Music size={32} />}
+          features={artistFeatures}
         />
       </RadioGroup>
       
