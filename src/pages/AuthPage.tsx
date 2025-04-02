@@ -15,8 +15,11 @@ const mockEmailDatabase = {
 const AuthPage = () => {
   const [showEmailForm, setShowEmailForm] = useState(false);
   const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
   const [showVerified, setShowVerified] = useState<'verified' | 'not-registered' | 'google' | false>(false);
   const [emailVerificationTimeout, setEmailVerificationTimeout] = useState<NodeJS.Timeout | null>(null);
+  const [emailError, setEmailError] = useState(false);
+  const [passwordError, setPasswordError] = useState(false);
   
   const handleShowEmailForm = () => {
     setShowEmailForm(true);
@@ -25,6 +28,7 @@ const AuthPage = () => {
   const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
     setEmail(value);
+    setEmailError(false);
     
     // Limpiar el timeout anterior si existe
     if (emailVerificationTimeout) {
@@ -45,6 +49,32 @@ const AuthPage = () => {
     } else {
       // Si el campo está vacío, ocultamos el icono
       setShowVerified(false);
+    }
+  };
+
+  const handlePasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setPassword(e.target.value);
+    setPasswordError(false);
+  };
+
+  const handleLogin = (e: React.FormEvent) => {
+    e.preventDefault();
+    
+    let hasError = false;
+    
+    if (!email) {
+      setEmailError(true);
+      hasError = true;
+    }
+    
+    if (!password) {
+      setPasswordError(true);
+      hasError = true;
+    }
+    
+    if (!hasError) {
+      // Proceder con el login
+      console.log("Intentando iniciar sesión con:", email, password);
     }
   };
 
@@ -96,9 +126,9 @@ const AuthPage = () => {
               </Button>
             </div>
           ) : (
-            <div className="space-y-6 mt-16 max-w-sm mx-auto">
+            <form onSubmit={handleLogin} className="space-y-6 mt-16 max-w-sm mx-auto">
               <div className="space-y-2">
-                <label htmlFor="email" className="block font-bold">Email</label>
+                <label htmlFor="email" className={`block font-bold ${emailError ? 'text-[#C13515]' : ''}`}>Email</label>
                 <Input 
                   id="email" 
                   type="email" 
@@ -107,25 +137,36 @@ const AuthPage = () => {
                   value={email}
                   onChange={handleEmailChange}
                   showVerified={showVerified}
+                  error={emailError}
                 />
+                {emailError && <p className="text-sm text-[#C13515]">Por favor, introduce tu email</p>}
                 <p className="text-xs text-gray-500">
                   Prueba con: usuario@vybapp.com o google@vybapp.com
                 </p>
               </div>
 
               <div className="space-y-2">
-                <label htmlFor="password" className="block font-bold">Contraseña</label>
-                <Input id="password" type="password" placeholder="••••••••" className="w-full bg-[#F7F7F7]" />
+                <label htmlFor="password" className={`block font-bold ${passwordError ? 'text-[#C13515]' : ''}`}>Contraseña</label>
+                <Input 
+                  id="password" 
+                  type="password" 
+                  placeholder="••••••••" 
+                  className="w-full bg-[#F7F7F7]" 
+                  value={password}
+                  onChange={handlePasswordChange}
+                  error={passwordError}
+                />
+                {passwordError && <p className="text-sm text-[#C13515]">Por favor, introduce tu contraseña</p>}
               </div>
               <div className="w-full flex justify-center">
-                <Button className="px-16">
+                <Button type="submit" className="px-16">
                   Iniciar sesión
                 </Button>
               </div>
               <div className="text-center text-sm">
                 <p>No tienes cuenta. <Link to="/register" className="font-bold">Regístrate</Link></p>
               </div>
-            </div>
+            </form>
           )}
           
           {!showEmailForm && <div className="text-center text-sm mt-6">
