@@ -20,7 +20,7 @@ const Input = React.forwardRef<HTMLInputElement, React.ComponentProps<"input"> &
           ref={combinedRef}
         />
         {showVerified && (
-          <div className="absolute right-3 top-1/2 transform -translate-y-1/2 bg-primary rounded-full p-1 opacity-0 animate-fade-in">
+          <div className="absolute right-3 top-1/2 transform -translate-y-1/2 bg-primary rounded-full p-1 transition-opacity duration-300 opacity-100">
             <svg
               xmlns="http://www.w3.org/2000/svg"
               width="18"

@@ -25,13 +25,14 @@ const AuthPage = () => {
       clearTimeout(emailVerificationTimeout);
     }
     
-    // Si hay valor, configuramos un nuevo timeout para mostrar el ícono después de 300ms
     if (value) {
+      // Si hay valor, configuramos un nuevo timeout para mostrar el ícono después de 300ms
       const timeout = setTimeout(() => {
         setShowVerified(true);
       }, 300);
       setEmailVerificationTimeout(timeout);
     } else {
+      // Si el campo está vacío, ocultamos el icono
       setShowVerified(false);
     }
   };
