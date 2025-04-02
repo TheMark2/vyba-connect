@@ -71,9 +71,14 @@ const RoleSelector = React.forwardRef<
       props.onClick(event);
     }
     
-    // Si también hay un onValueChange, dispararlo con el valor
-    if (props.value && props.onValueChange) {
-      props.onValueChange(props.value);
+    // Buscamos el elemento padre (RadioGroup) para actualizar el valor
+    const radioGroup = document.querySelector('[role="radiogroup"]');
+    if (radioGroup && props.value) {
+      // Disparar un evento de cambio para el RadioGroup
+      const changeEvent = new CustomEvent('change', {
+        detail: { value: props.value }
+      });
+      radioGroup.dispatchEvent(changeEvent);
     }
     
     setIsSelected(true);
