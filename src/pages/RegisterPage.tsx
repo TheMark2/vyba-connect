@@ -113,6 +113,41 @@ const RegisterPage = () => {
     }
   };
 
+  const getPasswordRequirements = () => {
+    if (!password || passwordStrength === null) return null;
+
+    const hasUpperCase = /[A-Z]/.test(password);
+    const hasLowerCase = /[a-z]/.test(password);
+    const hasNumbers = /\d/.test(password);
+    const isLongEnough = password.length >= 10;
+
+    if (passwordStrength === 'weak') {
+      return (
+        <div className="text-xs text-[#ea384c]">
+          Contraseña muy débil 
+          {!isLongEnough && <span> - <strong>Añade {10 - password.length} caracteres más</strong></span>}
+          {!hasUpperCase && <span> - <strong>Incluye al menos una mayúscula</strong></span>}
+          {!hasLowerCase && <span> - <strong>Incluye al menos una minúscula</strong></span>}
+          {!hasNumbers && <span> - <strong>Incluye al menos un número</strong></span>}
+        </div>
+      );
+    } else if (passwordStrength === 'medium') {
+      return (
+        <div className="text-xs text-[#FF9248]">
+          Contraseña débil
+          {!isLongEnough && <span> - <strong>Añade {10 - password.length} caracteres más</strong></span>}
+          {!hasUpperCase && <span> - <strong>Incluye al menos una mayúscula</strong></span>}
+          {!hasLowerCase && <span> - <strong>Incluye al menos una minúscula</strong></span>}
+          {!hasNumbers && <span> - <strong>Incluye al menos un número</strong></span>}
+        </div>
+      );
+    } else {
+      return (
+        <div className="text-xs text-[#4CAF50]">Contraseña segura</div>
+      );
+    }
+  };
+
   return (
     <div className="min-h-screen bg-white dark:bg-vyba-dark-bg">
       <Navbar />
@@ -201,9 +236,7 @@ const RegisterPage = () => {
                   {renderPasswordStrengthIndicator()}
                 </div>
                 {passwordError && <p className="text-sm text-[#C13515]">Por favor, introduce una contraseña</p>}
-                {passwordStrength === 'weak' && <p className="text-xs text-[#ea384c]">Contraseña muy débil</p>}
-                {passwordStrength === 'medium' && <p className="text-xs text-[#FF9248]">Contraseña débil</p>}
-                {passwordStrength === 'strong' && <p className="text-xs text-[#4CAF50]">Contraseña segura</p>}
+                {getPasswordRequirements()}
               </div>
               
               <div className="w-full flex justify-center">
