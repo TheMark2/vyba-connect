@@ -1,14 +1,10 @@
-
-import React, { useState, useEffect } from 'react';
-import { Skeleton } from "@/components/ui/skeleton";
-
+import React, { useState } from 'react';
 interface Artist {
   id: number;
   name: string;
   type: string;
   image: string;
 }
-
 const ArtistCards = () => {
   // Array de artistas con más información
   const artists = [{
@@ -35,30 +31,6 @@ const ArtistCards = () => {
 
   // Estado para rastrear la tarjeta en hover
   const [hoveredCard, setHoveredCard] = useState<number | null>(null);
-  // Estado para rastrear qué artistas se han cargado
-  const [loadedArtists, setLoadedArtists] = useState<number[]>([]);
-  // Estado para controlar si se están cargando las tarjetas
-  const [isLoading, setIsLoading] = useState(true);
-
-  useEffect(() => {
-    // Simulamos la carga progresiva de las tarjetas
-    const loadArtistsSequentially = async () => {
-      setIsLoading(true);
-      // Vaciar las tarjetas cargadas
-      setLoadedArtists([]);
-      
-      // Cargar cada artista de manera secuencial
-      for (let i = 0; i < artists.length; i++) {
-        // Pausa artificial entre cada carga (300ms)
-        await new Promise(resolve => setTimeout(resolve, 300));
-        setLoadedArtists(prev => [...prev, artists[i].id]);
-      }
-      
-      setIsLoading(false);
-    };
-
-    loadArtistsSequentially();
-  }, []);
 
   // Función para manejar el clic en una tarjeta
   const handleCardClick = (artistId: number) => {
@@ -112,62 +84,35 @@ const ArtistCards = () => {
     return `${basePositions[index]} ${baseRotations[index]}`;
   };
 
-  return (
-    <div className="bg-gray-50 dark:bg-vyba-dark-secondary rounded-3xl p-8 w-full max-w-5xl mx-auto flex flex-col items-center">
+  // Obtener imagen mejorada para cada artista
+  const getEnhancedImage = (index: number) => {
+    // Arreglo de imágenes mejoradas
+    const enhancedImages = ["/lovable-uploads/77591a97-10cd-4c8b-b768-5b17483c3d9f.png", "/lovable-uploads/64cabbe3-ce62-4190-830d-0e5defd31a1b.png", "/lovable-uploads/c89ee394-3c08-48f6-b69b-bddd81dffa8b.png", "/lovable-uploads/7e7c2282-785a-46fb-84b2-f7b14b762e64.png"];
+    return enhancedImages[index % enhancedImages.length];
+  };
+  return <div className="bg-gray-50 dark:bg-vyba-dark-secondary rounded-3xl p-8 w-full max-w-5xl mx-auto flex flex-col items-center">
       <h1 className="text-5xl font-medium text-center mb-16 dark:text-white">
         Descubre entre muchos artistas
       </h1>
       
       <div className="relative h-64 w-full max-w-4xl flex justify-center items-center">
         {artists.map((artist, index) => {
-          const isHovered = hoveredCard === artist.id;
-          const isLoaded = loadedArtists.includes(artist.id);
-
-          // Si aún no se ha cargado esta tarjeta, mostrar un skeleton
-          if (isLoading && !isLoaded) {
-            return (
-              <div 
-                key={`skeleton-${artist.id}`}
-                className={`
-                  absolute rounded-3xl border-6 border-white dark:border-white
-                  w-56 h-56 flex flex-col justify-end
-                  transition-all duration-300 ease-in-out
-                  shadow-[0_10px_20px_rgba(0,0,0,0.15)]
-                  ${getCardStyles(index, false)}
-                `}
-              >
-                <Skeleton className="w-full h-full rounded-3xl" />
-              </div>
-            );
-          }
-
-          // Mostrar la tarjeta normal cuando ya se ha cargado
-          return (
-            <div 
-              key={artist.id} 
-              onClick={() => handleCardClick(artist.id)} 
-              onMouseEnter={() => setHoveredCard(artist.id)} 
-              onMouseLeave={() => setHoveredCard(null)} 
-              className={`
+        const isHovered = hoveredCard === artist.id;
+        return <div key={artist.id} onClick={() => handleCardClick(artist.id)} onMouseEnter={() => setHoveredCard(artist.id)} onMouseLeave={() => setHoveredCard(null)} className={`
                 absolute rounded-3xl border-6 border-white dark:border-white
                 w-56 h-56 flex flex-col justify-end
                 transition-all duration-300 ease-in-out
                 cursor-pointer overflow-hidden
                 shadow-[0_10px_20px_rgba(0,0,0,0.15)] hover:shadow-[0_20px_30px_rgba(0,0,0,0.2)]
                 ${getCardStyles(index, isHovered)}
-                ${isLoaded ? 'animate-scale-in' : 'opacity-0'}
-              `}
-              aria-label={`Ver perfil de ${artist.name}`}
-            >
+              `} aria-label={`Ver perfil de ${artist.name}`}>
               {/* Imagen de fondo con degradado y efecto blur */}
               <div className={`
                   absolute inset-0 bg-cover bg-center z-0 transition-all duration-300
                   ${isHovered ? '' : 'blur-[2px]'}
-                `} 
-                style={{
-                  backgroundImage: `url(${artist.image})`
-                }} 
-              />
+                `} style={{
+            backgroundImage: `url(${getEnhancedImage(index)})`
+          }} />
               
               {/* Degradado negro de abajo hacia arriba */}
               <div className="absolute inset-0 bg-gradient-to-t from-black via-black/70 to-transparent z-1"></div>
@@ -177,12 +122,9 @@ const ArtistCards = () => {
                 <h2 className="text-xl font-bold">{artist.name}</h2>
                 <p className="text-sm">{artist.type}</p>
               </div>
-            </div>
-          );
-        })}
+            </div>;
+      })}
       </div>
-    </div>
-  );
+    </div>;
 };
-
 export default ArtistCards;
