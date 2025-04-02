@@ -1,4 +1,3 @@
-
 import * as React from "react"
 import { cn } from "@/lib/utils"
 
@@ -25,7 +24,7 @@ const Input = React.forwardRef<HTMLInputElement, React.ComponentProps<"input"> &
           ref={combinedRef}
         />
         {showVerified === 'verified' && (
-          <div className="absolute right-3 top-1/2 transform -translate-y-1/2 bg-primary rounded-full p-1 transition-opacity duration-300 opacity-100">
+          <div className="absolute right-3 top-1/2 transform -translate-y-1/2 bg-white rounded-full p-1 transition-opacity duration-300 opacity-100">
             <svg
               xmlns="http://www.w3.org/2000/svg"
               width="16"
@@ -46,7 +45,9 @@ const Input = React.forwardRef<HTMLInputElement, React.ComponentProps<"input"> &
           </div>
         )}
         {showVerified === 'not-registered' && (
-          <div className="absolute right-3 top-1/2 transform -translate-y-1/2 bg-[#EADBDB] ring-2 ring-[#EADBDB] rounded-full w-6 h-6 transition-opacity duration-300 opacity-100"></div>
+          <div className="absolute right-3 top-1/2 transform -translate-y-1/2 bg-[#EADBDB] ring-2 ring-[#EADBDB] rounded-full w-5 h-5 flex items-center justify-center transition-opacity duration-300 opacity-100">
+            <div className="bg-[#ea384c] rounded-full w-2 h-2"></div>
+          </div>
         )}
         {showVerified === 'google' && (
           <div className="absolute right-3 top-1/2 transform -translate-y-1/2 bg-white rounded-full p-1 transition-opacity duration-300 opacity-100">
