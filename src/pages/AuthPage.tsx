@@ -16,7 +16,7 @@ const AuthPage = () => {
             <h1 className="text-4xl md:text-6xl font-black">Bienvenido/a a VYBA</h1>
             <p className="mt-3 text-2xl md:text-4xl">Inicia sesión o regístrate</p>
           </div>
-          <div className="space-y-4 mt-12 max-w-md mx-auto">
+          <div className="space-y-4 mt-12 max-w-s mx-auto">
             <Button 
               variant="secondary" 
               className="w-full flex items-center justify-center gap-2 bg-[#F7F7F7] text-black"
