@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Eye, EyeOff } from 'lucide-react';
 import { Button } from "@/components/ui/button";
@@ -53,7 +52,7 @@ const RegisterFormStep1: React.FC<RegisterFormStep1Props> = ({
             })} 
             placeholder="Escribe tu nombre completo" 
             required 
-            className="rounded-xl h-12 bg-white dark:bg-black dark:text-white" 
+            className="rounded-xl h-12 bg-[#F7F7F7] dark:bg-[#F7F7F7] dark:text-white" 
           />
         </div>
         
@@ -71,7 +70,7 @@ const RegisterFormStep1: React.FC<RegisterFormStep1Props> = ({
             })} 
             placeholder="Escribe tu correo" 
             required 
-            className="rounded-xl h-12 bg-white dark:bg-black dark:text-white" 
+            className="rounded-xl h-12 bg-[#F7F7F7] dark:bg-[#F7F7F7] dark:text-white" 
           />
         </div>
         
@@ -90,7 +89,7 @@ const RegisterFormStep1: React.FC<RegisterFormStep1Props> = ({
               })} 
               placeholder="Escribe tu contraseña" 
               required 
-              className="rounded-xl h-12 pr-10 bg-white dark:bg-black dark:text-white" 
+              className="rounded-xl h-12 pr-10 bg-[#F7F7F7] dark:bg-[#F7F7F7] dark:text-white" 
             />
             <button 
               type="button" 

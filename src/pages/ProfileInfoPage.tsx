@@ -130,7 +130,7 @@ const ProfileInfoPage = () => {
                     value={artistForm.artistName} 
                     onChange={handleArtistFormChange} 
                     placeholder="Escribe tu nombre artístico" 
-                    className="rounded-xl h-12 bg-white dark:bg-black dark:text-white" 
+                    className="rounded-xl h-12 bg-[#F7F7F7] dark:bg-[#F7F7F7] dark:text-white" 
                     required 
                   />
                 </div>
@@ -146,7 +146,7 @@ const ProfileInfoPage = () => {
                       value={artistForm.mainGenres} 
                       onChange={handleArtistFormChange} 
                       placeholder="Ej: Rock, Pop, Jazz" 
-                      className="rounded-xl h-12 bg-white dark:bg-black dark:text-white" 
+                      className="rounded-xl h-12 bg-[#F7F7F7] dark:bg-[#F7F7F7] dark:text-white" 
                       required 
                     />
                   </div>
@@ -161,7 +161,7 @@ const ProfileInfoPage = () => {
                       value={artistForm.artistType} 
                       onChange={handleArtistFormChange} 
                       placeholder="Ej: Solista, Banda, DJ" 
-                      className="rounded-xl h-12 bg-white dark:bg-black dark:text-white" 
+                      className="rounded-xl h-12 bg-[#F7F7F7] dark:bg-[#F7F7F7] dark:text-white" 
                       required 
                     />
                   </div>
@@ -179,7 +179,7 @@ const ProfileInfoPage = () => {
                     value={seekerForm.fullName} 
                     onChange={handleSeekerFormChange} 
                     placeholder="Escribe tu nombre completo" 
-                    className="rounded-xl h-12 bg-white dark:bg-black dark:text-white" 
+                    className="rounded-xl h-12 bg-[#F7F7F7] dark:bg-[#F7F7F7] dark:text-white" 
                     required 
                   />
                 </div>
@@ -195,7 +195,7 @@ const ProfileInfoPage = () => {
                       value={seekerForm.musicalTastes} 
                       onChange={handleSeekerFormChange} 
                       placeholder="Ej: Rock, Jazz, Clásica" 
-                      className="rounded-xl h-12 bg-white dark:bg-black dark:text-white" 
+                      className="rounded-xl h-12 bg-[#F7F7F7] dark:bg-[#F7F7F7] dark:text-white" 
                       required 
                     />
                   </div>
@@ -211,7 +211,7 @@ const ProfileInfoPage = () => {
                       value={seekerForm.mobile} 
                       onChange={handleSeekerFormChange} 
                       placeholder="Tu número de teléfono" 
-                      className="rounded-xl h-12 bg-white dark:bg-black dark:text-white" 
+                      className="rounded-xl h-12 bg-[#F7F7F7] dark:bg-[#F7F7F7] dark:text-white" 
                       required 
                     />
                   </div>

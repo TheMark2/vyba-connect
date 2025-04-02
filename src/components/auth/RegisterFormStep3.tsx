@@ -58,7 +58,7 @@ const RegisterFormStep3: React.FC<RegisterFormStep3Props> = ({
           <Input id="artistName" name="artistName" value={artistForm.artistName} onChange={e => setArtistForm({
           ...artistForm,
           artistName: e.target.value
-        })} placeholder="Escribe tu nombre artístico" className="rounded-xl h-12 bg-white dark:bg-[#222222] dark:text-white" required />
+        })} placeholder="Escribe tu nombre artístico" className="rounded-xl h-12 bg-[#F7F7F7] dark:bg-[#F7F7F7] dark:text-white" required />
         </div>
         
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -69,7 +69,7 @@ const RegisterFormStep3: React.FC<RegisterFormStep3Props> = ({
             <Input id="mainGenres" name="mainGenres" value={artistForm.mainGenres} onChange={e => setArtistForm({
             ...artistForm,
             mainGenres: e.target.value
-          })} placeholder="Ej: Rock, Pop, Jazz" className="rounded-xl h-12 bg-white dark:bg-[#222222] dark:text-white" required />
+          })} placeholder="Ej: Rock, Pop, Jazz" className="rounded-xl h-12 bg-[#F7F7F7] dark:bg-[#F7F7F7] dark:text-white" required />
           </div>
           
           <div className="space-y-1.5">
@@ -79,7 +79,7 @@ const RegisterFormStep3: React.FC<RegisterFormStep3Props> = ({
             <Input id="artistType" name="artistType" value={artistForm.artistType} onChange={e => setArtistForm({
             ...artistForm,
             artistType: e.target.value
-          })} placeholder="Ej: Solista, Banda, DJ" className="rounded-xl h-12 bg-white dark:bg-[#222222] dark:text-white" required />
+          })} placeholder="Ej: Solista, Banda, DJ" className="rounded-xl h-12 bg-[#F7F7F7] dark:bg-[#F7F7F7] dark:text-white" required />
           </div>
         </div>
       </div>
