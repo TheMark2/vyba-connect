@@ -99,19 +99,6 @@ const RoleSelector = React.forwardRef<
             </RadioGroupPrimitive.Item>
           </div>
         </div>
-        
-        {features.length > 0 && (
-          <div className={cn(
-            "overflow-hidden transition-all duration-300 ease-in-out",
-            isSelected 
-              ? "max-h-48 opacity-100" 
-              : "max-h-48 opacity-80"
-          )}>
-            <p className="text-sm text-gray-500 dark:text-gray-400">
-              {features.join(', ')}
-            </p>
-          </div>
-        )}
       </label>
     </div>
   )
