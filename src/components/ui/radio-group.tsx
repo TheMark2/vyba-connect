@@ -50,9 +50,6 @@ const RoleSelector = React.forwardRef<
     features?: string[];
   }
 >(({ className, label, description, icon, features = [], ...props }, ref) => {
-  // El problema está en cómo manejamos el estado isSelected
-  // Necesitamos usar props.checked para determinar el estado inicial y también actualizarlo cuando cambia
-  
   // Usar un estado que se actualice con el valor de checked
   const [isSelected, setIsSelected] = React.useState(props.checked || false);
   
@@ -60,46 +57,65 @@ const RoleSelector = React.forwardRef<
   React.useEffect(() => {
     setIsSelected(props.checked === true);
   }, [props.checked]);
+  
+  // Función para manejar el click en todo el componente
+  const handleClick = () => {
+    // Aquí simulamos el clic en el RadioGroupItem
+    if (props.onClick) {
+      // Crear un evento sintético para pasarlo al onClick
+      const event = {
+        preventDefault: () => {},
+        stopPropagation: () => {},
+      } as React.MouseEvent<HTMLButtonElement>;
+      
+      props.onClick(event);
+    }
+    
+    // Si también hay un onValueChange, dispararlo con el valor
+    if (props.value && props.onValueChange) {
+      props.onValueChange(props.value);
+    }
+    
+    setIsSelected(true);
+  };
 
   return (
     <div 
+      onClick={handleClick}
       className={cn(
-        "p-6 rounded-2xl transition-all duration-500 flex flex-col bg-white",
+        "p-6 rounded-2xl transition-all duration-500 ease-in-out flex flex-col bg-white cursor-pointer",
         isSelected 
-          ? "bg-[#F5F1EB]" 
+          ? "bg-[#F5F1EB] border-[1.5px] border-black dark:border-white" 
           : "bg-white"
       )}
     >
-      <label className="cursor-pointer block w-full">
-        <div className="flex items-center justify-between gap-4">
-          <div className="flex flex-col">
-            <span className="text-xl font-bold text-black">
-              {label}
+      <div className="flex items-center justify-between gap-4">
+        <div className="flex flex-col">
+          <span className="text-xl font-bold text-black">
+            {label}
+          </span>
+          {description && (
+            <span className="text-sm text-gray-500 dark:text-gray-400 mt-1">
+              {description}
             </span>
-            {description && (
-              <span className="text-sm text-gray-500 dark:text-gray-400 mt-1">
-                {description}
-              </span>
-            )}
-          </div>
-          
-          <div className="flex items-center">
-            {icon && (
-              <span className="text-3xl text-black">
-                {icon}
-              </span>
-            )}
-            <RadioGroupPrimitive.Item
-              ref={ref}
-              className="hidden"
-              {...props}
-              onClick={() => setIsSelected(true)} // Aseguramos que se actualice el estado al hacer click
-            >
-              <RadioGroupPrimitive.Indicator />
-            </RadioGroupPrimitive.Item>
-          </div>
+          )}
         </div>
-      </label>
+        
+        <div className="flex items-center">
+          {icon && (
+            <span className="text-3xl text-black">
+              {icon}
+            </span>
+          )}
+          <RadioGroupPrimitive.Item
+            ref={ref}
+            className="hidden"
+            {...props}
+          >
+            <RadioGroupPrimitive.Indicator />
+          </RadioGroupPrimitive.Item>
+        </div>
+      </div>
     </div>
   )
 })
