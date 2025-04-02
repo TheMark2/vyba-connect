@@ -67,12 +67,12 @@ const RegisterFormStep2: React.FC<RegisterFormStep2Props> = ({
           type="button" 
           variant="secondary" 
           onClick={handleBackStep} 
-          className="p-3 bg-white hover:bg-gray-100 dark:bg-white dark:hover:bg-gray-100 dark:text-black"
+          className="p-3 bg-white hover:bg-gray-100 dark:bg-white dark:hover:bg-gray-100 dark:text-black shadow-sm"
           disabled={isLoading}
         >
           <ArrowLeft size={20}/>
         </Button>
-        <Button type="submit" isLoading={isLoading} className="w-full">
+        <Button type="submit" isLoading={isLoading} className="w-full shadow-sm">
           Siguiente
         </Button>
       </div>
@@ -82,7 +82,7 @@ const RegisterFormStep2: React.FC<RegisterFormStep2Props> = ({
         </p>
         <Button 
           variant="secondary" 
-          className="mt-2 text-xs font-bold" 
+          className="mt-2 text-xs font-bold bg-white hover:bg-gray-100 shadow-sm" 
           onClick={switchToLogin}
         >
           Iniciar Sesión

@@ -119,28 +119,30 @@ const AuthPage = () => {
 
   return (
     <PageTransition>
-      <Navbar />
-      <AuthContent 
-        defaultTab={defaultTab}
-        setDefaultTab={setDefaultTab}
-        loginForm={loginForm}
-        setLoginForm={setLoginForm}
-        registerForm={registerForm}
-        setRegisterForm={setRegisterForm}
-        artistForm={artistForm}
-        setArtistForm={setArtistForm}
-        registerStep={registerStep}
-        setRegisterStep={setRegisterStep}
-        isLoading={isLoading}
-        showPassword={showPassword}
-        togglePasswordVisibility={togglePasswordVisibility}
-        handleLoginSubmit={handleLoginSubmit}
-        handleRegisterSubmit={handleRegisterSubmit}
-        handleSocialLogin={handleSocialLogin}
-        handleTabChange={handleTabChange}
-        switchToRegister={switchToRegister}
-        handleBackStep={handleBackStep}
-      />
+      <div className="bg-white dark:bg-vyba-dark-bg min-h-screen">
+        <Navbar />
+        <AuthContent 
+          defaultTab={defaultTab}
+          setDefaultTab={setDefaultTab}
+          loginForm={loginForm}
+          setLoginForm={setLoginForm}
+          registerForm={registerForm}
+          setRegisterForm={setRegisterForm}
+          artistForm={artistForm}
+          setArtistForm={setArtistForm}
+          registerStep={registerStep}
+          setRegisterStep={setRegisterStep}
+          isLoading={isLoading}
+          showPassword={showPassword}
+          togglePasswordVisibility={togglePasswordVisibility}
+          handleLoginSubmit={handleLoginSubmit}
+          handleRegisterSubmit={handleRegisterSubmit}
+          handleSocialLogin={handleSocialLogin}
+          handleTabChange={handleTabChange}
+          switchToRegister={switchToRegister}
+          handleBackStep={handleBackStep}
+        />
+      </div>
     </PageTransition>
   );
 };

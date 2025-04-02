@@ -117,7 +117,7 @@ const AuthContent: React.FC<AuthContentProps> = ({
   }
   
   return (
-    <div className={`w-full max-w-screen bg-[#FAF8F6] dark:bg-vyba-dark-bg ${isMobile ? 'py-8' : 'py-8'}`}>
+    <div className={`w-full max-w-screen bg-white dark:bg-vyba-dark-bg ${isMobile ? 'py-8' : 'py-8'}`}>
       <div className="max-w-md mx-auto px-6 md:px-0 pt-10">
         {headerContent}
 

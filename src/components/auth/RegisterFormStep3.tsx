@@ -34,7 +34,7 @@ const RegisterFormStep3: React.FC<RegisterFormStep3Props> = ({
         Rellena tu información
       </h1>
       
-      <div className="bg-white dark:bg-vyba-dark-secondary/30 rounded-full py-5 px-6 flex items-center gap-4 mb-6">
+      <div className="bg-white dark:bg-vyba-dark-secondary/30 rounded-full py-5 px-6 flex items-center gap-4 mb-6 shadow-sm">
         <div className="w-12 h-12 bg-[#F7F7F7] dark:bg-vyba-dark-secondary/50 rounded-full flex items-center justify-center">
           <span className="text-2xl">
             🎵
@@ -85,10 +85,10 @@ const RegisterFormStep3: React.FC<RegisterFormStep3Props> = ({
       </div>
       
       <div className="flex justify-center items-center gap-3 mt-8">
-        <Button type="button" variant="secondary" onClick={handleBackStep} className="p-3 bg-[#EBEBEB] hover:bg-[#DDDDDD] dark:bg-[#5E5E5E] dark:hover:bg-[#717171] dark:text-white" disabled={isLoading}>
+        <Button type="button" variant="secondary" onClick={handleBackStep} className="p-3 bg-white hover:bg-[#EBEBEB] dark:bg-[#5E5E5E] dark:hover:bg-[#717171] dark:text-white shadow-sm" disabled={isLoading}>
           <ArrowLeft size={20} />
         </Button>
-        <Button type="submit" isLoading={isLoading} className="w-full bg-[#D4E1FF] hover:bg-[#E6ECFD] text-[#222222]">
+        <Button type="submit" isLoading={isLoading} className="w-full bg-[#D4E1FF] hover:bg-[#E6ECFD] text-[#222222] shadow-sm">
           Siguiente
         </Button>
       </div>
@@ -96,7 +96,7 @@ const RegisterFormStep3: React.FC<RegisterFormStep3Props> = ({
         <p className="text-sm text-[#717171] dark:text-[#C2C2C2]">
           ¿Tienes cuenta?
         </p>
-        <Button variant="secondary" className="mt-2 text-xs font-bold bg-[#EBEBEB] hover:bg-[#DDDDDD] text-[#222222] dark:bg-[#5E5E5E] dark:hover:bg-[#717171] dark:text-white" onClick={switchToLogin}>
+        <Button variant="secondary" className="mt-2 text-xs font-bold bg-white hover:bg-[#EBEBEB] text-[#222222] dark:bg-[#5E5E5E] dark:hover:bg-[#717171] dark:text-white shadow-sm" onClick={switchToLogin}>
           Iniciar Sesión
         </Button>
       </div>
