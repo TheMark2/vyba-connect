@@ -20,6 +20,7 @@ const AuthPage = () => {
   const [emailVerificationTimeout, setEmailVerificationTimeout] = useState<NodeJS.Timeout | null>(null);
   const [emailError, setEmailError] = useState(false);
   const [passwordError, setPasswordError] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   
   const handleShowEmailForm = () => {
     setShowEmailForm(true);
@@ -74,7 +75,13 @@ const AuthPage = () => {
     
     if (!hasError) {
       // Proceder con el login
+      setIsLoading(true);
       console.log("Intentando iniciar sesión con:", email, password);
+      
+      // Simular un tiempo de carga
+      setTimeout(() => {
+        setIsLoading(false);
+      }, 2000);
     }
   };
 
@@ -157,9 +164,12 @@ const AuthPage = () => {
                   error={passwordError}
                 />
                 {passwordError && <p className="text-sm text-[#C13515]">Por favor, introduce tu contraseña</p>}
+                <p className="text-xs text-gray-500">
+                  ¿Has olvidado tu contraseña? <Link to="/reset-password" className="font-medium">Recupérala aquí</Link>
+                </p>
               </div>
               <div className="w-full flex justify-center">
-                <Button type="submit" className="px-16">
+                <Button type="submit" className="px-16" isLoading={isLoading}>
                   Iniciar sesión
                 </Button>
               </div>
