@@ -95,33 +95,31 @@ const ArtistCards = () => {
               onMouseEnter={() => setHoveredCard(artist.id)}
               onMouseLeave={() => setHoveredCard(null)}
               className={`
-                absolute transition-all duration-300 ease-in-out cursor-pointer
+                absolute rounded-3xl border-6 border-white dark:border-white
+                w-56 h-56 flex flex-col justify-end
+                transition-all duration-300 ease-in-out
+                cursor-pointer overflow-hidden
+                shadow-[0_10px_20px_rgba(0,0,0,0.15)] hover:shadow-[0_20px_30px_rgba(0,0,0,0.2)]
                 ${getCardStyles(index, isHovered)}
               `}
               aria-label={`Ver perfil de ${artist.name}`}
             >
-              {/* Contenedor para la imagen blureada con bordes claros */}
-              <div className="relative w-56 h-56">
-                {/* Imagen de fondo con efecto blur */}
-                <div 
-                  className={`
-                    absolute inset-0 rounded-3xl bg-cover bg-center z-0 transition-all duration-300
-                    ${isHovered ? '' : 'blur-[2px]'}
-                  `} 
-                  style={{ backgroundImage: `url(${getEnhancedImage(index)})` }}
-                />
-                
-                {/* Degradado negro de abajo hacia arriba */}
-                <div className="absolute inset-0 rounded-3xl bg-gradient-to-t from-black via-black/70 to-transparent z-1"></div>
-                
-                {/* Borde blanco no blureado (aplicado como un pseudo-elemento) */}
-                <div className="absolute inset-0 rounded-3xl border-6 border-white dark:border-white shadow-[0_10px_20px_rgba(0,0,0,0.15)] hover:shadow-[0_20px_30px_rgba(0,0,0,0.2)] z-2"></div>
-                
-                {/* Contenido de texto */}
-                <div className="absolute bottom-0 left-0 right-0 p-4 text-white z-3">
-                  <h2 className="text-xl font-bold">{artist.name}</h2>
-                  <p className="text-sm">{artist.type}</p>
-                </div>
+              {/* Imagen de fondo con degradado y efecto blur */}
+              <div 
+                className={`
+                  absolute inset-0 bg-cover bg-center z-0 transition-all duration-300
+                  ${isHovered ? '' : 'blur-[2px]'}
+                `} 
+                style={{ backgroundImage: `url(${getEnhancedImage(index)})` }}
+              />
+              
+              {/* Degradado negro de abajo hacia arriba */}
+              <div className="absolute inset-0 bg-gradient-to-t from-black via-black/70 to-transparent z-1"></div>
+              
+              {/* Contenido de texto */}
+              <div className="relative z-2 p-4 text-white">
+                <h2 className="text-xl font-bold">{artist.name}</h2>
+                <p className="text-sm">{artist.type}</p>
               </div>
             </div>
           );
