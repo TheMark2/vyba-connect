@@ -41,7 +41,19 @@ const ArtistCards = () => {
       return `${positionOnly} rotate-0 scale-110 z-10`;
     }
     
-    // Si no está siendo hoverada, aplica los estilos base completos
+    // Si no está siendo hoverada, ajustamos la posición según si hay otra tarjeta con hover
+    if (hoveredCard !== null) {
+      // Si hay una tarjeta con hover, alejamos las demás tarjetas según su posición relativa
+      if (index < artists.findIndex(a => a.id === hoveredCard)) {
+        // Si está a la izquierda de la tarjeta con hover, moverla más a la izquierda
+        return baseStyles[index].replace('translate-x-', 'translate-x-[-') + '20px]';
+      } else if (index > artists.findIndex(a => a.id === hoveredCard)) {
+        // Si está a la derecha de la tarjeta con hover, moverla más a la derecha
+        return baseStyles[index].replace('translate-x-', 'translate-x-[') + '20px]';
+      }
+    }
+    
+    // Si no hay ninguna tarjeta con hover, aplica los estilos base completos
     return baseStyles[index];
   };
 
