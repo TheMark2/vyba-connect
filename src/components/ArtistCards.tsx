@@ -4,15 +4,17 @@ import React, { useState } from 'react';
 interface Artist {
   id: number;
   name: string;
+  type: string;
+  image: string;
 }
 
 const ArtistCards = () => {
-  // Array de artistas 
+  // Array de artistas con más información
   const artists = [
-    { id: 1, name: "Artista 1" },
-    { id: 2, name: "Artista 2" },
-    { id: 3, name: "Artista 3" },
-    { id: 4, name: "Artista 4" }
+    { id: 1, name: "Antonia Pedragosa", type: "DJ", image: "/lovable-uploads/77591a97-10cd-4c8b-b768-5b17483c3d9f.png" },
+    { id: 2, name: "Carlos Martínez", type: "Banda", image: "/lovable-uploads/64cabbe3-ce62-4190-830d-0e5defd31a1b.png" },
+    { id: 3, name: "Laura González", type: "Solista", image: "/lovable-uploads/c89ee394-3c08-48f6-b69b-bddd81dffa8b.png" },
+    { id: 4, name: "Miguel Torres", type: "Grupo", image: "/lovable-uploads/7e7c2282-785a-46fb-84b2-f7b14b762e64.png" }
   ];
 
   // Estado para rastrear la tarjeta en hover
@@ -26,23 +28,42 @@ const ArtistCards = () => {
 
   // Estilos dinámicos para la disposición de las tarjetas
   const getCardStyles = (index: number, isHovered: boolean) => {
-    // Rotaciones y posiciones base para cada tarjeta
-    const baseStyles = [
-      "rotate-[-15deg] translate-x-[-180px]", // Más a la izquierda
-      "rotate-[10deg] translate-x-[-60px]",   // Ajuste de posición
-      "rotate-[-8deg] translate-x-[60px]",    // Ajuste de posición
-      "rotate-[15deg] translate-x-[180px]"    // Más a la derecha
+    // Posiciones base para cada tarjeta
+    const basePositions = [
+      "translate-x-[-180px]", // Más a la izquierda
+      "translate-x-[-60px]",   // Ajuste de posición
+      "translate-x-[60px]",    // Ajuste de posición
+      "translate-x-[180px]"    // Más a la derecha
+    ];
+    
+    // Rotaciones para cada tarjeta (solo se aplican cuando no están en hover)
+    const baseRotations = [
+      "rotate-[-15deg]", // Rotación izquierda
+      "rotate-[10deg]",  // Rotación derecha
+      "rotate-[-8deg]",  // Rotación izquierda
+      "rotate-[15deg]"   // Rotación derecha
     ];
 
-    // Si está siendo hoverada, quita la rotación pero mantiene la posición
+    // Si está siendo hoverada, elimina la rotación y ajusta la posición para mayor separación
     if (isHovered) {
-      // Extraemos solo la parte de translación, quitamos la rotación
-      const positionOnly = baseStyles[index].split(' ').find(style => style.includes('translate'));
-      return `${positionOnly} rotate-0 scale-110 z-10`;
+      // Cuando está en hover, solo aplicamos la posición y aumentamos la escala
+      return `${basePositions[index]} rotate-0 scale-110 z-10`;
     }
     
-    // Si no está siendo hoverada, aplica los estilos base completos
-    return baseStyles[index];
+    // Si no está siendo hoverada pero hay otra tarjeta en hover, incrementamos la separación
+    if (hoveredCard !== null) {
+      // Alejamos más las tarjetas que no están en hover
+      const awayPosition = [
+        "translate-x-[-220px]", // Más alejado a la izquierda
+        "translate-x-[-100px]", // Ajuste de posición
+        "translate-x-[100px]",  // Ajuste de posición
+        "translate-x-[220px]"   // Más alejado a la derecha
+      ];
+      return `${awayPosition[index]} ${baseRotations[index]}`;
+    }
+    
+    // Si no hay ninguna tarjeta en hover, aplicamos los estilos base completos
+    return `${basePositions[index]} ${baseRotations[index]}`;
   };
 
   return (
@@ -62,15 +83,28 @@ const ArtistCards = () => {
               onMouseEnter={() => setHoveredCard(artist.id)}
               onMouseLeave={() => setHoveredCard(null)}
               className={`
-                absolute bg-gray-200 dark:bg-gray-700 rounded-3xl border-2 border-black dark:border-gray-600
-                w-56 h-56 flex items-center justify-center
+                absolute rounded-3xl border-4 border-white dark:border-white
+                w-56 h-56 flex flex-col justify-end
                 transition-all duration-300 ease-in-out
-                cursor-pointer
+                cursor-pointer overflow-hidden
                 ${getCardStyles(index, isHovered)}
               `}
               aria-label={`Ver perfil de ${artist.name}`}
             >
-              <span className="text-lg font-medium dark:text-white">{artist.name}</span>
+              {/* Imagen de fondo con degradado */}
+              <div 
+                className="absolute inset-0 bg-cover bg-center z-0" 
+                style={{ backgroundImage: `url(${artist.image})` }}
+              />
+              
+              {/* Degradado negro de abajo hacia arriba */}
+              <div className="absolute inset-0 bg-gradient-to-t from-black to-transparent z-1"></div>
+              
+              {/* Contenido de texto */}
+              <div className="relative z-2 p-4 text-white">
+                <h2 className="text-xl font-bold">{artist.name}</h2>
+                <p className="text-sm">{artist.type}</p>
+              </div>
             </div>
           );
         })}
