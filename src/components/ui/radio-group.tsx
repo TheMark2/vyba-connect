@@ -59,19 +59,16 @@ const RoleSelector = React.forwardRef<
   return (
     <div 
       className={cn(
-        "p-6 rounded-3xl transition-all duration-200 flex flex-col",
+        "p-6 rounded-3xl transition-all duration-200 flex flex-col bg-white",
         isSelected 
-          ? "bg-white dark:bg-white border-0" 
-          : "bg-transparent border-[1.5px] border-black dark:border-white hover:border-[2px] hover:shadow-sm"
+          ? "border-[1.5px] border-black dark:border-black" 
+          : "border-0"
       )}
     >
       <label className="cursor-pointer block w-full">
         <div className="flex items-center justify-between mb-3">
           <div className="flex flex-col">
-            <span className={cn(
-              "text-xl font-bold transition-all duration-200",
-              isSelected ? "text-black dark:text-black" : "text-black dark:text-white"
-            )}>
+            <span className="text-xl font-bold text-black">
               {label}
             </span>
             {description && (
@@ -83,10 +80,7 @@ const RoleSelector = React.forwardRef<
           
           <div className="flex items-center">
             {icon && (
-              <span className={cn(
-                "text-3xl",
-                isSelected ? "text-black dark:text-black" : "text-black dark:text-white"
-              )}>
+              <span className="text-3xl text-black">
                 {icon}
               </span>
             )}
