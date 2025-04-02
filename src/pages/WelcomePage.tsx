@@ -36,7 +36,7 @@ const WelcomePage = () => {
             <ArtistCards />
           </div>
           
-          <div className="flex gap-4 items-center my-8">
+          <div className="flex flex-col gap-4 items-center my-8">
             <div className="relative w-full max-w-md">
               <Button 
                 onClick={handlePromoteArtist} 
