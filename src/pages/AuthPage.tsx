@@ -1,14 +1,50 @@
-import React, { useState } from 'react';
+
+import React, { useState, useEffect } from 'react';
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Link } from "react-router-dom";
 import { Mail } from "lucide-react";
 import Navbar from "@/components/Navbar";
+
 const AuthPage = () => {
   const [showEmailForm, setShowEmailForm] = useState(false);
+  const [email, setEmail] = useState('');
+  const [showVerified, setShowVerified] = useState(false);
+  const [emailVerificationTimeout, setEmailVerificationTimeout] = useState<NodeJS.Timeout | null>(null);
+  
   const handleShowEmailForm = () => {
     setShowEmailForm(true);
   };
+
+  const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    setEmail(value);
+    
+    // Limpiar el timeout anterior si existe
+    if (emailVerificationTimeout) {
+      clearTimeout(emailVerificationTimeout);
+    }
+    
+    // Si hay valor, configuramos un nuevo timeout para mostrar el ícono después de 300ms
+    if (value) {
+      const timeout = setTimeout(() => {
+        setShowVerified(true);
+      }, 300);
+      setEmailVerificationTimeout(timeout);
+    } else {
+      setShowVerified(false);
+    }
+  };
+
+  // Limpiar el timeout cuando se desmonte el componente
+  useEffect(() => {
+    return () => {
+      if (emailVerificationTimeout) {
+        clearTimeout(emailVerificationTimeout);
+      }
+    };
+  }, [emailVerificationTimeout]);
+
   return <div className="min-h-screen bg-white dark:bg-vyba-dark-bg">
       <Navbar />
       
@@ -48,7 +84,15 @@ const AuthPage = () => {
             </div> : <div className="space-y-6 mt-16 max-w-sm mx-auto">
               <div className="space-y-2">
                 <label htmlFor="email" className="block font-bold">Email</label>
-                <Input id="email" type="email" placeholder="ramón.prado@vybapp.com" className="w-full bg-[#F7F7F7]" />
+                <Input 
+                  id="email" 
+                  type="email" 
+                  placeholder="ramón.prado@vybapp.com" 
+                  className="w-full bg-[#F7F7F7]" 
+                  value={email}
+                  onChange={handleEmailChange}
+                  showVerified={showVerified}
+                />
               </div>
 
               <div className="space-y-2">

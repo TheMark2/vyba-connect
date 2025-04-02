@@ -1,8 +1,9 @@
+
 import * as React from "react"
 import { cn } from "@/lib/utils"
 
-const Input = React.forwardRef<HTMLInputElement, React.ComponentProps<"input">>(
-  ({ className, ...props }, ref) => {
+const Input = React.forwardRef<HTMLInputElement, React.ComponentProps<"input"> & { showVerified?: boolean }>(
+  ({ className, type, showVerified = false, ...props }, ref) => {
     const inputRef = React.useRef<HTMLInputElement>(null)
     const combinedRef = useCombinedRefs(ref, inputRef)
 
@@ -10,12 +11,35 @@ const Input = React.forwardRef<HTMLInputElement, React.ComponentProps<"input">>(
       <div className="relative">
         <input
           {...props}
+          type={type}
           className={cn(
             "flex h-12 w-full rounded-lg bg-[#F7F7F7] px-5 py-2 text-sm file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground focus-visible:outline-none focus:ring-[#666666] focus:ring-2 transition-all duration-300 ease-in-out disabled:cursor-not-allowed disabled:opacity-50 md:text-sm text-black font-medium placeholder:font-medium placeholder:text-muted-foreground dark:text-white dark:bg-[#F7F7F7] dark:placeholder:text-gray-400",
+            showVerified && "pr-12",
             className
           )}
           ref={combinedRef}
         />
+        {showVerified && (
+          <div className="absolute right-3 top-1/2 transform -translate-y-1/2 bg-primary rounded-full p-1 opacity-0 animate-fade-in">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="18"
+              height="18"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              className="text-primary-foreground"
+            >
+              <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" />
+              <circle cx="9" cy="7" r="4" />
+              <path d="m22 11-2 2-2-2" />
+              <path d="M16 11h4" />
+            </svg>
+          </div>
+        )}
       </div>
     )
   }
