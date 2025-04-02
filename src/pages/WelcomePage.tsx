@@ -36,11 +36,11 @@ const WelcomePage = () => {
             <ArtistCards />
           </div>
           
-          <div className="flex flex-col items-center my-8">
-            <div className="relative w-full max-w-md flex gap-4">
+          <div className="flex gap-4 items-center my-8">
+            <div className="relative w-full max-w-md">
               <Button 
                 onClick={handlePromoteArtist} 
-                className="w-auto bg-[#F2D4DC] text-black hover:bg-[#EBBFCC]"
+                className="w-full bg-[#F2D4DC] text-black hover:bg-[#EBBFCC]"
               >
                 Promocionarse como artista
               </Button>
