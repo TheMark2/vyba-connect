@@ -66,8 +66,8 @@ const RoleSelector = React.forwardRef<
       className={cn(
         "p-6 rounded-2xl transition-all duration-500 flex flex-col bg-white",
         isSelected 
-          ? "outline outline-2 outline-black dark:outline-black" 
-          : "outline-none"
+          ? "bg-[#F5F1EB]" 
+          : "bg-white"
       )}
     >
       <label className="cursor-pointer block w-full">
