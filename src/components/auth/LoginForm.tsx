@@ -45,7 +45,7 @@ const LoginForm: React.FC<LoginFormProps> = ({
           })} 
           placeholder="Escribe tu correo" 
           required 
-          className="rounded-xl h-12 bg-white dark:bg-black dark:text-white" 
+          className="rounded-xl h-14 bg-white dark:bg-black dark:text-white" 
         />
       </div>
       
@@ -64,7 +64,7 @@ const LoginForm: React.FC<LoginFormProps> = ({
             })} 
             placeholder="Escribe tu contraseña" 
             required 
-            className="rounded-xl h-12 pr-10 bg-white dark:bg-black dark:text-white" 
+            className="rounded-xl h-14 pr-10 bg-white dark:bg-black dark:text-white" 
           />
           <button 
             type="button" 
