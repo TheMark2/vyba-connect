@@ -2,11 +2,12 @@
 import React, { useState } from 'react';
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Mail } from "lucide-react";
 import Navbar from "@/components/Navbar";
 
 const RegisterPage = () => {
+  const navigate = useNavigate();
   const [showEmailForm, setShowEmailForm] = useState(false);
   const [fullName, setFullName] = useState('');
   const [email, setEmail] = useState('');
@@ -82,9 +83,18 @@ const RegisterPage = () => {
       setIsLoading(true);
       console.log("Intentando registrar con:", fullName, email, password);
       
-      // Simular un tiempo de carga
+      // Simular un tiempo de carga y luego redirigir
       setTimeout(() => {
         setIsLoading(false);
+        // Redirigir a la página de bienvenida con los datos del usuario
+        navigate('/welcome', { 
+          state: { 
+            userInfo: {
+              fullName,
+              email
+            } 
+          } 
+        });
       }, 2000);
     }
   };
