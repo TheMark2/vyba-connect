@@ -2,7 +2,7 @@
 import React from 'react';
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
-import { Globe, MessageSquare, Laptop, Mail } from "lucide-react";
+import { Mail } from "lucide-react";
 import Navbar from "@/components/Navbar";
 
 const AuthPage = () => {
@@ -21,7 +21,7 @@ const AuthPage = () => {
               variant="secondary" 
               className="w-full flex items-center justify-center gap-2 bg-[#F7F7F7] text-black"
             >
-              <Globe size={20} />
+              <img src="/logos/google-logo.svg" alt="Google" width={20} height={20} />
               Continuar con Google
             </Button>
             
@@ -29,7 +29,7 @@ const AuthPage = () => {
               variant="secondary" 
               className="w-full flex items-center justify-center gap-2 bg-[#F7F7F7] text-black"
             >
-              <MessageSquare size={20} />
+              <img src="/logos/facebook-logo.svg" alt="Facebook" width={20} height={20} />
               Continuar con Facebook
             </Button>
             
@@ -37,7 +37,7 @@ const AuthPage = () => {
               variant="secondary" 
               className="w-full flex items-center justify-center gap-2 bg-[#F7F7F7] text-black"
             >
-              <Laptop size={20} />
+              <img src="/logos/apple-logo.svg" alt="Apple" width={20} height={20} />
               Continuar con Apple
             </Button>
             
