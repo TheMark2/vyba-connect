@@ -1,4 +1,3 @@
-
 import type { Config } from "tailwindcss";
 
 export default {
@@ -36,9 +35,9 @@ export default {
         background: "hsl(var(--background))",
         foreground: "hsl(var(--foreground))",
         primary: {
-          DEFAULT: "#D4E1FF", // Similar al Primary 01
-          hover: "#E6ECFD", // Versión más clara de Primary 01
-          foreground: "#222222", // Shade 02
+          DEFAULT: "#D4E1FF", // Primary color
+          hover: "#E6ECFD", // Versión más clara del Primary
+          foreground: "#222222", // Shade 02 - texto negro sobre fondo primary
         },
         secondary: {
           DEFAULT: "#EBEBEB", // Neutral 02

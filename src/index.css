@@ -1,4 +1,3 @@
-
 @import url('https://api.fontshare.com/v2/css?f[]=satoshi@900,700,500,400&display=swap');
 
 @tailwind base;
@@ -97,12 +96,12 @@
 
 @layer components {
   .btn-primary {
-    @apply bg-primary hover:bg-primary-hover text-primary-foreground px-6 py-3 rounded-full transition-colors 
+    @apply bg-gradient-to-br from-primary via-primary to-primary/90 text-primary-foreground px-6 py-3 rounded-full transition-colors 
     duration-200 inline-flex items-center justify-center font-medium relative overflow-hidden;
   }
   
   .btn-secondary {
-    @apply bg-secondary hover:bg-secondary-hover text-secondary-foreground px-6 py-3 rounded-full 
+    @apply bg-[#EBEBEB] hover:bg-[#EBEBEB]/80 text-[#222222] px-6 py-3 rounded-full 
     transition-colors duration-200 inline-flex items-center justify-center font-medium dark:bg-vyba-dark-secondary dark:hover:bg-opacity-80 dark:text-white relative overflow-hidden;
   }
 
