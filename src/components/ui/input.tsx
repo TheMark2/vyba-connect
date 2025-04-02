@@ -2,7 +2,12 @@
 import * as React from "react"
 import { cn } from "@/lib/utils"
 
-const Input = React.forwardRef<HTMLInputElement, React.ComponentProps<"input"> & { showVerified?: boolean }>(
+// Definimos un tipo para los estados de verificación del email
+type VerificationStatus = 'verified' | 'not-registered' | 'google' | false;
+
+const Input = React.forwardRef<HTMLInputElement, React.ComponentProps<"input"> & { 
+  showVerified?: VerificationStatus 
+}>(
   ({ className, type, showVerified = false, ...props }, ref) => {
     const inputRef = React.useRef<HTMLInputElement>(null)
     const combinedRef = useCombinedRefs(ref, inputRef)
@@ -19,12 +24,12 @@ const Input = React.forwardRef<HTMLInputElement, React.ComponentProps<"input"> &
           )}
           ref={combinedRef}
         />
-        {showVerified && (
+        {showVerified === 'verified' && (
           <div className="absolute right-3 top-1/2 transform -translate-y-1/2 bg-primary rounded-full p-1 transition-opacity duration-300 opacity-100">
             <svg
               xmlns="http://www.w3.org/2000/svg"
-              width="18"
-              height="18"
+              width="16"
+              height="16"
               viewBox="0 0 24 24"
               fill="none"
               stroke="currentColor"
@@ -38,6 +43,14 @@ const Input = React.forwardRef<HTMLInputElement, React.ComponentProps<"input"> &
               <path d="m22 11-2 2-2-2" />
               <path d="M16 11h4" />
             </svg>
+          </div>
+        )}
+        {showVerified === 'not-registered' && (
+          <div className="absolute right-3 top-1/2 transform -translate-y-1/2 bg-[#EADBDB] ring-2 ring-[#EADBDB] rounded-full w-6 h-6 transition-opacity duration-300 opacity-100"></div>
+        )}
+        {showVerified === 'google' && (
+          <div className="absolute right-3 top-1/2 transform -translate-y-1/2 bg-white rounded-full p-1 transition-opacity duration-300 opacity-100">
+            <img src="/logos/google-logo.svg" alt="Google" width={16} height={16} />
           </div>
         )}
       </div>

@@ -6,10 +6,16 @@ import { Link } from "react-router-dom";
 import { Mail } from "lucide-react";
 import Navbar from "@/components/Navbar";
 
+// Simular base de datos de emails
+const mockEmailDatabase = {
+  "usuario@vybapp.com": "verified",
+  "google@vybapp.com": "google",
+};
+
 const AuthPage = () => {
   const [showEmailForm, setShowEmailForm] = useState(false);
   const [email, setEmail] = useState('');
-  const [showVerified, setShowVerified] = useState(false);
+  const [showVerified, setShowVerified] = useState<'verified' | 'not-registered' | 'google' | false>(false);
   const [emailVerificationTimeout, setEmailVerificationTimeout] = useState<NodeJS.Timeout | null>(null);
   
   const handleShowEmailForm = () => {
@@ -26,9 +32,14 @@ const AuthPage = () => {
     }
     
     if (value) {
-      // Si hay valor, configuramos un nuevo timeout para mostrar el ícono después de 300ms
+      // Si hay valor, configuramos un nuevo timeout para verificar el email después de 300ms
       const timeout = setTimeout(() => {
-        setShowVerified(true);
+        // Simular verificación de email
+        if (value in mockEmailDatabase) {
+          setShowVerified(mockEmailDatabase[value as keyof typeof mockEmailDatabase] as 'verified' | 'google');
+        } else {
+          setShowVerified('not-registered');
+        }
       }, 300);
       setEmailVerificationTimeout(timeout);
     } else {
@@ -56,7 +67,8 @@ const AuthPage = () => {
             {!showEmailForm ? <p className="mt-3 text-2xl md:text-4xl">Inicia sesión o regístrate</p> : <p className="mt-3 text-2xl md:text-4xl">Inicia sesión</p>}
           </div>
 
-          {!showEmailForm ? <div className="space-y-4 mt-16 max-w-sm mx-auto">
+          {!showEmailForm ? (
+            <div className="space-y-4 mt-16 max-w-sm mx-auto">
               <Button variant="secondary" className="w-full flex items-center justify-center gap-2 bg-[#F7F7F7] text-black">
                 <img src="/logos/google-logo.svg" alt="Google" width={20} height={20} />
                 Continuar con Google
@@ -82,7 +94,9 @@ const AuthPage = () => {
                 <Mail size={20} />
                 Continuar con Mail
               </Button>
-            </div> : <div className="space-y-6 mt-16 max-w-sm mx-auto">
+            </div>
+          ) : (
+            <div className="space-y-6 mt-16 max-w-sm mx-auto">
               <div className="space-y-2">
                 <label htmlFor="email" className="block font-bold">Email</label>
                 <Input 
@@ -94,6 +108,9 @@ const AuthPage = () => {
                   onChange={handleEmailChange}
                   showVerified={showVerified}
                 />
+                <p className="text-xs text-gray-500">
+                  Prueba con: usuario@vybapp.com o google@vybapp.com
+                </p>
               </div>
 
               <div className="space-y-2">
@@ -108,7 +125,8 @@ const AuthPage = () => {
               <div className="text-center text-sm">
                 <p>No tienes cuenta. <Link to="/register" className="font-bold">Regístrate</Link></p>
               </div>
-            </div>}
+            </div>
+          )}
           
           {!showEmailForm && <div className="text-center text-sm mt-6">
               <p>No tienes cuenta. <Link to="/register" className="font-bold">Regístrate</Link></p>
