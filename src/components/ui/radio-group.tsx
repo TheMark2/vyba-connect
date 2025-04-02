@@ -52,18 +52,28 @@ const RoleSelector = React.forwardRef<
 >(({ className, label, description, icon, features = [], ...props }, ref) => {
   const isSelected = props.checked === true;
   
-  // Creamos una referencia para el botón de radio
-  const radioRef = React.useRef<HTMLButtonElement>(null);
+  // Usar una referencia estática para el elemento radio
+  const radioRef = React.useRef<HTMLButtonElement | null>(null);
   
+  // Manejar el click en el contenedor usando useCallback para evitar recreaciones
   const handleContainerClick = React.useCallback((e: React.MouseEvent) => {
-    // Evitar recursión y burbujas de eventos
-    if (e.target === radioRef.current) return;
-    
-    // Simular un clic directo en el elemento de radio sin usar querySelector
-    if (radioRef.current) {
-      radioRef.current.click();
+    // Evitar clicks recursivos y garantizar que no estamos haciendo click en el propio radio button
+    if (e.target instanceof Node && radioRef.current && 
+        (radioRef.current === e.target || radioRef.current.contains(e.target))) {
+      return;
     }
-  }, []);
+    
+    // Click seguro en el elemento radio
+    if (radioRef.current && !props.disabled) {
+      // Emular un evento de click nativo sin usar click() directamente
+      const event = new MouseEvent('click', {
+        bubbles: true,
+        cancelable: true,
+        view: window
+      });
+      radioRef.current.dispatchEvent(event);
+    }
+  }, [props.disabled]); // Solo depende de si está deshabilitado
   
   return (
     <div 
@@ -95,13 +105,15 @@ const RoleSelector = React.forwardRef<
           )}
           <RadioGroupPrimitive.Item
             ref={(node) => {
-              // Manejar correctamente la ref compuesta
+              // Manejar la ref de forma segura evitando actualizaciones recursivas
+              radioRef.current = node;
+              
+              // Pasar la ref al componente padre si es necesario
               if (typeof ref === 'function') {
                 ref(node);
               } else if (ref) {
                 ref.current = node;
               }
-              radioRef.current = node;
             }}
             className="hidden"
             {...props}
@@ -111,8 +123,8 @@ const RoleSelector = React.forwardRef<
         </div>
       </div>
     </div>
-  )
-})
-RoleSelector.displayName = "RoleSelector"
+  );
+});
+RoleSelector.displayName = "RoleSelector";
 
 export { RadioGroup, RadioGroupItem, RoleSelector }
