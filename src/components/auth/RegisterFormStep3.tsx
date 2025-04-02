@@ -1,9 +1,7 @@
-
 import React from 'react';
 import { ArrowLeft } from 'lucide-react';
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-
 interface RegisterFormStep3Props {
   artistForm: {
     artistName: string;
@@ -20,18 +18,16 @@ interface RegisterFormStep3Props {
   handleBackStep: () => void;
   switchToLogin: () => void;
 }
-
-const RegisterFormStep3: React.FC<RegisterFormStep3Props> = ({ 
-  artistForm, 
-  setArtistForm, 
-  isLoading, 
-  handleRegisterSubmit, 
+const RegisterFormStep3: React.FC<RegisterFormStep3Props> = ({
+  artistForm,
+  setArtistForm,
+  isLoading,
+  handleRegisterSubmit,
   handleBackStep,
   switchToLogin
 }) => {
-  return (
-    <form onSubmit={handleRegisterSubmit} className="space-y-6">
-      <h1 className="text-4xl font-black mb-8 text-center dark:text-white">
+  return <form onSubmit={handleRegisterSubmit} className="space-y-6">
+      <h1 className="text-6xl font-black mb-8 text-center dark:text-white">
         Rellena tu información
       </h1>
       
@@ -56,18 +52,10 @@ const RegisterFormStep3: React.FC<RegisterFormStep3Props> = ({
           <label htmlFor="artistName" className="block text-sm font-medium dark:text-white">
             Nombre de artista
           </label>
-          <Input 
-            id="artistName" 
-            name="artistName" 
-            value={artistForm.artistName} 
-            onChange={(e) => setArtistForm({
-              ...artistForm,
-              artistName: e.target.value
-            })} 
-            placeholder="Escribe tu nombre artístico" 
-            className="rounded-xl h-12 bg-white dark:bg-black dark:text-white" 
-            required 
-          />
+          <Input id="artistName" name="artistName" value={artistForm.artistName} onChange={e => setArtistForm({
+          ...artistForm,
+          artistName: e.target.value
+        })} placeholder="Escribe tu nombre artístico" className="rounded-xl h-12 bg-white dark:bg-black dark:text-white" required />
         </div>
         
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -75,49 +63,27 @@ const RegisterFormStep3: React.FC<RegisterFormStep3Props> = ({
             <label htmlFor="mainGenres" className="block text-sm font-medium dark:text-white">
               Géneros principales
             </label>
-            <Input 
-              id="mainGenres" 
-              name="mainGenres" 
-              value={artistForm.mainGenres} 
-              onChange={(e) => setArtistForm({
-                ...artistForm,
-                mainGenres: e.target.value
-              })} 
-              placeholder="Ej: Rock, Pop, Jazz" 
-              className="rounded-xl h-12 bg-white dark:bg-black dark:text-white" 
-              required 
-            />
+            <Input id="mainGenres" name="mainGenres" value={artistForm.mainGenres} onChange={e => setArtistForm({
+            ...artistForm,
+            mainGenres: e.target.value
+          })} placeholder="Ej: Rock, Pop, Jazz" className="rounded-xl h-12 bg-white dark:bg-black dark:text-white" required />
           </div>
           
           <div className="space-y-1.5">
             <label htmlFor="artistType" className="block text-sm font-medium dark:text-white">
               Tipo de artista
             </label>
-            <Input 
-              id="artistType" 
-              name="artistType" 
-              value={artistForm.artistType} 
-              onChange={(e) => setArtistForm({
-                ...artistForm,
-                artistType: e.target.value
-              })} 
-              placeholder="Ej: Solista, Banda, DJ" 
-              className="rounded-xl h-12 bg-white dark:bg-black dark:text-white" 
-              required 
-            />
+            <Input id="artistType" name="artistType" value={artistForm.artistType} onChange={e => setArtistForm({
+            ...artistForm,
+            artistType: e.target.value
+          })} placeholder="Ej: Solista, Banda, DJ" className="rounded-xl h-12 bg-white dark:bg-black dark:text-white" required />
           </div>
         </div>
       </div>
       
       <div className="flex justify-center items-center gap-3 mt-8">
-        <Button 
-          type="button" 
-          variant="secondary" 
-          onClick={handleBackStep} 
-          className="p-3 bg-white hover:bg-gray-100 dark:bg-white dark:hover:bg-gray-100 dark:text-black"
-          disabled={isLoading}
-        >
-          <ArrowLeft size={20}/>
+        <Button type="button" variant="secondary" onClick={handleBackStep} className="p-3 bg-white hover:bg-gray-100 dark:bg-white dark:hover:bg-gray-100 dark:text-black" disabled={isLoading}>
+          <ArrowLeft size={20} />
         </Button>
         <Button type="submit" isLoading={isLoading} className="w-full">
           Siguiente
@@ -127,16 +93,10 @@ const RegisterFormStep3: React.FC<RegisterFormStep3Props> = ({
         <p className="text-sm text-gray-600 dark:text-gray-400">
           ¿Tienes cuenta?
         </p>
-        <Button 
-          variant="secondary" 
-          className="mt-2 text-xs font-bold" 
-          onClick={switchToLogin}
-        >
+        <Button variant="secondary" className="mt-2 text-xs font-bold" onClick={switchToLogin}>
           Iniciar Sesión
         </Button>
       </div>
-    </form>
-  );
+    </form>;
 };
-
 export default RegisterFormStep3;
