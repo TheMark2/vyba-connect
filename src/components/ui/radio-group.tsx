@@ -90,7 +90,7 @@ const RoleSelector = React.forwardRef<
       className={cn(
         "p-6 rounded-2xl transition-all duration-500 ease-in-out flex flex-col bg-white cursor-pointer",
         isSelected 
-          ? "bg-[#F5F1EB] border-[1.5px] border-black dark:border-white" 
+          ? "bg-[#F5F1EB]" 
           : "bg-white"
       )}
     >
