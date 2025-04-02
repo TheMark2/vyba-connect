@@ -40,7 +40,7 @@ const WelcomePage = () => {
             <div className="relative w-full max-w-md flex gap-4">
               <Button 
                 onClick={handlePromoteArtist} 
-                className="flex-grow bg-[#F2D4DC] text-black hover:bg-[#EBBFCC]"
+                className="w-full bg-[#F2D4DC] text-black hover:bg-[#EBBFCC]"
               >
                 Promocionarse como artista
               </Button>
@@ -49,7 +49,7 @@ const WelcomePage = () => {
                 variant="secondary"
                 size="icon"
                 onClick={handleClose}
-                className="absolute right-0 top-1/2 -translate-y-1/2 rounded-full"
+                className="rounded-full"
                 aria-label="Cerrar"
               >
                 <X className="h-6 w-6" />
