@@ -13,8 +13,8 @@ const AuthPage = () => {
       <div className="container mx-auto flex flex-col items-center justify-center px-6 py-20">
         <div className="w-full space-y-6">
           <div className="text-center">
-            <h1 className="text-6xl font-black">Bienvenido/a a VYBA</h1>
-            <p className="mt-3 text-4xl">Inicia sesión o regístrate</p>
+            <h1 className="text-4xl md:text-6xl font-black">Bienvenido/a a VYBA</h1>
+            <p className="mt-3 text-2xl md:text-4xl">Inicia sesión o regístrate</p>
           </div>
           <div className="space-y-4 mt-12 max-w-md mx-auto">
             <Button 
