@@ -35,15 +35,20 @@ const RegisterFormStep3: React.FC<RegisterFormStep3Props> = ({
         Rellena tu información
       </h1>
       
-      <div className="bg-white dark:bg-vyba-dark-secondary/30 p-4 rounded-xl flex items-center gap-3 mb-6">
-        <div className="p-2 bg-gray-100 dark:bg-vyba-dark-secondary/50 rounded-full">
-          <span className="flex items-center justify-center w-6 h-6">
+      <div className="bg-white dark:bg-vyba-dark-secondary/30 rounded-full py-5 px-6 flex items-center gap-4 mb-6">
+        <div className="w-12 h-12 bg-gray-100 dark:bg-vyba-dark-secondary/50 rounded-full flex items-center justify-center">
+          <span className="text-2xl">
             🎵
           </span>
         </div>
-        <span className="text-sm font-medium">
-          Registrado como Artista
-        </span>
+        <div className="flex flex-col">
+          <span className="text-sm text-gray-500 dark:text-gray-400">
+            Registrado como
+          </span>
+          <span className="text-xl font-bold">
+            Artista
+          </span>
+        </div>
       </div>
       
       <div className="space-y-6">
