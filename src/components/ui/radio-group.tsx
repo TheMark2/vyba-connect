@@ -71,7 +71,7 @@ const RoleSelector = React.forwardRef<
       )}
     >
       <label className="cursor-pointer block w-full">
-        <div className="flex items-center justify-between">
+        <div className="flex items-center justify-between gap-4">
           <div className="flex flex-col">
             <span className="text-xl font-bold text-black">
               {label}
