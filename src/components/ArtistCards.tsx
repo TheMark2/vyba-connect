@@ -66,6 +66,18 @@ const ArtistCards = () => {
     return `${basePositions[index]} ${baseRotations[index]}`;
   };
 
+  // Obtener imagen mejorada para cada artista
+  const getEnhancedImage = (index: number) => {
+    // Arreglo de imágenes mejoradas
+    const enhancedImages = [
+      "/lovable-uploads/77591a97-10cd-4c8b-b768-5b17483c3d9f.png", 
+      "/lovable-uploads/64cabbe3-ce62-4190-830d-0e5defd31a1b.png",
+      "/lovable-uploads/c89ee394-3c08-48f6-b69b-bddd81dffa8b.png",
+      "/lovable-uploads/7e7c2282-785a-46fb-84b2-f7b14b762e64.png"
+    ];
+    return enhancedImages[index % enhancedImages.length];
+  };
+
   return (
     <div className="bg-gray-50 dark:bg-vyba-dark-secondary rounded-3xl p-8 w-full max-w-5xl mx-auto flex flex-col items-center">
       <h1 className="text-5xl font-bold text-center mb-16 dark:text-white">
@@ -83,22 +95,26 @@ const ArtistCards = () => {
               onMouseEnter={() => setHoveredCard(artist.id)}
               onMouseLeave={() => setHoveredCard(null)}
               className={`
-                absolute rounded-3xl border-4 border-white dark:border-white
+                absolute rounded-3xl border-6 border-white dark:border-white
                 w-56 h-56 flex flex-col justify-end
                 transition-all duration-300 ease-in-out
                 cursor-pointer overflow-hidden
+                shadow-[0_10px_20px_rgba(0,0,0,0.15)] hover:shadow-[0_20px_30px_rgba(0,0,0,0.2)]
                 ${getCardStyles(index, isHovered)}
               `}
               aria-label={`Ver perfil de ${artist.name}`}
             >
-              {/* Imagen de fondo con degradado */}
+              {/* Imagen de fondo con degradado y efecto blur */}
               <div 
-                className="absolute inset-0 bg-cover bg-center z-0" 
-                style={{ backgroundImage: `url(${artist.image})` }}
+                className={`
+                  absolute inset-0 bg-cover bg-center z-0 transition-all duration-300
+                  ${isHovered ? '' : 'blur-[2px]'}
+                `} 
+                style={{ backgroundImage: `url(${getEnhancedImage(index)})` }}
               />
               
               {/* Degradado negro de abajo hacia arriba */}
-              <div className="absolute inset-0 bg-gradient-to-t from-black to-transparent z-1"></div>
+              <div className="absolute inset-0 bg-gradient-to-t from-black via-black/70 to-transparent z-1"></div>
               
               {/* Contenido de texto */}
               <div className="relative z-2 p-4 text-white">
