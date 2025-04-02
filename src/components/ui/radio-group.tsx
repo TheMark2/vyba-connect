@@ -50,81 +50,59 @@ const RoleSelector = React.forwardRef<
     features?: string[];
   }
 >(({ className, label, description, icon, features = [], ...props }, ref) => {
-  const isSelected = props.checked === true;
+  // El problema está en cómo manejamos el estado isSelected
+  // Necesitamos usar props.checked para determinar el estado inicial y también actualizarlo cuando cambia
   
-  // Usar una referencia estática para el elemento radio
-  const radioRef = React.useRef<HTMLButtonElement | null>(null);
+  // Usar un estado que se actualice con el valor de checked
+  const [isSelected, setIsSelected] = React.useState(props.checked || false);
   
-  // Manejar el click en el contenedor usando useCallback para evitar recreaciones
-  const handleContainerClick = React.useCallback((e: React.MouseEvent) => {
-    // Evitar clicks recursivos y garantizar que no estamos haciendo click en el propio radio button
-    if (e.target instanceof Node && radioRef.current && 
-        (radioRef.current === e.target || radioRef.current.contains(e.target))) {
-      return;
-    }
-    
-    // Click seguro en el elemento radio
-    if (radioRef.current && !props.disabled) {
-      // Emular un evento de click nativo sin usar click() directamente
-      const event = new MouseEvent('click', {
-        bubbles: true,
-        cancelable: true,
-        view: window
-      });
-      radioRef.current.dispatchEvent(event);
-    }
-  }, [props.disabled]); // Solo depende de si está deshabilitado
-  
+  // Actualizar el estado cuando cambia el prop checked
+  React.useEffect(() => {
+    setIsSelected(props.checked === true);
+  }, [props.checked]);
+
   return (
     <div 
       className={cn(
-        "p-6 rounded-2xl transition-all duration-500 ease-in-out flex flex-col bg-white cursor-pointer",
+        "p-6 rounded-2xl transition-all duration-500 flex flex-col bg-white",
         isSelected 
           ? "bg-[#F5F1EB]" 
           : "bg-white"
       )}
-      onClick={handleContainerClick}
     >
-      <div className="flex items-center justify-between gap-4">
-        <div className="flex flex-col">
-          <span className="text-xl font-bold text-black">
-            {label}
-          </span>
-          {description && (
-            <span className="text-sm text-gray-500 dark:text-gray-400 mt-1">
-              {description}
+      <label className="cursor-pointer block w-full">
+        <div className="flex items-center justify-between gap-4">
+          <div className="flex flex-col">
+            <span className="text-xl font-bold text-black">
+              {label}
             </span>
-          )}
+            {description && (
+              <span className="text-sm text-gray-500 dark:text-gray-400 mt-1">
+                {description}
+              </span>
+            )}
+          </div>
+          
+          <div className="flex items-center">
+            {icon && (
+              <span className="text-3xl text-black">
+                {icon}
+              </span>
+            )}
+            <RadioGroupPrimitive.Item
+              ref={ref}
+              className="hidden"
+              {...props}
+              onClick={() => setIsSelected(true)} // Aseguramos que se actualice el estado al hacer click
+            >
+              <RadioGroupPrimitive.Indicator />
+            </RadioGroupPrimitive.Item>
+          </div>
         </div>
-        
-        <div className="flex items-center">
-          {icon && (
-            <span className="text-3xl text-black">
-              {icon}
-            </span>
-          )}
-          <RadioGroupPrimitive.Item
-            ref={(node) => {
-              // Manejar la ref de forma segura evitando actualizaciones recursivas
-              radioRef.current = node;
-              
-              // Pasar la ref al componente padre si es necesario
-              if (typeof ref === 'function') {
-                ref(node);
-              } else if (ref) {
-                ref.current = node;
-              }
-            }}
-            className="hidden"
-            {...props}
-          >
-            <RadioGroupPrimitive.Indicator />
-          </RadioGroupPrimitive.Item>
-        </div>
-      </div>
+      </label>
     </div>
-  );
-});
-RoleSelector.displayName = "RoleSelector";
+  )
+})
+RoleSelector.displayName = "RoleSelector"
 
 export { RadioGroup, RadioGroupItem, RoleSelector }
