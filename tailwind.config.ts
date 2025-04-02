@@ -1,3 +1,4 @@
+
 import type { Config } from "tailwindcss";
 
 export default {
@@ -20,13 +21,13 @@ export default {
     extend: {
       colors: {
         vyba: {
-          cream: "#FAF8F6",
-          blue: "#D4DDFF",
-          beige: "#F5F1EB",
-          navy: "#222845",
+          cream: "#F7F7F7", // Neutral 01
+          blue: "#D4E1FF", // Similar al Primary 01 en la imagen
+          beige: "#EBEBEB", // Neutral 02
+          navy: "#222222", // Shade 02
           dark: {
-            bg: "#000000",
-            secondary: "#333333"
+            bg: "#222222", // Shade 02
+            secondary: "#5E5E5E" // Similar a Neutral 08
           }
         },
         border: "hsl(var(--border))",
@@ -35,14 +36,14 @@ export default {
         background: "hsl(var(--background))",
         foreground: "hsl(var(--foreground))",
         primary: {
-          DEFAULT: "#D4DDFF",
-          hover: "#EBEFFF",
-          foreground: "#222845",
+          DEFAULT: "#D4E1FF", // Similar al Primary 01
+          hover: "#E6ECFD", // Versión más clara de Primary 01
+          foreground: "#222222", // Shade 02
         },
         secondary: {
-          DEFAULT: "#F5F1EB",
-          hover: "#EDE8E0",
-          foreground: "#222845",
+          DEFAULT: "#EBEBEB", // Neutral 02
+          hover: "#DDDDDD", // Neutral 03
+          foreground: "#222222", // Shade 02
         },
         muted: {
           DEFAULT: "hsl(var(--muted))",

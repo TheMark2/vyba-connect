@@ -1,7 +1,9 @@
+
 import React from 'react';
 import { ArrowLeft } from 'lucide-react';
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+
 interface RegisterFormStep3Props {
   artistForm: {
     artistName: string;
@@ -18,6 +20,7 @@ interface RegisterFormStep3Props {
   handleBackStep: () => void;
   switchToLogin: () => void;
 }
+
 const RegisterFormStep3: React.FC<RegisterFormStep3Props> = ({
   artistForm,
   setArtistForm,
@@ -32,13 +35,13 @@ const RegisterFormStep3: React.FC<RegisterFormStep3Props> = ({
       </h1>
       
       <div className="bg-white dark:bg-vyba-dark-secondary/30 rounded-full py-5 px-6 flex items-center gap-4 mb-6">
-        <div className="w-12 h-12 bg-gray-100 dark:bg-vyba-dark-secondary/50 rounded-full flex items-center justify-center">
+        <div className="w-12 h-12 bg-[#F7F7F7] dark:bg-vyba-dark-secondary/50 rounded-full flex items-center justify-center">
           <span className="text-2xl">
             🎵
           </span>
         </div>
         <div className="flex flex-col">
-          <span className="text-sm text-gray-500 dark:text-gray-400">
+          <span className="text-sm text-[#717171] dark:text-[#C2C2C2]">
             Registrado como
           </span>
           <span className="text-xl font-bold">
@@ -55,7 +58,7 @@ const RegisterFormStep3: React.FC<RegisterFormStep3Props> = ({
           <Input id="artistName" name="artistName" value={artistForm.artistName} onChange={e => setArtistForm({
           ...artistForm,
           artistName: e.target.value
-        })} placeholder="Escribe tu nombre artístico" className="rounded-xl h-12 bg-white dark:bg-black dark:text-white" required />
+        })} placeholder="Escribe tu nombre artístico" className="rounded-xl h-12 bg-white dark:bg-[#222222] dark:text-white" required />
         </div>
         
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -66,7 +69,7 @@ const RegisterFormStep3: React.FC<RegisterFormStep3Props> = ({
             <Input id="mainGenres" name="mainGenres" value={artistForm.mainGenres} onChange={e => setArtistForm({
             ...artistForm,
             mainGenres: e.target.value
-          })} placeholder="Ej: Rock, Pop, Jazz" className="rounded-xl h-12 bg-white dark:bg-black dark:text-white" required />
+          })} placeholder="Ej: Rock, Pop, Jazz" className="rounded-xl h-12 bg-white dark:bg-[#222222] dark:text-white" required />
           </div>
           
           <div className="space-y-1.5">
@@ -76,27 +79,28 @@ const RegisterFormStep3: React.FC<RegisterFormStep3Props> = ({
             <Input id="artistType" name="artistType" value={artistForm.artistType} onChange={e => setArtistForm({
             ...artistForm,
             artistType: e.target.value
-          })} placeholder="Ej: Solista, Banda, DJ" className="rounded-xl h-12 bg-white dark:bg-black dark:text-white" required />
+          })} placeholder="Ej: Solista, Banda, DJ" className="rounded-xl h-12 bg-white dark:bg-[#222222] dark:text-white" required />
           </div>
         </div>
       </div>
       
       <div className="flex justify-center items-center gap-3 mt-8">
-        <Button type="button" variant="secondary" onClick={handleBackStep} className="p-3 bg-white hover:bg-gray-100 dark:bg-white dark:hover:bg-gray-100 dark:text-black" disabled={isLoading}>
+        <Button type="button" variant="secondary" onClick={handleBackStep} className="p-3 bg-[#EBEBEB] hover:bg-[#DDDDDD] dark:bg-[#5E5E5E] dark:hover:bg-[#717171] dark:text-white" disabled={isLoading}>
           <ArrowLeft size={20} />
         </Button>
-        <Button type="submit" isLoading={isLoading} className="w-full">
+        <Button type="submit" isLoading={isLoading} className="w-full bg-[#D4E1FF] hover:bg-[#E6ECFD] text-[#222222]">
           Siguiente
         </Button>
       </div>
       <div className="text-center mt-4 pt-2">
-        <p className="text-sm text-gray-600 dark:text-gray-400">
+        <p className="text-sm text-[#717171] dark:text-[#C2C2C2]">
           ¿Tienes cuenta?
         </p>
-        <Button variant="secondary" className="mt-2 text-xs font-bold" onClick={switchToLogin}>
+        <Button variant="secondary" className="mt-2 text-xs font-bold bg-[#EBEBEB] hover:bg-[#DDDDDD] text-[#222222] dark:bg-[#5E5E5E] dark:hover:bg-[#717171] dark:text-white" onClick={switchToLogin}>
           Iniciar Sesión
         </Button>
       </div>
     </form>;
 };
+
 export default RegisterFormStep3;
