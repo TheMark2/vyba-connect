@@ -55,11 +55,11 @@ const AuthPage = () => {
                 <label htmlFor="password" className="block font-bold">Contraseña</label>
                 <Input id="password" type="password" placeholder="••••••••" className="w-full h-14 bg-[#F7F7F7]" />
               </div>
-
-              <Button className="w-md mx-auto">
-                Iniciar sesión
-              </Button>
-
+              <div className="w-full justify-center">
+                <Button className="px-12">
+                  Iniciar sesión
+                </Button>
+              </div>
               <div className="text-center text-sm">
                 <p>No tienes cuenta. <Link to="/register" className="font-bold">Regístrate</Link></p>
               </div>
