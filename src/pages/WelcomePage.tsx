@@ -37,7 +37,7 @@ const WelcomePage = () => {
           </div>
           
           <div className="flex flex-col items-center my-8">
-            <div className="relative w-full max-w-md">
+            <div className="relative w-full max-w-md flex gap-4">
               <Button 
                 onClick={handlePromoteArtist} 
                 className="w-full bg-[#F2D4DC] text-black hover:bg-[#EBBFCC]"
@@ -46,7 +46,7 @@ const WelcomePage = () => {
               </Button>
               
               <Button
-                variant="ghost"
+                variant="secondary"
                 size="icon"
                 onClick={handleClose}
                 className="absolute right-0 top-1/2 -translate-y-1/2 rounded-full"
