@@ -26,7 +26,7 @@ const ArtistCards = () => {
 
   // Estilos dinámicos para la disposición de las tarjetas
   const getCardStyles = (index: number, isHovered: boolean) => {
-    // Aumentamos la separación entre tarjetas modificando las posiciones base
+    // Rotaciones y posiciones base para cada tarjeta
     const baseStyles = [
       "rotate-[-15deg] translate-x-[-180px]", // Más a la izquierda
       "rotate-[10deg] translate-x-[-60px]",   // Ajuste de posición
@@ -34,15 +34,15 @@ const ArtistCards = () => {
       "rotate-[15deg] translate-x-[180px]"    // Más a la derecha
     ];
 
-    // Estilos base para todas las tarjetas
-    let styles = baseStyles[index];
-    
-    // Si está siendo hoverada, agranda la tarjeta pero mantiene su posición original
+    // Si está siendo hoverada, quita la rotación pero mantiene la posición
     if (isHovered) {
-      styles += " scale-110 z-10";
+      // Extraemos solo la parte de translación, quitamos la rotación
+      const positionOnly = baseStyles[index].split(' ').find(style => style.includes('translate'));
+      return `${positionOnly} rotate-0 scale-110 z-10`;
     }
     
-    return styles;
+    // Si no está siendo hoverada, aplica los estilos base completos
+    return baseStyles[index];
   };
 
   return (
