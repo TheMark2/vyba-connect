@@ -50,9 +50,20 @@ const RoleSelector = React.forwardRef<
     features?: string[];
   }
 >(({ className, label, description, icon, features = [], ...props }, ref) => {
-  // El RadioGroup de Radix UI maneja automáticamente el estado
-  // Solo necesitamos saber si este ítem específico está seleccionado
   const isSelected = props.checked === true;
+  
+  // Creamos una referencia para el botón de radio
+  const radioRef = React.useRef<HTMLButtonElement>(null);
+  
+  const handleContainerClick = React.useCallback((e: React.MouseEvent) => {
+    // Evitar recursión y burbujas de eventos
+    if (e.target === radioRef.current) return;
+    
+    // Simular un clic directo en el elemento de radio sin usar querySelector
+    if (radioRef.current) {
+      radioRef.current.click();
+    }
+  }, []);
   
   return (
     <div 
@@ -62,13 +73,7 @@ const RoleSelector = React.forwardRef<
           ? "bg-[#F5F1EB]" 
           : "bg-white"
       )}
-      onClick={(e) => {
-        // Simular un clic en el RadioGroupItem oculto
-        const radioInput = e.currentTarget.querySelector('button[role="radio"]');
-        if (radioInput) {
-          (radioInput as HTMLButtonElement).click();
-        }
-      }}
+      onClick={handleContainerClick}
     >
       <div className="flex items-center justify-between gap-4">
         <div className="flex flex-col">
@@ -89,7 +94,15 @@ const RoleSelector = React.forwardRef<
             </span>
           )}
           <RadioGroupPrimitive.Item
-            ref={ref}
+            ref={(node) => {
+              // Manejar correctamente la ref compuesta
+              if (typeof ref === 'function') {
+                ref(node);
+              } else if (ref) {
+                ref.current = node;
+              }
+              radioRef.current = node;
+            }}
             className="hidden"
             {...props}
           >
