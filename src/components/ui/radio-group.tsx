@@ -64,10 +64,10 @@ const RoleSelector = React.forwardRef<
   return (
     <div 
       className={cn(
-        "p-6 rounded-3xl transition-all duration-400 flex flex-col bg-white box-border",
+        "p-6 rounded-3xl transition-all duration-400 flex flex-col bg-white",
         isSelected 
-          ? "border-[3px] border-black dark:border-black" 
-          : "border-0"
+          ? "outline outline-[3px] outline-black dark:outline-black" 
+          : "outline-none"
       )}
     >
       <label className="cursor-pointer block w-full">
