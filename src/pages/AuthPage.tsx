@@ -48,12 +48,12 @@ const AuthPage = () => {
             </div> : <div className="space-y-6 mt-16 max-w-sm mx-auto">
               <div className="space-y-2">
                 <label htmlFor="email" className="block font-bold">Email</label>
-                <Input id="email" type="email" placeholder="ramón.prado@vybapp.com" className="w-full h-14 bg-[#F7F7F7]" />
+                <Input id="email" type="email" placeholder="ramón.prado@vybapp.com" className="w-full bg-[#F7F7F7]" />
               </div>
 
               <div className="space-y-2">
                 <label htmlFor="password" className="block font-bold">Contraseña</label>
-                <Input id="password" type="password" placeholder="••••••••" className="w-full h-14 bg-[#F7F7F7]" />
+                <Input id="password" type="password" placeholder="••••••••" className="w-full bg-[#F7F7F7]" />
               </div>
               <div className="w-full flex justify-center">
                 <Button className="px-16">
