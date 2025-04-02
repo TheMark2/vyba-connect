@@ -3,7 +3,6 @@ import React from 'react';
 import { Routes, Route, useLocation } from 'react-router-dom';
 import { AnimatePresence } from 'framer-motion';
 import Index from './pages/Index';
-import AuthPage from './pages/AuthPage';
 import ArtistThankYouPage from './pages/ArtistThankYouPage';
 import SeekerThankYouPage from './pages/SeekerThankYouPage';
 import ArtistsPage from './pages/ArtistsPage';
@@ -17,7 +16,6 @@ function App() {
     <AnimatePresence mode="wait">
       <Routes location={location} key={location.pathname}>
         <Route path="/" element={<Index />} />
-        <Route path="/auth" element={<AuthPage />} />
         <Route path="/thank-you" element={<ArtistThankYouPage />} />
         <Route path="/seeker-thank-you" element={<SeekerThankYouPage />} />
         <Route path="/artists" element={<ArtistsPage />} />
