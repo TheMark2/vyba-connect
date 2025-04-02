@@ -55,7 +55,7 @@ const AuthPage = () => {
                 <label htmlFor="password" className="block font-bold">Contraseña</label>
                 <Input id="password" type="password" placeholder="••••••••" className="w-full h-14 bg-[#F7F7F7]" />
               </div>
-              <div className="w-full content-center">
+              <div className="w-full align-center">
                 <Button className="px-16">
                   Iniciar sesión
                 </Button>
