@@ -16,7 +16,7 @@ const WelcomePage = () => {
   };
 
   const handlePromoteArtist = () => {
-    navigate('/thank-you');
+    navigate('/artist-benefits');
   };
 
   const handleClose = () => {
