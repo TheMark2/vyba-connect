@@ -1,7 +1,8 @@
+
 import React from 'react';
 import { Button } from "@/components/ui/button";
 import { useNavigate } from 'react-router-dom';
-import { ArrowLeft, Scan } from "lucide-react";
+import { ArrowLeft, Scan, Maximize } from "lucide-react";
 import Navbar from "@/components/Navbar";
 import { PageTransition } from '@/components/ui/page-transition';
 
@@ -21,17 +22,21 @@ const ArtistBenefitsPage = () => {
             <Button variant="ghost" size="icon" onClick={() => navigate(-1)} aria-label="Volver atrás">
               <ArrowLeft className="h-6 w-6" />
             </Button>
+            <h1 className="text-2xl font-bold">VYBA artistas</h1>
+            <Button variant="ghost" size="icon" aria-label="Maximizar">
+              <Maximize className="h-6 w-6" />
+            </Button>
           </div>
           
           <div className="relative mt-10 mb-32">
-            <div className="bg-[#F7F7F7] dark:bg-vyba-dark-secondary rounded-3xl overflow-visible relative">
+            <div className="bg-[#F7F7F7] dark:bg-vyba-dark-secondary rounded-3xl overflow-hidden relative">
               <div className="flex flex-col md:flex-row items-center">
                 <div className="p-10 md:p-16 md:w-1/2 flex flex-col justify-center">
                   <div className="mb-4">
                     <Scan className="h-12 w-12 text-black dark:text-white" />
                   </div>
                   <h1 className="text-4xl md:text-5xl font-black mb-4 dark:text-white">
-                    Usa AR para ver tu perfil de VYBA.
+                    Impulsa tu carrera con VYBA.
                   </h1>
                   <p className="text-gray-600 dark:text-gray-300 mb-6">
                     Abre esta página usando Safari en tu iPhone o iPad.
@@ -44,11 +49,11 @@ const ArtistBenefitsPage = () => {
                 </div>
                 
                 <div className="md:w-1/2 relative">
-                  <div className="flex justify-end relative h-[500px]">
+                  <div className="flex justify-end relative h-[400px] overflow-hidden">
                     <img
                       src="/lovable-uploads/a02627ff-e1d7-4640-959e-74140c8af909.png"
                       alt="VYBA app en iPhone"
-                      className="absolute bottom-0 right-0 md:right-10 h-[520px] mt-8 object-contain translate-y-16"
+                      className="absolute bottom-[-50%] right-0 md:right-10 h-[520px] object-contain"
                     />
                   </div>
                 </div>
