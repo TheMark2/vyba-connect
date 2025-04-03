@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Button } from "@/components/ui/button";
 import { useNavigate } from 'react-router-dom';
@@ -8,15 +7,15 @@ import { PageTransition } from '@/components/ui/page-transition';
 
 const ArtistBenefitsPage = () => {
   const navigate = useNavigate();
-
+  
   const handleGetStarted = () => {
     navigate('/thank-you');
   };
-
-  return <PageTransition>
+  
+  return (
+    <PageTransition>
       <div className="min-h-screen bg-white dark:bg-vyba-dark-bg">
         <Navbar />
-        
         <div className="container mx-auto px-4 pt-10">
           <div className="flex items-center justify-between mb-8">
             <Button variant="ghost" size="icon" onClick={() => navigate(-1)} aria-label="Volver atrás">
@@ -24,8 +23,8 @@ const ArtistBenefitsPage = () => {
             </Button>
           </div>
           
-          <div className="relative mt-10 mb-20">
-            <div className="bg-[#F7F7F7] dark:bg-vyba-dark-secondary rounded-3xl overflow-hidden relative">
+          <div className="relative mt-10 mb-32">
+            <div className="bg-[#F7F7F7] dark:bg-vyba-dark-secondary rounded-3xl overflow-visible relative">
               <div className="flex flex-col md:flex-row items-center">
                 <div className="p-10 md:p-16 md:w-1/2 flex flex-col justify-center">
                   <div className="mb-4">
@@ -46,10 +45,10 @@ const ArtistBenefitsPage = () => {
                 
                 <div className="md:w-1/2 relative">
                   <div className="flex justify-end relative h-[500px]">
-                    <img 
-                      src="/lovable-uploads/a02627ff-e1d7-4640-959e-74140c8af909.png" 
-                      alt="VYBA app en iPhone" 
-                      className="absolute bottom-0 right-0 md:right-10 h-[480px] mt-5 object-contain" 
+                    <img
+                      src="/lovable-uploads/a02627ff-e1d7-4640-959e-74140c8af909.png"
+                      alt="VYBA app en iPhone"
+                      className="absolute bottom-0 right-0 md:right-10 h-[520px] mt-8 object-contain translate-y-16"
                     />
                   </div>
                 </div>
@@ -58,7 +57,8 @@ const ArtistBenefitsPage = () => {
           </div>
         </div>
       </div>
-    </PageTransition>;
+    </PageTransition>
+  );
 };
 
 export default ArtistBenefitsPage;
