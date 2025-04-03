@@ -1,31 +1,21 @@
-
 import React from 'react';
 import { Button } from "@/components/ui/button";
 import { useNavigate } from 'react-router-dom';
 import { ArrowLeft, Scan } from "lucide-react";
 import Navbar from "@/components/Navbar";
 import { PageTransition } from '@/components/ui/page-transition';
-
 const ArtistBenefitsPage = () => {
   const navigate = useNavigate();
-
   const handleGetStarted = () => {
     navigate('/thank-you');
   };
-
-  return (
-    <PageTransition>
-      <div className="min-h-screen bg-[#F5F5F7] dark:bg-vyba-dark-bg">
+  return <PageTransition>
+      <div className="min-h-screen bg-white dark:bg-vyba-dark-bg">
         <Navbar />
         
         <div className="container mx-auto px-4 pt-10">
           <div className="flex items-center justify-between mb-8">
-            <Button 
-              variant="ghost" 
-              size="icon" 
-              onClick={() => navigate(-1)}
-              aria-label="Volver atrás"
-            >
+            <Button variant="ghost" size="icon" onClick={() => navigate(-1)} aria-label="Volver atrás">
               <ArrowLeft className="h-6 w-6" />
             </Button>
           </div>
@@ -44,9 +34,7 @@ const ArtistBenefitsPage = () => {
                     Abre esta página usando Safari en tu iPhone o iPad.
                   </p>
                   <div>
-                    <Button 
-                      onClick={handleGetStarted}
-                    >
+                    <Button onClick={handleGetStarted}>
                       Empezar ahora
                     </Button>
                   </div>
@@ -54,11 +42,7 @@ const ArtistBenefitsPage = () => {
                 
                 <div className="md:w-1/2 relative">
                   <div className="flex justify-end relative h-[500px]">
-                    <img 
-                      src="/lovable-uploads/c3ba2140-444c-4cca-a936-f2a70113f4f7.png" 
-                      alt="VYBA app en iPhone" 
-                      className="absolute bottom-0 right-0 md:right-10 h-auto max-h-[600px] object-contain"
-                    />
+                    <img src="/lovable-uploads/c3ba2140-444c-4cca-a936-f2a70113f4f7.png" alt="VYBA app en iPhone" className="absolute bottom-0 right-0 md:right-10 h-auto max-h-[600px] object-contain" />
                   </div>
                 </div>
               </div>
@@ -66,8 +50,6 @@ const ArtistBenefitsPage = () => {
           </div>
         </div>
       </div>
-    </PageTransition>
-  );
+    </PageTransition>;
 };
-
 export default ArtistBenefitsPage;
