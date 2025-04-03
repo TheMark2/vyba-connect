@@ -1,14 +1,18 @@
+
 import React from 'react';
 import { Button } from "@/components/ui/button";
 import { useNavigate } from 'react-router-dom';
 import { ArrowLeft, Scan } from "lucide-react";
 import Navbar from "@/components/Navbar";
 import { PageTransition } from '@/components/ui/page-transition';
+
 const ArtistBenefitsPage = () => {
   const navigate = useNavigate();
+
   const handleGetStarted = () => {
     navigate('/thank-you');
   };
+
   return <PageTransition>
       <div className="min-h-screen bg-white dark:bg-vyba-dark-bg">
         <Navbar />
@@ -42,7 +46,7 @@ const ArtistBenefitsPage = () => {
                 
                 <div className="md:w-1/2 relative">
                   <div className="flex justify-end relative h-[500px]">
-                    <img src="/lovable-uploads/c3ba2140-444c-4cca-a936-f2a70113f4f7.png" alt="VYBA app en iPhone" className="absolute bottom-0 right-0 md:right-10 h-auto max-h-[600px] object-contain" />
+                    <img src="/lovable-uploads/c89ee394-3c08-48f6-b69b-bddd81dffa8b.png" alt="VYBA app en iPhone" className="absolute bottom-0 right-0 md:right-10 h-auto max-h-[600px] object-contain" />
                   </div>
                 </div>
               </div>
@@ -52,4 +56,5 @@ const ArtistBenefitsPage = () => {
       </div>
     </PageTransition>;
 };
+
 export default ArtistBenefitsPage;
