@@ -12,6 +12,8 @@ const ArtistBenefitsPage = () => {
   return <PageTransition>
       <div className="min-h-screen bg-white dark:bg-vyba-dark-bg">
         <Navbar />
+        <div className="container mx-auto px-4 pt-10">
+          
           <div className="relative mt-10 mb-32">
             <div className="bg-[#F7F7F7] dark:bg-vyba-dark-secondary rounded-3xl overflow-hidden relative">
               <div className="flex flex-col md:flex-row items-center">
