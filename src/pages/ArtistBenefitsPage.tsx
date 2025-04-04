@@ -17,7 +17,7 @@ const ArtistBenefitsPage = () => {
     <PageTransition>
       <div className="min-h-screen bg-white dark:bg-vyba-dark-bg">
         <Navbar />
-        <div className="container mx-auto px-4 pt-10">
+        <div className="px-6 md:px-10 lg:px-14 xl:px-16 pt-8 pb-32">
           <div className="relative mt-10 mb-32">
             <div className="bg-[#F7F7F7] dark:bg-vyba-dark-secondary rounded-3xl overflow-hidden relative">
               <div className="flex flex-col md:flex-row items-center">
@@ -39,7 +39,7 @@ const ArtistBenefitsPage = () => {
                     <img
                       src="/lovable-uploads/2dfa688f-6333-41fe-b9d0-dceb94e091e1.png"
                       alt="VYBA app en iPhone"
-                      className="w-auto h-auto max-h-[900px] object-contain transform translate-y-[40%]"
+                      className="w-auto h-auto max-h-[1100px] object-contain transform translate-y-[20%]"
                     />
                   </div>
                 </div>
