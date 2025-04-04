@@ -28,17 +28,17 @@ const ArtistBenefitsPage = () => {
                     Impulsa tu carrera con VYBA.
                   </h1>
                   <div>
-                    <Button onClick={handleGetStarted}>
+                    <Button onClick={handleGetStarted} className="bg-blue-100 hover:bg-blue-200 text-black">
                       Empezar ahora
                     </Button>
                   </div>
                 </div>
-                <div className="flex-[0.8] relative h-[400px] overflow-hidden">
-                  <div className="absolute bottom-0 left-0 right-0 h-[166%]"> {/* 166% to show only top 60% */}
+                <div className="flex-[0.8] relative h-[400px] overflow-hidden flex items-end">
+                  <div className="w-full absolute bottom-0">
                     <img
                       src="/lovable-uploads/a02627ff-e1d7-4640-959e-74140c8af909.png"
                       alt="VYBA app en iPhone"
-                      className="absolute bottom-0 w-full object-contain"
+                      className="w-full object-contain translate-y-1/3"
                     />
                   </div>
                 </div>
