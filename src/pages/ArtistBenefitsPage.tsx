@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { Button } from "@/components/ui/button";
 import { useNavigate } from 'react-router-dom';
@@ -36,11 +37,11 @@ const ArtistBenefitsPage = () => {
                 </div>
                 
                 {/* Right image container positioned at the bottom */}
-                <div className="w-full md:w-1/2 flex justify-center relative">
+                <div className="w-full md:w-1/2 h-full flex items-end justify-center">
                   <img
                     src="/lovable-uploads/4f4470c7-ab55-4cf6-8e0c-0ad253b45b59.png"
                     alt="VYBA app en iPhone"
-                    className="absolute bottom-0 w-auto h-auto max-h-[240px] object-contain"
+                    className="w-auto h-auto max-h-[240px] object-contain"
                   />
                 </div>
               </div>
