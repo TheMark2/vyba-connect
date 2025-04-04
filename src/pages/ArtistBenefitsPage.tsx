@@ -12,17 +12,6 @@ const ArtistBenefitsPage = () => {
   return <PageTransition>
       <div className="min-h-screen bg-white dark:bg-vyba-dark-bg">
         <Navbar />
-        <div className="container mx-auto px-4 pt-10">
-          <div className="flex items-center justify-between mb-8">
-            <Button variant="ghost" size="icon" onClick={() => navigate(-1)} aria-label="Volver atrás">
-              <ArrowLeft className="h-6 w-6" />
-            </Button>
-            <h1 className="text-2xl font-bold">VYBA artistas</h1>
-            <Button variant="ghost" size="icon" aria-label="Maximizar">
-              <Expand className="h-6 w-6" />
-            </Button>
-          </div>
-          
           <div className="relative mt-10 mb-32">
             <div className="bg-[#F7F7F7] dark:bg-vyba-dark-secondary rounded-3xl overflow-hidden relative">
               <div className="flex flex-col md:flex-row items-center">
