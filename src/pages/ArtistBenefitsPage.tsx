@@ -1,7 +1,7 @@
 import React from 'react';
 import { Button } from "@/components/ui/button";
 import { useNavigate } from 'react-router-dom';
-import { ArrowLeft, Scan, Maximize } from "lucide-react";
+import { ArrowLeft, Scan, Expand } from "lucide-react";
 import Navbar from "@/components/Navbar";
 import { PageTransition } from '@/components/ui/page-transition';
 const ArtistBenefitsPage = () => {
@@ -19,16 +19,16 @@ const ArtistBenefitsPage = () => {
             </Button>
             <h1 className="text-2xl font-bold">VYBA artistas</h1>
             <Button variant="ghost" size="icon" aria-label="Maximizar">
-              <Maximize className="h-6 w-6" />
+              <Expand className="h-6 w-6" />
             </Button>
           </div>
           
           <div className="relative mt-10 mb-32">
             <div className="bg-[#F7F7F7] dark:bg-vyba-dark-secondary rounded-3xl overflow-hidden relative">
               <div className="flex flex-col md:flex-row items-center">
-                <div className="p-10 md:p-16 md:w-1/2 flex flex-col justify-center">
+                <div className="p-10 md:p-22 md:w-1/2 flex flex-col justify-center">
                   <div className="mb-4">
-                    <Scan className="h-12 w-12 text-black dark:text-white" />
+                    <Expand className="h-12 w-12 text-black dark:text-white" />
                   </div>
                   <h1 className="text-4xl md:text-5xl font-black mb-4 dark:text-white">
                     Impulsa tu carrera con VYBA.
