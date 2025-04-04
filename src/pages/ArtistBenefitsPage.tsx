@@ -24,7 +24,7 @@ const ArtistBenefitsPage = () => {
                   <h1 className="text-4xl md:text-6xl font-black mb-6 dark:text-white">
                     Impulsa tu carrera con VYBA.
                   </h1>
-                  <div">
+                  <div>
                     <Button onClick={handleGetStarted}>
                       Empezar ahora
                     </Button>
