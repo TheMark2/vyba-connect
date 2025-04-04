@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { Button } from "@/components/ui/button";
 import { useNavigate } from 'react-router-dom';
@@ -20,25 +21,25 @@ const ArtistBenefitsPage = () => {
           <div className="relative mt-10 mb-32">
             <div className="bg-[#F7F7F7] dark:bg-vyba-dark-secondary rounded-3xl overflow-hidden relative">
               <div className="flex flex-col md:flex-row items-center">
-                <div className="p-10 md:p-32 flex-1 flex flex-col justify-center">
+                <div className="p-10 md:p-16 lg:p-24 xl:p-32 flex-1 flex flex-col justify-center max-w-xl">
                   <div className="mb-6">
                     <Expand className="h-12 w-12 text-black dark:text-white" />
                   </div>
-                  <h1 className="text-4xl md:text-6xl font-black mb-6 dark:text-white">
-                    Impulsa tu carrera con VYBA.
+                  <h1 className="text-4xl md:text-5xl lg:text-6xl font-black mb-6 dark:text-white leading-tight">
+                    Impulsa tu carrera con VYBA
                   </h1>
                   <div>
-                    <Button onClick={handleGetStarted} className="bg-blue-100 hover:bg-blue-200 text-black">
+                    <Button onClick={handleGetStarted} className="bg-blue-100 hover:bg-blue-200 text-black w-full md:w-auto">
                       Empezar ahora
                     </Button>
                   </div>
                 </div>
-                <div className="flex-[0.8] relative h-[400px] overflow-hidden flex items-end">
-                  <div className="w-full absolute bottom-0">
+                <div className="md:absolute md:right-0 md:top-0 md:bottom-0 md:flex md:items-center md:justify-end md:w-1/2 h-full">
+                  <div className="relative w-full h-full">
                     <img
-                      src="/lovable-uploads/a02627ff-e1d7-4640-959e-74140c8af909.png"
+                      src="/lovable-uploads/2d3915f8-02a4-4b6c-89b3-4a86c42d4564.png"
                       alt="VYBA app en iPhone"
-                      className="w-full object-contain translate-y-1/3"
+                      className="w-auto h-auto max-h-[500px] object-contain md:absolute md:right-0 md:top-1/2 md:-translate-y-1/2"
                     />
                   </div>
                 </div>
