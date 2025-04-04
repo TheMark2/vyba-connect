@@ -20,7 +20,7 @@ const ArtistBenefitsPage = () => {
         <div className="px-6 md:px-10 lg:px-14 xl:px-16 pt-8 pb-32">
           <div className="relative mt-10 mb-32">
             <div className="bg-[#F7F7F7] dark:bg-vyba-dark-secondary rounded-3xl overflow-hidden relative">
-              <div className="flex flex-col md:flex-row items-center">
+              <div className="flex flex-col md:flex-row items-start">
                 {/* Left content container */}
                 <div className="p-10 md:p-16 lg:p-24 xl:p-32 flex flex-col justify-center w-full md:w-1/2">
                   <div className="mb-6">
@@ -37,7 +37,7 @@ const ArtistBenefitsPage = () => {
                 </div>
                 
                 {/* Right image container positioned at the bottom */}
-                <div className="w-full md:w-1/2 h-full flex items-end justify-center">
+                <div className="w-full md:w-1/2 h-full flex items-end justify-center self-end">
                   <img
                     src="/lovable-uploads/4f4470c7-ab55-4cf6-8e0c-0ad253b45b59.png"
                     alt="VYBA app en iPhone"
