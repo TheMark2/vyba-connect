@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { Button } from "@/components/ui/button";
 import { useNavigate } from 'react-router-dom';
@@ -34,17 +35,15 @@ const ArtistBenefitsPage = () => {
                     </Button>
                   </div>
                 </div>
-                
-                {/* Right image container positioned at the bottom */}
-                <div className="w-full md:w-1/2 relative">
-                  <div className="absolute bottom-0 left-0 right-0 flex justify-center">
-                    <img
-                      src="/lovable-uploads/4f4470c7-ab55-4cf6-8e0c-0ad253b45b59.png"
-                      alt="VYBA app en iPhone"
-                      className="w-auto h-auto max-h-[240px] object-contain"
-                    />
-                  </div>
-                </div>
+              </div>
+              
+              {/* Moved image outside the flex container but still inside the rounded container */}
+              <div className="w-full flex justify-center pb-8">
+                <img
+                  src="/lovable-uploads/4f4470c7-ab55-4cf6-8e0c-0ad253b45b59.png"
+                  alt="VYBA app en iPhone"
+                  className="w-auto h-auto max-h-[240px] object-contain"
+                />
               </div>
             </div>
           </div>
