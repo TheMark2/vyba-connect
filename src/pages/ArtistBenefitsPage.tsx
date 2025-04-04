@@ -18,13 +18,13 @@ const ArtistBenefitsPage = () => {
             <div className="bg-[#F7F7F7] dark:bg-vyba-dark-secondary rounded-3xl overflow-hidden relative">
               <div className="flex flex-col md:flex-row items-center">
                 <div className="p-10 md:p-32 md:w-1/2 flex flex-col justify-center">
-                  <div className="mb-4">
+                  <div className="mb-6">
                     <Expand className="h-12 w-12 text-black dark:text-white" />
                   </div>
-                  <h1 className="text-4xl md:text-5xl font-black mb-4 dark:text-white">
+                  <h1 className="text-4xl md:text-6xl font-black mb-6 dark:text-white">
                     Impulsa tu carrera con VYBA.
                   </h1>
-                  <div className="mt-2">
+                  <div">
                     <Button onClick={handleGetStarted}>
                       Empezar ahora
                     </Button>
