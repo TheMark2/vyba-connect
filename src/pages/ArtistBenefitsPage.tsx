@@ -36,7 +36,7 @@ const ArtistBenefitsPage = () => {
                 </div>
                 
                 {/* Right image container positioned at the bottom */}
-                <div className="w-full md:w-1/2 relative h-[300px] md:h-full">
+                <div className="w-full md:w-1/2 relative">
                   <div className="absolute bottom-0 left-0 right-0 flex justify-center">
                     <img
                       src="/lovable-uploads/4f4470c7-ab55-4cf6-8e0c-0ad253b45b59.png"
