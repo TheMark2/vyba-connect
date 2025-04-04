@@ -34,12 +34,12 @@ const ArtistBenefitsPage = () => {
                     </Button>
                   </div>
                 </div>
-                <div className="md:absolute md:right-0 md:top-0 md:bottom-0 md:flex md:items-center md:justify-end md:w-1/2 h-full">
-                  <div className="relative w-full h-full">
+                <div className="md:absolute md:right-0 md:top-0 md:bottom-0 md:flex md:items-center md:justify-center md:w-1/2 h-full">
+                  <div className="relative w-full h-full overflow-hidden flex justify-center">
                     <img
                       src="/lovable-uploads/2dfa688f-6333-41fe-b9d0-dceb94e091e1.png"
                       alt="VYBA app en iPhone"
-                      className="w-auto h-auto max-h-[500px] object-contain md:absolute md:right-0 md:top-1/2 md:-translate-y-1/2"
+                      className="w-auto h-auto max-h-[500px] object-contain transform translate-y-[20%]"
                     />
                   </div>
                 </div>
