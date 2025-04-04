@@ -1,20 +1,22 @@
-
 import React from 'react';
 import { Button } from "@/components/ui/button";
 import { useNavigate } from 'react-router-dom';
-import { ArrowLeft, Scan, Expand } from "lucide-react";
+import { Expand } from "lucide-react";
 import Navbar from "@/components/Navbar";
 import { PageTransition } from '@/components/ui/page-transition';
+
 const ArtistBenefitsPage = () => {
   const navigate = useNavigate();
+  
   const handleGetStarted = () => {
     navigate('/thank-you');
   };
-  return <PageTransition>
+  
+  return (
+    <PageTransition>
       <div className="min-h-screen bg-white dark:bg-vyba-dark-bg">
         <Navbar />
         <div className="container mx-auto px-4 pt-10">
-          
           <div className="relative mt-10 mb-32">
             <div className="bg-[#F7F7F7] dark:bg-vyba-dark-secondary rounded-3xl overflow-hidden relative">
               <div className="flex flex-col md:flex-row items-center">
@@ -31,19 +33,22 @@ const ArtistBenefitsPage = () => {
                     </Button>
                   </div>
                 </div>
-                
-                <div className="flex-[0.8] relative px-10 md:px-20 py-0 h-[400px] overflow-hidden">
-                  <img 
-                    src="/lovable-uploads/a02627ff-e1d7-4640-959e-74140c8af909.png" 
-                    alt="VYBA app en iPhone" 
-                    className="absolute bottom-0 h-[700px] object-contain -left-10" 
-                  />
+                <div className="flex-[0.8] relative h-[400px] overflow-hidden">
+                  <div className="absolute bottom-0 left-0 right-0 h-[166%]"> {/* 166% to show only top 60% */}
+                    <img
+                      src="/lovable-uploads/a02627ff-e1d7-4640-959e-74140c8af909.png"
+                      alt="VYBA app en iPhone"
+                      className="absolute bottom-0 w-full object-contain"
+                    />
+                  </div>
                 </div>
               </div>
             </div>
           </div>
         </div>
       </div>
-    </PageTransition>;
+    </PageTransition>
+  );
 };
+
 export default ArtistBenefitsPage;
