@@ -37,7 +37,7 @@ const ArtistBenefitsPage = () => {
                 <div className="md:absolute md:right-0 md:top-0 md:bottom-0 md:flex md:items-center md:justify-end md:w-1/2 h-full">
                   <div className="relative w-full h-full">
                     <img
-                      src="/lovable-uploads/2d3915f8-02a4-4b6c-89b3-4a86c42d4564.png"
+                      src="/lovable-uploads/2dfa688f-6333-41fe-b9d0-dceb94e091e1.png"
                       alt="VYBA app en iPhone"
                       className="w-auto h-auto max-h-[500px] object-contain md:absolute md:right-0 md:top-1/2 md:-translate-y-1/2"
                     />
