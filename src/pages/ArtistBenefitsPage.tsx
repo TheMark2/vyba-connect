@@ -32,11 +32,11 @@ const ArtistBenefitsPage = () => {
                   </div>
                 </div>
                 
-                <div className="flex-[0.8] relative px-10 md:px-32 py-0 h-[350px] overflow-hidden">
+                <div className="flex-[0.8] relative px-10 md:px-20 py-0 h-[400px] overflow-hidden">
                   <img 
                     src="/lovable-uploads/a02627ff-e1d7-4640-959e-74140c8af909.png" 
                     alt="VYBA app en iPhone" 
-                    className="absolute top-0 h-[700px] object-contain left-0" 
+                    className="absolute bottom-0 h-[700px] object-contain -left-10" 
                   />
                 </div>
               </div>
