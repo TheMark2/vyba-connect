@@ -17,7 +17,7 @@ const ArtistBenefitsPage = () => {
           <div className="relative mt-10 mb-32">
             <div className="bg-[#F7F7F7] dark:bg-vyba-dark-secondary rounded-3xl overflow-hidden relative">
               <div className="flex flex-col md:flex-row items-center">
-                <div className="p-10 md:p-22 md:w-1/2 flex flex-col justify-center">
+                <div className="p-10 md:p-32 md:w-1/2 flex flex-col justify-center">
                   <div className="mb-4">
                     <Expand className="h-12 w-12 text-black dark:text-white" />
                   </div>
