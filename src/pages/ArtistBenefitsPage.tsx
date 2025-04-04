@@ -39,7 +39,7 @@ const ArtistBenefitsPage = () => {
                     <img
                       src="/lovable-uploads/4f4470c7-ab55-4cf6-8e0c-0ad253b45b59.png"
                       alt="VYBA app en iPhone"
-                      className="w-auto h-auto max-h-[400px]object-contain transform"
+                      className="w-auto h-auto max-h-[400px] object-contain transform mt-10"
                     />
                   </div>
                 </div>
