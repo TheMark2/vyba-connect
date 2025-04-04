@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Button } from "@/components/ui/button";
 import { useNavigate } from 'react-router-dom';
@@ -21,7 +20,8 @@ const ArtistBenefitsPage = () => {
           <div className="relative mt-10 mb-32">
             <div className="bg-[#F7F7F7] dark:bg-vyba-dark-secondary rounded-3xl overflow-hidden relative">
               <div className="flex flex-col md:flex-row items-center">
-                <div className="p-10 md:p-16 lg:p-24 xl:p-32 flex flex-col justify-center max-w-2xl">
+                {/* Left content container */}
+                <div className="p-10 md:p-16 lg:p-24 xl:p-32 flex flex-col justify-center w-full md:w-1/2">
                   <div className="mb-6">
                     <Expand className="h-12 w-12 text-black dark:text-white" />
                   </div>
@@ -34,12 +34,14 @@ const ArtistBenefitsPage = () => {
                     </Button>
                   </div>
                 </div>
-                <div className="md:absolute md:right-0 md:top-0 md:bottom-0 md:flex md:items-center md:justify-center md:w-1/2 h-full mt-16">
-                  <div className="relative w-full h-full overflow-hidden flex justify-center">
+                
+                {/* Right image container */}
+                <div className="w-full md:w-1/2 flex items-center justify-center p-8">
+                  <div className="relative flex justify-center">
                     <img
                       src="/lovable-uploads/4f4470c7-ab55-4cf6-8e0c-0ad253b45b59.png"
                       alt="VYBA app en iPhone"
-                      className="w-auto h-auto max-h-[300px]object-contain transform"
+                      className="w-auto h-auto max-h-[240px] object-contain"
                     />
                   </div>
                 </div>
