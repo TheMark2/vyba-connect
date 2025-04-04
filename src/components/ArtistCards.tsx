@@ -108,7 +108,7 @@ const ArtistCards = () => {
                 shadow-[0_10px_20px_rgba(0,0,0,0.15)] hover:shadow-[0_20px_30px_rgba(0,0,0,0.2)]
                 ${getCardStyles(index, isHovered)}
               `}
-              style={{ borderColor: 'black' }}
+              style={{ borderColor: 'white' }}
               aria-label={`Ver perfil de ${artist.name}`}
             >
               {/* Imagen de fondo con degradado y efecto blur */}
