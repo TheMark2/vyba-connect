@@ -2,7 +2,7 @@
 import React from 'react';
 import { Button } from "@/components/ui/button";
 import { useNavigate } from 'react-router-dom';
-import { Expand, Target, Infinity, HeartHandshake } from "lucide-react";
+import { Expand, Target, Infinity, HeartHandshake, BarChart3, MessageSquare, Calendar } from "lucide-react";
 import Navbar from "@/components/Navbar";
 import { PageTransition } from '@/components/ui/page-transition';
 import { Card } from "@/components/ui/card";
@@ -90,6 +90,50 @@ const ArtistBenefitsPage = () => {
                 </div>
                 <p className="text-gray-600 dark:text-gray-300 mt-3">
                   Si necesitas ayuda o ves que algo no está funcionando correctamente no dudes en contactarnos
+                </p>
+              </div>
+            </div>
+          </div>
+          
+          {/* Nueva sección: Un sitio, todas las herramientas */}
+          <div className="mb-32 max-w-7xl mx-auto">
+            <div className="text-center mb-16">
+              <h2 className="text-4xl md:text-6xl font-black mb-3 max-w-3xl mx-auto">
+                Un sitio, todas las herramientas
+              </h2>
+            </div>
+            
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+              {/* Card 1: Estadísticas */}
+              <div className="flex flex-col items-center">
+                <div className="bg-[#F7F7F7] dark:bg-vyba-dark-secondary rounded-3xl w-full aspect-square mb-6 flex items-center justify-center">
+                  <BarChart3 className="h-24 w-24 text-black dark:text-white" />
+                </div>
+                <h3 className="text-xl font-bold mb-2">Estadísticas</h3>
+                <p className="text-gray-600 dark:text-gray-300 text-center">
+                  Revisa las estadísticas de tu perfil a tiempo real.
+                </p>
+              </div>
+              
+              {/* Card 2: Mensajes */}
+              <div className="flex flex-col items-center">
+                <div className="bg-[#F7F7F7] dark:bg-vyba-dark-secondary rounded-3xl w-full aspect-square mb-6 flex items-center justify-center">
+                  <MessageSquare className="h-24 w-24 text-black dark:text-white" />
+                </div>
+                <h3 className="text-xl font-bold mb-2">Mensajes</h3>
+                <p className="text-gray-600 dark:text-gray-300 text-center">
+                  Comunícate de manera fácil y rápida con tus clientes.
+                </p>
+              </div>
+              
+              {/* Card 3: Calendario */}
+              <div className="flex flex-col items-center">
+                <div className="bg-[#F7F7F7] dark:bg-vyba-dark-secondary rounded-3xl w-full aspect-square mb-6 flex items-center justify-center">
+                  <Calendar className="h-24 w-24 text-black dark:text-white" />
+                </div>
+                <h3 className="text-xl font-bold mb-2">Calendario</h3>
+                <p className="text-gray-600 dark:text-gray-300 text-center">
+                  Organiza tus bolos en un solo calendario.
                 </p>
               </div>
             </div>
