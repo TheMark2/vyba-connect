@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Button } from "@/components/ui/button";
 import { useNavigate } from 'react-router-dom';
@@ -8,16 +7,12 @@ import { PageTransition } from '@/components/ui/page-transition';
 import { Card } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import TimelineStep from "@/components/TimelineStep";
-
 const ArtistBenefitsPage = () => {
   const navigate = useNavigate();
-  
   const handleGetStarted = () => {
     navigate('/thank-you');
   };
-  
-  return (
-    <PageTransition>
+  return <PageTransition>
       <div className="min-h-screen bg-white dark:bg-vyba-dark-bg">
         <Navbar />
         <div className="px-6 md:px-10 lg:px-14 xl:px-16 pt-8 pb-32">
@@ -41,11 +36,7 @@ const ArtistBenefitsPage = () => {
                 
                 {/* Right image container positioned at the bottom */}
                 <div className="w-full md:w-1/2 h-full flex items-end justify-center self-end">
-                  <img
-                    src="/lovable-uploads/4f4470c7-ab55-4cf6-8e0c-0ad253b45b59.png"
-                    alt="VYBA app en iPhone"
-                    className="w-auto h-auto max-h-[500px] object-contain"
-                  />
+                  <img src="/lovable-uploads/4f4470c7-ab55-4cf6-8e0c-0ad253b45b59.png" alt="VYBA app en iPhone" className="w-auto h-auto max-h-[500px] object-contain" />
                 </div>
               </div>
             </div>
@@ -54,7 +45,7 @@ const ArtistBenefitsPage = () => {
           {/* Nueva sección: Promocionarte como artista */}
           <div className="mb-32">
             <div className="text-center mb-16">
-              <h2 className="text-4xl md:text-5xl font-bold mb-3">
+              <h2 className="text-4xl md:text-6xl font-bold mb-3 max-w-4xl mx-auto">
                 Promocionarte como artista es muy fácil
               </h2>
             </div>
@@ -96,8 +87,6 @@ const ArtistBenefitsPage = () => {
           </div>
         </div>
       </div>
-    </PageTransition>
-  );
+    </PageTransition>;
 };
-
 export default ArtistBenefitsPage;
