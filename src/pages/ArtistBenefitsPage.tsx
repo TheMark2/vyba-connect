@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { Button } from "@/components/ui/button";
 import { useNavigate } from 'react-router-dom';
@@ -7,6 +8,8 @@ import { PageTransition } from '@/components/ui/page-transition';
 import { Card } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import TimelineStep from "@/components/TimelineStep";
+import { cn } from '@/lib/utils';
+
 const ArtistBenefitsPage = () => {
   const navigate = useNavigate();
   const handleGetStarted = () => {
@@ -56,8 +59,13 @@ const ArtistBenefitsPage = () => {
                 <div className="bg-[#F7F7F7] dark:bg-vyba-dark-secondary w-14 h-14 rounded-full flex items-center justify-center mb-6">
                   <Target className="h-6 w-6 text-black dark:text-white" />
                 </div>
-                <h3 className="font-bold text-lg mb-3">Publica en pocos pasos</h3>
-                <p className="text-gray-600 dark:text-gray-300">
+                <div className="flex items-center bg-[#F7F7F7] dark:bg-vyba-dark-secondary rounded-full px-4 py-2">
+                  <div className="bg-white dark:bg-black w-10 h-10 rounded-full flex items-center justify-center mr-3">
+                    <Target className="h-5 w-5 text-black dark:text-white" />
+                  </div>
+                  <h3 className="font-bold text-lg">Publica en pocos pasos</h3>
+                </div>
+                <p className="text-gray-600 dark:text-gray-300 mt-3">
                   Publica tu perfil de artista <span className="font-bold">totalmente gratis</span> en menos de 5 minutos
                 </p>
               </div>
@@ -67,8 +75,13 @@ const ArtistBenefitsPage = () => {
                 <div className="bg-[#F7F7F7] dark:bg-vyba-dark-secondary w-14 h-14 rounded-full flex items-center justify-center mb-6">
                   <Infinity className="h-6 w-6 text-black dark:text-white" />
                 </div>
-                <h3 className="font-bold text-lg mb-3">Haz cambios cuando necesites</h3>
-                <p className="text-gray-600 dark:text-gray-300">
+                <div className="flex items-center bg-[#F7F7F7] dark:bg-vyba-dark-secondary rounded-full px-4 py-2">
+                  <div className="bg-white dark:bg-black w-10 h-10 rounded-full flex items-center justify-center mr-3">
+                    <Infinity className="h-5 w-5 text-black dark:text-white" />
+                  </div>
+                  <h3 className="font-bold text-lg">Haz cambios cuando necesites</h3>
+                </div>
+                <p className="text-gray-600 dark:text-gray-300 mt-3">
                   Haz actualizaciones en tu perfil a cualquier hora
                 </p>
               </div>
@@ -78,8 +91,13 @@ const ArtistBenefitsPage = () => {
                 <div className="bg-[#F7F7F7] dark:bg-vyba-dark-secondary w-14 h-14 rounded-full flex items-center justify-center mb-6">
                   <HeartHandshake className="h-6 w-6 text-black dark:text-white" />
                 </div>
-                <h3 className="font-bold text-lg mb-3">Recibe ayuda si lo necesitas</h3>
-                <p className="text-gray-600 dark:text-gray-300">
+                <div className="flex items-center bg-[#F7F7F7] dark:bg-vyba-dark-secondary rounded-full px-4 py-2">
+                  <div className="bg-white dark:bg-black w-10 h-10 rounded-full flex items-center justify-center mr-3">
+                    <HeartHandshake className="h-5 w-5 text-black dark:text-white" />
+                  </div>
+                  <h3 className="font-bold text-lg">Recibe ayuda si lo necesitas</h3>
+                </div>
+                <p className="text-gray-600 dark:text-gray-300 mt-3">
                   Si necesitas ayuda o ves que algo no está funcionando correctamente no dudes en contactarnos
                 </p>
               </div>
