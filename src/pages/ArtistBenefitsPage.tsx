@@ -2,9 +2,12 @@
 import React from 'react';
 import { Button } from "@/components/ui/button";
 import { useNavigate } from 'react-router-dom';
-import { Expand } from "lucide-react";
+import { Expand, Target, Infinity, HeartHandshake } from "lucide-react";
 import Navbar from "@/components/Navbar";
 import { PageTransition } from '@/components/ui/page-transition';
+import { Card } from "@/components/ui/card";
+import { Separator } from "@/components/ui/separator";
+import TimelineStep from "@/components/TimelineStep";
 
 const ArtistBenefitsPage = () => {
   const navigate = useNavigate();
@@ -44,6 +47,50 @@ const ArtistBenefitsPage = () => {
                     className="w-auto h-auto max-h-[500px] object-contain"
                   />
                 </div>
+              </div>
+            </div>
+          </div>
+          
+          {/* Nueva sección: Promocionarte como artista */}
+          <div className="mb-32">
+            <div className="text-center mb-16">
+              <h2 className="text-4xl md:text-5xl font-bold mb-3">
+                Promocionarte como artista es muy fácil
+              </h2>
+            </div>
+            
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+              {/* Card 1 */}
+              <div className="text-center flex flex-col items-center">
+                <div className="bg-[#F7F7F7] dark:bg-vyba-dark-secondary w-14 h-14 rounded-full flex items-center justify-center mb-6">
+                  <Target className="h-6 w-6 text-black dark:text-white" />
+                </div>
+                <h3 className="font-bold text-lg mb-3">Publica en pocos pasos</h3>
+                <p className="text-gray-600 dark:text-gray-300">
+                  Publica tu perfil de artista <span className="font-bold">totalmente gratis</span> en menos de 5 minutos
+                </p>
+              </div>
+              
+              {/* Card 2 */}
+              <div className="text-center flex flex-col items-center">
+                <div className="bg-[#F7F7F7] dark:bg-vyba-dark-secondary w-14 h-14 rounded-full flex items-center justify-center mb-6">
+                  <Infinity className="h-6 w-6 text-black dark:text-white" />
+                </div>
+                <h3 className="font-bold text-lg mb-3">Haz cambios cuando necesites</h3>
+                <p className="text-gray-600 dark:text-gray-300">
+                  Haz actualizaciones en tu perfil a cualquier hora
+                </p>
+              </div>
+              
+              {/* Card 3 */}
+              <div className="text-center flex flex-col items-center">
+                <div className="bg-[#F7F7F7] dark:bg-vyba-dark-secondary w-14 h-14 rounded-full flex items-center justify-center mb-6">
+                  <HeartHandshake className="h-6 w-6 text-black dark:text-white" />
+                </div>
+                <h3 className="font-bold text-lg mb-3">Recibe ayuda si lo necesitas</h3>
+                <p className="text-gray-600 dark:text-gray-300">
+                  Si necesitas ayuda o ves que algo no está funcionando correctamente no dudes en contactarnos
+                </p>
               </div>
             </div>
           </div>
