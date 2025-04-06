@@ -10,6 +10,7 @@ import { Separator } from "@/components/ui/separator";
 import TimelineStep from "@/components/TimelineStep";
 import { cn } from '@/lib/utils';
 import HelpSection from '@/components/HelpSection';
+import Footer from '@/components/Footer';
 
 const ArtistBenefitsPage = () => {
   const navigate = useNavigate();
@@ -17,9 +18,9 @@ const ArtistBenefitsPage = () => {
     navigate('/thank-you');
   };
   return <PageTransition>
-      <div className="min-h-screen bg-white dark:bg-vyba-dark-bg">
+      <div className="min-h-screen bg-white dark:bg-vyba-dark-bg flex flex-col">
         <SimpleNavbar />
-        <div className="px-6 md:px-10 lg:px-14 xl:px-16 pt-8 pb-32">
+        <div className="px-6 md:px-10 lg:px-14 xl:px-16 pt-8 pb-32 flex-grow">
           <div className="relative mt-10 mb-40">
             <div className="bg-[#F7F7F7] dark:bg-vyba-dark-secondary rounded-3xl overflow-hidden relative">
               <div className="flex flex-col md:flex-row items-start">
@@ -145,6 +146,7 @@ const ArtistBenefitsPage = () => {
             <HelpSection />
           </div>
         </div>
+        <Footer />
       </div>
     </PageTransition>;
 };
