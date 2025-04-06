@@ -21,7 +21,7 @@ const HelpSection = ({
   
   return (
     <section className={cn("", className)}>
-      <div className="py-8 md:py-16 bg-[#F5F1EB] dark:bg-vyba-dark-secondary rounded-[20px] md:rounded-[40px] px-6 md:px-10">
+      <div className="py-8 md:py-8 bg-[#F7F7F7] dark:bg-vyba-dark-secondary rounded-2xl md:rounded-3xl px-6 md:px-10">
         <div className="flex flex-col items-center justify-center text-center gap-4">
           <h2 className="text-2xl md:text-3xl lg:text-4xl font-black">
             ¿Tienes alguna duda?
