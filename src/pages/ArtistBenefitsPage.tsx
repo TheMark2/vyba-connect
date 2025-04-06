@@ -56,9 +56,6 @@ const ArtistBenefitsPage = () => {
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
               {/* Card 1 */}
               <div className="text-center flex flex-col items-center">
-                <div className="bg-[#F7F7F7] dark:bg-vyba-dark-secondary w-14 h-14 rounded-full flex items-center justify-center mb-6">
-                  <Target className="h-6 w-6 text-black dark:text-white" />
-                </div>
                 <div className="flex items-center bg-[#F7F7F7] dark:bg-vyba-dark-secondary rounded-full px-4 py-2">
                   <div className="bg-white dark:bg-black w-10 h-10 rounded-full flex items-center justify-center mr-3">
                     <Target className="h-5 w-5 text-black dark:text-white" />
@@ -72,9 +69,6 @@ const ArtistBenefitsPage = () => {
               
               {/* Card 2 */}
               <div className="text-center flex flex-col items-center">
-                <div className="bg-[#F7F7F7] dark:bg-vyba-dark-secondary w-14 h-14 rounded-full flex items-center justify-center mb-6">
-                  <Infinity className="h-6 w-6 text-black dark:text-white" />
-                </div>
                 <div className="flex items-center bg-[#F7F7F7] dark:bg-vyba-dark-secondary rounded-full px-4 py-2">
                   <div className="bg-white dark:bg-black w-10 h-10 rounded-full flex items-center justify-center mr-3">
                     <Infinity className="h-5 w-5 text-black dark:text-white" />
@@ -88,9 +82,6 @@ const ArtistBenefitsPage = () => {
               
               {/* Card 3 */}
               <div className="text-center flex flex-col items-center">
-                <div className="bg-[#F7F7F7] dark:bg-vyba-dark-secondary w-14 h-14 rounded-full flex items-center justify-center mb-6">
-                  <HeartHandshake className="h-6 w-6 text-black dark:text-white" />
-                </div>
                 <div className="flex items-center bg-[#F7F7F7] dark:bg-vyba-dark-secondary rounded-full px-4 py-2">
                   <div className="bg-white dark:bg-black w-10 h-10 rounded-full flex items-center justify-center mr-3">
                     <HeartHandshake className="h-5 w-5 text-black dark:text-white" />
