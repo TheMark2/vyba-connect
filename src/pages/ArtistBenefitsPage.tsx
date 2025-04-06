@@ -46,7 +46,7 @@ const ArtistBenefitsPage = () => {
           </div>
           
           {/* Nueva sección: Promocionarte como artista */}
-          <div className="mb-32">
+          <div className="mb-32 max-w-5xl">
             <div className="text-center mb-16">
               <h2 className="text-4xl md:text-6xl font-black mb-3 max-w-3xl mx-auto">
                 Promocionarte como artista es muy fácil
