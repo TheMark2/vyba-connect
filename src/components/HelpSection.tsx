@@ -20,17 +20,20 @@ const HelpSection = ({
   };
   
   return (
-    <section className={cn("px-6 md:px-14 lg:px-16", className)}>
-      <div className="py-8 md:py-16 bg-[#F5F1EB] dark:bg-vyba-dark-secondary rounded-[20px] md:rounded-[40px] px-6 md:px-32">
-        <div className="flex flex-col md:flex-row items-center justify-between gap-6 md:gap-0">
-          <h2 className="text-2xl md:text-3xl lg:text-5xl font-black text-center md:text-left">
-            ¿Tienes dudas?
+    <section className={cn("", className)}>
+      <div className="py-8 md:py-16 bg-[#F5F1EB] dark:bg-vyba-dark-secondary rounded-[20px] md:rounded-[40px] px-6 md:px-10">
+        <div className="flex flex-col items-center justify-center text-center gap-4">
+          <h2 className="text-2xl md:text-3xl lg:text-4xl font-black">
+            ¿Tienes alguna duda?
           </h2>
+          <p className="text-gray-600 dark:text-gray-300 mb-2">
+            Contacta con VYBA help
+          </p>
           <Button 
             onClick={handleHelpClick} 
-            className="bg-[#D4DDFF] text-[#222845] text-sm font-bold hover:bg-[#EBEFFF] w-full md:w-auto"
+            className="bg-[#D4DDFF] text-[#222845] text-sm font-bold hover:bg-[#EBEFFF] w-full md:w-auto max-w-xs"
           >
-            Ir a Vyba help
+            Contactar con VYBA help
           </Button>
         </div>
       </div>

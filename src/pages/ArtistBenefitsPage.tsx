@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Button } from "@/components/ui/button";
 import { useNavigate } from 'react-router-dom';
@@ -9,6 +8,7 @@ import { Card } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import TimelineStep from "@/components/TimelineStep";
 import { cn } from '@/lib/utils';
+import HelpSection from '@/components/HelpSection';
 
 const ArtistBenefitsPage = () => {
   const navigate = useNavigate();
@@ -137,6 +137,11 @@ const ArtistBenefitsPage = () => {
                 </p>
               </div>
             </div>
+          </div>
+          
+          {/* Nueva sección: ¿Tienes alguna duda? */}
+          <div className="mb-32 max-w-3xl mx-auto">
+            <HelpSection />
           </div>
         </div>
       </div>
