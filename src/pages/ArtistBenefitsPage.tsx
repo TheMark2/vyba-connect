@@ -1,8 +1,9 @@
+
 import React from 'react';
 import { Button } from "@/components/ui/button";
 import { useNavigate } from 'react-router-dom';
 import { Expand, Target, Infinity, HeartHandshake, BarChart3, MessageSquare, Calendar } from "lucide-react";
-import Navbar from "@/components/Navbar";
+import SimpleNavbar from "@/components/SimpleNavbar";
 import { PageTransition } from '@/components/ui/page-transition';
 import { Card } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
@@ -17,9 +18,9 @@ const ArtistBenefitsPage = () => {
   };
   return <PageTransition>
       <div className="min-h-screen bg-white dark:bg-vyba-dark-bg">
-        <Navbar />
+        <SimpleNavbar />
         <div className="px-6 md:px-10 lg:px-14 xl:px-16 pt-8 pb-32">
-          <div className="relative mt-10 mb-32">
+          <div className="relative mt-10 mb-40">
             <div className="bg-[#F7F7F7] dark:bg-vyba-dark-secondary rounded-3xl overflow-hidden relative">
               <div className="flex flex-col md:flex-row items-start">
                 {/* Left content container */}
@@ -46,7 +47,7 @@ const ArtistBenefitsPage = () => {
           </div>
           
           {/* Nueva sección: Promocionarte como artista */}
-          <div className="mb-32 max-w-7xl mx-auto">
+          <div className="mb-40 max-w-7xl mx-auto">
             <div className="text-center mb-16">
               <h2 className="text-4xl md:text-6xl font-black mb-3 max-w-3xl mx-auto">
                 Promocionarte como artista es muy fácil
@@ -96,7 +97,7 @@ const ArtistBenefitsPage = () => {
           </div>
           
           {/* Nueva sección: Un sitio, todas las herramientas */}
-          <div className="mb-32 max-w-7xl mx-auto">
+          <div className="mb-40 max-w-7xl mx-auto">
             <div className="text-center mb-16">
               <h2 className="text-4xl md:text-6xl font-black mb-3 max-w-3xl mx-auto">
                 Un sitio, todas las herramientas
