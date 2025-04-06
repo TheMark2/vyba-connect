@@ -60,7 +60,7 @@ const ArtistBenefitsPage = () => {
                   <div className="bg-white dark:bg-black w-10 h-10 rounded-full flex items-center justify-center ml-2 mr-3">
                     <Target className="h-5 w-5 text-black dark:text-white" />
                   </div>
-                  <h3 className="font-bold text-lg pr-4">Publica en pocos pasos</h3>
+                  <h3 className="font-bold text-base pr-4">Publica en pocos pasos</h3>
                 </div>
                 <p className="text-gray-600 dark:text-gray-300 mt-3">
                   Publica tu perfil de artista <span className="font-bold">totalmente gratis</span> en menos de 5 minutos
@@ -69,11 +69,11 @@ const ArtistBenefitsPage = () => {
               
               {/* Card 2 */}
               <div className="text-center flex flex-col items-center">
-                <div className="flex items-center bg-[#F7F7F7] dark:bg-vyba-dark-secondary rounded-full px-4 py-2">
-                  <div className="bg-white dark:bg-black w-10 h-10 rounded-full flex items-center justify-center mr-3">
+                <div className="flex items-center bg-[#F7F7F7] dark:bg-vyba-dark-secondary rounded-full py-2">
+                  <div className="bg-white dark:bg-black w-10 h-10 rounded-full flex items-center justify-center ml-2 mr-3">
                     <Infinity className="h-5 w-5 text-black dark:text-white" />
                   </div>
-                  <h3 className="font-bold text-lg">Haz cambios cuando necesites</h3>
+                  <h3 className="font-bold text-base pr-4">Haz cambios cuando necesites</h3>
                 </div>
                 <p className="text-gray-600 dark:text-gray-300 mt-3">
                   Haz actualizaciones en tu perfil a cualquier hora
@@ -82,11 +82,11 @@ const ArtistBenefitsPage = () => {
               
               {/* Card 3 */}
               <div className="text-center flex flex-col items-center">
-                <div className="flex items-center bg-[#F7F7F7] dark:bg-vyba-dark-secondary rounded-full px-4 py-2">
-                  <div className="bg-white dark:bg-black w-10 h-10 rounded-full flex items-center justify-center mr-3">
+                <div className="flex items-center bg-[#F7F7F7] dark:bg-vyba-dark-secondary rounded-full py-2">
+                  <div className="bg-white dark:bg-black w-10 h-10 rounded-full flex items-center justify-center mr-3 ml-2">
                     <HeartHandshake className="h-5 w-5 text-black dark:text-white" />
                   </div>
-                  <h3 className="font-bold text-lg">Recibe ayuda si lo necesitas</h3>
+                  <h3 className="font-bold text-base pr-4">Recibe ayuda si lo necesitas</h3>
                 </div>
                 <p className="text-gray-600 dark:text-gray-300 mt-3">
                   Si necesitas ayuda o ves que algo no está funcionando correctamente no dudes en contactarnos
