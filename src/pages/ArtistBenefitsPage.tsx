@@ -57,7 +57,7 @@ const ArtistBenefitsPage = () => {
               {/* Card 1 */}
               <div className="text-center flex flex-col items-center">
                 <div className="flex items-center bg-[#F7F7F7] dark:bg-vyba-dark-secondary rounded-full py-2">
-                  <div className="bg-white dark:bg-black w-10 h-10 rounded-full flex items-center justify-center pl-2 mr-3">
+                  <div className="bg-white dark:bg-black w-10 h-10 rounded-full flex items-center justify-center ml-2 mr-3">
                     <Target className="h-5 w-5 text-black dark:text-white" />
                   </div>
                   <h3 className="font-bold text-lg pr-4">Publica en pocos pasos</h3>
