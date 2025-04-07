@@ -33,7 +33,7 @@ const ArtistBenefitsPage = () => {
                     Impulsa tu carrera con VYBA
                   </h1>
                   <div>
-                    <Button onClick={handleGetStarted} className="bg-blue-100 hover:bg-blue-200 text-black w-full md:w-auto">
+                    <Button onClick={handleGetStarted} className="w-full md:w-auto">
                       Empezar ahora
                     </Button>
                   </div>
