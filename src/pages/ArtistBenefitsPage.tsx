@@ -60,7 +60,7 @@ const ArtistBenefitsPage = () => {
               </h2>
             </div>
             
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-16 px-8">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-16">
               {/* Card 1 */}
               <div className="text-center flex flex-col items-center">
                 <div className="flex items-center bg-[#F7F7F7] dark:bg-vyba-dark-secondary rounded-full py-2">
@@ -69,9 +69,11 @@ const ArtistBenefitsPage = () => {
                   </div>
                   <h3 className="font-bold text-base pr-4">Publica en pocos pasos</h3>
                 </div>
-                <p className="text-gray-600 dark:text-gray-300 mt-3">
-                  Publica tu perfil de artista <span className="font-bold">totalmente gratis</span> en menos de 5 minutos
-                </p>
+                <div className="px-8">
+                  <p className="text-gray-600 dark:text-gray-300 mt-3">
+                    Publica tu perfil de artista <span className="font-bold">totalmente gratis</span> en menos de 5 minutos
+                  </p>
+                </div>
               </div>
               
               {/* Card 2 */}
@@ -82,9 +84,11 @@ const ArtistBenefitsPage = () => {
                   </div>
                   <h3 className="font-bold text-base pr-4">Haz cambios cuando necesites</h3>
                 </div>
-                <p className="text-gray-600 dark:text-gray-300 mt-3">
-                  Haz actualizaciones en tu perfil a cualquier hora
-                </p>
+                <div className="px-8">
+                  <p className="text-gray-600 dark:text-gray-300 mt-3">
+                    Haz actualizaciones en tu perfil a cualquier hora
+                  </p>
+                </div>
               </div>
               
               {/* Card 3 */}
@@ -95,9 +99,11 @@ const ArtistBenefitsPage = () => {
                   </div>
                   <h3 className="font-bold text-base pr-4">Recibe ayuda si lo necesitas</h3>
                 </div>
-                <p className="text-gray-600 dark:text-gray-300 mt-3">
-                  Si necesitas ayuda o ves que algo no está funcionando correctamente no dudes en contactarnos
-                </p>
+                <div className="px-8">                
+                  <p className="text-gray-600 dark:text-gray-300 mt-3">
+                    Si necesitas ayuda o ves que algo no está funcionando correctamente no dudes en contactarnos
+                  </p>
+                </div>
               </div>
             </div>
           </div>
