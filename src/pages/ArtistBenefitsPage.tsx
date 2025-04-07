@@ -29,7 +29,7 @@ const ArtistBenefitsPage = () => {
                   <div className="mb-6">
                     <Expand className="h-12 w-12 text-black dark:text-white" />
                   </div>
-                  <h1 className="text-4xl md:text-6xl font-black mb-6 dark:text-white">
+                  <h1 className="text-5xl md:text-6xl font-black mb-6 dark:text-white">
                     Impulsa tu carrera con VYBA
                   </h1>
                   <div>
