@@ -162,7 +162,7 @@ const RegisterPage = () => {
     <main className="min-h-screen bg-white dark:bg-vyba-dark-bg flex flex-col">
       <Navbar />
       
-      <div className="container mx-auto flex flex-col items-center px-6 pt-16 md:pt-12 pb-20 flex-1">
+      <div className="container mx-auto flex flex-col items-center px-6 pt-24 md:pt-12 pb-20 flex-1">
         <div className="w-full space-y-6 md:mt-8">
           <div className="text-center">
             <h1 className="text-4xl md:text-6xl font-black">Bienvenido/a a VYBA</h1>
