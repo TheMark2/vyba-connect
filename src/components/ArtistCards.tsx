@@ -1,4 +1,6 @@
+
 import React, { useState } from 'react';
+import { useIsMobile } from '@/hooks/use-mobile';
 
 interface Artist {
   id: number;
@@ -8,6 +10,8 @@ interface Artist {
 }
 
 const ArtistCards = () => {
+  const isMobile = useIsMobile();
+  
   // Array de artistas con más información
   const artists = [{
     id: 1,
@@ -84,6 +88,11 @@ const ArtistCards = () => {
   const getEnhancedImage = (index: number) => {
     return artists[index].image;
   };
+
+  // Si estamos en móvil, no renderizamos las tarjetas, ya que se usa una imagen estática
+  if (isMobile) {
+    return null;
+  }
 
   return (
     <div className="bg-gray-50 dark:bg-vyba-dark-secondary rounded-3xl p-8 w-full max-w-5xl mx-auto flex flex-col items-center">
