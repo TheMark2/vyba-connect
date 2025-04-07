@@ -154,3 +154,4 @@ const ArtistBenefitsPage = () => {
     </PageTransition>;
 };
 export default ArtistBenefitsPage;
+
