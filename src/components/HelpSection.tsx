@@ -26,10 +26,7 @@ const HelpSection = ({
       )}>
         <div className="flex flex-col items-center justify-center text-center gap-4">
           <div className="flex flex-col gap-1">
-            <h2 className={cn(
-              "font-black",
-              isMobile ? "text-xl" : "text-2xl md:text-3xl lg:text-4xl"
-            )}>
+            <h2 className="font-black text-3xl lg:text-4xl">
               ¿Tienes alguna duda?
             </h2>
             <p className="text-gray-600 dark:text-gray-300 mb-2">
@@ -38,10 +35,7 @@ const HelpSection = ({
           </div>
           <Button 
             onClick={handleHelpClick} 
-            className={cn(
-              "bg-[#D4DDFF] text-[#222845] hover:bg-[#EBEFFF] max-w-xs rounded-full",
-              isMobile ? "text-xs w-full" : "text-sm font-bold w-full md:w-auto"
-            )}>
+            className="">
             Contactar con VYBA help
           </Button>
         </div>
