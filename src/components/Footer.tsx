@@ -2,8 +2,9 @@
 import { Link } from "react-router-dom";
 import { cn } from "@/lib/utils";
 import { LanguageDropdown } from "@/components/ui/language-dropdown";
+
 const Footer = () => {
-  return <footer className="bg-vyba-cream dark:bg-vyba-dark-bg py-8 border-t border-gray-200/30 dark:border-gray-700/30">
+  return <footer className="py-8">
       <div className="container mx-auto px-8 md:px-16 lg:px-24 xl:px-32 2xl:max-w-[1800px]">
         <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
           <div>
