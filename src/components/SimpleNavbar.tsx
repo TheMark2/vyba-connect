@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Button } from "@/components/ui/button";
 import { Link, useNavigate } from 'react-router-dom';
@@ -92,7 +91,7 @@ const SimpleNavbar = ({
     <div 
       className={cn(
         "w-full mx-auto flex items-center justify-between",
-        "px-6 md:px-10 lg:px-14 xl:px-16 h-24",
+        "px-6 md:px-10 lg:px-14 xl:px-16 h-24 bg-white dark:bg-vyba-dark-bg",
         className
       )}
     >
@@ -214,4 +213,3 @@ const SimpleNavbar = ({
 };
 
 export default SimpleNavbar;
-
