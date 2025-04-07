@@ -35,7 +35,7 @@ const WelcomePage = () => {
         <Navbar />
         
         {isMobile ? (
-          <div className="container mx-auto px-4 pt-8 pb-10">
+          <div className="container mx-auto px-4 pt-16 pb-10">
             <h1 className="text-4xl font-black text-center mb-1 dark:text-white">
               Bienvenido
             </h1>
@@ -89,7 +89,7 @@ const WelcomePage = () => {
             </p>
           </div>
         ) : (
-          <div className="container mx-auto pt-12">
+          <div className="container mx-auto pt-16">
             <h1 className="text-6xl font-black text-center mb-12 dark:text-white">
               Bienvenido {userInfo.fullName}
             </h1>
