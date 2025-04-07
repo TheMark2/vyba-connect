@@ -3,6 +3,7 @@ import React from 'react';
 import { Button } from "@/components/ui/button";
 import { Link, useNavigate } from 'react-router-dom';
 import { cn } from '@/lib/utils';
+import { ArrowLeft } from 'lucide-react';
 
 interface SimpleNavbarProps {
   className?: string;
@@ -17,6 +18,10 @@ const SimpleNavbar = ({
     navigate('/thank-you');
   };
   
+  const handleGoBack = () => {
+    navigate(-1);
+  };
+  
   return (
     <div 
       className={cn(
@@ -29,13 +34,24 @@ const SimpleNavbar = ({
         VYBA
       </Link>
 
-      {/* Botón primario */}
-      <Button 
-        onClick={handleGetStarted}
-        className="text-sm"
-      >
-        Empezar
-      </Button>
+      {/* Botones de acción */}
+      <div className="flex items-center space-x-3">
+        <Button 
+          variant="secondary"
+          size="icon"
+          onClick={handleGoBack}
+          className="rounded-full"
+        >
+          <ArrowLeft className="h-5 w-5" />
+        </Button>
+        
+        <Button 
+          onClick={handleGetStarted}
+          className="text-sm"
+        >
+          Empezar
+        </Button>
+      </div>
     </div>
   );
 };
