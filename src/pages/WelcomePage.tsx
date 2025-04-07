@@ -35,7 +35,7 @@ const WelcomePage = () => {
         <Navbar />
         
         {isMobile ? (
-          <div className="container mx-auto px-4 pt-16 pb-10">
+          <div className="container mx-auto px-4 pt-32 pb-10">
             <h1 className="text-4xl font-black text-center mb-1 dark:text-white">
               Bienvenido
             </h1>
