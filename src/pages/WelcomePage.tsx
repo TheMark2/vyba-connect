@@ -1,5 +1,5 @@
 
-import React from 'react';
+import React, { useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { Button } from "@/components/ui/button";
 import { X } from "lucide-react";
@@ -129,9 +129,12 @@ const WelcomePage = () => {
   );
 };
 
-// Componente para mostrar las tarjetas de artistas en formato móvil sin interacción
+// Componente para mostrar las tarjetas de artistas en formato móvil similar a PC pero más pequeñas
 const ArtistCardsMobile = () => {
-  // Datos de artistas (igual que en ArtistCards.tsx pero simplificados)
+  // Estado para rastrear la tarjeta en hover (aunque en móvil no hay hover)
+  const [hoveredCard, setHoveredCard] = useState<number | null>(null);
+  
+  // Datos de artistas (igual que en ArtistCards.tsx)
   const artists = [{
     id: 1,
     name: "Antonia Pedragosa",
@@ -154,22 +157,54 @@ const ArtistCardsMobile = () => {
     image: "/lovable-uploads/7e7c2282-785a-46fb-84b2-f7b14b762e64.png"
   }];
 
+  // Función para obtener los estilos de las tarjetas (versión simplificada para móvil)
+  const getCardStyles = (index: number) => {
+    // Posiciones fijas para cada tarjeta en móvil, adaptadas para un espacio más pequeño
+    const mobilePositions = [
+      "translate-x-[-60px]", // Más a la izquierda
+      "translate-x-[0px]",   // Centro 
+      "translate-x-[60px]",  // Más a la derecha
+    ];
+    
+    // Rotaciones para cada tarjeta (mantenemos el mismo estilo visual que en desktop)
+    const mobileRotations = [
+      "rotate-[-10deg]", // Rotación izquierda
+      "rotate-[5deg]",   // Rotación derecha
+      "rotate-[-5deg]",  // Rotación izquierda
+    ];
+    
+    // Devolvemos la combinación de posición y rotación
+    return `${mobilePositions[index]} ${mobileRotations[index]}`;
+  };
+
   return (
-    <div className="flex justify-center gap-2 overflow-x-auto pb-2">
+    <div className="relative h-40 w-full flex justify-center items-center">
       {artists.slice(0, 3).map((artist, index) => (
         <div 
           key={artist.id}
-          className="relative rounded-xl overflow-hidden min-w-[100px] h-[140px]"
+          className={`
+            absolute rounded-xl border-2 border-white
+            w-24 h-32 flex flex-col justify-end
+            transition-all duration-300 ease-in-out
+            overflow-hidden shadow-[0_5px_10px_rgba(0,0,0,0.15)]
+            ${getCardStyles(index)}
+          `}
         >
-          <img 
-            src={artist.image} 
-            alt={artist.name}
-            className="w-full h-full object-cover"
+          {/* Imagen de fondo con degradado */}
+          <div 
+            className="absolute inset-0 bg-cover bg-center z-0 blur-[1px]" 
+            style={{
+              backgroundImage: `url(${artist.image})`
+            }} 
           />
-          <div className="absolute inset-0 bg-gradient-to-t from-black via-black/60 to-transparent"></div>
-          <div className="absolute bottom-2 left-2 right-2 text-white">
-            <p className="text-xs font-bold">{artist.name}</p>
-            <p className="text-xs">{artist.type}</p>
+          
+          {/* Degradado negro de abajo hacia arriba */}
+          <div className="absolute inset-0 bg-gradient-to-t from-black via-black/70 to-transparent z-1"></div>
+          
+          {/* Contenido de texto */}
+          <div className="relative z-2 p-2 text-white">
+            <h2 className="text-xs font-bold truncate">{artist.name}</h2>
+            <p className="text-[10px]">{artist.type}</p>
           </div>
         </div>
       ))}
