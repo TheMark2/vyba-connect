@@ -35,7 +35,7 @@ const WelcomePage = () => {
         <Navbar />
         
         {isMobile ? (
-          <div className="container mx-auto px-4 py-10">
+          <div className="container mx-auto px-4 pt-8 pb-10">
             <h1 className="text-4xl font-black text-center mb-1 dark:text-white">
               Bienvenido
             </h1>
@@ -53,12 +53,8 @@ const WelcomePage = () => {
                 </h2>
               </div>
               
-              <div className="w-full flex justify-center mb-6">
-                <img 
-                  src="/lovable-uploads/4935f5e3-d4ed-4d4f-b493-2520dc94b4a4.png" 
-                  alt="Artistas" 
-                  className="w-3/4 max-w-[240px]"
-                />
+              <div className="w-full mb-6">
+                <ArtistCardsMobile />
               </div>
               
               <Button 
@@ -78,7 +74,7 @@ const WelcomePage = () => {
             
             <div className="flex justify-center mb-10">
               <Button
-                variant="ghost"
+                variant="secondary"
                 size="icon"
                 onClick={handleClose}
                 className="rounded-full"
@@ -93,8 +89,8 @@ const WelcomePage = () => {
             </p>
           </div>
         ) : (
-          <div className="container mx-auto">
-            <h1 className="text-6xl font-black text-center mb-8 dark:text-white">
+          <div className="container mx-auto pt-12">
+            <h1 className="text-6xl font-black text-center mb-12 dark:text-white">
               Bienvenido {userInfo.fullName}
             </h1>
             
@@ -130,6 +126,54 @@ const WelcomePage = () => {
         )}
       </div>
     </PageTransition>
+  );
+};
+
+// Componente para mostrar las tarjetas de artistas en formato móvil sin interacción
+const ArtistCardsMobile = () => {
+  // Datos de artistas (igual que en ArtistCards.tsx pero simplificados)
+  const artists = [{
+    id: 1,
+    name: "Antonia Pedragosa",
+    type: "DJ",
+    image: "/lovable-uploads/77591a97-10cd-4c8b-b768-5b17483c3d9f.png"
+  }, {
+    id: 2,
+    name: "Carlos Martínez",
+    type: "Banda",
+    image: "/lovable-uploads/64cabbe3-ce62-4190-830d-0e5defd31a1b.png"
+  }, {
+    id: 3,
+    name: "Laura González",
+    type: "Solista",
+    image: "/lovable-uploads/c89ee394-3c08-48f6-b69b-bddd81dffa8b.png"
+  }, {
+    id: 4,
+    name: "Miguel Torres",
+    type: "Grupo",
+    image: "/lovable-uploads/7e7c2282-785a-46fb-84b2-f7b14b762e64.png"
+  }];
+
+  return (
+    <div className="flex justify-center gap-2 overflow-x-auto pb-2">
+      {artists.slice(0, 3).map((artist, index) => (
+        <div 
+          key={artist.id}
+          className="relative rounded-xl overflow-hidden min-w-[100px] h-[140px]"
+        >
+          <img 
+            src={artist.image} 
+            alt={artist.name}
+            className="w-full h-full object-cover"
+          />
+          <div className="absolute inset-0 bg-gradient-to-t from-black via-black/60 to-transparent"></div>
+          <div className="absolute bottom-2 left-2 right-2 text-white">
+            <p className="text-xs font-bold">{artist.name}</p>
+            <p className="text-xs">{artist.type}</p>
+          </div>
+        </div>
+      ))}
+    </div>
   );
 };
 
