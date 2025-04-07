@@ -23,13 +23,13 @@ const ArtistBenefitsPage = () => {
         <div className="px-6 md:px-10 lg:px-14 xl:px-16 pt-8 pb-32 flex-grow">
           <div className="relative mt-10 mb-40">
             <div className="bg-[#F7F7F7] dark:bg-vyba-dark-secondary rounded-3xl overflow-hidden relative">
-              <div className="flex flex-col md:flex-row items-start">
-                {/* Left content container */}
-                <div className="p-10 md:p-16 lg:p-24 xl:p-32 flex flex-col justify-center w-full md:w-1/2">
+              <div className="flex flex-col md:flex-row items-center">
+                {/* Left content container - centered on mobile */}
+                <div className="p-8 md:p-16 lg:p-24 xl:p-32 flex flex-col items-center md:items-start justify-center w-full md:w-1/2 text-center md:text-left">
                   <div className="mb-6">
                     <Expand className="h-12 w-12 text-black dark:text-white" />
                   </div>
-                  <h1 className="text-5xl md:text-6xl font-black mb-6 dark:text-white">
+                  <h1 className="text-4xl md:text-6xl font-black mb-6 dark:text-white">
                     Impulsa tu carrera con VYBA
                   </h1>
                   <div>
@@ -38,10 +38,13 @@ const ArtistBenefitsPage = () => {
                     </Button>
                   </div>
                 </div>
-                
-                {/* Right image container positioned at the bottom */}
+                {/* Right image container - smaller on mobile */}
                 <div className="w-full md:w-1/2 h-full flex items-end justify-center self-end">
-                  <img src="/lovable-uploads/4f4470c7-ab55-4cf6-8e0c-0ad253b45b59.png" alt="VYBA app en iPhone" className="w-auto h-auto max-h-[500px] object-contain" />
+                  <img 
+                    src="/lovable-uploads/4f4470c7-ab55-4cf6-8e0c-0ad253b45b59.png" 
+                    alt="VYBA app en iPhone" 
+                    className="w-auto h-auto max-h-[350px] md:max-h-[500px] object-contain" 
+                  />
                 </div>
               </div>
             </div>
