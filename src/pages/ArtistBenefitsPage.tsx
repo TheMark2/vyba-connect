@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Button } from "@/components/ui/button";
 import { useNavigate } from 'react-router-dom';
@@ -11,7 +10,6 @@ import TimelineStep from "@/components/TimelineStep";
 import { cn } from '@/lib/utils';
 import HelpSection from '@/components/HelpSection';
 import Footer from '@/components/Footer';
-
 const ArtistBenefitsPage = () => {
   const navigate = useNavigate();
   const handleGetStarted = () => {
@@ -112,7 +110,7 @@ const ArtistBenefitsPage = () => {
                   <BarChart3 className="h-24 w-24 text-black dark:text-white" />
                 </div>
                 <h3 className="text-xl font-bold mb-2">Estadísticas</h3>
-                <p className="text-gray-600 dark:text-gray-300 text-center">
+                <p className="text-gray-600 dark:text-gray-300 text-center max-w-xl">
                   Revisa las estadísticas de tu perfil a tiempo real.
                 </p>
               </div>
