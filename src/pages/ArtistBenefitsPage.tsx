@@ -60,7 +60,7 @@ const ArtistBenefitsPage = () => {
               </h2>
             </div>
             
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-16">
               {/* Card 1 */}
               <div className="text-center flex flex-col items-center">
                 <div className="flex items-center bg-[#F7F7F7] dark:bg-vyba-dark-secondary rounded-full py-2">
