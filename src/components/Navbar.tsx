@@ -1,3 +1,4 @@
+
 import { Button } from "@/components/ui/button";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { cn } from "@/lib/utils";
@@ -115,11 +116,12 @@ const Navbar = ({
   };
 
   return (
-    <div 
+    <header 
       className={cn(
         "w-full mx-auto px-6 md:px-10 lg:px-14 xl:px-16 flex items-center justify-between",
         isMobile ? "fixed top-0 left-0 right-0 z-50 transition-colors duration-500 h-20" : "h-24",
         isMobile && scrolled ? "bg-[#F5F1EB] dark:bg-vyba-dark-bg" : "bg-transparent",
+        isMobile && !scrolled ? "bg-white dark:bg-vyba-dark-bg" : "",
         className
       )}
     >
@@ -246,7 +248,7 @@ const Navbar = ({
           </>
         )}
       </div>
-    </div>
+    </header>
   );
 };
 

@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -93,10 +94,11 @@ const AuthPage = () => {
     };
   }, [emailVerificationTimeout]);
 
-  return <div className="min-h-screen bg-white dark:bg-vyba-dark-bg">
+  return (
+    <main className="min-h-screen bg-white dark:bg-vyba-dark-bg flex flex-col">
       <Navbar />
       
-      <div className="container mx-auto flex flex-col items-center justify-center px-6 py-20">
+      <div className="container mx-auto flex flex-col items-center justify-center px-6 py-20 flex-1">
         <div className="w-full space-y-6">
           <div className="text-center">
             <h1 className="text-4xl md:text-6xl font-black">Bienvenido/a a VYBA</h1>
@@ -183,6 +185,7 @@ const AuthPage = () => {
             </div>}
         </div>
       </div>
-    </div>;
+    </main>
+  );
 };
 export default AuthPage;
