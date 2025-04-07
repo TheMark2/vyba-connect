@@ -43,7 +43,7 @@ const WelcomePage = () => {
               {userInfo.fullName}
             </h2>
             
-            <div className="bg-gray-50 dark:bg-vyba-dark-secondary rounded-3xl p-6 w-full mx-auto flex flex-col items-center mb-6">
+            <div className="bg-gray-50 dark:bg-vyba-dark-secondary rounded-3xl p-8 w-full mx-auto flex flex-col items-center mb-6">
               <div className="text-center mb-4">
                 <p className="text-sm font-black text-gray-600 dark:text-gray-400">
                   Todos los artistas
