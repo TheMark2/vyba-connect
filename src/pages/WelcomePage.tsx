@@ -45,7 +45,7 @@ const WelcomePage = () => {
             
             <div className="bg-gray-50 dark:bg-vyba-dark-secondary rounded-3xl p-6 w-full mx-auto flex flex-col items-center mb-6">
               <div className="text-center mb-4">
-                <p className="text-sm font-medium text-gray-600 dark:text-gray-400">
+                <p className="text-sm font-black text-gray-600 dark:text-gray-400">
                   Todos los artistas
                 </p>
                 <h2 className="text-2xl font-medium mb-4 dark:text-white">
@@ -59,7 +59,7 @@ const WelcomePage = () => {
               
               <Button 
                 onClick={handleSearchArtists}
-                className="w-full max-w-[240px] mb-3 bg-[#E8EEFF] hover:bg-[#D8E0FF]"
+                className="mb-3 bg-[#E8EEFF] hover:bg-[#D8E0FF]"
               >
                 Empezar a buscar
               </Button>
