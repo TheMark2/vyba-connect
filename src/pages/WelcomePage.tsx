@@ -39,7 +39,7 @@ const WelcomePage = () => {
             <h1 className="text-4xl font-black text-center mb-1 dark:text-white">
               Bienvenido
             </h1>
-            <h2 className="text-4xl font-black text-center mb-8 dark:text-white">
+            <h2 className="text-5xl font-black text-center mb-8 dark:text-white">
               {userInfo.fullName}
             </h2>
             
