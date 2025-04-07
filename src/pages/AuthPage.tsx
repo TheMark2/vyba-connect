@@ -98,7 +98,7 @@ const AuthPage = () => {
     <main className="min-h-screen bg-white dark:bg-vyba-dark-bg flex flex-col">
       <Navbar />
       
-      <div className="container mx-auto flex flex-col items-center justify-center px-6 py-20 flex-1">
+      <div className="container mx-auto flex flex-col items-center justify-center px-6 pt-16 md:pt-20 pb-20 flex-1">
         <div className="w-full space-y-6">
           <div className="text-center">
             <h1 className="text-4xl md:text-6xl font-black">Bienvenido/a a VYBA</h1>
