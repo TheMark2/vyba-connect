@@ -39,7 +39,7 @@ const HelpSection = ({
           <Button 
             onClick={handleHelpClick} 
             className={cn(
-              "bg-[#D4DDFF] text-[#222845] hover:bg-[#EBEFFF] max-w-xs",
+              "bg-[#D4DDFF] text-[#222845] hover:bg-[#EBEFFF] max-w-xs rounded-full",
               isMobile ? "text-xs w-full" : "text-sm font-bold w-full md:w-auto"
             )}>
             Contactar con VYBA help

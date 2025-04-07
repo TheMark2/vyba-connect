@@ -56,8 +56,8 @@ const SimpleNavbar = ({
         <Button 
           onClick={handleGetStarted}
           className={cn(
-            "text-sm",
-            isMobile ? "text-xs py-1 px-4" : ""
+            "text-sm rounded-full",
+            isMobile ? "text-xs py-1 px-6" : ""
           )}
         >
           Empezar

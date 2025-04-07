@@ -28,44 +28,48 @@ const ArtistBenefitsPage = () => {
           {/* Hero Section */}
           <div className="relative mt-4 md:mt-10 mb-24 md:mb-40">
             <div className="bg-[#F7F7F7] dark:bg-vyba-dark-secondary rounded-3xl overflow-hidden relative">
-              <div className="flex flex-col md:flex-row items-center">
-                {/* Left content container */}
-                <div className="p-8 md:p-16 lg:p-24 xl:p-32 flex flex-col justify-center w-full md:w-1/2 text-center md:text-left">
-                  {!isMobile && (
+              {isMobile ? (
+                <div className="p-6 flex flex-col text-center">
+                  <div className="flex justify-center mb-4">
+                    <Expand className="h-10 w-10 text-black dark:text-white" />
+                  </div>
+                  <h1 className="text-2xl font-black mb-2 dark:text-white">
+                    Impulsa tu carrera con VYBA
+                  </h1>
+                  <div className="mt-8 mb-6">
+                    <Button onClick={handleGetStarted} className="w-full text-sm py-6 rounded-full">
+                      Empezar ahora
+                    </Button>
+                  </div>
+                  <div className="w-full flex justify-center py-4">
+                    <img 
+                      src="/lovable-uploads/4f4470c7-ab55-4cf6-8e0c-0ad253b45b59.png" 
+                      alt="VYBA app en iPhone" 
+                      className="max-h-[400px] w-auto object-contain" 
+                    />
+                  </div>
+                </div>
+              ) : (
+                <div className="flex flex-col md:flex-row items-center">
+                  {/* Left content container */}
+                  <div className="p-8 md:p-16 lg:p-24 xl:p-32 flex flex-col justify-center w-full md:w-1/2 text-center md:text-left">
                     <div className="mb-6">
                       <Expand className="h-12 w-12 text-black dark:text-white" />
                     </div>
-                  )}
+                    <h1 className="text-4xl md:text-5xl lg:text-6xl font-black mb-6 dark:text-white">
+                      Impulsa tu carrera con VYBA
+                    </h1>
+                    <Button onClick={handleGetStarted} className="bg-blue-100 hover:bg-blue-200 text-black w-full md:w-auto">
+                      Empezar ahora
+                    </Button>
+                  </div>
                   
-                  {isMobile && (
-                    <div className="flex justify-center mb-4">
-                      <Expand className="h-10 w-10 text-black dark:text-white" />
-                    </div>
-                  )}
-                  
-                  <h1 className={cn(
-                    "font-black mb-6 dark:text-white",
-                    isMobile ? "text-2xl" : "text-4xl md:text-5xl lg:text-6xl"
-                  )}>
-                    Impulsa tu carrera con VYBA
-                  </h1>
-                  
-                  {isMobile && (
-                    <div className="mt-2 mb-4">
-                      <Button onClick={handleGetStarted} className="bg-blue-100 hover:bg-blue-200 text-black w-full">
-                        Empezar ahora
-                      </Button>
-                    </div>
-                  )}
-                </div>
-                
-                {/* Right image container positioned at the bottom */}
-                {!isMobile && (
+                  {/* Right image container positioned at the bottom */}
                   <div className="w-full md:w-1/2 h-full flex items-end justify-center self-end">
                     <img src="/lovable-uploads/4f4470c7-ab55-4cf6-8e0c-0ad253b45b59.png" alt="VYBA app en iPhone" className="w-auto h-auto max-h-[500px] object-contain" />
                   </div>
-                )}
-              </div>
+                </div>
+              )}
             </div>
           </div>
           
