@@ -120,9 +120,11 @@ const ArtistBenefitsPage = () => {
                   <BarChart3 className="h-24 w-24 text-black dark:text-white" />
                 </div>
                 <h3 className="text-xl font-bold mb-2">Estadísticas</h3>
-                <p className="text-gray-600 dark:text-gray-300 text-center">
-                  Revisa las estadísticas de tu perfil a tiempo real.
-                </p>
+                <div className="max-w-lg">
+                  <p className="text-gray-600 dark:text-gray-300 text-center">
+                    Revisa las estadísticas de tu perfil a tiempo real.
+                  </p>
+                </div>
               </div>
               
               {/* Card 2: Mensajes */}
@@ -131,9 +133,11 @@ const ArtistBenefitsPage = () => {
                   <MessageSquare className="h-24 w-24 text-black dark:text-white" />
                 </div>
                 <h3 className="text-xl font-bold mb-2">Mensajes</h3>
-                <p className="text-gray-600 dark:text-gray-300 text-center">
-                  Comunícate de manera fácil y rápida con tus clientes.
-                </p>
+                <div className="max-w-lg">
+                  <p className="text-gray-600 dark:text-gray-300 text-center">
+                    Comunícate de manera fácil y rápida con tus clientes.
+                  </p>
+                </div>
               </div>
               
               {/* Card 3: Calendario */}
@@ -142,9 +146,11 @@ const ArtistBenefitsPage = () => {
                   <Calendar className="h-24 w-24 text-black dark:text-white" />
                 </div>
                 <h3 className="text-xl font-bold mb-2">Calendario</h3>
-                <p className="text-gray-600 dark:text-gray-300 text-center">
-                  Organiza tus bolos en un solo calendario.
-                </p>
+                <div className="max-w-lg">
+                  <p className="text-gray-600 dark:text-gray-300 text-center">
+                    Organiza tus bolos en un solo calendario.
+                  </p>
+                </div>
               </div>
             </div>
           </div>
