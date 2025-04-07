@@ -17,10 +17,12 @@ const ArtistBenefitsPage = () => {
   const handleGetStarted = () => {
     navigate('/thank-you');
   };
-  return <PageTransition>
+  
+  return (
+    <PageTransition>
       <div className="min-h-screen bg-white dark:bg-vyba-dark-bg flex flex-col">
         <SimpleNavbar />
-        <div className="px-4 md:px-10 lg:px-14 xl:px-16 pt-8 pb-32 flex-grow">
+        <div className="px-4 md:px-10 lg:px-14 xl:px-16 pt-0 pb-32 flex-grow">
           <div className="relative mt-10 mb-40">
             <div className="bg-[#F7F7F7] dark:bg-vyba-dark-secondary rounded-3xl overflow-hidden relative">
               <div className="flex flex-col md:flex-row items-center">
@@ -151,6 +153,7 @@ const ArtistBenefitsPage = () => {
         </div>
         <Footer />
       </div>
-    </PageTransition>;
+    </PageTransition>
+  );
 };
 export default ArtistBenefitsPage;
