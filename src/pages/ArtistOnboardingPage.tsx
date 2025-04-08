@@ -5,6 +5,7 @@ import { PageTransition } from '@/components/ui/page-transition';
 import StepsNavbar from '@/components/onboarding/StepsNavbar';
 import CoverStep from '@/components/onboarding/CoverStep';
 import ArtistTypeStep from '@/components/onboarding/ArtistTypeStep';
+import ArtistNameStep from '@/components/onboarding/ArtistNameStep';
 import { Target, Music, Camera, Calendar, CheckCircle } from 'lucide-react';
 
 // Definimos los grupos de pasos
@@ -19,6 +20,7 @@ interface StepGroup {
 // Definimos la interfaz para los datos de onboarding
 interface OnboardingData {
   artistType?: string;
+  artistName?: string;
   // Aquí irían más campos para los siguientes pasos
 }
 
@@ -79,6 +81,13 @@ const ArtistOnboardingPage = () => {
     });
   };
   
+  const handleArtistNameChange = (name: string) => {
+    setOnboardingData({
+      ...onboardingData,
+      artistName: name
+    });
+  };
+  
   // Funciones de navegación
   const handleNext = () => {
     const currentGroupObj = stepGroups[currentGroup];
@@ -118,6 +127,11 @@ const ArtistOnboardingPage = () => {
       return !!onboardingData.artistType;
     }
     
+    // Si estamos en el primer grupo, paso 2 (índice 2)
+    if (currentGroup === 0 && currentStepInGroup === 2) {
+      return !!onboardingData.artistName && onboardingData.artistName.trim() !== '';
+    }
+    
     // Por defecto permitir avanzar
     return true;
   };
@@ -146,6 +160,16 @@ const ArtistOnboardingPage = () => {
           <ArtistTypeStep 
             onSelect={handleArtistTypeSelect} 
             initialValue={onboardingData.artistType}
+          />
+        );
+      }
+      
+      // Paso 2 del grupo 1 (índice 2) - Nombre artístico
+      if (currentStepInGroup === 2) {
+        return (
+          <ArtistNameStep 
+            onInputChange={handleArtistNameChange}
+            initialValue={onboardingData.artistName}
           />
         );
       }
