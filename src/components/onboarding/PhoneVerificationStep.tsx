@@ -1,9 +1,10 @@
 
 import React, { useState, useEffect } from 'react';
-import { Phone, Check } from 'lucide-react';
+import { Phone, Check, Loader2 } from 'lucide-react';
 import { Input } from "@/components/ui/input";
 import { InputOTP, InputOTPGroup, InputOTPSlot } from "@/components/ui/input-otp";
 import { Button } from "@/components/ui/button";
+import { useToast } from "@/hooks/use-toast";
 
 interface PhoneVerificationStepProps {
   onPhoneChange: (phone: string) => void;
@@ -19,6 +20,9 @@ const PhoneVerificationStep: React.FC<PhoneVerificationStepProps> = ({
   const [showOTP, setShowOTP] = useState(false);
   const [otp, setOtp] = useState('');
   const [verified, setVerified] = useState(false);
+  const [isSendingCode, setIsSendingCode] = useState(false);
+  const [isVerifyingCode, setIsVerifyingCode] = useState(false);
+  const { toast } = useToast();
 
   // Formatear número de teléfono automáticamente
   const formatPhoneNumber = (value: string) => {
@@ -49,25 +53,49 @@ const PhoneVerificationStep: React.FC<PhoneVerificationStepProps> = ({
   };
 
   const handleSendCode = () => {
+    // Simular envío de código con loading
+    setIsSendingCode(true);
+    
     // En un caso real, enviarías un código por SMS
     console.log('Enviando código al número:', phone);
-    setShowOTP(true);
+    
+    // Simular tiempo de carga
+    setTimeout(() => {
+      setIsSendingCode(false);
+      setShowOTP(true);
+      toast({
+        title: "Código enviado",
+        description: "Hemos enviado un código a tu teléfono móvil"
+      });
+    }, 1500);
   };
 
   const handleOTPComplete = (value: string) => {
     setOtp(value);
     if (value.length === 6) {
       // En un caso real, verificarías el código
+      setIsVerifyingCode(true);
       console.log('Verificando código:', value);
+      
+      // Simular tiempo de verificación
       setTimeout(() => {
+        setIsVerifyingCode(false);
         setVerified(true);
-      }, 1000);
+      }, 1500);
     }
   };
 
   const handleResendCode = () => {
+    setIsSendingCode(true);
     console.log('Reenviando código al número:', phone);
-    // Aquí iría la lógica para reenviar el código
+    // Simular tiempo de carga
+    setTimeout(() => {
+      setIsSendingCode(false);
+      toast({
+        title: "Código reenviado",
+        description: "Hemos enviado un nuevo código a tu teléfono móvil"
+      });
+    }, 1500);
   };
 
   return <div className="flex flex-col items-center justify-center h-full w-full pt-28 px-4">
@@ -100,7 +128,8 @@ const PhoneVerificationStep: React.FC<PhoneVerificationStepProps> = ({
                     <Button 
                       onClick={handleSendCode} 
                       variant="default"
-                      className="mt-2"
+                      isLoading={isSendingCode}
+                      disabled={isSendingCode}
                     >
                       Enviar código
                     </Button>
@@ -115,14 +144,30 @@ const PhoneVerificationStep: React.FC<PhoneVerificationStepProps> = ({
                   {" "}
                   <span className="text-gray-500">
                     Si no te ha llegado,{" "}
-                    <button onClick={handleResendCode} className="font-medium text-black dark:text-white underline">
-                      Volver a enviar
+                    <button 
+                      onClick={handleResendCode} 
+                      className="font-medium text-black dark:text-white underline"
+                      disabled={isSendingCode}
+                    >
+                      {isSendingCode ? (
+                        <>
+                          <Loader2 className="inline-block w-4 h-4 mr-1 animate-spin" />
+                          Enviando...
+                        </>
+                      ) : (
+                        "Volver a enviar"
+                      )}
                     </button>
                   </span>
                 </p>
                 
-                <div className="flex justify-center mt-6 mb-8">
-                  <InputOTP maxLength={6} value={otp} onChange={handleOTPComplete}>
+                <div className="flex justify-center mt-6 mb-8 relative">
+                  <InputOTP 
+                    maxLength={6} 
+                    value={otp} 
+                    onChange={handleOTPComplete}
+                    disabled={isVerifyingCode}
+                  >
                     <InputOTPGroup className="gap-4">
                       <InputOTPSlot index={0} className="w-14 h-14 rounded-lg border-0 bg-[#F7F7F7] dark:bg-vyba-dark-secondary/30" />
                       <InputOTPSlot index={1} className="w-14 h-14 rounded-lg border-0 bg-[#F7F7F7] dark:bg-vyba-dark-secondary/30" />
@@ -132,22 +177,29 @@ const PhoneVerificationStep: React.FC<PhoneVerificationStepProps> = ({
                       <InputOTPSlot index={5} className="w-14 h-14 rounded-lg border-0 bg-[#F7F7F7] dark:bg-vyba-dark-secondary/30" />
                     </InputOTPGroup>
                   </InputOTP>
+                  {isVerifyingCode && (
+                    <div className="absolute inset-0 flex items-center justify-center bg-white/50 dark:bg-black/10 backdrop-blur-[1px] rounded-lg">
+                      <Loader2 className="w-8 h-8 animate-spin text-primary" />
+                    </div>
+                  )}
                 </div>
               </>}
           </> : <>
-            <h2 className="text-4xl md:text-6xl font-black mb-6">
-              Código correcto
-            </h2>
-            <p className="text-gray-400 mb-12">
-              Puedes continuar
-            </p>
-            
-            <div className="flex justify-center">
-              <div className="bg-[#F7F7F7] rounded-full py-3 px-5 flex items-center gap-2.5">
-                <div className="bg-[#E4F9E4] rounded-full p-1.5">
-                  <Check className="h-4 w-4 text-green-500" />
+            <div className="flex flex-col items-center">
+              <h2 className="text-4xl md:text-6xl font-black mb-6">
+                Código correcto
+              </h2>
+              <p className="text-gray-400 mb-12">
+                Puedes continuar
+              </p>
+              
+              <div className="flex justify-center">
+                <div className="bg-[#F7F7F7] rounded-full py-3 px-5 flex items-center gap-2.5">
+                  <div className="bg-[#E4F9E4] rounded-full p-1.5">
+                    <Check className="h-4 w-4 text-green-500" />
+                  </div>
+                  <span className="text-black font-medium">Código correcto</span>
                 </div>
-                <span className="text-black font-medium">Código correcto</span>
               </div>
             </div>
           </>}
