@@ -13,6 +13,7 @@ import GalleryImagesStep from '@/components/onboarding/GalleryImagesStep';
 import PhoneVerificationStep from '@/components/onboarding/PhoneVerificationStep';
 import CachePriceStep from '@/components/onboarding/CachePriceStep';
 import { Target, Music, Camera, Phone, CheckCircle } from 'lucide-react';
+import { useToast } from "@/hooks/use-toast";
 
 interface StepGroup {
   id: number;
@@ -37,6 +38,7 @@ interface OnboardingData {
 
 const ArtistOnboardingPage = () => {
   const navigate = useNavigate();
+  const { toast } = useToast();
   
   const [onboardingData, setOnboardingData] = useState<OnboardingData>({});
   
@@ -154,7 +156,11 @@ const ArtistOnboardingPage = () => {
       setCurrentGroup(currentGroup + 1);
       setCurrentStepInGroup(0);
     } else {
-      navigate('/thank-you');
+      toast({
+        title: "¡Perfil creado con éxito!",
+        description: "Tu perfil de artista ha sido creado correctamente.",
+      });
+      navigate('/');
     }
   };
   
