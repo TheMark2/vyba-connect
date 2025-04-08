@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { PageTransition } from '@/components/ui/page-transition';
@@ -11,7 +10,6 @@ import BioStep from '@/components/onboarding/BioStep';
 import ExperienceStep from '@/components/onboarding/ExperienceStep';
 import { Target, Music, Camera, Calendar, CheckCircle } from 'lucide-react';
 
-// Definimos los grupos de pasos
 interface StepGroup {
   id: number;
   title: string;
@@ -20,23 +18,19 @@ interface StepGroup {
   totalSteps: number;
 }
 
-// Definimos la interfaz para los datos de onboarding
 interface OnboardingData {
   artistType?: string;
   artistName?: string;
   musicGenres?: string[];
   bio?: string;
   experience?: string;
-  // Aquí irían más campos para los siguientes pasos
 }
 
 const ArtistOnboardingPage = () => {
   const navigate = useNavigate();
   
-  // Estado para almacenar los datos del onboarding
   const [onboardingData, setOnboardingData] = useState<OnboardingData>({});
   
-  // Configuración de los grupos de pasos
   const stepGroups: StepGroup[] = [
     {
       id: 0,
@@ -75,11 +69,9 @@ const ArtistOnboardingPage = () => {
     }
   ];
   
-  // Estado para el seguimiento de la navegación
   const [currentGroup, setCurrentGroup] = useState(0);
   const [currentStepInGroup, setCurrentStepInGroup] = useState(0);
   
-  // Actualizadores de datos
   const handleArtistTypeSelect = (type: string) => {
     setOnboardingData({
       ...onboardingData,
@@ -115,7 +107,6 @@ const ArtistOnboardingPage = () => {
     });
   };
   
-  // Funciones de navegación
   const handleNext = () => {
     const currentGroupObj = stepGroups[currentGroup];
     
@@ -142,7 +133,6 @@ const ArtistOnboardingPage = () => {
     navigate('/artist-benefits');
   };
   
-  // Verificar si hay un valor seleccionado para habilitar el botón siguiente
   const canGoNext = () => {
     if (currentGroup === 0 && currentStepInGroup === 1) {
       return !!onboardingData.artistType;
@@ -160,10 +150,13 @@ const ArtistOnboardingPage = () => {
       return !!onboardingData.bio && onboardingData.bio.trim() !== '';
     }
     
+    if (currentGroup === 1 && currentStepInGroup === 2) {
+      return !!onboardingData.experience && onboardingData.experience.trim() !== '';
+    }
+    
     return true;
   };
   
-  // Renderizar el paso actual
   const renderCurrentStep = () => {
     const currentGroupObj = stepGroups[currentGroup];
     
@@ -216,15 +209,14 @@ const ArtistOnboardingPage = () => {
           />
         );
       }
-    }
-    
-    if (currentGroup === 2 && currentStepInGroup === 1) {
-      return (
-        <ExperienceStep 
-          onInputChange={handleExperienceChange}
-          initialValue={onboardingData.experience}
-        />
-      );
+      if (currentStepInGroup === 2) {
+        return (
+          <ExperienceStep 
+            onInputChange={handleExperienceChange}
+            initialValue={onboardingData.experience}
+          />
+        );
+      }
     }
     
     return (
