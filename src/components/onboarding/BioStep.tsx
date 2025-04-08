@@ -30,10 +30,10 @@ const BioStep: React.FC<BioStepProps> = ({ onInputChange, initialValue = '' }) =
   return (
     <div className="flex flex-col items-center justify-center h-full w-full pt-28 px-4">
       <div className="max-w-2xl w-full text-center">
-        <h2 className="text-3xl md:text-5xl font-black mb-6">
+        <h2 className="text-3xl md:text-5xl font-black mb-4">
           Sobre ti
         </h2>
-        <p className="text-gray-500 mb-8">
+        <p className="text-gray-500 mb-6">
           ¿Quién eres? Explícanos un poco la biografía del proyecto
         </p>
         
