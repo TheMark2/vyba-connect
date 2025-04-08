@@ -309,7 +309,7 @@ const ArtistOnboardingPage = () => {
     }
     
     return (
-      <div className="flex flex-col items-center justify-center h-full w-full pt-28 px-4">
+      <div className="flex flex-col items-center justify-center h-full w-full pt-28 px-6 sm:px-4 md:px-8">
         <div className="max-w-2xl w-full text-center">
           <h2 className="text-3xl md:text-5xl font-black mb-6">
             Paso {currentStepInGroup} del Grupo {currentGroup + 1}
@@ -344,7 +344,7 @@ const ArtistOnboardingPage = () => {
           canGoNext={canGoNext()}
         />
         
-        <div className="flex-1 flex items-center justify-center">
+        <div className="flex-1 flex items-center justify-center px-0">
           {renderCurrentStep()}
         </div>
       </div>
