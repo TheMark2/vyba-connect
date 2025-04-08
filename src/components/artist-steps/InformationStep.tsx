@@ -58,6 +58,7 @@ const eventTypes = [{
   value: "festival",
   label: "Festivales"
 }];
+
 interface InformationStepProps {
   formData: {
     artistType: string;
@@ -72,6 +73,7 @@ interface InformationStepProps {
     eventTypes: string[];
   }>) => void;
 }
+
 const InformationStep: React.FC<InformationStepProps> = ({
   formData,
   updateFormData
@@ -79,10 +81,10 @@ const InformationStep: React.FC<InformationStepProps> = ({
   return <div className="w-full max-w-2xl mx-auto">
       <h1 className="text-4xl md:text-6xl font-black text-center mb-12">Información</h1>
       
-      <div className="space-y-8 max-w-xl mx-auto">
+      <div className="space-y-6 max-w-sm mx-auto">
         {/* Tipo de artista */}
         <div className="space-y-2">
-          <Label htmlFor="artistType" className="text-lg font-medium">Tipo de artista</Label>
+          <Label htmlFor="artistType" className="block font-bold">Tipo de artista</Label>
           <Select value={formData.artistType} onValueChange={value => updateFormData({
           artistType: value
         })}>
@@ -99,7 +101,7 @@ const InformationStep: React.FC<InformationStepProps> = ({
         
         {/* Nombre de artista */}
         <div className="space-y-2">
-          <Label htmlFor="artistName" className="text-lg font-medium">Nombre de artista</Label>
+          <Label htmlFor="artistName" className="block font-bold">Nombre de artista</Label>
           <Input id="artistName" placeholder="DJ Mave" value={formData.artistName} onChange={e => updateFormData({
           artistName: e.target.value
         })} className="h-12 bg-[#F7F7F7]" />
@@ -107,7 +109,7 @@ const InformationStep: React.FC<InformationStepProps> = ({
         
         {/* Géneros principales */}
         <div className="space-y-2">
-          <Label htmlFor="genres" className="text-lg font-medium">Géneros principales</Label>
+          <Label htmlFor="genres" className="block font-bold">Géneros principales</Label>
           <Select value={formData.genres[0] || ""} // Simplificado para este ejemplo
         onValueChange={value => updateFormData({
           genres: [value]
@@ -125,7 +127,7 @@ const InformationStep: React.FC<InformationStepProps> = ({
         
         {/* Tipos de eventos */}
         <div className="space-y-2">
-          <Label htmlFor="eventTypes" className="text-lg font-medium">Tipos de eventos principales</Label>
+          <Label htmlFor="eventTypes" className="block font-bold">Tipos de eventos principales</Label>
           <Select value={formData.eventTypes[0] || ""} // Simplificado para este ejemplo
         onValueChange={value => updateFormData({
           eventTypes: [value]
@@ -143,4 +145,5 @@ const InformationStep: React.FC<InformationStepProps> = ({
       </div>
     </div>;
 };
+
 export default InformationStep;
