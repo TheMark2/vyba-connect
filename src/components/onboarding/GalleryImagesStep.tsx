@@ -47,7 +47,7 @@ const GalleryImagesStep: React.FC<GalleryImagesStepProps> = ({
         id: Math.random().toString(36).substring(2, 9),
         file,
         preview: URL.createObjectURL(file),
-        // La primera imagen es main solo si no hay imágenes previas O si es la primera en este lote y no hay imágenes previas
+        // Solo la primera imagen del lote es main si no hay imágenes previas
         isMain: images.length === 0 && index === 0
       };
     });
@@ -109,7 +109,27 @@ const GalleryImagesStep: React.FC<GalleryImagesStepProps> = ({
     fileInputRef.current?.click();
   };
   
-  const toggleImageSelection = (id: string) => {
+  const toggleImageSelection = (id: string, e: React.MouseEvent<HTMLDivElement>) => {
+    // Crear el efecto radial como en los botones
+    const card = e.currentTarget;
+    const rect = card.getBoundingClientRect();
+    
+    const x = e.clientX - rect.left;
+    const y = e.clientY - rect.top;
+    
+    const ripple = document.createElement('span');
+    ripple.className = 'ripple-effect';
+    ripple.style.left = `${x}px`;
+    ripple.style.top = `${y}px`;
+    
+    card.appendChild(ripple);
+    
+    // Eliminar el elemento después de la animación
+    setTimeout(() => {
+      ripple.remove();
+    }, 800);
+    
+    // Actualizar la selección
     setSelectedImages(prev => {
       if (prev.includes(id)) {
         return prev.filter(imgId => imgId !== id);
@@ -201,7 +221,7 @@ const GalleryImagesStep: React.FC<GalleryImagesStepProps> = ({
                 <Card 
                   key={image.id} 
                   className={`col-span-2 row-span-2 relative rounded-lg overflow-hidden shadow-none cursor-pointer transition-all duration-500 ease-in-out ${selectedImages.includes(image.id) ? 'ring-4 ring-primary' : ''}`}
-                  onClick={() => toggleImageSelection(image.id)}
+                  onClick={(e) => toggleImageSelection(image.id, e as React.MouseEvent<HTMLDivElement>)}
                 >
                   <img 
                     src={image.preview} 
@@ -213,9 +233,9 @@ const GalleryImagesStep: React.FC<GalleryImagesStepProps> = ({
                   </div>
                   
                   {/* Selection overlay with transition */}
-                  <div className={`absolute inset-0 bg-black transition-opacity duration-500 ease-in-out ${selectedImages.includes(image.id) ? 'bg-opacity-50' : 'bg-opacity-0 pointer-events-none'}`}>
+                  <div className={`absolute inset-0 bg-black transition-all duration-500 ease-in-out ${selectedImages.includes(image.id) ? 'bg-opacity-50' : 'bg-opacity-0 pointer-events-none'}`}>
                     {selectedImages.includes(image.id) && (
-                      <div className="absolute bottom-2 right-2 bg-white text-black w-6 h-6 rounded-full flex items-center justify-center font-bold text-sm transition-all duration-500 ease-in-out">
+                      <div className="absolute bottom-2 right-2 bg-white text-black w-6 h-6 rounded-full flex items-center justify-center font-bold text-sm transition-all duration-500 ease-in-out animate-scale-in">
                         {getSelectionIndex(image.id)}
                       </div>
                     )}
@@ -228,7 +248,7 @@ const GalleryImagesStep: React.FC<GalleryImagesStepProps> = ({
                 <Card 
                   key={image.id} 
                   className={`relative aspect-square rounded-lg overflow-hidden shadow-none cursor-pointer transition-all duration-500 ease-in-out ${selectedImages.includes(image.id) ? 'ring-4 ring-primary' : ''}`}
-                  onClick={() => toggleImageSelection(image.id)}
+                  onClick={(e) => toggleImageSelection(image.id, e as React.MouseEvent<HTMLDivElement>)}
                 >
                   <img 
                     src={image.preview} 
@@ -237,9 +257,9 @@ const GalleryImagesStep: React.FC<GalleryImagesStepProps> = ({
                   />
                   
                   {/* Selection overlay with transition */}
-                  <div className={`absolute inset-0 bg-black transition-opacity duration-500 ease-in-out ${selectedImages.includes(image.id) ? 'bg-opacity-50' : 'bg-opacity-0 pointer-events-none'}`}>
+                  <div className={`absolute inset-0 bg-black transition-all duration-500 ease-in-out ${selectedImages.includes(image.id) ? 'bg-opacity-50' : 'bg-opacity-0 pointer-events-none'}`}>
                     {selectedImages.includes(image.id) && (
-                      <div className="absolute bottom-2 right-2 bg-white text-black w-6 h-6 rounded-full flex items-center justify-center font-bold text-sm transition-all duration-500 ease-in-out">
+                      <div className="absolute bottom-2 right-2 bg-white text-black w-6 h-6 rounded-full flex items-center justify-center font-bold text-sm transition-all duration-500 ease-in-out animate-scale-in">
                         {getSelectionIndex(image.id)}
                       </div>
                     )}
