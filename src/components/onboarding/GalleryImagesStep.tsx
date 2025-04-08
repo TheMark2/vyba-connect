@@ -1,10 +1,10 @@
-
 import React, { useState, useRef } from 'react';
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import { Upload, ImagePlus, X, Trash2 } from 'lucide-react';
+import { Upload, ImagePlus, X, Trash2, Loader2 } from 'lucide-react';
 import { Badge } from "@/components/ui/badge";
 import { toast } from "@/hooks/use-toast";
+import { Skeleton } from "@/components/ui/skeleton";
 
 interface GalleryImage {
   id: string;
@@ -28,6 +28,7 @@ const GalleryImagesStep: React.FC<GalleryImagesStepProps> = ({
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [draggedImage, setDraggedImage] = useState<string | null>(null);
   const [dragOverImage, setDragOverImage] = useState<string | null>(null);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
   
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const selectedFiles = e.target.files;
@@ -43,34 +44,43 @@ const GalleryImagesStep: React.FC<GalleryImagesStepProps> = ({
       return;
     }
     
-    // Convert FileList to array and create new image objects
-    const newImageFiles = Array.from(selectedFiles).map((file, index) => {
-      return {
-        id: Math.random().toString(36).substring(2, 9),
-        file,
-        preview: URL.createObjectURL(file),
-        // Solo la primera imagen del lote es main si no hay imágenes previas
-        isMain: images.length === 0 && index === 0
-      };
-    });
+    // Set loading state to true before processing images
+    setIsLoading(true);
     
-    // Update state with new images
-    const updatedImages = [...images, ...newImageFiles];
-    
-    // Si no hay ninguna imagen principal, marcar la primera como principal
-    if (!updatedImages.some(img => img.isMain) && updatedImages.length > 0) {
-      updatedImages[0].isMain = true;
-    }
-    
-    setImages(updatedImages);
-    
-    // Call the onImagesChange prop with all files
-    onImagesChange(updatedImages.map(img => img.file));
-    
-    // Reset the file input
-    if (fileInputRef.current) {
-      fileInputRef.current.value = '';
-    }
+    // Simulate image processing delay (you can remove this in production if not needed)
+    setTimeout(() => {
+      // Convert FileList to array and create new image objects
+      const newImageFiles = Array.from(selectedFiles).map((file, index) => {
+        return {
+          id: Math.random().toString(36).substring(2, 9),
+          file,
+          preview: URL.createObjectURL(file),
+          // Solo la primera imagen del lote es main si no hay imágenes previas
+          isMain: images.length === 0 && index === 0
+        };
+      });
+      
+      // Update state with new images
+      const updatedImages = [...images, ...newImageFiles];
+      
+      // Si no hay ninguna imagen principal, marcar la primera como principal
+      if (!updatedImages.some(img => img.isMain) && updatedImages.length > 0) {
+        updatedImages[0].isMain = true;
+      }
+      
+      setImages(updatedImages);
+      
+      // Call the onImagesChange prop with all files
+      onImagesChange(updatedImages.map(img => img.file));
+      
+      // Reset the file input
+      if (fileInputRef.current) {
+        fileInputRef.current.value = '';
+      }
+      
+      // Set loading state to false after processing is complete
+      setIsLoading(false);
+    }, 1000); // Simulate 1 second loading time
   };
   
   const handleRemoveImage = (id: string) => {
@@ -257,7 +267,7 @@ const GalleryImagesStep: React.FC<GalleryImagesStepProps> = ({
         </p>
         
         {/* Upload area */}
-        <div className="mb-8">
+        <div className="mb-8 relative">
           {images.length === 0 && (
             <div 
               className="border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-lg p-12 flex flex-col items-center justify-center cursor-pointer hover:bg-gray-50 dark:hover:bg-vyba-dark-secondary/10 transition-all"
@@ -283,6 +293,7 @@ const GalleryImagesStep: React.FC<GalleryImagesStepProps> = ({
               onClick={handleAddImages}
               variant="secondary"
               className="mb-8"
+              disabled={isLoading}
             >
               <ImagePlus className="w-4 h-4 mr-2" />
               Añadir imágenes
@@ -291,91 +302,104 @@ const GalleryImagesStep: React.FC<GalleryImagesStepProps> = ({
         </div>
         
         {/* Image grid */}
-        {images.length > 0 && (
-          <>
-            <p className="text-gray-500 text-sm mb-6">Arrastra y suelta para reordenar las imágenes. La primera imagen será la principal.</p>
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-              {/* Main image (double width) */}
-              {images.filter(img => img.isMain).map(image => (
-                <Card 
-                  key={image.id} 
-                  className={`col-span-2 row-span-2 relative rounded-lg overflow-hidden shadow-none cursor-pointer transition-all duration-500 ease-in-out ${
-                    selectedImages.includes(image.id) ? 'ring-4 ring-primary' : ''
-                  } ${dragOverImage === image.id ? 'scale-105 ring-2 ring-primary/50' : ''}`}
-                  onClick={(e) => toggleImageSelection(image.id, e as React.MouseEvent<HTMLDivElement>)}
-                  draggable
-                  onDragStart={(e) => handleDragStart(e, image.id)}
-                  onDragEnd={handleDragEnd}
-                  onDragOver={(e) => handleDragOver(e, image.id)}
-                  onDragLeave={handleDragLeave}
-                  onDrop={(e) => handleDrop(e, image.id)}
-                >
-                  <img 
-                    src={image.preview} 
-                    alt="Preview" 
-                    className="w-full h-full object-cover aspect-[1.5/1]" 
-                  />
-                  <div className="absolute top-2 left-2">
-                    <Badge className="bg-white text-black font-medium">Imagen principal</Badge>
-                  </div>
-                  
-                  {/* Selection overlay with transition */}
-                  <div className={`absolute inset-0 bg-black transition-all duration-500 ease-in-out ${selectedImages.includes(image.id) ? 'bg-opacity-50' : 'bg-opacity-0 pointer-events-none'}`}>
-                    {selectedImages.includes(image.id) && (
-                      <div className="absolute bottom-2 right-2 bg-white text-black w-6 h-6 rounded-full flex items-center justify-center font-bold text-sm transition-all duration-500 ease-in-out animate-scale-in">
-                        {getSelectionIndex(image.id)}
-                      </div>
-                    )}
-                  </div>
-                </Card>
-              ))}
+        <div className="relative">
+          {images.length > 0 && (
+            <>
+              <p className="text-gray-500 text-sm mb-6">Arrastra y suelta para reordenar las imágenes. La primera imagen será la principal.</p>
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                {/* Main image (double width) */}
+                {images.filter(img => img.isMain).map(image => (
+                  <Card 
+                    key={image.id} 
+                    className={`col-span-2 row-span-2 relative rounded-lg overflow-hidden shadow-none cursor-pointer transition-all duration-500 ease-in-out ${
+                      selectedImages.includes(image.id) ? 'ring-4 ring-primary' : ''
+                    } ${dragOverImage === image.id ? 'scale-105 ring-2 ring-primary/50' : ''}`}
+                    onClick={(e) => toggleImageSelection(image.id, e as React.MouseEvent<HTMLDivElement>)}
+                    draggable
+                    onDragStart={(e) => handleDragStart(e, image.id)}
+                    onDragEnd={handleDragEnd}
+                    onDragOver={(e) => handleDragOver(e, image.id)}
+                    onDragLeave={handleDragLeave}
+                    onDrop={(e) => handleDrop(e, image.id)}
+                  >
+                    <img 
+                      src={image.preview} 
+                      alt="Preview" 
+                      className="w-full h-full object-cover aspect-[1.5/1]" 
+                    />
+                    <div className="absolute top-2 left-2">
+                      <Badge className="bg-white text-black font-medium">Imagen principal</Badge>
+                    </div>
+                    
+                    {/* Selection overlay with transition */}
+                    <div className={`absolute inset-0 bg-black transition-all duration-500 ease-in-out ${selectedImages.includes(image.id) ? 'bg-opacity-50' : 'bg-opacity-0 pointer-events-none'}`}>
+                      {selectedImages.includes(image.id) && (
+                        <div className="absolute bottom-2 right-2 bg-white text-black w-6 h-6 rounded-full flex items-center justify-center font-bold text-sm transition-all duration-500 ease-in-out animate-scale-in">
+                          {getSelectionIndex(image.id)}
+                        </div>
+                      )}
+                    </div>
+                  </Card>
+                ))}
+                
+                {/* Other images */}
+                {images.filter(img => !img.isMain).map(image => (
+                  <Card 
+                    key={image.id} 
+                    className={`relative aspect-square rounded-lg overflow-hidden shadow-none cursor-pointer transition-all duration-500 ease-in-out ${
+                      selectedImages.includes(image.id) ? 'ring-4 ring-primary' : ''
+                    } ${dragOverImage === image.id ? 'scale-105 ring-2 ring-primary/50' : ''}`}
+                    onClick={(e) => toggleImageSelection(image.id, e as React.MouseEvent<HTMLDivElement>)}
+                    draggable
+                    onDragStart={(e) => handleDragStart(e, image.id)}
+                    onDragEnd={handleDragEnd}
+                    onDragOver={(e) => handleDragOver(e, image.id)}
+                    onDragLeave={handleDragLeave}
+                    onDrop={(e) => handleDrop(e, image.id)}
+                  >
+                    <img 
+                      src={image.preview} 
+                      alt="Preview" 
+                      className="w-full h-full object-cover" 
+                    />
+                    
+                    {/* Selection overlay with transition */}
+                    <div className={`absolute inset-0 bg-black transition-all duration-500 ease-in-out ${selectedImages.includes(image.id) ? 'bg-opacity-50' : 'bg-opacity-0 pointer-events-none'}`}>
+                      {selectedImages.includes(image.id) && (
+                        <div className="absolute bottom-2 right-2 bg-white text-black w-6 h-6 rounded-full flex items-center justify-center font-bold text-sm transition-all duration-500 ease-in-out animate-scale-in">
+                          {getSelectionIndex(image.id)}
+                        </div>
+                      )}
+                    </div>
+                  </Card>
+                ))}
+              </div>
               
-              {/* Other images */}
-              {images.filter(img => !img.isMain).map(image => (
-                <Card 
-                  key={image.id} 
-                  className={`relative aspect-square rounded-lg overflow-hidden shadow-none cursor-pointer transition-all duration-500 ease-in-out ${
-                    selectedImages.includes(image.id) ? 'ring-4 ring-primary' : ''
-                  } ${dragOverImage === image.id ? 'scale-105 ring-2 ring-primary/50' : ''}`}
-                  onClick={(e) => toggleImageSelection(image.id, e as React.MouseEvent<HTMLDivElement>)}
-                  draggable
-                  onDragStart={(e) => handleDragStart(e, image.id)}
-                  onDragEnd={handleDragEnd}
-                  onDragOver={(e) => handleDragOver(e, image.id)}
-                  onDragLeave={handleDragLeave}
-                  onDrop={(e) => handleDrop(e, image.id)}
+              {/* Delete selected button */}
+              {selectedImages.length > 0 && (
+                <Button 
+                  variant="secondary" 
+                  className="mt-6"
+                  onClick={handleDeleteSelected}
+                  disabled={isLoading}
                 >
-                  <img 
-                    src={image.preview} 
-                    alt="Preview" 
-                    className="w-full h-full object-cover" 
-                  />
-                  
-                  {/* Selection overlay with transition */}
-                  <div className={`absolute inset-0 bg-black transition-all duration-500 ease-in-out ${selectedImages.includes(image.id) ? 'bg-opacity-50' : 'bg-opacity-0 pointer-events-none'}`}>
-                    {selectedImages.includes(image.id) && (
-                      <div className="absolute bottom-2 right-2 bg-white text-black w-6 h-6 rounded-full flex items-center justify-center font-bold text-sm transition-all duration-500 ease-in-out animate-scale-in">
-                        {getSelectionIndex(image.id)}
-                      </div>
-                    )}
-                  </div>
-                </Card>
-              ))}
+                  <Trash2 className="w-4 h-4 mr-2" />
+                  Eliminar {selectedImages.length} {selectedImages.length === 1 ? 'imagen' : 'imágenes'}
+                </Button>
+              )}
+            </>
+          )}
+          
+          {/* Loading overlay */}
+          {isLoading && (
+            <div className="absolute inset-0 bg-gray-200/70 dark:bg-gray-800/70 rounded-lg flex items-center justify-center z-10">
+              <div className="flex flex-col items-center">
+                <Loader2 className="w-10 h-10 text-primary animate-spin mb-2" />
+                <p className="text-gray-700 dark:text-gray-300 font-medium">Cargando imágenes...</p>
+              </div>
             </div>
-            
-            {/* Delete selected button */}
-            {selectedImages.length > 0 && (
-              <Button 
-                variant="secondary" 
-                className="mt-6"
-                onClick={handleDeleteSelected}
-              >
-                <Trash2 className="w-4 h-4 mr-2" />
-                Eliminar {selectedImages.length} {selectedImages.length === 1 ? 'imagen' : 'imágenes'}
-              </Button>
-            )}
-          </>
-        )}
+          )}
+        </div>
       </div>
     </div>
   );
