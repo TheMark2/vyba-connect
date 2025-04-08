@@ -2,7 +2,7 @@
 import React, { useState } from 'react';
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { Smartphone } from 'lucide-react';
+import { Smartphone, Check } from 'lucide-react';
 import { toast } from "@/hooks/use-toast";
 import { InputOTP, InputOTPGroup, InputOTPSlot } from "@/components/ui/input-otp";
 
@@ -20,6 +20,7 @@ const PhoneVerificationStep: React.FC<PhoneVerificationStepProps> = ({
   const [isVerifying, setIsVerifying] = useState(false);
   const [verificationCode, setVerificationCode] = useState('');
   const [isCodeSent, setIsCodeSent] = useState(false);
+  const [isVerified, setIsVerified] = useState(false);
 
   const handlePhoneChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
@@ -68,11 +69,18 @@ const PhoneVerificationStep: React.FC<PhoneVerificationStepProps> = ({
     // Simulación de verificación (en producción aquí iría la llamada a la API)
     setTimeout(() => {
       setIsVerifying(false);
+      setIsVerified(true);
       toast({
         title: "Teléfono verificado",
         description: "Tu número de teléfono ha sido verificado correctamente"
       });
     }, 1500);
+  };
+
+  const handleChangeNumber = () => {
+    setIsCodeSent(false);
+    setVerificationCode('');
+    setIsVerified(false);
   };
 
   return (
@@ -86,7 +94,24 @@ const PhoneVerificationStep: React.FC<PhoneVerificationStepProps> = ({
         </p>
         
         <div className="bg-[#F7F7F7] dark:bg-vyba-dark-secondary/30 rounded-3xl p-8 md:p-12">
-          {!isCodeSent ? (
+          {isVerified ? (
+            <div className="space-y-6 text-center">
+              <div className="mx-auto bg-green-100 dark:bg-green-900/30 rounded-full w-20 h-20 flex items-center justify-center mb-4">
+                <Check className="w-10 h-10 text-green-600 dark:text-green-400" />
+              </div>
+              <h3 className="text-xl font-bold">Número verificado</h3>
+              <p className="text-gray-500 mb-4">
+                Has verificado correctamente el número {countryCode} {phone}
+              </p>
+              <Button 
+                variant="outline"
+                className="w-full"
+                onClick={handleChangeNumber}
+              >
+                Cambiar número
+              </Button>
+            </div>
+          ) : !isCodeSent ? (
             <div className="space-y-6">
               <div className="flex space-x-2">
                 <div className="w-20">
@@ -151,7 +176,7 @@ const PhoneVerificationStep: React.FC<PhoneVerificationStepProps> = ({
               <Button 
                 variant="ghost"
                 className="w-full mt-2"
-                onClick={() => setIsCodeSent(false)}
+                onClick={handleChangeNumber}
                 disabled={isVerifying}
               >
                 Cambiar número
