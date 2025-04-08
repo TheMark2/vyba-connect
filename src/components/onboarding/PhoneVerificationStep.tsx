@@ -42,7 +42,7 @@ const PhoneVerificationStep: React.FC<PhoneVerificationStepProps> = ({
       <div className="max-w-md w-full text-center">
         {!verified ? <>
             {!showOTP ? <>
-                <h2 className="text-3xl md:text-5xl font-black mb-6">
+                <h2 className="text-4xl md:text-6xl font-black mb-6">
                   Escribe tu móvil
                 </h2>
                 <p className="text-gray-500 mb-8">
@@ -90,7 +90,7 @@ const PhoneVerificationStep: React.FC<PhoneVerificationStepProps> = ({
                 </div>
               </>}
           </> : <>
-            <h2 className="text-3xl md:text-5xl font-black mb-6">
+            <h2 className="text-4xl md:text-6xl font-black mb-6">
               Teléfono verificado
             </h2>
             <p className="text-gray-500 mb-8">
