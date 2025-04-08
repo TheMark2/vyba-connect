@@ -6,6 +6,7 @@ import StepsNavbar from '@/components/onboarding/StepsNavbar';
 import CoverStep from '@/components/onboarding/CoverStep';
 import ArtistTypeStep from '@/components/onboarding/ArtistTypeStep';
 import ArtistNameStep from '@/components/onboarding/ArtistNameStep';
+import MusicGenresStep from '@/components/onboarding/MusicGenresStep';
 import { Target, Music, Camera, Calendar, CheckCircle } from 'lucide-react';
 
 // Definimos los grupos de pasos
@@ -21,6 +22,7 @@ interface StepGroup {
 interface OnboardingData {
   artistType?: string;
   artistName?: string;
+  musicGenres?: string[];
   // Aquí irían más campos para los siguientes pasos
 }
 
@@ -88,6 +90,13 @@ const ArtistOnboardingPage = () => {
     });
   };
   
+  const handleMusicGenresSelect = (genres: string[]) => {
+    setOnboardingData({
+      ...onboardingData,
+      musicGenres: genres
+    });
+  };
+  
   // Funciones de navegación
   const handleNext = () => {
     const currentGroupObj = stepGroups[currentGroup];
@@ -132,6 +141,11 @@ const ArtistOnboardingPage = () => {
       return !!onboardingData.artistName && onboardingData.artistName.trim() !== '';
     }
     
+    // Si estamos en el primer grupo, paso 3 (índice 3)
+    if (currentGroup === 0 && currentStepInGroup === 3) {
+      return !!onboardingData.musicGenres && onboardingData.musicGenres.length > 0;
+    }
+    
     // Por defecto permitir avanzar
     return true;
   };
@@ -170,6 +184,16 @@ const ArtistOnboardingPage = () => {
           <ArtistNameStep 
             onInputChange={handleArtistNameChange}
             initialValue={onboardingData.artistName}
+          />
+        );
+      }
+      
+      // Paso 3 del grupo 1 (índice 3) - Géneros musicales
+      if (currentStepInGroup === 3) {
+        return (
+          <MusicGenresStep
+            onSelect={handleMusicGenresSelect}
+            initialValues={onboardingData.musicGenres}
           />
         );
       }
