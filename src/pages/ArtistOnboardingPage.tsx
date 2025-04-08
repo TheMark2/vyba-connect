@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { PageTransition } from '@/components/ui/page-transition';
@@ -187,6 +188,7 @@ const ArtistOnboardingPage = () => {
   const renderCurrentStep = () => {
     const currentGroupObj = stepGroups[currentGroup];
     
+    // Portada paso
     if (currentStepInGroup === 0) {
       return (
         <CoverStep
@@ -198,6 +200,7 @@ const ArtistOnboardingPage = () => {
       );
     }
     
+    // Grupo 1: Quién eres como artista?
     if (currentGroup === 0) {
       if (currentStepInGroup === 1) {
         return (
@@ -227,6 +230,7 @@ const ArtistOnboardingPage = () => {
       }
     }
     
+    // Grupo 2: Presentación y trayectoria
     if (currentGroup === 1) {
       if (currentStepInGroup === 1) {
         return (
@@ -246,6 +250,7 @@ const ArtistOnboardingPage = () => {
       }
     }
     
+    // Grupo 3: Imágenes
     if (currentGroup === 2) {
       if (currentStepInGroup === 1) {
         return (
@@ -264,6 +269,7 @@ const ArtistOnboardingPage = () => {
       }
     }
     
+    // Grupo 4: Verificación de teléfono
     if (currentGroup === 3 && currentStepInGroup === 1) {
       return (
         <PhoneVerificationStep
@@ -273,6 +279,7 @@ const ArtistOnboardingPage = () => {
       );
     }
     
+    // Paso genérico (si no coincide con ninguna condición anterior)
     return (
       <div className="flex flex-col items-center justify-center h-full w-full pt-28 px-4">
         <div className="max-w-2xl w-full text-center">
