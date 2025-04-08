@@ -42,7 +42,7 @@ const BioStep: React.FC<BioStepProps> = ({ onInputChange, initialValue = '' }) =
             <div className="space-y-4">
               <Textarea 
                 placeholder="Es importante que el texto sea original. No se pueden insertar enlaces ni números de teléfono."
-                className="min-h-[180px] bg-[#F7F7F7] dark:bg-vyba-dark-bg/80 rounded-xl"
+                className="min-h-[180px]"
                 value={bio}
                 onChange={handleBioChange}
               />
