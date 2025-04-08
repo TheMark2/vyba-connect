@@ -9,6 +9,7 @@ import MusicGenresStep from '@/components/onboarding/MusicGenresStep';
 import BioStep from '@/components/onboarding/BioStep';
 import ExperienceStep from '@/components/onboarding/ExperienceStep';
 import ProfilePhotoStep from '@/components/onboarding/ProfilePhotoStep';
+import GalleryImagesStep from '@/components/onboarding/GalleryImagesStep';
 import { Target, Music, Camera, Calendar, CheckCircle } from 'lucide-react';
 
 interface StepGroup {
@@ -26,6 +27,7 @@ interface OnboardingData {
   bio?: string;
   experience?: string;
   profilePhoto?: File | null;
+  galleryImages?: File[];
 }
 
 const ArtistOnboardingPage = () => {
@@ -53,7 +55,7 @@ const ArtistOnboardingPage = () => {
       title: "Una imagen vale mas que 1000 palabras",
       description: "Sube las imágenes que van a ser la primera impresión de los buscadores. Andate con ojo, no pongas cualquiera",
       icon: <Camera className="w-full h-full stroke-[1.5px]" />,
-      totalSteps: 2
+      totalSteps: 3
     },
     {
       id: 3,
@@ -116,6 +118,13 @@ const ArtistOnboardingPage = () => {
     });
   };
   
+  const handleGalleryImagesChange = (images: File[]) => {
+    setOnboardingData({
+      ...onboardingData,
+      galleryImages: images
+    });
+  };
+  
   const handleNext = () => {
     const currentGroupObj = stepGroups[currentGroup];
     
@@ -164,6 +173,10 @@ const ArtistOnboardingPage = () => {
     }
     
     if (currentGroup === 2 && currentStepInGroup === 1) {
+      return true;
+    }
+    
+    if (currentGroup === 2 && currentStepInGroup === 2) {
       return true;
     }
     
@@ -237,6 +250,14 @@ const ArtistOnboardingPage = () => {
         return (
           <ProfilePhotoStep 
             onPhotoChange={handleProfilePhotoChange}
+          />
+        );
+      }
+      if (currentStepInGroup === 2) {
+        return (
+          <GalleryImagesStep
+            onImagesChange={handleGalleryImagesChange}
+            initialImages={onboardingData.galleryImages}
           />
         );
       }
