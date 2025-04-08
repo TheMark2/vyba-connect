@@ -33,11 +33,8 @@ const BioStep: React.FC<BioStepProps> = ({ onInputChange, initialValue = '' }) =
         <div className="bg-[#F7F7F7] dark:bg-vyba-dark-secondary/30 rounded-3xl p-8 md:p-12">
           <div className="w-full mx-auto">
             <div className="space-y-4">
-              <p className="text-sm text-gray-500 text-left mb-4">
-                Es importante que el texto sea original. No se pueden insertar enlaces ni números de teléfono.
-              </p>
               <Textarea 
-                placeholder="Cuéntanos sobre ti y tu proyecto..."
+                placeholder="Es importante que el texto sea original. No se pueden insertar enlaces ni números de teléfono."
                 className="min-h-[180px] bg-white dark:bg-vyba-dark-bg/80 rounded-xl"
                 value={bio}
                 onChange={handleBioChange}
