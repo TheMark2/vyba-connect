@@ -63,7 +63,7 @@ const InformationStep: React.FC<InformationStepProps> = ({
       <div className="space-y-8">
         {/* Tipo de artista */}
         <div className="space-y-2">
-          <Label htmlFor="artistType" className="text-lg font-medium">Tipo de artista</Label>
+          <Label htmlFor="artistType" className="text-base font-medium">Tipo de artista</Label>
           <Select 
             value={formData.artistType}
             onValueChange={(value) => updateFormData({ artistType: value })}
@@ -83,7 +83,7 @@ const InformationStep: React.FC<InformationStepProps> = ({
         
         {/* Nombre de artista */}
         <div className="space-y-2">
-          <Label htmlFor="artistName" className="text-lg font-medium">Nombre de artista</Label>
+          <Label htmlFor="artistName" className="text-base font-medium">Nombre de artista</Label>
           <Input
             id="artistName"
             placeholder="DJ Mave"
@@ -95,7 +95,7 @@ const InformationStep: React.FC<InformationStepProps> = ({
         
         {/* Géneros principales */}
         <div className="space-y-2">
-          <Label htmlFor="genres" className="text-lg font-medium">Géneros principales</Label>
+          <Label htmlFor="genres" className="text-base font-medium">Géneros principales</Label>
           <Select 
             value={formData.genres[0] || ""} // Simplificado para este ejemplo
             onValueChange={(value) => updateFormData({ genres: [value] })}
@@ -115,7 +115,7 @@ const InformationStep: React.FC<InformationStepProps> = ({
         
         {/* Tipos de eventos */}
         <div className="space-y-2">
-          <Label htmlFor="eventTypes" className="text-lg font-medium">Tipos de eventos principales</Label>
+          <Label htmlFor="eventTypes" className="text-base font-medium">Tipos de eventos principales</Label>
           <Select 
             value={formData.eventTypes[0] || ""} // Simplificado para este ejemplo
             onValueChange={(value) => updateFormData({ eventTypes: [value] })}
