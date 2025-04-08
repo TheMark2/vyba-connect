@@ -347,7 +347,7 @@ const ArtistOnboardingPage = () => {
           canGoNext={canGoNext()}
         />
         
-        <div className={`flex-1 ${isMobile ? 'pt-28 pb-24' : 'flex items-center justify-center'}`}>
+        <div className={`flex-1 ${isMobile ? 'min-h-0 flex items-start' : 'flex items-center justify-center'}`}>
           {renderCurrentStep()}
         </div>
       </div>
