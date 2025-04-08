@@ -1,8 +1,10 @@
+
 import React, { useState, useRef } from 'react';
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Upload, ImagePlus, X } from 'lucide-react';
 import { Badge } from "@/components/ui/badge";
+import { toast } from "@/hooks/use-toast";
 
 interface GalleryImage {
   id: string;
@@ -26,6 +28,16 @@ const GalleryImagesStep: React.FC<GalleryImagesStepProps> = ({
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const selectedFiles = e.target.files;
     if (!selectedFiles || selectedFiles.length === 0) return;
+    
+    // Check if adding these files would exceed the limit of 5
+    if (images.length + selectedFiles.length > 5) {
+      toast({
+        title: "Límite de imágenes",
+        description: "Solo puedes subir un máximo de 5 imágenes.",
+        variant: "destructive"
+      });
+      return;
+    }
     
     // Convert FileList to array and create new image objects
     const newImageFiles = Array.from(selectedFiles).map(file => {
@@ -51,10 +63,11 @@ const GalleryImagesStep: React.FC<GalleryImagesStepProps> = ({
   };
   
   const handleRemoveImage = (id: string) => {
+    const removedImage = images.find(img => img.id === id);
     const updatedImages = images.filter(img => img.id !== id);
     
     // If we're removing the main image, set the first remaining image as main
-    if (updatedImages.length > 0 && images.find(img => img.id === id)?.isMain) {
+    if (updatedImages.length > 0 && removedImage?.isMain) {
       updatedImages[0].isMain = true;
     }
     
@@ -73,6 +86,14 @@ const GalleryImagesStep: React.FC<GalleryImagesStepProps> = ({
   };
   
   const handleAddImages = () => {
+    if (images.length >= 5) {
+      toast({
+        title: "Límite de imágenes",
+        description: "Ya has alcanzado el límite de 5 imágenes.",
+        variant: "destructive"
+      });
+      return;
+    }
     fileInputRef.current?.click();
   };
   
@@ -108,7 +129,7 @@ const GalleryImagesStep: React.FC<GalleryImagesStepProps> = ({
             className="hidden"
           />
           
-          {images.length > 0 && (
+          {images.length > 0 && images.length < 5 && (
             <Button 
               onClick={handleAddImages}
               variant="secondary"
@@ -127,7 +148,7 @@ const GalleryImagesStep: React.FC<GalleryImagesStepProps> = ({
             {images.filter(img => img.isMain).map(image => (
               <Card 
                 key={image.id} 
-                className="col-span-2 row-span-2 relative rounded-lg overflow-hidden group"
+                className="col-span-2 row-span-2 relative rounded-lg overflow-hidden group shadow-none"
               >
                 <img 
                   src={image.preview} 
@@ -154,7 +175,7 @@ const GalleryImagesStep: React.FC<GalleryImagesStepProps> = ({
             {images.filter(img => !img.isMain).map(image => (
               <Card 
                 key={image.id} 
-                className="relative aspect-square rounded-lg overflow-hidden group"
+                className="relative aspect-square rounded-lg overflow-hidden group shadow-none"
               >
                 <img 
                   src={image.preview} 
