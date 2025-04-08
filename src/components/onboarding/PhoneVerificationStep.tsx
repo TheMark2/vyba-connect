@@ -1,12 +1,15 @@
+
 import React, { useState } from 'react';
 import { Phone } from 'lucide-react';
 import { Input } from "@/components/ui/input";
 import { InputOTP, InputOTPGroup, InputOTPSlot } from "@/components/ui/input-otp";
 import { Button } from "@/components/ui/button";
+
 interface PhoneVerificationStepProps {
   onPhoneChange: (phone: string) => void;
   initialValue?: string;
 }
+
 const PhoneVerificationStep: React.FC<PhoneVerificationStepProps> = ({
   onPhoneChange,
   initialValue = ''
@@ -15,15 +18,18 @@ const PhoneVerificationStep: React.FC<PhoneVerificationStepProps> = ({
   const [showOTP, setShowOTP] = useState(false);
   const [otp, setOtp] = useState('');
   const [verified, setVerified] = useState(false);
+
   const handlePhoneChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setPhone(e.target.value);
     onPhoneChange(e.target.value);
   };
+
   const handleSendCode = () => {
     // En un caso real, enviarías un código por SMS
     console.log('Enviando código al número:', phone);
     setShowOTP(true);
   };
+
   const handleOTPComplete = (value: string) => {
     setOtp(value);
     if (value.length === 6) {
@@ -34,10 +40,12 @@ const PhoneVerificationStep: React.FC<PhoneVerificationStepProps> = ({
       }, 1000);
     }
   };
+
   const handleResendCode = () => {
     console.log('Reenviando código al número:', phone);
     // Aquí iría la lógica para reenviar el código
   };
+
   return <div className="flex flex-col items-center justify-center h-full w-full pt-28 px-4">
       <div className="max-w-md w-full text-center">
         {!verified ? <>
@@ -77,8 +85,8 @@ const PhoneVerificationStep: React.FC<PhoneVerificationStepProps> = ({
                 </p>
                 
                 <div className="flex justify-center mt-6 mb-8">
-                  <InputOTP maxLength={6} value={otp} onChange={handleOTPComplete} className="gap-3">
-                    <InputOTPGroup>
+                  <InputOTP maxLength={6} value={otp} onChange={handleOTPComplete}>
+                    <InputOTPGroup className="gap-4">
                       <InputOTPSlot index={0} className="w-14 h-14 rounded-lg border-0 bg-[#F7F7F7] dark:bg-vyba-dark-secondary/30" />
                       <InputOTPSlot index={1} className="w-14 h-14 rounded-lg border-0 bg-[#F7F7F7] dark:bg-vyba-dark-secondary/30" />
                       <InputOTPSlot index={2} className="w-14 h-14 rounded-lg border-0 bg-[#F7F7F7] dark:bg-vyba-dark-secondary/30" />
@@ -105,4 +113,5 @@ const PhoneVerificationStep: React.FC<PhoneVerificationStepProps> = ({
       </div>
     </div>;
 };
+
 export default PhoneVerificationStep;
