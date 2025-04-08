@@ -11,7 +11,7 @@ import Footer from '@/components/Footer';
 const ArtistBenefitsPage = () => {
   const navigate = useNavigate();
   const handleGetStarted = () => {
-    navigate('/thank-you');
+    navigate('/artist-onboarding');
   };
   
   return (
