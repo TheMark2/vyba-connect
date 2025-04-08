@@ -1,5 +1,5 @@
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Phone, Check } from 'lucide-react';
 import { Input } from "@/components/ui/input";
 import { InputOTP, InputOTPGroup, InputOTPSlot } from "@/components/ui/input-otp";
@@ -15,13 +15,37 @@ const PhoneVerificationStep: React.FC<PhoneVerificationStepProps> = ({
   initialValue = ''
 }) => {
   const [phone, setPhone] = useState(initialValue);
+  const [formattedPhone, setFormattedPhone] = useState('');
   const [showOTP, setShowOTP] = useState(false);
   const [otp, setOtp] = useState('');
   const [verified, setVerified] = useState(false);
 
+  // Formatear número de teléfono automáticamente
+  const formatPhoneNumber = (value: string) => {
+    // Eliminar todos los caracteres no numéricos
+    const numbersOnly = value.replace(/\D/g, '');
+    
+    // Aplicar formato XXX XXX XXX
+    let formatted = '';
+    for (let i = 0; i < numbersOnly.length && i < 9; i++) {
+      if (i === 3 || i === 6) {
+        formatted += ' ';
+      }
+      formatted += numbersOnly[i];
+    }
+    
+    return formatted;
+  };
+
   const handlePhoneChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setPhone(e.target.value);
-    onPhoneChange(e.target.value);
+    const inputValue = e.target.value;
+    const formatted = formatPhoneNumber(inputValue);
+    
+    setFormattedPhone(formatted);
+    // Guardar solo los números para el estado real
+    const numbersOnly = formatted.replace(/\D/g, '');
+    setPhone(numbersOnly);
+    onPhoneChange(numbersOnly);
   };
 
   const handleSendCode = () => {
@@ -57,17 +81,30 @@ const PhoneVerificationStep: React.FC<PhoneVerificationStepProps> = ({
                   Es imprescindible que al crear un proyecto nuevo pongas tu móvil para poder verificar y proteger tu cuenta
                 </p>
                 
-                <div className="w-full max-w-md mx-auto space-y-4">
-                  <div className="flex gap-2 w-full">
+                <div className="w-full max-w-md mx-auto space-y-4 flex flex-col items-center">
+                  <div className="flex gap-2 w-full justify-center">
                     <div className="bg-[#F7F7F7] dark:bg-vyba-dark-secondary/30 rounded-lg px-4 flex items-center justify-center w-20">
                       <span className="text-sm font-medium">+34</span>
                     </div>
-                    <Input type="tel" placeholder="684 *** *** ***" className="flex-1" value={phone} onChange={handlePhoneChange} />
+                    <Input 
+                      type="tel" 
+                      placeholder="684 *** *** ***" 
+                      className="flex-1" 
+                      value={formattedPhone} 
+                      onChange={handlePhoneChange} 
+                      maxLength={11} // 9 dígitos + 2 espacios
+                    />
                   </div>
                   
-                  <Button onClick={handleSendCode} disabled={!phone || phone.length < 9} className="w-full bg-black text-white rounded-full py-3 font-medium disabled:opacity-50 disabled:cursor-not-allowed mt-2">
-                    Enviar código
-                  </Button>
+                  {phone.length === 9 && (
+                    <Button 
+                      onClick={handleSendCode} 
+                      variant="default"
+                      className="mt-2"
+                    >
+                      Enviar código
+                    </Button>
+                  )}
                 </div>
               </> : <>
                 <h2 className="text-4xl md:text-6xl font-black mb-6">
