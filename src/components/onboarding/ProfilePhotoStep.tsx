@@ -49,13 +49,16 @@ const ProfilePhotoStep: React.FC<ProfilePhotoStepProps> = ({
             onMouseEnter={() => setIsHovering(true)}
             onMouseLeave={() => setIsHovering(false)}
           >
-            <div className={`
-              w-48 h-48 rounded-full border-2 border-dashed border-gray-300 
-              flex items-center justify-center
-              ${photoPreview ? 'bg-transparent' : 'bg-[#F7F7F7] dark:bg-vyba-dark-secondary/30'}
-              overflow-hidden
-              transition-all duration-300
-            `}>
+            <div 
+              className={`
+                w-48 h-48 rounded-full border-2 border-dashed border-gray-300 
+                flex items-center justify-center
+                ${photoPreview ? 'bg-transparent' : 'bg-[#F7F7F7] dark:bg-vyba-dark-secondary/30'}
+                overflow-hidden cursor-pointer
+                transition-all duration-300
+              `}
+              onClick={handleButtonClick}
+            >
               {photoPreview ? (
                 <Avatar className="w-full h-full">
                   <AvatarImage src={photoPreview} alt="Foto de perfil" className="object-cover" />
@@ -67,6 +70,12 @@ const ProfilePhotoStep: React.FC<ProfilePhotoStepProps> = ({
                 <Plus 
                   className={`w-10 h-10 text-gray-400 transition-opacity duration-300 ${isHovering ? 'opacity-70' : 'opacity-100'}`} 
                 />
+              )}
+              
+              {isHovering && (
+                <div className="absolute inset-0 bg-black bg-opacity-30 rounded-full flex items-center justify-center">
+                  <span className="text-white text-sm font-medium">Cambiar foto</span>
+                </div>
               )}
             </div>
             
