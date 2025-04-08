@@ -6,6 +6,7 @@ import CoverStep from '@/components/onboarding/CoverStep';
 import ArtistTypeStep from '@/components/onboarding/ArtistTypeStep';
 import ArtistNameStep from '@/components/onboarding/ArtistNameStep';
 import MusicGenresStep from '@/components/onboarding/MusicGenresStep';
+import BioStep from '@/components/onboarding/BioStep';
 import { Target, Music, Camera, Calendar, CheckCircle } from 'lucide-react';
 
 // Definimos los grupos de pasos
@@ -22,6 +23,7 @@ interface OnboardingData {
   artistType?: string;
   artistName?: string;
   musicGenres?: string[];
+  bio?: string;
   // Aquí irían más campos para los siguientes pasos
 }
 
@@ -96,31 +98,33 @@ const ArtistOnboardingPage = () => {
     });
   };
   
+  const handleBioChange = (bio: string) => {
+    setOnboardingData({
+      ...onboardingData,
+      bio: bio
+    });
+  };
+  
   // Funciones de navegación
   const handleNext = () => {
     const currentGroupObj = stepGroups[currentGroup];
     
     if (currentStepInGroup < currentGroupObj.totalSteps - 1) {
-      // Avanzar al siguiente paso dentro del mismo grupo
       setCurrentStepInGroup(currentStepInGroup + 1);
     } else if (currentGroup < stepGroups.length - 1) {
-      // Avanzar al siguiente grupo
       setCurrentGroup(currentGroup + 1);
-      setCurrentStepInGroup(0); // Resetear al primer paso del nuevo grupo
+      setCurrentStepInGroup(0);
     } else {
-      // Finalizar el proceso de onboarding
       navigate('/thank-you');
     }
   };
   
   const handleBack = () => {
     if (currentStepInGroup > 0) {
-      // Retroceder un paso dentro del mismo grupo
       setCurrentStepInGroup(currentStepInGroup - 1);
     } else if (currentGroup > 0) {
-      // Retroceder al grupo anterior
       setCurrentGroup(currentGroup - 1);
-      setCurrentStepInGroup(stepGroups[currentGroup - 1].totalSteps - 1); // Ir al último paso del grupo anterior
+      setCurrentStepInGroup(stepGroups[currentGroup - 1].totalSteps - 1);
     }
   };
   
@@ -130,22 +134,22 @@ const ArtistOnboardingPage = () => {
   
   // Verificar si hay un valor seleccionado para habilitar el botón siguiente
   const canGoNext = () => {
-    // Si estamos en el primer grupo, paso 1 (índice 1)
     if (currentGroup === 0 && currentStepInGroup === 1) {
       return !!onboardingData.artistType;
     }
     
-    // Si estamos en el primer grupo, paso 2 (índice 2)
     if (currentGroup === 0 && currentStepInGroup === 2) {
       return !!onboardingData.artistName && onboardingData.artistName.trim() !== '';
     }
     
-    // Si estamos en el primer grupo, paso 3 (índice 3)
     if (currentGroup === 0 && currentStepInGroup === 3) {
       return !!onboardingData.musicGenres && onboardingData.musicGenres.length > 0;
     }
     
-    // Por defecto permitir avanzar
+    if (currentGroup === 1 && currentStepInGroup === 1) {
+      return !!onboardingData.bio && onboardingData.bio.trim() !== '';
+    }
+    
     return true;
   };
   
@@ -153,7 +157,6 @@ const ArtistOnboardingPage = () => {
   const renderCurrentStep = () => {
     const currentGroupObj = stepGroups[currentGroup];
     
-    // Si estamos en el primer paso de cualquier grupo, mostrar la portada
     if (currentStepInGroup === 0) {
       return (
         <CoverStep
@@ -165,9 +168,7 @@ const ArtistOnboardingPage = () => {
       );
     }
     
-    // Grupo 1 (índice 0)
     if (currentGroup === 0) {
-      // Paso 1 del grupo 1 (índice 1) - Selección de tipo de artista
       if (currentStepInGroup === 1) {
         return (
           <ArtistTypeStep 
@@ -177,7 +178,6 @@ const ArtistOnboardingPage = () => {
         );
       }
       
-      // Paso 2 del grupo 1 (índice 2) - Nombre artístico
       if (currentStepInGroup === 2) {
         return (
           <ArtistNameStep 
@@ -187,7 +187,6 @@ const ArtistOnboardingPage = () => {
         );
       }
       
-      // Paso 3 del grupo 1 (índice 3) - Géneros musicales
       if (currentStepInGroup === 3) {
         return (
           <MusicGenresStep
@@ -198,8 +197,17 @@ const ArtistOnboardingPage = () => {
       }
     }
     
-    // En un caso real, aquí renderizaríamos los distintos pasos de cada grupo
-    // Por ahora, solo mostraremos un placeholder para los pasos no implementados
+    if (currentGroup === 1) {
+      if (currentStepInGroup === 1) {
+        return (
+          <BioStep 
+            onInputChange={handleBioChange}
+            initialValue={onboardingData.bio}
+          />
+        );
+      }
+    }
+    
     return (
       <div className="flex flex-col items-center justify-center h-full w-full pt-28 px-4">
         <div className="max-w-2xl w-full text-center">
