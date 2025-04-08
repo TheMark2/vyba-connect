@@ -10,7 +10,7 @@ import BioStep from '@/components/onboarding/BioStep';
 import ExperienceStep from '@/components/onboarding/ExperienceStep';
 import ProfilePhotoStep from '@/components/onboarding/ProfilePhotoStep';
 import GalleryImagesStep from '@/components/onboarding/GalleryImagesStep';
-import { Target, Music, Camera, Calendar, CheckCircle } from 'lucide-react';
+import { Target, Camera, Calendar, CheckCircle } from 'lucide-react';
 
 interface StepGroup {
   id: number;
@@ -55,13 +55,13 @@ const ArtistOnboardingPage = () => {
       title: "Una imagen vale mas que 1000 palabras",
       description: "Sube las imágenes que van a ser la primera impresión de los buscadores. Andate con ojo, no pongas cualquiera",
       icon: <Camera className="w-full h-full stroke-[1.5px]" />,
-      totalSteps: 3
+      totalSteps: 1
     },
     {
       id: 3,
-      title: "Disponibilidad y eventos",
-      description: "Dinos cuándo y dónde estás disponible para actuar.",
-      icon: <Calendar className="w-full h-full stroke-[1.5px]" />,
+      title: "Vamos a verificar la cuenta",
+      description: "Es imprescindible que al crear un proyecto nuevo pongas tu móvil para poder verificar y proteger tu cuenta",
+      icon: <Target className="w-full h-full stroke-[1.5px]" />,
       totalSteps: 2
     },
     {
@@ -72,9 +72,6 @@ const ArtistOnboardingPage = () => {
       totalSteps: 1
     }
   ];
-  
-  const [currentGroup, setCurrentGroup] = useState(0);
-  const [currentStepInGroup, setCurrentStepInGroup] = useState(0);
   
   const handleArtistTypeSelect = (type: string) => {
     setOnboardingData({
@@ -151,6 +148,9 @@ const ArtistOnboardingPage = () => {
     navigate('/artist-benefits');
   };
   
+  const [currentGroup, setCurrentGroup] = useState(0);
+  const [currentStepInGroup, setCurrentStepInGroup] = useState(0);
+  
   const canGoNext = () => {
     if (currentGroup === 0 && currentStepInGroup === 1) {
       return !!onboardingData.artistType;
@@ -173,10 +173,6 @@ const ArtistOnboardingPage = () => {
     }
     
     if (currentGroup === 2 && currentStepInGroup === 1) {
-      return true;
-    }
-    
-    if (currentGroup === 2 && currentStepInGroup === 2) {
       return true;
     }
     
@@ -248,14 +244,7 @@ const ArtistOnboardingPage = () => {
     if (currentGroup === 2) {
       if (currentStepInGroup === 1) {
         return (
-          <ProfilePhotoStep 
-            onPhotoChange={handleProfilePhotoChange}
-          />
-        );
-      }
-      if (currentStepInGroup === 2) {
-        return (
-          <GalleryImagesStep
+          <GalleryImagesStep 
             onImagesChange={handleGalleryImagesChange}
             initialImages={onboardingData.galleryImages}
           />
