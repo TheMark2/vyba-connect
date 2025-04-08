@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { PageTransition } from '@/components/ui/page-transition';
@@ -312,7 +311,7 @@ const ArtistOnboardingPage = () => {
     }
     
     return (
-      <div className="flex flex-col items-center justify-center h-full w-full pt-28 px-6 sm:px-4 md:px-8">
+      <div className="flex flex-col items-center w-full pt-8 px-6 sm:px-4 md:px-8">
         <div className="max-w-2xl w-full text-center">
           <h2 className="text-3xl md:text-5xl font-black mb-6">
             Paso {currentStepInGroup} del Grupo {currentGroup + 1}
@@ -347,7 +346,7 @@ const ArtistOnboardingPage = () => {
           canGoNext={canGoNext()}
         />
         
-        <div className={`flex-1 ${isMobile ? 'pt-28 pb-24' : 'flex items-center justify-center'}`}>
+        <div className="flex-1 min-h-0 overflow-auto">
           {renderCurrentStep()}
         </div>
       </div>
