@@ -113,13 +113,21 @@ const ArtistOnboardingPage = () => {
     // Por ahora, solo mostraremos un placeholder
     return (
       <div className="flex flex-col items-center justify-center h-full w-full pt-28 px-4">
-        <div className="max-w-lg w-full text-center">
-          <h2 className="text-2xl font-bold mb-4">
+        <div className="max-w-2xl w-full text-center">
+          <h2 className="text-3xl md:text-5xl font-black mb-6">
             Paso {currentStepInGroup} del Grupo {currentGroup + 1}
           </h2>
-          <p className="text-gray-500">
+          <p className="text-gray-500 mb-8">
             Aquí iría el formulario o contenido para este paso específico.
           </p>
+          
+          <div className="bg-[#F7F7F7] dark:bg-vyba-dark-secondary/30 rounded-3xl p-8 md:p-12">
+            <div className="w-full max-w-md mx-auto">
+              <p className="text-center text-gray-500">
+                Contenido del formulario
+              </p>
+            </div>
+          </div>
         </div>
       </div>
     );
@@ -127,7 +135,7 @@ const ArtistOnboardingPage = () => {
   
   return (
     <PageTransition>
-      <div className="min-h-screen bg-white dark:bg-vyba-dark-bg">
+      <div className="min-h-screen bg-white dark:bg-vyba-dark-bg flex flex-col">
         <StepsNavbar
           currentGroup={currentGroup}
           totalGroups={stepGroups.length}
@@ -138,7 +146,9 @@ const ArtistOnboardingPage = () => {
           onCancel={handleCancel}
         />
         
-        {renderCurrentStep()}
+        <div className="flex-1 flex items-center justify-center">
+          {renderCurrentStep()}
+        </div>
       </div>
     </PageTransition>
   );
