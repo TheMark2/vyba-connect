@@ -28,7 +28,7 @@ const ArtistStepsNavbar = ({
   isLastStep
 }: ArtistStepsNavbarProps) => {
   return <div className="w-full py-4 px-6 sticky top-0 z-10 bg-white dark:bg-vyba-dark-bg">
-      <div className="flex items-center justify-between rounded-2xl bg-[#F7F7F7] dark:bg-vyba-dark-secondary py-2 px-4">
+      <div className="flex items-center justify-between rounded-2xl bg-[#F7F7F7] dark:bg-vyba-dark-secondary py-4 px-6">
         {/* Botón Cancelar */}
         <Button variant="ghost" size="sm" className="text-black dark:text-white hover:bg-[#EBEBEB]" onClick={onCancel}>
           <X size={16} className="mr-1" />
