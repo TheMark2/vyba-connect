@@ -352,17 +352,18 @@ const GalleryImagesStep: React.FC<GalleryImagesStepProps> = ({
                         </div>
                       )}
                     
-                    <div className="absolute top-2 left-2">
-                      <Badge className="bg-white text-black font-medium">Imagen principal</Badge>
-                    </div>
-                    
-                    {/* Selection overlay with transition */}
-                    <div className={`absolute inset-0 bg-black transition-all duration-500 ease-in-out ${selectedImages.includes(image.id) ? 'bg-opacity-50' : 'bg-opacity-0 pointer-events-none'}`}>
-                      {selectedImages.includes(image.id) && (
-                        <div className="absolute bottom-2 right-2 bg-white text-black w-6 h-6 rounded-full flex items-center justify-center font-bold text-sm transition-all duration-500 ease-in-out animate-scale-in">
-                          {getSelectionIndex(image.id)}
-                        </div>
-                      )}
+                      <div className="absolute top-2 left-2">
+                        <Badge className="bg-white text-black font-medium">Imagen principal</Badge>
+                      </div>
+                      
+                      {/* Selection overlay with transition */}
+                      <div className={`absolute inset-0 bg-black transition-all duration-500 ease-in-out ${selectedImages.includes(image.id) ? 'bg-opacity-50' : 'bg-opacity-0 pointer-events-none'}`}>
+                        {selectedImages.includes(image.id) && (
+                          <div className="absolute bottom-2 right-2 bg-white text-black w-6 h-6 rounded-full flex items-center justify-center font-bold text-sm transition-all duration-500 ease-in-out animate-scale-in">
+                            {getSelectionIndex(image.id)}
+                          </div>
+                        )}
+                      </div>
                     </div>
                   </Card>
                 ))}
@@ -395,15 +396,15 @@ const GalleryImagesStep: React.FC<GalleryImagesStepProps> = ({
                           <Loader2 className="w-8 h-8 text-primary animate-spin" />
                         </div>
                       )}
-                    </div>
                     
-                    {/* Selection overlay with transition */}
-                    <div className={`absolute inset-0 bg-black transition-all duration-500 ease-in-out ${selectedImages.includes(image.id) ? 'bg-opacity-50' : 'bg-opacity-0 pointer-events-none'}`}>
-                      {selectedImages.includes(image.id) && (
-                        <div className="absolute bottom-2 right-2 bg-white text-black w-6 h-6 rounded-full flex items-center justify-center font-bold text-sm transition-all duration-500 ease-in-out animate-scale-in">
-                          {getSelectionIndex(image.id)}
-                        </div>
-                      )}
+                      {/* Selection overlay with transition */}
+                      <div className={`absolute inset-0 bg-black transition-all duration-500 ease-in-out ${selectedImages.includes(image.id) ? 'bg-opacity-50' : 'bg-opacity-0 pointer-events-none'}`}>
+                        {selectedImages.includes(image.id) && (
+                          <div className="absolute bottom-2 right-2 bg-white text-black w-6 h-6 rounded-full flex items-center justify-center font-bold text-sm transition-all duration-500 ease-in-out animate-scale-in">
+                            {getSelectionIndex(image.id)}
+                          </div>
+                        )}
+                      </div>
                     </div>
                   </Card>
                 ))}
