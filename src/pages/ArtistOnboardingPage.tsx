@@ -8,9 +8,9 @@ import ArtistNameStep from '@/components/onboarding/ArtistNameStep';
 import MusicGenresStep from '@/components/onboarding/MusicGenresStep';
 import BioStep from '@/components/onboarding/BioStep';
 import ExperienceStep from '@/components/onboarding/ExperienceStep';
+import ProfilePhotoStep from '@/components/onboarding/ProfilePhotoStep';
 import GalleryImagesStep from '@/components/onboarding/GalleryImagesStep';
-import PhoneVerificationStep from '@/components/onboarding/PhoneVerificationStep';
-import { Target, Camera, Smartphone, CheckCircle } from 'lucide-react';
+import { Target, Music, Camera, Calendar, CheckCircle } from 'lucide-react';
 
 interface StepGroup {
   id: number;
@@ -28,7 +28,6 @@ interface OnboardingData {
   experience?: string;
   profilePhoto?: File | null;
   galleryImages?: File[];
-  phone?: string;
 }
 
 const ArtistOnboardingPage = () => {
@@ -56,14 +55,14 @@ const ArtistOnboardingPage = () => {
       title: "Una imagen vale mas que 1000 palabras",
       description: "Sube las imágenes que van a ser la primera impresión de los buscadores. Andate con ojo, no pongas cualquiera",
       icon: <Camera className="w-full h-full stroke-[1.5px]" />,
-      totalSteps: 1
+      totalSteps: 3
     },
     {
       id: 3,
-      title: "Vamos a verificar la cuenta",
-      description: "Es imprescindible que al crear un proyecto nuevo pongas tu móvil para poder verificar y proteger tu cuenta",
-      icon: <Smartphone className="w-full h-full stroke-[1.5px]" />,
-      totalSteps: 1
+      title: "Disponibilidad y eventos",
+      description: "Dinos cuándo y dónde estás disponible para actuar.",
+      icon: <Calendar className="w-full h-full stroke-[1.5px]" />,
+      totalSteps: 2
     },
     {
       id: 4,
@@ -126,13 +125,6 @@ const ArtistOnboardingPage = () => {
     });
   };
   
-  const handlePhoneChange = (phone: string) => {
-    setOnboardingData({
-      ...onboardingData,
-      phone: phone
-    });
-  };
-  
   const handleNext = () => {
     const currentGroupObj = stepGroups[currentGroup];
     
@@ -180,8 +172,12 @@ const ArtistOnboardingPage = () => {
       return !!onboardingData.experience && onboardingData.experience.trim() !== '';
     }
     
-    if (currentGroup === 3 && currentStepInGroup === 1) {
-      return !!onboardingData.phone && onboardingData.phone.trim() !== '';
+    if (currentGroup === 2 && currentStepInGroup === 1) {
+      return true;
+    }
+    
+    if (currentGroup === 2 && currentStepInGroup === 2) {
+      return true;
     }
     
     return true;
@@ -252,20 +248,16 @@ const ArtistOnboardingPage = () => {
     if (currentGroup === 2) {
       if (currentStepInGroup === 1) {
         return (
-          <GalleryImagesStep 
-            onImagesChange={handleGalleryImagesChange}
-            initialImages={onboardingData.galleryImages}
+          <ProfilePhotoStep 
+            onPhotoChange={handleProfilePhotoChange}
           />
         );
       }
-    }
-    
-    if (currentGroup === 3) {
-      if (currentStepInGroup === 1) {
+      if (currentStepInGroup === 2) {
         return (
-          <PhoneVerificationStep 
-            onPhoneChange={handlePhoneChange}
-            initialValue={onboardingData.phone?.replace(/^\+\d+/, '') || ''}
+          <GalleryImagesStep
+            onImagesChange={handleGalleryImagesChange}
+            initialImages={onboardingData.galleryImages}
           />
         );
       }
