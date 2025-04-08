@@ -1,6 +1,6 @@
 
 import React, { useState } from 'react';
-import { Phone } from 'lucide-react';
+import { Phone, Check } from 'lucide-react';
 import { Input } from "@/components/ui/input";
 import { InputOTP, InputOTPGroup, InputOTPSlot } from "@/components/ui/input-otp";
 import { Button } from "@/components/ui/button";
@@ -99,15 +99,19 @@ const PhoneVerificationStep: React.FC<PhoneVerificationStepProps> = ({
               </>}
           </> : <>
             <h2 className="text-4xl md:text-6xl font-black mb-6">
-              Teléfono verificado
+              Código correcto
             </h2>
-            <p className="text-gray-500 mb-8">
-              Tu número de teléfono ha sido verificado correctamente
+            <p className="text-gray-400 mb-12">
+              Puedes continuar
             </p>
             
-            <div className="bg-green-50 rounded-lg p-4 flex items-center justify-center gap-2">
-              <Phone className="h-5 w-5 text-green-500" />
-              <span className="text-green-700 font-medium">Número verificado correctamente</span>
+            <div className="flex justify-center">
+              <div className="bg-[#F7F7F7] rounded-full py-3 px-5 flex items-center gap-2.5">
+                <div className="bg-[#E4F9E4] rounded-full p-1.5">
+                  <Check className="h-4 w-4 text-green-500" />
+                </div>
+                <span className="text-black font-medium">Código correcto</span>
+              </div>
             </div>
           </>}
       </div>
