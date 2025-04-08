@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { PageTransition } from '@/components/ui/page-transition';
@@ -9,6 +8,7 @@ import ArtistNameStep from '@/components/onboarding/ArtistNameStep';
 import MusicGenresStep from '@/components/onboarding/MusicGenresStep';
 import BioStep from '@/components/onboarding/BioStep';
 import ExperienceStep from '@/components/onboarding/ExperienceStep';
+import ProfilePhotoStep from '@/components/onboarding/ProfilePhotoStep';
 import { Target, Music, Camera, Calendar, CheckCircle } from 'lucide-react';
 
 interface StepGroup {
@@ -25,6 +25,7 @@ interface OnboardingData {
   musicGenres?: string[];
   bio?: string;
   experience?: string;
+  profilePhoto?: File | null;
 }
 
 const ArtistOnboardingPage = () => {
@@ -108,6 +109,13 @@ const ArtistOnboardingPage = () => {
     });
   };
   
+  const handleProfilePhotoChange = (photo: File | null) => {
+    setOnboardingData({
+      ...onboardingData,
+      profilePhoto: photo
+    });
+  };
+  
   const handleNext = () => {
     const currentGroupObj = stepGroups[currentGroup];
     
@@ -153,6 +161,10 @@ const ArtistOnboardingPage = () => {
     
     if (currentGroup === 1 && currentStepInGroup === 2) {
       return !!onboardingData.experience && onboardingData.experience.trim() !== '';
+    }
+    
+    if (currentGroup === 2 && currentStepInGroup === 1) {
+      return true;
     }
     
     return true;
@@ -215,6 +227,16 @@ const ArtistOnboardingPage = () => {
           <ExperienceStep 
             onInputChange={handleExperienceChange}
             initialValue={onboardingData.experience}
+          />
+        );
+      }
+    }
+    
+    if (currentGroup === 2) {
+      if (currentStepInGroup === 1) {
+        return (
+          <ProfilePhotoStep 
+            onPhotoChange={handleProfilePhotoChange}
           />
         );
       }
