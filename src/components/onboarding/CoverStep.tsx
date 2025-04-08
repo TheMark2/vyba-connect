@@ -26,7 +26,7 @@ const CoverStep: React.FC<CoverStepProps> = ({
         <h1 className={`text-4xl md:text-6xl font-black mb-4 md:mb-6 dark:text-white`}>
           {title}
         </h1>
-        <p className="text-sm sm:text-base md:text-lg text-gray-500 dark:text-gray-400">
+        <p className="text-base md:text-lg text-gray-500 dark:text-gray-400">
           {description}
         </p>
       </div>
