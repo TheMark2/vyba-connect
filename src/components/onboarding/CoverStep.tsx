@@ -15,8 +15,8 @@ const CoverStep: React.FC<CoverStepProps> = ({
   icon,
 }) => {
   return (
-    <div className="flex flex-col items-center justify-center h-full w-full max-w-6xl mx-auto pt-28 pb-16 px-4 md:px-8">
-      <div className="text-center max-w-2xl mb-12">
+    <div className="flex flex-col lg:flex-row items-center justify-center h-full w-full max-w-6xl mx-auto pt-28 pb-16 px-4 md:px-8">
+      <div className="w-full lg:w-1/2 mb-10 lg:mb-0 text-left lg:pr-8">
         <div className="text-sm font-medium mb-4 text-gray-500 dark:text-gray-400">
           GRUPO {group}
         </div>
@@ -28,7 +28,7 @@ const CoverStep: React.FC<CoverStepProps> = ({
         </p>
       </div>
       
-      <div className="flex justify-center items-center">
+      <div className="w-full lg:w-1/2 flex justify-center items-center">
         <div className="bg-[#F7F7F7] dark:bg-vyba-dark-secondary/30 rounded-3xl p-16 flex items-center justify-center w-full max-w-md aspect-square">
           <div className="w-32 h-32">
             {icon}
