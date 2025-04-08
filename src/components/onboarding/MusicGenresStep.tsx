@@ -83,40 +83,14 @@ const MusicGenresStep: React.FC<MusicGenresStepProps> = ({
           {selectedGenres.length} de {maxSelections} seleccionados
         </p>
         
-        {/* Primera fila de géneros */}
-        <div className="flex flex-wrap justify-center gap-3 mb-4">
-          {musicGenres.slice(0, 8).map(genre => (
-            <Badge
-              key={genre}
-              variant="outline"
-              className={`
-                py-3 px-6 cursor-pointer transition-all duration-150 h-14
-                flex items-center gap-2 text-sm font-medium rounded-full border-none
-                ${selectedGenres.includes(genre) 
-                  ? 'bg-[#D9D9D9] dark:bg-[#444444]' 
-                  : 'bg-[#F7F7F7] dark:bg-vyba-dark-secondary hover:bg-[#E9E9E9] dark:hover:bg-vyba-dark-secondary/80'
-                }
-                ${activePress === genre ? 'transform scale-95' : ''}
-              `}
-              onClick={() => handleSelect(genre)}
-              onMouseDown={() => handleMouseDown(genre)}
-              onMouseUp={handleMouseUp}
-              onMouseLeave={handleMouseUp}
-            >
-              {getGenreIcon(genre)}
-              {genre}
-            </Badge>
-          ))}
-        </div>
-        
-        {/* Segunda fila de géneros */}
+        {/* Grid de géneros musicales */}
         <div className="flex flex-wrap justify-center gap-3">
-          {musicGenres.slice(8).map(genre => (
+          {musicGenres.map(genre => (
             <Badge
               key={genre}
               variant="outline"
               className={`
-                py-3 px-6 cursor-pointer transition-all duration-150 h-14
+                py-3 px-6 cursor-pointer transition-all duration-150
                 flex items-center gap-2 text-sm font-medium rounded-full border-none
                 ${selectedGenres.includes(genre) 
                   ? 'bg-[#D9D9D9] dark:bg-[#444444]' 
