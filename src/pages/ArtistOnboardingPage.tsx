@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { PageTransition } from '@/components/ui/page-transition';
@@ -44,7 +45,7 @@ const ArtistOnboardingPage = () => {
       title: "Presentación y trayectoria",
       description: "Aquí es donde vendes tu talento. Cuéntales qué haces, por qué eres único y dónde has estado.",
       icon: <Target className="w-full h-full stroke-[1.5px]" />,
-      totalSteps: 2
+      totalSteps: 3
     },
     {
       id: 2,
