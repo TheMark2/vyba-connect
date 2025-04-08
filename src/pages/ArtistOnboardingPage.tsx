@@ -14,6 +14,7 @@ import PhoneVerificationStep from '@/components/onboarding/PhoneVerificationStep
 import CachePriceStep from '@/components/onboarding/CachePriceStep';
 import { Target, Music, Camera, Phone, CheckCircle } from 'lucide-react';
 import { useToast } from "@/hooks/use-toast";
+import { useIsMobile } from '@/hooks/use-mobile';
 
 interface StepGroup {
   id: number;
@@ -39,6 +40,7 @@ interface OnboardingData {
 const ArtistOnboardingPage = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
+  const isMobile = useIsMobile();
   
   const [onboardingData, setOnboardingData] = useState<OnboardingData>({});
   
@@ -344,7 +346,7 @@ const ArtistOnboardingPage = () => {
           canGoNext={canGoNext()}
         />
         
-        <div className="flex-1 flex items-center justify-center px-0">
+        <div className={`flex-1 flex items-center justify-center px-0 ${isMobile ? 'pb-24' : ''}`}>
           {renderCurrentStep()}
         </div>
       </div>
