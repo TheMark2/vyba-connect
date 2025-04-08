@@ -79,9 +79,9 @@ const InformationStep: React.FC<InformationStepProps> = ({
   updateFormData
 }) => {
   return <div className="w-full max-w-2xl mx-auto">
-      <h1 className="text-4xl md:text-6xl font-black text-center mb-12">Información</h1>
+      <h1 className="text-4xl md:text-6xl font-black text-center mb-16">Información</h1>
       
-      <div className="space-y-6 max-w-sm mx-auto">
+      <div className="space-y-8 max-w-md mx-auto">
         {/* Tipo de artista */}
         <div className="space-y-2">
           <Label htmlFor="artistType" className="block font-bold">Tipo de artista</Label>
