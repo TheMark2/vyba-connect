@@ -1,3 +1,4 @@
+
 import React, { useState, useRef } from 'react';
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
@@ -192,7 +193,7 @@ const GalleryImagesStep: React.FC<GalleryImagesStepProps> = ({
               {images.filter(img => img.isMain).map(image => (
                 <Card 
                   key={image.id} 
-                  className={`col-span-2 row-span-2 relative rounded-lg overflow-hidden shadow-none transition-all duration-300 ${selectedImages.includes(image.id) ? 'ring-2 ring-primary' : ''}`}
+                  className={`col-span-2 row-span-2 relative rounded-lg overflow-hidden shadow-none cursor-pointer transition-all duration-300 ${selectedImages.includes(image.id) ? 'ring-3 ring-primary' : ''}`}
                   onClick={() => toggleImageSelection(image.id)}
                 >
                   <img 
@@ -219,7 +220,7 @@ const GalleryImagesStep: React.FC<GalleryImagesStepProps> = ({
               {images.filter(img => !img.isMain).map(image => (
                 <Card 
                   key={image.id} 
-                  className={`relative aspect-square rounded-lg overflow-hidden shadow-none cursor-pointer transition-all duration-300 ${selectedImages.includes(image.id) ? 'ring-2 ring-primary' : ''}`}
+                  className={`relative aspect-square rounded-lg overflow-hidden shadow-none cursor-pointer transition-all duration-300 ${selectedImages.includes(image.id) ? 'ring-3 ring-primary' : ''}`}
                   onClick={() => toggleImageSelection(image.id)}
                 >
                   <img 
@@ -243,7 +244,7 @@ const GalleryImagesStep: React.FC<GalleryImagesStepProps> = ({
             {/* Delete selected button */}
             {selectedImages.length > 0 && (
               <Button 
-                variant="destructive" 
+                variant="secondary" 
                 className="mt-6"
                 onClick={handleDeleteSelected}
               >
