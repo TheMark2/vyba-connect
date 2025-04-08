@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { PageTransition } from '@/components/ui/page-transition';
@@ -10,7 +11,8 @@ import BioStep from '@/components/onboarding/BioStep';
 import ExperienceStep from '@/components/onboarding/ExperienceStep';
 import ProfilePhotoStep from '@/components/onboarding/ProfilePhotoStep';
 import GalleryImagesStep from '@/components/onboarding/GalleryImagesStep';
-import { Target, Music, Camera, Calendar, CheckCircle } from 'lucide-react';
+import PhoneVerificationStep from '@/components/onboarding/PhoneVerificationStep';
+import { Target, Music, Camera, Phone, CheckCircle } from 'lucide-react';
 
 interface StepGroup {
   id: number;
@@ -28,6 +30,7 @@ interface OnboardingData {
   experience?: string;
   profilePhoto?: File | null;
   galleryImages?: File[];
+  phone?: string;
 }
 
 const ArtistOnboardingPage = () => {
@@ -47,7 +50,7 @@ const ArtistOnboardingPage = () => {
       id: 1,
       title: "Presentación y trayectoria",
       description: "Aquí es donde vendes tu talento. Cuéntales qué haces, por qué eres único y dónde has estado.",
-      icon: <Target className="w-full h-full stroke-[1.5px]" />,
+      icon: <Music className="w-full h-full stroke-[1.5px]" />,
       totalSteps: 3
     },
     {
@@ -59,10 +62,10 @@ const ArtistOnboardingPage = () => {
     },
     {
       id: 3,
-      title: "Disponibilidad y eventos",
-      description: "Dinos cuándo y dónde estás disponible para actuar.",
-      icon: <Calendar className="w-full h-full stroke-[1.5px]" />,
-      totalSteps: 2
+      title: "Escribe tu móvil",
+      description: "Es imprescindible que al crear un proyecto nuevo pongas tu móvil para poder verificar y proteger tu cuenta",
+      icon: <Phone className="w-full h-full stroke-[1.5px]" />,
+      totalSteps: 1
     },
     {
       id: 4,
@@ -125,6 +128,13 @@ const ArtistOnboardingPage = () => {
     });
   };
   
+  const handlePhoneChange = (phone: string) => {
+    setOnboardingData({
+      ...onboardingData,
+      phone: phone
+    });
+  };
+  
   const handleNext = () => {
     const currentGroupObj = stepGroups[currentGroup];
     
@@ -170,14 +180,6 @@ const ArtistOnboardingPage = () => {
     
     if (currentGroup === 1 && currentStepInGroup === 2) {
       return !!onboardingData.experience && onboardingData.experience.trim() !== '';
-    }
-    
-    if (currentGroup === 2 && currentStepInGroup === 1) {
-      return true;
-    }
-    
-    if (currentGroup === 2 && currentStepInGroup === 2) {
-      return true;
     }
     
     return true;
@@ -258,6 +260,17 @@ const ArtistOnboardingPage = () => {
           <GalleryImagesStep
             onImagesChange={handleGalleryImagesChange}
             initialImages={onboardingData.galleryImages}
+          />
+        );
+      }
+    }
+    
+    if (currentGroup === 3) {
+      if (currentStepInGroup === 1) {
+        return (
+          <PhoneVerificationStep
+            onPhoneChange={handlePhoneChange}
+            initialValue={onboardingData.phone}
           />
         );
       }
