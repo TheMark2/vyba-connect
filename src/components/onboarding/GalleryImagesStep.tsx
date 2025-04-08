@@ -1,8 +1,7 @@
-
 import React, { useState, useRef } from 'react';
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import { Upload, ImagePlus, X } from 'lucide-react';
+import { Upload, ImagePlus, X, Trash2 } from 'lucide-react';
 import { Badge } from "@/components/ui/badge";
 import { toast } from "@/hooks/use-toast";
 
@@ -11,6 +10,7 @@ interface GalleryImage {
   file: File;
   preview: string;
   isMain: boolean;
+  isSelected?: boolean;
 }
 
 interface GalleryImagesStepProps {
@@ -23,6 +23,7 @@ const GalleryImagesStep: React.FC<GalleryImagesStepProps> = ({
   initialImages = []
 }) => {
   const [images, setImages] = useState<GalleryImage[]>([]);
+  const [selectedImages, setSelectedImages] = useState<string[]>([]);
   const fileInputRef = useRef<HTMLInputElement>(null);
   
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -73,6 +74,9 @@ const GalleryImagesStep: React.FC<GalleryImagesStepProps> = ({
     
     setImages(updatedImages);
     onImagesChange(updatedImages.map(img => img.file));
+    
+    // Remove from selected images if present
+    setSelectedImages(prevSelected => prevSelected.filter(imgId => imgId !== id));
   };
   
   const handleSetMainImage = (id: string) => {
@@ -95,6 +99,45 @@ const GalleryImagesStep: React.FC<GalleryImagesStepProps> = ({
       return;
     }
     fileInputRef.current?.click();
+  };
+  
+  const toggleImageSelection = (id: string) => {
+    setSelectedImages(prev => {
+      if (prev.includes(id)) {
+        return prev.filter(imgId => imgId !== id);
+      } else {
+        return [...prev, id];
+      }
+    });
+  };
+  
+  const handleDeleteSelected = () => {
+    // First check if we're removing the main image
+    const isRemovingMainImage = selectedImages.some(id => 
+      images.find(img => img.id === id)?.isMain
+    );
+    
+    // Filter out selected images
+    const updatedImages = images.filter(img => !selectedImages.includes(img.id));
+    
+    // If we're removing the main image and have other images left, set a new main
+    if (isRemovingMainImage && updatedImages.length > 0) {
+      updatedImages[0].isMain = true;
+    }
+    
+    setImages(updatedImages);
+    onImagesChange(updatedImages.map(img => img.file));
+    setSelectedImages([]);
+    
+    toast({
+      title: "Imágenes eliminadas",
+      description: `Se ${selectedImages.length === 1 ? 'ha' : 'han'} eliminado ${selectedImages.length} ${selectedImages.length === 1 ? 'imagen' : 'imágenes'} correctamente.`
+    });
+  };
+  
+  // Helper to get selection index (for numbering)
+  const getSelectionIndex = (id: string) => {
+    return selectedImages.indexOf(id) + 1;
   };
   
   return (
@@ -143,66 +186,72 @@ const GalleryImagesStep: React.FC<GalleryImagesStepProps> = ({
         
         {/* Image grid */}
         {images.length > 0 && (
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-            {/* Main image (double width) */}
-            {images.filter(img => img.isMain).map(image => (
-              <Card 
-                key={image.id} 
-                className="col-span-2 row-span-2 relative rounded-lg overflow-hidden group shadow-none"
-              >
-                <img 
-                  src={image.preview} 
-                  alt="Preview" 
-                  className="w-full h-full object-cover aspect-[1.5/1]" 
-                />
-                <div className="absolute top-2 left-2">
-                  <Badge className="bg-white text-black font-medium">Imagen principal</Badge>
-                </div>
-                <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-30 transition-all flex items-center justify-center opacity-0 group-hover:opacity-100">
-                  <Button 
-                    variant="destructive" 
-                    size="icon"
-                    className="rounded-full"
-                    onClick={() => handleRemoveImage(image.id)}
-                  >
-                    <X className="w-4 h-4" />
-                  </Button>
-                </div>
-              </Card>
-            ))}
+          <>
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+              {/* Main image (double width) */}
+              {images.filter(img => img.isMain).map(image => (
+                <Card 
+                  key={image.id} 
+                  className={`col-span-2 row-span-2 relative rounded-lg overflow-hidden shadow-none transition-all duration-300 ${selectedImages.includes(image.id) ? 'ring-2 ring-primary' : ''}`}
+                  onClick={() => toggleImageSelection(image.id)}
+                >
+                  <img 
+                    src={image.preview} 
+                    alt="Preview" 
+                    className="w-full h-full object-cover aspect-[1.5/1]" 
+                  />
+                  <div className="absolute top-2 left-2">
+                    <Badge className="bg-white text-black font-medium">Imagen principal</Badge>
+                  </div>
+                  
+                  {/* Selection overlay */}
+                  {selectedImages.includes(image.id) && (
+                    <div className="absolute inset-0 bg-black bg-opacity-50 transition-opacity duration-300">
+                      <div className="absolute bottom-2 right-2 bg-white text-black w-6 h-6 rounded-full flex items-center justify-center font-bold text-sm">
+                        {getSelectionIndex(image.id)}
+                      </div>
+                    </div>
+                  )}
+                </Card>
+              ))}
+              
+              {/* Other images */}
+              {images.filter(img => !img.isMain).map(image => (
+                <Card 
+                  key={image.id} 
+                  className={`relative aspect-square rounded-lg overflow-hidden shadow-none cursor-pointer transition-all duration-300 ${selectedImages.includes(image.id) ? 'ring-2 ring-primary' : ''}`}
+                  onClick={() => toggleImageSelection(image.id)}
+                >
+                  <img 
+                    src={image.preview} 
+                    alt="Preview" 
+                    className="w-full h-full object-cover" 
+                  />
+                  
+                  {/* Selection overlay */}
+                  {selectedImages.includes(image.id) && (
+                    <div className="absolute inset-0 bg-black bg-opacity-50 transition-opacity duration-300">
+                      <div className="absolute bottom-2 right-2 bg-white text-black w-6 h-6 rounded-full flex items-center justify-center font-bold text-sm">
+                        {getSelectionIndex(image.id)}
+                      </div>
+                    </div>
+                  )}
+                </Card>
+              ))}
+            </div>
             
-            {/* Other images */}
-            {images.filter(img => !img.isMain).map(image => (
-              <Card 
-                key={image.id} 
-                className="relative aspect-square rounded-lg overflow-hidden group shadow-none"
+            {/* Delete selected button */}
+            {selectedImages.length > 0 && (
+              <Button 
+                variant="destructive" 
+                className="mt-6"
+                onClick={handleDeleteSelected}
               >
-                <img 
-                  src={image.preview} 
-                  alt="Preview" 
-                  className="w-full h-full object-cover" 
-                />
-                <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-30 transition-all flex items-center justify-center gap-2 opacity-0 group-hover:opacity-100">
-                  <Button 
-                    variant="secondary" 
-                    size="sm"
-                    className="rounded-full"
-                    onClick={() => handleSetMainImage(image.id)}
-                  >
-                    Principal
-                  </Button>
-                  <Button 
-                    variant="destructive" 
-                    size="icon"
-                    className="rounded-full"
-                    onClick={() => handleRemoveImage(image.id)}
-                  >
-                    <X className="w-4 h-4" />
-                  </Button>
-                </div>
-              </Card>
-            ))}
-          </div>
+                <Trash2 className="w-4 h-4 mr-2" />
+                Eliminar {selectedImages.length} {selectedImages.length === 1 ? 'imagen' : 'imágenes'}
+              </Button>
+            )}
+          </>
         )}
       </div>
     </div>
