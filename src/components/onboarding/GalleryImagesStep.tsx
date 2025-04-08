@@ -42,17 +42,24 @@ const GalleryImagesStep: React.FC<GalleryImagesStepProps> = ({
     }
     
     // Convert FileList to array and create new image objects
-    const newImageFiles = Array.from(selectedFiles).map(file => {
+    const newImageFiles = Array.from(selectedFiles).map((file, index) => {
       return {
         id: Math.random().toString(36).substring(2, 9),
         file,
         preview: URL.createObjectURL(file),
-        isMain: images.length === 0 // First image is main by default
+        // La primera imagen es main solo si no hay imágenes previas O si es la primera en este lote y no hay imágenes previas
+        isMain: images.length === 0 && index === 0
       };
     });
     
     // Update state with new images
     const updatedImages = [...images, ...newImageFiles];
+    
+    // Si no hay ninguna imagen principal, marcar la primera como principal
+    if (!updatedImages.some(img => img.isMain) && updatedImages.length > 0) {
+      updatedImages[0].isMain = true;
+    }
+    
     setImages(updatedImages);
     
     // Call the onImagesChange prop with all files
@@ -193,7 +200,7 @@ const GalleryImagesStep: React.FC<GalleryImagesStepProps> = ({
               {images.filter(img => img.isMain).map(image => (
                 <Card 
                   key={image.id} 
-                  className={`col-span-2 row-span-2 relative rounded-lg overflow-hidden shadow-none cursor-pointer transition-all duration-300 ${selectedImages.includes(image.id) ? 'ring-3 ring-primary' : ''}`}
+                  className={`col-span-2 row-span-2 relative rounded-lg overflow-hidden shadow-none cursor-pointer transition-all duration-500 ease-in-out ${selectedImages.includes(image.id) ? 'ring-4 ring-primary' : ''}`}
                   onClick={() => toggleImageSelection(image.id)}
                 >
                   <img 
@@ -205,14 +212,14 @@ const GalleryImagesStep: React.FC<GalleryImagesStepProps> = ({
                     <Badge className="bg-white text-black font-medium">Imagen principal</Badge>
                   </div>
                   
-                  {/* Selection overlay */}
-                  {selectedImages.includes(image.id) && (
-                    <div className="absolute inset-0 bg-black bg-opacity-50 transition-opacity duration-300">
-                      <div className="absolute bottom-2 right-2 bg-white text-black w-6 h-6 rounded-full flex items-center justify-center font-bold text-sm">
+                  {/* Selection overlay with transition */}
+                  <div className={`absolute inset-0 bg-black transition-opacity duration-500 ease-in-out ${selectedImages.includes(image.id) ? 'bg-opacity-50' : 'bg-opacity-0 pointer-events-none'}`}>
+                    {selectedImages.includes(image.id) && (
+                      <div className="absolute bottom-2 right-2 bg-white text-black w-6 h-6 rounded-full flex items-center justify-center font-bold text-sm transition-all duration-500 ease-in-out">
                         {getSelectionIndex(image.id)}
                       </div>
-                    </div>
-                  )}
+                    )}
+                  </div>
                 </Card>
               ))}
               
@@ -220,7 +227,7 @@ const GalleryImagesStep: React.FC<GalleryImagesStepProps> = ({
               {images.filter(img => !img.isMain).map(image => (
                 <Card 
                   key={image.id} 
-                  className={`relative aspect-square rounded-lg overflow-hidden shadow-none cursor-pointer transition-all duration-300 ${selectedImages.includes(image.id) ? 'ring-3 ring-primary' : ''}`}
+                  className={`relative aspect-square rounded-lg overflow-hidden shadow-none cursor-pointer transition-all duration-500 ease-in-out ${selectedImages.includes(image.id) ? 'ring-4 ring-primary' : ''}`}
                   onClick={() => toggleImageSelection(image.id)}
                 >
                   <img 
@@ -229,14 +236,14 @@ const GalleryImagesStep: React.FC<GalleryImagesStepProps> = ({
                     className="w-full h-full object-cover" 
                   />
                   
-                  {/* Selection overlay */}
-                  {selectedImages.includes(image.id) && (
-                    <div className="absolute inset-0 bg-black bg-opacity-50 transition-opacity duration-300">
-                      <div className="absolute bottom-2 right-2 bg-white text-black w-6 h-6 rounded-full flex items-center justify-center font-bold text-sm">
+                  {/* Selection overlay with transition */}
+                  <div className={`absolute inset-0 bg-black transition-opacity duration-500 ease-in-out ${selectedImages.includes(image.id) ? 'bg-opacity-50' : 'bg-opacity-0 pointer-events-none'}`}>
+                    {selectedImages.includes(image.id) && (
+                      <div className="absolute bottom-2 right-2 bg-white text-black w-6 h-6 rounded-full flex items-center justify-center font-bold text-sm transition-all duration-500 ease-in-out">
                         {getSelectionIndex(image.id)}
                       </div>
-                    </div>
-                  )}
+                    )}
+                  </div>
                 </Card>
               ))}
             </div>
