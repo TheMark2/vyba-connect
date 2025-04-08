@@ -3,6 +3,7 @@ import React, { useState, useRef } from 'react';
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Plus } from 'lucide-react';
+import { Tooltip, TooltipProvider, TooltipTrigger, TooltipContent } from "@/components/ui/tooltip";
 
 interface ProfilePhotoStepProps {
   onPhotoChange: (photo: File | null) => void;
@@ -51,7 +52,8 @@ const ProfilePhotoStep: React.FC<ProfilePhotoStepProps> = ({
           >
             <div 
               className={`
-                w-48 h-48 rounded-full border-2 border-dashed border-gray-300 
+                w-48 h-48 rounded-full 
+                border-2 ${isHovering ? 'border-black dark:border-white' : 'border-dashed border-gray-300'} 
                 flex items-center justify-center
                 ${photoPreview ? 'bg-transparent' : 'bg-[#F7F7F7] dark:bg-vyba-dark-secondary/30'}
                 overflow-hidden cursor-pointer
@@ -68,11 +70,11 @@ const ProfilePhotoStep: React.FC<ProfilePhotoStepProps> = ({
                 </Avatar>
               ) : (
                 <Plus 
-                  className={`w-10 h-10 text-gray-400 transition-opacity duration-300 ${isHovering ? 'opacity-70' : 'opacity-100'}`} 
+                  className={`w-10 h-10 transition-all duration-300 ${isHovering ? 'text-black dark:text-white' : 'text-gray-400'}`} 
                 />
               )}
               
-              {isHovering && (
+              {isHovering && photoPreview && (
                 <div className="absolute inset-0 bg-black bg-opacity-30 rounded-full flex items-center justify-center">
                   <span className="text-white text-sm font-medium">Cambiar foto</span>
                 </div>
