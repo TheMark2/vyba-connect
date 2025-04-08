@@ -2,6 +2,7 @@
 import React, { useState } from 'react';
 import { Badge } from "@/components/ui/badge";
 import { Mic, Users, Guitar, Music, Headphones } from 'lucide-react';
+import { useIsMobile } from '@/hooks/use-mobile';
 
 interface ArtistType {
   id: string;
@@ -29,6 +30,7 @@ interface ArtistTypeStepProps {
 const ArtistTypeStep: React.FC<ArtistTypeStepProps> = ({ onSelect, initialValue }) => {
   const [selectedType, setSelectedType] = useState<string>(initialValue || '');
   const [activePress, setActivePress] = useState<string | null>(null);
+  const isMobile = useIsMobile();
 
   const handleSelect = (typeId: string) => {
     setSelectedType(typeId);
@@ -53,33 +55,9 @@ const ArtistTypeStep: React.FC<ArtistTypeStepProps> = ({ onSelect, initialValue 
           ¿Eres DJ, cantante, banda, performer...? Cuéntanos tu tipo de propuesta artística.
         </p>
         
-        <div className="flex flex-wrap justify-center gap-3 mb-4">
-          {artistTypes.slice(0, 4).map(type => (
-            <Badge
-              key={type.id}
-              variant="outline"
-              className={`
-                py-3 px-6 cursor-pointer transition-all duration-150 
-                flex items-center gap-2 text-sm font-medium rounded-full border-none
-                ${selectedType === type.id 
-                  ? 'bg-[#D9D9D9] dark:bg-[#444444]' 
-                  : 'bg-[#F7F7F7] dark:bg-vyba-dark-secondary hover:bg-[#E9E9E9] dark:hover:bg-vyba-dark-secondary/80'
-                }
-                ${activePress === type.id ? 'transform scale-95' : ''}
-              `}
-              onClick={() => handleSelect(type.id)}
-              onMouseDown={() => handleMouseDown(type.id)}
-              onMouseUp={handleMouseUp}
-              onMouseLeave={handleMouseUp}
-            >
-              {type.icon}
-              {type.name}
-            </Badge>
-          ))}
-        </div>
-        
+        {/* Mostrar todos los badges juntos en una sola lista */}
         <div className="flex flex-wrap justify-center gap-3">
-          {artistTypes.slice(4).map(type => (
+          {artistTypes.map(type => (
             <Badge
               key={type.id}
               variant="outline"
