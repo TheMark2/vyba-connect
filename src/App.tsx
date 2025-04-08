@@ -11,6 +11,7 @@ import SeekerThankYouPage from './pages/SeekerThankYouPage';
 import ArtistsPage from './pages/ArtistsPage';
 import ArtistProfilePage from './pages/ArtistProfilePage';
 import ArtistBenefitsPage from './pages/ArtistBenefitsPage';
+import ArtistOnboardingPage from './pages/ArtistOnboardingPage';
 import NotFound from './pages/NotFound';
 
 function App() {
@@ -28,6 +29,7 @@ function App() {
         <Route path="/artists" element={<ArtistsPage />} />
         <Route path="/artista/:id" element={<ArtistProfilePage />} />
         <Route path="/artist-benefits" element={<ArtistBenefitsPage />} />
+        <Route path="/artist-onboarding" element={<ArtistOnboardingPage />} />
         <Route path="*" element={<NotFound />} />
       </Routes>
     </AnimatePresence>
