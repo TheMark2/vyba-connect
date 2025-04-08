@@ -24,7 +24,7 @@ const ArtistNameStep: React.FC<ArtistNameStepProps> = ({ onInputChange, initialV
   };
 
   return (
-    <div className="flex flex-col items-center justify-center w-full pt-28 px-4 md:px-8">
+    <div className="flex flex-col items-center justify-center w-full pt-28 px-6 sm:px-4 md:px-8">
       <div className="max-w-2xl w-full text-center">
         <h2 className="text-4xl md:text-6xl font-black mb-6 dark:text-white">
           Tu nombre artístico
@@ -39,7 +39,7 @@ const ArtistNameStep: React.FC<ArtistNameStepProps> = ({ onInputChange, initialV
             placeholder="DJ Mave"
             value={artistName}
             onChange={handleInputChange}
-            className="w-full h-14 text-base"
+            className="w-full h-14 text-sm"
           />
         </div>
       </div>

@@ -29,7 +29,7 @@ const CachePriceStep: React.FC<CachePriceStepProps> = ({
   };
 
   return (
-    <div className="flex flex-col items-center justify-center h-full w-full pt-28 px-4">
+    <div className="flex flex-col items-center justify-center h-full w-full pt-28 px-6 sm:px-4 md:px-8">
       <div className="max-w-xl w-full text-center">
         <h2 className="text-4xl md:text-6xl font-black mb-6">
           Define tu caché
@@ -49,7 +49,7 @@ const CachePriceStep: React.FC<CachePriceStepProps> = ({
                 placeholder="0" 
                 value={minPrice}
                 onChange={handleMinPriceChange}
-                className="bg-[#F7F7F7] dark:bg-vyba-dark-secondary/30 text-center"
+                className="bg-[#F7F7F7] dark:bg-vyba-dark-secondary/30 text-center text-sm"
               />
             </div>
             <div className="text-black dark:text-white font-medium">
@@ -61,7 +61,7 @@ const CachePriceStep: React.FC<CachePriceStepProps> = ({
                 placeholder="0" 
                 value={maxPrice}
                 onChange={handleMaxPriceChange}
-                className="bg-[#F7F7F7] dark:bg-vyba-dark-secondary/30 text-center"
+                className="bg-[#F7F7F7] dark:bg-vyba-dark-secondary/30 text-center text-sm"
               />
             </div>
           </div>
