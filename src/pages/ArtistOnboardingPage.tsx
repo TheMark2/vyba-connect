@@ -7,6 +7,7 @@ import ArtistTypeStep from '@/components/onboarding/ArtistTypeStep';
 import ArtistNameStep from '@/components/onboarding/ArtistNameStep';
 import MusicGenresStep from '@/components/onboarding/MusicGenresStep';
 import BioStep from '@/components/onboarding/BioStep';
+import ExperienceStep from '@/components/onboarding/ExperienceStep';
 import { Target, Music, Camera, Calendar, CheckCircle } from 'lucide-react';
 
 // Definimos los grupos de pasos
@@ -24,6 +25,7 @@ interface OnboardingData {
   artistName?: string;
   musicGenres?: string[];
   bio?: string;
+  experience?: string;
   // Aquí irían más campos para los siguientes pasos
 }
 
@@ -47,7 +49,7 @@ const ArtistOnboardingPage = () => {
       title: "Presentación y trayectoria",
       description: "Aquí es donde vendes tu talento. Cuéntales qué haces, por qué eres único y dónde has estado.",
       icon: <Target className="w-full h-full stroke-[1.5px]" />,
-      totalSteps: 2
+      totalSteps: 3
     },
     {
       id: 2,
@@ -105,6 +107,13 @@ const ArtistOnboardingPage = () => {
     });
   };
   
+  const handleExperienceChange = (experience: string) => {
+    setOnboardingData({
+      ...onboardingData,
+      experience: experience
+    });
+  };
+  
   // Funciones de navegación
   const handleNext = () => {
     const currentGroupObj = stepGroups[currentGroup];
@@ -148,6 +157,10 @@ const ArtistOnboardingPage = () => {
     
     if (currentGroup === 1 && currentStepInGroup === 1) {
       return !!onboardingData.bio && onboardingData.bio.trim() !== '';
+    }
+    
+    if (currentGroup === 1 && currentStepInGroup === 2) {
+      return !!onboardingData.experience && onboardingData.experience.trim() !== '';
     }
     
     return true;
@@ -203,6 +216,15 @@ const ArtistOnboardingPage = () => {
           <BioStep 
             onInputChange={handleBioChange}
             initialValue={onboardingData.bio}
+          />
+        );
+      }
+      
+      if (currentStepInGroup === 2) {
+        return (
+          <ExperienceStep 
+            onInputChange={handleExperienceChange}
+            initialValue={onboardingData.experience}
           />
         );
       }
