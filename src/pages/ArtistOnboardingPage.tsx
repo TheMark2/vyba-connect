@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { PageTransition } from '@/components/ui/page-transition';
@@ -49,12 +50,12 @@ const ArtistOnboardingPage = () => {
       title: "Presentación y trayectoria",
       description: "Aquí es donde vendes tu talento. Cuéntales qué haces, por qué eres único y dónde has estado.",
       icon: <Target className="w-full h-full stroke-[1.5px]" />,
-      totalSteps: 3
+      totalSteps: 2
     },
     {
       id: 2,
-      title: "Muestra tu imagen",
-      description: "Las imágenes valen más que mil palabras, muestra quién eres.",
+      title: "Una imagen vale mas que 1000 palabras",
+      description: "Sube las imágenes que van a ser la primera impresión de los buscadores. Andate con ojo, no pongas cualquiera",
       icon: <Camera className="w-full h-full stroke-[1.5px]" />,
       totalSteps: 2
     },
@@ -159,10 +160,6 @@ const ArtistOnboardingPage = () => {
       return !!onboardingData.bio && onboardingData.bio.trim() !== '';
     }
     
-    if (currentGroup === 1 && currentStepInGroup === 2) {
-      return !!onboardingData.experience && onboardingData.experience.trim() !== '';
-    }
-    
     return true;
   };
   
@@ -219,15 +216,15 @@ const ArtistOnboardingPage = () => {
           />
         );
       }
-      
-      if (currentStepInGroup === 2) {
-        return (
-          <ExperienceStep 
-            onInputChange={handleExperienceChange}
-            initialValue={onboardingData.experience}
-          />
-        );
-      }
+    }
+    
+    if (currentGroup === 2 && currentStepInGroup === 1) {
+      return (
+        <ExperienceStep 
+          onInputChange={handleExperienceChange}
+          initialValue={onboardingData.experience}
+        />
+      );
     }
     
     return (
