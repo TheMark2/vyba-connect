@@ -11,6 +11,7 @@ import ExperienceStep from '@/components/onboarding/ExperienceStep';
 import ProfilePhotoStep from '@/components/onboarding/ProfilePhotoStep';
 import GalleryImagesStep from '@/components/onboarding/GalleryImagesStep';
 import PhoneVerificationStep from '@/components/onboarding/PhoneVerificationStep';
+import CachePriceStep from '@/components/onboarding/CachePriceStep';
 import { Target, Music, Camera, Phone, CheckCircle } from 'lucide-react';
 
 interface StepGroup {
@@ -30,6 +31,8 @@ interface OnboardingData {
   profilePhoto?: File | null;
   galleryImages?: File[];
   phone?: string;
+  minPrice?: string;
+  maxPrice?: string;
 }
 
 const ArtistOnboardingPage = () => {
@@ -71,7 +74,7 @@ const ArtistOnboardingPage = () => {
       title: "¡Casi listo!",
       description: "Revisa toda la información antes de publicar tu perfil.",
       icon: <CheckCircle className="w-full h-full stroke-[1.5px]" />,
-      totalSteps: 1
+      totalSteps: 2
     }
   ];
   
@@ -134,6 +137,14 @@ const ArtistOnboardingPage = () => {
     });
   };
   
+  const handlePriceRangeChange = (minPrice: string, maxPrice: string) => {
+    setOnboardingData({
+      ...onboardingData,
+      minPrice,
+      maxPrice
+    });
+  };
+  
   const handleNext = () => {
     const currentGroupObj = stepGroups[currentGroup];
     
@@ -179,6 +190,10 @@ const ArtistOnboardingPage = () => {
     
     if (currentGroup === 1 && currentStepInGroup === 2) {
       return !!onboardingData.experience && onboardingData.experience.trim() !== '';
+    }
+    
+    if (currentGroup === 4 && currentStepInGroup === 1) {
+      return !!onboardingData.minPrice && !!onboardingData.maxPrice;
     }
     
     return true;
@@ -270,6 +285,18 @@ const ArtistOnboardingPage = () => {
           <PhoneVerificationStep
             onPhoneChange={handlePhoneChange}
             initialValue={onboardingData.phone}
+          />
+        );
+      }
+    }
+    
+    if (currentGroup === 4) {
+      if (currentStepInGroup === 1) {
+        return (
+          <CachePriceStep
+            onPriceRangeChange={handlePriceRangeChange}
+            initialMinPrice={onboardingData.minPrice}
+            initialMaxPrice={onboardingData.maxPrice}
           />
         );
       }
