@@ -335,7 +335,7 @@ const ArtistOnboardingPage = () => {
   
   return (
     <PageTransition>
-      <div className="min-h-screen bg-white dark:bg-vyba-dark-bg flex flex-col">
+      <div className="h-auto bg-white dark:bg-vyba-dark-bg flex flex-col">
         <StepsNavbar
           currentGroup={currentGroup}
           totalGroups={stepGroups.length}
