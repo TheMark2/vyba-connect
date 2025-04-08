@@ -5,7 +5,6 @@ import { Input } from "@/components/ui/input";
 import { InputOTP, InputOTPGroup, InputOTPSlot } from "@/components/ui/input-otp";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
-import { useIsMobile } from '@/hooks/use-mobile';
 
 interface PhoneVerificationStepProps {
   onPhoneChange: (phone: string) => void;
@@ -24,7 +23,6 @@ const PhoneVerificationStep: React.FC<PhoneVerificationStepProps> = ({
   const [isSendingCode, setIsSendingCode] = useState(false);
   const [isVerifyingCode, setIsVerifyingCode] = useState(false);
   const { toast } = useToast();
-  const isMobile = useIsMobile();
 
   // Formatear número de teléfono automáticamente
   const formatPhoneNumber = (value: string) => {
@@ -100,7 +98,7 @@ const PhoneVerificationStep: React.FC<PhoneVerificationStepProps> = ({
     }, 1500);
   };
 
-  return <div className="flex flex-col items-center w-full pt-8 px-4">
+  return <div className="flex flex-col items-center justify-center h-full w-full pt-28 px-4">
       <div className="max-w-md w-full text-center">
         {!verified ? <>
             {!showOTP ? <>

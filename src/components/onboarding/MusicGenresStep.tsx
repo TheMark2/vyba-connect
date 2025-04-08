@@ -2,7 +2,6 @@
 import React, { useState, useEffect } from 'react';
 import { Badge } from "@/components/ui/badge";
 import { Headphones, Music } from 'lucide-react';
-import { useIsMobile } from '@/hooks/use-mobile';
 
 interface MusicGenresStepProps {
   onSelect: (genres: string[]) => void;
@@ -17,7 +16,6 @@ const MusicGenresStep: React.FC<MusicGenresStepProps> = ({
 }) => {
   const [selectedGenres, setSelectedGenres] = useState<string[]>(initialValues || []);
   const [activePress, setActivePress] = useState<string | null>(null);
-  const isMobile = useIsMobile();
 
   // Lista reducida de géneros musicales populares
   const musicGenres = [
@@ -71,7 +69,7 @@ const MusicGenresStep: React.FC<MusicGenresStepProps> = ({
   };
 
   return (
-    <div className="flex flex-col w-full px-4 md:px-8 pt-8">
+    <div className="flex flex-col items-center justify-center w-full pt-28 px-4 md:px-8">
       <div className="max-w-2xl w-full text-center">
         <h2 className="text-4xl md:text-6xl font-black mb-6 dark:text-white">
           Tus géneros musicales
