@@ -28,10 +28,19 @@ interface ArtistTypeStepProps {
 
 const ArtistTypeStep: React.FC<ArtistTypeStepProps> = ({ onSelect, initialValue }) => {
   const [selectedType, setSelectedType] = useState<string>(initialValue || '');
+  const [activePress, setActivePress] = useState<string | null>(null);
 
   const handleSelect = (typeId: string) => {
     setSelectedType(typeId);
     onSelect(typeId);
+  };
+  
+  const handleMouseDown = (typeId: string) => {
+    setActivePress(typeId);
+  };
+  
+  const handleMouseUp = () => {
+    setActivePress(null);
   };
 
   return (
@@ -40,24 +49,28 @@ const ArtistTypeStep: React.FC<ArtistTypeStepProps> = ({ onSelect, initialValue 
         <h2 className="text-4xl md:text-6xl font-black mb-6 dark:text-white">
           Descríbete a ti mismo
         </h2>
-        <p className="text-gray-500 text-center mb-10 max-w-md mx-auto">
+        <p className="text-gray-500 text-center mb-8 max-w-md mx-auto">
           ¿Eres DJ, cantante, banda, performer...? Cuéntanos tu tipo de propuesta artística.
         </p>
         
-        <div className="flex flex-wrap justify-center gap-3 mb-6">
+        <div className="flex flex-wrap justify-center gap-3 mb-4">
           {artistTypes.slice(0, 4).map(type => (
             <Badge
               key={type.id}
               variant="outline"
               className={`
-                py-2.5 px-6 cursor-pointer transition-all duration-300 
+                py-3 px-6 cursor-pointer transition-all duration-150 
                 flex items-center gap-2 text-sm font-medium rounded-full border-none
                 ${selectedType === type.id 
-                  ? 'bg-[#D9D9D9] dark:bg-[#444444] transform scale-95' 
+                  ? 'bg-[#D9D9D9] dark:bg-[#444444]' 
                   : 'bg-[#F7F7F7] dark:bg-vyba-dark-secondary hover:bg-[#E9E9E9] dark:hover:bg-vyba-dark-secondary/80'
                 }
+                ${activePress === type.id ? 'transform scale-95' : ''}
               `}
               onClick={() => handleSelect(type.id)}
+              onMouseDown={() => handleMouseDown(type.id)}
+              onMouseUp={handleMouseUp}
+              onMouseLeave={handleMouseUp}
             >
               {type.icon}
               {type.name}
@@ -71,14 +84,18 @@ const ArtistTypeStep: React.FC<ArtistTypeStepProps> = ({ onSelect, initialValue 
               key={type.id}
               variant="outline"
               className={`
-                py-2.5 px-6 cursor-pointer transition-all duration-300
+                py-3 px-6 cursor-pointer transition-all duration-150
                 flex items-center gap-2 text-sm font-medium rounded-full border-none
                 ${selectedType === type.id 
-                  ? 'bg-[#D9D9D9] dark:bg-[#444444] transform scale-95' 
+                  ? 'bg-[#D9D9D9] dark:bg-[#444444]' 
                   : 'bg-[#F7F7F7] dark:bg-vyba-dark-secondary hover:bg-[#E9E9E9] dark:hover:bg-vyba-dark-secondary/80'
                 }
+                ${activePress === type.id ? 'transform scale-95' : ''}
               `}
               onClick={() => handleSelect(type.id)}
+              onMouseDown={() => handleMouseDown(type.id)}
+              onMouseUp={handleMouseUp}
+              onMouseLeave={handleMouseUp}
             >
               {type.icon}
               {type.name}
