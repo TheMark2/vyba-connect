@@ -26,6 +26,8 @@ const GalleryImagesStep: React.FC<GalleryImagesStepProps> = ({
   const [images, setImages] = useState<GalleryImage[]>([]);
   const [selectedImages, setSelectedImages] = useState<string[]>([]);
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const [draggedImage, setDraggedImage] = useState<string | null>(null);
+  const [dragOverImage, setDragOverImage] = useState<string | null>(null);
   
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const selectedFiles = e.target.files;
@@ -167,6 +169,82 @@ const GalleryImagesStep: React.FC<GalleryImagesStepProps> = ({
   const getSelectionIndex = (id: string) => {
     return selectedImages.indexOf(id) + 1;
   };
+
+  // Drag and drop handlers
+  const handleDragStart = (e: React.DragEvent<HTMLDivElement>, id: string) => {
+    setDraggedImage(id);
+    // Add drag styling
+    e.currentTarget.classList.add('opacity-50', 'scale-95');
+    // Set data transfer for Firefox compatibility
+    e.dataTransfer.setData('text/plain', id);
+    // Set the drag image (optional, improves UX)
+    const img = new Image();
+    img.src = images.find(img => img.id === id)?.preview || '';
+    e.dataTransfer.setDragImage(img, 50, 50);
+  };
+  
+  const handleDragEnd = (e: React.DragEvent<HTMLDivElement>) => {
+    setDraggedImage(null);
+    setDragOverImage(null);
+    // Remove drag styling
+    e.currentTarget.classList.remove('opacity-50', 'scale-95');
+  };
+  
+  const handleDragOver = (e: React.DragEvent<HTMLDivElement>, id: string) => {
+    e.preventDefault();
+    if (draggedImage === id) return; // Don't highlight if dragging over self
+    setDragOverImage(id);
+  };
+  
+  const handleDragLeave = () => {
+    setDragOverImage(null);
+  };
+  
+  const handleDrop = (e: React.DragEvent<HTMLDivElement>, targetId: string) => {
+    e.preventDefault();
+    
+    if (!draggedImage || draggedImage === targetId) {
+      setDraggedImage(null);
+      setDragOverImage(null);
+      return;
+    }
+    
+    // Reorder images
+    const draggedIndex = images.findIndex(img => img.id === draggedImage);
+    const targetIndex = images.findIndex(img => img.id === targetId);
+    
+    if (draggedIndex < 0 || targetIndex < 0) return;
+    
+    const newImages = [...images];
+    const [movedImage] = newImages.splice(draggedIndex, 1);
+    newImages.splice(targetIndex, 0, movedImage);
+    
+    // Update the main image if it was moved and it was the first item
+    if (movedImage.isMain && targetIndex !== 0) {
+      // If we moved the main image from position 0, make the new first image main
+      movedImage.isMain = false;
+      newImages[0].isMain = true;
+    } else if (!movedImage.isMain && targetIndex === 0 && draggedIndex !== 0) {
+      // If we moved a non-main image to position 0, make it main
+      movedImage.isMain = true;
+      const previousMainImage = newImages.find((img, idx) => idx !== 0 && img.isMain);
+      if (previousMainImage) {
+        previousMainImage.isMain = false;
+      }
+    }
+    
+    setImages(newImages);
+    onImagesChange(newImages.map(img => img.file));
+    setDraggedImage(null);
+    setDragOverImage(null);
+    
+    // Create drop animation effect
+    const targetElem = e.currentTarget;
+    targetElem.classList.add('scale-105');
+    setTimeout(() => {
+      targetElem.classList.remove('scale-105');
+    }, 300);
+  };
   
   return (
     <div className="flex flex-col items-center justify-center w-full pt-28 px-4 md:px-8">
@@ -215,13 +293,22 @@ const GalleryImagesStep: React.FC<GalleryImagesStepProps> = ({
         {/* Image grid */}
         {images.length > 0 && (
           <>
+            <p className="text-gray-500 text-sm mb-6">Arrastra y suelta para reordenar las imágenes. La primera imagen será la principal.</p>
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
               {/* Main image (double width) */}
               {images.filter(img => img.isMain).map(image => (
                 <Card 
                   key={image.id} 
-                  className={`col-span-2 row-span-2 relative rounded-lg overflow-hidden shadow-none cursor-pointer transition-all duration-500 ease-in-out ${selectedImages.includes(image.id) ? 'ring-4 ring-primary' : ''}`}
+                  className={`col-span-2 row-span-2 relative rounded-lg overflow-hidden shadow-none cursor-pointer transition-all duration-500 ease-in-out ${
+                    selectedImages.includes(image.id) ? 'ring-4 ring-primary' : ''
+                  } ${dragOverImage === image.id ? 'scale-105 ring-2 ring-primary/50' : ''}`}
                   onClick={(e) => toggleImageSelection(image.id, e as React.MouseEvent<HTMLDivElement>)}
+                  draggable
+                  onDragStart={(e) => handleDragStart(e, image.id)}
+                  onDragEnd={handleDragEnd}
+                  onDragOver={(e) => handleDragOver(e, image.id)}
+                  onDragLeave={handleDragLeave}
+                  onDrop={(e) => handleDrop(e, image.id)}
                 >
                   <img 
                     src={image.preview} 
@@ -247,8 +334,16 @@ const GalleryImagesStep: React.FC<GalleryImagesStepProps> = ({
               {images.filter(img => !img.isMain).map(image => (
                 <Card 
                   key={image.id} 
-                  className={`relative aspect-square rounded-lg overflow-hidden shadow-none cursor-pointer transition-all duration-500 ease-in-out ${selectedImages.includes(image.id) ? 'ring-4 ring-primary' : ''}`}
+                  className={`relative aspect-square rounded-lg overflow-hidden shadow-none cursor-pointer transition-all duration-500 ease-in-out ${
+                    selectedImages.includes(image.id) ? 'ring-4 ring-primary' : ''
+                  } ${dragOverImage === image.id ? 'scale-105 ring-2 ring-primary/50' : ''}`}
                   onClick={(e) => toggleImageSelection(image.id, e as React.MouseEvent<HTMLDivElement>)}
+                  draggable
+                  onDragStart={(e) => handleDragStart(e, image.id)}
+                  onDragEnd={handleDragEnd}
+                  onDragOver={(e) => handleDragOver(e, image.id)}
+                  onDragLeave={handleDragLeave}
+                  onDrop={(e) => handleDrop(e, image.id)}
                 >
                   <img 
                     src={image.preview} 
