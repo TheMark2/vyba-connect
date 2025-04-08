@@ -79,7 +79,7 @@ const InformationStep: React.FC<InformationStepProps> = ({
   return <div className="w-full max-w-2xl mx-auto">
       <h1 className="text-4xl font-black text-center mb-12">Información</h1>
       
-      <div className="space-y-8 max-w-3xl mx-auto">
+      <div className="space-y-8 max-w-2xl mx-auto">
         {/* Tipo de artista */}
         <div className="space-y-2">
           <Label htmlFor="artistType" className="text-lg font-medium">Tipo de artista</Label>
