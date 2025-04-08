@@ -46,8 +46,8 @@ const ArtistTypeStep: React.FC<ArtistTypeStepProps> = ({ onSelect, initialValue 
   };
 
   return (
-    <div className="flex flex-col items-center justify-center w-full pt-28 px-6 sm:px-4 md:px-8">
-      <div className="max-w-2xl w-full text-center">
+    <div className="flex flex-col w-full px-6 sm:px-4 md:px-8">
+      <div className="max-w-2xl w-full text-center mx-auto">
         <h2 className="text-4xl md:text-6xl font-black mb-6 dark:text-white">
           Descríbete a ti mismo
         </h2>

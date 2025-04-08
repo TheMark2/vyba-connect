@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { PageTransition } from '@/components/ui/page-transition';
@@ -346,7 +347,7 @@ const ArtistOnboardingPage = () => {
           canGoNext={canGoNext()}
         />
         
-        <div className={`flex-1 flex items-center justify-center px-0 ${isMobile ? 'pb-24' : ''}`}>
+        <div className={`flex-1 ${isMobile ? 'pt-28 pb-24' : 'flex items-center justify-center'}`}>
           {renderCurrentStep()}
         </div>
       </div>
