@@ -12,6 +12,7 @@ interface GalleryImage {
   preview: string;
   isMain: boolean;
   isSelected?: boolean;
+  isLoading?: boolean;
 }
 
 interface GalleryImagesStepProps {
@@ -44,43 +45,58 @@ const GalleryImagesStep: React.FC<GalleryImagesStepProps> = ({
       return;
     }
     
-    // Set loading state to true before processing images
-    setIsLoading(true);
+    // Convert FileList to array and create new image objects with loading state
+    const newImageFiles = Array.from(selectedFiles).map((file, index) => {
+      return {
+        id: Math.random().toString(36).substring(2, 9),
+        file,
+        preview: URL.createObjectURL(file),
+        // Solo la primera imagen del lote es main si no hay imágenes previas
+        isMain: images.length === 0 && index === 0,
+        isLoading: true
+      };
+    });
+    
+    // Update state with new images (in loading state)
+    const updatedImages = [...images, ...newImageFiles];
+    
+    // Si no hay ninguna imagen principal, marcar la primera como principal
+    if (!updatedImages.some(img => img.isMain) && updatedImages.length > 0) {
+      updatedImages[0].isMain = true;
+    }
+    
+    setImages(updatedImages);
+    
+    // Reset the file input
+    if (fileInputRef.current) {
+      fileInputRef.current.value = '';
+    }
     
     // Simulate image processing delay (you can remove this in production if not needed)
-    setTimeout(() => {
-      // Convert FileList to array and create new image objects
-      const newImageFiles = Array.from(selectedFiles).map((file, index) => {
-        return {
-          id: Math.random().toString(36).substring(2, 9),
-          file,
-          preview: URL.createObjectURL(file),
-          // Solo la primera imagen del lote es main si no hay imágenes previas
-          isMain: images.length === 0 && index === 0
-        };
-      });
-      
-      // Update state with new images
-      const updatedImages = [...images, ...newImageFiles];
-      
-      // Si no hay ninguna imagen principal, marcar la primera como principal
-      if (!updatedImages.some(img => img.isMain) && updatedImages.length > 0) {
-        updatedImages[0].isMain = true;
-      }
-      
-      setImages(updatedImages);
-      
-      // Call the onImagesChange prop with all files
-      onImagesChange(updatedImages.map(img => img.file));
-      
-      // Reset the file input
-      if (fileInputRef.current) {
-        fileInputRef.current.value = '';
-      }
-      
-      // Set loading state to false after processing is complete
-      setIsLoading(false);
-    }, 1000); // Simulate 1 second loading time
+    // Process each image individually with different timing to make it more realistic
+    newImageFiles.forEach((img, index) => {
+      setTimeout(() => {
+        setImages(prevImages => {
+          const newImages = [...prevImages];
+          const imgIndex = newImages.findIndex(i => i.id === img.id);
+          if (imgIndex !== -1) {
+            newImages[imgIndex] = {
+              ...newImages[imgIndex],
+              isLoading: false
+            };
+          }
+          return newImages;
+        });
+        
+        // Only update onImagesChange after all images are loaded
+        if (index === newImageFiles.length - 1) {
+          setTimeout(() => {
+            // Call the onImagesChange prop with all files
+            onImagesChange(updatedImages.map(img => img.file));
+          }, 100);
+        }
+      }, 1000 + (index * 500)); // Stagger the loading times a bit
+    });
   };
   
   const handleRemoveImage = (id: string) => {
@@ -322,11 +338,20 @@ const GalleryImagesStep: React.FC<GalleryImagesStepProps> = ({
                     onDragLeave={handleDragLeave}
                     onDrop={(e) => handleDrop(e, image.id)}
                   >
-                    <img 
-                      src={image.preview} 
-                      alt="Preview" 
-                      className="w-full h-full object-cover aspect-[1.5/1]" 
-                    />
+                    <div className="relative w-full h-full">
+                      <img 
+                        src={image.preview} 
+                        alt="Preview" 
+                        className="w-full h-full object-cover aspect-[1.5/1]" 
+                      />
+                      
+                      {/* Per-image loading spinner */}
+                      {image.isLoading && (
+                        <div className="absolute inset-0 bg-gray-200/70 dark:bg-gray-800/70 flex items-center justify-center">
+                          <Loader2 className="w-8 h-8 text-primary animate-spin" />
+                        </div>
+                      )}
+                    
                     <div className="absolute top-2 left-2">
                       <Badge className="bg-white text-black font-medium">Imagen principal</Badge>
                     </div>
@@ -357,11 +382,20 @@ const GalleryImagesStep: React.FC<GalleryImagesStepProps> = ({
                     onDragLeave={handleDragLeave}
                     onDrop={(e) => handleDrop(e, image.id)}
                   >
-                    <img 
-                      src={image.preview} 
-                      alt="Preview" 
-                      className="w-full h-full object-cover" 
-                    />
+                    <div className="relative w-full h-full">
+                      <img 
+                        src={image.preview} 
+                        alt="Preview" 
+                        className="w-full h-full object-cover" 
+                      />
+                      
+                      {/* Per-image loading spinner */}
+                      {image.isLoading && (
+                        <div className="absolute inset-0 bg-gray-200/70 dark:bg-gray-800/70 flex items-center justify-center">
+                          <Loader2 className="w-8 h-8 text-primary animate-spin" />
+                        </div>
+                      )}
+                    </div>
                     
                     {/* Selection overlay with transition */}
                     <div className={`absolute inset-0 bg-black transition-all duration-500 ease-in-out ${selectedImages.includes(image.id) ? 'bg-opacity-50' : 'bg-opacity-0 pointer-events-none'}`}>
@@ -381,7 +415,6 @@ const GalleryImagesStep: React.FC<GalleryImagesStepProps> = ({
                   variant="secondary" 
                   className="mt-6"
                   onClick={handleDeleteSelected}
-                  disabled={isLoading}
                 >
                   <Trash2 className="w-4 h-4 mr-2" />
                   Eliminar {selectedImages.length} {selectedImages.length === 1 ? 'imagen' : 'imágenes'}
