@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { PageTransition } from '@/components/ui/page-transition';
 import StepsNavbar from '@/components/onboarding/StepsNavbar';
 import CoverStep from '@/components/onboarding/CoverStep';
+import ArtistTypeStep from '@/components/onboarding/ArtistTypeStep';
 import { Target, Music, Camera, Calendar, CheckCircle } from 'lucide-react';
 
 // Definimos los grupos de pasos
@@ -15,8 +16,17 @@ interface StepGroup {
   totalSteps: number;
 }
 
+// Definimos la interfaz para los datos de onboarding
+interface OnboardingData {
+  artistType?: string;
+  // Aquí irían más campos para los siguientes pasos
+}
+
 const ArtistOnboardingPage = () => {
   const navigate = useNavigate();
+  
+  // Estado para almacenar los datos del onboarding
+  const [onboardingData, setOnboardingData] = useState<OnboardingData>({});
   
   // Configuración de los grupos de pasos
   const stepGroups: StepGroup[] = [
@@ -25,7 +35,7 @@ const ArtistOnboardingPage = () => {
       title: "¿Quién eres como artista?",
       description: "Vamos a mostrar tu esencia para que los promotores y fans te conozcan al instante.",
       icon: <Target className="w-full h-full stroke-[1.5px]" />,
-      totalSteps: 3
+      totalSteps: 4
     },
     {
       id: 1,
@@ -61,6 +71,14 @@ const ArtistOnboardingPage = () => {
   const [currentGroup, setCurrentGroup] = useState(0);
   const [currentStepInGroup, setCurrentStepInGroup] = useState(0);
   
+  // Actualizadores de datos
+  const handleArtistTypeSelect = (type: string) => {
+    setOnboardingData({
+      ...onboardingData,
+      artistType: type
+    });
+  };
+  
   // Funciones de navegación
   const handleNext = () => {
     const currentGroupObj = stepGroups[currentGroup];
@@ -93,6 +111,17 @@ const ArtistOnboardingPage = () => {
     navigate('/artist-benefits');
   };
   
+  // Verificar si hay un valor seleccionado para habilitar el botón siguiente
+  const canGoNext = () => {
+    // Si estamos en el primer grupo, paso 1 (índice 1)
+    if (currentGroup === 0 && currentStepInGroup === 1) {
+      return !!onboardingData.artistType;
+    }
+    
+    // Por defecto permitir avanzar
+    return true;
+  };
+  
   // Renderizar el paso actual
   const renderCurrentStep = () => {
     const currentGroupObj = stepGroups[currentGroup];
@@ -109,8 +138,21 @@ const ArtistOnboardingPage = () => {
       );
     }
     
+    // Grupo 1 (índice 0)
+    if (currentGroup === 0) {
+      // Paso 1 del grupo 1 (índice 1) - Selección de tipo de artista
+      if (currentStepInGroup === 1) {
+        return (
+          <ArtistTypeStep 
+            onSelect={handleArtistTypeSelect} 
+            initialValue={onboardingData.artistType}
+          />
+        );
+      }
+    }
+    
     // En un caso real, aquí renderizaríamos los distintos pasos de cada grupo
-    // Por ahora, solo mostraremos un placeholder
+    // Por ahora, solo mostraremos un placeholder para los pasos no implementados
     return (
       <div className="flex flex-col items-center justify-center h-full w-full pt-28 px-4">
         <div className="max-w-2xl w-full text-center">
@@ -144,6 +186,7 @@ const ArtistOnboardingPage = () => {
           onBack={handleBack}
           onNext={handleNext}
           onCancel={handleCancel}
+          canGoNext={canGoNext()}
         />
         
         <div className="flex-1 flex items-center justify-center">

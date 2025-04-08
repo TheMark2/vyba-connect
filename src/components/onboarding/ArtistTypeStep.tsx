@@ -1,0 +1,93 @@
+
+import React, { useState } from 'react';
+import { Badge } from "@/components/ui/badge";
+import { Mic, Users, Guitar, Music, Headphones } from 'lucide-react';
+
+interface ArtistType {
+  id: string;
+  name: string;
+  icon: React.ReactNode;
+}
+
+const artistTypes: ArtistType[] = [
+  { id: 'dj', name: 'DJ', icon: <Headphones className="w-4 h-4" /> },
+  { id: 'solista', name: 'Solista', icon: <Mic className="w-4 h-4" /> },
+  { id: 'banda', name: 'Banda', icon: <Users className="w-4 h-4" /> },
+  { id: 'duo', name: 'Duo', icon: <Users className="w-4 h-4" /> },
+  { id: 'coro', name: 'Coro', icon: <Mic className="w-4 h-4" /> },
+  { id: 'guitarrista', name: 'Guitarrista', icon: <Guitar className="w-4 h-4" /> },
+  { id: 'bajista', name: 'Bajista', icon: <Music className="w-4 h-4" /> },
+  { id: 'pianista', name: 'Pianista', icon: <Music className="w-4 h-4" /> },
+  { id: 'violinista', name: 'Violinista', icon: <Music className="w-4 h-4" /> },
+];
+
+interface ArtistTypeStepProps {
+  onSelect: (type: string) => void;
+  initialValue?: string;
+}
+
+const ArtistTypeStep: React.FC<ArtistTypeStepProps> = ({ onSelect, initialValue }) => {
+  const [selectedType, setSelectedType] = useState<string>(initialValue || '');
+
+  const handleSelect = (typeId: string) => {
+    setSelectedType(typeId);
+    onSelect(typeId);
+  };
+
+  return (
+    <div className="flex flex-col items-center justify-center w-full pt-28 px-4 md:px-8">
+      <div className="max-w-2xl w-full text-center">
+        <h2 className="text-4xl md:text-6xl font-black mb-6 dark:text-white">
+          Descríbete a ti mismo
+        </h2>
+        <p className="text-gray-500 text-center mb-14">
+          ¿Eres DJ, cantante, banda, performer...? Cuéntanos tu tipo de propuesta artística.
+        </p>
+        
+        <div className="flex flex-wrap justify-center gap-3 mb-16">
+          {artistTypes.slice(0, 4).map(type => (
+            <Badge
+              key={type.id}
+              variant="outline"
+              className={`
+                py-2.5 px-6 cursor-pointer transition-all duration-300 
+                flex items-center gap-2 text-sm font-medium rounded-full
+                ${selectedType === type.id 
+                  ? 'bg-[#D9D9D9] dark:bg-[#444444] scale-95' 
+                  : 'bg-[#F7F7F7] dark:bg-vyba-dark-secondary hover:scale-95'
+                }
+              `}
+              onClick={() => handleSelect(type.id)}
+            >
+              {type.icon}
+              {type.name}
+            </Badge>
+          ))}
+        </div>
+        
+        <div className="flex flex-wrap justify-center gap-3">
+          {artistTypes.slice(4).map(type => (
+            <Badge
+              key={type.id}
+              variant="outline"
+              className={`
+                py-2.5 px-6 cursor-pointer transition-all duration-300
+                flex items-center gap-2 text-sm font-medium rounded-full
+                ${selectedType === type.id 
+                  ? 'bg-[#D9D9D9] dark:bg-[#444444] scale-95' 
+                  : 'bg-[#F7F7F7] dark:bg-vyba-dark-secondary hover:scale-95'
+                }
+              `}
+              onClick={() => handleSelect(type.id)}
+            >
+              {type.icon}
+              {type.name}
+            </Badge>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default ArtistTypeStep;
