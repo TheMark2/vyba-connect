@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { PageTransition } from '@/components/ui/page-transition';
@@ -265,15 +264,13 @@ const ArtistOnboardingPage = () => {
       }
     }
     
-    if (currentGroup === 3) {
-      if (currentStepInGroup === 1) {
-        return (
-          <PhoneVerificationStep
-            onPhoneChange={handlePhoneChange}
-            initialValue={onboardingData.phone}
-          />
-        );
-      }
+    if (currentGroup === 3 && currentStepInGroup === 1) {
+      return (
+        <PhoneVerificationStep
+          onPhoneChange={handlePhoneChange}
+          initialValue={onboardingData.phone}
+        />
+      );
     }
     
     return (

@@ -7,6 +7,7 @@ import {
   InputOTPGroup,
   InputOTPSlot
 } from "@/components/ui/input-otp";
+import { Button } from "@/components/ui/button";
 
 interface PhoneVerificationStepProps {
   onPhoneChange: (phone: string) => void;
@@ -89,13 +90,13 @@ const PhoneVerificationStep: React.FC<PhoneVerificationStepProps> = ({
                   </div>
                 </div>
               ) : (
-                <button
+                <Button
                   onClick={handleSendCode}
                   disabled={!phone || phone.length < 9}
                   className="w-full bg-black text-white rounded-full py-3 font-medium disabled:opacity-50 disabled:cursor-not-allowed mt-2"
                 >
                   Enviar código
-                </button>
+                </Button>
               )}
             </>
           ) : (
