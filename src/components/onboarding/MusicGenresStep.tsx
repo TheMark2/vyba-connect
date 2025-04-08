@@ -1,7 +1,6 @@
 
 import React, { useState, useEffect } from 'react';
 import { Badge } from "@/components/ui/badge";
-import { MUSIC_GENRES } from "@/constants/music";
 import { Headphones, Music } from 'lucide-react';
 
 interface MusicGenresStepProps {
@@ -18,24 +17,13 @@ const MusicGenresStep: React.FC<MusicGenresStepProps> = ({
   const [selectedGenres, setSelectedGenres] = useState<string[]>(initialValues || []);
   const [activePress, setActivePress] = useState<string | null>(null);
 
-  // Mezclamos todos los géneros y los distribuimos uniformemente
-  const allGenres = [...MUSIC_GENRES];
-  
-  // Movemos algunos géneros populares al inicio
-  const popularGenres = ["Pop", "Rock", "Hip-Hop", "Electrónica", "Reggaetón", "House", "Trap", "Jazz"];
-  const sortedGenres = [
-    ...popularGenres.filter(genre => allGenres.includes(genre)),
-    ...allGenres.filter(genre => !popularGenres.includes(genre))
+  // Lista reducida de géneros musicales populares
+  const musicGenres = [
+    "Pop", "Rock", "Hip-Hop", "Electrónica", "Reggaetón", 
+    "House", "Trap", "Jazz", "Indie", "R&B",
+    "Techno", "Salsa", "Bachata", "Cumbia", "Metal"
   ];
   
-  // Dividimos en tres filas aproximadamente iguales
-  const firstRowCount = Math.ceil(sortedGenres.length / 3);
-  const secondRowCount = Math.ceil((sortedGenres.length - firstRowCount) / 2);
-  
-  const firstRow = sortedGenres.slice(0, firstRowCount);
-  const secondRow = sortedGenres.slice(firstRowCount, firstRowCount + secondRowCount);
-  const thirdRow = sortedGenres.slice(firstRowCount + secondRowCount);
-
   useEffect(() => {
     // Si hay valores iniciales, notificamos al componente padre
     if (initialValues && initialValues.length > 0) {
@@ -73,36 +61,12 @@ const MusicGenresStep: React.FC<MusicGenresStepProps> = ({
 
   // Generar un icono para cada género
   const getGenreIcon = (genre: string) => {
-    // Simplemente alternamos entre dos iconos para este ejemplo
-    if (['Electrónica', 'House', 'Techno', 'Trance', 'Drum & Bass', 'Dubstep'].includes(genre)) {
+    // Simplemente alternamos entre dos iconos
+    if (['Electrónica', 'House', 'Techno', 'Trap'].includes(genre)) {
       return <Headphones className="w-4 h-4" />;
     }
     return <Music className="w-4 h-4" />;
   };
-
-  // Componente Badge reutilizable
-  const GenreBadge = ({ genre }: { genre: string }) => (
-    <Badge
-      key={genre}
-      variant="outline"
-      className={`
-        py-3 px-6 cursor-pointer transition-all duration-150 h-14
-        flex items-center gap-2 text-sm font-medium rounded-full border-none
-        ${selectedGenres.includes(genre) 
-          ? 'bg-[#D9D9D9] dark:bg-[#444444]' 
-          : 'bg-[#F7F7F7] dark:bg-vyba-dark-secondary hover:bg-[#E9E9E9] dark:hover:bg-vyba-dark-secondary/80'
-        }
-        ${activePress === genre ? 'transform scale-95' : ''}
-      `}
-      onClick={() => handleSelect(genre)}
-      onMouseDown={() => handleMouseDown(genre)}
-      onMouseUp={handleMouseUp}
-      onMouseLeave={handleMouseUp}
-    >
-      {getGenreIcon(genre)}
-      {genre}
-    </Badge>
-  );
 
   return (
     <div className="flex flex-col items-center justify-center w-full pt-28 px-4 md:px-8">
@@ -119,28 +83,56 @@ const MusicGenresStep: React.FC<MusicGenresStepProps> = ({
           {selectedGenres.length} de {maxSelections} seleccionados
         </p>
         
-        {/* Contenedor de género con menor espacio entre filas */}
-        <div className="flex flex-col gap-2">
-          {/* Primera fila de géneros */}
-          <div className="flex flex-wrap justify-center gap-2">
-            {firstRow.map(genre => (
-              <GenreBadge key={genre} genre={genre} />
-            ))}
-          </div>
-          
-          {/* Segunda fila de géneros */}
-          <div className="flex flex-wrap justify-center gap-2">
-            {secondRow.map(genre => (
-              <GenreBadge key={genre} genre={genre} />
-            ))}
-          </div>
-          
-          {/* Tercera fila de géneros */}
-          <div className="flex flex-wrap justify-center gap-2">
-            {thirdRow.map(genre => (
-              <GenreBadge key={genre} genre={genre} />
-            ))}
-          </div>
+        {/* Primera fila de géneros */}
+        <div className="flex flex-wrap justify-center gap-3 mb-4">
+          {musicGenres.slice(0, 8).map(genre => (
+            <Badge
+              key={genre}
+              variant="outline"
+              className={`
+                py-3 px-6 cursor-pointer transition-all duration-150 h-14
+                flex items-center gap-2 text-sm font-medium rounded-full border-none
+                ${selectedGenres.includes(genre) 
+                  ? 'bg-[#D9D9D9] dark:bg-[#444444]' 
+                  : 'bg-[#F7F7F7] dark:bg-vyba-dark-secondary hover:bg-[#E9E9E9] dark:hover:bg-vyba-dark-secondary/80'
+                }
+                ${activePress === genre ? 'transform scale-95' : ''}
+              `}
+              onClick={() => handleSelect(genre)}
+              onMouseDown={() => handleMouseDown(genre)}
+              onMouseUp={handleMouseUp}
+              onMouseLeave={handleMouseUp}
+            >
+              {getGenreIcon(genre)}
+              {genre}
+            </Badge>
+          ))}
+        </div>
+        
+        {/* Segunda fila de géneros */}
+        <div className="flex flex-wrap justify-center gap-3">
+          {musicGenres.slice(8).map(genre => (
+            <Badge
+              key={genre}
+              variant="outline"
+              className={`
+                py-3 px-6 cursor-pointer transition-all duration-150 h-14
+                flex items-center gap-2 text-sm font-medium rounded-full border-none
+                ${selectedGenres.includes(genre) 
+                  ? 'bg-[#D9D9D9] dark:bg-[#444444]' 
+                  : 'bg-[#F7F7F7] dark:bg-vyba-dark-secondary hover:bg-[#E9E9E9] dark:hover:bg-vyba-dark-secondary/80'
+                }
+                ${activePress === genre ? 'transform scale-95' : ''}
+              `}
+              onClick={() => handleSelect(genre)}
+              onMouseDown={() => handleMouseDown(genre)}
+              onMouseUp={handleMouseUp}
+              onMouseLeave={handleMouseUp}
+            >
+              {getGenreIcon(genre)}
+              {genre}
+            </Badge>
+          ))}
         </div>
       </div>
     </div>
