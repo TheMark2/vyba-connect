@@ -39,7 +39,7 @@ const ArtistStepsNavbar = ({
         <div className="hidden md:flex items-center justify-center">
           {steps.map((step, index) => <React.Fragment key={step.number}>
               <div className="flex items-center">
-                <div className={cn("w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold", step.isActive ? "bg-black text-white dark:bg-white dark:text-black" : step.isCompleted ? "bg-gray-400 text-white" : "bg-[#EBEBEB] text-gray-500 dark:bg-gray-700")}>
+                <div className={cn("w-6 h-6 rounded-xl flex items-center justify-center text-xs font-bold", step.isActive ? "bg-black text-white dark:bg-white dark:text-black" : step.isCompleted ? "bg-gray-400 text-white" : "bg-[#EBEBEB] text-gray-500 dark:bg-gray-700")}>
                   {step.number}
                 </div>
                 <span className={cn("ml-2 text-sm font-medium", step.isActive ? "text-black dark:text-white" : "text-gray-500")}>
