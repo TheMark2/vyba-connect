@@ -48,7 +48,7 @@ const DetailedInformation = ({
                   const location = parts.length > 1 ? parts[1] : '';
                   return (
                     <CarouselItem key={index} className="pl-2 md:pl-4 basis-auto">
-                      <UIBadge variant="outline" className="py-3 px-6 bg-white border-0 text-sm font-medium dark:bg-vyba-dark-secondary">
+                      <UIBadge variant="outline" className="py-3 px-6 bg-[#F7F7F7] border-0 text-sm font-medium dark:bg-vyba-dark-secondary">
                         <span className="text-black dark:text-white">{name}</span>
                         {location && <>
                           <span className="mx-1 text-gray-500">·</span>
@@ -92,7 +92,7 @@ const DetailedInformation = ({
               <CarouselContent className="-ml-2 md:-ml-4">
                 {artist.equipment?.map((item, index) => (
                   <CarouselItem key={index} className="pl-2 md:pl-4 basis-auto">
-                    <UIBadge variant="outline" className="py-3 px-6 bg-white border-0 text-sm font-medium flex items-center gap-2 dark:bg-vyba-dark-secondary">
+                    <UIBadge variant="outline" className="py-3 px-6 bg-[#F7F7F7] border-0 text-sm font-medium flex items-center gap-2 dark:bg-vyba-dark-secondary">
                       <List className="w-4 h-4" />                              
                       {item}
                     </UIBadge>
@@ -121,7 +121,7 @@ const DetailedInformation = ({
               <CarouselContent className="-ml-2 md:-ml-4">
                 {artist.timeRequirements?.map((req, index) => (
                   <CarouselItem key={index} className="pl-2 md:pl-4 basis-auto">
-                    <UIBadge variant="outline" className="py-3 px-6 bg-white border-0 text-sm font-medium flex items-center gap-2 dark:bg-vyba-dark-secondary">
+                    <UIBadge variant="outline" className="py-3 px-6 bg-[#F7F7F7] border-0 text-sm font-medium flex items-center gap-2 dark:bg-vyba-dark-secondary">
                       <Clock className="w-4 h-4" />
                       {req}
                     </UIBadge>
@@ -150,7 +150,7 @@ const DetailedInformation = ({
               <CarouselContent className="-ml-2 md:-ml-4">
                 {artist.education?.map((edu, index) => (
                   <CarouselItem key={index} className="pl-2 md:pl-4 basis-auto">
-                    <UIBadge variant="outline" className="py-3 px-6 bg-white border-0 text-sm font-medium flex items-center gap-2 dark:bg-vyba-dark-secondary">
+                    <UIBadge variant="outline" className="py-3 px-6 bg-[#F7F7F7] border-0 text-sm font-medium flex items-center gap-2 dark:bg-vyba-dark-secondary">
                       <Book className="w-4 h-4" />
                       {edu}
                     </UIBadge>

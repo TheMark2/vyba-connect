@@ -1,4 +1,3 @@
-
 import React, { useState, useRef } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { toast } from "sonner";
@@ -14,6 +13,7 @@ import ArtistReviews from "@/components/artist-profile/ArtistReviews";
 import ContactCard from "@/components/artist-profile/ContactCard";
 import RecommendedArtists from "@/components/artist-profile/RecommendedArtists";
 import NotFoundArtist from "@/components/artist-profile/NotFoundArtist";
+import GroupMembers from "@/components/artist-profile/GroupMembers";
 import { useIsMobile } from "@/hooks/use-mobile";
 
 const artistsData = [
@@ -74,7 +74,31 @@ const artistsData = [
       rating: 4,
       badges: ["Reggaeton", "Comercial"],
       comment: "¿Buscas añadir un toque de elegancia y encanto musical a tu próximo evento? ¡Estás en el lugar indicado! Soy Rodrigo Belga, un apasionado saxofonista especializado en jazz, bossa nova y blues. 🎷✨"
-    }]
+    }],
+    groupMembers: [
+      {
+        id: "gm1",
+        name: "Paco Porras",
+        image: "https://images.unsplash.com/photo-1516450360452-9312f5e86fc7?q=80&w=2070",
+        roles: ["Guitarrista"]
+      },
+      {
+        id: "gm2",
+        name: "Paco Porras",
+        roles: ["Guitarrista", "Vocalista"]
+      },
+      {
+        id: "gm3",
+        name: "Lucía Martínez",
+        image: "https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?q=80&w=1000",
+        roles: ["Batería"]
+      },
+      {
+        id: "gm4",
+        name: "Carlos Gómez",
+        roles: ["Bajista", "Coros"]
+      }
+    ]
   },
   {
     id: "2",
@@ -266,6 +290,10 @@ const ArtistProfilePage = () => {
               
               <DetailedInformation artist={artist} />
               
+              {artist.groupMembers && (
+                <GroupMembers members={artist.groupMembers} />
+              )}
+              
               {artist.musicPreviews && (
                 <MusicPreviews 
                   previews={artist.musicPreviews} 
@@ -292,10 +320,12 @@ const ArtistProfilePage = () => {
             
             {/* Right Content - Solo se muestra en escritorio dentro del grid */}
             {!isMobile && (
-              <ContactCard 
-                artist={artistContactData} 
-                onContact={handleContact} 
-              />
+              <div className="bg-[#F7F7F7] p-6 rounded-xl sticky top-24 h-fit">
+                <ContactCard 
+                  artist={artistContactData} 
+                  onContact={handleContact} 
+                />
+              </div>
             )}
           </div>
         </div>
@@ -306,11 +336,13 @@ const ArtistProfilePage = () => {
       {/* En dispositivos móviles y pantallas medianas, la tarjeta de contacto se renderiza 
          fuera del grid y del layout principal como elemento fixed */}
       {isMobile && (
-        <ContactCard 
-          artist={artistContactData} 
-          onContact={handleContact}
-          aboutMeRef={aboutMeRef}
-        />
+        <div className="fixed bottom-0 left-0 right-0 z-50 bg-[#F7F7F7] px-6 pt-4 pb-6 border-t border-gray-100 shadow-lg">
+          <ContactCard 
+            artist={artistContactData} 
+            onContact={handleContact}
+            aboutMeRef={aboutMeRef}
+          />
+        </div>
       )}
       
       <Footer />
