@@ -45,11 +45,11 @@ const GroupMembers = ({ members }: GroupMembersProps) => {
                 />
               </div>
             ) : (
-              <Card className="aspect-square p-4 bg-[#F7F7F7] flex flex-col justify-between rounded-2xl">
+              <Card className="aspect-square p-6 bg-[#F7F7F7] flex flex-col justify-between rounded-3xl border-0">
                 <span className="font-bold text-xl">{member.name}</span>
                 <div className="flex flex-wrap gap-2">
                   {member.roles.map((role, index) => (
-                    <UIBadge key={index} className="bg-white text-black">
+                    <UIBadge key={index} className="bg-white text-black px-4 py-2">
                       {role}
                     </UIBadge>
                   ))}
