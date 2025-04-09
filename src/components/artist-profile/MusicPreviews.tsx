@@ -179,7 +179,7 @@ const NoImagePreviewCard = ({
         
         {/* Contenido de texto en la parte inferior - más padding */}
         <div className="absolute bottom-0 left-0 right-0 p-7">
-          <h3 className="text-lg font-bold line-clamp-1">{preview.title}</h3>
+          <h3 className="text-xl font-black line-clamp-1">{preview.title}</h3>
           <p className="text-sm text-gray-600 dark:text-gray-400 mb-5">{artistName}</p>
           
           {/* Duración en la esquina inferior derecha - mejor separada */}
