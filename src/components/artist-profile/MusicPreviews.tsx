@@ -9,9 +9,7 @@ import { Badge } from "@/components/ui/badge";
 import {
   Carousel,
   CarouselContent,
-  CarouselItem,
-  CarouselNext,
-  CarouselPrevious
+  CarouselItem
 } from "@/components/ui/carousel";
 import { useIsMobile } from "@/hooks/use-mobile";
 
@@ -35,36 +33,58 @@ const MusicPreviews = ({ previews, artistName }: MusicPreviewsProps) => {
       <h2 className="text-3xl font-black mb-6">Preview</h2>
       
       {previews?.length > 0 && (
-        <Carousel
-          opts={{
-            align: "start",
-            loop: false,
-          }}
-          className="w-full"
-        >
-          <CarouselContent className="-ml-4">
-            {previews.map((preview, index) => (
-              <CarouselItem 
-                key={index} 
-                className={`pl-4 ${isMobile ? 'basis-full' : 'basis-1/2 lg:basis-1/3'}`}
-              >
-                {preview.image ? (
-                  <ImagePreviewCard 
-                    preview={preview}
-                    artistName={artistName}
-                  />
-                ) : (
-                  <NoImagePreviewCard 
-                    preview={preview}
-                    artistName={artistName}
-                  />
-                )}
-              </CarouselItem>
-            ))}
-          </CarouselContent>
-          <CarouselPrevious className="left-2" />
-          <CarouselNext className="right-2" />
-        </Carousel>
+        <>
+          {isMobile ? (
+            // Vista de carrusel para móviles (sin flechas de navegación)
+            <Carousel
+              opts={{
+                align: "start",
+                loop: false,
+              }}
+              className="w-full"
+            >
+              <CarouselContent className="-ml-4">
+                {previews.map((preview, index) => (
+                  <CarouselItem 
+                    key={index} 
+                    className="pl-4 basis-full"
+                  >
+                    {preview.image ? (
+                      <ImagePreviewCard 
+                        preview={preview}
+                        artistName={artistName}
+                      />
+                    ) : (
+                      <NoImagePreviewCard 
+                        preview={preview}
+                        artistName={artistName}
+                      />
+                    )}
+                  </CarouselItem>
+                ))}
+              </CarouselContent>
+            </Carousel>
+          ) : (
+            // Vista de cuadrícula para pantallas grandes
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {previews.map((preview, index) => (
+                <div key={index}>
+                  {preview.image ? (
+                    <ImagePreviewCard 
+                      preview={preview}
+                      artistName={artistName}
+                    />
+                  ) : (
+                    <NoImagePreviewCard 
+                      preview={preview}
+                      artistName={artistName}
+                    />
+                  )}
+                </div>
+              ))}
+            </div>
+          )}
+        </>
       )}
     </div>
   );
