@@ -45,7 +45,7 @@ const GroupMembers = ({ members }: GroupMembersProps) => {
             {members.map((member) => (
               <CarouselItem 
                 key={member.id} 
-                className={`pl-4 ${isMobile ? 'basis-4/5' : 'md:basis-1/2 lg:basis-1/3 xl:basis-1/4'}`}
+                className={`pl-4 ${isMobile ? 'basis-4/5' : 'md:basis-1/3 lg:basis-1/4 xl:basis-1/4'}`}
               >
                 <MemberCard member={member} />
               </CarouselItem>
@@ -67,9 +67,11 @@ const GroupMembers = ({ members }: GroupMembersProps) => {
   return (
     <div className="mt-8 mb-12">
       <h2 className="text-3xl font-black mb-6">Integrantes del grupo</h2>
-      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
+      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
         {members.map((member) => (
-          <MemberCard key={member.id} member={member} />
+          <div key={member.id} className="w-full max-w-[300px] mx-auto">
+            <MemberCard member={member} />
+          </div>
         ))}
       </div>
     </div>
