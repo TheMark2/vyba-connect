@@ -1,3 +1,4 @@
+
 import React, { useState, useRef } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { toast } from "sonner";
@@ -238,7 +239,7 @@ const ArtistProfilePage = () => {
   };
 
   return (
-    <>
+    <div className="bg-white dark:bg-vyba-dark-bg">
       <Navbar />
       {/* Eliminamos el padding para el banner en móvil, pero mantenemos la estructura para el resto del contenido */}
       <div className={`${isMobile ? 'px-0' : 'px-6 md:px-10 lg:px-14 xl:px-16'}`}>
@@ -251,7 +252,7 @@ const ArtistProfilePage = () => {
       </div>
 
       {/* Mantenemos el padding para el resto del contenido */}
-      <div className="px-6 md:px-10 lg:px-14 xl:px-16">
+      <div className="px-6 md:px-10 lg:px-14 xl:px-16 bg-white dark:bg-vyba-dark-bg">
         <div className="pb-16 max-w-7xl mx-auto">
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-16">
             {/* Left Content */}
@@ -313,7 +314,7 @@ const ArtistProfilePage = () => {
       )}
       
       <Footer />
-    </>
+    </div>
   );
 };
 
