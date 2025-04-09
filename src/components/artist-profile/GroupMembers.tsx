@@ -25,13 +25,13 @@ const GroupMembers = ({ members }: GroupMembersProps) => {
         {members.map((member) => (
           <div key={member.id} className="overflow-hidden rounded-xl">
             {member.image ? (
-              <div className="relative aspect-square overflow-hidden rounded-xl">
+              <div className="relative aspect-square overflow-hidden rounded-3xl border-0">
                 <div className="absolute inset-0 bg-black/60 z-10">
-                  <div className="flex flex-col justify-between h-full p-4">
-                    <span className="text-white font-semibold">{member.name}</span>
+                  <div className="flex flex-col justify-between h-full p-6">
+                    <span className="text-white font-bold text-xl">{member.name}</span>
                     <div className="flex flex-wrap gap-2">
                       {member.roles.map((role, index) => (
-                        <UIBadge key={index} className="bg-white text-black">
+                        <UIBadge key={index} className="bg-white text-black px-4 py-2">
                           {role}
                         </UIBadge>
                       ))}
