@@ -1,19 +1,23 @@
+
 import React, { useEffect, useState, useRef } from "react";
 import { Music, Video } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Carousel, CarouselContent, CarouselItem } from "@/components/ui/carousel";
 import { useIsMobile } from "@/hooks/use-mobile";
+
 interface MusicPreview {
   title: string;
   duration: string;
   image?: string;
   hasVideo?: boolean;
 }
+
 interface MusicPreviewsProps {
   previews: MusicPreview[];
   artistName: string;
 }
+
 const MusicPreviews = ({
   previews,
   artistName
@@ -25,6 +29,7 @@ const MusicPreviews = ({
 
   // Crear una referencia para el observador de intersección
   const observerRef = useRef<IntersectionObserver | null>(null);
+
   useEffect(() => {
     // Función para detectar si el navbar es visible o no
     const detectNavbarVisibility = () => {
@@ -53,6 +58,7 @@ const MusicPreviews = ({
       }
     };
   }, []);
+
   useEffect(() => {
     const handleResize = () => {
       setWindowWidth(window.innerWidth);
@@ -86,6 +92,7 @@ const MusicPreviews = ({
       window.removeEventListener("resize", handleResize);
     };
   }, [previews.length, isNavbarVisible]);
+
   return <div className="mt-8 mb-16">
       <h2 className="text-3xl font-black mb-6">Preview</h2>
       
@@ -96,12 +103,9 @@ const MusicPreviews = ({
         containScroll: "trimSnaps"
       }} className="w-full">
               <CarouselContent className="-ml-4">
-                {previews.map((preview, index) => <CarouselItem key={index} className={`pl-4 ${windowWidth < 640 ? 'basis-full' :
-          // Móviles pequeños: tarjetas más grandes
-          windowWidth < 768 ? 'basis-full' :
-          // Móviles: tarjetas más grandes
-          windowWidth < 1024 ? 'basis-1/2' :
-          // Tablets: 2 por fila
+                {previews.map((preview, index) => <CarouselItem key={index} className={`pl-4 ${windowWidth < 640 ? 'basis-[85%]' : // Móvil: mostrar un poco de la siguiente card
+          windowWidth < 768 ? 'basis-[85%]' : // Móviles grandes: mostrar un poco de la siguiente card
+          windowWidth < 1024 ? 'basis-1/2' : // Tablets: 2 por fila
           'basis-1/3' // Desktop: 3 por fila
           }`}>
                     {preview.image ? <ImagePreviewCard preview={preview} artistName={artistName} /> : <NoImagePreviewCard preview={preview} artistName={artistName} />}
@@ -190,4 +194,5 @@ const NoImagePreviewCard = ({
       </div>
     </Card>;
 };
+
 export default MusicPreviews;
