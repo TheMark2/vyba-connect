@@ -6,9 +6,7 @@ import { Card } from "@/components/ui/card";
 import {
   Carousel,
   CarouselContent,
-  CarouselItem,
-  CarouselPrevious,
-  CarouselNext
+  CarouselItem
 } from "@/components/ui/carousel";
 import { useIsMobile } from "@/hooks/use-mobile";
 
@@ -76,10 +74,11 @@ const GroupMembers = ({ members }: GroupMembersProps) => {
               <CarouselItem 
                 key={member.id} 
                 className={`pl-4 ${
-                  windowWidth < 640 ? 'basis-4/5' : 
-                  windowWidth < 1024 ? 'basis-1/2' : 
-                  windowWidth < 1280 ? 'basis-1/3' : 
-                  'basis-1/4'
+                  windowWidth < 640 ? 'basis-1/2' : // Móviles pequeños: 2 por fila
+                  windowWidth < 768 ? 'basis-1/2' : // Móviles: 2 por fila
+                  windowWidth < 1024 ? 'basis-1/3' : // Tablets: 3 por fila (ajustado aquí)
+                  windowWidth < 1280 ? 'basis-1/3' : // Desktop pequeño: mantiene 3 por fila
+                  'basis-1/4' // Desktop grande: mantiene 4 por fila
                 }`}
               >
                 <div className="aspect-square w-full">
@@ -88,13 +87,7 @@ const GroupMembers = ({ members }: GroupMembersProps) => {
               </CarouselItem>
             ))}
           </CarouselContent>
-          {/* Solo mostrar botones de navegación en desktop */}
-          {!isMobile && (
-            <>
-              <CarouselPrevious className="left-2" />
-              <CarouselNext className="right-2" />
-            </>
-          )}
+          {/* Se han eliminado los botones de navegación del carrusel */}
         </Carousel>
       </div>
     );
