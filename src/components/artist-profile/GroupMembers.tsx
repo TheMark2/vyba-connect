@@ -37,6 +37,7 @@ const GroupMembers = ({ members }: GroupMembersProps) => {
           opts={{
             align: "start",
             loop: false,
+            containScroll: "trimSnaps"
           }}
           className="w-full"
         >
@@ -44,7 +45,7 @@ const GroupMembers = ({ members }: GroupMembersProps) => {
             {members.map((member) => (
               <CarouselItem 
                 key={member.id} 
-                className={`pl-4 ${isMobile ? 'basis-full sm:basis-2/3' : 'md:basis-1/2 lg:basis-1/3 xl:basis-1/4'}`}
+                className={`pl-4 ${isMobile ? 'basis-4/5' : 'md:basis-1/2 lg:basis-1/3 xl:basis-1/4'}`}
               >
                 <MemberCard member={member} />
               </CarouselItem>
