@@ -1,5 +1,5 @@
 
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Music, Video } from "lucide-react";
 import { 
   Card,
@@ -27,6 +27,37 @@ interface MusicPreviewsProps {
 
 const MusicPreviews = ({ previews, artistName }: MusicPreviewsProps) => {
   const isMobile = useIsMobile();
+  const [windowWidth, setWindowWidth] = useState(window.innerWidth);
+  const [useCarousel, setUseCarousel] = useState(isMobile || previews.length > 3);
+  
+  useEffect(() => {
+    const handleResize = () => {
+      setWindowWidth(window.innerWidth);
+      
+      // Determina si usamos carrusel basado en el ancho de la ventana y cantidad de elementos
+      if (window.innerWidth < 768) {
+        // Móvil siempre carrusel
+        setUseCarousel(true);
+      } else if (window.innerWidth < 1024) {
+        // Tablet: carrusel si hay más de 2 elementos
+        setUseCarousel(previews.length > 2);
+      } else if (window.innerWidth < 1280) {
+        // Desktop pequeño: carrusel si hay más de 3 elementos
+        setUseCarousel(previews.length > 3);
+      } else {
+        // Desktop grande: carrusel si hay más de 3 elementos
+        setUseCarousel(previews.length > 3);
+      }
+    };
+
+    // Ejecutar al montar y cuando cambia el tamaño de la ventana
+    handleResize();
+    window.addEventListener("resize", handleResize);
+    
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
+  }, [previews.length]);
   
   return (
     <div className="mt-8 mb-16">
@@ -34,12 +65,12 @@ const MusicPreviews = ({ previews, artistName }: MusicPreviewsProps) => {
       
       {previews?.length > 0 && (
         <>
-          {isMobile ? (
-            // Vista de carrusel para móviles (sin flechas de navegación)
+          {useCarousel ? (
             <Carousel
               opts={{
                 align: "start",
                 loop: false,
+                containScroll: "trimSnaps"
               }}
               className="w-full"
             >
@@ -47,7 +78,12 @@ const MusicPreviews = ({ previews, artistName }: MusicPreviewsProps) => {
                 {previews.map((preview, index) => (
                   <CarouselItem 
                     key={index} 
-                    className="pl-4 basis-full"
+                    className={`pl-4 ${
+                      windowWidth < 640 ? 'basis-full' : // Móviles pequeños: tarjetas más grandes
+                      windowWidth < 768 ? 'basis-full' : // Móviles: tarjetas más grandes
+                      windowWidth < 1024 ? 'basis-1/2' : // Tablets: 2 por fila
+                      'basis-1/3' // Desktop: 3 por fila
+                    }`}
                   >
                     {preview.image ? (
                       <ImagePreviewCard 
@@ -63,9 +99,10 @@ const MusicPreviews = ({ previews, artistName }: MusicPreviewsProps) => {
                   </CarouselItem>
                 ))}
               </CarouselContent>
+              {/* Sin botones de navegación */}
             </Carousel>
           ) : (
-            // Vista de cuadrícula para pantallas grandes
+            // Vista de cuadrícula para pantallas grandes con pocos elementos
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {previews.map((preview, index) => (
                 <div key={index}>
