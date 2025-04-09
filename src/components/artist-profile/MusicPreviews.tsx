@@ -103,11 +103,12 @@ const MusicPreviews = ({
         containScroll: "trimSnaps"
       }} className="w-full">
               <CarouselContent className="-ml-4">
-                {previews.map((preview, index) => <CarouselItem key={index} className={`pl-4 ${windowWidth < 640 ? 'basis-[85%]' : // Móvil: mostrar un poco de la siguiente card
-          windowWidth < 768 ? 'basis-[85%]' : // Móviles grandes: mostrar un poco de la siguiente card
-          windowWidth < 1024 ? 'basis-1/2' : // Tablets: 2 por fila
-          'basis-1/3' // Desktop: 3 por fila
-          }`}>
+                {previews.map((preview, index) => <CarouselItem key={index} className={`pl-4 ${
+                  windowWidth < 640 ? 'basis-[85%]' : // Móvil: mostrar un poco de la siguiente card
+                  windowWidth < 768 ? 'basis-[45%]' : // Móviles grandes: mostrar 2 completas y un poco de la siguiente
+                  windowWidth < 1024 ? 'basis-1/2' : // Tablets: 2 por fila
+                  'basis-1/3' // Desktop: 3 por fila
+                }`}>
                     {preview.image ? <ImagePreviewCard preview={preview} artistName={artistName} /> : <NoImagePreviewCard preview={preview} artistName={artistName} />}
                   </CarouselItem>)}
               </CarouselContent>
