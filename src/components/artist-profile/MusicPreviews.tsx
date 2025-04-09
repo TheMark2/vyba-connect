@@ -1,6 +1,6 @@
 
 import React, { useEffect, useState, useRef } from "react";
-import { Music, Video, Play } from "lucide-react";
+import { Music, Video, Play, Expand } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Carousel, CarouselContent, CarouselItem } from "@/components/ui/carousel";
@@ -145,6 +145,11 @@ const ImagePreviewCard = ({
     // Aquí podríamos añadir la lógica para reproducir el audio/video
   };
 
+  const handleExpand = () => {
+    console.log(`Expandiendo video: ${preview.title}`);
+    // Aquí podríamos añadir la lógica para expandir el video
+  };
+
   return <Card className="overflow-hidden rounded-3xl relative group cursor-pointer border-none">
       <div className="relative aspect-[4/5]">
         {/* Imagen de fondo */}
@@ -159,6 +164,17 @@ const ImagePreviewCard = ({
             Video
           </Badge>}
         
+        {/* Badge de expansión para videos - visible solo en hover */}
+        {preview.hasVideo && (
+          <Badge 
+            className="absolute top-5 right-5 bg-white text-black font-medium px-4 py-2 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-300 cursor-pointer"
+            onClick={handleExpand}
+          >
+            <Expand className="w-4 h-4 mr-1" />
+            Expandir
+          </Badge>
+        )}
+        
         {/* Contenido de texto en la parte inferior - se oculta en hover */}
         <div className="absolute bottom-0 left-0 right-0 p-7 text-white transition-opacity duration-300 group-hover:opacity-0">
           <h3 className="text-xl font-black line-clamp-1">{preview.title}</h3>
@@ -170,15 +186,20 @@ const ImagePreviewCard = ({
           </div>
         </div>
 
-        {/* Botón de Play - visible solo en hover */}
+        {/* Botón de Play - visible solo en hover - tamaño reducido */}
         <Button 
           variant="secondary" 
           size="icon" 
-          className="absolute bottom-7 left-7 opacity-0 group-hover:opacity-100 transition-opacity duration-300 h-12 w-12 bg-white hover:bg-white/90 text-black"
+          className="absolute bottom-7 left-7 opacity-0 group-hover:opacity-100 transition-opacity duration-300 h-10 w-10 bg-white hover:bg-white/90 text-black"
           onClick={handlePlay}
         >
-          <Play className="h-6 w-6" />
+          <Play className="h-5 w-5" />
         </Button>
+        
+        {/* Duración - siempre visible, incluso en hover */}
+        <div className="absolute bottom-7 right-7 z-10">
+          <span className="text-sm font-medium text-white bg-black/50 px-2 py-1 rounded-md">{preview.duration}</span>
+        </div>
       </div>
     </Card>;
 };
@@ -214,15 +235,20 @@ const NoImagePreviewCard = ({
           </div>
         </div>
 
-        {/* Botón de Play - visible solo en hover */}
+        {/* Botón de Play - visible solo en hover - tamaño reducido */}
         <Button 
           variant="secondary" 
           size="icon" 
-          className="absolute bottom-7 left-7 opacity-0 group-hover:opacity-100 transition-opacity duration-300 h-12 w-12"
+          className="absolute bottom-7 left-7 opacity-0 group-hover:opacity-100 transition-opacity duration-300 h-10 w-10"
           onClick={handlePlay}
         >
-          <Play className="h-6 w-6" />
+          <Play className="h-5 w-5" />
         </Button>
+        
+        {/* Duración - siempre visible, incluso en hover */}
+        <div className="absolute bottom-7 right-7 z-10">
+          <span className="text-sm font-medium dark:text-white bg-gray-200 dark:bg-black/50 px-2 py-1 rounded-md">{preview.duration}</span>
+        </div>
       </div>
     </Card>;
 };
