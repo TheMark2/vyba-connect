@@ -69,19 +69,25 @@ const MusicPreviews = ({ previews, artistName }: MusicPreviewsProps) => {
     const handleResize = () => {
       setWindowWidth(window.innerWidth);
       
-      // Determina si usamos carrusel basado en el ancho de la ventana, cantidad de elementos y visibilidad del navbar
+      // Cuando el navbar no es visible, no usamos carrusel
+      if (!isNavbarVisible) {
+        setUseCarousel(false);
+        return;
+      }
+      
+      // Solo aplicamos lógica de carrusel si el navbar es visible
       if (window.innerWidth < 768) {
-        // Móvil siempre carrusel
+        // Móvil siempre carrusel cuando el navbar es visible
         setUseCarousel(true);
       } else if (window.innerWidth < 1024) {
-        // Tablet: carrusel si hay más de 2 elementos o si el navbar es visible
-        setUseCarousel(previews.length > 2 && isNavbarVisible);
+        // Tablet: carrusel si hay más de 2 elementos y el navbar es visible
+        setUseCarousel(previews.length > 2);
       } else if (window.innerWidth < 1280) {
-        // Desktop pequeño: carrusel si hay más de 3 elementos o si el navbar es visible
-        setUseCarousel(previews.length > 3 && isNavbarVisible);
+        // Desktop pequeño: carrusel si hay más de 3 elementos y el navbar es visible
+        setUseCarousel(previews.length > 3);
       } else {
-        // Desktop grande: carrusel si hay más de 3 elementos o si el navbar es visible
-        setUseCarousel(previews.length > 3 && isNavbarVisible);
+        // Desktop grande: carrusel si hay más de 3 elementos y el navbar es visible
+        setUseCarousel(previews.length > 3);
       }
     };
 
@@ -137,7 +143,28 @@ const MusicPreviews = ({ previews, artistName }: MusicPreviewsProps) => {
               {/* Sin botones de navegación */}
             </Carousel>
           ) : (
-            // Vista de cuadrícula para pantallas grandes con pocos elementos o cuando el navbar no es visible
+            // Cuando el navbar no es visible, mostrar en una sola fila con scroll horizontal
+            <div className={`flex overflow-x-auto space-x-4 pb-4 ${isNavbarVisible ? 'hidden' : ''}`}>
+              {previews.map((preview, index) => (
+                <div key={index} className="flex-none w-80">
+                  {preview.image ? (
+                    <ImagePreviewCard 
+                      preview={preview}
+                      artistName={artistName}
+                    />
+                  ) : (
+                    <NoImagePreviewCard 
+                      preview={preview}
+                      artistName={artistName}
+                    />
+                  )}
+                </div>
+              ))}
+            </div>
+          )}
+          
+          {/* Vista de cuadrícula para pantallas grandes con pocos elementos cuando el navbar es visible */}
+          {!useCarousel && isNavbarVisible && (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {previews.map((preview, index) => (
                 <div key={index}>
