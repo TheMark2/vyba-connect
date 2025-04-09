@@ -1,5 +1,5 @@
 
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { Music, Video } from "lucide-react";
 import { 
   Card,
@@ -29,35 +29,70 @@ const MusicPreviews = ({ previews, artistName }: MusicPreviewsProps) => {
   const isMobile = useIsMobile();
   const [windowWidth, setWindowWidth] = useState(window.innerWidth);
   const [useCarousel, setUseCarousel] = useState(isMobile || previews.length > 3);
+  const [isNavbarVisible, setIsNavbarVisible] = useState(true);
+  
+  // Crear una referencia para el observador de intersección
+  const observerRef = useRef<IntersectionObserver | null>(null);
+  
+  useEffect(() => {
+    // Función para detectar si el navbar es visible o no
+    const detectNavbarVisibility = () => {
+      // Intentar seleccionar el navbar (que suele ser el elemento sticky en la parte superior)
+      const navbar = document.querySelector('header.sticky') || 
+                     document.querySelector('header[class*="sticky"]') || 
+                     document.querySelector('div[class*="sticky"]');
+      
+      if (navbar) {
+        // Configurar el observador de intersección para el navbar
+        observerRef.current = new IntersectionObserver((entries) => {
+          // Si el navbar no es visible (ha salido de la vista), actualizar el estado
+          setIsNavbarVisible(entries[0].isIntersecting);
+        }, { threshold: 0.1 });
+        
+        // Empezar a observar el navbar
+        observerRef.current.observe(navbar);
+      }
+    };
+    
+    // Llamar a la función después de un pequeño retraso para asegurar que el DOM esté listo
+    const timer = setTimeout(detectNavbarVisibility, 500);
+    
+    return () => {
+      clearTimeout(timer);
+      if (observerRef.current) {
+        observerRef.current.disconnect();
+      }
+    };
+  }, []);
   
   useEffect(() => {
     const handleResize = () => {
       setWindowWidth(window.innerWidth);
       
-      // Determina si usamos carrusel basado en el ancho de la ventana y cantidad de elementos
+      // Determina si usamos carrusel basado en el ancho de la ventana, cantidad de elementos y visibilidad del navbar
       if (window.innerWidth < 768) {
         // Móvil siempre carrusel
         setUseCarousel(true);
       } else if (window.innerWidth < 1024) {
-        // Tablet: carrusel si hay más de 2 elementos
-        setUseCarousel(previews.length > 2);
+        // Tablet: carrusel si hay más de 2 elementos o si el navbar es visible
+        setUseCarousel(previews.length > 2 && isNavbarVisible);
       } else if (window.innerWidth < 1280) {
-        // Desktop pequeño: carrusel si hay más de 3 elementos
-        setUseCarousel(previews.length > 3);
+        // Desktop pequeño: carrusel si hay más de 3 elementos o si el navbar es visible
+        setUseCarousel(previews.length > 3 && isNavbarVisible);
       } else {
-        // Desktop grande: carrusel si hay más de 3 elementos
-        setUseCarousel(previews.length > 3);
+        // Desktop grande: carrusel si hay más de 3 elementos o si el navbar es visible
+        setUseCarousel(previews.length > 3 && isNavbarVisible);
       }
     };
 
-    // Ejecutar al montar y cuando cambia el tamaño de la ventana
+    // Ejecutar al montar y cuando cambia el tamaño de la ventana o la visibilidad del navbar
     handleResize();
     window.addEventListener("resize", handleResize);
     
     return () => {
       window.removeEventListener("resize", handleResize);
     };
-  }, [previews.length]);
+  }, [previews.length, isNavbarVisible]);
   
   return (
     <div className="mt-8 mb-16">
@@ -102,7 +137,7 @@ const MusicPreviews = ({ previews, artistName }: MusicPreviewsProps) => {
               {/* Sin botones de navegación */}
             </Carousel>
           ) : (
-            // Vista de cuadrícula para pantallas grandes con pocos elementos
+            // Vista de cuadrícula para pantallas grandes con pocos elementos o cuando el navbar no es visible
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {previews.map((preview, index) => (
                 <div key={index}>
