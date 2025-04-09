@@ -43,15 +43,23 @@ const artistsData = [
     equipment: ["Con equipo propio", "Para <100 personas"],
     timeRequirements: ["10-15 minutos de prueba de sonido", "1h de montaje"],
     education: ["Conservatorio Provincial de Música Luis Gianneo"],
-    musicPreviews: [{
-      title: "Set 30 min musica urbana",
-      duration: "30:45",
-      image: "https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?q=80&w=1000"
-    }, {
-      title: "Mix pop comercial",
-      duration: "45:20",
-      image: "https://images.unsplash.com/photo-1514525253161-7a46d19cd819?q=80&w=1000"
-    }],
+    musicPreviews: [
+      {
+        title: "La Previa-Sesión Urbana Verano 2023",
+        duration: "40:34",
+        image: "https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?q=80&w=1000"
+      }, 
+      {
+        title: "La Previa-Sesión Urbana Verano 2023",
+        duration: "40:34",
+        image: "https://images.unsplash.com/photo-1514525253161-7a46d19cd819?q=80&w=1000",
+        hasVideo: true
+      },
+      {
+        title: "La Previa-Sesión Urbana Verano 2023",
+        duration: "40:34"
+      }
+    ],
     eventTypes: ["Bodas", "Fiestas Privadas", "Cumpleaños", "Eventos Corporativos", "Inauguraciones", "Aniversarios", "Cenas de Gala"],
     reviewsData: [{
       id: 1,
@@ -265,7 +273,6 @@ const ArtistProfilePage = () => {
   return (
     <div className="bg-white dark:bg-vyba-dark-bg">
       <Navbar />
-      {/* Eliminamos el padding para el banner en móvil, pero mantenemos la estructura para el resto del contenido */}
       <div className={`${isMobile ? 'px-0' : 'px-6 md:px-10 lg:px-14 xl:px-16'}`}>
         <ArtistBanner 
           artist={artist} 
@@ -275,11 +282,9 @@ const ArtistProfilePage = () => {
         />
       </div>
 
-      {/* Mantenemos el padding para el resto del contenido */}
       <div className="px-6 md:px-10 lg:px-14 xl:px-16 bg-white dark:bg-vyba-dark-bg">
         <div className="pb-16 max-w-7xl mx-auto">
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-16">
-            {/* Left Content */}
             <div className="lg:col-span-2">
               <AboutArtist 
                 ref={aboutMeRef}
@@ -318,7 +323,6 @@ const ArtistProfilePage = () => {
               />
             </div>
             
-            {/* Right Content - Solo se muestra en escritorio dentro del grid */}
             {!isMobile && (
               <div className="bg-[#F7F7F7] p-6 rounded-xl sticky top-24 h-fit">
                 <ContactCard 
@@ -333,8 +337,6 @@ const ArtistProfilePage = () => {
         <RecommendedArtists artists={recommendedArtists} />
       </div>
       
-      {/* En dispositivos móviles y pantallas medianas, la tarjeta de contacto se renderiza 
-         fuera del grid y del layout principal como elemento fixed */}
       {isMobile && (
         <div className="fixed bottom-0 left-0 right-0 z-50 bg-[#F7F7F7] px-6 pt-4 pb-6 border-t border-gray-100 shadow-lg">
           <ContactCard 
