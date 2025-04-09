@@ -28,44 +28,44 @@ const GroupMembers = ({ members }: GroupMembersProps) => {
   
   if (!members || members.length === 0) return null;
 
-  // Si hay 4 o menos miembros, mostrar grid normal
-  if (members.length <= 4) {
+  // Si es móvil siempre muestra carrusel, o si hay más de 4 miembros en escritorio
+  if (isMobile || members.length > 4) {
     return (
       <div className="mt-8 mb-12">
         <h2 className="text-3xl font-black mb-6">Integrantes del grupo</h2>
-        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
-          {members.map((member) => (
-            <MemberCard key={member.id} member={member} />
-          ))}
-        </div>
+        <Carousel
+          opts={{
+            align: "start",
+            loop: false,
+          }}
+          className="w-full"
+        >
+          <CarouselContent className="-ml-4">
+            {members.map((member) => (
+              <CarouselItem 
+                key={member.id} 
+                className={`pl-4 ${isMobile ? 'basis-full sm:basis-2/3' : 'md:basis-1/2 lg:basis-1/3 xl:basis-1/4'}`}
+              >
+                <MemberCard member={member} />
+              </CarouselItem>
+            ))}
+          </CarouselContent>
+          <CarouselPrevious className="left-2" />
+          <CarouselNext className="right-2" />
+        </Carousel>
       </div>
     );
   }
 
-  // Si hay más de 4 miembros, mostrar carrusel
+  // Solo mostramos grid en escritorio cuando hay 4 o menos miembros
   return (
     <div className="mt-8 mb-12">
       <h2 className="text-3xl font-black mb-6">Integrantes del grupo</h2>
-      <Carousel
-        opts={{
-          align: "start",
-          loop: false,
-        }}
-        className="w-full"
-      >
-        <CarouselContent className="-ml-4">
-          {members.map((member) => (
-            <CarouselItem 
-              key={member.id} 
-              className="pl-4 md:basis-1/2 lg:basis-1/3 xl:basis-1/4"
-            >
-              <MemberCard member={member} />
-            </CarouselItem>
-          ))}
-        </CarouselContent>
-        <CarouselPrevious className="left-2" />
-        <CarouselNext className="right-2" />
-      </Carousel>
+      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
+        {members.map((member) => (
+          <MemberCard key={member.id} member={member} />
+        ))}
+      </div>
     </div>
   );
 };
