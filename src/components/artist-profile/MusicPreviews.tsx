@@ -1,10 +1,11 @@
 
 import React, { useEffect, useState, useRef } from "react";
-import { Music, Video } from "lucide-react";
+import { Music, Video, Play } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Carousel, CarouselContent, CarouselItem } from "@/components/ui/carousel";
 import { useIsMobile } from "@/hooks/use-mobile";
+import { Button } from "@/components/ui/button";
 
 interface MusicPreview {
   title: string;
@@ -139,13 +140,18 @@ const ImagePreviewCard = ({
   preview: MusicPreview;
   artistName: string;
 }) => {
+  const handlePlay = () => {
+    console.log(`Reproduciendo: ${preview.title}`);
+    // Aquí podríamos añadir la lógica para reproducir el audio/video
+  };
+
   return <Card className="overflow-hidden rounded-3xl relative group cursor-pointer border-none">
       <div className="relative aspect-[4/5]">
         {/* Imagen de fondo */}
         <img src={preview.image} alt={preview.title} className="w-full h-full object-cover" />
         
-        {/* Degradado oscuro de abajo hacia arriba - más pronunciado */}
-        <div className="absolute inset-0 bg-gradient-to-t from-black via-black/70 to-transparent"></div>
+        {/* Degradado oscuro de abajo hacia arriba - más pronunciado - se oculta en hover */}
+        <div className="absolute inset-0 bg-gradient-to-t from-black via-black/70 to-transparent transition-opacity duration-300 group-hover:opacity-0"></div>
         
         {/* Badge de video si es aplicable - sin opacidad y con padding ajustado */}
         {preview.hasVideo && <Badge className="absolute top-5 left-5 bg-white text-black font-medium px-4 py-2 rounded-full">
@@ -153,8 +159,8 @@ const ImagePreviewCard = ({
             Video
           </Badge>}
         
-        {/* Contenido de texto en la parte inferior - más padding */}
-        <div className="absolute bottom-0 left-0 right-0 p-7 text-white">
+        {/* Contenido de texto en la parte inferior - se oculta en hover */}
+        <div className="absolute bottom-0 left-0 right-0 p-7 text-white transition-opacity duration-300 group-hover:opacity-0">
           <h3 className="text-xl font-black line-clamp-1">{preview.title}</h3>
           <p className="text-sm text-white/80 mb-5">{artistName}</p>
           
@@ -163,6 +169,16 @@ const ImagePreviewCard = ({
             <span className="text-sm font-medium">{preview.duration}</span>
           </div>
         </div>
+
+        {/* Botón de Play - visible solo en hover */}
+        <Button 
+          variant="secondary" 
+          size="icon" 
+          className="absolute bottom-7 left-7 opacity-0 group-hover:opacity-100 transition-opacity duration-300 h-12 w-12 bg-white hover:bg-white/90 text-black"
+          onClick={handlePlay}
+        >
+          <Play className="h-6 w-6" />
+        </Button>
       </div>
     </Card>;
 };
@@ -175,15 +191,20 @@ const NoImagePreviewCard = ({
   preview: MusicPreview;
   artistName: string;
 }) => {
+  const handlePlay = () => {
+    console.log(`Reproduciendo: ${preview.title}`);
+    // Aquí podríamos añadir la lógica para reproducir el audio/video
+  };
+
   return <Card className="overflow-hidden rounded-3xl relative group cursor-pointer border-none bg-[#F7F7F7] dark:bg-vyba-dark-secondary/40">
       <div className="relative aspect-[4/5] flex flex-col items-center justify-center p-7">
-        {/* Icono de música en el centro */}
-        <div className="mb-5 opacity-80">
+        {/* Icono de música en el centro - se mantiene visible */}
+        <div className="mb-5 opacity-80 group-hover:opacity-40 transition-opacity duration-300">
           <Music className="w-20 h-20 stroke-1" />
         </div>
         
-        {/* Contenido de texto en la parte inferior - más padding */}
-        <div className="absolute bottom-0 left-0 right-0 p-7">
+        {/* Contenido de texto en la parte inferior - se oculta en hover */}
+        <div className="absolute bottom-0 left-0 right-0 p-7 transition-opacity duration-300 group-hover:opacity-0">
           <h3 className="text-xl font-black line-clamp-1">{preview.title}</h3>
           <p className="text-sm text-gray-600 dark:text-gray-400 mb-5">{artistName}</p>
           
@@ -192,6 +213,16 @@ const NoImagePreviewCard = ({
             <span className="text-sm font-medium">{preview.duration}</span>
           </div>
         </div>
+
+        {/* Botón de Play - visible solo en hover */}
+        <Button 
+          variant="secondary" 
+          size="icon" 
+          className="absolute bottom-7 left-7 opacity-0 group-hover:opacity-100 transition-opacity duration-300 h-12 w-12"
+          onClick={handlePlay}
+        >
+          <Play className="h-6 w-6" />
+        </Button>
       </div>
     </Card>;
 };
