@@ -26,11 +26,26 @@ interface GroupMembersProps {
 const GroupMembers = ({ members }: GroupMembersProps) => {
   const isMobile = useIsMobile();
   const [windowWidth, setWindowWidth] = useState(window.innerWidth);
-  const [useCarousel, setUseCarousel] = useState(true); // Siempre usamos carrusel
+  const [useCarousel, setUseCarousel] = useState(isMobile || members.length > 4);
   
   useEffect(() => {
     const handleResize = () => {
       setWindowWidth(window.innerWidth);
+      
+      // Determina si usamos carrusel basado en el ancho de la ventana y cantidad de miembros
+      if (window.innerWidth < 768) {
+        // Móvil siempre carrusel
+        setUseCarousel(true);
+      } else if (window.innerWidth < 1024) {
+        // Tablet: carrusel si hay más de 2 miembros
+        setUseCarousel(members.length > 2);
+      } else if (window.innerWidth < 1280) {
+        // Desktop pequeño: carrusel si hay más de 3 miembros
+        setUseCarousel(members.length > 3);
+      } else {
+        // Desktop grande: carrusel si hay más de 4 miembros
+        setUseCarousel(members.length > 4);
+      }
     };
 
     // Ejecutar al montar y cuando cambia el tamaño de la ventana
@@ -40,41 +55,62 @@ const GroupMembers = ({ members }: GroupMembersProps) => {
     return () => {
       window.removeEventListener("resize", handleResize);
     };
-  }, []);
+  }, [members.length]);
   
   if (!members || members.length === 0) return null;
 
+  if (useCarousel) {
+    return (
+      <div className="mt-8 mb-12">
+        <h2 className="text-3xl font-black mb-6">Integrantes del grupo</h2>
+        <Carousel
+          opts={{
+            align: "start",
+            loop: false,
+            containScroll: "trimSnaps"
+          }}
+          className="w-full"
+        >
+          <CarouselContent className="-ml-4">
+            {members.map((member) => (
+              <CarouselItem 
+                key={member.id} 
+                className={`pl-4 ${
+                  windowWidth < 640 ? 'basis-4/5' : 
+                  windowWidth < 1024 ? 'basis-1/2' : 
+                  windowWidth < 1280 ? 'basis-1/3' : 
+                  'basis-1/4'
+                }`}
+              >
+                <div className="aspect-square w-full">
+                  <MemberCard member={member} />
+                </div>
+              </CarouselItem>
+            ))}
+          </CarouselContent>
+          {/* Solo mostrar botones de navegación en desktop */}
+          {!isMobile && (
+            <>
+              <CarouselPrevious className="left-2" />
+              <CarouselNext className="right-2" />
+            </>
+          )}
+        </Carousel>
+      </div>
+    );
+  }
+
+  // Grid layout para pocos miembros en pantallas grandes
   return (
     <div className="mt-8 mb-12">
       <h2 className="text-3xl font-black mb-6">Integrantes del grupo</h2>
-      <Carousel
-        opts={{
-          align: "start",
-          loop: false,
-          containScroll: "trimSnaps"
-        }}
-        className="w-full"
-      >
-        <CarouselContent className="-ml-4">
-          {members.map((member) => (
-            <CarouselItem 
-              key={member.id} 
-              className={`pl-4 ${
-                windowWidth < 640 ? 'basis-1/2' : // Móvil pequeño: mostrar 2
-                windowWidth < 768 ? 'basis-1/2' : // Móvil: mostrar 2
-                windowWidth < 1024 ? 'basis-1/3' : // Tablet: mostrar 3
-                windowWidth < 1280 ? 'basis-1/4' : // Desktop pequeño: mostrar 4 (sin cambios)
-                'basis-1/5' // Desktop grande: mostrar 5 (sin cambios)
-              }`}
-            >
-              <div className="aspect-square w-full">
-                <MemberCard member={member} />
-              </div>
-            </CarouselItem>
-          ))}
-        </CarouselContent>
-        {/* Eliminamos los botones de navegación por completo */}
-      </Carousel>
+      <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+        {members.map((member) => (
+          <div key={member.id} className="aspect-square w-full max-w-[300px]">
+            <MemberCard member={member} />
+          </div>
+        ))}
+      </div>
     </div>
   );
 };
