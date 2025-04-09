@@ -28,46 +28,52 @@ const GroupMembers = ({ members }: GroupMembersProps) => {
   
   if (!members || members.length === 0) return null;
 
-  // Siempre usamos carrusel para mantener proporciones consistentes
+  // Si es móvil siempre muestra carrusel, o si hay más de 4 miembros en escritorio
+  if (isMobile || members.length > 4) {
+    return (
+      <div className="mt-8 mb-12">
+        <h2 className="text-3xl font-black mb-6">Integrantes del grupo</h2>
+        <Carousel
+          opts={{
+            align: "start",
+            loop: false,
+            containScroll: "trimSnaps"
+          }}
+          className="w-full"
+        >
+          <CarouselContent className="-ml-4">
+            {members.map((member) => (
+              <CarouselItem 
+                key={member.id} 
+                className={`pl-4 ${isMobile ? 'basis-4/5' : 'md:basis-1/3 lg:basis-1/4 xl:basis-1/4'}`}
+              >
+                <MemberCard member={member} />
+              </CarouselItem>
+            ))}
+          </CarouselContent>
+          {/* Solo mostrar botones de navegación en desktop */}
+          {!isMobile && (
+            <>
+              <CarouselPrevious className="left-2" />
+              <CarouselNext className="right-2" />
+            </>
+          )}
+        </Carousel>
+      </div>
+    );
+  }
+
+  // Solo mostramos grid en escritorio cuando hay 4 o menos miembros
   return (
     <div className="mt-8 mb-12">
       <h2 className="text-3xl font-black mb-6">Integrantes del grupo</h2>
-      <Carousel
-        opts={{
-          align: "start",
-          loop: false,
-          containScroll: "trimSnaps"
-        }}
-        className="w-full"
-      >
-        <CarouselContent className="-ml-4">
-          {members.map((member) => (
-            <CarouselItem 
-              key={member.id} 
-              className={`pl-4 ${
-                isMobile 
-                  ? 'basis-4/5' 
-                  : members.length <= 2 
-                    ? 'md:basis-1/2' 
-                    : members.length <= 3 
-                      ? 'md:basis-1/3' 
-                      : 'md:basis-1/3 lg:basis-1/4'
-              }`}
-            >
-              <div className="max-w-[350px] mx-auto w-full">
-                <MemberCard member={member} />
-              </div>
-            </CarouselItem>
-          ))}
-        </CarouselContent>
-        {/* Solo mostrar botones de navegación en desktop */}
-        {!isMobile && (
-          <>
-            <CarouselPrevious className="left-2" />
-            <CarouselNext className="right-2" />
-          </>
-        )}
-      </Carousel>
+      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+        {members.map((member) => (
+          <div key={member.id} className="w-full max-w-[300px] mx-auto">
+            <MemberCard member={member} />
+          </div>
+        ))}
+      </div>
     </div>
   );
 };
