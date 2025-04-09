@@ -106,8 +106,8 @@ const MusicPreviews = ({
                 {previews.map((preview, index) => <CarouselItem key={index} className={`pl-4 ${
                   windowWidth < 640 ? 'basis-[85%]' : // Móvil: mostrar un poco de la siguiente card
                   windowWidth < 768 ? 'basis-[45%]' : // Móviles grandes: mostrar 2 completas y un poco de la siguiente
-                  windowWidth < 1024 ? 'basis-1/3' : // Tablets: 3 por fila con altura mantenida
-                  'basis-1/4' // Desktop: 4 por fila con altura mantenida
+                  windowWidth < 1024 ? 'basis-1/2' : // Tablets: 2 por fila
+                  'basis-1/3' // Desktop: 3 por fila
                 }`}>
                     {preview.image ? <ImagePreviewCard preview={preview} artistName={artistName} /> : <NoImagePreviewCard preview={preview} artistName={artistName} />}
                   </CarouselItem>)}
@@ -122,7 +122,7 @@ const MusicPreviews = ({
             </div>}
           
           {/* Vista de cuadrícula para pantallas grandes con pocos elementos cuando el navbar es visible */}
-          {!useCarousel && isNavbarVisible && <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+          {!useCarousel && isNavbarVisible && <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {previews.map((preview, index) => <div key={index}>
                   {preview.image ? <ImagePreviewCard preview={preview} artistName={artistName} /> : <NoImagePreviewCard preview={preview} artistName={artistName} />}
                 </div>)}
