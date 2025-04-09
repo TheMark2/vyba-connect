@@ -6,6 +6,14 @@ import {
   CardContent
 } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import {
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+  CarouselNext,
+  CarouselPrevious
+} from "@/components/ui/carousel";
+import { useIsMobile } from "@/hooks/use-mobile";
 
 interface MusicPreview {
   title: string;
@@ -20,31 +28,44 @@ interface MusicPreviewsProps {
 }
 
 const MusicPreviews = ({ previews, artistName }: MusicPreviewsProps) => {
+  const isMobile = useIsMobile();
+  
   return (
     <div className="mt-8 mb-16">
       <h2 className="text-3xl font-black mb-6">Preview</h2>
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-        {previews?.map((preview, index) => {
-          // Determinamos el tipo de tarjeta basado en las propiedades
-          if (preview.image) {
-            return (
-              <ImagePreviewCard 
-                key={index}
-                preview={preview}
-                artistName={artistName}
-              />
-            );
-          } else {
-            return (
-              <NoImagePreviewCard 
-                key={index}
-                preview={preview}
-                artistName={artistName}
-              />
-            );
-          }
-        })}
-      </div>
+      
+      {previews?.length > 0 && (
+        <Carousel
+          opts={{
+            align: "start",
+            loop: false,
+          }}
+          className="w-full"
+        >
+          <CarouselContent className="-ml-4">
+            {previews.map((preview, index) => (
+              <CarouselItem 
+                key={index} 
+                className={`pl-4 ${isMobile ? 'basis-full' : 'basis-1/2 lg:basis-1/3'}`}
+              >
+                {preview.image ? (
+                  <ImagePreviewCard 
+                    preview={preview}
+                    artistName={artistName}
+                  />
+                ) : (
+                  <NoImagePreviewCard 
+                    preview={preview}
+                    artistName={artistName}
+                  />
+                )}
+              </CarouselItem>
+            ))}
+          </CarouselContent>
+          <CarouselPrevious className="left-2" />
+          <CarouselNext className="right-2" />
+        </Carousel>
+      )}
     </div>
   );
 };
@@ -64,9 +85,9 @@ const ImagePreviewCard = ({ preview, artistName }: { preview: MusicPreview, arti
         {/* Degradado oscuro de abajo hacia arriba - más pronunciado */}
         <div className="absolute inset-0 bg-gradient-to-t from-black via-black/70 to-transparent"></div>
         
-        {/* Badge de video si es aplicable */}
+        {/* Badge de video si es aplicable - sin opacidad y con padding ajustado */}
         {preview.hasVideo && (
-          <Badge className="absolute top-5 left-5 bg-white/90 text-black font-medium px-3 py-1 rounded-full">
+          <Badge className="absolute top-5 left-5 bg-white text-black font-medium px-4 py-2 rounded-full">
             <Video className="w-4 h-4 mr-1" />
             Video
           </Badge>
