@@ -51,8 +51,13 @@ const GroupMembers = ({ members }: GroupMembersProps) => {
               </CarouselItem>
             ))}
           </CarouselContent>
-          <CarouselPrevious className="left-2" />
-          <CarouselNext className="right-2" />
+          {/* Solo mostrar botones de navegación en desktop */}
+          {!isMobile && (
+            <>
+              <CarouselPrevious className="left-2" />
+              <CarouselNext className="right-2" />
+            </>
+          )}
         </Carousel>
       </div>
     );
