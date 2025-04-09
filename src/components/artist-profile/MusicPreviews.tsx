@@ -53,7 +53,7 @@ const MusicPreviews = ({ previews, artistName }: MusicPreviewsProps) => {
 const ImagePreviewCard = ({ preview, artistName }: { preview: MusicPreview, artistName: string }) => {
   return (
     <Card className="overflow-hidden rounded-3xl relative group cursor-pointer border-none">
-      <div className="relative aspect-square">
+      <div className="relative aspect-[4/5]">
         {/* Imagen de fondo */}
         <img 
           src={preview.image} 
@@ -61,24 +61,24 @@ const ImagePreviewCard = ({ preview, artistName }: { preview: MusicPreview, arti
           className="w-full h-full object-cover"
         />
         
-        {/* Degradado oscuro de abajo hacia arriba */}
-        <div className="absolute inset-0 bg-gradient-to-t from-black/90 to-transparent"></div>
+        {/* Degradado oscuro de abajo hacia arriba - más pronunciado */}
+        <div className="absolute inset-0 bg-gradient-to-t from-black via-black/70 to-transparent"></div>
         
         {/* Badge de video si es aplicable */}
         {preview.hasVideo && (
-          <Badge className="absolute top-4 left-4 bg-white/90 text-black font-medium px-3 py-1 rounded-full">
+          <Badge className="absolute top-5 left-5 bg-white/90 text-black font-medium px-3 py-1 rounded-full">
             <Video className="w-4 h-4 mr-1" />
             Video
           </Badge>
         )}
         
-        {/* Contenido de texto en la parte inferior */}
-        <div className="absolute bottom-0 left-0 right-0 p-5 text-white">
+        {/* Contenido de texto en la parte inferior - más padding */}
+        <div className="absolute bottom-0 left-0 right-0 p-7 text-white">
           <h3 className="text-lg font-bold line-clamp-1">{preview.title}</h3>
-          <p className="text-sm text-white/80">{artistName}</p>
+          <p className="text-sm text-white/80 mb-5">{artistName}</p>
           
-          {/* Duración en la esquina inferior derecha */}
-          <div className="absolute bottom-5 right-5">
+          {/* Duración en la esquina inferior derecha - mejor separada */}
+          <div className="absolute bottom-7 right-7">
             <span className="text-sm font-medium">{preview.duration}</span>
           </div>
         </div>
@@ -91,19 +91,19 @@ const ImagePreviewCard = ({ preview, artistName }: { preview: MusicPreview, arti
 const NoImagePreviewCard = ({ preview, artistName }: { preview: MusicPreview, artistName: string }) => {
   return (
     <Card className="overflow-hidden rounded-3xl relative group cursor-pointer border-none bg-[#F7F7F7] dark:bg-vyba-dark-secondary/40">
-      <div className="relative aspect-square flex flex-col items-center justify-center p-5">
+      <div className="relative aspect-[4/5] flex flex-col items-center justify-center p-7">
         {/* Icono de música en el centro */}
         <div className="mb-5 opacity-80">
-          <Music className="w-16 h-16 stroke-1" />
+          <Music className="w-20 h-20 stroke-1" />
         </div>
         
-        {/* Contenido de texto en la parte inferior */}
-        <div className="absolute bottom-0 left-0 right-0 p-5">
+        {/* Contenido de texto en la parte inferior - más padding */}
+        <div className="absolute bottom-0 left-0 right-0 p-7">
           <h3 className="text-lg font-bold line-clamp-1">{preview.title}</h3>
-          <p className="text-sm text-gray-600 dark:text-gray-400">{artistName}</p>
+          <p className="text-sm text-gray-600 dark:text-gray-400 mb-5">{artistName}</p>
           
-          {/* Duración en la esquina inferior derecha */}
-          <div className="absolute bottom-5 right-5">
+          {/* Duración en la esquina inferior derecha - mejor separada */}
+          <div className="absolute bottom-7 right-7">
             <span className="text-sm font-medium">{preview.duration}</span>
           </div>
         </div>
