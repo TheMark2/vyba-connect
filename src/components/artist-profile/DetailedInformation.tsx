@@ -161,8 +161,8 @@ const DetailedInformation = ({
           </div>
         </div>
         
-        {/* Gradient overlay for truncated content */}
-        {!showFullInfo && <div className="absolute bottom-0 left-0 right-0 h-40 bg-gradient-to-t from-[#FAF8F6] to-transparent dark:from-vyba-dark-bg pointer-events-none transition-opacity duration-500 ease-in-out" />}
+        {/* Gradient overlay for truncated content - Cambiado a blanco */}
+        {!showFullInfo && <div className="absolute bottom-0 left-0 right-0 h-40 bg-gradient-to-t from-white to-transparent dark:from-vyba-dark-bg pointer-events-none transition-opacity duration-500 ease-in-out" />}
       </div>
       
       {/* Button to toggle full content */}
