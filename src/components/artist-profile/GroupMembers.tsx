@@ -60,11 +60,11 @@ const GroupMembers = ({ members }: GroupMembersProps) => {
             <CarouselItem 
               key={member.id} 
               className={`pl-4 ${
-                windowWidth < 640 ? 'basis-3/4' : // Móvil pequeño: 3/4
-                windowWidth < 768 ? 'basis-2/3' : // Móvil: 2/3
+                windowWidth < 640 ? 'basis-1/2' : // Móvil pequeño: mostrar 2
+                windowWidth < 768 ? 'basis-1/2' : // Móvil: mostrar 2
                 windowWidth < 1024 ? 'basis-1/3' : // Tablet: mostrar 3
-                windowWidth < 1280 ? 'basis-1/4' : // Desktop pequeño: mostrar 4
-                'basis-1/5' // Desktop grande: mostrar 5
+                windowWidth < 1280 ? 'basis-1/4' : // Desktop pequeño: mostrar 4 (sin cambios)
+                'basis-1/5' // Desktop grande: mostrar 5 (sin cambios)
               }`}
             >
               <div className="aspect-square w-full">
