@@ -1,5 +1,5 @@
 
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 import Navbar from "@/components/Navbar";
@@ -221,6 +221,32 @@ const ArtistProfilePage = () => {
   const [isAudioPlaying, setIsAudioPlaying] = useState(false);
   const audioRef = useRef<HTMLAudioElement>(null);
   
+  // Creamos el elemento de audio directamente en el DOM
+  useEffect(() => {
+    // Crear el elemento de audio si no existe
+    if (!audioRef.current) {
+      audioRef.current = new Audio();
+      
+      // Configurar eventos
+      audioRef.current.addEventListener('ended', () => {
+        setIsAudioPlaying(false);
+      });
+      
+      audioRef.current.addEventListener('error', (e) => {
+        console.error('Error en la reproducción de audio:', e);
+        setIsAudioPlaying(false);
+      });
+    }
+    
+    // Limpiar al desmontar
+    return () => {
+      if (audioRef.current) {
+        audioRef.current.pause();
+        audioRef.current.src = '';
+      }
+    };
+  }, []);
+  
   const artist = artistsData.find(artist => artist.id === id);
   
   if (!artist) {
@@ -279,12 +305,14 @@ const ArtistProfilePage = () => {
   };
 
   const handlePlaybackState = (preview: any, playing: boolean) => {
+    console.log("Estado de reproducción cambiado:", { preview, playing });
     setCurrentPlaying(preview);
     setIsAudioPlaying(playing);
   };
 
   const handlePlayPause = () => {
     if (audioRef.current) {
+      console.log("Play/Pause presionado. Estado actual:", isAudioPlaying);
       if (isAudioPlaying) {
         audioRef.current.pause();
       } else {

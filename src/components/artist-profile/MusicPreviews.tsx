@@ -1,3 +1,4 @@
+
 import React, { useEffect, useState, useRef } from "react";
 import { Music, Video, Play, Expand, Pause, FileAudio } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
@@ -59,13 +60,19 @@ const MusicPreviews = ({
   }, []);
 
   const handlePlayPause = (preview: MusicPreview) => {
+    console.log("Intentando reproducir:", preview);
+    
     if (!preview.audioUrl) {
       console.log(`No hay URL de audio para: ${preview.title}`);
       return;
     }
 
+    // Mostrar información completa de la URL de audio
+    console.log("URL de audio:", preview.audioUrl);
+
     if (currentlyPlaying === preview.title) {
       if (audioRef.current) {
+        console.log("Pausando audio");
         audioRef.current.pause();
       }
       setCurrentlyPlaying(null);
@@ -74,15 +81,38 @@ const MusicPreviews = ({
       }
     } else {
       if (audioRef.current) {
+        console.log("Reproduciendo nuevo audio");
         audioRef.current.pause();
         audioRef.current.src = preview.audioUrl;
-        audioRef.current.play().catch(e => console.error("Error al reproducir audio:", e));
-        setCurrentlyPlaying(preview.title);
-        if (onPlaybackState) {
-          onPlaybackState(preview, true);
+        
+        // Verificar que la URL se ha asignado correctamente
+        console.log("URL asignada:", audioRef.current.src);
+        
+        // Precarga el audio
+        audioRef.current.load();
+        
+        const playPromise = audioRef.current.play();
+        
+        if (playPromise !== undefined) {
+          playPromise
+            .then(() => {
+              console.log("Reproducción iniciada correctamente");
+              setCurrentlyPlaying(preview.title);
+              if (onPlaybackState) {
+                onPlaybackState(preview, true);
+              }
+            })
+            .catch(error => {
+              console.error("Error al reproducir audio:", error);
+              // Intentar reproducir de nuevo después de la interacción del usuario
+              audioRef.current?.addEventListener('canplaythrough', () => {
+                audioRef.current?.play().catch(e => console.error("Error en segundo intento:", e));
+              }, { once: true });
+            });
         }
         
         audioRef.current.onended = () => {
+          console.log("Audio finalizado");
           setCurrentlyPlaying(null);
           if (onPlaybackState) {
             onPlaybackState(preview, false);
@@ -131,6 +161,9 @@ const MusicPreviews = ({
   return (
     <div className="mt-8 mb-16">
       <h2 className="text-3xl font-black mb-6">Preview</h2>
+      
+      {/* Elemento de audio oculto */}
+      {/* No es necesario aquí porque usamos el audioRef del componente padre */}
       
       {previews?.length > 0 && (
         <>

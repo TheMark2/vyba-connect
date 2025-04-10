@@ -1,5 +1,5 @@
 
-import React, { useEffect, useState, useRef } from "react";
+import React, { useEffect, useState } from "react";
 import { Progress } from "@/components/ui/progress";
 import { Pause, Play } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -57,16 +57,27 @@ const AudioPlayer = ({
       }
     };
     
+    // Usar evento timeupdate para actualizar el progreso
     audioRef.current.addEventListener('timeupdate', updateProgress);
+    
+    // Usar evento loadedmetadata para obtener la duración total
     audioRef.current.addEventListener('loadedmetadata', handleLoadedMetadata);
     
+    // Limpiar los event listeners al desmontar
     return () => {
       if (audioRef.current) {
         audioRef.current.removeEventListener('timeupdate', updateProgress);
         audioRef.current.removeEventListener('loadedmetadata', handleLoadedMetadata);
       }
     };
-  }, [audioRef]);
+  }, [audioRef]); // Solo se ejecuta cuando cambia audioRef
+
+  // Resetear el progreso cuando cambia la canción
+  useEffect(() => {
+    setProgress(0);
+    setCurrentTime("0:00");
+    setDuration(preview.duration);
+  }, [preview]);
 
   return (
     <div className="bg-[#F7F7F7] dark:bg-vyba-dark-secondary/40 py-5 px-6 rounded-xl border-t border-gray-200 dark:border-gray-800 mt-4">
