@@ -63,6 +63,9 @@ const ContactCard = ({
   const handleTouchMove = (e: React.TouchEvent) => {
     if (!isDragging || !hasDragFunctionality) return;
     
+    // Prevenir el scroll de la página durante el arrastre
+    e.preventDefault();
+    
     const currentY = e.touches[0].clientY;
     const diffY = currentY - startY;
     
