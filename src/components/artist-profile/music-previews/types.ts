@@ -14,4 +14,5 @@ export interface PreviewCardProps {
   isPlaying: boolean;
   isLoading?: boolean;
   onPlayPause: () => void;
+  audioRef?: React.RefObject<HTMLAudioElement>;
 }
