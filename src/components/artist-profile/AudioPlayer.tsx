@@ -190,14 +190,13 @@ const AudioPlayer = ({
             <Button 
               variant="secondary" 
               size="icon" 
-              className={`h-10 w-10 ${isPlaying ? 'bg-green-500 hover:bg-green-600' : 'bg-blue-500 hover:bg-blue-600'} text-white`}
+              className={`h-10 w-10 ${isPlaying ? 'bg-green-500 hover:bg-green-600' : 'bg-blue-500 hover:bg-blue-600'} text-white relative overflow-hidden`}
               onClick={onPlayPause}
             >
-              {isPlaying ? (
-                <Pause className="h-5 w-5 fill-white" />
-              ) : (
-                <Play className="h-5 w-5 fill-white" />
-              )}
+              <div className="relative z-10 w-5 h-5">
+                <Pause className={`absolute inset-0 h-5 w-5 fill-white transition-all duration-300 ${isPlaying ? 'opacity-100 scale-100' : 'opacity-0 scale-50'}`} />
+                <Play className={`absolute inset-0 h-5 w-5 fill-white transition-all duration-300 ${isPlaying ? 'opacity-0 scale-50' : 'opacity-100 scale-100'}`} />
+              </div>
             </Button>
           </div>
         </div>
