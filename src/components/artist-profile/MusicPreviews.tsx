@@ -1,3 +1,4 @@
+
 import React, { useEffect, useState, useRef } from "react";
 import { Music, Video, Play, Expand, Pause, FileAudio } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
@@ -20,15 +21,13 @@ interface MusicPreviewsProps {
   artistName: string;
   onPlaybackState?: (preview: MusicPreview, isPlaying: boolean) => void;
   audioRef: React.RefObject<HTMLAudioElement>;
-  onPreviewClick?: (preview: MusicPreview) => void;
 }
 
 const MusicPreviews = ({
   previews,
   artistName,
   onPlaybackState,
-  audioRef,
-  onPreviewClick
+  audioRef
 }: MusicPreviewsProps) => {
   const isMobile = useIsMobile();
   const [windowWidth, setWindowWidth] = useState(window.innerWidth);
@@ -71,10 +70,10 @@ const MusicPreviews = ({
       return;
     }
 
-    if (isMobile && onPreviewClick) {
-      onPreviewClick(preview);
-    }
+    // Mostrar información completa de la URL de audio
+    console.log("URL de audio:", preview.audioUrl);
 
+    // Si ya está reproduciendo esta pista, pausarla
     if (currentlyPlaying === preview.title) {
       if (audioRef.current) {
         console.log("Pausando audio");
@@ -87,18 +86,23 @@ const MusicPreviews = ({
       return;
     }
     
+    // Indicar que está cargando el audio
     setLoadingAudio(preview.title);
     
+    // Intentar reproducir la nueva pista
     if (audioRef.current) {
       console.log("Reproduciendo nuevo audio");
+      // Pausa cualquier reproducción actual
       audioRef.current.pause();
       
       try {
+        // Limpiar eventos anteriores para evitar duplicados
         audioRef.current.oncanplaythrough = null;
         audioRef.current.onerror = null;
         audioRef.current.onloadedmetadata = null;
         audioRef.current.onended = null;
         
+        // Configurar nuevos manejadores de eventos
         audioRef.current.oncanplaythrough = () => {
           console.log("Audio listo para reproducir sin interrupciones");
           if (audioRef.current) {
@@ -137,18 +141,26 @@ const MusicPreviews = ({
           }
         };
         
+        // Importante: establecer la URL antes de cargar
         audioRef.current.src = preview.audioUrl;
+        
+        // Verificar que la URL se ha asignado correctamente
         console.log("URL asignada:", audioRef.current.src);
+        
+        // CORS headers para evitar problemas de permisos
         audioRef.current.crossOrigin = "anonymous";
+        
+        // Cargar el audio para activar oncanplaythrough
         audioRef.current.load();
         
+        // Establecer un timeout para manejar casos donde el audio no se carga
         setTimeout(() => {
           if (loadingAudio === preview.title) {
             console.warn("Timeout de carga de audio");
             setLoadingAudio(null);
             handlePlaybackError(preview);
           }
-        }, 10000);
+        }, 10000); // 10 segundos
       } catch (error) {
         console.error("Error al configurar el audio:", error);
         setLoadingAudio(null);
@@ -203,8 +215,10 @@ const MusicPreviews = ({
     };
   }, [previews.length, isNavbarVisible]);
 
+  // Función para mantener un tamaño consistente de las tarjetas en todos los formatos
   const getCardWidth = () => {
-    return "320px";
+    // Usamos un tamaño fijo para las tarjetas en todos los formatos de pantalla
+    return "320px"; // Tamaño consistente para todas las tarjetas
   };
 
   return (

@@ -1,3 +1,4 @@
+
 import React, { useEffect, useState, useRef } from "react";
 import { Slider } from "@/components/ui/slider";
 import { Pause, Play } from "lucide-react";
@@ -62,11 +63,14 @@ const AudioPlayer = ({
           setDuration(`${minutes}:${seconds < 10 ? '0' : ''}${seconds}`);
           setIsLoading(false);
         } else {
+          // Si no se puede obtener la duración del archivo de audio,
+          // usar la duración proporcionada en los datos
           setDuration(preview.duration);
           setIsLoading(false);
         }
       } catch (error) {
         console.error("Error al obtener metadatos de audio:", error);
+        // En caso de error, usar la duración proporcionada
         setDuration(preview.duration);
         setIsLoading(false);
       }
@@ -97,6 +101,7 @@ const AudioPlayer = ({
     };
   }, [audioRef, isDragging, preview.duration]);
   
+  // Reset player when preview changes
   useEffect(() => {
     setProgress(0);
     setCurrentTime("0:00");
@@ -131,6 +136,7 @@ const AudioPlayer = ({
       const newTime = value[0] / 100 * audioRef.current.duration;
       setProgress(value[0]);
 
+      // Actualizar el tiempo mostrado mientras se arrastra
       const minutes = Math.floor(newTime / 60);
       const seconds = Math.floor(newTime % 60);
       setCurrentTime(`${minutes}:${seconds < 10 ? '0' : ''}${seconds}`);
@@ -174,8 +180,8 @@ const AudioPlayer = ({
             </div>
             
             <div className="flex-grow text-white">
-              <div className="font-black text-lg mb-1">{preview.title}</div>
-              <div className="text-sm font-medium opacity-90">{artistName}</div>
+              <div className="font-bold text-lg mb-1">{preview.title}</div>
+              <div className="text-sm opacity-90">{artistName}</div>
             </div>
           </div>
           
@@ -193,16 +199,16 @@ const AudioPlayer = ({
           
           <div className="flex justify-center mt-3">
             <button 
-              className="text-white relative overflow-hidden w-10 h-10 flex items-center justify-center"
+              className="text-white relative overflow-hidden w-12 h-12 flex items-center justify-center"
               onClick={handlePlayPauseClick}
               disabled={isLoading}
             >
               {isLoading ? (
-                <div className="h-4 w-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                <div className="h-5 w-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
               ) : (
-                <div className="relative z-10 w-7 h-7 bg-white rounded-full flex items-center justify-center">
-                  <Pause className={`absolute inset-0 h-4 w-4 text-black transition-all duration-300 m-auto ${isPlaying ? 'opacity-100 scale-100' : 'opacity-0 scale-50'}`} />
-                  <Play className={`absolute inset-0 h-4 w-4 text-black transition-all duration-300 m-auto ${isPlaying ? 'opacity-0 scale-50' : 'opacity-100 scale-100'}`} />
+                <div className="relative z-10 w-8 h-8">
+                  <Pause className={`absolute inset-0 h-8 w-8 transition-all duration-300 ${isPlaying ? 'opacity-100 scale-100' : 'opacity-0 scale-50'}`} />
+                  <Play className={`absolute inset-0 h-8 w-8 transition-all duration-300 ${isPlaying ? 'opacity-0 scale-50' : 'opacity-100 scale-100'}`} />
                 </div>
               )}
             </button>
@@ -212,6 +218,7 @@ const AudioPlayer = ({
     );
   }
   
+  // Render para desktop (mantener el diseño original)
   return (
     <div className="relative rounded-2xl overflow-hidden bg-transparent dark:bg-transparent">
       <div className="flex flex-col gap-4 rounded-xl">
