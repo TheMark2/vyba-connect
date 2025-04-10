@@ -1,7 +1,7 @@
 
 import * as React from "react"
 import * as AccordionPrimitive from "@radix-ui/react-accordion"
-import { ChevronDown, MinusCircle } from "lucide-react"
+import { Plus, Minus } from "lucide-react"
 
 import { cn } from "@/lib/utils"
 
@@ -27,16 +27,16 @@ const AccordionTrigger = React.forwardRef<
     <AccordionPrimitive.Trigger
       ref={ref}
       className={cn(
-        "group flex flex-1 items-center justify-between py-4 font-medium transition-all hover:underline [&[data-state=open]>svg]:rotate-180",
+        "group flex flex-1 items-center justify-between py-4 font-medium transition-all hover:underline [&[data-state=open]>div>svg]:hidden [&[data-state=closed]>div>svg:first-child]:hidden",
         className
       )}
       {...props}
     >
-      <div className="flex items-center">
-        <MinusCircle className="mr-3 h-5 w-5 text-gray-400 flex-shrink-0" />
+      <div className="flex items-center gap-4">
+        <Plus className="h-5 w-5 text-gray-400 flex-shrink-0" />
+        <Minus className="h-5 w-5 text-gray-400 flex-shrink-0" />
         {children}
       </div>
-      <ChevronDown className="h-4 w-4 shrink-0 transition-transform duration-300" />
     </AccordionPrimitive.Trigger>
   </AccordionPrimitive.Header>
 ))
@@ -51,7 +51,7 @@ const AccordionContent = React.forwardRef<
     className="overflow-hidden text-sm transition-all data-[state=closed]:animate-accordion-up data-[state=open]:animate-accordion-down duration-300"
     {...props}
   >
-    <div className={cn("pb-4 pt-0", className)}>{children}</div>
+    <div className={cn("pb-4 pt-0 pl-9", className)}>{children}</div>
   </AccordionPrimitive.Content>
 ))
 
