@@ -77,16 +77,7 @@ const VideoPreviewCard = ({
         videoRef.current.onerror = (e) => {
           console.error("Error cargando el video:", preview.videoUrl, e);
           setVideoError(true);
-          
-          // No intentar recargar si ya sabemos que hay un problema de permisos
-          if (retryCount === 0) {
-            // Solo intentar una vez
-            setRetryCount(prev => prev + 1);
-          }
         };
-        
-        // Forzar carga
-        videoRef.current.load();
       }
     };
     
@@ -99,22 +90,30 @@ const VideoPreviewCard = ({
         videoRef.current.ontimeupdate = null;
       }
     };
-  }, [preview.videoUrl, retryCount, isYoutubeVideo]);
+  }, [preview.videoUrl, isYoutubeVideo]);
   
   const handleRetry = (e: React.MouseEvent) => {
     e.stopPropagation();
-    setRetryCount(0);
+    setRetryCount(prev => prev + 1);
     setVideoError(false);
     toast.info("Reintentando cargar el video");
     if (videoRef.current) {
-      videoRef.current.load();
+      // Forzar recarga del video
+      const currentSrc = videoRef.current.src;
+      videoRef.current.src = '';
+      setTimeout(() => {
+        if (videoRef.current) {
+          videoRef.current.src = currentSrc || preview.videoUrl || '';
+          videoRef.current.load();
+        }
+      }, 100);
     }
   };
   
   const handleMouseEnter = () => {
-    if (isYoutubeVideo) return;
+    if (isYoutubeVideo || videoError) return;
     
-    if (videoRef.current && !videoError) {
+    if (videoRef.current) {
       videoRef.current.currentTime = 0;
       
       // Usar muted para permitir la reproducción automática
@@ -133,7 +132,7 @@ const VideoPreviewCard = ({
   };
   
   const handleMouseLeave = () => {
-    if (isYoutubeVideo) return;
+    if (isYoutubeVideo || videoError) return;
     
     if (videoRef.current) {
       videoRef.current.pause();
@@ -221,6 +220,7 @@ const VideoPreviewCard = ({
             playsInline
             preload="metadata"
             poster={preview.image}
+            crossOrigin="anonymous"
           />
         )}
         

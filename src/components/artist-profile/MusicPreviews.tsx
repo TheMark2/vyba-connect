@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import { Carousel, CarouselContent, CarouselItem } from "@/components/ui/carousel";
 import { toast } from "sonner";
@@ -99,17 +98,19 @@ const MusicPreviews = ({
         };
         
         audioRef.current.src = preview.audioUrl;
-        console.log("URL asignada:", audioRef.current.src);
         audioRef.current.crossOrigin = "anonymous";
+        audioRef.current.volume = 1.0;
         audioRef.current.load();
         
-        setTimeout(() => {
+        const timeoutId = setTimeout(() => {
           if (loadingAudio === preview.title) {
             console.warn("Timeout de carga de audio");
             setLoadingAudio(null);
             handlePlaybackError(preview);
           }
-        }, 10000);
+        }, 8000);
+        
+        return () => clearTimeout(timeoutId);
       } catch (error) {
         console.error("Error al configurar el audio:", error);
         setLoadingAudio(null);
