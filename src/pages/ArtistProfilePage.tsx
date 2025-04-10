@@ -47,7 +47,6 @@ const artistsData = [{
       duration: "1:33",
       image: "https://images.unsplash.com/photo-1514525253161-7a46d19cd819?q=80&w=1000",
       hasVideo: true,
-      videoUrl: "/lovable-uploads/Bad Bunny - Moscow Mule (Video Oficial)  Un Verano Sin Ti.mp4",
       audioUrl: "https://assets.mixkit.co/music/preview/mixkit-hip-hop-02-614.mp3"
     }, 
     {
@@ -66,24 +65,7 @@ const artistsData = [{
       duration: "1:44",
       image: "https://images.unsplash.com/photo-1516450360452-9312f5e86fc7?q=80&w=2070",
       hasVideo: true,
-      videoUrl: "/lovable-uploads/W Sound 05 LA PLENA - Beéle, Westcol, Ovy On The Drums.mp4",
       audioUrl: "https://assets.mixkit.co/music/preview/mixkit-summer-fun-13.mp3"
-    },
-    {
-      title: "Fiesta Latina Mix",
-      duration: "1:38",
-      image: "https://images.unsplash.com/photo-1581090464777-f3220bbe1b8b?q=80&w=1000",
-      hasVideo: true,
-      videoUrl: "/lovable-uploads/Bad Bunny - Moscow Mule (Video Oficial)  Un Verano Sin Ti.mp4",
-      audioUrl: "https://assets.mixkit.co/music/preview/mixkit-dance-with-me-3.mp3"
-    },
-    {
-      title: "Techno Club Session",
-      duration: "1:57",
-      image: "https://images.unsplash.com/photo-1526478806334-5fd488fcaabc?q=80&w=2070",
-      hasVideo: true,
-      videoUrl: "/lovable-uploads/W Sound 05 LA PLENA - Beéle, Westcol, Ovy On The Drums.mp4",
-      audioUrl: "https://assets.mixkit.co/music/preview/mixkit-electronic-trip-132.mp3"
     }
   ],
   eventTypes: ["Bodas", "Fiestas Privadas", "Cumpleaños", "Eventos Corporativos", "Inauguraciones", "Aniversarios", "Cenas de Gala"],
