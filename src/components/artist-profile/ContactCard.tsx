@@ -47,13 +47,6 @@ const ContactCard = ({
           setIsVisible(false);
         }
       }
-
-      // En móvil, no ocultamos al hacer scroll hacia abajo
-      if (!isMobile && currentScrollY > lastScrollY) {
-        setIsVisible(false);
-      } else {
-        setIsVisible(true);
-      }
       
       setLastScrollY(currentScrollY);
     };
