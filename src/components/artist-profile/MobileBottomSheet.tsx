@@ -34,8 +34,8 @@ const MobileBottomSheet = ({
 }: MobileBottomSheetProps) => {
   const [isOpen, setIsOpen] = useState(true);
   
-  // Altura para mostrar solo la tarjeta de contacto cuando está cerrado
-  const contactCardHeight = 150; // Ajustar según el tamaño real de la tarjeta
+  // Aumentamos la altura para mostrar completamente la tarjeta de contacto
+  const contactCardHeight = 180; // Aumentado de 150 para asegurar que se vea completo
   
   // Altura total cuando está abierto (tarjeta de contacto + reproductor)
   const totalHeight = currentPlaying ? contactCardHeight + 100 : contactCardHeight;
@@ -54,7 +54,7 @@ const MobileBottomSheet = ({
         backgroundColor: '#F7F7F7'
       }}
     >
-      <div className={`px-5 pt-3 ${!currentPlaying ? 'pb-8' : 'pb-5'}`}>
+      <div className={`px-5 pt-3 ${!currentPlaying ? 'pb-10' : 'pb-5'}`}>
         <ContactCard 
           artist={artistContact} 
           onContact={onContact} 
