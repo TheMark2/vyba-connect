@@ -1,10 +1,9 @@
 
-import React, { useRef, useState, useEffect } from "react";
+import React from "react";
 import { VideoOff } from "lucide-react";
 import { MusicPreview } from "../types";
 import { Button } from "@/components/ui/button";
 import Image from "@/components/ui/image";
-import { toast } from "sonner";
 
 interface VideoThumbnailProps {
   preview: MusicPreview;
@@ -93,12 +92,12 @@ const VideoThumbnail = ({
       ref={videoRef}
       src={preview.videoUrl}
       className="w-full h-full object-cover"
-      muted={true} // Siempre silenciado porque el audio lo maneja AudioPlayer
+      muted={true}
       playsInline
       preload="metadata"
       poster={preview.image}
       crossOrigin="anonymous"
-      loop={false}
+      loop={true}
     />
   );
 };

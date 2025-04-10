@@ -1,6 +1,5 @@
 
 import React, { useState } from "react";
-import { toast } from "sonner";
 import { Card } from "@/components/ui/card";
 import { PreviewCardProps } from "./types";
 import { useVideoLogic } from "./video-components/useVideoLogic";
@@ -12,7 +11,7 @@ const VideoPreviewCard = ({
   preview,
   artistName,
   isPlaying,
-  isLoading,
+  isLoading = false,
   onPlayPause,
   audioRef
 }: PreviewCardProps) => {
@@ -23,6 +22,7 @@ const VideoPreviewCard = ({
     isVideoPlaying,
     videoError,
     currentTime,
+    duration,
     isYoutubeVideo,
     isLocalVideo,
     youtubeEmbedUrl,
@@ -45,20 +45,12 @@ const VideoPreviewCard = ({
         window.open(preview.videoUrl, '_blank');
       }
     } else if (isLocalVideo && !videoError) {
-      // Para videos locales, mostramos el reproductor a pantalla completa con Dialog
+      // Para videos locales, mostramos el reproductor a pantalla completa
       setShowFullscreen(true);
-    } else {
-      toast.error("No se puede expandir este video", {
-        description: "El video no está disponible o tiene un error."
-      });
     }
   };
 
-  const handleCardClick = () => {
-    onPlayPause();
-  };
-
-  // Función para actualizar el tiempo cuando cambia en el reproductor a pantalla completa
+  // Para actualizar el tiempo cuando cambia en el reproductor a pantalla completa
   const handleTimeUpdate = (time: number) => {
     if (audioRef?.current) {
       audioRef.current.currentTime = time;
@@ -70,7 +62,7 @@ const VideoPreviewCard = ({
     <>
       <Card 
         className="overflow-hidden rounded-3xl relative group cursor-pointer border-none" 
-        onClick={handleCardClick}
+        onClick={onPlayPause}
         onMouseEnter={handleMouseEnter}
         onMouseLeave={handleMouseLeave}
       >
@@ -93,7 +85,7 @@ const VideoPreviewCard = ({
             artistName={artistName}
             duration={preview.duration}
             isPlaying={isPlaying}
-            isLoading={isLoading || false}
+            isLoading={isLoading}
             isVideoPlaying={isVideoPlaying}
             onPlay={handlePlay}
             onExpand={handleExpand}

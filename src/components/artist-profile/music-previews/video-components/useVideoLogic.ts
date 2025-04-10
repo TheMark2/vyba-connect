@@ -10,133 +10,128 @@ export function useVideoLogic(
 ) {
   const videoRef = useRef<HTMLVideoElement>(null);
   const [isVideoPlaying, setIsVideoPlaying] = useState(false);
+  const [isHovering, setIsHovering] = useState(false);
   const [videoError, setVideoError] = useState(false);
-  const [retryCount, setRetryCount] = useState(0);
   const [currentTime, setCurrentTime] = useState(0);
+  const [duration, setDuration] = useState(0);
   
   // Verificar si es un video de YouTube o un video local/web
   const isYoutubeVideo = preview.videoUrl?.includes('youtube.com') || preview.videoUrl?.includes('youtu.be');
   const isLocalVideo = !isYoutubeVideo && preview.videoUrl !== undefined;
   
+  // Función para extraer el ID de YouTube y generar URL de embed
   const getYoutubeEmbedUrl = (url: string) => {
     if (!url) return '';
     
-    // Patrones para extraer el ID de YouTube de diferentes formatos de URL
     const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|&v=)([^#&?]*).*/;
     const match = url.match(regExp);
     
-    // Si hay coincidencia y el ID tiene 11 caracteres (ID estándar de YouTube)
     if (match && match[2].length === 11) {
       return `https://www.youtube.com/embed/${match[2]}?autoplay=0&controls=0&showinfo=0&rel=0`;
     }
     
-    return url; // Devolver la URL original si no es de YouTube
+    return url;
   };
   
   const youtubeEmbedUrl = isYoutubeVideo ? getYoutubeEmbedUrl(preview.videoUrl || '') : '';
   
+  // Configurar el video cuando cambie la URL
   useEffect(() => {
-    // Si es un video de YouTube, no necesitamos manejar el video nativo
-    if (isYoutubeVideo) {
-      setVideoError(false);
-      return;
-    }
+    if (isYoutubeVideo || !videoRef.current) return;
     
-    const loadVideo = () => {
-      if (videoRef.current) {
-        // Limpiar eventos previos
-        videoRef.current.onloadedmetadata = null;
-        videoRef.current.onerror = null;
-        
-        // Configurar el video
-        videoRef.current.onloadedmetadata = () => {
-          console.log("Video metadata loaded:", preview.title);
-          setVideoError(false);
-          
-          // Actualizar la duración del video si está disponible
-          if (videoRef.current && !isNaN(videoRef.current.duration)) {
-            // Solo actualizar en consola para verificar, no modificamos el objeto preview directamente
-            console.log(`Duración real del video ${preview.title}: ${formatTime(videoRef.current.duration)}`);
-          }
-        };
-        
-        videoRef.current.onerror = (e) => {
-          console.error("Error cargando el video:", preview.videoUrl, e);
-          setVideoError(true);
-        };
+    const video = videoRef.current;
+    
+    // Eventos para el video
+    const handleMetadataLoaded = () => {
+      setVideoError(false);
+      if (video && !isNaN(video.duration)) {
+        setDuration(video.duration);
+        console.log(`Duración real del video ${preview.title}: ${formatTime(video.duration)}`);
       }
     };
     
-    loadVideo();
+    const handleError = () => {
+      console.error("Error cargando el video:", preview.videoUrl);
+      setVideoError(true);
+    };
     
+    // Configurar listeners
+    video.addEventListener('loadedmetadata', handleMetadataLoaded);
+    video.addEventListener('error', handleError);
+    
+    // Limpiar listeners
     return () => {
-      if (videoRef.current) {
-        videoRef.current.onloadedmetadata = null;
-        videoRef.current.onerror = null;
-        videoRef.current.ontimeupdate = null;
-      }
+      video.removeEventListener('loadedmetadata', handleMetadataLoaded);
+      video.removeEventListener('error', handleError);
     };
   }, [preview.videoUrl, isYoutubeVideo, preview.title]);
   
-  // Efecto para sincronizar el estado de reproducción con isPlaying y actualizar currentTime
+  // Manejar la reproducción cuando isPlaying cambia o en hover
   useEffect(() => {
-    // No hacemos nada si es un video de YouTube o hay error
-    if (isYoutubeVideo || videoError) return;
+    if (isYoutubeVideo || videoError || !videoRef.current) return;
     
-    if (videoRef.current) {
-      if (isPlaying) {
-        // Sincronizar visualmente el video con el audio principal (muted)
-        videoRef.current.muted = true;
-        
-        try {
-          // Solo sincronizar el video (no el audio)
-          const syncPromise = videoRef.current.play();
-          if (syncPromise !== undefined) {
-            syncPromise.catch(error => {
-              console.error("Error al sincronizar video:", error);
-            });
+    const video = videoRef.current;
+    
+    // Si está en modo reproducción principal
+    if (isPlaying) {
+      // Asegurarse de que el video está sincronizado con el audio principal
+      if (audioRef?.current) {
+        const syncVideo = () => {
+          // Solo sincronizar si la diferencia es significativa
+          if (Math.abs(video.currentTime - audioRef.current!.currentTime) > 0.3) {
+            video.currentTime = audioRef.current!.currentTime;
           }
-          
-          // Actualizamos el tiempo actual cuando cambia en el video
-          videoRef.current.ontimeupdate = () => {
-            if (audioRef?.current) {
-              // Mantener sincronizado el video con el audio principal
-              if (Math.abs(videoRef.current!.currentTime - audioRef.current.currentTime) > 0.3) {
-                videoRef.current!.currentTime = audioRef.current.currentTime;
-              }
-              setCurrentTime(audioRef.current.currentTime);
-            } else {
-              setCurrentTime(videoRef.current!.currentTime);
-            }
-          };
-        } catch (e) {
-          console.error("Error al sincronizar el video:", e);
+          setCurrentTime(audioRef.current!.currentTime);
+        };
+        
+        // Actualizar tiempo cada 250ms para mantener sincronía
+        const intervalId = setInterval(syncVideo, 250);
+        
+        video.muted = true; // Siempre silenciado cuando se usa audio externo
+        
+        // Comenzar reproducción si no está pausado el audio
+        if (!audioRef.current.paused) {
+          video.play().catch(e => console.error("Error al reproducir video sincronizado:", e));
         }
+        
+        return () => clearInterval(intervalId);
       } else {
-        videoRef.current.pause();
-        videoRef.current.ontimeupdate = null;
+        // Sin audio externo, usar el propio audio del video
+        video.muted = false;
+        video.play().catch(e => console.error("Error al reproducir video:", e));
       }
-    }
-    
-    // Si no está reproduciéndose como audio principal,
-    // nos aseguramos de que el video esté pausado y en su posición inicial
-    if (!isPlaying && videoRef.current && !isYoutubeVideo && !videoError) {
-      videoRef.current.pause();
-      videoRef.current.currentTime = 0;
+    } 
+    // Si está en modo hover pero no reproduciendo como audio principal
+    else if (isHovering && !isPlaying) {
+      video.currentTime = 0;
+      video.muted = true;
+      video.loop = true;
+      video.play().catch(e => {
+        // Error esperado en algunos navegadores por políticas de autoplay
+        console.log("Error en reproducción de hover (esperado):", e);
+      });
+      setIsVideoPlaying(true);
+    } 
+    // Ni reproduciendo ni hover
+    else {
+      video.pause();
+      if (!isPlaying) {
+        video.currentTime = 0;
+      }
       setIsVideoPlaying(false);
-      setCurrentTime(0);
     }
-  }, [isPlaying, isYoutubeVideo, videoError, audioRef]);
+  }, [isPlaying, isHovering, isYoutubeVideo, videoError, audioRef]);
   
+  // Intentar cargar de nuevo el video si falla
   const handleRetry = (e: React.MouseEvent) => {
     e.stopPropagation();
-    setRetryCount(prev => prev + 1);
     setVideoError(false);
     toast.info("Reintentando cargar el video");
+    
     if (videoRef.current) {
-      // Forzar recarga del video
       const currentSrc = videoRef.current.src;
       videoRef.current.src = '';
+      
       setTimeout(() => {
         if (videoRef.current) {
           videoRef.current.src = currentSrc || preview.videoUrl || '';
@@ -146,41 +141,16 @@ export function useVideoLogic(
     }
   };
   
+  // Manejar eventos de ratón
   const handleMouseEnter = () => {
-    // No activar la vista previa si está reproduciéndose como audio principal
-    // o si es un video de YouTube o hay error
-    if (isYoutubeVideo || videoError || isPlaying) return;
-    
-    if (videoRef.current) {
-      videoRef.current.currentTime = 0;
-      
-      // Usar muted para permitir la reproducción automática
-      videoRef.current.muted = true;
-      
-      const playPromise = videoRef.current.play();
-      
-      if (playPromise !== undefined) {
-        playPromise.catch(err => {
-          // No mostrar este error en consola ya que es esperado en algunos navegadores
-          setIsVideoPlaying(false);
-        });
-      }
-      setIsVideoPlaying(true);
-    }
+    setIsHovering(true);
   };
   
   const handleMouseLeave = () => {
-    // No detener en hover si está sonando como audio principal
-    if (isYoutubeVideo || videoError || isPlaying) return;
-    
-    if (videoRef.current) {
-      videoRef.current.pause();
-      videoRef.current.currentTime = 0;
-      setIsVideoPlaying(false);
-    }
+    setIsHovering(false);
   };
-
-  // Para el formateado de tiempo
+  
+  // Formatear tiempo en formato min:seg
   const formatTime = (seconds: number): string => {
     if (isNaN(seconds) || !isFinite(seconds)) return "0:00";
     
@@ -189,13 +159,13 @@ export function useVideoLogic(
     
     return `${minutes}:${remainingSeconds < 10 ? '0' : ''}${remainingSeconds}`;
   };
-
+  
   return {
     videoRef,
     isVideoPlaying,
     videoError,
-    retryCount,
     currentTime,
+    duration,
     isYoutubeVideo,
     isLocalVideo,
     youtubeEmbedUrl,
