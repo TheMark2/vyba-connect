@@ -4,6 +4,7 @@ import { Slider } from "@/components/ui/slider";
 import { Pause, Play } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import Image from "@/components/ui/image";
+
 interface AudioPlayerProps {
   preview: {
     title: string;
@@ -16,6 +17,7 @@ interface AudioPlayerProps {
   onPlayPause: () => void;
   audioRef: React.RefObject<HTMLAudioElement>;
 }
+
 const AudioPlayer = ({
   preview,
   artistName,
@@ -63,17 +65,19 @@ const AudioPlayer = ({
       }
     };
     
-    audioRef.current.addEventListener('timeupdate', updateProgress);
-    audioRef.current.addEventListener('loadedmetadata', handleLoadedMetadata);
+    const audioElement = audioRef.current;
+    audioElement.addEventListener('timeupdate', updateProgress);
+    audioElement.addEventListener('loadedmetadata', handleLoadedMetadata);
     
     return () => {
-      if (audioRef.current) {
-        audioRef.current.removeEventListener('timeupdate', updateProgress);
-        audioRef.current.removeEventListener('loadedmetadata', handleLoadedMetadata);
+      if (audioElement) {
+        audioElement.removeEventListener('timeupdate', updateProgress);
+        audioElement.removeEventListener('loadedmetadata', handleLoadedMetadata);
       }
     };
   }, [audioRef, isDragging, preview.duration]);
   
+  // Reset player when preview changes
   useEffect(() => {
     setProgress(0);
     setCurrentTime("0:00");
@@ -124,7 +128,8 @@ const AudioPlayer = ({
     setTimeout(() => setIsDragging(false), 200);
   };
   
-  return <div className="relative rounded-2xl overflow-hidden bg-transparent dark:bg-transparent">
+  return (
+    <div className="relative rounded-2xl overflow-hidden bg-transparent dark:bg-transparent">
       <div className="flex flex-col gap-4 rounded-xl">
         <div className="flex items-center gap-4">
           <div className="w-16 h-16 rounded-lg overflow-hidden bg-gray-200 flex-shrink-0">
@@ -173,6 +178,8 @@ const AudioPlayer = ({
           </div>
         </div>
       </div>
-    </div>;
+    </div>
+  );
 };
+
 export default AudioPlayer;

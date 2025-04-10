@@ -6,6 +6,7 @@ import { Badge } from "@/components/ui/badge";
 import { Carousel, CarouselContent, CarouselItem } from "@/components/ui/carousel";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { Button } from "@/components/ui/button";
+import { toast } from "sonner";
 
 interface MusicPreview {
   title: string;
@@ -64,6 +65,7 @@ const MusicPreviews = ({
     
     if (!preview.audioUrl) {
       console.log(`No hay URL de audio para: ${preview.title}`);
+      toast.error("No hay audio disponible para esta pista");
       return;
     }
 
@@ -74,56 +76,52 @@ const MusicPreviews = ({
       if (audioRef.current) {
         console.log("Pausando audio");
         audioRef.current.pause();
-      }
-      setCurrentlyPlaying(null);
-      if (onPlaybackState) {
-        onPlaybackState(preview, false);
+        setCurrentlyPlaying(null);
+        if (onPlaybackState) {
+          onPlaybackState(preview, false);
+        }
       }
     } else {
       if (audioRef.current) {
         console.log("Reproduciendo nuevo audio");
+        // Pausa cualquier reproducción actual
         audioRef.current.pause();
+        
+        // Importante: establecer la URL antes de cargar
         audioRef.current.src = preview.audioUrl;
         
         // Verificar que la URL se ha asignado correctamente
         console.log("URL asignada:", audioRef.current.src);
         
-        // Precarga el audio
-        audioRef.current.load();
+        // Limpiar eventos anteriores para evitar duplicados
+        audioRef.current.oncanplaythrough = null;
+        audioRef.current.onerror = null;
+        audioRef.current.onended = null;
         
-        const playPromise = audioRef.current.play();
-        
-        if (playPromise !== undefined) {
-          playPromise
-            .then(() => {
-              console.log("Reproducción iniciada correctamente");
-              setCurrentlyPlaying(preview.title);
-              if (onPlaybackState) {
-                onPlaybackState(preview, true);
-              }
-            })
-            .catch(error => {
-              console.error("Error al reproducir audio:", error);
-              // Intenta tratar con el error de reproducción automática
-              const attemptPlayAfterInteraction = () => {
-                document.removeEventListener('click', attemptPlayAfterInteraction);
-                if (audioRef.current) {
-                  audioRef.current.play()
-                    .then(() => {
-                      console.log("Reproducción iniciada después de interacción");
-                      setCurrentlyPlaying(preview.title);
-                      if (onPlaybackState) {
-                        onPlaybackState(preview, true);
-                      }
-                    })
-                    .catch(e => console.error("Error en segundo intento:", e));
+        // Configurar nuevos manejadores de eventos
+        audioRef.current.oncanplaythrough = () => {
+          console.log("Audio listo para reproducir sin interrupciones");
+          const playPromise = audioRef.current?.play();
+          if (playPromise) {
+            playPromise
+              .then(() => {
+                console.log("Reproducción iniciada correctamente");
+                setCurrentlyPlaying(preview.title);
+                if (onPlaybackState) {
+                  onPlaybackState(preview, true);
                 }
-              };
-              
-              document.addEventListener('click', attemptPlayAfterInteraction, { once: true });
-              console.log("Esperando interacción del usuario para reproducir");
-            });
-        }
+              })
+              .catch(error => {
+                console.error("Error al reproducir audio:", error);
+                handlePlaybackError(preview);
+              });
+          }
+        };
+        
+        audioRef.current.onerror = (e) => {
+          console.error("Error en la carga del audio:", e);
+          handlePlaybackError(preview);
+        };
         
         audioRef.current.onended = () => {
           console.log("Audio finalizado");
@@ -132,7 +130,20 @@ const MusicPreviews = ({
             onPlaybackState(preview, false);
           }
         };
+        
+        // Cargar el audio para activar oncanplaythrough
+        audioRef.current.load();
       }
+    }
+  };
+  
+  const handlePlaybackError = (preview: MusicPreview) => {
+    toast.error("Error al reproducir el audio", {
+      description: "Intente de nuevo o pruebe otra pista"
+    });
+    setCurrentlyPlaying(null);
+    if (onPlaybackState) {
+      onPlaybackState(preview, false);
     }
   };
 
