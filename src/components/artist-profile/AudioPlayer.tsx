@@ -61,9 +61,6 @@ const AudioPlayer = ({
           const seconds = Math.floor(durationValue % 60);
           setDuration(`${minutes}:${seconds < 10 ? '0' : ''}${seconds}`);
           setIsLoading(false);
-          
-          // Asegurarnos que no se reproduce en bucle
-          audioRef.current.loop = false;
         } else {
           // Si no se puede obtener la duración del archivo de audio,
           // usar la duración proporcionada en los datos
