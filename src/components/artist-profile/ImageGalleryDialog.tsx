@@ -25,10 +25,12 @@ const ImageGalleryDialog = ({
     <Dialog open={isOpen} onOpenChange={(open) => !open && onClose()}>
       <DialogContent className={cn(
         "p-0 w-full h-full max-w-none max-h-screen bg-vyba-cream dark:bg-black text-black dark:text-white",
-        isMobile ? "rounded-none" : "rounded-[40px]"
+        isMobile ? "rounded-none" : "rounded-none"
       )}>
         
         <div className="h-full w-full overflow-y-auto p-8 pt-16">
+          <h1 className="text-5xl font-black mb-8 text-left">Imágenes de Antonia Pedragosa</h1>
+          
           <div className="flex flex-wrap gap-2 justify-center">
             {images.map((image, index) => (
               <div 
