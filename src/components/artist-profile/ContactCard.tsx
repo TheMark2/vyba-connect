@@ -1,7 +1,8 @@
+
 import React, { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { MapPin, Clock } from "lucide-react";
+import { Badge } from "@/components/ui/badge";
 
 interface ContactCardProps {
   artist: {
@@ -55,39 +56,23 @@ const ContactCard = ({ artist, onContact, aboutMeRef }: ContactCardProps) => {
     <div className={`transition-transform duration-300 ${!isVisible ? 'translate-y-full' : 'translate-y-0'}`}>
       <Card className="border-0 shadow-none bg-transparent">
         <CardContent className="p-0">
-          <div className="flex items-center gap-4 mb-4">
-            <div className="w-12 h-12 rounded-full overflow-hidden">
-              <img 
-                src={artist.image} 
-                alt={artist.name} 
-                className="w-full h-full object-cover"
-              />
+          <div className="bg-[#F7F7F7] p-6 rounded-3xl">
+            <div className="flex items-center gap-2 mb-4">
+              <Badge variant="secondary">{artist.availability}</Badge>
+              <Badge variant="secondary">{artist.location}</Badge>
             </div>
-            <div>
-              <h3 className="font-bold">{artist.name}</h3>
-              <div className="flex items-center text-sm text-gray-500 dark:text-gray-400">
-                <MapPin className="w-4 h-4 mr-1" />
-                {artist.location}
-              </div>
+            
+            <div className="mb-6">
+              <div className="text-xl font-bold">{artist.priceRange}</div>
             </div>
+            
+            <Button 
+              className="w-full" 
+              onClick={onContact}
+            >
+              Contactar
+            </Button>
           </div>
-          
-          <div className="mb-4 flex items-center text-sm text-gray-500 dark:text-gray-400">
-            <Clock className="w-4 h-4 mr-2" />
-            {artist.availability}
-          </div>
-          
-          <div className="mb-6">
-            <div className="text-sm text-gray-500 dark:text-gray-400 mb-1">Precio estimado</div>
-            <div className="font-bold">{artist.priceRange}</div>
-          </div>
-          
-          <Button 
-            className="w-full" 
-            onClick={onContact}
-          >
-            Contactar
-          </Button>
         </CardContent>
       </Card>
     </div>
