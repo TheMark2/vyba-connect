@@ -2,7 +2,6 @@
 import React, { useEffect, useState, useRef } from "react";
 import { Slider } from "@/components/ui/slider";
 import { Pause, Play } from "lucide-react";
-import { Button } from "@/components/ui/button";
 import Image from "@/components/ui/image";
 
 interface AudioPlayerProps {
@@ -16,6 +15,7 @@ interface AudioPlayerProps {
   isPlaying: boolean;
   onPlayPause: () => void;
   audioRef: React.RefObject<HTMLAudioElement>;
+  isMobile?: boolean;
 }
 
 const AudioPlayer = ({
@@ -23,7 +23,8 @@ const AudioPlayer = ({
   artistName,
   isPlaying,
   onPlayPause,
-  audioRef
+  audioRef,
+  isMobile = false
 }: AudioPlayerProps) => {
   const [progress, setProgress] = useState(0);
   const [currentTime, setCurrentTime] = useState("0:00");
@@ -155,7 +156,69 @@ const AudioPlayer = ({
     if (isLoading) return;
     onPlayPause();
   };
+
+  if (isMobile) {
+    return (
+      <div 
+        className="relative rounded-3xl overflow-hidden"
+        style={{
+          backgroundImage: preview.image ? `url(${preview.image})` : 'none',
+          backgroundSize: 'cover',
+          backgroundPosition: 'center'
+        }}
+      >
+        <div className="absolute inset-0 bg-black/30 backdrop-blur-[50px]"></div>
+        <div className="relative p-5 z-10">
+          <div className="flex items-center gap-4 mb-4">
+            <div className="w-16 h-16 rounded-lg overflow-hidden bg-gray-200 flex-shrink-0">
+              {preview.image ? 
+                <Image src={preview.image} alt={preview.title} className="w-full h-full object-cover" /> : 
+                <div className="w-full h-full bg-gray-200 flex items-center justify-center text-gray-400">
+                  <span>No image</span>
+                </div>
+              }
+            </div>
+            
+            <div className="flex-grow text-white">
+              <div className="font-bold text-lg mb-1">{preview.title}</div>
+              <div className="text-sm opacity-90">{artistName}</div>
+            </div>
+          </div>
+          
+          <div className="mb-2">
+            <Slider 
+              value={[progress]} 
+              min={0} 
+              max={100} 
+              step={0.1} 
+              onValueChange={handleSliderChange} 
+              onValueCommit={handleSliderCommit} 
+              className="mb-2"
+            />
+          </div>
+          
+          <div className="flex justify-center mt-3">
+            <button 
+              className="text-white relative overflow-hidden w-12 h-12 flex items-center justify-center"
+              onClick={handlePlayPauseClick}
+              disabled={isLoading}
+            >
+              {isLoading ? (
+                <div className="h-5 w-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+              ) : (
+                <div className="relative z-10 w-8 h-8">
+                  <Pause className={`absolute inset-0 h-8 w-8 transition-all duration-300 ${isPlaying ? 'opacity-100 scale-100' : 'opacity-0 scale-50'}`} />
+                  <Play className={`absolute inset-0 h-8 w-8 transition-all duration-300 ${isPlaying ? 'opacity-0 scale-50' : 'opacity-100 scale-100'}`} />
+                </div>
+              )}
+            </button>
+          </div>
+        </div>
+      </div>
+    );
+  }
   
+  // Render para desktop (mantener el diseño original)
   return (
     <div className="relative rounded-2xl overflow-hidden bg-transparent dark:bg-transparent">
       <div className="flex flex-col gap-4 rounded-xl">
@@ -197,10 +260,8 @@ const AudioPlayer = ({
           </div>
           
           <div className="flex justify-center mt-3">
-            <Button 
-              variant="secondary" 
-              size="icon" 
-              className={`h-10 w-10 ${isPlaying ? 'bg-green-500 hover:bg-green-600' : 'bg-blue-500 hover:bg-blue-600'} text-white relative overflow-hidden ${isLoading ? 'opacity-70 cursor-wait' : ''}`} 
+            <button 
+              className={`h-10 w-10 ${isPlaying ? 'bg-green-500 hover:bg-green-600' : 'bg-blue-500 hover:bg-blue-600'} text-white rounded-full relative overflow-hidden ${isLoading ? 'opacity-70 cursor-wait' : ''}`} 
               onClick={handlePlayPauseClick}
               disabled={isLoading}
             >
@@ -212,7 +273,7 @@ const AudioPlayer = ({
                   <Play className={`absolute inset-0 h-5 w-5 fill-white transition-all duration-300 ${isPlaying ? 'opacity-0 scale-50' : 'opacity-100 scale-100'}`} />
                 </div>
               )}
-            </Button>
+            </button>
           </div>
         </div>
       </div>

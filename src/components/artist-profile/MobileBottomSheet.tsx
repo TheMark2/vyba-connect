@@ -1,5 +1,5 @@
 
-import React, { useState } from "react";
+import React from "react";
 import SwipeableBottomSheet from "react-swipeable-bottom-sheet";
 import ContactCard from "./ContactCard";
 import AudioPlayer from "./AudioPlayer";
@@ -63,6 +63,7 @@ const MobileBottomSheet = ({
               isPlaying={isAudioPlaying} 
               onPlayPause={onPlayPause} 
               audioRef={audioRef} 
+              isMobile={true}
             />
           </div>
         )}
