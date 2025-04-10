@@ -3,6 +3,7 @@ import { Slider } from "@/components/ui/slider";
 import { Pause, Play, Rewind, FastForward } from "lucide-react";
 import Image from "@/components/ui/image";
 import { Marquee } from "@/components/ui/marquee";
+
 interface AudioPlayerProps {
   preview: {
     title: string;
@@ -16,6 +17,7 @@ interface AudioPlayerProps {
   audioRef: React.RefObject<HTMLAudioElement>;
   isMobile?: boolean;
 }
+
 const AudioPlayer = ({
   preview,
   artistName,
@@ -36,8 +38,10 @@ const AudioPlayer = ({
   const [isLoading, setIsLoading] = useState(false);
   const titleRef = useRef<HTMLDivElement>(null);
   const artistRef = useRef<HTMLDivElement>(null);
+
   useEffect(() => {
     if (!audioRef.current) return;
+
     const updateProgress = () => {
       if (audioRef.current && !isDragging) {
         const currentTimeValue = audioRef.current.currentTime;
@@ -54,6 +58,7 @@ const AudioPlayer = ({
         setRemainingTime(`-${remainingMinutes}:${remainingSeconds < 10 ? '0' : ''}${remainingSeconds}`);
       }
     };
+
     const handleLoadedMetadata = () => {
       try {
         if (audioRef.current && !isNaN(audioRef.current.duration)) {
@@ -72,18 +77,22 @@ const AudioPlayer = ({
         setIsLoading(false);
       }
     };
+
     const handleLoadStart = () => {
       setIsLoading(true);
     };
+
     const handleError = (e: Event) => {
       console.error("Error en AudioPlayer:", e);
       setIsLoading(false);
     };
+
     const audioElement = audioRef.current;
     audioElement.addEventListener('timeupdate', updateProgress);
     audioElement.addEventListener('loadedmetadata', handleLoadedMetadata);
     audioElement.addEventListener('loadstart', handleLoadStart);
     audioElement.addEventListener('error', handleError);
+
     return () => {
       if (audioElement) {
         audioElement.removeEventListener('timeupdate', updateProgress);
@@ -93,12 +102,20 @@ const AudioPlayer = ({
       }
     };
   }, [audioRef, isDragging, preview.duration]);
+
   useEffect(() => {
     setProgress(0);
     setCurrentTime("0:00");
     setRemainingTime(`-${duration}`);
     setDuration(preview.duration);
+
+    if (audioRef.current && preview.audioUrl && audioRef.current.src !== preview.audioUrl) {
+      console.log("Actualizando URL de audio en AudioPlayer:", preview.audioUrl);
+      audioRef.current.src = preview.audioUrl;
+      audioRef.current.crossOrigin = "anonymous";
+    }
   }, [preview, duration]);
+
   useEffect(() => {
     const checkTextOverflow = () => {
       if (titleRef.current) {
@@ -120,6 +137,7 @@ const AudioPlayer = ({
     window.addEventListener('resize', checkTextOverflow);
     return () => window.removeEventListener('resize', checkTextOverflow);
   }, [preview.title, artistName]);
+
   const handleSliderChange = (value: number[]) => {
     setIsDragging(true);
     if (audioRef.current && audioRef.current.duration) {
@@ -134,6 +152,7 @@ const AudioPlayer = ({
       setRemainingTime(`-${remainingMinutes}:${remainingSeconds < 10 ? '0' : ''}${remainingSeconds}`);
     }
   };
+
   const handleSliderCommit = (value: number[]) => {
     if (audioRef.current && audioRef.current.duration) {
       const newTime = value[0] / 100 * audioRef.current.duration;
@@ -142,20 +161,32 @@ const AudioPlayer = ({
     }
     setTimeout(() => setIsDragging(false), 200);
   };
+
   const handlePlayPauseClick = () => {
     if (isLoading) return;
+
+    if (audioRef.current && preview.audioUrl && (!audioRef.current.src || !audioRef.current.src.includes(preview.audioUrl))) {
+      console.log("Actualizando URL de audio antes de reproducir:", preview.audioUrl);
+      audioRef.current.src = preview.audioUrl;
+      audioRef.current.crossOrigin = "anonymous";
+      audioRef.current.load();
+    }
+
     onPlayPause();
   };
+
   const handleSkipForward = () => {
     if (!audioRef.current || isLoading) return;
     const newTime = Math.min(audioRef.current.currentTime + 60, audioRef.current.duration || 0);
     audioRef.current.currentTime = newTime;
   };
+
   const handleSkipBackward = () => {
     if (!audioRef.current || isLoading) return;
     const newTime = Math.max(audioRef.current.currentTime - 60, 0);
     audioRef.current.currentTime = newTime;
   };
+
   if (isMobile) {
     return <div className="relative rounded-3xl overflow-hidden" style={{
       backgroundImage: preview.image ? `url(${preview.image})` : 'none',
@@ -208,6 +239,7 @@ const AudioPlayer = ({
         </div>
       </div>;
   }
+
   return <div className="relative rounded-2xl overflow-hidden bg-transparent dark:bg-transparent">
       <div className="flex flex-col gap-3 rounded-xl">
         <div className="flex items-center gap-4">
@@ -265,4 +297,5 @@ const AudioPlayer = ({
       </div>
     </div>;
 };
+
 export default AudioPlayer;
