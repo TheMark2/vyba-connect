@@ -170,7 +170,7 @@ const AudioPlayer = ({
         <div className="absolute inset-0 bg-black/30 backdrop-blur-[50px]"></div>
         <div className="relative p-5 z-10">
           <div className="flex items-center gap-4 mb-4">
-            <div className="w-20 h-20 rounded-xl overflow-hidden bg-gray-200 flex-shrink-0">
+            <div className="w-20 h-20 rounded-2xl overflow-hidden bg-gray-200 flex-shrink-0">
               {preview.image ? 
                 <Image src={preview.image} alt={preview.title} className="w-full h-full object-cover" /> : 
                 <div className="w-full h-full bg-gray-200 flex items-center justify-center text-gray-400">
