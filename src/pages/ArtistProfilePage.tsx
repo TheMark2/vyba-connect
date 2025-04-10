@@ -47,7 +47,7 @@ const artistsData = [{
       duration: "1:33",
       image: "https://images.unsplash.com/photo-1514525253161-7a46d19cd819?q=80&w=1000",
       hasVideo: true,
-      videoUrl: "https://assets.mixkit.co/videos/preview/mixkit-dj-working-on-production-5473-medium.mp4",
+      videoUrl: "https://www.youtube.com/watch?v=5qap5aO4i9A",
       audioUrl: "https://assets.mixkit.co/music/preview/mixkit-hip-hop-02-614.mp3"
     }, 
     {
@@ -66,7 +66,7 @@ const artistsData = [{
       duration: "1:44",
       image: "https://images.unsplash.com/photo-1516450360452-9312f5e86fc7?q=80&w=2070",
       hasVideo: true,
-      videoUrl: "https://assets.mixkit.co/videos/preview/mixkit-dj-woman-playing-music-in-a-club-5260-medium.mp4",
+      videoUrl: "https://www.youtube.com/watch?v=jfKfPfyJRdk",
       audioUrl: "https://assets.mixkit.co/music/preview/mixkit-summer-fun-13.mp3"
     }
   ],

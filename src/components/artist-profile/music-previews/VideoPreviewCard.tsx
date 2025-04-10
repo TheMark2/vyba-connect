@@ -20,7 +20,33 @@ const VideoPreviewCard = ({
   const [videoError, setVideoError] = useState(false);
   const [retryCount, setRetryCount] = useState(0);
   
+  // Verificar si es un video de YouTube y extraer su ID
+  const isYoutubeVideo = preview.videoUrl?.includes('youtube.com') || preview.videoUrl?.includes('youtu.be');
+  
+  const getYoutubeEmbedUrl = (url: string) => {
+    if (!url) return '';
+    
+    // Patrones para extraer el ID de YouTube de diferentes formatos de URL
+    const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|&v=)([^#&?]*).*/;
+    const match = url.match(regExp);
+    
+    // Si hay coincidencia y el ID tiene 11 caracteres (ID estándar de YouTube)
+    if (match && match[2].length === 11) {
+      return `https://www.youtube.com/embed/${match[2]}?autoplay=0&controls=0&showinfo=0&rel=0`;
+    }
+    
+    return url; // Devolver la URL original si no es de YouTube
+  };
+  
+  const youtubeEmbedUrl = isYoutubeVideo ? getYoutubeEmbedUrl(preview.videoUrl || '') : '';
+  
   useEffect(() => {
+    // Si es un video de YouTube, no necesitamos manejar el video nativo
+    if (isYoutubeVideo) {
+      setVideoError(false);
+      return;
+    }
+    
     const loadVideo = () => {
       if (videoRef.current) {
         // Limpiar eventos previos
@@ -72,7 +98,7 @@ const VideoPreviewCard = ({
         videoRef.current.ontimeupdate = null;
       }
     };
-  }, [preview.videoUrl, retryCount]);
+  }, [preview.videoUrl, retryCount, isYoutubeVideo]);
   
   const handleRetry = (e: React.MouseEvent) => {
     e.stopPropagation();
@@ -85,6 +111,8 @@ const VideoPreviewCard = ({
   };
   
   const handleMouseEnter = () => {
+    if (isYoutubeVideo) return;
+    
     if (videoRef.current && !videoError) {
       videoRef.current.currentTime = 0;
       
@@ -104,6 +132,8 @@ const VideoPreviewCard = ({
   };
   
   const handleMouseLeave = () => {
+    if (isYoutubeVideo) return;
+    
     if (videoRef.current) {
       videoRef.current.pause();
       videoRef.current.currentTime = 0;
@@ -133,7 +163,18 @@ const VideoPreviewCard = ({
       onMouseLeave={handleMouseLeave}
     >
       <div className="relative aspect-[4/5]">
-        {videoError ? (
+        {isYoutubeVideo ? (
+          <div className="w-full h-full">
+            <iframe 
+              className="w-full h-full object-cover"
+              src={youtubeEmbedUrl}
+              title={preview.title}
+              frameBorder="0"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+              allowFullScreen
+            ></iframe>
+          </div>
+        ) : videoError ? (
           <div className="w-full h-full flex flex-col items-center justify-center bg-gray-200 dark:bg-gray-800">
             {preview.image ? (
               <div className="w-full h-full relative">
