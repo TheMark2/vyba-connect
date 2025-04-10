@@ -1,8 +1,8 @@
-
 import React, { useEffect, useState, useRef } from "react";
 import { Slider } from "@/components/ui/slider";
 import { Pause, Play } from "lucide-react";
 import Image from "@/components/ui/image";
+import { Marquee } from "@/components/ui/marquee";
 
 interface AudioPlayerProps {
   preview: {
@@ -63,14 +63,11 @@ const AudioPlayer = ({
           setDuration(`${minutes}:${seconds < 10 ? '0' : ''}${seconds}`);
           setIsLoading(false);
         } else {
-          // Si no se puede obtener la duración del archivo de audio,
-          // usar la duración proporcionada en los datos
           setDuration(preview.duration);
           setIsLoading(false);
         }
       } catch (error) {
         console.error("Error al obtener metadatos de audio:", error);
-        // En caso de error, usar la duración proporcionada
         setDuration(preview.duration);
         setIsLoading(false);
       }
@@ -101,7 +98,6 @@ const AudioPlayer = ({
     };
   }, [audioRef, isDragging, preview.duration]);
   
-  // Reset player when preview changes
   useEffect(() => {
     setProgress(0);
     setCurrentTime("0:00");
@@ -136,7 +132,6 @@ const AudioPlayer = ({
       const newTime = value[0] / 100 * audioRef.current.duration;
       setProgress(value[0]);
 
-      // Actualizar el tiempo mostrado mientras se arrastra
       const minutes = Math.floor(newTime / 60);
       const seconds = Math.floor(newTime % 60);
       setCurrentTime(`${minutes}:${seconds < 10 ? '0' : ''}${seconds}`);
@@ -179,8 +174,12 @@ const AudioPlayer = ({
               }
             </div>
             
-            <div className="flex-grow text-white">
-              <div className="font-black text-lg mb-1">{preview.title}</div>
+            <div className="flex-grow text-white overflow-hidden">
+              <div className="mb-1 w-full overflow-hidden">
+                <Marquee className="text-white" pauseOnHover>
+                  <div className="font-black text-lg">{preview.title}</div>
+                </Marquee>
+              </div>
               <div className="text-sm opacity-90 font-medium">{artistName}</div>
             </div>
           </div>
@@ -230,7 +229,6 @@ const AudioPlayer = ({
     );
   }
   
-  // Render para desktop (mantener el diseño original)
   return (
     <div className="relative rounded-2xl overflow-hidden bg-transparent dark:bg-transparent">
       <div className="flex flex-col gap-4 rounded-xl">
