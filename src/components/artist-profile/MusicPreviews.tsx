@@ -1,4 +1,3 @@
-
 import React, { useEffect, useState, useRef } from "react";
 import { Music, Video, Play, Expand, Pause, FileAudio } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
@@ -7,12 +6,14 @@ import { Carousel, CarouselContent, CarouselItem } from "@/components/ui/carouse
 import { useIsMobile } from "@/hooks/use-mobile";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
+import { HoverCard, HoverCardTrigger, HoverCardContent } from "@/components/ui/hover-card";
 
 interface MusicPreview {
   title: string;
   duration: string;
   image?: string;
   hasVideo?: boolean;
+  videoUrl?: string;
   audioUrl?: string;
 }
 
@@ -36,6 +37,8 @@ const MusicPreviews = ({
   const [isNavbarVisible, setIsNavbarVisible] = useState(true);
   const [currentlyPlaying, setCurrentlyPlaying] = useState<string | null>(null);
   const [loadingAudio, setLoadingAudio] = useState<string | null>(null);
+  const [currentVideoHover, setCurrentVideoHover] = useState<string | null>(null);
+  const videoTimeoutRef = useRef<any>(null);
 
   const observerRef = useRef<IntersectionObserver | null>(null);
 
@@ -70,10 +73,8 @@ const MusicPreviews = ({
       return;
     }
 
-    // Mostrar información completa de la URL de audio
     console.log("URL de audio:", preview.audioUrl);
 
-    // Si ya está reproduciendo esta pista, pausarla
     if (currentlyPlaying === preview.title) {
       if (audioRef.current) {
         console.log("Pausando audio");
@@ -86,23 +87,18 @@ const MusicPreviews = ({
       return;
     }
     
-    // Indicar que está cargando el audio
     setLoadingAudio(preview.title);
     
-    // Intentar reproducir la nueva pista
     if (audioRef.current) {
       console.log("Reproduciendo nuevo audio");
-      // Pausa cualquier reproducción actual
       audioRef.current.pause();
       
       try {
-        // Limpiar eventos anteriores para evitar duplicados
         audioRef.current.oncanplaythrough = null;
         audioRef.current.onerror = null;
         audioRef.current.onloadedmetadata = null;
         audioRef.current.onended = null;
         
-        // Configurar nuevos manejadores de eventos
         audioRef.current.oncanplaythrough = () => {
           console.log("Audio listo para reproducir sin interrupciones");
           if (audioRef.current) {
@@ -141,26 +137,18 @@ const MusicPreviews = ({
           }
         };
         
-        // Importante: establecer la URL antes de cargar
         audioRef.current.src = preview.audioUrl;
-        
-        // Verificar que la URL se ha asignado correctamente
         console.log("URL asignada:", audioRef.current.src);
-        
-        // CORS headers para evitar problemas de permisos
         audioRef.current.crossOrigin = "anonymous";
-        
-        // Cargar el audio para activar oncanplaythrough
         audioRef.current.load();
         
-        // Establecer un timeout para manejar casos donde el audio no se carga
         setTimeout(() => {
           if (loadingAudio === preview.title) {
             console.warn("Timeout de carga de audio");
             setLoadingAudio(null);
             handlePlaybackError(preview);
           }
-        }, 10000); // 10 segundos
+        }, 10000);
       } catch (error) {
         console.error("Error al configurar el audio:", error);
         setLoadingAudio(null);
@@ -177,6 +165,28 @@ const MusicPreviews = ({
     if (onPlaybackState) {
       onPlaybackState(preview, false);
     }
+  };
+
+  const handleVideoHover = (preview: MusicPreview) => {
+    if (!preview.hasVideo || !preview.videoUrl) return;
+    
+    if (videoTimeoutRef.current) {
+      clearTimeout(videoTimeoutRef.current);
+    }
+    
+    setCurrentVideoHover(preview.title);
+    
+    videoTimeoutRef.current = setTimeout(() => {
+      setCurrentVideoHover(null);
+    }, 10000);
+  };
+  
+  const handleVideoLeave = () => {
+    if (videoTimeoutRef.current) {
+      clearTimeout(videoTimeoutRef.current);
+      videoTimeoutRef.current = null;
+    }
+    setCurrentVideoHover(null);
   };
 
   useEffect(() => {
@@ -215,17 +225,29 @@ const MusicPreviews = ({
     };
   }, [previews.length, isNavbarVisible]);
 
-  // Función para mantener un tamaño consistente de las tarjetas en todos los formatos
   const getCardWidth = () => {
-    // Usamos un tamaño fijo para las tarjetas en todos los formatos de pantalla
-    return "320px"; // Tamaño consistente para todas las tarjetas
+    return "320px";
   };
+
+  const updatedPreviews = previews.map(preview => {
+    if (preview.hasVideo && !preview.videoUrl) {
+      const videoUrls = [
+        "/lovable-uploads/Bad Bunny - Moscow Mule (Video Oficial)  Un Verano Sin Ti.mp4",
+        "/lovable-uploads/W Sound 05 LA PLENA - Beéle, Westcol, Ovy On The Drums.mp4"
+      ];
+      return {
+        ...preview,
+        videoUrl: videoUrls[Math.floor(Math.random() * videoUrls.length)]
+      };
+    }
+    return preview;
+  });
 
   return (
     <div className="mt-8 mb-16">
       <h2 className="text-3xl font-black mb-6">Preview</h2>
       
-      {previews?.length > 0 && (
+      {updatedPreviews?.length > 0 && (
         <>
           {useCarousel ? (
             <Carousel
@@ -237,7 +259,7 @@ const MusicPreviews = ({
               className="w-full"
             >
               <CarouselContent className="-ml-4">
-                {previews.map((preview, index) => (
+                {updatedPreviews.map((preview, index) => (
                   <CarouselItem
                     key={index}
                     className="pl-4"
@@ -253,6 +275,9 @@ const MusicPreviews = ({
                         isPlaying={currentlyPlaying === preview.title}
                         isLoading={loadingAudio === preview.title}
                         onPlayPause={() => handlePlayPause(preview)}
+                        isVideoHover={currentVideoHover === preview.title}
+                        onMouseEnter={() => handleVideoHover(preview)}
+                        onMouseLeave={handleVideoLeave}
                       />
                     ) : (
                       <NoImagePreviewCard
@@ -273,7 +298,7 @@ const MusicPreviews = ({
                 isNavbarVisible ? "hidden" : ""
               }`}
             >
-              {previews.map((preview, index) => (
+              {updatedPreviews.map((preview, index) => (
                 <div key={index} style={{ width: getCardWidth(), flex: `0 0 ${getCardWidth()}` }}>
                   {preview.image ? (
                     <ImagePreviewCard
@@ -282,6 +307,9 @@ const MusicPreviews = ({
                       isPlaying={currentlyPlaying === preview.title}
                       isLoading={loadingAudio === preview.title}
                       onPlayPause={() => handlePlayPause(preview)}
+                      isVideoHover={currentVideoHover === preview.title}
+                      onMouseEnter={() => handleVideoHover(preview)}
+                      onMouseLeave={handleVideoLeave}
                     />
                   ) : (
                     <NoImagePreviewCard
@@ -301,7 +329,7 @@ const MusicPreviews = ({
             <div className="grid gap-6" style={{ 
               gridTemplateColumns: `repeat(auto-fill, minmax(${getCardWidth()}, 1fr))` 
             }}>
-              {previews.map((preview, index) => (
+              {updatedPreviews.map((preview, index) => (
                 <div key={index}>
                   {preview.image ? (
                     <ImagePreviewCard
@@ -310,6 +338,9 @@ const MusicPreviews = ({
                       isPlaying={currentlyPlaying === preview.title}
                       isLoading={loadingAudio === preview.title}
                       onPlayPause={() => handlePlayPause(preview)}
+                      isVideoHover={currentVideoHover === preview.title}
+                      onMouseEnter={() => handleVideoHover(preview)}
+                      onMouseLeave={handleVideoLeave}
                     />
                   ) : (
                     <NoImagePreviewCard
@@ -335,13 +366,19 @@ const ImagePreviewCard = ({
   artistName,
   isPlaying,
   isLoading,
-  onPlayPause
+  onPlayPause,
+  isVideoHover,
+  onMouseEnter,
+  onMouseLeave
 }: {
   preview: MusicPreview;
   artistName: string;
   isPlaying: boolean;
   isLoading?: boolean;
   onPlayPause: () => void;
+  isVideoHover?: boolean;
+  onMouseEnter?: () => void;
+  onMouseLeave?: () => void;
 }) => {
   const handlePlay = (e: React.MouseEvent) => {
     e.stopPropagation();
@@ -357,9 +394,45 @@ const ImagePreviewCard = ({
     onPlayPause();
   };
 
-  return <Card className="overflow-hidden rounded-3xl relative group cursor-pointer border-none" onClick={handleCardClick}>
+  const videoRef = useRef<HTMLVideoElement>(null);
+
+  useEffect(() => {
+    if (videoRef.current) {
+      if (isVideoHover) {
+        videoRef.current.currentTime = 0;
+        videoRef.current.play().catch(err => {
+          console.error("Error reproduciendo video:", err);
+        });
+      } else {
+        videoRef.current.pause();
+      }
+    }
+  }, [isVideoHover]);
+
+  return (
+    <Card 
+      className="overflow-hidden rounded-3xl relative group cursor-pointer border-none" 
+      onClick={handleCardClick}
+      onMouseEnter={onMouseEnter}
+      onMouseLeave={onMouseLeave}
+    >
       <div className="relative aspect-[4/5]">
-        <img src={preview.image} alt={preview.title} className="w-full h-full object-cover" />
+        <img 
+          src={preview.image} 
+          alt={preview.title} 
+          className={`w-full h-full object-cover ${isVideoHover ? 'opacity-0' : 'opacity-100'} transition-opacity duration-300`} 
+        />
+        
+        {preview.hasVideo && preview.videoUrl && (
+          <video 
+            ref={videoRef}
+            src={preview.videoUrl}
+            className={`absolute inset-0 w-full h-full object-cover ${isVideoHover ? 'opacity-100' : 'opacity-0'} transition-opacity duration-300`}
+            muted
+            loop
+            playsInline
+          />
+        )}
         
         <div className="absolute inset-0 bg-gradient-to-t from-black via-black/70 to-transparent opacity-60 pointer-events-none transition-opacity duration-300 group-hover:opacity-0"></div>
         
@@ -414,7 +487,8 @@ const ImagePreviewCard = ({
           <span className="text-sm font-medium text-white bg-black/50 px-2 py-1 rounded-md">{preview.duration}</span>
         </div>
       </div>
-    </Card>;
+    </Card>
+  );
 };
 
 const NoImagePreviewCard = ({
