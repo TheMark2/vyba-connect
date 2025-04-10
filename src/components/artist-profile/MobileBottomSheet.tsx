@@ -19,6 +19,8 @@ interface MobileBottomSheetProps {
   isAudioPlaying: boolean;
   onPlayPause: () => void;
   audioRef: React.RefObject<HTMLAudioElement>;
+  onNextTrack?: () => void;
+  onPreviousTrack?: () => void;
 }
 
 const MobileBottomSheet = ({
@@ -29,7 +31,9 @@ const MobileBottomSheet = ({
   currentPlaying,
   isAudioPlaying,
   onPlayPause,
-  audioRef
+  audioRef,
+  onNextTrack,
+  onPreviousTrack
 }: MobileBottomSheetProps) => {
   // Altura para asegurar que la tarjeta de contacto se vea completa
   const contactCardHeight = 200;
@@ -64,6 +68,8 @@ const MobileBottomSheet = ({
               onPlayPause={onPlayPause} 
               audioRef={audioRef} 
               isMobile={true}
+              onNext={onNextTrack}
+              onPrevious={onPreviousTrack}
             />
           </div>
         )}

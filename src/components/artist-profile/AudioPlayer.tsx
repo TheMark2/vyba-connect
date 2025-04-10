@@ -1,3 +1,4 @@
+
 import React, { useEffect, useState, useRef } from "react";
 import { Slider } from "@/components/ui/slider";
 import { Pause, Play, Rewind, FastForward } from "lucide-react";
@@ -16,6 +17,8 @@ interface AudioPlayerProps {
   onPlayPause: () => void;
   audioRef: React.RefObject<HTMLAudioElement>;
   isMobile?: boolean;
+  onNext?: () => void;
+  onPrevious?: () => void;
 }
 
 const AudioPlayer = ({
@@ -24,7 +27,9 @@ const AudioPlayer = ({
   isPlaying,
   onPlayPause,
   audioRef,
-  isMobile = false
+  isMobile = false,
+  onNext,
+  onPrevious
 }: AudioPlayerProps) => {
   const [progress, setProgress] = useState(0);
   const [currentTime, setCurrentTime] = useState("0:00");
@@ -38,6 +43,9 @@ const AudioPlayer = ({
   const [isLoading, setIsLoading] = useState(false);
   const titleRef = useRef<HTMLDivElement>(null);
   const artistRef = useRef<HTMLDivElement>(null);
+  const playerRef = useRef<HTMLDivElement>(null);
+  const [touchStartX, setTouchStartX] = useState<number | null>(null);
+  const [touchEndX, setTouchEndX] = useState<number | null>(null);
   
   useEffect(() => {
     if (!audioRef.current) return;
@@ -176,6 +184,33 @@ const AudioPlayer = ({
     audioRef.current.currentTime = newTime;
   };
 
+  const handleTouchStart = (e: React.TouchEvent) => {
+    setTouchStartX(e.touches[0].clientX);
+  };
+
+  const handleTouchMove = (e: React.TouchEvent) => {
+    setTouchEndX(e.touches[0].clientX);
+  };
+
+  const handleTouchEnd = () => {
+    if (!touchStartX || !touchEndX) return;
+    
+    const swipeDistance = touchEndX - touchStartX;
+    const minSwipeDistance = 50; // Mínima distancia para considerar como deslizamiento
+
+    if (swipeDistance > minSwipeDistance && onNext) {
+      // Deslizamiento a la derecha (siguiente canción)
+      onNext();
+    } else if (swipeDistance < -minSwipeDistance && onPrevious) {
+      // Deslizamiento a la izquierda (canción anterior)
+      onPrevious();
+    }
+
+    // Resetear valores
+    setTouchStartX(null);
+    setTouchEndX(null);
+  };
+
   if (isMobile) {
     return (
       <div 
@@ -185,9 +220,13 @@ const AudioPlayer = ({
           backgroundSize: 'cover',
           backgroundPosition: 'center'
         }}
+        ref={playerRef}
+        onTouchStart={handleTouchStart}
+        onTouchMove={handleTouchMove}
+        onTouchEnd={handleTouchEnd}
       >
         <div className="absolute inset-0 bg-black/30 backdrop-blur-[50px]"></div>
-        <div className="relative p-5 pt-5 pb-3 z-10">
+        <div className="relative p-5 pt-5 pb-2 z-10">
           <div className="flex items-center gap-4 mb-4">
             <div className="w-20 h-20 rounded-2xl overflow-hidden bg-gray-200 flex-shrink-0">
               {preview.image ? 
