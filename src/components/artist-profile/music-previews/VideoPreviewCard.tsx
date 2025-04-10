@@ -8,14 +8,14 @@ import { PreviewCardProps } from "./types";
 import { toast } from "sonner";
 import Image from "@/components/ui/image";
 import FullscreenVideoPlayer from "./FullscreenVideoPlayer";
+import { formatTime } from "@/lib/utils";
 
 const VideoPreviewCard = ({
   preview,
   artistName,
   isPlaying,
   isLoading,
-  onPlayPause,
-  audioRef
+  onPlayPause
 }: PreviewCardProps) => {
   const videoRef = useRef<HTMLVideoElement>(null);
   const [isVideoPlaying, setIsVideoPlaying] = useState(false);
@@ -88,7 +88,7 @@ const VideoPreviewCard = ({
     };
   }, [preview.videoUrl, isYoutubeVideo, preview.title]);
   
-  // Efecto para sincronizar el estado de reproducción con isPlaying y actualizar currentTime
+  // Efecto para sincronizar el estado de reproducción con isPlaying
   useEffect(() => {
     // No hacemos nada si es un video de YouTube o hay error
     if (isYoutubeVideo || videoError) return;
@@ -109,15 +109,7 @@ const VideoPreviewCard = ({
           
           // Actualizamos el tiempo actual cuando cambia en el video
           videoRef.current.ontimeupdate = () => {
-            if (audioRef?.current) {
-              // Mantener sincronizado el video con el audio principal
-              if (Math.abs(videoRef.current!.currentTime - audioRef.current.currentTime) > 0.3) {
-                videoRef.current!.currentTime = audioRef.current.currentTime;
-              }
-              setCurrentTime(audioRef.current.currentTime);
-            } else {
-              setCurrentTime(videoRef.current!.currentTime);
-            }
+            setCurrentTime(videoRef.current!.currentTime);
           };
         } catch (e) {
           console.error("Error al sincronizar el video:", e);
@@ -136,7 +128,7 @@ const VideoPreviewCard = ({
       setIsVideoPlaying(false);
       setCurrentTime(0);
     }
-  }, [isPlaying, isYoutubeVideo, videoError, audioRef]);
+  }, [isPlaying, isYoutubeVideo, videoError]);
   
   const handleRetry = (e: React.MouseEvent) => {
     e.stopPropagation();
@@ -212,26 +204,8 @@ const VideoPreviewCard = ({
     }
   };
 
-  // Para el formateado de tiempo
-  const formatTime = (seconds: number): string => {
-    if (isNaN(seconds) || !isFinite(seconds)) return "0:00";
-    
-    const minutes = Math.floor(seconds / 60);
-    const remainingSeconds = Math.floor(seconds % 60);
-    
-    return `${minutes}:${remainingSeconds < 10 ? '0' : ''}${remainingSeconds}`;
-  };
-
   const handleCardClick = () => {
     onPlayPause();
-  };
-
-  // Función para actualizar el tiempo cuando cambia en el reproductor a pantalla completa
-  const handleTimeUpdate = (time: number) => {
-    if (audioRef?.current) {
-      audioRef.current.currentTime = time;
-    }
-    setCurrentTime(time);
   };
 
   return (
@@ -355,8 +329,7 @@ const VideoPreviewCard = ({
           onClose={() => setShowFullscreen(false)}
           isOpen={showFullscreen}
           currentTime={currentTime}
-          onTimeUpdate={handleTimeUpdate}
-          audioRef={audioRef}
+          onTimeUpdate={(time) => setCurrentTime(time)}
         />
       )}
     </>
