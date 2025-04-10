@@ -53,14 +53,20 @@ const AudioPlayer = ({
     };
     
     const handleLoadedMetadata = () => {
-      if (audioRef.current && !isNaN(audioRef.current.duration)) {
-        const durationValue = audioRef.current.duration;
-        const minutes = Math.floor(durationValue / 60);
-        const seconds = Math.floor(durationValue % 60);
-        setDuration(`${minutes}:${seconds < 10 ? '0' : ''}${seconds}`);
-      } else {
-        // Si no se puede obtener la duración del archivo de audio,
-        // usar la duración proporcionada en los datos
+      try {
+        if (audioRef.current && !isNaN(audioRef.current.duration)) {
+          const durationValue = audioRef.current.duration;
+          const minutes = Math.floor(durationValue / 60);
+          const seconds = Math.floor(durationValue % 60);
+          setDuration(`${minutes}:${seconds < 10 ? '0' : ''}${seconds}`);
+        } else {
+          // Si no se puede obtener la duración del archivo de audio,
+          // usar la duración proporcionada en los datos
+          setDuration(preview.duration);
+        }
+      } catch (error) {
+        console.error("Error al obtener metadatos de audio:", error);
+        // En caso de error, usar la duración proporcionada
         setDuration(preview.duration);
       }
     };

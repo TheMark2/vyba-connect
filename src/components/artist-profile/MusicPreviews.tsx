@@ -1,3 +1,4 @@
+
 import React, { useEffect, useState, useRef } from "react";
 import { Music, Video, Play, Expand, Pause, FileAudio } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
@@ -87,15 +88,6 @@ const MusicPreviews = ({
         audioRef.current.pause();
         
         try {
-          // Asegurar que el audio esté completamente descargado y listo
-          audioRef.current.src = '';
-          
-          // Importante: establecer la URL antes de cargar
-          audioRef.current.src = preview.audioUrl;
-          
-          // Verificar que la URL se ha asignado correctamente
-          console.log("URL asignada:", audioRef.current.src);
-          
           // Limpiar eventos anteriores para evitar duplicados
           audioRef.current.oncanplaythrough = null;
           audioRef.current.onerror = null;
@@ -130,6 +122,15 @@ const MusicPreviews = ({
               onPlaybackState(preview, false);
             }
           };
+          
+          // Importante: establecer la URL antes de cargar
+          audioRef.current.src = preview.audioUrl;
+          
+          // Verificar que la URL se ha asignado correctamente
+          console.log("URL asignada:", audioRef.current.src);
+          
+          // CORS headers para evitar problemas de permisos
+          audioRef.current.crossOrigin = "anonymous";
           
           // Cargar el audio para activar oncanplaythrough
           audioRef.current.load();
@@ -196,8 +197,9 @@ const MusicPreviews = ({
       if (preview.audioUrl) {
         try {
           const audio = new Audio();
+          audio.crossOrigin = "anonymous"; // Añadir CORS para evitar problemas de permisos
           audio.src = preview.audioUrl;
-          audio.preload = "auto"; // Cambiar a "auto" para precargar completamente
+          audio.preload = "metadata"; // Precargar solo metadatos para rendimiento
           
           // Guardar referencia para limpiar después
           preloadedAudios.push(audio);
