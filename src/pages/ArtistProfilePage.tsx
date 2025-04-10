@@ -196,8 +196,6 @@ const ArtistProfilePage = () => {
   const audioRef = useRef<HTMLAudioElement>(null);
   const [showMobileAudioPlayer, setShowMobileAudioPlayer] = useState(true);
   const [showMobileBottomSheet, setShowMobileBottomSheet] = useState(false);
-  const [currentPlayingIndex, setCurrentPlayingIndex] = useState<number | null>(null);
-  const [audioPlayerKey, setAudioPlayerKey] = useState(0);
 
   useEffect(() => {
     if (isMobile && aboutMeRef.current) {
@@ -313,16 +311,6 @@ const ArtistProfilePage = () => {
     });
     setCurrentPlaying(preview);
     setIsAudioPlaying(playing);
-    
-    if (playing && artist.musicPreviews) {
-      const previewIndex = artist.musicPreviews.findIndex(p => 
-        p.title === preview.title && p.audioUrl === preview.audioUrl
-      );
-      if (previewIndex !== -1) {
-        setCurrentPlayingIndex(previewIndex);
-      }
-    }
-    
     if (playing && isMobile) {
       setShowMobileAudioPlayer(true);
       setShowMobileBottomSheet(true);
@@ -363,80 +351,6 @@ const ArtistProfilePage = () => {
 
   const handleToggleAudioPlayerVisibility = (visible: boolean) => {
     setShowMobileAudioPlayer(visible);
-  };
-
-  const handleNextTrack = () => {
-    if (currentPlayingIndex === null || !artist.musicPreviews) return;
-    
-    const nextIndex = (currentPlayingIndex + 1) % artist.musicPreviews.length;
-    const nextPreview = artist.musicPreviews[nextIndex];
-    
-    if (nextPreview && nextPreview.audioUrl) {
-      if (audioRef.current) {
-        audioRef.current.pause();
-      }
-      
-      setAudioPlayerKey(prev => prev + 1);
-      
-      setCurrentPlaying(nextPreview);
-      setCurrentPlayingIndex(nextIndex);
-      
-      setTimeout(() => {
-        if (audioRef.current) {
-          audioRef.current.src = nextPreview.audioUrl || '';
-          audioRef.current.load();
-          audioRef.current.play()
-            .then(() => {
-              setIsAudioPlaying(true);
-              toast.success(`Reproduciendo: ${nextPreview.title}`, {
-                position: "bottom-center",
-                duration: 2000
-              });
-            })
-            .catch(error => {
-              console.error("Error al reproducir la siguiente pista:", error);
-              toast.error("No se pudo reproducir la pista siguiente");
-            });
-        }
-      }, 100);
-    }
-  };
-  
-  const handlePreviousTrack = () => {
-    if (currentPlayingIndex === null || !artist.musicPreviews) return;
-    
-    const prevIndex = (currentPlayingIndex - 1 + artist.musicPreviews.length) % artist.musicPreviews.length;
-    const prevPreview = artist.musicPreviews[prevIndex];
-    
-    if (prevPreview && prevPreview.audioUrl) {
-      if (audioRef.current) {
-        audioRef.current.pause();
-      }
-      
-      setAudioPlayerKey(prev => prev + 1);
-      
-      setCurrentPlaying(prevPreview);
-      setCurrentPlayingIndex(prevIndex);
-      
-      setTimeout(() => {
-        if (audioRef.current) {
-          audioRef.current.src = prevPreview.audioUrl || '';
-          audioRef.current.load();
-          audioRef.current.play()
-            .then(() => {
-              setIsAudioPlaying(true);
-              toast.success(`Reproduciendo: ${prevPreview.title}`, {
-                position: "bottom-center",
-                duration: 2000
-              });
-            })
-            .catch(error => {
-              console.error("Error al reproducir la pista anterior:", error);
-              toast.error("No se pudo reproducir la pista anterior");
-            });
-        }
-      }, 100);
-    }
   };
 
   return (
@@ -482,7 +396,7 @@ const ArtistProfilePage = () => {
                 </div>
                 
                 {currentPlaying && (
-                  <div className="bg-[#F7F7F7] dark:bg-vyba-dark-secondary/40 py-5 px-6 rounded-3xl sticky top-[calc(24rem+1.5rem)] h-fit" key={`desktop-player-container-${audioPlayerKey}`}>
+                  <div className="bg-[#F7F7F7] dark:bg-vyba-dark-secondary/40 py-5 px-6 rounded-3xl sticky top-[calc(24rem+1.5rem)] h-fit">
                     <AudioPlayer 
                       preview={currentPlaying} 
                       artistName={artist.name} 
@@ -510,9 +424,6 @@ const ArtistProfilePage = () => {
           isAudioPlaying={isAudioPlaying}
           onPlayPause={handlePlayPause}
           audioRef={audioRef}
-          onNextTrack={handleNextTrack}
-          onPreviousTrack={handlePreviousTrack}
-          key={`mobile-sheet-${audioPlayerKey}`}
         />
       )}
       

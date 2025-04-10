@@ -1,5 +1,5 @@
 
-import React, { useEffect, useState } from "react";
+import React from "react";
 import SwipeableBottomSheet from "react-swipeable-bottom-sheet";
 import ContactCard from "./ContactCard";
 import AudioPlayer from "./AudioPlayer";
@@ -19,8 +19,6 @@ interface MobileBottomSheetProps {
   isAudioPlaying: boolean;
   onPlayPause: () => void;
   audioRef: React.RefObject<HTMLAudioElement>;
-  onNextTrack?: () => void;
-  onPreviousTrack?: () => void;
 }
 
 const MobileBottomSheet = ({
@@ -31,22 +29,10 @@ const MobileBottomSheet = ({
   currentPlaying,
   isAudioPlaying,
   onPlayPause,
-  audioRef,
-  onNextTrack,
-  onPreviousTrack
+  audioRef
 }: MobileBottomSheetProps) => {
   // Altura para asegurar que la tarjeta de contacto se vea completa
   const contactCardHeight = 200;
-  
-  // Estado para forzar la re-renderización cuando cambia la canción
-  const [playerKey, setPlayerKey] = useState(0);
-  
-  // Actualizar la clave cuando cambia la canción para forzar re-renderizado
-  useEffect(() => {
-    if (currentPlaying) {
-      setPlayerKey(prevKey => prevKey + 1);
-    }
-  }, [currentPlaying]);
   
   return (
     <SwipeableBottomSheet
@@ -70,7 +56,7 @@ const MobileBottomSheet = ({
         />
         
         {currentPlaying && (
-          <div className="mt-4" key={`player-container-${playerKey}`}>
+          <div className="mt-4">
             <AudioPlayer 
               preview={currentPlaying} 
               artistName={artistContact.name} 
@@ -78,8 +64,6 @@ const MobileBottomSheet = ({
               onPlayPause={onPlayPause} 
               audioRef={audioRef} 
               isMobile={true}
-              onNext={onNextTrack}
-              onPrevious={onPreviousTrack}
             />
           </div>
         )}
