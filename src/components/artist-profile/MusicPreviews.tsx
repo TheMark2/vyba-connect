@@ -50,8 +50,8 @@ const MusicPreviews = ({
       if (preview.hasVideo && preview.videoUrl && 
           !preview.videoUrl.includes('youtube.com') && 
           !preview.videoUrl.includes('youtu.be')) {
-        audioSource = preview.videoUrl;
-        console.log("Usando audio del video:", preview.videoUrl);
+        audioSource = preview.videoUrl.startsWith('/') ? preview.videoUrl : `/${preview.videoUrl}`;
+        console.log("Usando audio del video:", audioSource);
       }
       
       if (!audioSource) {
@@ -139,37 +139,46 @@ const MusicPreviews = ({
   };
 
   const renderPreviewCard = (preview: MusicPreview, index: number) => {
-    if (preview.videoUrl && preview.hasVideo) {
+    const fixedPreview = {
+      ...preview,
+      videoUrl: preview.videoUrl && !preview.videoUrl.startsWith('/') && 
+                !preview.videoUrl.includes('youtube.com') && 
+                !preview.videoUrl.includes('youtu.be') 
+                ? `/${preview.videoUrl}` 
+                : preview.videoUrl
+    };
+
+    if (fixedPreview.videoUrl && fixedPreview.hasVideo) {
       return (
         <VideoPreviewCard
           key={index}
-          preview={preview}
+          preview={fixedPreview}
           artistName={artistName}
-          isPlaying={currentlyPlaying === preview.title}
-          isLoading={loadingAudio === preview.title}
-          onPlayPause={() => handlePlayPause(preview)}
+          isPlaying={currentlyPlaying === fixedPreview.title}
+          isLoading={loadingAudio === fixedPreview.title}
+          onPlayPause={() => handlePlayPause(fixedPreview)}
         />
       );
-    } else if (preview.image) {
+    } else if (fixedPreview.image) {
       return (
         <ImagePreviewCard
           key={index}
-          preview={preview}
+          preview={fixedPreview}
           artistName={artistName}
-          isPlaying={currentlyPlaying === preview.title}
-          isLoading={loadingAudio === preview.title}
-          onPlayPause={() => handlePlayPause(preview)}
+          isPlaying={currentlyPlaying === fixedPreview.title}
+          isLoading={loadingAudio === fixedPreview.title}
+          onPlayPause={() => handlePlayPause(fixedPreview)}
         />
       );
     } else {
       return (
         <NoImagePreviewCard
           key={index}
-          preview={preview}
+          preview={fixedPreview}
           artistName={artistName}
-          isPlaying={currentlyPlaying === preview.title}
-          isLoading={loadingAudio === preview.title}
-          onPlayPause={() => handlePlayPause(preview)}
+          isPlaying={currentlyPlaying === fixedPreview.title}
+          isLoading={loadingAudio === fixedPreview.title}
+          onPlayPause={() => handlePlayPause(fixedPreview)}
         />
       );
     }

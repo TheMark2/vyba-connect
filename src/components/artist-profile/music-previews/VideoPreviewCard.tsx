@@ -22,7 +22,13 @@ const VideoPreviewCard = ({
   
   // Verificar si es un video de YouTube o un video local/web
   const isYoutubeVideo = preview.videoUrl?.includes('youtube.com') || preview.videoUrl?.includes('youtu.be');
-  const isLocalVideo = !isYoutubeVideo && preview.videoUrl !== undefined;
+  
+  // Asegurarse de que la ruta del video comience con /
+  const videoUrl = preview.videoUrl && !isYoutubeVideo && !preview.videoUrl.startsWith('/') 
+    ? `/${preview.videoUrl}` 
+    : preview.videoUrl;
+    
+  const isLocalVideo = !isYoutubeVideo && videoUrl !== undefined;
   
   const getYoutubeEmbedUrl = (url: string) => {
     if (!url) return '';
@@ -61,7 +67,7 @@ const VideoPreviewCard = ({
         };
         
         videoRef.current.onerror = (e) => {
-          console.error("Error cargando el video:", preview.videoUrl, e);
+          console.error("Error cargando el video:", videoUrl, e);
           setVideoError(true);
         };
       }
@@ -76,7 +82,7 @@ const VideoPreviewCard = ({
         videoRef.current.ontimeupdate = null;
       }
     };
-  }, [preview.videoUrl, isYoutubeVideo]);
+  }, [videoUrl, isYoutubeVideo]);
   
   // Efecto para sincronizar el estado de reproducción con isPlaying
   useEffect(() => {
@@ -125,7 +131,7 @@ const VideoPreviewCard = ({
       videoRef.current.src = '';
       setTimeout(() => {
         if (videoRef.current) {
-          videoRef.current.src = currentSrc || preview.videoUrl || '';
+          videoRef.current.src = currentSrc || videoUrl || '';
           videoRef.current.load();
         }
       }, 100);
@@ -239,7 +245,7 @@ const VideoPreviewCard = ({
         ) : (
           <video 
             ref={videoRef}
-            src={preview.videoUrl}
+            src={videoUrl}
             className="w-full h-full object-cover"
             muted={true} // Siempre silenciado porque el audio lo maneja AudioPlayer
             playsInline
