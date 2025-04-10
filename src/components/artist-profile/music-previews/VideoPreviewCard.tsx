@@ -5,6 +5,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { PreviewCardProps } from "./types";
+import { toast } from "sonner";
 
 const VideoPreviewCard = ({
   preview,
@@ -16,43 +17,77 @@ const VideoPreviewCard = ({
   const videoRef = useRef<HTMLVideoElement>(null);
   const [isVideoPlaying, setIsVideoPlaying] = useState(false);
   const [videoError, setVideoError] = useState(false);
+  const [retryCount, setRetryCount] = useState(0);
   
   useEffect(() => {
-    if (videoRef.current) {
-      // Configurar el video para bucle de los primeros 10 segundos
-      const handleMetadata = () => {
-        console.log("Video metadata loaded");
-        // Limitar a 10 segundos o a la duración del video si es menor
-        const clipDuration = Math.min(10, videoRef.current?.duration || 10);
+    const loadVideo = () => {
+      if (videoRef.current) {
+        // Limpiar eventos previos
+        videoRef.current.onloadedmetadata = null;
+        videoRef.current.onerror = null;
         
-        const handleTimeUpdate = () => {
-          if (videoRef.current && videoRef.current.currentTime > clipDuration) {
-            videoRef.current.currentTime = 0; // Reiniciar al principio cuando llega a 10s
+        // Configurar el video para bucle de los primeros 10 segundos
+        videoRef.current.onloadedmetadata = () => {
+          console.log("Video metadata loaded:", preview.title);
+          setVideoError(false);
+          
+          // Limitar a 10 segundos o a la duración del video si es menor
+          const clipDuration = Math.min(10, videoRef.current?.duration || 10);
+          
+          const handleTimeUpdate = () => {
+            if (videoRef.current && videoRef.current.currentTime > clipDuration) {
+              videoRef.current.currentTime = 0; // Reiniciar al principio cuando llega a 10s
+            }
+          };
+          
+          videoRef.current?.addEventListener('timeupdate', handleTimeUpdate);
+          return () => {
+            videoRef.current?.removeEventListener('timeupdate', handleTimeUpdate);
+          };
+        };
+        
+        videoRef.current.onerror = (e) => {
+          console.error("Error cargando el video:", preview.videoUrl, e);
+          setVideoError(true);
+          
+          // Intentar recargar si no hemos superado el límite de intentos
+          if (retryCount < 2) {
+            console.log(`Reintentando cargar video (intento ${retryCount + 1})...`);
+            setRetryCount(prev => prev + 1);
+            
+            // Esperar un segundo antes de reintentar
+            setTimeout(() => {
+              if (videoRef.current) {
+                videoRef.current.load();
+              }
+            }, 1000);
           }
         };
         
-        videoRef.current?.addEventListener('timeupdate', handleTimeUpdate);
-        return () => {
-          videoRef.current?.removeEventListener('timeupdate', handleTimeUpdate);
-        };
-      };
-      
-      const handleError = () => {
-        console.error("Error cargando el video:", preview.videoUrl);
-        setVideoError(true);
-      };
-      
-      videoRef.current.addEventListener('loadedmetadata', handleMetadata);
-      videoRef.current.addEventListener('error', handleError);
-      
-      return () => {
-        if (videoRef.current) {
-          videoRef.current.removeEventListener('loadedmetadata', handleMetadata);
-          videoRef.current.removeEventListener('error', handleError);
-        }
-      };
+        // Forzar carga
+        videoRef.current.load();
+      }
+    };
+    
+    loadVideo();
+    
+    return () => {
+      if (videoRef.current) {
+        videoRef.current.onloadedmetadata = null;
+        videoRef.current.onerror = null;
+        videoRef.current.ontimeupdate = null;
+      }
+    };
+  }, [preview.videoUrl, retryCount]);
+  
+  const handleRetry = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    setRetryCount(0);
+    setVideoError(false);
+    if (videoRef.current) {
+      videoRef.current.load();
     }
-  }, [preview.videoUrl]);
+  };
   
   const handleMouseEnter = () => {
     if (videoRef.current && !videoError) {
@@ -103,8 +138,17 @@ const VideoPreviewCard = ({
     >
       <div className="relative aspect-[4/5]">
         {videoError ? (
-          <div className="w-full h-full flex items-center justify-center bg-gray-200 dark:bg-gray-800">
-            <VideoOff className="h-16 w-16 text-gray-400" />
+          <div className="w-full h-full flex flex-col items-center justify-center bg-gray-200 dark:bg-gray-800">
+            <VideoOff className="h-16 w-16 text-gray-400 mb-2" />
+            <p className="text-sm text-gray-500 dark:text-gray-400 mb-2">Error al cargar el video</p>
+            <Button 
+              variant="outline" 
+              size="sm" 
+              onClick={handleRetry}
+              className="mt-2"
+            >
+              Reintentar
+            </Button>
           </div>
         ) : (
           <video 
@@ -114,6 +158,7 @@ const VideoPreviewCard = ({
             muted
             playsInline
             preload="metadata"
+            poster={preview.image}
           />
         )}
         
