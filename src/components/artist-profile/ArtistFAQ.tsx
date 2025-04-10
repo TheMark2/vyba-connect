@@ -1,9 +1,11 @@
 
 import React from "react";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
+
 interface ArtistFAQProps {
   artistName: string;
 }
+
 const ArtistFAQ = ({
   artistName
 }: ArtistFAQProps) => {
@@ -61,4 +63,5 @@ const ArtistFAQ = ({
       </Accordion>
     </div>;
 };
+
 export default ArtistFAQ;
