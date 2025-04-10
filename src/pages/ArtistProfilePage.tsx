@@ -309,21 +309,6 @@ const ArtistProfilePage = () => {
                 </div>
                 
                 {currentPlaying && <div className="py-5 px-6 rounded-3xl sticky top-[calc(24rem+1.5rem)] h-fit relative overflow-hidden">
-                    {currentPlaying.image && (
-                      <div className="absolute inset-0 z-0">
-                        <div 
-                          className="w-full h-full" 
-                          style={{
-                            backgroundImage: `url(${currentPlaying.image})`,
-                            backgroundSize: 'cover',
-                            backgroundPosition: 'center',
-                            filter: 'blur(20px)',
-                            opacity: 0.3,
-                            transform: 'scale(1.1)'
-                          }}
-                        />
-                      </div>
-                    )}
                     <div className="relative z-10 bg-transparent">
                       <AudioPlayer preview={currentPlaying} artistName={artist.name} isPlaying={isAudioPlaying} onPlayPause={handlePlayPause} audioRef={audioRef} />
                     </div>
@@ -339,21 +324,6 @@ const ArtistProfilePage = () => {
           <ContactCard artist={artistContactData} onContact={handleContact} aboutMeRef={aboutMeRef} />
           
           {currentPlaying && <div className="mt-4 relative overflow-hidden">
-              {currentPlaying.image && (
-                <div className="absolute inset-0 z-0">
-                  <div 
-                    className="w-full h-full" 
-                    style={{
-                      backgroundImage: `url(${currentPlaying.image})`,
-                      backgroundSize: 'cover',
-                      backgroundPosition: 'center',
-                      filter: 'blur(20px)',
-                      opacity: 0.3,
-                      transform: 'scale(1.1)'
-                    }}
-                  />
-                </div>
-              )}
               <div className="relative z-10">
                 <AudioPlayer preview={currentPlaying} artistName={artist.name} isPlaying={isAudioPlaying} onPlayPause={handlePlayPause} audioRef={audioRef} />
               </div>
