@@ -48,8 +48,8 @@ const ContactCard = ({
         }
       }
 
-      // Ocultar cuando se hace scroll hacia abajo, mostrar cuando se hace scroll hacia arriba
-      if (currentScrollY > lastScrollY) {
+      // En móvil, no ocultamos al hacer scroll hacia abajo
+      if (!isMobile && currentScrollY > lastScrollY) {
         setIsVisible(false);
       } else {
         setIsVisible(true);
@@ -66,10 +66,10 @@ const ContactCard = ({
     <div className={`transition-transform duration-300 ${!isVisible ? 'translate-y-full' : 'translate-y-0'}`}>
       <Card className="border-0 shadow-none bg-transparent">
         <CardContent className="p-0">
-          <div className="bg-[#F7F7F7] rounded-3xl md:rounded-3xl rounded-t-3xl">
+          <div className="bg-[#F7F7F7] rounded-3xl md:rounded-3xl">
             <div className="flex items-center gap-3 mb-4">
-              <Badge variant="secondary" className="bg-white py-1.5 px-3.5">{artist.availability}</Badge>
-              <Badge variant="secondary" className="bg-white py-1.5 px-3.5">{artist.location}</Badge>
+              <Badge variant="secondary" className="bg-white py-2 px-4">{artist.availability}</Badge>
+              <Badge variant="secondary" className="bg-white py-2 px-4">{artist.location}</Badge>
             </div>
             
             <div className="mb-5">

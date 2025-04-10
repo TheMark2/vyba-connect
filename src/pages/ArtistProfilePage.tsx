@@ -1,3 +1,4 @@
+
 import React, { useState, useRef, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { toast } from "sonner";
@@ -380,7 +381,7 @@ const ArtistProfilePage = () => {
       </div>
       
       {isMobile && (
-        <div className="fixed bottom-0 left-0 right-0 z-50 bg-[#F7F7F7] px-5 pt-3 pb-5 border-t-0 shadow-lg rounded-t-3xl">
+        <div className="fixed bottom-0 left-0 right-0 z-50 bg-[#F7F7F7] px-5 pt-3 pb-5 shadow-lg rounded-t-3xl">
           <ContactCard 
             artist={artistContactData} 
             onContact={handleContact} 
