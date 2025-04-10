@@ -1,10 +1,9 @@
 
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { Progress } from "@/components/ui/progress";
 import { Pause, Play } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import Image from "@/components/ui/image";
-import { Marquee } from "@/components/ui/marquee";
 
 interface AudioPlayerProps {
   preview: {
@@ -33,6 +32,9 @@ const AudioPlayer = ({
     title: false,
     artist: false
   });
+  
+  const titleRef = useRef<HTMLDivElement>(null);
+  const artistRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     if (!audioRef.current) return;
@@ -63,20 +65,16 @@ const AudioPlayer = ({
       }
     };
     
-    // Usar evento timeupdate para actualizar el progreso
     audioRef.current.addEventListener('timeupdate', updateProgress);
-    
-    // Usar evento loadedmetadata para obtener la duración total
     audioRef.current.addEventListener('loadedmetadata', handleLoadedMetadata);
     
-    // Limpiar los event listeners al desmontar
     return () => {
       if (audioRef.current) {
         audioRef.current.removeEventListener('timeupdate', updateProgress);
         audioRef.current.removeEventListener('loadedmetadata', handleLoadedMetadata);
       }
     };
-  }, [audioRef]); // Solo se ejecuta cuando cambia audioRef
+  }, [audioRef]);
 
   // Resetear el progreso cuando cambia la canción
   useEffect(() => {
@@ -88,25 +86,17 @@ const AudioPlayer = ({
   // Comprobar si los textos necesitan marquesina
   useEffect(() => {
     const checkTextOverflow = () => {
-      const titleElement = document.getElementById('audio-title');
-      const artistElement = document.getElementById('audio-artist');
-      
-      if (titleElement) {
-        setTextOverflow(prev => ({
-          ...prev,
-          title: titleElement.scrollWidth > titleElement.clientWidth
-        }));
+      if (titleRef.current) {
+        const isOverflowing = titleRef.current.scrollWidth > titleRef.current.clientWidth;
+        setTextOverflow(prev => ({ ...prev, title: isOverflowing }));
       }
       
-      if (artistElement) {
-        setTextOverflow(prev => ({
-          ...prev,
-          artist: artistElement.scrollWidth > artistElement.clientWidth
-        }));
+      if (artistRef.current) {
+        const isOverflowing = artistRef.current.scrollWidth > artistRef.current.clientWidth;
+        setTextOverflow(prev => ({ ...prev, artist: isOverflowing }));
       }
     };
     
-    // Comprobar después de que el componente se monte y cuando cambie el contenido
     checkTextOverflow();
     window.addEventListener('resize', checkTextOverflow);
     
@@ -114,7 +104,7 @@ const AudioPlayer = ({
   }, [preview.title, artistName]);
 
   return (
-    <div className="relative p-5 rounded-xl overflow-hidden">
+    <div className="relative p-5 rounded-2xl overflow-hidden bg-[#F7F7F7] dark:bg-vyba-dark-secondary/40">
       <div className="flex flex-col gap-4 rounded-xl">
         {/* Cabecera: Imagen y título */}
         <div className="flex items-center gap-4">
@@ -134,34 +124,33 @@ const AudioPlayer = ({
           </div>
           
           <div className="flex-grow overflow-hidden">
-            {/* Información de la canción con marquesina condicional */}
-            <div className="flex flex-col">
+            {/* Título con efecto marquesina si es necesario */}
+            <div className="h-6 overflow-hidden">
               {textOverflow.title ? (
-                <div className="overflow-hidden h-6">
-                  <Marquee 
-                    className="font-bold text-lg"
-                    pauseOnHover
-                    gap="2rem"
-                  >
-                    <h3 id="audio-title">{preview.title}</h3>
-                  </Marquee>
+                <div className="inline-block whitespace-nowrap animate-marquee-bounce">
+                  <div ref={titleRef} className="font-bold text-lg">
+                    {preview.title}
+                  </div>
                 </div>
               ) : (
-                <h3 id="audio-title" className="font-bold text-lg truncate">{preview.title}</h3>
+                <div ref={titleRef} className="font-bold text-lg truncate">
+                  {preview.title}
+                </div>
               )}
-              
+            </div>
+            
+            {/* Artista con efecto marquesina si es necesario */}
+            <div className="h-5 overflow-hidden">
               {textOverflow.artist ? (
-                <div className="overflow-hidden h-5">
-                  <Marquee 
-                    className="text-sm text-gray-500 dark:text-gray-400"
-                    pauseOnHover
-                    gap="2rem"
-                  >
-                    <p id="audio-artist">{artistName}</p>
-                  </Marquee>
+                <div className="inline-block whitespace-nowrap animate-marquee-bounce">
+                  <div ref={artistRef} className="text-sm text-gray-500 dark:text-gray-400">
+                    {artistName}
+                  </div>
                 </div>
               ) : (
-                <p id="audio-artist" className="text-sm text-gray-500 dark:text-gray-400 truncate">{artistName}</p>
+                <div ref={artistRef} className="text-sm text-gray-500 dark:text-gray-400 truncate">
+                  {artistName}
+                </div>
               )}
             </div>
           </div>

@@ -1,3 +1,4 @@
+
 @import url('https://api.fontshare.com/v2/css?f[]=satoshi@900,700,500,400&display=swap');
 
 @tailwind base;
@@ -155,6 +156,15 @@
   }
 }
 
+@keyframes marquee-bounce {
+  0%, 100% {
+    transform: translateX(0);
+  }
+  50% {
+    transform: translateX(calc(-100% + 280px)); /* Ajustar según el ancho del contenedor */
+  }
+}
+
 @keyframes heartbeat {
   0% {
     transform: scale(1);
@@ -230,6 +240,9 @@
   }
   .animate-marquee-vertical {
     animation: marquee-vertical var(--duration) linear infinite;
+  }
+  .animate-marquee-bounce {
+    animation: marquee-bounce 6s ease-in-out infinite alternate;
   }
   .animate-heartbeat {
     animation: heartbeat 0.6s ease-in-out;
