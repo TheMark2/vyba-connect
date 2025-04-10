@@ -1,12 +1,11 @@
-
 import React, { useState } from "react";
 import { Carousel, CarouselContent, CarouselItem } from "@/components/ui/carousel";
 import { toast } from "sonner";
-import { MusicPreview } from "./music-previews/types";
-import VideoPreviewCard from "./music-previews/VideoPreviewCard";
-import ImagePreviewCard from "./music-previews/ImagePreviewCard";
-import NoImagePreviewCard from "./music-previews/NoImagePreviewCard";
-import { useCarouselLogic } from "./music-previews/useCarouselLogic";
+import { MusicPreview } from "@/components/artist-profile/music-previews/types";
+import VideoPreviewCard from "@/components/artist-profile/music-previews/VideoPreviewCard";
+import ImagePreviewCard from "@/components/artist-profile/music-previews/ImagePreviewCard";
+import NoImagePreviewCard from "@/components/artist-profile/music-previews/NoImagePreviewCard";
+import { useCarouselLogic } from "@/components/artist-profile/music-previews/useCarouselLogic";
 
 interface MusicPreviewsProps {
   previews: MusicPreview[];
@@ -28,7 +27,6 @@ const MusicPreviews = ({
   const handlePlayPause = (preview: MusicPreview) => {
     console.log("Intentando reproducir:", preview);
     
-    // Si ya está reproduciéndose esta pista, pausarla
     if (currentlyPlaying === preview.title) {
       if (audioRef.current) {
         console.log("Pausando audio");
@@ -43,15 +41,12 @@ const MusicPreviews = ({
     
     setLoadingAudio(preview.title);
     
-    // Detener la reproducción actual
     if (audioRef.current) {
       console.log("Reproduciendo nuevo audio/video");
       audioRef.current.pause();
       
-      // Determinar qué fuente de audio usar
       let audioSource = preview.audioUrl;
       
-      // Si es un video local, usar el video como fuente de audio
       if (preview.hasVideo && preview.videoUrl && 
           !preview.videoUrl.includes('youtube.com') && 
           !preview.videoUrl.includes('youtu.be')) {
@@ -59,7 +54,6 @@ const MusicPreviews = ({
         console.log("Usando audio del video:", preview.videoUrl);
       }
       
-      // Si no hay fuente de audio disponible
       if (!audioSource) {
         console.log(`No hay URL de audio para: ${preview.title}`);
         toast.error("No hay audio disponible para esta pista");
@@ -68,13 +62,11 @@ const MusicPreviews = ({
       }
       
       try {
-        // Limpiar eventos anteriores
         audioRef.current.oncanplaythrough = null;
         audioRef.current.onerror = null;
         audioRef.current.onloadedmetadata = null;
         audioRef.current.onended = null;
         
-        // Configurar eventos para el audio
         audioRef.current.oncanplaythrough = () => {
           console.log("Audio listo para reproducir sin interrupciones");
           if (audioRef.current) {
@@ -113,14 +105,12 @@ const MusicPreviews = ({
           }
         };
         
-        // Configurar y cargar el audio
         audioRef.current.src = audioSource;
         audioRef.current.crossOrigin = "anonymous";
         audioRef.current.volume = 1.0;
-        audioRef.current.loop = false; // Importante: quitamos el loop para que no se repita
+        audioRef.current.loop = false;
         audioRef.current.load();
         
-        // Timeout para manejar problemas de carga
         const timeoutId = setTimeout(() => {
           if (loadingAudio === preview.title) {
             console.warn("Timeout de carga de audio");
