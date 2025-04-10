@@ -1,4 +1,3 @@
-
 import React, { useEffect, useState, useRef } from "react";
 import { Slider } from "@/components/ui/slider";
 import { Pause, Play } from "lucide-react";
@@ -123,7 +122,7 @@ const AudioPlayer = ({
   };
 
   return (
-    <div className="relative p-5 rounded-2xl overflow-hidden bg-[#F7F7F7] dark:bg-vyba-dark-secondary/40">
+    <div className="relative p-5 rounded-2xl overflow-hidden bg-transparent dark:bg-transparent">
       <div className="flex flex-col gap-4 rounded-xl">
         <div className="flex items-center gap-4">
           <div className="w-16 h-16 rounded-lg overflow-hidden bg-gray-200 flex-shrink-0">
