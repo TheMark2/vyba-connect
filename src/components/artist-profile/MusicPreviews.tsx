@@ -1,3 +1,4 @@
+
 import React, { useState } from "react";
 import { Carousel, CarouselContent, CarouselItem } from "@/components/ui/carousel";
 import { toast } from "sonner";
@@ -48,17 +49,13 @@ const MusicPreviews = ({
       audioRef.current.pause();
       
       // Determinar qué fuente de audio usar
-      // SIEMPRE usar el video como fuente de audio si está disponible para mejorar la calidad
-      let audioSource = preview.hasVideo && preview.videoUrl && 
-                        !preview.videoUrl.includes('youtube.com') && 
-                        !preview.videoUrl.includes('youtu.be') 
-                        ? preview.videoUrl
-                        : preview.audioUrl;
+      let audioSource = preview.audioUrl;
       
-      // Registrar la fuente que estamos usando
+      // Si es un video local, usar el video como fuente de audio
       if (preview.hasVideo && preview.videoUrl && 
           !preview.videoUrl.includes('youtube.com') && 
           !preview.videoUrl.includes('youtu.be')) {
+        audioSource = preview.videoUrl;
         console.log("Usando audio del video:", preview.videoUrl);
       }
       
@@ -120,7 +117,7 @@ const MusicPreviews = ({
         audioRef.current.src = audioSource;
         audioRef.current.crossOrigin = "anonymous";
         audioRef.current.volume = 1.0;
-        audioRef.current.loop = false; // Nunca reproducir en bucle
+        audioRef.current.loop = false; // Importante: quitamos el loop para que no se repita
         audioRef.current.load();
         
         // Timeout para manejar problemas de carga

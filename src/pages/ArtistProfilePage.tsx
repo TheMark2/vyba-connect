@@ -47,7 +47,7 @@ const artistsData = [{
       duration: "2:47",
       image: "https://images.unsplash.com/photo-1514525253161-7a46d19cd819?q=80&w=1000",
       hasVideo: true,
-      videoUrl: "https://id-preview--497a55f0-740f-4223-b3c6-9413b4a6628e.lovable.app/lovable-uploads/Bad%20Bunny%20-%20Moscow%20Mule%20(Video%20Oficial)%20%20Un%20Verano%20Sin%20Ti.mp4",
+      videoUrl: "/lovable-uploads/Bad Bunny - Moscow Mule (Video Oficial)  Un Verano Sin Ti.mp4",
       audioUrl: "https://assets.mixkit.co/music/preview/mixkit-hip-hop-02-614.mp3"
     }, 
     {
@@ -60,7 +60,7 @@ const artistsData = [{
       duration: "3:15",
       image: "https://images.unsplash.com/photo-1429962714451-bb934ecdc4ec?q=80&w=2070",
       hasVideo: true,
-      videoUrl: "https://id-preview--497a55f0-740f-4223-b3c6-9413b4a6628e.lovable.app/lovable-uploads/W%20Sound%2005%20LA%20PLENA%20-%20Beéle,%20Westcol,%20Ovy%20On%20The%20Drums.mp4",
+      videoUrl: "/lovable-uploads/W Sound 05 LA PLENA - Beéle, Westcol, Ovy On The Drums.mp4",
       audioUrl: "https://assets.mixkit.co/music/preview/mixkit-a-very-happy-christmas-897.mp3"
     },
     {
