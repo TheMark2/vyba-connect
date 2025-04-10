@@ -15,6 +15,7 @@ import ContactCard from "@/components/artist-profile/ContactCard";
 import RecommendedArtists from "@/components/artist-profile/RecommendedArtists";
 import NotFoundArtist from "@/components/artist-profile/NotFoundArtist";
 import GroupMembers from "@/components/artist-profile/GroupMembers";
+import AudioPlayer from "@/components/artist-profile/AudioPlayer";
 import { useIsMobile } from "@/hooks/use-mobile";
 
 const artistsData = [
