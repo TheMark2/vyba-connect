@@ -81,10 +81,10 @@ const AudioPlayer = ({
   }, [preview]);
 
   return (
-    <div className="relative">
+    <div className="relative p-5 rounded-xl overflow-hidden">
       {/* Fondo blureado con la imagen */}
       {preview.image && (
-        <div className="absolute top-0 left-0 w-20 h-20 overflow-hidden rounded-lg -m-2 opacity-20 pointer-events-none">
+        <div className="absolute top-0 left-0 w-20 h-20 overflow-hidden pointer-events-none">
           <div className="w-full h-full blur-xl scale-150" style={{ 
             backgroundImage: `url(${preview.image})`,
             backgroundSize: 'cover',
@@ -120,31 +120,30 @@ const AudioPlayer = ({
           </div>
         </div>
         
-        {/* Controles y barra de progreso */}
+        {/* Barra de progreso */}
         <div>
-          {/* Botón de reproducción */}
-          <Button 
-            variant="secondary" 
-            size="icon" 
-            className="h-10 w-10 mb-2"
-            onClick={onPlayPause}
-          >
-            {isPlaying ? (
-              <Pause className="h-5 w-5" />
-            ) : (
-              <Play className="h-5 w-5" />
-            )}
-          </Button>
-          
-          {/* Barra de progreso */}
-          <div>
-            <div className="relative">
-              <Progress value={progress} className="h-1" />
-              <div className="flex justify-between text-xs text-gray-500 dark:text-gray-400 mt-1">
-                <span>{currentTime}</span>
-                <span>{duration}</span>
-              </div>
+          <div className="relative">
+            <Progress value={progress} className="h-1" />
+            <div className="flex justify-between text-xs text-gray-500 dark:text-gray-400 mt-1">
+              <span>{currentTime}</span>
+              <span>{duration}</span>
             </div>
+          </div>
+          
+          {/* Botón de reproducción centrado */}
+          <div className="flex justify-center mt-3">
+            <Button 
+              variant="secondary" 
+              size="icon" 
+              className="h-10 w-10"
+              onClick={onPlayPause}
+            >
+              {isPlaying ? (
+                <Pause className="h-5 w-5" />
+              ) : (
+                <Play className="h-5 w-5" />
+              )}
+            </Button>
           </div>
         </div>
       </div>
