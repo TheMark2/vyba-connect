@@ -1,4 +1,3 @@
-
 import React, { useState, useRef, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { toast } from "sonner";
@@ -231,6 +230,7 @@ const ArtistProfilePage = () => {
       audioRef.current = audio;
     }
     
+    // Limpieza al desmontar componente
     return () => {
       if (audioRef.current) {
         audioRef.current.pause();

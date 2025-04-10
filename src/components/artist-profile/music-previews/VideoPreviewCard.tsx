@@ -100,6 +100,14 @@ const VideoPreviewCard = ({
         videoRef.current.pause();
       }
     }
+    
+    // Importante: si no está reproduciéndose como audio principal,
+    // nos aseguramos de que el video esté pausado y en su posición inicial
+    if (!isPlaying && videoRef.current && !isYoutubeVideo && !videoError) {
+      videoRef.current.pause();
+      videoRef.current.currentTime = 0;
+      setIsVideoPlaying(false);
+    }
   }, [isPlaying, isYoutubeVideo, videoError]);
   
   const handleRetry = (e: React.MouseEvent) => {
@@ -121,7 +129,9 @@ const VideoPreviewCard = ({
   };
   
   const handleMouseEnter = () => {
-    if (isYoutubeVideo || videoError || isPlaying) return; // No reproducir en hover si está sonando
+    // No activar la vista previa si está reproduciéndose como audio principal
+    // o si es un video de YouTube o hay error
+    if (isYoutubeVideo || videoError || isPlaying) return;
     
     if (videoRef.current) {
       videoRef.current.currentTime = 0;
@@ -142,7 +152,8 @@ const VideoPreviewCard = ({
   };
   
   const handleMouseLeave = () => {
-    if (isYoutubeVideo || videoError || isPlaying) return; // No detener en hover si está sonando
+    // No detener en hover si está sonando como audio principal
+    if (isYoutubeVideo || videoError || isPlaying) return;
     
     if (videoRef.current) {
       videoRef.current.pause();
