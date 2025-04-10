@@ -1,4 +1,3 @@
-
 import React, { useEffect, useState, useRef } from "react";
 import { Music, Video, Play, Expand, Pause, FileAudio } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
@@ -87,23 +86,25 @@ const MusicPreviews = ({
         // Pausa cualquier reproducción actual
         audioRef.current.pause();
         
-        // Importante: establecer la URL antes de cargar
-        audioRef.current.src = preview.audioUrl;
-        
-        // Verificar que la URL se ha asignado correctamente
-        console.log("URL asignada:", audioRef.current.src);
-        
-        // Limpiar eventos anteriores para evitar duplicados
-        audioRef.current.oncanplaythrough = null;
-        audioRef.current.onerror = null;
-        audioRef.current.onended = null;
-        
-        // Configurar nuevos manejadores de eventos
-        audioRef.current.oncanplaythrough = () => {
-          console.log("Audio listo para reproducir sin interrupciones");
-          const playPromise = audioRef.current?.play();
-          if (playPromise) {
-            playPromise
+        try {
+          // Asegurar que el audio esté completamente descargado y listo
+          audioRef.current.src = '';
+          
+          // Importante: establecer la URL antes de cargar
+          audioRef.current.src = preview.audioUrl;
+          
+          // Verificar que la URL se ha asignado correctamente
+          console.log("URL asignada:", audioRef.current.src);
+          
+          // Limpiar eventos anteriores para evitar duplicados
+          audioRef.current.oncanplaythrough = null;
+          audioRef.current.onerror = null;
+          audioRef.current.onended = null;
+          
+          // Configurar nuevos manejadores de eventos
+          audioRef.current.oncanplaythrough = () => {
+            console.log("Audio listo para reproducir sin interrupciones");
+            audioRef.current?.play()
               .then(() => {
                 console.log("Reproducción iniciada correctamente");
                 setCurrentlyPlaying(preview.title);
@@ -115,24 +116,27 @@ const MusicPreviews = ({
                 console.error("Error al reproducir audio:", error);
                 handlePlaybackError(preview);
               });
-          }
-        };
-        
-        audioRef.current.onerror = (e) => {
-          console.error("Error en la carga del audio:", e);
+          };
+          
+          audioRef.current.onerror = (e) => {
+            console.error("Error en la carga del audio:", e);
+            handlePlaybackError(preview);
+          };
+          
+          audioRef.current.onended = () => {
+            console.log("Audio finalizado");
+            setCurrentlyPlaying(null);
+            if (onPlaybackState) {
+              onPlaybackState(preview, false);
+            }
+          };
+          
+          // Cargar el audio para activar oncanplaythrough
+          audioRef.current.load();
+        } catch (error) {
+          console.error("Error al configurar el audio:", error);
           handlePlaybackError(preview);
-        };
-        
-        audioRef.current.onended = () => {
-          console.log("Audio finalizado");
-          setCurrentlyPlaying(null);
-          if (onPlaybackState) {
-            onPlaybackState(preview, false);
-          }
-        };
-        
-        // Cargar el audio para activar oncanplaythrough
-        audioRef.current.load();
+        }
       }
     }
   };
@@ -185,13 +189,35 @@ const MusicPreviews = ({
 
   // Precarga los archivos de audio para mejor respuesta
   useEffect(() => {
+    // Usar un array para almacenar referencias a elementos de audio precargados
+    const preloadedAudios: HTMLAudioElement[] = [];
+    
     previews.forEach(preview => {
       if (preview.audioUrl) {
-        const audio = new Audio();
-        audio.src = preview.audioUrl;
-        audio.preload = "metadata";
+        try {
+          const audio = new Audio();
+          audio.src = preview.audioUrl;
+          audio.preload = "auto"; // Cambiar a "auto" para precargar completamente
+          
+          // Guardar referencia para limpiar después
+          preloadedAudios.push(audio);
+        } catch (error) {
+          console.error("Error al precargar audio:", error);
+        }
       }
     });
+    
+    // Limpiar audios precargados al desmontar
+    return () => {
+      preloadedAudios.forEach(audio => {
+        try {
+          audio.src = '';
+          audio.load();
+        } catch (error) {
+          console.error("Error al limpiar audio precargado:", error);
+        }
+      });
+    };
   }, [previews]);
 
   return (

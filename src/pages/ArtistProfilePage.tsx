@@ -1,4 +1,3 @@
-
 import React, { useState, useRef, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { toast } from "sonner";
@@ -191,11 +190,7 @@ const recommendedArtists = [{
 }];
 
 const ArtistProfilePage = () => {
-  const {
-    id
-  } = useParams<{
-    id: string;
-  }>();
+  const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const [isInfoOpen, setIsInfoOpen] = useState(false);
   const isMobile = useIsMobile();
@@ -206,19 +201,37 @@ const ArtistProfilePage = () => {
 
   useEffect(() => {
     if (!audioRef.current) {
-      audioRef.current = new Audio();
-      audioRef.current.addEventListener('ended', () => {
+      const audio = new Audio();
+      
+      audio.addEventListener('ended', () => {
+        console.log("Audio terminado");
         setIsAudioPlaying(false);
       });
-      audioRef.current.addEventListener('error', e => {
+      
+      audio.addEventListener('error', e => {
         console.error('Error en la reproducción de audio:', e);
+        toast.error("Error al reproducir audio", {
+          description: "Intente con otra pista"
+        });
         setIsAudioPlaying(false);
       });
+      
+      audio.addEventListener('canplaythrough', () => {
+        console.log("Audio completamente cargado y listo para reproducir");
+      });
+      
+      audioRef.current = audio;
     }
+    
     return () => {
       if (audioRef.current) {
         audioRef.current.pause();
         audioRef.current.src = '';
+        
+        const audioElement = audioRef.current;
+        audioElement.onended = null;
+        audioElement.onerror = null;
+        audioElement.oncanplaythrough = null;
       }
     };
   }, []);
@@ -285,14 +298,38 @@ const ArtistProfilePage = () => {
   };
 
   const handlePlayPause = () => {
-    if (audioRef.current) {
-      console.log("Play/Pause presionado. Estado actual:", isAudioPlaying);
+    if (!audioRef.current || !currentPlaying) return;
+    
+    console.log("Play/Pause presionado. Estado actual:", isAudioPlaying);
+    
+    try {
       if (isAudioPlaying) {
         audioRef.current.pause();
+        setIsAudioPlaying(false);
       } else {
-        audioRef.current.play().catch(e => console.error("Error al reproducir audio:", e));
+        if (audioRef.current.src) {
+          const playPromise = audioRef.current.play();
+          if (playPromise !== undefined) {
+            playPromise
+              .then(() => {
+                console.log("Reproducción iniciada con éxito desde handlePlayPause");
+                setIsAudioPlaying(true);
+              })
+              .catch(error => {
+                console.error("Error al reproducir audio:", error);
+                toast.error("No se pudo reproducir el audio", {
+                  description: "Prueba con otra pista o recarga la página"
+                });
+              });
+          }
+        } else {
+          console.error("No hay URL de audio asignada");
+          toast.error("No hay audio disponible");
+        }
       }
-      setIsAudioPlaying(!isAudioPlaying);
+    } catch (error) {
+      console.error("Error en handlePlayPause:", error);
+      toast.error("Error al controlar la reproducción");
     }
   };
 
