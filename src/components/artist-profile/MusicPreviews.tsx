@@ -35,6 +35,7 @@ const MusicPreviews = ({
   const [useCarousel, setUseCarousel] = useState(isMobile || previews.length > 3);
   const [isNavbarVisible, setIsNavbarVisible] = useState(true);
   const [currentlyPlaying, setCurrentlyPlaying] = useState<string | null>(null);
+  const [loadingAudio, setLoadingAudio] = useState<string | null>(null);
 
   const observerRef = useRef<IntersectionObserver | null>(null);
 
@@ -72,6 +73,7 @@ const MusicPreviews = ({
     // Mostrar información completa de la URL de audio
     console.log("URL de audio:", preview.audioUrl);
 
+    // Si ya está reproduciendo esta pista, pausarla
     if (currentlyPlaying === preview.title) {
       if (audioRef.current) {
         console.log("Pausando audio");
@@ -81,63 +83,88 @@ const MusicPreviews = ({
           onPlaybackState(preview, false);
         }
       }
-    } else {
-      if (audioRef.current) {
-        console.log("Reproduciendo nuevo audio");
-        // Pausa cualquier reproducción actual
-        audioRef.current.pause();
+      return;
+    }
+    
+    // Indicar que está cargando el audio
+    setLoadingAudio(preview.title);
+    
+    // Intentar reproducir la nueva pista
+    if (audioRef.current) {
+      console.log("Reproduciendo nuevo audio");
+      // Pausa cualquier reproducción actual
+      audioRef.current.pause();
+      
+      try {
+        // Limpiar eventos anteriores para evitar duplicados
+        audioRef.current.oncanplaythrough = null;
+        audioRef.current.onerror = null;
+        audioRef.current.onloadedmetadata = null;
+        audioRef.current.onended = null;
         
-        try {
-          // Limpiar eventos anteriores para evitar duplicados
-          audioRef.current.oncanplaythrough = null;
-          audioRef.current.onerror = null;
-          audioRef.current.onended = null;
-          
-          // Configurar nuevos manejadores de eventos
-          audioRef.current.oncanplaythrough = () => {
-            console.log("Audio listo para reproducir sin interrupciones");
-            audioRef.current?.play()
+        // Configurar nuevos manejadores de eventos
+        audioRef.current.oncanplaythrough = () => {
+          console.log("Audio listo para reproducir sin interrupciones");
+          if (audioRef.current) {
+            audioRef.current.play()
               .then(() => {
                 console.log("Reproducción iniciada correctamente");
                 setCurrentlyPlaying(preview.title);
+                setLoadingAudio(null);
                 if (onPlaybackState) {
                   onPlaybackState(preview, true);
                 }
               })
               .catch(error => {
                 console.error("Error al reproducir audio:", error);
+                setLoadingAudio(null);
                 handlePlaybackError(preview);
               });
-          };
-          
-          audioRef.current.onerror = (e) => {
-            console.error("Error en la carga del audio:", e);
-            handlePlaybackError(preview);
-          };
-          
-          audioRef.current.onended = () => {
-            console.log("Audio finalizado");
-            setCurrentlyPlaying(null);
-            if (onPlaybackState) {
-              onPlaybackState(preview, false);
-            }
-          };
-          
-          // Importante: establecer la URL antes de cargar
-          audioRef.current.src = preview.audioUrl;
-          
-          // Verificar que la URL se ha asignado correctamente
-          console.log("URL asignada:", audioRef.current.src);
-          
-          // CORS headers para evitar problemas de permisos
-          audioRef.current.crossOrigin = "anonymous";
-          
-          // Cargar el audio para activar oncanplaythrough
-          audioRef.current.load();
-        } catch (error) {
-          console.error("Error al configurar el audio:", error);
+          }
+        };
+        
+        audioRef.current.onerror = (e) => {
+          console.error("Error en la carga del audio:", e);
+          setLoadingAudio(null);
           handlePlaybackError(preview);
-        }
+        };
+        
+        audioRef.current.onloadedmetadata = () => {
+          console.log("Metadatos de audio cargados");
+        };
+        
+        audioRef.current.onended = () => {
+          console.log("Audio finalizado");
+          setCurrentlyPlaying(null);
+          if (onPlaybackState) {
+            onPlaybackState(preview, false);
+          }
+        };
+        
+        // Importante: establecer la URL antes de cargar
+        audioRef.current.src = preview.audioUrl;
+        
+        // Verificar que la URL se ha asignado correctamente
+        console.log("URL asignada:", audioRef.current.src);
+        
+        // CORS headers para evitar problemas de permisos
+        audioRef.current.crossOrigin = "anonymous";
+        
+        // Cargar el audio para activar oncanplaythrough
+        audioRef.current.load();
+        
+        // Establecer un timeout para manejar casos donde el audio no se carga
+        setTimeout(() => {
+          if (loadingAudio === preview.title) {
+            console.warn("Timeout de carga de audio");
+            setLoadingAudio(null);
+            handlePlaybackError(preview);
+          }
+        }, 10000); // 10 segundos
+      } catch (error) {
+        console.error("Error al configurar el audio:", error);
+        setLoadingAudio(null);
+        handlePlaybackError(preview);
       }
     }
   };
@@ -188,40 +215,6 @@ const MusicPreviews = ({
     };
   }, [previews.length, isNavbarVisible]);
 
-  // Precarga los archivos de audio para mejor respuesta
-  useEffect(() => {
-    // Usar un array para almacenar referencias a elementos de audio precargados
-    const preloadedAudios: HTMLAudioElement[] = [];
-    
-    previews.forEach(preview => {
-      if (preview.audioUrl) {
-        try {
-          const audio = new Audio();
-          audio.crossOrigin = "anonymous"; // Añadir CORS para evitar problemas de permisos
-          audio.src = preview.audioUrl;
-          audio.preload = "metadata"; // Precargar solo metadatos para rendimiento
-          
-          // Guardar referencia para limpiar después
-          preloadedAudios.push(audio);
-        } catch (error) {
-          console.error("Error al precargar audio:", error);
-        }
-      }
-    });
-    
-    // Limpiar audios precargados al desmontar
-    return () => {
-      preloadedAudios.forEach(audio => {
-        try {
-          audio.src = '';
-          audio.load();
-        } catch (error) {
-          console.error("Error al limpiar audio precargado:", error);
-        }
-      });
-    };
-  }, [previews]);
-
   return (
     <div className="mt-8 mb-16">
       <h2 className="text-3xl font-black mb-6">Preview</h2>
@@ -256,6 +249,7 @@ const MusicPreviews = ({
                         preview={preview}
                         artistName={artistName}
                         isPlaying={currentlyPlaying === preview.title}
+                        isLoading={loadingAudio === preview.title}
                         onPlayPause={() => handlePlayPause(preview)}
                       />
                     ) : (
@@ -263,6 +257,7 @@ const MusicPreviews = ({
                         preview={preview}
                         artistName={artistName}
                         isPlaying={currentlyPlaying === preview.title}
+                        isLoading={loadingAudio === preview.title}
                         onPlayPause={() => handlePlayPause(preview)}
                       />
                     )}
@@ -283,6 +278,7 @@ const MusicPreviews = ({
                       preview={preview}
                       artistName={artistName}
                       isPlaying={currentlyPlaying === preview.title}
+                      isLoading={loadingAudio === preview.title}
                       onPlayPause={() => handlePlayPause(preview)}
                     />
                   ) : (
@@ -290,6 +286,7 @@ const MusicPreviews = ({
                       preview={preview}
                       artistName={artistName}
                       isPlaying={currentlyPlaying === preview.title}
+                      isLoading={loadingAudio === preview.title}
                       onPlayPause={() => handlePlayPause(preview)}
                     />
                   )}
@@ -307,6 +304,7 @@ const MusicPreviews = ({
                       preview={preview}
                       artistName={artistName}
                       isPlaying={currentlyPlaying === preview.title}
+                      isLoading={loadingAudio === preview.title}
                       onPlayPause={() => handlePlayPause(preview)}
                     />
                   ) : (
@@ -314,6 +312,7 @@ const MusicPreviews = ({
                       preview={preview}
                       artistName={artistName}
                       isPlaying={currentlyPlaying === preview.title}
+                      isLoading={loadingAudio === preview.title}
                       onPlayPause={() => handlePlayPause(preview)}
                     />
                   )}
@@ -331,11 +330,13 @@ const ImagePreviewCard = ({
   preview,
   artistName,
   isPlaying,
+  isLoading,
   onPlayPause
 }: {
   preview: MusicPreview;
   artistName: string;
   isPlaying: boolean;
+  isLoading?: boolean;
   onPlayPause: () => void;
 }) => {
   const handlePlay = (e: React.MouseEvent) => {
@@ -392,10 +393,13 @@ const ImagePreviewCard = ({
         <Button 
           variant="secondary" 
           size="icon" 
-          className="absolute bottom-7 left-7 opacity-0 group-hover:opacity-100 transition-opacity duration-300 h-10 w-10 bg-white hover:bg-white/90 text-black"
+          className={`absolute bottom-7 left-7 opacity-0 group-hover:opacity-100 transition-opacity duration-300 h-10 w-10 bg-white hover:bg-white/90 text-black ${isLoading ? 'opacity-70 cursor-wait' : ''}`}
           onClick={handlePlay}
+          disabled={isLoading}
         >
-          {isPlaying ? (
+          {isLoading ? (
+            <div className="h-5 w-5 border-2 border-black border-t-transparent rounded-full animate-spin"></div>
+          ) : isPlaying ? (
             <Pause className="h-5 w-5" />
           ) : (
             <Play className="h-5 w-5" />
@@ -413,11 +417,13 @@ const NoImagePreviewCard = ({
   preview,
   artistName,
   isPlaying,
+  isLoading,
   onPlayPause
 }: {
   preview: MusicPreview;
   artistName: string;
   isPlaying: boolean;
+  isLoading?: boolean;
   onPlayPause: () => void;
 }) => {
   const handlePlay = (e: React.MouseEvent) => {
@@ -443,10 +449,13 @@ const NoImagePreviewCard = ({
         <Button 
           variant="secondary" 
           size="icon" 
-          className="absolute bottom-7 left-7 opacity-0 group-hover:opacity-100 transition-opacity duration-300 h-10 w-10"
+          className={`absolute bottom-7 left-7 opacity-0 group-hover:opacity-100 transition-opacity duration-300 h-10 w-10 ${isLoading ? 'opacity-70 cursor-wait' : ''}`}
           onClick={handlePlay}
+          disabled={isLoading}
         >
-          {isPlaying ? (
+          {isLoading ? (
+            <div className="h-5 w-5 border-2 border-current border-t-transparent rounded-full animate-spin"></div>
+          ) : isPlaying ? (
             <Pause className="h-5 w-5" />
           ) : (
             <Play className="h-5 w-5" />

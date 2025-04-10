@@ -1,4 +1,3 @@
-
 import React, { useState, useRef, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { toast } from "sonner";
@@ -41,32 +40,32 @@ const artistsData = [{
       title: "Set House Verano 2023",
       duration: "1:42",
       image: "https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?q=80&w=1000",
-      audioUrl: "https://audio.jukehost.co.uk/5Lz2TaU7Cjhk36uWQGbPFdYm0PcUt7J2"
+      audioUrl: "https://assets.mixkit.co/music/preview/mixkit-tech-house-vibes-130.mp3"
     }, 
     {
       title: "Sesión Urbana Remix",
       duration: "1:33",
       image: "https://images.unsplash.com/photo-1514525253161-7a46d19cd819?q=80&w=1000",
       hasVideo: true,
-      audioUrl: "https://audio.jukehost.co.uk/W2m9HnT6weCsXoQFPzsmf9OPp55JZZTH"
+      audioUrl: "https://assets.mixkit.co/music/preview/mixkit-hip-hop-02-614.mp3"
     }, 
     {
       title: "Mix Hip-Hop 2024",
       duration: "1:31",
-      audioUrl: "https://audio.jukehost.co.uk/KsJUVapdeLOeOx2EvL7mHtfH4KF3lZrv"
+      audioUrl: "https://assets.mixkit.co/music/preview/mixkit-hip-hop-03-612.mp3"
     },
     {
       title: "Deep House Experience",
       duration: "1:52",
       image: "https://images.unsplash.com/photo-1429962714451-bb934ecdc4ec?q=80&w=2070",
-      audioUrl: "https://audio.jukehost.co.uk/4BDXXj0YrKwO1F2KCxzRdnrOqkOaO8lE"
+      audioUrl: "https://assets.mixkit.co/music/preview/mixkit-a-very-happy-christmas-897.mp3"
     },
     {
       title: "Summer Vibes DJ Set",
       duration: "1:44",
       image: "https://images.unsplash.com/photo-1516450360452-9312f5e86fc7?q=80&w=2070",
       hasVideo: true,
-      audioUrl: "https://audio.jukehost.co.uk/fgI1H50QNOQeX5WaNAQ4i3MiQS6GEV3u"
+      audioUrl: "https://assets.mixkit.co/music/preview/mixkit-summer-fun-13.mp3"
     }
   ],
   eventTypes: ["Bodas", "Fiestas Privadas", "Cumpleaños", "Eventos Corporativos", "Inauguraciones", "Aniversarios", "Cenas de Gala"],

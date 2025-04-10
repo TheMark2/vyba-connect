@@ -33,6 +33,7 @@ const AudioPlayer = ({
     artist: false
   });
   const [isDragging, setIsDragging] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const titleRef = useRef<HTMLDivElement>(null);
   const artistRef = useRef<HTMLDivElement>(null);
   
@@ -59,26 +60,42 @@ const AudioPlayer = ({
           const minutes = Math.floor(durationValue / 60);
           const seconds = Math.floor(durationValue % 60);
           setDuration(`${minutes}:${seconds < 10 ? '0' : ''}${seconds}`);
+          setIsLoading(false);
         } else {
           // Si no se puede obtener la duración del archivo de audio,
           // usar la duración proporcionada en los datos
           setDuration(preview.duration);
+          setIsLoading(false);
         }
       } catch (error) {
         console.error("Error al obtener metadatos de audio:", error);
         // En caso de error, usar la duración proporcionada
         setDuration(preview.duration);
+        setIsLoading(false);
       }
+    };
+    
+    const handleLoadStart = () => {
+      setIsLoading(true);
+    };
+    
+    const handleError = (e: Event) => {
+      console.error("Error en AudioPlayer:", e);
+      setIsLoading(false);
     };
     
     const audioElement = audioRef.current;
     audioElement.addEventListener('timeupdate', updateProgress);
     audioElement.addEventListener('loadedmetadata', handleLoadedMetadata);
+    audioElement.addEventListener('loadstart', handleLoadStart);
+    audioElement.addEventListener('error', handleError);
     
     return () => {
       if (audioElement) {
         audioElement.removeEventListener('timeupdate', updateProgress);
         audioElement.removeEventListener('loadedmetadata', handleLoadedMetadata);
+        audioElement.removeEventListener('loadstart', handleLoadStart);
+        audioElement.removeEventListener('error', handleError);
       }
     };
   }, [audioRef, isDragging, preview.duration]);
@@ -134,6 +151,11 @@ const AudioPlayer = ({
     setTimeout(() => setIsDragging(false), 200);
   };
   
+  const handlePlayPauseClick = () => {
+    if (isLoading) return;
+    onPlayPause();
+  };
+  
   return (
     <div className="relative rounded-2xl overflow-hidden bg-transparent dark:bg-transparent">
       <div className="flex flex-col gap-4 rounded-xl">
@@ -175,11 +197,21 @@ const AudioPlayer = ({
           </div>
           
           <div className="flex justify-center mt-3">
-            <Button variant="secondary" size="icon" className={`h-10 w-10 ${isPlaying ? 'bg-green-500 hover:bg-green-600' : 'bg-blue-500 hover:bg-blue-600'} text-white relative overflow-hidden`} onClick={onPlayPause}>
-              <div className="relative z-10 w-5 h-5">
-                <Pause className={`absolute inset-0 h-5 w-5 fill-white transition-all duration-300 ${isPlaying ? 'opacity-100 scale-100' : 'opacity-0 scale-50'}`} />
-                <Play className={`absolute inset-0 h-5 w-5 fill-white transition-all duration-300 ${isPlaying ? 'opacity-0 scale-50' : 'opacity-100 scale-100'}`} />
-              </div>
+            <Button 
+              variant="secondary" 
+              size="icon" 
+              className={`h-10 w-10 ${isPlaying ? 'bg-green-500 hover:bg-green-600' : 'bg-blue-500 hover:bg-blue-600'} text-white relative overflow-hidden ${isLoading ? 'opacity-70 cursor-wait' : ''}`} 
+              onClick={handlePlayPauseClick}
+              disabled={isLoading}
+            >
+              {isLoading ? (
+                <div className="h-5 w-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+              ) : (
+                <div className="relative z-10 w-5 h-5">
+                  <Pause className={`absolute inset-0 h-5 w-5 fill-white transition-all duration-300 ${isPlaying ? 'opacity-100 scale-100' : 'opacity-0 scale-50'}`} />
+                  <Play className={`absolute inset-0 h-5 w-5 fill-white transition-all duration-300 ${isPlaying ? 'opacity-0 scale-50' : 'opacity-100 scale-100'}`} />
+                </div>
+              )}
             </Button>
           </div>
         </div>
