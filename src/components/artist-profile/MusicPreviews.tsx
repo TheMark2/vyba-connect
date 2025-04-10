@@ -1,4 +1,3 @@
-
 import React, { useEffect, useState, useRef } from "react";
 import { Music, Video, Play, Expand, Pause, FileAudio } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
@@ -355,36 +354,40 @@ const VideoPreviewCard = ({
   const [isVideoPlaying, setIsVideoPlaying] = useState(false);
   
   useEffect(() => {
-    // Configuramos el video para que se reproduzca en bucle
     if (videoRef.current) {
-      // Establecer el tamaño del bucle (10 segundos o la duración total si es menor)
-      videoRef.current.addEventListener('loadedmetadata', () => {
+      const handleMetadata = () => {
         const clipDuration = Math.min(10, videoRef.current?.duration || 10);
         
-        // Añadir evento para detectar cuando avanza el tiempo
-        videoRef.current?.addEventListener('timeupdate', () => {
-          // Si el tiempo actual excede la duración del clip, volver al inicio
+        const handleTimeUpdate = () => {
           if (videoRef.current && videoRef.current.currentTime > clipDuration) {
             videoRef.current.currentTime = 0;
           }
-        });
-      });
+        };
+        
+        videoRef.current?.addEventListener('timeupdate', handleTimeUpdate);
+      };
+      
+      videoRef.current.addEventListener('loadedmetadata', handleMetadata);
+      
+      return () => {
+        if (videoRef.current) {
+          videoRef.current.removeEventListener('loadedmetadata', handleMetadata);
+          videoRef.current.removeEventListener('timeupdate', () => {});
+        }
+      };
     }
-    
-    return () => {
-      if (videoRef.current) {
-        videoRef.current.removeEventListener('loadedmetadata', () => {});
-        videoRef.current.removeEventListener('timeupdate', () => {});
-      }
-    };
   }, []);
   
   const handleMouseEnter = () => {
     if (videoRef.current) {
       videoRef.current.currentTime = 0;
-      videoRef.current.play().catch(err => {
-        console.warn("Error al reproducir el video automáticamente:", err);
-      });
+      const playPromise = videoRef.current.play();
+      
+      if (playPromise !== undefined) {
+        playPromise.catch(err => {
+          console.warn("Error al reproducir el video automáticamente:", err);
+        });
+      }
       setIsVideoPlaying(true);
     }
   };
@@ -549,12 +552,12 @@ const ImagePreviewCard = ({
         <Button 
           variant="secondary" 
           size="icon" 
-          className={`absolute bottom-7 left-7 opacity-0 group-hover:opacity-100 transition-opacity duration-300 h-10 w-10 bg-white hover:bg-white/90 text-black ${isLoading ? 'opacity-70 cursor-wait' : ''}`}
+          className={`absolute bottom-7 left-7 opacity-0 group-hover:opacity-100 transition-opacity duration-300 h-10 w-10 ${isLoading ? 'opacity-70 cursor-wait' : ''}`}
           onClick={handlePlay}
           disabled={isLoading}
         >
           {isLoading ? (
-            <div className="h-5 w-5 border-2 border-black border-t-transparent rounded-full animate-spin"></div>
+            <div className="h-5 w-5 border-2 border-current border-t-transparent rounded-full animate-spin"></div>
           ) : isPlaying ? (
             <Pause className="h-5 w-5" />
           ) : (
@@ -563,7 +566,7 @@ const ImagePreviewCard = ({
         </Button>
         
         <div className="absolute bottom-7 right-7 z-10 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-          <span className="text-sm font-medium text-white bg-black/50 px-2 py-1 rounded-md">{preview.duration}</span>
+          <span className="text-sm font-medium dark:text-white bg-gray-200 dark:bg-black/50 px-2 py-1 rounded-md">{preview.duration}</span>
         </div>
       </div>
     </Card>;
