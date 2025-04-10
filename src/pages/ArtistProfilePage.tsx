@@ -15,6 +15,7 @@ import RecommendedArtists from "@/components/artist-profile/RecommendedArtists";
 import NotFoundArtist from "@/components/artist-profile/NotFoundArtist";
 import GroupMembers from "@/components/artist-profile/GroupMembers";
 import AudioPlayer from "@/components/artist-profile/AudioPlayer";
+import MobileBottomSheet from "@/components/artist-profile/MobileBottomSheet";
 import { useIsMobile } from "@/hooks/use-mobile";
 
 const artistsData = [{
@@ -387,31 +388,17 @@ const ArtistProfilePage = () => {
         <RecommendedArtists artists={recommendedArtists} />
       </div>
       
-      {isMobile && (
-        <div className="fixed bottom-0 left-0 right-0 z-50 bg-[#F7F7F7] px-5 pt-3 pb-5 shadow-lg rounded-t-3xl">
-          <ContactCard 
-            artist={artistContactData} 
-            onContact={handleContact} 
-            aboutMeRef={aboutMeRef} 
-            imagesRef={imagesRef}
-            isMobile={isMobile}
-            isAudioPlaying={isAudioPlaying}
-            showAudioPlayer={showMobileAudioPlayer}
-            onToggleAudioPlayerVisibility={handleToggleAudioPlayerVisibility}
-          />
-          
-          {currentPlaying && showMobileAudioPlayer && (
-            <div className="mt-3">
-              <AudioPlayer 
-                preview={currentPlaying} 
-                artistName={artist.name} 
-                isPlaying={isAudioPlaying} 
-                onPlayPause={handlePlayPause} 
-                audioRef={audioRef} 
-              />
-            </div>
-          )}
-        </div>
+      {isMobile && currentPlaying && (
+        <MobileBottomSheet 
+          artistContact={artistContactData} 
+          onContact={handleContact} 
+          aboutMeRef={aboutMeRef} 
+          imagesRef={imagesRef}
+          currentPlaying={currentPlaying}
+          isAudioPlaying={isAudioPlaying}
+          onPlayPause={handlePlayPause}
+          audioRef={audioRef}
+        />
       )}
       
       <Footer />
