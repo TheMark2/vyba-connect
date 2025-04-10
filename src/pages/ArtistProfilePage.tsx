@@ -378,20 +378,24 @@ const ArtistProfilePage = () => {
             </div>
             
             {!isMobile && (
-              <div className="bg-[#F7F7F7] p-6 rounded-xl sticky top-24 h-fit">
-                <ContactCard 
-                  artist={artistContactData} 
-                  onContact={handleContact} 
-                />
+              <div className="space-y-6">
+                <div className="bg-[#F7F7F7] p-6 rounded-xl sticky top-24 h-fit">
+                  <ContactCard 
+                    artist={artistContactData} 
+                    onContact={handleContact} 
+                  />
+                </div>
                 
                 {currentPlaying && (
-                  <AudioPlayer 
-                    preview={currentPlaying}
-                    artistName={artist.name}
-                    isPlaying={isAudioPlaying}
-                    onPlayPause={handlePlayPause}
-                    audioRef={audioRef}
-                  />
+                  <div className="bg-[#F7F7F7] dark:bg-vyba-dark-secondary/40 py-5 px-6 rounded-xl border-t border-gray-200 dark:border-gray-800 sticky top-[calc(24rem+1.5rem)] h-fit">
+                    <AudioPlayer 
+                      preview={currentPlaying}
+                      artistName={artist.name}
+                      isPlaying={isAudioPlaying}
+                      onPlayPause={handlePlayPause}
+                      audioRef={audioRef}
+                    />
+                  </div>
                 )}
               </div>
             )}
@@ -410,13 +414,15 @@ const ArtistProfilePage = () => {
           />
           
           {currentPlaying && (
-            <AudioPlayer 
-              preview={currentPlaying}
-              artistName={artist.name}
-              isPlaying={isAudioPlaying}
-              onPlayPause={handlePlayPause}
-              audioRef={audioRef}
-            />
+            <div className="mt-4">
+              <AudioPlayer 
+                preview={currentPlaying}
+                artistName={artist.name}
+                isPlaying={isAudioPlaying}
+                onPlayPause={handlePlayPause}
+                audioRef={audioRef}
+              />
+            </div>
           )}
         </div>
       )}
