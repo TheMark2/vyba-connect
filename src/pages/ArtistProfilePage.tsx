@@ -16,6 +16,7 @@ import NotFoundArtist from "@/components/artist-profile/NotFoundArtist";
 import GroupMembers from "@/components/artist-profile/GroupMembers";
 import AudioPlayer from "@/components/artist-profile/AudioPlayer";
 import { useIsMobile } from "@/hooks/use-mobile";
+
 const artistsData = [{
   id: "1",
   name: "Antonia Pedragosa",
@@ -123,6 +124,7 @@ const artistsData = [{
   education: ["Conservatorio Provincial de Música Luis Gianneo"],
   eventTypes: ["Fiestas Privadas", "Inauguraciones", "Aniversarios"]
 }];
+
 const recommendedArtists = [{
   id: "101",
   name: "Marco Olivera",
@@ -169,6 +171,7 @@ const recommendedArtists = [{
   priceRange: "180-350€",
   isFavorite: true
 }];
+
 const ArtistProfilePage = () => {
   const {
     id
@@ -182,6 +185,7 @@ const ArtistProfilePage = () => {
   const [currentPlaying, setCurrentPlaying] = useState<any>(null);
   const [isAudioPlaying, setIsAudioPlaying] = useState(false);
   const audioRef = useRef<HTMLAudioElement>(null);
+
   useEffect(() => {
     if (!audioRef.current) {
       audioRef.current = new Audio();
@@ -200,43 +204,51 @@ const ArtistProfilePage = () => {
       }
     };
   }, []);
+
   const artist = artistsData.find(artist => artist.id === id);
   if (!artist) {
     return <NotFoundArtist onBack={() => navigate(-1)} />;
   }
+
   const handleFavorite = () => {
     toast.success("Añadido a favoritos", {
       icon: "❤️",
       position: "bottom-center"
     });
   };
+
   const handleReport = () => {
     toast.info("Gracias por informarnos", {
       description: "Revisaremos el perfil lo antes posible",
       position: "bottom-center"
     });
   };
+
   const handleShare = () => {
     toast.success("Enlace copiado al portapapeles", {
       position: "bottom-center"
     });
   };
+
   const handleContact = () => {
     toast.success(`Contactando con ${artist.name}`, {
       description: "Te conectaremos pronto",
       position: "bottom-center"
     });
   };
+
   const handleGenreClick = (genre: string) => {
     toast.success(`Buscando más artistas de ${genre}`, {
       position: "bottom-center"
     });
   };
+
   const handleEventTypeClick = (eventType: string) => {
     toast.success(`Buscando artistas para ${eventType}`, {
       position: "bottom-center"
     });
   };
+
   const artistContactData = {
     name: artist.name,
     location: artist.location || "",
@@ -244,6 +256,7 @@ const ArtistProfilePage = () => {
     priceRange: artist.priceRange,
     image: artist.images[0]
   };
+
   const handlePlaybackState = (preview: any, playing: boolean) => {
     console.log("Estado de reproducción cambiado:", {
       preview,
@@ -252,6 +265,7 @@ const ArtistProfilePage = () => {
     setCurrentPlaying(preview);
     setIsAudioPlaying(playing);
   };
+
   const handlePlayPause = () => {
     if (audioRef.current) {
       console.log("Play/Pause presionado. Estado actual:", isAudioPlaying);
@@ -263,6 +277,7 @@ const ArtistProfilePage = () => {
       setIsAudioPlaying(!isAudioPlaying);
     }
   };
+
   return <div className="bg-white dark:bg-vyba-dark-bg">
       <Navbar />
       <div className={`${isMobile ? 'px-0' : 'px-6 md:px-10 lg:px-14 xl:px-16'}`}>
@@ -293,8 +308,25 @@ const ArtistProfilePage = () => {
                   <ContactCard artist={artistContactData} onContact={handleContact} />
                 </div>
                 
-                {currentPlaying && <div className="bg-[#F7F7F7] dark:bg-vyba-dark-secondary/40 py-5 px-6 rounded-3xl sticky top-[calc(24rem+1.5rem)] h-fit">
-                    <AudioPlayer preview={currentPlaying} artistName={artist.name} isPlaying={isAudioPlaying} onPlayPause={handlePlayPause} audioRef={audioRef} />
+                {currentPlaying && <div className="py-5 px-6 rounded-3xl sticky top-[calc(24rem+1.5rem)] h-fit relative overflow-hidden">
+                    {currentPlaying.image && (
+                      <div className="absolute inset-0 z-0">
+                        <div 
+                          className="w-full h-full" 
+                          style={{
+                            backgroundImage: `url(${currentPlaying.image})`,
+                            backgroundSize: 'cover',
+                            backgroundPosition: 'center',
+                            filter: 'blur(20px)',
+                            opacity: 0.3,
+                            transform: 'scale(1.1)'
+                          }}
+                        />
+                      </div>
+                    )}
+                    <div className="relative z-10 bg-transparent">
+                      <AudioPlayer preview={currentPlaying} artistName={artist.name} isPlaying={isAudioPlaying} onPlayPause={handlePlayPause} audioRef={audioRef} />
+                    </div>
                   </div>}
               </div>}
           </div>
@@ -306,12 +338,30 @@ const ArtistProfilePage = () => {
       {isMobile && <div className="fixed bottom-0 left-0 right-0 z-50 bg-[#F7F7F7] px-6 pt-4 pb-6 border-t border-gray-100 shadow-lg">
           <ContactCard artist={artistContactData} onContact={handleContact} aboutMeRef={aboutMeRef} />
           
-          {currentPlaying && <div className="mt-4">
-              <AudioPlayer preview={currentPlaying} artistName={artist.name} isPlaying={isAudioPlaying} onPlayPause={handlePlayPause} audioRef={audioRef} />
+          {currentPlaying && <div className="mt-4 relative overflow-hidden">
+              {currentPlaying.image && (
+                <div className="absolute inset-0 z-0">
+                  <div 
+                    className="w-full h-full" 
+                    style={{
+                      backgroundImage: `url(${currentPlaying.image})`,
+                      backgroundSize: 'cover',
+                      backgroundPosition: 'center',
+                      filter: 'blur(20px)',
+                      opacity: 0.3,
+                      transform: 'scale(1.1)'
+                    }}
+                  />
+                </div>
+              )}
+              <div className="relative z-10">
+                <AudioPlayer preview={currentPlaying} artistName={artist.name} isPlaying={isAudioPlaying} onPlayPause={handlePlayPause} audioRef={audioRef} />
+              </div>
             </div>}
         </div>}
       
       <Footer />
     </div>;
 };
+
 export default ArtistProfilePage;
