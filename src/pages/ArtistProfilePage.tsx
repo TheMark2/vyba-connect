@@ -1,3 +1,4 @@
+
 import React, { useState, useRef, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { toast } from "sonner";
@@ -207,6 +208,9 @@ const ArtistProfilePage = () => {
     if (!audioRef.current) {
       const audio = new Audio();
       
+      // Asegurarnos de que no se reproduzca en bucle
+      audio.loop = false;
+      
       audio.addEventListener('ended', () => {
         console.log("Audio terminado");
         setIsAudioPlaying(false);
@@ -312,6 +316,7 @@ const ArtistProfilePage = () => {
         setIsAudioPlaying(false);
       } else {
         if (audioRef.current.src) {
+          audioRef.current.loop = false; // Asegurar que no se reproduce en bucle
           const playPromise = audioRef.current.play();
           if (playPromise !== undefined) {
             playPromise

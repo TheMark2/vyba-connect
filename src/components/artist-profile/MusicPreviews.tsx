@@ -102,6 +102,7 @@ const MusicPreviews = ({
           audioRef.current.src = preview.videoUrl;
           audioRef.current.crossOrigin = "anonymous";
           audioRef.current.volume = 1.0;
+          audioRef.current.loop = false; // Importante: quitamos el loop para que no se repita
           audioRef.current.load();
           
           // Timeout para manejar problemas de carga
@@ -194,6 +195,7 @@ const MusicPreviews = ({
       audioRef.current.src = preview.audioUrl;
       audioRef.current.crossOrigin = "anonymous";
       audioRef.current.volume = 1.0;
+      audioRef.current.loop = false; // Importante: quitamos el loop para que no se repita
       audioRef.current.load();
       
       const timeoutId = setTimeout(() => {

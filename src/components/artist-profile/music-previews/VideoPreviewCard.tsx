@@ -54,24 +54,10 @@ const VideoPreviewCard = ({
         videoRef.current.onloadedmetadata = null;
         videoRef.current.onerror = null;
         
-        // Configurar el video para bucle de los primeros 10 segundos
+        // Configurar el video
         videoRef.current.onloadedmetadata = () => {
           console.log("Video metadata loaded:", preview.title);
           setVideoError(false);
-          
-          // Limitar a 10 segundos o a la duración del video si es menor
-          const clipDuration = Math.min(10, videoRef.current?.duration || 10);
-          
-          const handleTimeUpdate = () => {
-            if (videoRef.current && videoRef.current.currentTime > clipDuration) {
-              videoRef.current.currentTime = 0; // Reiniciar al principio cuando llega a 10s
-            }
-          };
-          
-          videoRef.current?.addEventListener('timeupdate', handleTimeUpdate);
-          return () => {
-            videoRef.current?.removeEventListener('timeupdate', handleTimeUpdate);
-          };
         };
         
         videoRef.current.onerror = (e) => {
@@ -245,6 +231,7 @@ const VideoPreviewCard = ({
             preload="metadata"
             poster={preview.image}
             crossOrigin="anonymous"
+            loop={false} // Importante: quitamos el loop para que no se repita
           />
         )}
         
