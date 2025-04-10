@@ -54,7 +54,7 @@ const MobileBottomSheet = ({
         backgroundColor: '#F7F7F7'
       }}
     >
-      <div className="px-5 pt-3 pb-5">
+      <div className={`px-5 pt-3 ${!currentPlaying ? 'pb-8' : 'pb-5'}`}>
         <ContactCard 
           artist={artistContact} 
           onContact={onContact} 
