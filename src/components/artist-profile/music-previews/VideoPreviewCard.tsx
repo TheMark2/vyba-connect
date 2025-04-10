@@ -1,6 +1,6 @@
 
 import React, { useRef, useState, useEffect } from "react";
-import { Video, Play, Expand, Pause, FileAudio } from "lucide-react";
+import { Video, Play, Expand, Pause, FileAudio, VideoOff } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
@@ -15,11 +15,13 @@ const VideoPreviewCard = ({
 }: PreviewCardProps) => {
   const videoRef = useRef<HTMLVideoElement>(null);
   const [isVideoPlaying, setIsVideoPlaying] = useState(false);
+  const [videoError, setVideoError] = useState(false);
   
   useEffect(() => {
     if (videoRef.current) {
       // Configurar el video para bucle de los primeros 10 segundos
       const handleMetadata = () => {
+        console.log("Video metadata loaded");
         // Limitar a 10 segundos o a la duración del video si es menor
         const clipDuration = Math.min(10, videoRef.current?.duration || 10);
         
@@ -30,22 +32,35 @@ const VideoPreviewCard = ({
         };
         
         videoRef.current?.addEventListener('timeupdate', handleTimeUpdate);
+        return () => {
+          videoRef.current?.removeEventListener('timeupdate', handleTimeUpdate);
+        };
+      };
+      
+      const handleError = () => {
+        console.error("Error cargando el video:", preview.videoUrl);
+        setVideoError(true);
       };
       
       videoRef.current.addEventListener('loadedmetadata', handleMetadata);
+      videoRef.current.addEventListener('error', handleError);
       
       return () => {
         if (videoRef.current) {
           videoRef.current.removeEventListener('loadedmetadata', handleMetadata);
-          videoRef.current.removeEventListener('timeupdate', () => {});
+          videoRef.current.removeEventListener('error', handleError);
         }
       };
     }
-  }, []);
+  }, [preview.videoUrl]);
   
   const handleMouseEnter = () => {
-    if (videoRef.current) {
+    if (videoRef.current && !videoError) {
       videoRef.current.currentTime = 0;
+      
+      // Usar muted para permitir la reproducción automática
+      videoRef.current.muted = true;
+      
       const playPromise = videoRef.current.play();
       
       if (playPromise !== undefined) {
@@ -87,14 +102,20 @@ const VideoPreviewCard = ({
       onMouseLeave={handleMouseLeave}
     >
       <div className="relative aspect-[4/5]">
-        <video 
-          ref={videoRef}
-          src={preview.videoUrl}
-          className="w-full h-full object-cover"
-          muted
-          playsInline
-          preload="auto"
-        />
+        {videoError ? (
+          <div className="w-full h-full flex items-center justify-center bg-gray-200 dark:bg-gray-800">
+            <VideoOff className="h-16 w-16 text-gray-400" />
+          </div>
+        ) : (
+          <video 
+            ref={videoRef}
+            src={preview.videoUrl}
+            className="w-full h-full object-cover"
+            muted
+            playsInline
+            preload="metadata"
+          />
+        )}
         
         <div className={`absolute inset-0 bg-gradient-to-t from-black via-black/70 to-transparent opacity-60 pointer-events-none transition-opacity duration-300 ${isVideoPlaying ? 'opacity-30' : 'group-hover:opacity-30'}`}></div>
         
