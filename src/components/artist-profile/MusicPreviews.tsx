@@ -1,3 +1,4 @@
+
 import React, { useEffect, useState, useRef } from "react";
 import { Music, Video, Play, Expand, Pause, FileAudio } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
@@ -355,6 +356,7 @@ const VideoPreviewCard = ({
   
   const handleMouseEnter = () => {
     if (videoRef.current) {
+      videoRef.current.currentTime = 0;
       videoRef.current.play().catch(err => {
         console.warn("Error al reproducir el video automáticamente:", err);
       });
@@ -365,6 +367,8 @@ const VideoPreviewCard = ({
   const handleMouseLeave = () => {
     if (videoRef.current) {
       videoRef.current.pause();
+      // Reiniciamos el video al inicio para que la próxima vez empiece desde el principio
+      videoRef.current.currentTime = 0;
       setIsVideoPlaying(false);
     }
   };
