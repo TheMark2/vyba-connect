@@ -81,20 +81,9 @@ const ArtistsList = ({
     };
   }, [artists]);
 
+  // Tamaño consistente para las tarjetas en todos los formatos de pantalla
   const getItemWidth = () => {
-    if (isMobile) {
-      return 'calc(85% - 1rem)'; // Mayor tamaño en móvil para mantener proporción
-    } else if (typeof window !== 'undefined' && window.innerWidth < 768) {
-      return 'calc(75% - 1rem)'; // Mayor tamaño en tablet pequeña
-    } else if (typeof window !== 'undefined' && window.innerWidth < 1024) {
-      return 'calc(45% - 1rem)'; // Mayor tamaño en tablets
-    } else if (typeof window !== 'undefined' && window.innerWidth < 1280) {
-      return 'calc(33% - 1rem)'; // Mayor tamaño en small desktops
-    } else if (typeof window !== 'undefined' && window.innerWidth < 1536) {
-      return 'calc(25% - 1rem)'; // Mayor tamaño en desktops
-    } else {
-      return 'calc(20% - 1rem)'; // Mayor tamaño en pantallas grandes
-    }
+    return "280px"; // Tamaño fijo para todas las tarjetas
   };
 
   return (

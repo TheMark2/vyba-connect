@@ -215,6 +215,12 @@ const MusicPreviews = ({
     };
   }, [previews.length, isNavbarVisible]);
 
+  // Función para mantener un tamaño consistente de las tarjetas en todos los formatos
+  const getCardWidth = () => {
+    // Usamos un tamaño fijo para las tarjetas en todos los formatos de pantalla
+    return "320px"; // Tamaño consistente para todas las tarjetas
+  };
+
   return (
     <div className="mt-8 mb-16">
       <h2 className="text-3xl font-black mb-6">Preview</h2>
@@ -234,15 +240,11 @@ const MusicPreviews = ({
                 {previews.map((preview, index) => (
                   <CarouselItem
                     key={index}
-                    className={`pl-4 ${
-                      windowWidth < 640
-                        ? "basis-[85%]"
-                        : windowWidth < 768
-                        ? "basis-[45%]"
-                        : windowWidth < 1024
-                        ? "basis-1/2"
-                        : "basis-1/3"
-                    }`}
+                    className="pl-4"
+                    style={{
+                      width: getCardWidth(),
+                      flex: `0 0 ${getCardWidth()}`
+                    }}
                   >
                     {preview.image ? (
                       <ImagePreviewCard
@@ -272,7 +274,7 @@ const MusicPreviews = ({
               }`}
             >
               {previews.map((preview, index) => (
-                <div key={index} className="flex-none w-80">
+                <div key={index} style={{ width: getCardWidth(), flex: `0 0 ${getCardWidth()}` }}>
                   {preview.image ? (
                     <ImagePreviewCard
                       preview={preview}
@@ -296,7 +298,9 @@ const MusicPreviews = ({
           )}
 
           {!useCarousel && isNavbarVisible && (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div className="grid gap-6" style={{ 
+              gridTemplateColumns: `repeat(auto-fill, minmax(${getCardWidth()}, 1fr))` 
+            }}>
               {previews.map((preview, index) => (
                 <div key={index}>
                   {preview.image ? (
