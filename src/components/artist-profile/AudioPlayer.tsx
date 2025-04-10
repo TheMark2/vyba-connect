@@ -127,8 +127,8 @@ const AudioPlayer = ({
             {/* Título con efecto marquesina si es necesario */}
             <div className="h-6 overflow-hidden">
               {textOverflow.title ? (
-                <div className="inline-block whitespace-nowrap animate-marquee-bounce">
-                  <div ref={titleRef} className="font-bold text-lg">
+                <div className="whitespace-nowrap animate-marquee-bounce">
+                  <div ref={titleRef} className="font-bold text-lg inline-block">
                     {preview.title}
                   </div>
                 </div>
@@ -142,8 +142,8 @@ const AudioPlayer = ({
             {/* Artista con efecto marquesina si es necesario */}
             <div className="h-5 overflow-hidden">
               {textOverflow.artist ? (
-                <div className="inline-block whitespace-nowrap animate-marquee-bounce">
-                  <div ref={artistRef} className="text-sm text-gray-500 dark:text-gray-400">
+                <div className="whitespace-nowrap animate-marquee-bounce">
+                  <div ref={artistRef} className="text-sm text-gray-500 dark:text-gray-400 inline-block">
                     {artistName}
                   </div>
                 </div>
@@ -175,9 +175,9 @@ const AudioPlayer = ({
               onClick={onPlayPause}
             >
               {isPlaying ? (
-                <Pause className="h-5 w-5" />
+                <Pause className="h-5 w-5 fill-white" />
               ) : (
-                <Play className="h-5 w-5" />
+                <Play className="h-5 w-5 fill-white" />
               )}
             </Button>
           </div>
