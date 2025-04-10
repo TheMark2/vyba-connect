@@ -1,4 +1,3 @@
-
 import React, { useEffect, useState, useRef } from "react";
 import { Music, Video, Play, Expand, Pause, FileAudio } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
@@ -14,6 +13,7 @@ interface MusicPreview {
   image?: string;
   hasVideo?: boolean;
   audioUrl?: string;
+  videoUrl?: string;
 }
 
 interface MusicPreviewsProps {
@@ -70,10 +70,8 @@ const MusicPreviews = ({
       return;
     }
 
-    // Mostrar información completa de la URL de audio
     console.log("URL de audio:", preview.audioUrl);
 
-    // Si ya está reproduciendo esta pista, pausarla
     if (currentlyPlaying === preview.title) {
       if (audioRef.current) {
         console.log("Pausando audio");
@@ -86,23 +84,18 @@ const MusicPreviews = ({
       return;
     }
     
-    // Indicar que está cargando el audio
     setLoadingAudio(preview.title);
     
-    // Intentar reproducir la nueva pista
     if (audioRef.current) {
       console.log("Reproduciendo nuevo audio");
-      // Pausa cualquier reproducción actual
       audioRef.current.pause();
       
       try {
-        // Limpiar eventos anteriores para evitar duplicados
         audioRef.current.oncanplaythrough = null;
         audioRef.current.onerror = null;
         audioRef.current.onloadedmetadata = null;
         audioRef.current.onended = null;
         
-        // Configurar nuevos manejadores de eventos
         audioRef.current.oncanplaythrough = () => {
           console.log("Audio listo para reproducir sin interrupciones");
           if (audioRef.current) {
@@ -141,26 +134,18 @@ const MusicPreviews = ({
           }
         };
         
-        // Importante: establecer la URL antes de cargar
         audioRef.current.src = preview.audioUrl;
-        
-        // Verificar que la URL se ha asignado correctamente
         console.log("URL asignada:", audioRef.current.src);
-        
-        // CORS headers para evitar problemas de permisos
         audioRef.current.crossOrigin = "anonymous";
-        
-        // Cargar el audio para activar oncanplaythrough
         audioRef.current.load();
         
-        // Establecer un timeout para manejar casos donde el audio no se carga
         setTimeout(() => {
           if (loadingAudio === preview.title) {
             console.warn("Timeout de carga de audio");
             setLoadingAudio(null);
             handlePlaybackError(preview);
           }
-        }, 10000); // 10 segundos
+        }, 10000);
       } catch (error) {
         console.error("Error al configurar el audio:", error);
         setLoadingAudio(null);
@@ -215,10 +200,8 @@ const MusicPreviews = ({
     };
   }, [previews.length, isNavbarVisible]);
 
-  // Función para mantener un tamaño consistente de las tarjetas en todos los formatos
   const getCardWidth = () => {
-    // Usamos un tamaño fijo para las tarjetas en todos los formatos de pantalla
-    return "320px"; // Tamaño consistente para todas las tarjetas
+    return "320px";
   };
 
   return (
@@ -246,7 +229,15 @@ const MusicPreviews = ({
                       flex: `0 0 ${getCardWidth()}`
                     }}
                   >
-                    {preview.image ? (
+                    {preview.videoUrl && preview.hasVideo ? (
+                      <VideoPreviewCard
+                        preview={preview}
+                        artistName={artistName}
+                        isPlaying={currentlyPlaying === preview.title}
+                        isLoading={loadingAudio === preview.title}
+                        onPlayPause={() => handlePlayPause(preview)}
+                      />
+                    ) : preview.image ? (
                       <ImagePreviewCard
                         preview={preview}
                         artistName={artistName}
@@ -275,7 +266,15 @@ const MusicPreviews = ({
             >
               {previews.map((preview, index) => (
                 <div key={index} style={{ width: getCardWidth(), flex: `0 0 ${getCardWidth()}` }}>
-                  {preview.image ? (
+                  {preview.videoUrl && preview.hasVideo ? (
+                    <VideoPreviewCard
+                      preview={preview}
+                      artistName={artistName}
+                      isPlaying={currentlyPlaying === preview.title}
+                      isLoading={loadingAudio === preview.title}
+                      onPlayPause={() => handlePlayPause(preview)}
+                    />
+                  ) : preview.image ? (
                     <ImagePreviewCard
                       preview={preview}
                       artistName={artistName}
@@ -303,7 +302,15 @@ const MusicPreviews = ({
             }}>
               {previews.map((preview, index) => (
                 <div key={index}>
-                  {preview.image ? (
+                  {preview.videoUrl && preview.hasVideo ? (
+                    <VideoPreviewCard
+                      preview={preview}
+                      artistName={artistName}
+                      isPlaying={currentlyPlaying === preview.title}
+                      isLoading={loadingAudio === preview.title}
+                      onPlayPause={() => handlePlayPause(preview)}
+                    />
+                  ) : preview.image ? (
                     <ImagePreviewCard
                       preview={preview}
                       artistName={artistName}
@@ -327,6 +334,123 @@ const MusicPreviews = ({
         </>
       )}
     </div>
+  );
+};
+
+const VideoPreviewCard = ({
+  preview,
+  artistName,
+  isPlaying,
+  isLoading,
+  onPlayPause
+}: {
+  preview: MusicPreview;
+  artistName: string;
+  isPlaying: boolean;
+  isLoading?: boolean;
+  onPlayPause: () => void;
+}) => {
+  const videoRef = useRef<HTMLVideoElement>(null);
+  const [isVideoPlaying, setIsVideoPlaying] = useState(false);
+  
+  const handleMouseEnter = () => {
+    if (videoRef.current) {
+      videoRef.current.play().catch(err => {
+        console.warn("Error al reproducir el video automáticamente:", err);
+      });
+      setIsVideoPlaying(true);
+    }
+  };
+  
+  const handleMouseLeave = () => {
+    if (videoRef.current) {
+      videoRef.current.pause();
+      setIsVideoPlaying(false);
+    }
+  };
+  
+  const handlePlay = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    onPlayPause();
+  };
+
+  const handleExpand = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    console.log(`Expandiendo video: ${preview.title}`);
+  };
+
+  const handleCardClick = () => {
+    onPlayPause();
+  };
+
+  return (
+    <Card 
+      className="overflow-hidden rounded-3xl relative group cursor-pointer border-none" 
+      onClick={handleCardClick}
+      onMouseEnter={handleMouseEnter}
+      onMouseLeave={handleMouseLeave}
+    >
+      <div className="relative aspect-[4/5]">
+        <video 
+          ref={videoRef}
+          src={preview.videoUrl}
+          poster={preview.image}
+          className="w-full h-full object-cover"
+          muted
+          loop
+          playsInline
+        />
+        
+        <div className={`absolute inset-0 bg-gradient-to-t from-black via-black/70 to-transparent opacity-60 pointer-events-none transition-opacity duration-300 ${isVideoPlaying ? 'opacity-30' : 'group-hover:opacity-30'}`}></div>
+        
+        <div className="absolute top-5 left-5 flex gap-2">
+          <Badge className="bg-white text-black font-medium px-4 py-2 rounded-full">
+            <Video className="w-4 h-4 mr-1" />
+            Video
+          </Badge>
+          
+          {preview.audioUrl && 
+            <Badge className="bg-white text-black font-medium px-4 py-2 rounded-full">
+              <FileAudio className="w-4 h-4 mr-1" />
+              Audio
+            </Badge>
+          }
+        </div>
+        
+        <Badge 
+          className="absolute top-5 right-5 bg-white text-black font-medium px-4 py-2 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-300 cursor-pointer"
+          onClick={handleExpand}
+        >
+          <Expand className="w-4 h-4 mr-1" />
+          Expandir
+        </Badge>
+        
+        <div className="absolute bottom-0 left-0 right-0 p-7 text-white transition-opacity duration-300 group-hover:opacity-0">
+          <h3 className="text-xl font-black line-clamp-1">{preview.title}</h3>
+          <p className="text-sm text-white/80 mb-5">{artistName}</p>
+        </div>
+
+        <Button 
+          variant="secondary" 
+          size="icon" 
+          className={`absolute bottom-7 left-7 opacity-0 group-hover:opacity-100 transition-opacity duration-300 h-10 w-10 bg-white hover:bg-white/90 text-black ${isLoading ? 'opacity-70 cursor-wait' : ''}`}
+          onClick={handlePlay}
+          disabled={isLoading}
+        >
+          {isLoading ? (
+            <div className="h-5 w-5 border-2 border-black border-t-transparent rounded-full animate-spin"></div>
+          ) : isPlaying ? (
+            <Pause className="h-5 w-5" />
+          ) : (
+            <Play className="h-5 w-5" />
+          )}
+        </Button>
+        
+        <div className="absolute bottom-7 right-7 z-10 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+          <span className="text-sm font-medium text-white bg-black/50 px-2 py-1 rounded-md">{preview.duration}</span>
+        </div>
+      </div>
+    </Card>
   );
 };
 
