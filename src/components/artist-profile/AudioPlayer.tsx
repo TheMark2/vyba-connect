@@ -1,8 +1,10 @@
+
 import React, { useEffect, useState, useRef } from "react";
 import { Slider } from "@/components/ui/slider";
 import { Pause, Play, Rewind, FastForward } from "lucide-react";
 import Image from "@/components/ui/image";
 import { Marquee } from "@/components/ui/marquee";
+
 interface AudioPlayerProps {
   preview: {
     title: string;
@@ -18,6 +20,7 @@ interface AudioPlayerProps {
   onNext?: () => void;
   onPrevious?: () => void;
 }
+
 const AudioPlayer = ({
   preview,
   artistName,
@@ -43,8 +46,24 @@ const AudioPlayer = ({
   const playerRef = useRef<HTMLDivElement>(null);
   const [touchStartX, setTouchStartX] = useState<number | null>(null);
   const [touchEndX, setTouchEndX] = useState<number | null>(null);
+  const previewRef = useRef(preview);
+
+  // Cuando cambia la preview, actualizamos la referencia
+  useEffect(() => {
+    previewRef.current = preview;
+    // Reset del estado cuando cambia la canción
+    setProgress(0);
+    setCurrentTime("0:00");
+    setRemainingTime(`-${preview.duration}`);
+    setDuration(preview.duration);
+    
+    // Verificar overflow de texto con la nueva canción
+    checkTextOverflow();
+  }, [preview]);
+
   useEffect(() => {
     if (!audioRef.current) return;
+    
     const updateProgress = () => {
       if (audioRef.current && !isDragging) {
         const currentTimeValue = audioRef.current.currentTime;
@@ -61,6 +80,7 @@ const AudioPlayer = ({
         setRemainingTime(`-${remainingMinutes}:${remainingSeconds < 10 ? '0' : ''}${remainingSeconds}`);
       }
     };
+
     const handleLoadedMetadata = () => {
       try {
         if (audioRef.current && !isNaN(audioRef.current.duration)) {
@@ -70,27 +90,31 @@ const AudioPlayer = ({
           setDuration(`${minutes}:${seconds < 10 ? '0' : ''}${seconds}`);
           setIsLoading(false);
         } else {
-          setDuration(preview.duration);
+          setDuration(previewRef.current.duration);
           setIsLoading(false);
         }
       } catch (error) {
         console.error("Error al obtener metadatos de audio:", error);
-        setDuration(preview.duration);
+        setDuration(previewRef.current.duration);
         setIsLoading(false);
       }
     };
+
     const handleLoadStart = () => {
       setIsLoading(true);
     };
+
     const handleError = (e: Event) => {
       console.error("Error en AudioPlayer:", e);
       setIsLoading(false);
     };
+
     const audioElement = audioRef.current;
     audioElement.addEventListener('timeupdate', updateProgress);
     audioElement.addEventListener('loadedmetadata', handleLoadedMetadata);
     audioElement.addEventListener('loadstart', handleLoadStart);
     audioElement.addEventListener('error', handleError);
+    
     return () => {
       if (audioElement) {
         audioElement.removeEventListener('timeupdate', updateProgress);
@@ -99,15 +123,11 @@ const AudioPlayer = ({
         audioElement.removeEventListener('error', handleError);
       }
     };
-  }, [audioRef, isDragging, preview.duration]);
-  useEffect(() => {
-    setProgress(0);
-    setCurrentTime("0:00");
-    setRemainingTime(`-${duration}`);
-    setDuration(preview.duration);
-  }, [preview, duration]);
-  useEffect(() => {
-    const checkTextOverflow = () => {
+  }, [audioRef, isDragging]);
+
+  // Función para verificar si el texto está desbordando
+  const checkTextOverflow = () => {
+    setTimeout(() => {
       if (titleRef.current) {
         const isOverflowing = titleRef.current.scrollWidth > titleRef.current.clientWidth;
         setTextOverflow(prev => ({
@@ -122,11 +142,15 @@ const AudioPlayer = ({
           artist: isOverflowing
         }));
       }
-    };
+    }, 100); // Pequeño retraso para asegurar que los elementos se han renderizado
+  };
+
+  useEffect(() => {
     checkTextOverflow();
     window.addEventListener('resize', checkTextOverflow);
     return () => window.removeEventListener('resize', checkTextOverflow);
   }, [preview.title, artistName]);
+
   const handleSliderChange = (value: number[]) => {
     setIsDragging(true);
     if (audioRef.current && audioRef.current.duration) {
@@ -141,6 +165,7 @@ const AudioPlayer = ({
       setRemainingTime(`-${remainingMinutes}:${remainingSeconds < 10 ? '0' : ''}${remainingSeconds}`);
     }
   };
+
   const handleSliderCommit = (value: number[]) => {
     if (audioRef.current && audioRef.current.duration) {
       const newTime = value[0] / 100 * audioRef.current.duration;
@@ -149,49 +174,64 @@ const AudioPlayer = ({
     }
     setTimeout(() => setIsDragging(false), 200);
   };
+
   const handlePlayPauseClick = () => {
     if (isLoading) return;
     onPlayPause();
   };
+
   const handleSkipForward = () => {
     if (!audioRef.current || isLoading) return;
     const newTime = Math.min(audioRef.current.currentTime + 60, audioRef.current.duration || 0);
     audioRef.current.currentTime = newTime;
   };
+
   const handleSkipBackward = () => {
     if (!audioRef.current || isLoading) return;
     const newTime = Math.max(audioRef.current.currentTime - 60, 0);
     audioRef.current.currentTime = newTime;
   };
+
   const handleTouchStart = (e: React.TouchEvent) => {
     setTouchStartX(e.touches[0].clientX);
   };
+
   const handleTouchMove = (e: React.TouchEvent) => {
     setTouchEndX(e.touches[0].clientX);
   };
+
   const handleTouchEnd = () => {
     if (!touchStartX || !touchEndX) return;
     const swipeDistance = touchEndX - touchStartX;
     const minSwipeDistance = 50; // Mínima distancia para considerar como deslizamiento
 
-    if (swipeDistance > minSwipeDistance && onNext) {
-      // Deslizamiento a la derecha (siguiente canción)
-      onNext();
-    } else if (swipeDistance < -minSwipeDistance && onPrevious) {
-      // Deslizamiento a la izquierda (canción anterior)
+    if (swipeDistance > minSwipeDistance && onPrevious) {
+      // Deslizamiento a la derecha (canción anterior)
       onPrevious();
+    } else if (swipeDistance < -minSwipeDistance && onNext) {
+      // Deslizamiento a la izquierda (siguiente canción)
+      onNext();
     }
 
     // Resetear valores
     setTouchStartX(null);
     setTouchEndX(null);
   };
+
   if (isMobile) {
-    return <div className="relative rounded-3xl overflow-hidden" style={{
-      backgroundImage: preview.image ? `url(${preview.image})` : 'none',
-      backgroundSize: 'cover',
-      backgroundPosition: 'center'
-    }} ref={playerRef} onTouchStart={handleTouchStart} onTouchMove={handleTouchMove} onTouchEnd={handleTouchEnd}>
+    return <div 
+      className="relative rounded-3xl overflow-hidden" 
+      style={{
+        backgroundImage: preview.image ? `url(${preview.image})` : 'none',
+        backgroundSize: 'cover',
+        backgroundPosition: 'center'
+      }} 
+      ref={playerRef} 
+      onTouchStart={handleTouchStart} 
+      onTouchMove={handleTouchMove} 
+      onTouchEnd={handleTouchEnd}
+      key={`mobile-player-${preview.title}`} // Clave única para forzar re-render
+    >
         <div className="absolute inset-0 bg-black/30 backdrop-blur-[50px]"></div>
         <div className="relative p-6 pt-6 pb-3 z-10">
           <div className="flex items-center gap-4 mb-4">
@@ -238,7 +278,9 @@ const AudioPlayer = ({
         </div>
       </div>;
   }
-  return <div className="relative rounded-2xl overflow-hidden bg-transparent dark:bg-transparent">
+  
+  // Versión de escritorio
+  return <div className="relative rounded-2xl overflow-hidden bg-transparent dark:bg-transparent" key={`desktop-player-${preview.title}`}>
       <div className="flex flex-col gap-3 rounded-xl">
         <div className="flex items-center gap-4">
           <div className="w-16 h-16 rounded-lg overflow-hidden bg-gray-200 flex-shrink-0">
@@ -295,4 +337,5 @@ const AudioPlayer = ({
       </div>
     </div>;
 };
+
 export default AudioPlayer;

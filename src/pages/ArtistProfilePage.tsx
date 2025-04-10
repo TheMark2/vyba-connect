@@ -197,6 +197,7 @@ const ArtistProfilePage = () => {
   const [showMobileAudioPlayer, setShowMobileAudioPlayer] = useState(true);
   const [showMobileBottomSheet, setShowMobileBottomSheet] = useState(false);
   const [currentPlayingIndex, setCurrentPlayingIndex] = useState<number | null>(null);
+  const [audioPlayerKey, setAudioPlayerKey] = useState(0);
 
   useEffect(() => {
     if (isMobile && aboutMeRef.current) {
@@ -374,6 +375,9 @@ const ArtistProfilePage = () => {
       if (audioRef.current) {
         audioRef.current.pause();
       }
+      
+      setAudioPlayerKey(prev => prev + 1);
+      
       setCurrentPlaying(nextPreview);
       setCurrentPlayingIndex(nextIndex);
       
@@ -408,6 +412,9 @@ const ArtistProfilePage = () => {
       if (audioRef.current) {
         audioRef.current.pause();
       }
+      
+      setAudioPlayerKey(prev => prev + 1);
+      
       setCurrentPlaying(prevPreview);
       setCurrentPlayingIndex(prevIndex);
       
@@ -475,7 +482,7 @@ const ArtistProfilePage = () => {
                 </div>
                 
                 {currentPlaying && (
-                  <div className="bg-[#F7F7F7] dark:bg-vyba-dark-secondary/40 py-5 px-6 rounded-3xl sticky top-[calc(24rem+1.5rem)] h-fit">
+                  <div className="bg-[#F7F7F7] dark:bg-vyba-dark-secondary/40 py-5 px-6 rounded-3xl sticky top-[calc(24rem+1.5rem)] h-fit" key={`desktop-player-container-${audioPlayerKey}`}>
                     <AudioPlayer 
                       preview={currentPlaying} 
                       artistName={artist.name} 
@@ -505,6 +512,7 @@ const ArtistProfilePage = () => {
           audioRef={audioRef}
           onNextTrack={handleNextTrack}
           onPreviousTrack={handlePreviousTrack}
+          key={`mobile-sheet-${audioPlayerKey}`}
         />
       )}
       

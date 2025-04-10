@@ -1,5 +1,5 @@
 
-import React from "react";
+import React, { useEffect, useState } from "react";
 import SwipeableBottomSheet from "react-swipeable-bottom-sheet";
 import ContactCard from "./ContactCard";
 import AudioPlayer from "./AudioPlayer";
@@ -38,6 +38,16 @@ const MobileBottomSheet = ({
   // Altura para asegurar que la tarjeta de contacto se vea completa
   const contactCardHeight = 200;
   
+  // Estado para forzar la re-renderización cuando cambia la canción
+  const [playerKey, setPlayerKey] = useState(0);
+  
+  // Actualizar la clave cuando cambia la canción para forzar re-renderizado
+  useEffect(() => {
+    if (currentPlaying) {
+      setPlayerKey(prevKey => prevKey + 1);
+    }
+  }, [currentPlaying]);
+  
   return (
     <SwipeableBottomSheet
       overflowHeight={contactCardHeight}
@@ -60,7 +70,7 @@ const MobileBottomSheet = ({
         />
         
         {currentPlaying && (
-          <div className="mt-4">
+          <div className="mt-4" key={`player-container-${playerKey}`}>
             <AudioPlayer 
               preview={currentPlaying} 
               artistName={artistContact.name} 
