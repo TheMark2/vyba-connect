@@ -3,7 +3,6 @@ import { Slider } from "@/components/ui/slider";
 import { Pause, Play, Rewind, FastForward } from "lucide-react";
 import Image from "@/components/ui/image";
 import { Marquee } from "@/components/ui/marquee";
-
 interface AudioPlayerProps {
   preview: {
     title: string;
@@ -17,7 +16,6 @@ interface AudioPlayerProps {
   audioRef: React.RefObject<HTMLAudioElement>;
   isMobile?: boolean;
 }
-
 const AudioPlayer = ({
   preview,
   artistName,
@@ -38,10 +36,8 @@ const AudioPlayer = ({
   const [isLoading, setIsLoading] = useState(false);
   const titleRef = useRef<HTMLDivElement>(null);
   const artistRef = useRef<HTMLDivElement>(null);
-  
   useEffect(() => {
     if (!audioRef.current) return;
-    
     const updateProgress = () => {
       if (audioRef.current && !isDragging) {
         const currentTimeValue = audioRef.current.currentTime;
@@ -52,14 +48,12 @@ const AudioPlayer = ({
         const minutes = Math.floor(currentTimeValue / 60);
         const seconds = Math.floor(currentTimeValue % 60);
         setCurrentTime(`${minutes}:${seconds < 10 ? '0' : ''}${seconds}`);
-        
         const remainingTimeValue = durationValue - currentTimeValue;
         const remainingMinutes = Math.floor(remainingTimeValue / 60);
         const remainingSeconds = Math.floor(remainingTimeValue % 60);
         setRemainingTime(`-${remainingMinutes}:${remainingSeconds < 10 ? '0' : ''}${remainingSeconds}`);
       }
     };
-    
     const handleLoadedMetadata = () => {
       try {
         if (audioRef.current && !isNaN(audioRef.current.duration)) {
@@ -78,22 +72,18 @@ const AudioPlayer = ({
         setIsLoading(false);
       }
     };
-    
     const handleLoadStart = () => {
       setIsLoading(true);
     };
-    
     const handleError = (e: Event) => {
       console.error("Error en AudioPlayer:", e);
       setIsLoading(false);
     };
-    
     const audioElement = audioRef.current;
     audioElement.addEventListener('timeupdate', updateProgress);
     audioElement.addEventListener('loadedmetadata', handleLoadedMetadata);
     audioElement.addEventListener('loadstart', handleLoadStart);
     audioElement.addEventListener('error', handleError);
-    
     return () => {
       if (audioElement) {
         audioElement.removeEventListener('timeupdate', updateProgress);
@@ -103,14 +93,12 @@ const AudioPlayer = ({
       }
     };
   }, [audioRef, isDragging, preview.duration]);
-  
   useEffect(() => {
     setProgress(0);
     setCurrentTime("0:00");
     setRemainingTime(`-${duration}`);
     setDuration(preview.duration);
   }, [preview, duration]);
-  
   useEffect(() => {
     const checkTextOverflow = () => {
       if (titleRef.current) {
@@ -132,24 +120,20 @@ const AudioPlayer = ({
     window.addEventListener('resize', checkTextOverflow);
     return () => window.removeEventListener('resize', checkTextOverflow);
   }, [preview.title, artistName]);
-  
   const handleSliderChange = (value: number[]) => {
     setIsDragging(true);
     if (audioRef.current && audioRef.current.duration) {
       const newTime = value[0] / 100 * audioRef.current.duration;
       setProgress(value[0]);
-
       const minutes = Math.floor(newTime / 60);
       const seconds = Math.floor(newTime % 60);
       setCurrentTime(`${minutes}:${seconds < 10 ? '0' : ''}${seconds}`);
-      
       const remainingTime = audioRef.current.duration - newTime;
       const remainingMinutes = Math.floor(remainingTime / 60);
       const remainingSeconds = Math.floor(remainingTime % 60);
       setRemainingTime(`-${remainingMinutes}:${remainingSeconds < 10 ? '0' : ''}${remainingSeconds}`);
     }
   };
-  
   const handleSliderCommit = (value: number[]) => {
     if (audioRef.current && audioRef.current.duration) {
       const newTime = value[0] / 100 * audioRef.current.duration;
@@ -158,44 +142,33 @@ const AudioPlayer = ({
     }
     setTimeout(() => setIsDragging(false), 200);
   };
-  
   const handlePlayPauseClick = () => {
     if (isLoading) return;
     onPlayPause();
   };
-  
   const handleSkipForward = () => {
     if (!audioRef.current || isLoading) return;
     const newTime = Math.min(audioRef.current.currentTime + 60, audioRef.current.duration || 0);
     audioRef.current.currentTime = newTime;
   };
-  
   const handleSkipBackward = () => {
     if (!audioRef.current || isLoading) return;
     const newTime = Math.max(audioRef.current.currentTime - 60, 0);
     audioRef.current.currentTime = newTime;
   };
-
   if (isMobile) {
-    return (
-      <div 
-        className="relative rounded-3xl overflow-hidden"
-        style={{
-          backgroundImage: preview.image ? `url(${preview.image})` : 'none',
-          backgroundSize: 'cover',
-          backgroundPosition: 'center'
-        }}
-      >
+    return <div className="relative rounded-3xl overflow-hidden" style={{
+      backgroundImage: preview.image ? `url(${preview.image})` : 'none',
+      backgroundSize: 'cover',
+      backgroundPosition: 'center'
+    }}>
         <div className="absolute inset-0 bg-black/30 backdrop-blur-[50px]"></div>
         <div className="relative p-5 pt-5 pb-3 z-10">
           <div className="flex items-center gap-4 mb-4">
             <div className="w-20 h-20 rounded-2xl overflow-hidden bg-gray-200 flex-shrink-0">
-              {preview.image ? 
-                <Image src={preview.image} alt={preview.title} className="w-full h-full object-cover" /> : 
-                <div className="w-full h-full bg-gray-200 flex items-center justify-center text-gray-400">
+              {preview.image ? <Image src={preview.image} alt={preview.title} className="w-full h-full object-cover" /> : <div className="w-full h-full bg-gray-200 flex items-center justify-center text-gray-400">
                   <span>No image</span>
-                </div>
-              }
+                </div>}
             </div>
             
             <div className="flex-grow text-white overflow-hidden">
@@ -204,85 +177,38 @@ const AudioPlayer = ({
                   <div className="font-black text-lg">{preview.title}</div>
                 </Marquee>
               </div>
-              <div className="text-sm opacity-90 font-medium">{artistName}</div>
+              <div className="text-md opacity-90 font-medium">{artistName}</div>
             </div>
           </div>
           
           <div className="mb-2">
             <div className="flex items-center gap-2 mb-1">
               <span className="text-xs text-white min-w-[35px]">{currentTime}</span>
-              <Slider 
-                value={[progress]} 
-                min={0} 
-                max={100} 
-                step={0.1} 
-                onValueChange={handleSliderChange} 
-                onValueCommit={handleSliderCommit} 
-                className="flex-grow"
-              />
+              <Slider value={[progress]} min={0} max={100} step={0.1} onValueChange={handleSliderChange} onValueCommit={handleSliderCommit} className="flex-grow" />
               <span className="text-xs text-white min-w-[35px] text-right">{remainingTime}</span>
             </div>
           </div>
           
           <div className="flex justify-center items-center gap-3 mt-2">
-            <button 
-              className="text-white relative overflow-hidden w-10 h-10 flex items-center justify-center"
-              onClick={handleSkipBackward}
-              disabled={isLoading}
-            >
-              <Rewind
-                className="h-6 w-6"
-                fill="white"
-                fillOpacity="1"
-                stroke="none"
-              />
+            <button className="text-white relative overflow-hidden w-10 h-10 flex items-center justify-center" onClick={handleSkipBackward} disabled={isLoading}>
+              <Rewind className="h-6 w-6" fill="white" fillOpacity="1" stroke="none" />
             </button>
-            <button 
-              className="text-white relative overflow-hidden w-12 h-12 flex items-center justify-center"
-              onClick={handlePlayPauseClick}
-              disabled={isLoading}
-            >
-              {isLoading ? (
-                <div className="h-5 w-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
-              ) : (
-                <div className="relative z-10 flex items-center justify-center w-10 h-10">
-                  <Pause
-                    className={`absolute h-7 w-7 transition-all duration-300 
-                      ${isPlaying ? 'opacity-100 scale-100' : 'opacity-0 scale-50'}`}
-                    fill="white"
-                    fillOpacity="1"
-                    stroke="none"
-                  />
-                  <Play
-                    className={`absolute h-7 w-7 transition-all duration-300 
-                      ${isPlaying ? 'opacity-0 scale-50' : 'opacity-100 scale-100'}`}
-                    fill="white"
-                    fillOpacity="1"
-                    stroke="none"
-                  />
-                </div>
-              )}
+            <button className="text-white relative overflow-hidden w-12 h-12 flex items-center justify-center" onClick={handlePlayPauseClick} disabled={isLoading}>
+              {isLoading ? <div className="h-5 w-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div> : <div className="relative z-10 flex items-center justify-center w-10 h-10">
+                  <Pause className={`absolute h-7 w-7 transition-all duration-300 
+                      ${isPlaying ? 'opacity-100 scale-100' : 'opacity-0 scale-50'}`} fill="white" fillOpacity="1" stroke="none" />
+                  <Play className={`absolute h-7 w-7 transition-all duration-300 
+                      ${isPlaying ? 'opacity-0 scale-50' : 'opacity-100 scale-100'}`} fill="white" fillOpacity="1" stroke="none" />
+                </div>}
             </button>
-            <button 
-              className="text-white relative overflow-hidden w-10 h-10 flex items-center justify-center"
-              onClick={handleSkipForward}
-              disabled={isLoading}
-            >
-              <FastForward
-                className="h-6 w-6"
-                fill="white"
-                fillOpacity="1"
-                stroke="none"
-              />
+            <button className="text-white relative overflow-hidden w-10 h-10 flex items-center justify-center" onClick={handleSkipForward} disabled={isLoading}>
+              <FastForward className="h-6 w-6" fill="white" fillOpacity="1" stroke="none" />
             </button>
           </div>
         </div>
-      </div>
-    );
+      </div>;
   }
-  
-  return (
-    <div className="relative rounded-2xl overflow-hidden bg-transparent dark:bg-transparent">
+  return <div className="relative rounded-2xl overflow-hidden bg-transparent dark:bg-transparent">
       <div className="flex flex-col gap-3 rounded-xl">
         <div className="flex items-center gap-4">
           <div className="w-16 h-16 rounded-lg overflow-hidden bg-gray-200 flex-shrink-0">
@@ -322,39 +248,21 @@ const AudioPlayer = ({
           </div>
           
           <div className="flex justify-center items-center gap-2 mt-2">
-            <button 
-              className="h-8 w-8 bg-gray-200 dark:bg-vyba-dark-secondary text-gray-700 dark:text-white rounded-full relative overflow-hidden"
-              onClick={handleSkipBackward}
-              disabled={isLoading}
-            >
+            <button className="h-8 w-8 bg-gray-200 dark:bg-vyba-dark-secondary text-gray-700 dark:text-white rounded-full relative overflow-hidden" onClick={handleSkipBackward} disabled={isLoading}>
               <Rewind className="h-4 w-4 mx-auto" fill="currentColor" stroke="none" />
             </button>
-            <button 
-              className={`h-10 w-10 ${isPlaying ? 'bg-green-500 hover:bg-green-600' : 'bg-blue-500 hover:bg-blue-600'} text-white rounded-full relative overflow-hidden ${isLoading ? 'opacity-70 cursor-wait' : ''}`} 
-              onClick={handlePlayPauseClick}
-              disabled={isLoading}
-            >
-              {isLoading ? (
-                <div className="h-5 w-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
-              ) : (
-                <div className="relative z-10 flex items-center justify-center w-5 h-5">
+            <button className={`h-10 w-10 ${isPlaying ? 'bg-green-500 hover:bg-green-600' : 'bg-blue-500 hover:bg-blue-600'} text-white rounded-full relative overflow-hidden ${isLoading ? 'opacity-70 cursor-wait' : ''}`} onClick={handlePlayPauseClick} disabled={isLoading}>
+              {isLoading ? <div className="h-5 w-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div> : <div className="relative z-10 flex items-center justify-center w-5 h-5">
                   <Pause className={`absolute h-5 w-5 fill-white transition-all duration-300 ${isPlaying ? 'opacity-100 scale-100' : 'opacity-0 scale-50'}`} />
                   <Play className={`absolute h-5 w-5 fill-white transition-all duration-300 ${isPlaying ? 'opacity-0 scale-50' : 'opacity-100 scale-100'}`} />
-                </div>
-              )}
+                </div>}
             </button>
-            <button 
-              className="h-8 w-8 bg-gray-200 dark:bg-vyba-dark-secondary text-gray-700 dark:text-white rounded-full relative overflow-hidden"
-              onClick={handleSkipForward}
-              disabled={isLoading}
-            >
+            <button className="h-8 w-8 bg-gray-200 dark:bg-vyba-dark-secondary text-gray-700 dark:text-white rounded-full relative overflow-hidden" onClick={handleSkipForward} disabled={isLoading}>
               <FastForward className="h-4 w-4 mx-auto" fill="currentColor" stroke="none" />
             </button>
           </div>
         </div>
       </div>
-    </div>
-  );
+    </div>;
 };
-
 export default AudioPlayer;
