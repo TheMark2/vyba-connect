@@ -1,4 +1,3 @@
-
 import React, { useState, useRef, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { toast } from "sonner";
@@ -44,11 +43,11 @@ const artistsData = [{
       audioUrl: "https://assets.mixkit.co/music/preview/mixkit-tech-house-vibes-130.mp3"
     }, 
     {
-      title: "Sesión Urbana Remix",
-      duration: "1:33",
+      title: "Moscow Mule - Bad Bunny",
+      duration: "2:47",
       image: "https://images.unsplash.com/photo-1514525253161-7a46d19cd819?q=80&w=1000",
       hasVideo: true,
-      videoUrl: "/videos/dj-mujer-1.mp4",
+      videoUrl: "/lovable-uploads/Bad Bunny - Moscow Mule (Video Oficial)  Un Verano Sin Ti.mp4",
       audioUrl: "https://assets.mixkit.co/music/preview/mixkit-hip-hop-02-614.mp3"
     }, 
     {
@@ -57,11 +56,11 @@ const artistsData = [{
       audioUrl: "https://assets.mixkit.co/music/preview/mixkit-hip-hop-03-612.mp3"
     },
     {
-      title: "Deep House Experience",
-      duration: "1:52",
+      title: "La Plena - Beéle, Westcol",
+      duration: "3:15",
       image: "https://images.unsplash.com/photo-1429962714451-bb934ecdc4ec?q=80&w=2070",
       hasVideo: true,
-      videoUrl: "/videos/dj-hombre-1.mp4",
+      videoUrl: "/lovable-uploads/W Sound 05 LA PLENA - Beéle, Westcol, Ovy On The Drums.mp4",
       audioUrl: "https://assets.mixkit.co/music/preview/mixkit-a-very-happy-christmas-897.mp3"
     },
     {

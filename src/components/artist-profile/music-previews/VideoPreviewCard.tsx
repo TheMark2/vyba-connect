@@ -22,7 +22,7 @@ const VideoPreviewCard = ({
   
   // Verificar si es un video de YouTube o un video local/web
   const isYoutubeVideo = preview.videoUrl?.includes('youtube.com') || preview.videoUrl?.includes('youtu.be');
-  const isLocalVideo = preview.videoUrl?.startsWith('/') || preview.videoUrl?.startsWith('./');
+  const isLocalVideo = !isYoutubeVideo && preview.videoUrl !== undefined;
   
   const getYoutubeEmbedUrl = (url: string) => {
     if (!url) return '';
