@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect, useRef } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { Button } from "@/components/ui/button";
@@ -197,15 +196,15 @@ const MobileMenu = ({ isOpen, onClose }: MobileMenuProps) => {
               </div>
             </Link>
             <Link 
-              to="/artistas" 
-              className={`px-4 py-3 rounded-lg ${isActive('/artistas') ? 'bg-[#F8F8F8] dark:bg-vyba-dark-secondary' : 'hover:bg-[#F8F8F8] dark:hover:bg-vyba-dark-secondary'} text-black dark:text-white font-medium transition-all duration-200 animate-menu-item`}
+              to="/artists" 
+              className={`px-4 py-3 rounded-lg ${isActive('/artists') ? 'bg-[#F8F8F8] dark:bg-vyba-dark-secondary' : 'hover:bg-[#F8F8F8] dark:hover:bg-vyba-dark-secondary'} text-black dark:text-white font-medium transition-all duration-200 animate-menu-item`}
               onClick={handleLinkClick}
               style={{ animationDelay: "100ms" }}
             >
               <div className="flex items-center space-x-3">
                 <Users 
-                  className={`h-5 w-5 ${isActive('/artistas') ? 'text-gray-800 dark:text-white' : 'hover:text-gray-800 dark:hover:text-white'}`} 
-                  strokeWidth={isActive('/artistas') ? 2.5 : 2}
+                  className={`h-5 w-5 ${isActive('/artists') ? 'text-gray-800 dark:text-white' : 'hover:text-gray-800 dark:hover:text-white'}`} 
+                  strokeWidth={isActive('/artists') ? 2.5 : 2}
                 />
                 <span>Artistas</span>
               </div>
