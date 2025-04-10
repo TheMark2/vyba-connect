@@ -6,6 +6,7 @@ import { Badge } from "@/components/ui/badge";
 import { Carousel, CarouselContent, CarouselItem } from "@/components/ui/carousel";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { Button } from "@/components/ui/button";
+import { toast } from "sonner";
 
 interface MusicPreview {
   title: string;
@@ -34,8 +35,68 @@ const MusicPreviews = ({
   const [useCarousel, setUseCarousel] = useState(isMobile || previews.length > 3);
   const [isNavbarVisible, setIsNavbarVisible] = useState(true);
   const [currentlyPlaying, setCurrentlyPlaying] = useState<string | null>(null);
+  const [trackDurations, setTrackDurations] = useState<Record<string, string>>({});
+  
+  // Crear un pequeño audio oculto para cargar los tracks y obtener su duración real
+  const preloadAudioRef = useRef<HTMLAudioElement | null>(null);
 
   const observerRef = useRef<IntersectionObserver | null>(null);
+
+  useEffect(() => {
+    // Crear el elemento de audio para precargar
+    if (!preloadAudioRef.current) {
+      preloadAudioRef.current = new Audio();
+    }
+
+    // Función para precargar los tracks y obtener su duración
+    const preloadTracks = async () => {
+      const durations: Record<string, string> = {};
+      
+      for (const preview of previews) {
+        if (preview.audioUrl) {
+          try {
+            const audio = new Audio(preview.audioUrl);
+            
+            // Esperar a que se carguen los metadatos
+            await new Promise<void>((resolve) => {
+              audio.addEventListener('loadedmetadata', () => {
+                if (!isNaN(audio.duration)) {
+                  const minutes = Math.floor(audio.duration / 60);
+                  const seconds = Math.floor(audio.duration % 60);
+                  durations[preview.title] = `${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
+                } else {
+                  durations[preview.title] = preview.duration; // Usar la duración proporcionada si no se puede obtener
+                }
+                resolve();
+              }, { once: true });
+              
+              audio.addEventListener('error', () => {
+                console.error(`Error al cargar el audio: ${preview.title}`);
+                durations[preview.title] = preview.duration; // Usar la duración proporcionada en caso de error
+                resolve();
+              }, { once: true });
+            });
+          } catch (error) {
+            console.error(`Error al precargar: ${preview.title}`, error);
+            durations[preview.title] = preview.duration;
+          }
+        } else {
+          durations[preview.title] = preview.duration;
+        }
+      }
+      
+      setTrackDurations(durations);
+    };
+    
+    preloadTracks();
+    
+    return () => {
+      if (preloadAudioRef.current) {
+        preloadAudioRef.current.pause();
+        preloadAudioRef.current.src = '';
+      }
+    };
+  }, [previews]);
 
   useEffect(() => {
     const detectNavbarVisibility = () => {
@@ -64,6 +125,7 @@ const MusicPreviews = ({
     
     if (!preview.audioUrl) {
       console.log(`No hay URL de audio para: ${preview.title}`);
+      toast.error("Este preview no tiene audio disponible");
       return;
     }
 
@@ -99,11 +161,17 @@ const MusicPreviews = ({
               console.log("Reproducción iniciada correctamente");
               setCurrentlyPlaying(preview.title);
               if (onPlaybackState) {
-                onPlaybackState(preview, true);
+                // Crear una copia del preview con la duración actualizada
+                const updatedPreview = {
+                  ...preview,
+                  duration: trackDurations[preview.title] || preview.duration
+                };
+                onPlaybackState(updatedPreview, true);
               }
             })
             .catch(error => {
               console.error("Error al reproducir audio:", error);
+              toast.error("Error al reproducir el audio. Inténtalo de nuevo.");
               // Intentar reproducir de nuevo después de la interacción del usuario
               audioRef.current?.addEventListener('canplaythrough', () => {
                 audioRef.current?.play().catch(e => console.error("Error en segundo intento:", e));
@@ -158,6 +226,30 @@ const MusicPreviews = ({
     };
   }, [previews.length, isNavbarVisible]);
 
+  // Ejemplos de audio para pruebas
+  const examplePreviews = [
+    {
+      title: "Chill Beats Mix 2023",
+      duration: "3:45",
+      image: "https://images.unsplash.com/photo-1511379938547-c1f69419868d?q=80&w=1000",
+      audioUrl: "https://assets.mixkit.co/music/preview/mixkit-tech-house-vibes-130.mp3"
+    },
+    {
+      title: "Summer House Party",
+      duration: "2:50",
+      image: "https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?q=80&w=1000",
+      audioUrl: "https://assets.mixkit.co/music/preview/mixkit-deep-urban-623.mp3"
+    },
+    {
+      title: "Electronic Dreams",
+      duration: "4:10",
+      audioUrl: "https://assets.mixkit.co/music/preview/mixkit-hip-hop-02-738.mp3"
+    }
+  ];
+
+  // Usar los previews proporcionados o los ejemplos si no hay ninguno
+  const displayPreviews = previews.length > 0 ? previews : examplePreviews;
+
   return (
     <div className="mt-8 mb-16">
       <h2 className="text-3xl font-black mb-6">Preview</h2>
@@ -165,7 +257,7 @@ const MusicPreviews = ({
       {/* Elemento de audio oculto */}
       {/* No es necesario aquí porque usamos el audioRef del componente padre */}
       
-      {previews?.length > 0 && (
+      {displayPreviews?.length > 0 && (
         <>
           {useCarousel ? (
             <Carousel
@@ -177,7 +269,7 @@ const MusicPreviews = ({
               className="w-full"
             >
               <CarouselContent className="-ml-4">
-                {previews.map((preview, index) => (
+                {displayPreviews.map((preview, index) => (
                   <CarouselItem
                     key={index}
                     className={`pl-4 ${
@@ -192,14 +284,20 @@ const MusicPreviews = ({
                   >
                     {preview.image ? (
                       <ImagePreviewCard
-                        preview={preview}
+                        preview={{
+                          ...preview,
+                          duration: trackDurations[preview.title] || preview.duration
+                        }}
                         artistName={artistName}
                         isPlaying={currentlyPlaying === preview.title}
                         onPlayPause={() => handlePlayPause(preview)}
                       />
                     ) : (
                       <NoImagePreviewCard
-                        preview={preview}
+                        preview={{
+                          ...preview,
+                          duration: trackDurations[preview.title] || preview.duration
+                        }}
                         artistName={artistName}
                         isPlaying={currentlyPlaying === preview.title}
                         onPlayPause={() => handlePlayPause(preview)}
@@ -215,18 +313,24 @@ const MusicPreviews = ({
                 isNavbarVisible ? "hidden" : ""
               }`}
             >
-              {previews.map((preview, index) => (
+              {displayPreviews.map((preview, index) => (
                 <div key={index} className="flex-none w-80">
                   {preview.image ? (
                     <ImagePreviewCard
-                      preview={preview}
+                      preview={{
+                        ...preview,
+                        duration: trackDurations[preview.title] || preview.duration
+                      }}
                       artistName={artistName}
                       isPlaying={currentlyPlaying === preview.title}
                       onPlayPause={() => handlePlayPause(preview)}
                     />
                   ) : (
                     <NoImagePreviewCard
-                      preview={preview}
+                      preview={{
+                        ...preview,
+                        duration: trackDurations[preview.title] || preview.duration
+                      }}
                       artistName={artistName}
                       isPlaying={currentlyPlaying === preview.title}
                       onPlayPause={() => handlePlayPause(preview)}
@@ -239,18 +343,24 @@ const MusicPreviews = ({
 
           {!useCarousel && isNavbarVisible && (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {previews.map((preview, index) => (
+              {displayPreviews.map((preview, index) => (
                 <div key={index}>
                   {preview.image ? (
                     <ImagePreviewCard
-                      preview={preview}
+                      preview={{
+                        ...preview,
+                        duration: trackDurations[preview.title] || preview.duration
+                      }}
                       artistName={artistName}
                       isPlaying={currentlyPlaying === preview.title}
                       onPlayPause={() => handlePlayPause(preview)}
                     />
                   ) : (
                     <NoImagePreviewCard
-                      preview={preview}
+                      preview={{
+                        ...preview,
+                        duration: trackDurations[preview.title] || preview.duration
+                      }}
                       artistName={artistName}
                       isPlaying={currentlyPlaying === preview.title}
                       onPlayPause={() => handlePlayPause(preview)}
@@ -291,9 +401,17 @@ const ImagePreviewCard = ({
     onPlayPause();
   };
 
-  return <Card className="overflow-hidden rounded-3xl relative group cursor-pointer border-none" onClick={handleCardClick}>
+  return (
+    <Card 
+      className="overflow-hidden rounded-3xl relative group cursor-pointer border-none" 
+      onClick={handleCardClick}
+    >
       <div className="relative aspect-[4/5]">
-        <img src={preview.image} alt={preview.title} className="w-full h-full object-cover" />
+        <img 
+          src={preview.image} 
+          alt={preview.title} 
+          className="w-full h-full object-cover" 
+        />
         
         <div className="absolute inset-0 bg-gradient-to-t from-black via-black/70 to-transparent opacity-60 pointer-events-none transition-opacity duration-300 group-hover:opacity-0"></div>
         
@@ -345,7 +463,8 @@ const ImagePreviewCard = ({
           <span className="text-sm font-medium text-white bg-black/50 px-2 py-1 rounded-md">{preview.duration}</span>
         </div>
       </div>
-    </Card>;
+    </Card>
+  );
 };
 
 const NoImagePreviewCard = ({
@@ -368,7 +487,11 @@ const NoImagePreviewCard = ({
     onPlayPause();
   };
 
-  return <Card className="overflow-hidden rounded-3xl relative group cursor-pointer border-none bg-[#F7F7F7] dark:bg-vyba-dark-secondary/40" onClick={handleCardClick}>
+  return (
+    <Card 
+      className="overflow-hidden rounded-3xl relative group cursor-pointer border-none bg-[#F7F7F7] dark:bg-vyba-dark-secondary/40" 
+      onClick={handleCardClick}
+    >
       <div className="relative aspect-[4/5] flex flex-col items-center justify-center p-7">
         <div className="mb-5 opacity-80 group-hover:opacity-40 transition-opacity duration-300">
           <Music className="w-20 h-20 stroke-1" />
@@ -396,7 +519,8 @@ const NoImagePreviewCard = ({
           <span className="text-sm font-medium dark:text-white bg-gray-200 dark:bg-black/50 px-2 py-1 rounded-md">{preview.duration}</span>
         </div>
       </div>
-    </Card>;
+    </Card>
+  );
 };
 
 export default MusicPreviews;
