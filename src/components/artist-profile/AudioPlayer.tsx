@@ -93,46 +93,51 @@ const AudioPlayer = ({
         </div>
       )}
       
-      <div className="flex items-center gap-4">
-        {/* Imagen de la canción */}
-        <div className="w-16 h-16 rounded-lg overflow-hidden bg-gray-200 flex-shrink-0">
-          {preview.image ? (
-            <Image 
-              src={preview.image} 
-              alt={preview.title} 
-              className="w-full h-full object-cover"
-            />
-          ) : (
-            <div className="w-full h-full bg-gray-200 flex items-center justify-center text-gray-400">
-              <span>No image</span>
-            </div>
-          )}
-        </div>
-        
-        <div className="flex-grow">
-          {/* Información de la canción */}
-          <div className="flex items-center gap-4">
-            <Button 
-              variant="secondary" 
-              size="icon" 
-              className="h-10 w-10"
-              onClick={onPlayPause}
-            >
-              {isPlaying ? (
-                <Pause className="h-5 w-5" />
-              ) : (
-                <Play className="h-5 w-5" />
-              )}
-            </Button>
-            
-            <div>
+      <div className="flex flex-col gap-4 rounded-xl">
+        {/* Cabecera: Imagen y título */}
+        <div className="flex items-center gap-4">
+          {/* Imagen de la canción */}
+          <div className="w-16 h-16 rounded-lg overflow-hidden bg-gray-200 flex-shrink-0">
+            {preview.image ? (
+              <Image 
+                src={preview.image} 
+                alt={preview.title} 
+                className="w-full h-full object-cover"
+              />
+            ) : (
+              <div className="w-full h-full bg-gray-200 flex items-center justify-center text-gray-400">
+                <span>No image</span>
+              </div>
+            )}
+          </div>
+          
+          <div className="flex-grow">
+            {/* Información de la canción */}
+            <div className="flex flex-col">
               <h3 className="font-bold text-lg line-clamp-1">{preview.title}</h3>
               <p className="text-sm text-gray-500 dark:text-gray-400">{artistName}</p>
             </div>
           </div>
+        </div>
+        
+        {/* Controles y barra de progreso */}
+        <div>
+          {/* Botón de reproducción */}
+          <Button 
+            variant="secondary" 
+            size="icon" 
+            className="h-10 w-10 mb-2"
+            onClick={onPlayPause}
+          >
+            {isPlaying ? (
+              <Pause className="h-5 w-5" />
+            ) : (
+              <Play className="h-5 w-5" />
+            )}
+          </Button>
           
           {/* Barra de progreso */}
-          <div className="mt-2">
+          <div>
             <div className="relative">
               <Progress value={progress} className="h-1" />
               <div className="flex justify-between text-xs text-gray-500 dark:text-gray-400 mt-1">

@@ -1,4 +1,3 @@
-
 import React, { useState, useRef, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { toast } from "sonner";
@@ -221,13 +220,10 @@ const ArtistProfilePage = () => {
   const [isAudioPlaying, setIsAudioPlaying] = useState(false);
   const audioRef = useRef<HTMLAudioElement>(null);
   
-  // Creamos el elemento de audio directamente en el DOM
   useEffect(() => {
-    // Crear el elemento de audio si no existe
     if (!audioRef.current) {
       audioRef.current = new Audio();
       
-      // Configurar eventos
       audioRef.current.addEventListener('ended', () => {
         setIsAudioPlaying(false);
       });
@@ -238,7 +234,6 @@ const ArtistProfilePage = () => {
       });
     }
     
-    // Limpiar al desmontar
     return () => {
       if (audioRef.current) {
         audioRef.current.pause();
@@ -284,16 +279,12 @@ const ArtistProfilePage = () => {
     toast.success(`Buscando más artistas de ${genre}`, {
       position: "bottom-center"
     });
-    // Aquí podríamos navegar a una página de búsqueda filtrada por género
-    // navigate(`/artistas?genero=${genre}`);
   };
   
   const handleEventTypeClick = (eventType: string) => {
     toast.success(`Buscando artistas para ${eventType}`, {
       position: "bottom-center"
     });
-    // Aquí podríamos navegar a una página de búsqueda filtrada por tipo de evento
-    // navigate(`/artistas?evento=${eventType}`);
   };
 
   const artistContactData = {
@@ -387,7 +378,7 @@ const ArtistProfilePage = () => {
                 </div>
                 
                 {currentPlaying && (
-                  <div className="bg-[#F7F7F7] dark:bg-vyba-dark-secondary/40 py-5 px-6 rounded-xl border-t border-gray-200 dark:border-gray-800 sticky top-[calc(24rem+1.5rem)] h-fit">
+                  <div className="bg-[#F7F7F7] dark:bg-vyba-dark-secondary/40 py-5 px-6 rounded-xl sticky top-[calc(24rem+1.5rem)] h-fit">
                     <AudioPlayer 
                       preview={currentPlaying}
                       artistName={artist.name}
