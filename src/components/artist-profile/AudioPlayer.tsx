@@ -1,6 +1,7 @@
+
 import React, { useEffect, useState, useRef } from "react";
 import { Slider } from "@/components/ui/slider";
-import { Pause, Play } from "lucide-react";
+import { Pause, Play, SkipBack, SkipForward } from "lucide-react";
 import Image from "@/components/ui/image";
 import { Marquee } from "@/components/ui/marquee";
 
@@ -28,6 +29,7 @@ const AudioPlayer = ({
 }: AudioPlayerProps) => {
   const [progress, setProgress] = useState(0);
   const [currentTime, setCurrentTime] = useState("0:00");
+  const [remainingTime, setRemainingTime] = useState("0:00");
   const [duration, setDuration] = useState(preview.duration);
   const [textOverflow, setTextOverflow] = useState({
     title: false,
@@ -51,6 +53,12 @@ const AudioPlayer = ({
         const minutes = Math.floor(currentTimeValue / 60);
         const seconds = Math.floor(currentTimeValue % 60);
         setCurrentTime(`${minutes}:${seconds < 10 ? '0' : ''}${seconds}`);
+        
+        // Calcular tiempo restante
+        const remainingTimeValue = durationValue - currentTimeValue;
+        const remainingMinutes = Math.floor(remainingTimeValue / 60);
+        const remainingSeconds = Math.floor(remainingTimeValue % 60);
+        setRemainingTime(`-${remainingMinutes}:${remainingSeconds < 10 ? '0' : ''}${remainingSeconds}`);
       }
     };
     
@@ -101,8 +109,9 @@ const AudioPlayer = ({
   useEffect(() => {
     setProgress(0);
     setCurrentTime("0:00");
+    setRemainingTime(`-${duration}`);
     setDuration(preview.duration);
-  }, [preview]);
+  }, [preview, duration]);
   
   useEffect(() => {
     const checkTextOverflow = () => {
@@ -135,6 +144,12 @@ const AudioPlayer = ({
       const minutes = Math.floor(newTime / 60);
       const seconds = Math.floor(newTime % 60);
       setCurrentTime(`${minutes}:${seconds < 10 ? '0' : ''}${seconds}`);
+      
+      // Actualizar tiempo restante al arrastrar
+      const remainingTime = audioRef.current.duration - newTime;
+      const remainingMinutes = Math.floor(remainingTime / 60);
+      const remainingSeconds = Math.floor(remainingTime % 60);
+      setRemainingTime(`-${remainingMinutes}:${remainingSeconds < 10 ? '0' : ''}${remainingSeconds}`);
     }
   };
   
@@ -151,6 +166,18 @@ const AudioPlayer = ({
     if (isLoading) return;
     onPlayPause();
   };
+  
+  const handleSkipForward = () => {
+    if (!audioRef.current || isLoading) return;
+    const newTime = Math.min(audioRef.current.currentTime + 60, audioRef.current.duration || 0);
+    audioRef.current.currentTime = newTime;
+  };
+  
+  const handleSkipBackward = () => {
+    if (!audioRef.current || isLoading) return;
+    const newTime = Math.max(audioRef.current.currentTime - 60, 0);
+    audioRef.current.currentTime = newTime;
+  };
 
   if (isMobile) {
     return (
@@ -163,7 +190,7 @@ const AudioPlayer = ({
         }}
       >
         <div className="absolute inset-0 bg-black/30 backdrop-blur-[50px]"></div>
-        <div className="relative p-5 z-10">
+        <div className="relative p-5 pt-5 pb-3 z-10">
           <div className="flex items-center gap-4 mb-4">
             <div className="w-20 h-20 rounded-2xl overflow-hidden bg-gray-200 flex-shrink-0">
               {preview.image ? 
@@ -185,18 +212,34 @@ const AudioPlayer = ({
           </div>
           
           <div className="mb-2">
-            <Slider 
-              value={[progress]} 
-              min={0} 
-              max={100} 
-              step={0.1} 
-              onValueChange={handleSliderChange} 
-              onValueCommit={handleSliderCommit} 
-              className="mb-2"
-            />
+            <div className="flex items-center gap-2 mb-1">
+              <span className="text-xs text-white min-w-[35px]">{currentTime}</span>
+              <Slider 
+                value={[progress]} 
+                min={0} 
+                max={100} 
+                step={0.1} 
+                onValueChange={handleSliderChange} 
+                onValueCommit={handleSliderCommit} 
+                className="flex-grow"
+              />
+              <span className="text-xs text-white min-w-[35px] text-right">{remainingTime}</span>
+            </div>
           </div>
           
-          <div className="flex justify-center mt-3">
+          <div className="flex justify-center items-center gap-3 mt-2">
+            <button 
+              className="text-white relative overflow-hidden w-10 h-10 flex items-center justify-center"
+              onClick={handleSkipBackward}
+              disabled={isLoading}
+            >
+              <SkipBack
+                className="h-6 w-6"
+                fill="white"
+                fillOpacity="1"
+                stroke="none"
+              />
+            </button>
             <button 
               className="text-white relative overflow-hidden w-12 h-12 flex items-center justify-center"
               onClick={handlePlayPauseClick}
@@ -223,6 +266,18 @@ const AudioPlayer = ({
                 </div>
               )}
             </button>
+            <button 
+              className="text-white relative overflow-hidden w-10 h-10 flex items-center justify-center"
+              onClick={handleSkipForward}
+              disabled={isLoading}
+            >
+              <SkipForward
+                className="h-6 w-6"
+                fill="white"
+                fillOpacity="1"
+                stroke="none"
+              />
+            </button>
           </div>
         </div>
       </div>
@@ -231,7 +286,7 @@ const AudioPlayer = ({
   
   return (
     <div className="relative rounded-2xl overflow-hidden bg-transparent dark:bg-transparent">
-      <div className="flex flex-col gap-4 rounded-xl">
+      <div className="flex flex-col gap-3 rounded-xl">
         <div className="flex items-center gap-4">
           <div className="w-16 h-16 rounded-lg overflow-hidden bg-gray-200 flex-shrink-0">
             {preview.image ? <Image src={preview.image} alt={preview.title} className="w-full h-full object-cover" /> : <div className="w-full h-full bg-gray-200 flex items-center justify-center text-gray-400">
@@ -266,10 +321,17 @@ const AudioPlayer = ({
           <div className="flex items-center gap-2">
             <span className="text-xs text-gray-500 dark:text-gray-400 min-w-[35px]">{currentTime}</span>
             <Slider value={[progress]} min={0} max={100} step={0.1} onValueChange={handleSliderChange} onValueCommit={handleSliderCommit} className="flex-grow" />
-            <span className="text-xs text-gray-500 dark:text-gray-400 min-w-[35px] text-right">{duration}</span>
+            <span className="text-xs text-gray-500 dark:text-gray-400 min-w-[35px] text-right">{remainingTime}</span>
           </div>
           
-          <div className="flex justify-center mt-3">
+          <div className="flex justify-center items-center gap-2 mt-2">
+            <button 
+              className="h-8 w-8 bg-gray-200 dark:bg-vyba-dark-secondary text-gray-700 dark:text-white rounded-full relative overflow-hidden"
+              onClick={handleSkipBackward}
+              disabled={isLoading}
+            >
+              <SkipBack className="h-4 w-4 mx-auto" fill="currentColor" stroke="none" />
+            </button>
             <button 
               className={`h-10 w-10 ${isPlaying ? 'bg-green-500 hover:bg-green-600' : 'bg-blue-500 hover:bg-blue-600'} text-white rounded-full relative overflow-hidden ${isLoading ? 'opacity-70 cursor-wait' : ''}`} 
               onClick={handlePlayPauseClick}
@@ -283,6 +345,13 @@ const AudioPlayer = ({
                   <Play className={`absolute inset-0 h-5 w-5 fill-white transition-all duration-300 ${isPlaying ? 'opacity-0 scale-50' : 'opacity-100 scale-100'}`} />
                 </div>
               )}
+            </button>
+            <button 
+              className="h-8 w-8 bg-gray-200 dark:bg-vyba-dark-secondary text-gray-700 dark:text-white rounded-full relative overflow-hidden"
+              onClick={handleSkipForward}
+              disabled={isLoading}
+            >
+              <SkipForward className="h-4 w-4 mx-auto" fill="currentColor" stroke="none" />
             </button>
           </div>
         </div>
