@@ -180,8 +180,8 @@ const AudioPlayer = ({
             </div>
             
             <div className="flex-grow text-white">
-              <div className="font-bold text-lg mb-1">{preview.title}</div>
-              <div className="text-sm opacity-90">{artistName}</div>
+              <div className="font-black text-lg mb-1">{preview.title}</div>
+              <div className="text-sm opacity-90 font-medium">{artistName}</div>
             </div>
           </div>
           
