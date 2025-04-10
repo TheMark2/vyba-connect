@@ -1,18 +1,16 @@
-
 import React from "react";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
-
 interface ArtistFAQProps {
   artistName: string;
 }
-
-const ArtistFAQ = ({ artistName }: ArtistFAQProps) => {
-  return (
-    <div className="mt-8 mb-16">
+const ArtistFAQ = ({
+  artistName
+}: ArtistFAQProps) => {
+  return <div className="mt-8 mb-16">
       <h2 className="text-3xl font-black mb-6">FAQ</h2>
       <Accordion type="single" collapsible className="space-y-3">
         <AccordionItem value="item-1" className="border-none rounded-xl overflow-hidden bg-[#F7F7F7] dark:bg-vyba-dark-secondary/30">
-          <AccordionTrigger className="px-6 py-4 text-sm font-bold hover:no-underline">
+          <AccordionTrigger className="px-6 py-5 text-sm font-bold hover:no-underline">
             ¿Cómo puedo reservar una fecha?
           </AccordionTrigger>
           <AccordionContent className="px-6 text-base">
@@ -20,7 +18,7 @@ const ArtistFAQ = ({ artistName }: ArtistFAQProps) => {
           </AccordionContent>
         </AccordionItem>
         <AccordionItem value="item-2" className="border-none rounded-xl overflow-hidden bg-[#F7F7F7] dark:bg-vyba-dark-secondary/30">
-          <AccordionTrigger className="px-6 py-4 text-sm font-bold hover:no-underline">
+          <AccordionTrigger className="px-6 py-5 text-sm font-bold hover:no-underline">
             ¿Qué incluye el precio?
           </AccordionTrigger>
           <AccordionContent className="px-6 text-base">
@@ -28,7 +26,7 @@ const ArtistFAQ = ({ artistName }: ArtistFAQProps) => {
           </AccordionContent>
         </AccordionItem>
         <AccordionItem value="item-3" className="border-none rounded-xl overflow-hidden bg-[#F7F7F7] dark:bg-vyba-dark-secondary/30">
-          <AccordionTrigger className="px-6 py-4 text-sm font-bold hover:no-underline">
+          <AccordionTrigger className="px-6 py-5 text-sm font-bold hover:no-underline">
             ¿Cuánto tiempo dura una actuación?
           </AccordionTrigger>
           <AccordionContent className="px-6 text-base">
@@ -36,7 +34,7 @@ const ArtistFAQ = ({ artistName }: ArtistFAQProps) => {
           </AccordionContent>
         </AccordionItem>
         <AccordionItem value="item-4" className="border-none rounded-xl overflow-hidden bg-[#F7F7F7] dark:bg-vyba-dark-secondary/30">
-          <AccordionTrigger className="px-6 py-4 text-sm font-bold hover:no-underline">
+          <AccordionTrigger className="px-6 py-5 text-sm font-bold hover:no-underline">
             ¿Puedo solicitar canciones específicas?
           </AccordionTrigger>
           <AccordionContent className="px-6 text-base">
@@ -44,7 +42,7 @@ const ArtistFAQ = ({ artistName }: ArtistFAQProps) => {
           </AccordionContent>
         </AccordionItem>
         <AccordionItem value="item-5" className="border-none rounded-xl overflow-hidden bg-[#F7F7F7] dark:bg-vyba-dark-secondary/30">
-          <AccordionTrigger className="px-6 py-4 text-sm font-bold hover:no-underline">
+          <AccordionTrigger className="px-6 py-5 text-sm font-bold hover:no-underline">
             ¿Qué pasa si necesito cancelar?
           </AccordionTrigger>
           <AccordionContent className="px-6 text-base">
@@ -52,7 +50,7 @@ const ArtistFAQ = ({ artistName }: ArtistFAQProps) => {
           </AccordionContent>
         </AccordionItem>
         <AccordionItem value="item-6" className="border-none rounded-xl overflow-hidden bg-[#F7F7F7] dark:bg-vyba-dark-secondary/30">
-          <AccordionTrigger className="px-6 py-4 text-sm font-bold hover:no-underline">
+          <AccordionTrigger className="px-6 py-5 text-sm font-bold hover:no-underline">
             ¿Cómo funciona el pago?
           </AccordionTrigger>
           <AccordionContent className="px-6 text-base">
@@ -60,8 +58,6 @@ const ArtistFAQ = ({ artistName }: ArtistFAQProps) => {
           </AccordionContent>
         </AccordionItem>
       </Accordion>
-    </div>
-  );
+    </div>;
 };
-
 export default ArtistFAQ;
