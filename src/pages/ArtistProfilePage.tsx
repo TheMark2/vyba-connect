@@ -1,4 +1,3 @@
-
 import React, { useState, useRef, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { toast } from "sonner";
@@ -194,6 +193,7 @@ const ArtistProfilePage = () => {
   const [currentPlaying, setCurrentPlaying] = useState<any>(null);
   const [isAudioPlaying, setIsAudioPlaying] = useState(false);
   const audioRef = useRef<HTMLAudioElement>(null);
+  const [showMobileAudioPlayer, setShowMobileAudioPlayer] = useState(true);
 
   useEffect(() => {
     if (!audioRef.current) {
@@ -285,6 +285,9 @@ const ArtistProfilePage = () => {
     });
     setCurrentPlaying(preview);
     setIsAudioPlaying(playing);
+    if (playing && isMobile) {
+      setShowMobileAudioPlayer(true);
+    }
   };
 
   const handlePlayPause = () => {
@@ -317,6 +320,10 @@ const ArtistProfilePage = () => {
       console.error("Error en handlePlayPause:", error);
       toast.error("Error al controlar la reproducción");
     }
+  };
+
+  const handleToggleAudioPlayerVisibility = (visible: boolean) => {
+    setShowMobileAudioPlayer(visible);
   };
 
   return (
@@ -387,9 +394,13 @@ const ArtistProfilePage = () => {
             onContact={handleContact} 
             aboutMeRef={aboutMeRef} 
             imagesRef={imagesRef}
+            isMobile={isMobile}
+            isAudioPlaying={isAudioPlaying}
+            showAudioPlayer={showMobileAudioPlayer}
+            onToggleAudioPlayerVisibility={handleToggleAudioPlayerVisibility}
           />
           
-          {currentPlaying && (
+          {currentPlaying && showMobileAudioPlayer && (
             <div className="mt-3">
               <AudioPlayer 
                 preview={currentPlaying} 
