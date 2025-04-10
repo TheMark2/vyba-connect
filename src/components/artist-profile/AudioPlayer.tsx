@@ -4,6 +4,7 @@ import { Progress } from "@/components/ui/progress";
 import { Pause, Play } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import Image from "@/components/ui/image";
+import { Marquee } from "@/components/ui/marquee";
 
 interface AudioPlayerProps {
   preview: {
@@ -28,6 +29,10 @@ const AudioPlayer = ({
   const [progress, setProgress] = useState(0);
   const [currentTime, setCurrentTime] = useState("0:00");
   const [duration, setDuration] = useState(preview.duration);
+  const [textOverflow, setTextOverflow] = useState({
+    title: false,
+    artist: false
+  });
 
   useEffect(() => {
     if (!audioRef.current) return;
@@ -79,20 +84,37 @@ const AudioPlayer = ({
     setCurrentTime("0:00");
     setDuration(preview.duration);
   }, [preview]);
+  
+  // Comprobar si los textos necesitan marquesina
+  useEffect(() => {
+    const checkTextOverflow = () => {
+      const titleElement = document.getElementById('audio-title');
+      const artistElement = document.getElementById('audio-artist');
+      
+      if (titleElement) {
+        setTextOverflow(prev => ({
+          ...prev,
+          title: titleElement.scrollWidth > titleElement.clientWidth
+        }));
+      }
+      
+      if (artistElement) {
+        setTextOverflow(prev => ({
+          ...prev,
+          artist: artistElement.scrollWidth > artistElement.clientWidth
+        }));
+      }
+    };
+    
+    // Comprobar después de que el componente se monte y cuando cambie el contenido
+    checkTextOverflow();
+    window.addEventListener('resize', checkTextOverflow);
+    
+    return () => window.removeEventListener('resize', checkTextOverflow);
+  }, [preview.title, artistName]);
 
   return (
     <div className="relative p-5 rounded-xl overflow-hidden">
-      {/* Fondo blureado con la imagen */}
-      {preview.image && (
-        <div className="absolute top-0 left-0 w-20 h-20 overflow-hidden pointer-events-none">
-          <div className="w-full h-full blur-xl scale-150" style={{ 
-            backgroundImage: `url(${preview.image})`,
-            backgroundSize: 'cover',
-            backgroundPosition: 'center'
-          }}></div>
-        </div>
-      )}
-      
       <div className="flex flex-col gap-4 rounded-xl">
         {/* Cabecera: Imagen y título */}
         <div className="flex items-center gap-4">
@@ -111,11 +133,36 @@ const AudioPlayer = ({
             )}
           </div>
           
-          <div className="flex-grow">
-            {/* Información de la canción */}
+          <div className="flex-grow overflow-hidden">
+            {/* Información de la canción con marquesina condicional */}
             <div className="flex flex-col">
-              <h3 className="font-bold text-lg line-clamp-1">{preview.title}</h3>
-              <p className="text-sm text-gray-500 dark:text-gray-400">{artistName}</p>
+              {textOverflow.title ? (
+                <div className="overflow-hidden h-6">
+                  <Marquee 
+                    className="font-bold text-lg"
+                    pauseOnHover
+                    gap="2rem"
+                  >
+                    <h3 id="audio-title">{preview.title}</h3>
+                  </Marquee>
+                </div>
+              ) : (
+                <h3 id="audio-title" className="font-bold text-lg truncate">{preview.title}</h3>
+              )}
+              
+              {textOverflow.artist ? (
+                <div className="overflow-hidden h-5">
+                  <Marquee 
+                    className="text-sm text-gray-500 dark:text-gray-400"
+                    pauseOnHover
+                    gap="2rem"
+                  >
+                    <p id="audio-artist">{artistName}</p>
+                  </Marquee>
+                </div>
+              ) : (
+                <p id="audio-artist" className="text-sm text-gray-500 dark:text-gray-400 truncate">{artistName}</p>
+              )}
             </div>
           </div>
         </div>
@@ -135,7 +182,7 @@ const AudioPlayer = ({
             <Button 
               variant="secondary" 
               size="icon" 
-              className="h-10 w-10"
+              className={`h-10 w-10 ${isPlaying ? 'bg-green-500 hover:bg-green-600' : 'bg-blue-500 hover:bg-blue-600'} text-white`}
               onClick={onPlayPause}
             >
               {isPlaying ? (
