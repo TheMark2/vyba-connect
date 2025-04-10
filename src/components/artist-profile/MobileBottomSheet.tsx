@@ -1,7 +1,6 @@
 
 import React, { useState } from "react";
 import SwipeableBottomSheet from "react-swipeable-bottom-sheet";
-import { ChevronUp, ChevronDown } from "lucide-react";
 import ContactCard from "./ContactCard";
 import AudioPlayer from "./AudioPlayer";
 
@@ -32,19 +31,13 @@ const MobileBottomSheet = ({
   onPlayPause,
   audioRef
 }: MobileBottomSheetProps) => {
-  const [isOpen, setIsOpen] = useState(true);
-  
-  // Aumentamos la altura para mostrar completamente la tarjeta de contacto
-  const contactCardHeight = 180; // Aumentado de 150 para asegurar que se vea completo
-  
-  // Altura total cuando está abierto (tarjeta de contacto + reproductor)
-  const totalHeight = currentPlaying ? contactCardHeight + 100 : contactCardHeight;
+  // Aumentamos aún más la altura para asegurar que la tarjeta de contacto se vea completa
+  const contactCardHeight = 200; // Aumentado de 180 para dar más espacio
   
   return (
     <SwipeableBottomSheet
       overflowHeight={contactCardHeight}
       marginTop={64}
-      onChange={(isOpen) => setIsOpen(isOpen)}
       fullScreen={false}
       topShadow={false}
       shadowTip={false}
@@ -54,7 +47,7 @@ const MobileBottomSheet = ({
         backgroundColor: '#F7F7F7'
       }}
     >
-      <div className={`px-5 pt-3 ${!currentPlaying ? 'pb-10' : 'pb-5'}`}>
+      <div className={`px-5 pt-3 ${!currentPlaying ? 'pb-16' : 'pb-5'}`}>
         <ContactCard 
           artist={artistContact} 
           onContact={onContact} 
@@ -63,36 +56,15 @@ const MobileBottomSheet = ({
         />
         
         {currentPlaying && (
-          <>
-            <div 
-              className="flex justify-center mt-3 cursor-pointer" 
-              onClick={() => setIsOpen(!isOpen)}
-            >
-              {isOpen ? (
-                <div className="flex items-center text-sm text-gray-500">
-                  <ChevronDown className="w-4 h-4 mr-1" />
-                  Ocultar reproductor
-                </div>
-              ) : (
-                <div className="flex items-center text-sm text-gray-500">
-                  <ChevronUp className="w-4 h-4 mr-1" />
-                  Mostrar reproductor
-                </div>
-              )}
-            </div>
-            
-            {isOpen && (
-              <div className="mt-3">
-                <AudioPlayer 
-                  preview={currentPlaying} 
-                  artistName={artistContact.name} 
-                  isPlaying={isAudioPlaying} 
-                  onPlayPause={onPlayPause} 
-                  audioRef={audioRef} 
-                />
-              </div>
-            )}
-          </>
+          <div className="mt-4">
+            <AudioPlayer 
+              preview={currentPlaying} 
+              artistName={artistContact.name} 
+              isPlaying={isAudioPlaying} 
+              onPlayPause={onPlayPause} 
+              audioRef={audioRef} 
+            />
+          </div>
         )}
       </div>
     </SwipeableBottomSheet>
