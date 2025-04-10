@@ -4,6 +4,7 @@ import { Slider } from "@/components/ui/slider";
 import { Pause, Play } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import Image from "@/components/ui/image";
+import { formatTime } from "@/lib/utils";
 
 interface AudioPlayerProps {
   preview: {
@@ -47,9 +48,7 @@ const AudioPlayer = ({
         if (durationValue > 0) {
           setProgress(currentTimeValue / durationValue * 100);
         }
-        const minutes = Math.floor(currentTimeValue / 60);
-        const seconds = Math.floor(currentTimeValue % 60);
-        setCurrentTime(`${minutes}:${seconds < 10 ? '0' : ''}${seconds}`);
+        setCurrentTime(formatTime(currentTimeValue));
       }
     };
     
@@ -57,9 +56,7 @@ const AudioPlayer = ({
       try {
         if (audioRef.current && !isNaN(audioRef.current.duration)) {
           const durationValue = audioRef.current.duration;
-          const minutes = Math.floor(durationValue / 60);
-          const seconds = Math.floor(durationValue % 60);
-          setDuration(`${minutes}:${seconds < 10 ? '0' : ''}${seconds}`);
+          setDuration(formatTime(durationValue));
           setIsLoading(false);
           
           // Asegurarnos que no se reproduce en bucle
@@ -139,9 +136,7 @@ const AudioPlayer = ({
       setProgress(value[0]);
 
       // Actualizar el tiempo mostrado mientras se arrastra
-      const minutes = Math.floor(newTime / 60);
-      const seconds = Math.floor(newTime % 60);
-      setCurrentTime(`${minutes}:${seconds < 10 ? '0' : ''}${seconds}`);
+      setCurrentTime(formatTime(newTime));
     }
   };
   
