@@ -1,4 +1,3 @@
-
 import React, { useRef, useState, useEffect } from "react";
 import { Video, Play, Expand, Pause, FileAudio, VideoOff } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
@@ -14,15 +13,13 @@ const VideoPreviewCard = ({
   artistName,
   isPlaying,
   isLoading,
-  onPlayPause,
-  audioRef
+  onPlayPause
 }: PreviewCardProps) => {
   const videoRef = useRef<HTMLVideoElement>(null);
   const [isVideoPlaying, setIsVideoPlaying] = useState(false);
   const [videoError, setVideoError] = useState(false);
   const [retryCount, setRetryCount] = useState(0);
   const [showFullscreen, setShowFullscreen] = useState(false);
-  const [currentTime, setCurrentTime] = useState(0);
   
   // Verificar si es un video de YouTube o un video local/web
   const isYoutubeVideo = preview.videoUrl?.includes('youtube.com') || preview.videoUrl?.includes('youtu.be');
@@ -62,12 +59,6 @@ const VideoPreviewCard = ({
         videoRef.current.onloadedmetadata = () => {
           console.log("Video metadata loaded:", preview.title);
           setVideoError(false);
-          
-          // Actualizar la duración del video si está disponible
-          if (videoRef.current && !isNaN(videoRef.current.duration)) {
-            // Solo actualizar en consola para verificar, no modificamos el objeto preview directamente
-            console.log(`Duración real del video ${preview.title}: ${formatTime(videoRef.current.duration)}`);
-          }
         };
         
         videoRef.current.onerror = (e) => {
@@ -86,17 +77,18 @@ const VideoPreviewCard = ({
         videoRef.current.ontimeupdate = null;
       }
     };
-  }, [preview.videoUrl, isYoutubeVideo, preview.title]);
+  }, [preview.videoUrl, isYoutubeVideo]);
   
-  // Efecto para sincronizar el estado de reproducción con isPlaying y actualizar currentTime
+  // Efecto para sincronizar el estado de reproducción con isPlaying
   useEffect(() => {
     // No hacemos nada si es un video de YouTube o hay error
     if (isYoutubeVideo || videoError) return;
     
     if (videoRef.current) {
       if (isPlaying) {
-        // Sincronizar visualmente el video con el audio principal (muted)
-        videoRef.current.muted = true;
+        // SOLO SINCRONIZAMOS VISUALMENTE el video con el audio principal
+        // pero no reproducimos el audio del video
+        videoRef.current.muted = true; // Siempre silenciado
         
         try {
           // Solo sincronizar el video (no el audio)
@@ -106,25 +98,11 @@ const VideoPreviewCard = ({
               console.error("Error al sincronizar video:", error);
             });
           }
-          
-          // Actualizamos el tiempo actual cuando cambia en el video
-          videoRef.current.ontimeupdate = () => {
-            if (audioRef?.current) {
-              // Mantener sincronizado el video con el audio principal
-              if (Math.abs(videoRef.current!.currentTime - audioRef.current.currentTime) > 0.3) {
-                videoRef.current!.currentTime = audioRef.current.currentTime;
-              }
-              setCurrentTime(audioRef.current.currentTime);
-            } else {
-              setCurrentTime(videoRef.current!.currentTime);
-            }
-          };
         } catch (e) {
           console.error("Error al sincronizar el video:", e);
         }
       } else {
         videoRef.current.pause();
-        videoRef.current.ontimeupdate = null;
       }
     }
     
@@ -134,9 +112,8 @@ const VideoPreviewCard = ({
       videoRef.current.pause();
       videoRef.current.currentTime = 0;
       setIsVideoPlaying(false);
-      setCurrentTime(0);
     }
-  }, [isPlaying, isYoutubeVideo, videoError, audioRef]);
+  }, [isPlaying, isYoutubeVideo, videoError]);
   
   const handleRetry = (e: React.MouseEvent) => {
     e.stopPropagation();
@@ -203,7 +180,7 @@ const VideoPreviewCard = ({
         window.open(preview.videoUrl, '_blank');
       }
     } else if (isLocalVideo && !videoError) {
-      // Para videos locales, mostramos el reproductor a pantalla completa con Dialog
+      // Para videos locales, mostramos el reproductor a pantalla completa
       setShowFullscreen(true);
     } else {
       toast.error("No se puede expandir este video", {
@@ -212,26 +189,8 @@ const VideoPreviewCard = ({
     }
   };
 
-  // Para el formateado de tiempo
-  const formatTime = (seconds: number): string => {
-    if (isNaN(seconds) || !isFinite(seconds)) return "0:00";
-    
-    const minutes = Math.floor(seconds / 60);
-    const remainingSeconds = Math.floor(seconds % 60);
-    
-    return `${minutes}:${remainingSeconds < 10 ? '0' : ''}${remainingSeconds}`;
-  };
-
   const handleCardClick = () => {
     onPlayPause();
-  };
-
-  // Función para actualizar el tiempo cuando cambia en el reproductor a pantalla completa
-  const handleTimeUpdate = (time: number) => {
-    if (audioRef?.current) {
-      audioRef.current.currentTime = time;
-    }
-    setCurrentTime(time);
   };
 
   return (
@@ -353,10 +312,6 @@ const VideoPreviewCard = ({
         <FullscreenVideoPlayer 
           preview={preview}
           onClose={() => setShowFullscreen(false)}
-          isOpen={showFullscreen}
-          currentTime={currentTime}
-          onTimeUpdate={handleTimeUpdate}
-          audioRef={audioRef}
         />
       )}
     </>
