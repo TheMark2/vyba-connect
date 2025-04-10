@@ -427,14 +427,14 @@ const ImagePreviewCard = ({
           <video 
             ref={videoRef}
             src={preview.videoUrl}
-            className={`absolute inset-0 w-full h-full object-cover ${isVideoHover ? 'opacity-100' : 'opacity-0'} transition-opacity duration-300`}
+            className={`absolute inset-0 w-full h-full object-cover ${isVideoHover ? 'opacity-100' : 'opacity-0'} transition-opacity duration-300 bg-black`}
             muted
             loop
             playsInline
           />
         )}
         
-        <div className="absolute inset-0 bg-gradient-to-t from-black via-black/70 to-transparent opacity-60 pointer-events-none transition-opacity duration-300 group-hover:opacity-0"></div>
+        <div className="absolute inset-0 bg-gradient-to-t from-black via-black/70 to-transparent opacity-60 pointer-events-none transition-opacity duration-300 group-hover:opacity-60"></div>
         
         <div className="absolute top-5 left-5 flex gap-2">
           {preview.hasVideo && 
@@ -462,7 +462,7 @@ const ImagePreviewCard = ({
           </Badge>
         )}
         
-        <div className="absolute bottom-0 left-0 right-0 p-7 text-white transition-opacity duration-300 group-hover:opacity-0">
+        <div className="absolute bottom-0 left-0 right-0 p-7 text-white transition-opacity duration-300 group-hover:opacity-100">
           <h3 className="text-xl font-black line-clamp-1">{preview.title}</h3>
           <p className="text-sm text-white/80 mb-5">{artistName}</p>
         </div>
