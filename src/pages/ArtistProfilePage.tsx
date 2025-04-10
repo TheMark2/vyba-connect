@@ -195,6 +195,31 @@ const ArtistProfilePage = () => {
   const [isAudioPlaying, setIsAudioPlaying] = useState(false);
   const audioRef = useRef<HTMLAudioElement>(null);
   const [showMobileAudioPlayer, setShowMobileAudioPlayer] = useState(true);
+  const [showMobileBottomSheet, setShowMobileBottomSheet] = useState(false);
+
+  useEffect(() => {
+    if (isMobile && aboutMeRef.current) {
+      const observer = new IntersectionObserver(
+        (entries) => {
+          if (entries[0] && !entries[0].isIntersecting) {
+            setShowMobileBottomSheet(true);
+          }
+        },
+        {
+          threshold: 0.1,
+          rootMargin: '-20% 0px 0px 0px'
+        }
+      );
+      
+      observer.observe(aboutMeRef.current);
+      
+      return () => {
+        if (aboutMeRef.current) {
+          observer.unobserve(aboutMeRef.current);
+        }
+      };
+    }
+  }, [isMobile, aboutMeRef]);
 
   useEffect(() => {
     if (!audioRef.current) {
@@ -288,6 +313,7 @@ const ArtistProfilePage = () => {
     setIsAudioPlaying(playing);
     if (playing && isMobile) {
       setShowMobileAudioPlayer(true);
+      setShowMobileBottomSheet(true);
     }
   };
 
@@ -388,7 +414,7 @@ const ArtistProfilePage = () => {
         <RecommendedArtists artists={recommendedArtists} />
       </div>
       
-      {isMobile && currentPlaying && (
+      {isMobile && (showMobileBottomSheet || currentPlaying) && (
         <MobileBottomSheet 
           artistContact={artistContactData} 
           onContact={handleContact} 
