@@ -1,6 +1,6 @@
 
 import React, { useEffect, useState, useRef } from "react";
-import { Progress } from "@/components/ui/progress";
+import { Slider } from "@/components/ui/slider";
 import { Pause, Play } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import Image from "@/components/ui/image";
@@ -103,6 +103,15 @@ const AudioPlayer = ({
     return () => window.removeEventListener('resize', checkTextOverflow);
   }, [preview.title, artistName]);
 
+  // Manejar clic en la barra de progreso para desplazarse por la canción
+  const handleSliderChange = (value: number[]) => {
+    if (audioRef.current && audioRef.current.duration) {
+      const newTime = (value[0] / 100) * audioRef.current.duration;
+      audioRef.current.currentTime = newTime;
+      setProgress(value[0]);
+    }
+  };
+
   return (
     <div className="relative p-5 rounded-2xl overflow-hidden bg-[#F7F7F7] dark:bg-vyba-dark-secondary/40">
       <div className="flex flex-col gap-4 rounded-xl">
@@ -156,14 +165,19 @@ const AudioPlayer = ({
           </div>
         </div>
         
-        {/* Barra de progreso */}
+        {/* Barra de progreso con tiempos */}
         <div>
-          <div className="relative">
-            <Progress value={progress} className="h-1" />
-            <div className="flex justify-between text-xs text-gray-500 dark:text-gray-400 mt-1">
-              <span>{currentTime}</span>
-              <span>{duration}</span>
-            </div>
+          <div className="flex items-center gap-2">
+            <span className="text-xs text-gray-500 dark:text-gray-400 min-w-[35px]">{currentTime}</span>
+            <Slider
+              value={[progress]}
+              min={0}
+              max={100}
+              step={0.1}
+              onValueChange={handleSliderChange}
+              className="flex-grow h-1"
+            />
+            <span className="text-xs text-gray-500 dark:text-gray-400 min-w-[35px] text-right">{duration}</span>
           </div>
           
           {/* Botón de reproducción centrado */}
