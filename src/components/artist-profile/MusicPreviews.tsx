@@ -354,6 +354,31 @@ const VideoPreviewCard = ({
   const videoRef = useRef<HTMLVideoElement>(null);
   const [isVideoPlaying, setIsVideoPlaying] = useState(false);
   
+  useEffect(() => {
+    // Configuramos el video para que se reproduzca en bucle
+    if (videoRef.current) {
+      // Establecer el tamaño del bucle (10 segundos o la duración total si es menor)
+      videoRef.current.addEventListener('loadedmetadata', () => {
+        const clipDuration = Math.min(10, videoRef.current?.duration || 10);
+        
+        // Añadir evento para detectar cuando avanza el tiempo
+        videoRef.current?.addEventListener('timeupdate', () => {
+          // Si el tiempo actual excede la duración del clip, volver al inicio
+          if (videoRef.current && videoRef.current.currentTime > clipDuration) {
+            videoRef.current.currentTime = 0;
+          }
+        });
+      });
+    }
+    
+    return () => {
+      if (videoRef.current) {
+        videoRef.current.removeEventListener('loadedmetadata', () => {});
+        videoRef.current.removeEventListener('timeupdate', () => {});
+      }
+    };
+  }, []);
+  
   const handleMouseEnter = () => {
     if (videoRef.current) {
       videoRef.current.currentTime = 0;
@@ -367,7 +392,6 @@ const VideoPreviewCard = ({
   const handleMouseLeave = () => {
     if (videoRef.current) {
       videoRef.current.pause();
-      // Reiniciamos el video al inicio para que la próxima vez empiece desde el principio
       videoRef.current.currentTime = 0;
       setIsVideoPlaying(false);
     }
@@ -401,8 +425,8 @@ const VideoPreviewCard = ({
           poster={preview.image}
           className="w-full h-full object-cover"
           muted
-          loop
           playsInline
+          preload="auto"
         />
         
         <div className={`absolute inset-0 bg-gradient-to-t from-black via-black/70 to-transparent opacity-60 pointer-events-none transition-opacity duration-300 ${isVideoPlaying ? 'opacity-30' : 'group-hover:opacity-30'}`}></div>
