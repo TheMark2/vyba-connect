@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { PreviewCardProps } from "./types";
 import { toast } from "sonner";
+import Image from "@/components/ui/image";
 
 const VideoPreviewCard = ({
   preview,
@@ -50,17 +51,10 @@ const VideoPreviewCard = ({
           console.error("Error cargando el video:", preview.videoUrl, e);
           setVideoError(true);
           
-          // Intentar recargar si no hemos superado el límite de intentos
-          if (retryCount < 2) {
-            console.log(`Reintentando cargar video (intento ${retryCount + 1})...`);
+          // No intentar recargar si ya sabemos que hay un problema de permisos
+          if (retryCount === 0) {
+            // Solo intentar una vez
             setRetryCount(prev => prev + 1);
-            
-            // Esperar un segundo antes de reintentar
-            setTimeout(() => {
-              if (videoRef.current) {
-                videoRef.current.load();
-              }
-            }, 1000);
           }
         };
         
@@ -84,6 +78,7 @@ const VideoPreviewCard = ({
     e.stopPropagation();
     setRetryCount(0);
     setVideoError(false);
+    toast.info("Reintentando cargar el video");
     if (videoRef.current) {
       videoRef.current.load();
     }
@@ -100,7 +95,8 @@ const VideoPreviewCard = ({
       
       if (playPromise !== undefined) {
         playPromise.catch(err => {
-          console.warn("Error al reproducir el video automáticamente:", err);
+          // No mostrar este error en consola ya que es esperado en algunos navegadores
+          setIsVideoPlaying(false);
         });
       }
       setIsVideoPlaying(true);
@@ -139,16 +135,40 @@ const VideoPreviewCard = ({
       <div className="relative aspect-[4/5]">
         {videoError ? (
           <div className="w-full h-full flex flex-col items-center justify-center bg-gray-200 dark:bg-gray-800">
-            <VideoOff className="h-16 w-16 text-gray-400 mb-2" />
-            <p className="text-sm text-gray-500 dark:text-gray-400 mb-2">Error al cargar el video</p>
-            <Button 
-              variant="outline" 
-              size="sm" 
-              onClick={handleRetry}
-              className="mt-2"
-            >
-              Reintentar
-            </Button>
+            {preview.image ? (
+              <div className="w-full h-full relative">
+                <Image 
+                  src={preview.image} 
+                  alt={preview.title} 
+                  className="w-full h-full object-cover"
+                />
+                <div className="absolute inset-0 flex flex-col items-center justify-center bg-black/50">
+                  <VideoOff className="h-12 w-12 text-white mb-2" />
+                  <p className="text-sm text-white mb-2">Error al cargar el video</p>
+                  <Button 
+                    variant="outline" 
+                    size="sm" 
+                    onClick={handleRetry}
+                    className="mt-2 bg-white/20 text-white hover:bg-white/30 border-white/40"
+                  >
+                    Reintentar
+                  </Button>
+                </div>
+              </div>
+            ) : (
+              <>
+                <VideoOff className="h-16 w-16 text-gray-400 mb-2" />
+                <p className="text-sm text-gray-500 dark:text-gray-400 mb-2">Error al cargar el video</p>
+                <Button 
+                  variant="outline" 
+                  size="sm" 
+                  onClick={handleRetry}
+                  className="mt-2"
+                >
+                  Reintentar
+                </Button>
+              </>
+            )}
           </div>
         ) : (
           <video 
