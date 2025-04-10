@@ -1,3 +1,4 @@
+
 import React, { useEffect, useState, useRef } from "react";
 import { Slider } from "@/components/ui/slider";
 import { Pause, Play } from "lucide-react";
@@ -31,6 +32,7 @@ const AudioPlayer = ({
     title: false,
     artist: false
   });
+  const [isDragging, setIsDragging] = useState(false);
   
   const titleRef = useRef<HTMLDivElement>(null);
   const artistRef = useRef<HTMLDivElement>(null);
@@ -39,7 +41,7 @@ const AudioPlayer = ({
     if (!audioRef.current) return;
     
     const updateProgress = () => {
-      if (audioRef.current) {
+      if (audioRef.current && !isDragging) {
         const currentTimeValue = audioRef.current.currentTime;
         const durationValue = audioRef.current.duration || 0;
         
@@ -71,7 +73,7 @@ const AudioPlayer = ({
         audioRef.current.removeEventListener('loadedmetadata', handleLoadedMetadata);
       }
     };
-  }, [audioRef]);
+  }, [audioRef, isDragging]);
 
   useEffect(() => {
     setProgress(0);
@@ -99,11 +101,25 @@ const AudioPlayer = ({
   }, [preview.title, artistName]);
 
   const handleSliderChange = (value: number[]) => {
+    setIsDragging(true);
+    if (audioRef.current && audioRef.current.duration) {
+      const newTime = (value[0] / 100) * audioRef.current.duration;
+      setProgress(value[0]);
+      
+      // Actualizar el tiempo mostrado mientras se arrastra
+      const minutes = Math.floor(newTime / 60);
+      const seconds = Math.floor(newTime % 60);
+      setCurrentTime(`${minutes}:${seconds < 10 ? '0' : ''}${seconds}`);
+    }
+  };
+
+  const handleSliderCommit = (value: number[]) => {
     if (audioRef.current && audioRef.current.duration) {
       const newTime = (value[0] / 100) * audioRef.current.duration;
       audioRef.current.currentTime = newTime;
       setProgress(value[0]);
     }
+    setTimeout(() => setIsDragging(false), 200);
   };
 
   return (
@@ -164,6 +180,7 @@ const AudioPlayer = ({
               max={100}
               step={0.1}
               onValueChange={handleSliderChange}
+              onValueCommit={handleSliderCommit}
               className="flex-grow"
             />
             <span className="text-xs text-gray-500 dark:text-gray-400 min-w-[35px] text-right">{duration}</span>
