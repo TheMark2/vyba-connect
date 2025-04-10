@@ -14,8 +14,8 @@ import ContactCard from "@/components/artist-profile/ContactCard";
 import RecommendedArtists from "@/components/artist-profile/RecommendedArtists";
 import NotFoundArtist from "@/components/artist-profile/NotFoundArtist";
 import GroupMembers from "@/components/artist-profile/GroupMembers";
-import AudioPlayer from "@/components/artist-profile/AudioPlayer";
 import { useIsMobile } from "@/hooks/use-mobile";
+
 const artistsData = [{
   id: "1",
   name: "Antonia Pedragosa",
@@ -169,30 +169,20 @@ const recommendedArtists = [{
   priceRange: "180-350€",
   isFavorite: true
 }];
+
 const ArtistProfilePage = () => {
-  const {
-    id
-  } = useParams<{
-    id: string;
-  }>();
+  const { id } = useParams<{ id: string; }>();
   const navigate = useNavigate();
   const [isInfoOpen, setIsInfoOpen] = useState(false);
   const isMobile = useIsMobile();
   const aboutMeRef = useRef<HTMLDivElement>(null);
-  const [currentPlaying, setCurrentPlaying] = useState<any>(null);
-  const [isAudioPlaying, setIsAudioPlaying] = useState(false);
   const audioRef = useRef<HTMLAudioElement>(null);
+  
   useEffect(() => {
     if (!audioRef.current) {
       audioRef.current = new Audio();
-      audioRef.current.addEventListener('ended', () => {
-        setIsAudioPlaying(false);
-      });
-      audioRef.current.addEventListener('error', e => {
-        console.error('Error en la reproducción de audio:', e);
-        setIsAudioPlaying(false);
-      });
     }
+    
     return () => {
       if (audioRef.current) {
         audioRef.current.pause();
@@ -200,43 +190,52 @@ const ArtistProfilePage = () => {
       }
     };
   }, []);
+
   const artist = artistsData.find(artist => artist.id === id);
+  
   if (!artist) {
     return <NotFoundArtist onBack={() => navigate(-1)} />;
   }
+
   const handleFavorite = () => {
     toast.success("Añadido a favoritos", {
       icon: "❤️",
       position: "bottom-center"
     });
   };
+
   const handleReport = () => {
     toast.info("Gracias por informarnos", {
       description: "Revisaremos el perfil lo antes posible",
       position: "bottom-center"
     });
   };
+
   const handleShare = () => {
     toast.success("Enlace copiado al portapapeles", {
       position: "bottom-center"
     });
   };
+
   const handleContact = () => {
     toast.success(`Contactando con ${artist.name}`, {
       description: "Te conectaremos pronto",
       position: "bottom-center"
     });
   };
+
   const handleGenreClick = (genre: string) => {
     toast.success(`Buscando más artistas de ${genre}`, {
       position: "bottom-center"
     });
   };
+
   const handleEventTypeClick = (eventType: string) => {
     toast.success(`Buscando artistas para ${eventType}`, {
       position: "bottom-center"
     });
   };
+
   const artistContactData = {
     name: artist.name,
     location: artist.location || "",
@@ -244,74 +243,91 @@ const ArtistProfilePage = () => {
     priceRange: artist.priceRange,
     image: artist.images[0]
   };
-  const handlePlaybackState = (preview: any, playing: boolean) => {
-    console.log("Estado de reproducción cambiado:", {
-      preview,
-      playing
-    });
-    setCurrentPlaying(preview);
-    setIsAudioPlaying(playing);
-  };
-  const handlePlayPause = () => {
-    if (audioRef.current) {
-      console.log("Play/Pause presionado. Estado actual:", isAudioPlaying);
-      if (isAudioPlaying) {
-        audioRef.current.pause();
-      } else {
-        audioRef.current.play().catch(e => console.error("Error al reproducir audio:", e));
-      }
-      setIsAudioPlaying(!isAudioPlaying);
-    }
-  };
-  return <div className="bg-white dark:bg-vyba-dark-bg">
+
+  return (
+    <div className="bg-white dark:bg-vyba-dark-bg">
       <Navbar />
+      
       <div className={`${isMobile ? 'px-0' : 'px-6 md:px-10 lg:px-14 xl:px-16'}`}>
-        <ArtistBanner artist={artist} onFavorite={handleFavorite} onReport={handleReport} onShare={handleShare} />
+        <ArtistBanner 
+          artist={artist} 
+          onFavorite={handleFavorite} 
+          onReport={handleReport} 
+          onShare={handleShare} 
+        />
       </div>
 
       <div className="px-6 md:px-10 lg:px-14 xl:px-16 bg-white dark:bg-vyba-dark-bg">
         <div className="pb-16 max-w-7xl mx-auto">
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-16">
             <div className="lg:col-span-2">
-              <AboutArtist ref={aboutMeRef} description={artist.description} genres={artist.genres} onGenreClick={handleGenreClick} />
+              <AboutArtist 
+                ref={aboutMeRef} 
+                description={artist.description} 
+                genres={artist.genres} 
+                onGenreClick={handleGenreClick} 
+              />
               
               <DetailedInformation artist={artist} />
               
-              {artist.groupMembers && <GroupMembers members={artist.groupMembers} />}
+              {artist.groupMembers && (
+                <GroupMembers members={artist.groupMembers} />
+              )}
               
-              {artist.musicPreviews && <MusicPreviews previews={artist.musicPreviews} artistName={artist.name} onPlaybackState={handlePlaybackState} audioRef={audioRef} />}
+              {artist.musicPreviews && (
+                <MusicPreviews 
+                  previews={artist.musicPreviews} 
+                  artistName={artist.name} 
+                  audioRef={audioRef} 
+                />
+              )}
               
-              {artist.eventTypes && <EventTypes eventTypes={artist.eventTypes} onEventTypeClick={handleEventTypeClick} />}
+              {artist.eventTypes && (
+                <EventTypes 
+                  eventTypes={artist.eventTypes} 
+                  onEventTypeClick={handleEventTypeClick} 
+                />
+              )}
               
               <ArtistFAQ artistName={artist.name} />
               
-              <ArtistReviews rating={artist.rating} reviews={artist.reviews || 0} genres={artist.genres} reviewsData={artist.reviewsData} />
+              <ArtistReviews 
+                rating={artist.rating} 
+                reviews={artist.reviews || 0} 
+                genres={artist.genres} 
+                reviewsData={artist.reviewsData} 
+              />
             </div>
             
-            {!isMobile && <div className="space-y-6">
+            {!isMobile && (
+              <div className="space-y-6">
                 <div className="bg-[#F7F7F7] p-6 rounded-xl sticky top-24 h-fit">
-                  <ContactCard artist={artistContactData} onContact={handleContact} />
+                  <ContactCard 
+                    artist={artistContactData} 
+                    onContact={handleContact} 
+                  />
                 </div>
-                
-                {currentPlaying && <div className="bg-[#F7F7F7] dark:bg-vyba-dark-secondary/40 py-5 px-6 rounded-3xl sticky top-[calc(24rem+1.5rem)] h-fit">
-                    <AudioPlayer preview={currentPlaying} artistName={artist.name} isPlaying={isAudioPlaying} onPlayPause={handlePlayPause} audioRef={audioRef} />
-                  </div>}
-              </div>}
+              </div>
+            )}
           </div>
         </div>
 
         <RecommendedArtists artists={recommendedArtists} />
       </div>
       
-      {isMobile && <div className="fixed bottom-0 left-0 right-0 z-50 bg-[#F7F7F7] px-6 pt-4 pb-6 border-t border-gray-100 shadow-lg">
-          <ContactCard artist={artistContactData} onContact={handleContact} aboutMeRef={aboutMeRef} />
-          
-          {currentPlaying && <div className="mt-4">
-              <AudioPlayer preview={currentPlaying} artistName={artist.name} isPlaying={isAudioPlaying} onPlayPause={handlePlayPause} audioRef={audioRef} />
-            </div>}
-        </div>}
+      {isMobile && (
+        <div className="fixed bottom-0 left-0 right-0 z-50 bg-[#F7F7F7] px-6 pt-4 pb-6 border-t border-gray-100 shadow-lg">
+          <ContactCard 
+            artist={artistContactData} 
+            onContact={handleContact} 
+            aboutMeRef={aboutMeRef} 
+          />
+        </div>
+      )}
       
       <Footer />
-    </div>;
+    </div>
+  );
 };
+
 export default ArtistProfilePage;
