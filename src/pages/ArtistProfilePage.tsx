@@ -1,3 +1,4 @@
+
 import React, { useState, useRef } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { toast } from "sonner";
@@ -215,6 +216,9 @@ const ArtistProfilePage = () => {
   const [isInfoOpen, setIsInfoOpen] = useState(false);
   const isMobile = useIsMobile();
   const aboutMeRef = useRef<HTMLDivElement>(null);
+  const [currentPlaying, setCurrentPlaying] = useState<any>(null);
+  const [isAudioPlaying, setIsAudioPlaying] = useState(false);
+  const audioRef = useRef<HTMLAudioElement>(null);
   
   const artist = artistsData.find(artist => artist.id === id);
   
@@ -273,6 +277,22 @@ const ArtistProfilePage = () => {
     image: artist.images[0]
   };
 
+  const handlePlaybackState = (preview: any, playing: boolean) => {
+    setCurrentPlaying(preview);
+    setIsAudioPlaying(playing);
+  };
+
+  const handlePlayPause = () => {
+    if (audioRef.current) {
+      if (isAudioPlaying) {
+        audioRef.current.pause();
+      } else {
+        audioRef.current.play().catch(e => console.error("Error al reproducir audio:", e));
+      }
+      setIsAudioPlaying(!isAudioPlaying);
+    }
+  };
+
   return (
     <div className="bg-white dark:bg-vyba-dark-bg">
       <Navbar />
@@ -305,7 +325,9 @@ const ArtistProfilePage = () => {
               {artist.musicPreviews && (
                 <MusicPreviews 
                   previews={artist.musicPreviews} 
-                  artistName={artist.name} 
+                  artistName={artist.name}
+                  onPlaybackState={handlePlaybackState}
+                  audioRef={audioRef}
                 />
               )}
               
@@ -332,6 +354,16 @@ const ArtistProfilePage = () => {
                   artist={artistContactData} 
                   onContact={handleContact} 
                 />
+                
+                {currentPlaying && (
+                  <AudioPlayer 
+                    preview={currentPlaying}
+                    artistName={artist.name}
+                    isPlaying={isAudioPlaying}
+                    onPlayPause={handlePlayPause}
+                    audioRef={audioRef}
+                  />
+                )}
               </div>
             )}
           </div>
@@ -347,6 +379,16 @@ const ArtistProfilePage = () => {
             onContact={handleContact}
             aboutMeRef={aboutMeRef}
           />
+          
+          {currentPlaying && (
+            <AudioPlayer 
+              preview={currentPlaying}
+              artistName={artist.name}
+              isPlaying={isAudioPlaying}
+              onPlayPause={handlePlayPause}
+              audioRef={audioRef}
+            />
+          )}
         </div>
       )}
       

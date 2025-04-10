@@ -69,8 +69,8 @@ const AudioPlayer = ({
   }, [audioRef]);
 
   return (
-    <div className="fixed bottom-0 left-0 right-0 bg-[#F7F7F7] dark:bg-vyba-dark-secondary/40 py-5 px-6 z-50 shadow-lg border-t border-gray-200 dark:border-gray-800">
-      <div className="max-w-7xl mx-auto relative">
+    <div className="bg-[#F7F7F7] dark:bg-vyba-dark-secondary/40 py-5 px-6 rounded-xl border-t border-gray-200 dark:border-gray-800 mt-4">
+      <div className="relative">
         {/* Fondo blureado con la imagen */}
         {preview.image && (
           <div className="absolute top-0 left-0 w-20 h-20 overflow-hidden rounded-lg -m-2 opacity-20 pointer-events-none">

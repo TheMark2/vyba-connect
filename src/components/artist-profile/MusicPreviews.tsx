@@ -5,7 +5,6 @@ import { Badge } from "@/components/ui/badge";
 import { Carousel, CarouselContent, CarouselItem } from "@/components/ui/carousel";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { Button } from "@/components/ui/button";
-import AudioPlayer from "./AudioPlayer";
 
 interface MusicPreview {
   title: string;
@@ -18,11 +17,15 @@ interface MusicPreview {
 interface MusicPreviewsProps {
   previews: MusicPreview[];
   artistName: string;
+  onPlaybackState?: (preview: MusicPreview, isPlaying: boolean) => void;
+  audioRef: React.RefObject<HTMLAudioElement>;
 }
 
 const MusicPreviews = ({
   previews,
-  artistName
+  artistName,
+  onPlaybackState,
+  audioRef
 }: MusicPreviewsProps) => {
   const isMobile = useIsMobile();
   const [windowWidth, setWindowWidth] = useState(window.innerWidth);
@@ -30,10 +33,8 @@ const MusicPreviews = ({
   const [useCarousel, setUseCarousel] = useState(isMobile || previews.length > 3);
   const [isNavbarVisible, setIsNavbarVisible] = useState(true);
   const [currentlyPlaying, setCurrentlyPlaying] = useState<string | null>(null);
-  const [currentPreview, setCurrentPreview] = useState<MusicPreview | null>(null);
 
   const observerRef = useRef<IntersectionObserver | null>(null);
-  const audioRef = useRef<HTMLAudioElement | null>(null);
 
   useEffect(() => {
     const detectNavbarVisibility = () => {
@@ -57,17 +58,6 @@ const MusicPreviews = ({
     };
   }, []);
 
-  useEffect(() => {
-    audioRef.current = new Audio();
-    
-    return () => {
-      if (audioRef.current) {
-        audioRef.current.pause();
-        audioRef.current = null;
-      }
-    };
-  }, []);
-
   const handlePlayPause = (preview: MusicPreview) => {
     if (!preview.audioUrl) {
       console.log(`No hay URL de audio para: ${preview.title}`);
@@ -79,18 +69,24 @@ const MusicPreviews = ({
         audioRef.current.pause();
       }
       setCurrentlyPlaying(null);
-      setCurrentPreview(null);
+      if (onPlaybackState) {
+        onPlaybackState(preview, false);
+      }
     } else {
       if (audioRef.current) {
         audioRef.current.pause();
         audioRef.current.src = preview.audioUrl;
         audioRef.current.play().catch(e => console.error("Error al reproducir audio:", e));
         setCurrentlyPlaying(preview.title);
-        setCurrentPreview(preview);
+        if (onPlaybackState) {
+          onPlaybackState(preview, true);
+        }
         
         audioRef.current.onended = () => {
           setCurrentlyPlaying(null);
-          setCurrentPreview(null);
+          if (onPlaybackState) {
+            onPlaybackState(preview, false);
+          }
         };
       }
     }
@@ -232,16 +228,6 @@ const MusicPreviews = ({
             </div>
           )}
         </>
-      )}
-
-      {currentlyPlaying && currentPreview && (
-        <AudioPlayer 
-          preview={currentPreview}
-          artistName={artistName}
-          isPlaying={!!currentlyPlaying}
-          onPlayPause={() => handlePlayPause(currentPreview)}
-          audioRef={audioRef}
-        />
       )}
     </div>
   );
