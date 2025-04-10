@@ -1,4 +1,3 @@
-
 import React, { useEffect, useState, useRef } from "react";
 import { Slider } from "@/components/ui/slider";
 import { Pause, Play } from "lucide-react";
@@ -44,12 +43,10 @@ const AudioPlayer = ({
         const currentTimeValue = audioRef.current.currentTime;
         const durationValue = audioRef.current.duration || 0;
         
-        // Actualizar el progreso como porcentaje
         if (durationValue > 0) {
           setProgress((currentTimeValue / durationValue) * 100);
         }
         
-        // Formatear el tiempo actual
         const minutes = Math.floor(currentTimeValue / 60);
         const seconds = Math.floor(currentTimeValue % 60);
         setCurrentTime(`${minutes}:${seconds < 10 ? '0' : ''}${seconds}`);
@@ -76,14 +73,12 @@ const AudioPlayer = ({
     };
   }, [audioRef]);
 
-  // Resetear el progreso cuando cambia la canción
   useEffect(() => {
     setProgress(0);
     setCurrentTime("0:00");
     setDuration(preview.duration);
   }, [preview]);
   
-  // Comprobar si los textos necesitan marquesina
   useEffect(() => {
     const checkTextOverflow = () => {
       if (titleRef.current) {
@@ -103,7 +98,6 @@ const AudioPlayer = ({
     return () => window.removeEventListener('resize', checkTextOverflow);
   }, [preview.title, artistName]);
 
-  // Manejar clic en la barra de progreso para desplazarse por la canción
   const handleSliderChange = (value: number[]) => {
     if (audioRef.current && audioRef.current.duration) {
       const newTime = (value[0] / 100) * audioRef.current.duration;
@@ -115,9 +109,7 @@ const AudioPlayer = ({
   return (
     <div className="relative p-5 rounded-2xl overflow-hidden bg-[#F7F7F7] dark:bg-vyba-dark-secondary/40">
       <div className="flex flex-col gap-4 rounded-xl">
-        {/* Cabecera: Imagen y título */}
         <div className="flex items-center gap-4">
-          {/* Imagen de la canción */}
           <div className="w-16 h-16 rounded-lg overflow-hidden bg-gray-200 flex-shrink-0">
             {preview.image ? (
               <Image 
@@ -133,7 +125,6 @@ const AudioPlayer = ({
           </div>
           
           <div className="flex-grow overflow-hidden">
-            {/* Título con efecto marquesina si es necesario */}
             <div className="h-6 overflow-hidden">
               {textOverflow.title ? (
                 <div className="whitespace-nowrap animate-marquee-bounce">
@@ -148,7 +139,6 @@ const AudioPlayer = ({
               )}
             </div>
             
-            {/* Artista con efecto marquesina si es necesario */}
             <div className="h-5 overflow-hidden">
               {textOverflow.artist ? (
                 <div className="whitespace-nowrap animate-marquee-bounce">
@@ -165,7 +155,6 @@ const AudioPlayer = ({
           </div>
         </div>
         
-        {/* Barra de progreso con tiempos */}
         <div>
           <div className="flex items-center gap-2">
             <span className="text-xs text-gray-500 dark:text-gray-400 min-w-[35px]">{currentTime}</span>
@@ -175,12 +164,11 @@ const AudioPlayer = ({
               max={100}
               step={0.1}
               onValueChange={handleSliderChange}
-              className="flex-grow h-1"
+              className="flex-grow"
             />
             <span className="text-xs text-gray-500 dark:text-gray-400 min-w-[35px] text-right">{duration}</span>
           </div>
           
-          {/* Botón de reproducción centrado */}
           <div className="flex justify-center mt-3">
             <Button 
               variant="secondary" 
