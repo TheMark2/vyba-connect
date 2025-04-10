@@ -156,7 +156,7 @@ const ImagePreviewCard = ({
         <img src={preview.image} alt={preview.title} className="w-full h-full object-cover" />
         
         {/* Degradado oscuro de abajo hacia arriba - más pronunciado - se oculta en hover */}
-        <div className="absolute inset-0 bg-gradient-to-t from-black via-black/70 to-transparent transition-opacity duration-300 group-hover:opacity-0"></div>
+        <div className="absolute inset-0 bg-gradient-to-t from-black via-black/70 to-transparent opacity-60 pointer-events-none transition-opacity duration-300 group-hover:opacity-0"></div>
         
         {/* Badge de video si es aplicable - sin opacidad y con padding ajustado */}
         {preview.hasVideo && <Badge className="absolute top-5 left-5 bg-white text-black font-medium px-4 py-2 rounded-full">
