@@ -195,6 +195,7 @@ const ArtistProfilePage = () => {
   const [isAudioPlaying, setIsAudioPlaying] = useState(false);
   const audioRef = useRef<HTMLAudioElement>(null);
   const [showMobileAudioPlayer, setShowMobileAudioPlayer] = useState(true);
+  const [expandBottomSheet, setExpandBottomSheet] = useState(false);
 
   useEffect(() => {
     if (!audioRef.current) {
@@ -286,9 +287,11 @@ const ArtistProfilePage = () => {
     });
     setCurrentPlaying(preview);
     setIsAudioPlaying(playing);
-    if (playing && isMobile) {
-      setShowMobileAudioPlayer(true);
-    }
+  };
+
+  const handlePreviewClick = (preview: any) => {
+    console.log("Preview clickeado:", preview);
+    setExpandBottomSheet(true);
   };
 
   const handlePlayPause = () => {
@@ -351,7 +354,8 @@ const ArtistProfilePage = () => {
                     previews={artist.musicPreviews} 
                     artistName={artist.name} 
                     onPlaybackState={handlePlaybackState} 
-                    audioRef={audioRef} 
+                    audioRef={audioRef}
+                    onPreviewClick={handlePreviewClick} 
                   />
                 </div>
               )}
@@ -398,6 +402,7 @@ const ArtistProfilePage = () => {
           isAudioPlaying={isAudioPlaying}
           onPlayPause={handlePlayPause}
           audioRef={audioRef}
+          expanded={expandBottomSheet}
         />
       )}
       

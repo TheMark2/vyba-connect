@@ -19,6 +19,7 @@ interface MobileBottomSheetProps {
   isAudioPlaying: boolean;
   onPlayPause: () => void;
   audioRef: React.RefObject<HTMLAudioElement>;
+  expanded?: boolean; // Nueva propiedad para controlar si el panel está expandido
 }
 
 const MobileBottomSheet = ({
@@ -29,10 +30,11 @@ const MobileBottomSheet = ({
   currentPlaying,
   isAudioPlaying,
   onPlayPause,
-  audioRef
+  audioRef,
+  expanded = false // Por defecto no está expandido
 }: MobileBottomSheetProps) => {
-  // Aumentamos aún más la altura para asegurar que la tarjeta de contacto se vea completa
-  const contactCardHeight = 200; // Aumentado de 180 para dar más espacio
+  // Altura de la tarjeta de contacto para que se vea completa
+  const contactCardHeight = 200;
   
   return (
     <SwipeableBottomSheet
@@ -41,6 +43,7 @@ const MobileBottomSheet = ({
       fullScreen={false}
       topShadow={false}
       shadowTip={false}
+      open={currentPlaying && expanded} // Mostramos expandido solo si hay algo reproduciéndose y expanded es true
       bodyStyle={{ 
         borderTopLeftRadius: '24px', 
         borderTopRightRadius: '24px',
