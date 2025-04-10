@@ -85,23 +85,27 @@ const VideoPreviewCard = ({
     
     if (videoRef.current) {
       if (isPlaying) {
-        // Restaurar volumen normal (no silenciado) cuando se reproduce como audio
-        videoRef.current.muted = false;
-        videoRef.current.volume = 1.0;
+        // SOLO SINCRONIZAMOS VISUALMENTE el video con el audio principal
+        // pero no reproducimos el audio del video
+        videoRef.current.muted = true; // Siempre silenciado
         
-        const playPromise = videoRef.current.play();
-        if (playPromise !== undefined) {
-          playPromise.catch(error => {
-            console.error("Error al reproducir video como audio:", error);
-            // No mostramos toast aquí porque MusicPreviews ya maneja los errores
-          });
+        try {
+          // Solo sincronizar el video (no el audio)
+          const syncPromise = videoRef.current.play();
+          if (syncPromise !== undefined) {
+            syncPromise.catch(error => {
+              console.error("Error al sincronizar video:", error);
+            });
+          }
+        } catch (e) {
+          console.error("Error al sincronizar el video:", e);
         }
       } else {
         videoRef.current.pause();
       }
     }
     
-    // Importante: si no está reproduciéndose como audio principal,
+    // Si no está reproduciéndose como audio principal,
     // nos aseguramos de que el video esté pausado y en su posición inicial
     if (!isPlaying && videoRef.current && !isYoutubeVideo && !videoError) {
       videoRef.current.pause();
@@ -237,12 +241,12 @@ const VideoPreviewCard = ({
             ref={videoRef}
             src={preview.videoUrl}
             className="w-full h-full object-cover"
-            muted={!isPlaying} // Solo silenciado cuando no se está reproduciendo como audio
+            muted={true} // Siempre silenciado porque el audio lo maneja AudioPlayer
             playsInline
             preload="metadata"
             poster={preview.image}
             crossOrigin="anonymous"
-            loop={false} // Importante: quitamos el loop para que no se repita
+            loop={false}
           />
         )}
         

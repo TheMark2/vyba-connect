@@ -207,7 +207,7 @@ const ArtistProfilePage = () => {
     if (!audioRef.current) {
       const audio = new Audio();
       
-      // Asegurarnos de que no se reproduzca en bucle
+      // Configuración inicial del audio
       audio.loop = false;
       
       audio.addEventListener('ended', () => {

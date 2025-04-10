@@ -48,169 +48,93 @@ const MusicPreviews = ({
       console.log("Reproduciendo nuevo audio/video");
       audioRef.current.pause();
       
-      // Si es un video local, usar el audio del video en lugar de la URL de audio
-      if (preview.hasVideo && preview.videoUrl && !preview.videoUrl.includes('youtube.com') && !preview.videoUrl.includes('youtu.be')) {
-        try {
-          console.log("Usando audio del video:", preview.videoUrl);
-          
-          // Limpiar eventos anteriores
-          audioRef.current.oncanplaythrough = null;
-          audioRef.current.onerror = null;
-          audioRef.current.onloadedmetadata = null;
-          audioRef.current.onended = null;
-          
-          // Configurar eventos para el audio del video
-          audioRef.current.oncanplaythrough = () => {
-            console.log("Audio del video listo para reproducir sin interrupciones");
-            if (audioRef.current) {
-              audioRef.current.play()
-                .then(() => {
-                  console.log("Reproducción del audio del video iniciada correctamente");
-                  setCurrentlyPlaying(preview.title);
-                  setLoadingAudio(null);
-                  if (onPlaybackState) {
-                    onPlaybackState(preview, true);
-                  }
-                })
-                .catch(error => {
-                  console.error("Error al reproducir audio del video:", error);
-                  setLoadingAudio(null);
-                  handlePlaybackError(preview);
-                });
-            }
-          };
-          
-          audioRef.current.onerror = (e) => {
-            console.error("Error en la carga del audio del video:", e);
-            setLoadingAudio(null);
-            handlePlaybackError(preview);
-          };
-          
-          audioRef.current.onloadedmetadata = () => {
-            console.log("Metadatos de audio del video cargados");
-          };
-          
-          audioRef.current.onended = () => {
-            console.log("Audio del video finalizado");
-            setCurrentlyPlaying(null);
-            if (onPlaybackState) {
-              onPlaybackState(preview, false);
-            }
-          };
-          
-          // Usar la ruta del video como fuente de audio
-          audioRef.current.src = preview.videoUrl;
-          audioRef.current.crossOrigin = "anonymous";
-          audioRef.current.volume = 1.0;
-          audioRef.current.loop = false; // Importante: quitamos el loop para que no se repita
-          audioRef.current.load();
-          
-          // Timeout para manejar problemas de carga
-          const timeoutId = setTimeout(() => {
-            if (loadingAudio === preview.title) {
-              console.warn("Timeout de carga de audio del video");
-              setLoadingAudio(null);
-              
-              // Si falla el audio del video, intentar con el audio normal
-              if (preview.audioUrl) {
-                toast.info("Cambiando a fuente de audio alternativa...");
-                playNormalAudio(preview);
-              } else {
-                handlePlaybackError(preview);
-              }
-            }
-          }, 8000);
-          
-          return () => clearTimeout(timeoutId);
-        } catch (error) {
-          console.error("Error al configurar el audio del video:", error);
-          setLoadingAudio(null);
-          
-          // Intentar reproducir el audio normal si está disponible
-          if (preview.audioUrl) {
-            playNormalAudio(preview);
-          } else {
-            handlePlaybackError(preview);
-          }
-        }
-      } else {
-        // Usar el audio normal para videos de YouTube o pistas sin video
-        playNormalAudio(preview);
+      // Determinar qué fuente de audio usar
+      let audioSource = preview.audioUrl;
+      
+      // Si es un video local, usar el video como fuente de audio
+      if (preview.hasVideo && preview.videoUrl && 
+          !preview.videoUrl.includes('youtube.com') && 
+          !preview.videoUrl.includes('youtu.be')) {
+        audioSource = preview.videoUrl;
+        console.log("Usando audio del video:", preview.videoUrl);
       }
-    }
-  };
-  
-  const playNormalAudio = (preview: MusicPreview) => {
-    if (!audioRef.current || !preview.audioUrl) {
-      console.log(`No hay URL de audio para: ${preview.title}`);
-      toast.error("No hay audio disponible para esta pista");
-      setLoadingAudio(null);
-      return;
-    }
-    
-    try {
-      audioRef.current.oncanplaythrough = null;
-      audioRef.current.onerror = null;
-      audioRef.current.onloadedmetadata = null;
-      audioRef.current.onended = null;
       
-      audioRef.current.oncanplaythrough = () => {
-        console.log("Audio listo para reproducir sin interrupciones");
-        if (audioRef.current) {
-          audioRef.current.play()
-            .then(() => {
-              console.log("Reproducción iniciada correctamente");
-              setCurrentlyPlaying(preview.title);
-              setLoadingAudio(null);
-              if (onPlaybackState) {
-                onPlaybackState(preview, true);
-              }
-            })
-            .catch(error => {
-              console.error("Error al reproducir audio:", error);
-              setLoadingAudio(null);
-              handlePlaybackError(preview);
-            });
-        }
-      };
-      
-      audioRef.current.onerror = (e) => {
-        console.error("Error en la carga del audio:", e);
+      // Si no hay fuente de audio disponible
+      if (!audioSource) {
+        console.log(`No hay URL de audio para: ${preview.title}`);
+        toast.error("No hay audio disponible para esta pista");
         setLoadingAudio(null);
-        handlePlaybackError(preview);
-      };
+        return;
+      }
       
-      audioRef.current.onloadedmetadata = () => {
-        console.log("Metadatos de audio cargados");
-      };
-      
-      audioRef.current.onended = () => {
-        console.log("Audio finalizado");
-        setCurrentlyPlaying(null);
-        if (onPlaybackState) {
-          onPlaybackState(preview, false);
-        }
-      };
-      
-      audioRef.current.src = preview.audioUrl;
-      audioRef.current.crossOrigin = "anonymous";
-      audioRef.current.volume = 1.0;
-      audioRef.current.loop = false; // Importante: quitamos el loop para que no se repita
-      audioRef.current.load();
-      
-      const timeoutId = setTimeout(() => {
-        if (loadingAudio === preview.title) {
-          console.warn("Timeout de carga de audio");
+      try {
+        // Limpiar eventos anteriores
+        audioRef.current.oncanplaythrough = null;
+        audioRef.current.onerror = null;
+        audioRef.current.onloadedmetadata = null;
+        audioRef.current.onended = null;
+        
+        // Configurar eventos para el audio
+        audioRef.current.oncanplaythrough = () => {
+          console.log("Audio listo para reproducir sin interrupciones");
+          if (audioRef.current) {
+            audioRef.current.play()
+              .then(() => {
+                console.log("Reproducción iniciada correctamente");
+                setCurrentlyPlaying(preview.title);
+                setLoadingAudio(null);
+                if (onPlaybackState) {
+                  onPlaybackState(preview, true);
+                }
+              })
+              .catch(error => {
+                console.error("Error al reproducir audio:", error);
+                setLoadingAudio(null);
+                handlePlaybackError(preview);
+              });
+          }
+        };
+        
+        audioRef.current.onerror = (e) => {
+          console.error("Error en la carga del audio:", e);
           setLoadingAudio(null);
           handlePlaybackError(preview);
-        }
-      }, 8000);
-      
-      return () => clearTimeout(timeoutId);
-    } catch (error) {
-      console.error("Error al configurar el audio:", error);
-      setLoadingAudio(null);
-      handlePlaybackError(preview);
+        };
+        
+        audioRef.current.onloadedmetadata = () => {
+          console.log("Metadatos de audio cargados");
+        };
+        
+        audioRef.current.onended = () => {
+          console.log("Audio finalizado");
+          setCurrentlyPlaying(null);
+          if (onPlaybackState) {
+            onPlaybackState(preview, false);
+          }
+        };
+        
+        // Configurar y cargar el audio
+        audioRef.current.src = audioSource;
+        audioRef.current.crossOrigin = "anonymous";
+        audioRef.current.volume = 1.0;
+        audioRef.current.loop = false; // Importante: quitamos el loop para que no se repita
+        audioRef.current.load();
+        
+        // Timeout para manejar problemas de carga
+        const timeoutId = setTimeout(() => {
+          if (loadingAudio === preview.title) {
+            console.warn("Timeout de carga de audio");
+            setLoadingAudio(null);
+            handlePlaybackError(preview);
+          }
+        }, 8000);
+        
+        return () => clearTimeout(timeoutId);
+      } catch (error) {
+        console.error("Error al configurar el audio:", error);
+        setLoadingAudio(null);
+        handlePlaybackError(preview);
+      }
     }
   };
   
