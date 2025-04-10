@@ -47,17 +47,20 @@ const artistsData = [
       {
         title: "La Previa-Sesión Urbana Verano 2023",
         duration: "40:34",
-        image: "https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?q=80&w=1000"
+        image: "https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?q=80&w=1000",
+        audioUrl: "https://assets.mixkit.co/music/preview/mixkit-tech-house-vibes-130.mp3"
       }, 
       {
         title: "La Previa-Sesión Urbana Verano 2023",
         duration: "40:34",
         image: "https://images.unsplash.com/photo-1514525253161-7a46d19cd819?q=80&w=1000",
-        hasVideo: true
+        hasVideo: true,
+        audioUrl: "https://assets.mixkit.co/music/preview/mixkit-deep-urban-623.mp3"
       },
       {
         title: "La Previa-Sesión Urbana Verano 2023",
-        duration: "40:34"
+        duration: "40:34",
+        audioUrl: "https://assets.mixkit.co/music/preview/mixkit-hip-hop-02-738.mp3"
       }
     ],
     eventTypes: ["Bodas", "Fiestas Privadas", "Cumpleaños", "Eventos Corporativos", "Inauguraciones", "Aniversarios", "Cenas de Gala"],

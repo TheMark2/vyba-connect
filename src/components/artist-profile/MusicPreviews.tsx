@@ -1,5 +1,6 @@
+
 import React, { useEffect, useState, useRef } from "react";
-import { Music, Video, Play, Expand } from "lucide-react";
+import { Music, Video, Play, Expand, Pause, FileAudio } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Carousel, CarouselContent, CarouselItem } from "@/components/ui/carousel";
@@ -11,6 +12,7 @@ interface MusicPreview {
   duration: string;
   image?: string;
   hasVideo?: boolean;
+  audioUrl?: string; // URL del archivo de audio
 }
 
 interface MusicPreviewsProps {
@@ -24,10 +26,13 @@ const MusicPreviews = ({
 }: MusicPreviewsProps) => {
   const isMobile = useIsMobile();
   const [windowWidth, setWindowWidth] = useState(window.innerWidth);
+  const [windowHeight, setWindowHeight] = useState(window.innerHeight);
   const [useCarousel, setUseCarousel] = useState(isMobile || previews.length > 3);
   const [isNavbarVisible, setIsNavbarVisible] = useState(true);
+  const [currentlyPlaying, setCurrentlyPlaying] = useState<string | null>(null);
 
   const observerRef = useRef<IntersectionObserver | null>(null);
+  const audioRef = useRef<HTMLAudioElement | null>(null);
 
   useEffect(() => {
     const detectNavbarVisibility = () => {
@@ -52,8 +57,58 @@ const MusicPreviews = ({
   }, []);
 
   useEffect(() => {
+    // Crear elemento de audio una vez
+    audioRef.current = new Audio();
+    
+    // Limpiar cuando el componente se desmonte
+    return () => {
+      if (audioRef.current) {
+        audioRef.current.pause();
+        audioRef.current = null;
+      }
+    };
+  }, []);
+
+  const handlePlayPause = (preview: MusicPreview) => {
+    if (!preview.audioUrl) {
+      console.log(`No hay URL de audio para: ${preview.title}`);
+      return;
+    }
+
+    if (currentlyPlaying === preview.title) {
+      // Pausar si ya está sonando
+      if (audioRef.current) {
+        audioRef.current.pause();
+      }
+      setCurrentlyPlaying(null);
+    } else {
+      // Reproducir si no está sonando o es una pista diferente
+      if (audioRef.current) {
+        audioRef.current.pause();
+        audioRef.current.src = preview.audioUrl;
+        audioRef.current.play().catch(e => console.error("Error al reproducir audio:", e));
+        setCurrentlyPlaying(preview.title);
+        
+        // Añadir evento para cuando termine la reproducción
+        audioRef.current.onended = () => {
+          setCurrentlyPlaying(null);
+        };
+      }
+    }
+  };
+
+  useEffect(() => {
     const handleResize = () => {
       setWindowWidth(window.innerWidth);
+      setWindowHeight(window.innerHeight);
+      checkCardDistortion();
+    };
+
+    const checkCardDistortion = () => {
+      // Si la altura de la ventana es menor a 700px o la relación aspecto es desfavorable
+      // activamos el carrusel para evitar distorsión 
+      const aspectRatio = window.innerWidth / window.innerHeight;
+      const heightThreshold = 700; // Umbral de altura para considerar activar carrusel
 
       if (!isNavbarVisible) {
         setUseCarousel(false);
@@ -61,6 +116,8 @@ const MusicPreviews = ({
       }
 
       if (window.innerWidth < 768) {
+        setUseCarousel(true);
+      } else if (window.innerHeight < heightThreshold) {
         setUseCarousel(true);
       } else if (window.innerWidth < 1024) {
         setUseCarousel(previews.length > 2);
@@ -94,20 +151,55 @@ const MusicPreviews = ({
                   windowWidth < 1024 ? 'basis-1/2' : // Tablets: 2 por fila
                   'basis-1/3' // Desktop: 3 por fila
                 }`}>
-                    {preview.image ? <ImagePreviewCard preview={preview} artistName={artistName} /> : <NoImagePreviewCard preview={preview} artistName={artistName} />}
+                    {preview.image ? 
+                      <ImagePreviewCard 
+                        preview={preview} 
+                        artistName={artistName} 
+                        isPlaying={currentlyPlaying === preview.title}
+                        onPlayPause={() => handlePlayPause(preview)}
+                      /> : 
+                      <NoImagePreviewCard 
+                        preview={preview} 
+                        artistName={artistName} 
+                        isPlaying={currentlyPlaying === preview.title}
+                        onPlayPause={() => handlePlayPause(preview)}
+                      />}
                   </CarouselItem>)}
               </CarouselContent>
-              {/* Sin botones de navegación */}
             </Carousel> :
       <div className={`flex overflow-x-auto space-x-4 pb-4 ${isNavbarVisible ? 'hidden' : ''}`}>
               {previews.map((preview, index) => <div key={index} className="flex-none w-80">
-                  {preview.image ? <ImagePreviewCard preview={preview} artistName={artistName} /> : <NoImagePreviewCard preview={preview} artistName={artistName} />}
+                  {preview.image ? 
+                    <ImagePreviewCard 
+                      preview={preview} 
+                      artistName={artistName} 
+                      isPlaying={currentlyPlaying === preview.title}
+                      onPlayPause={() => handlePlayPause(preview)}
+                    /> : 
+                    <NoImagePreviewCard 
+                      preview={preview} 
+                      artistName={artistName} 
+                      isPlaying={currentlyPlaying === preview.title}
+                      onPlayPause={() => handlePlayPause(preview)}
+                    />}
                 </div>)}
             </div>}
           
           {!useCarousel && isNavbarVisible && <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {previews.map((preview, index) => <div key={index}>
-                  {preview.image ? <ImagePreviewCard preview={preview} artistName={artistName} /> : <NoImagePreviewCard preview={preview} artistName={artistName} />}
+                  {preview.image ? 
+                    <ImagePreviewCard 
+                      preview={preview} 
+                      artistName={artistName} 
+                      isPlaying={currentlyPlaying === preview.title}
+                      onPlayPause={() => handlePlayPause(preview)}
+                    /> : 
+                    <NoImagePreviewCard 
+                      preview={preview} 
+                      artistName={artistName} 
+                      isPlaying={currentlyPlaying === preview.title}
+                      onPlayPause={() => handlePlayPause(preview)}
+                    />}
                 </div>)}
             </div>}
         </>}
@@ -116,29 +208,50 @@ const MusicPreviews = ({
 
 const ImagePreviewCard = ({
   preview,
-  artistName
+  artistName,
+  isPlaying,
+  onPlayPause
 }: {
   preview: MusicPreview;
   artistName: string;
+  isPlaying: boolean;
+  onPlayPause: () => void;
 }) => {
-  const handlePlay = () => {
-    console.log(`Reproduciendo: ${preview.title}`);
+  const handlePlay = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    onPlayPause();
   };
 
-  const handleExpand = () => {
+  const handleExpand = (e: React.MouseEvent) => {
+    e.stopPropagation();
     console.log(`Expandiendo video: ${preview.title}`);
   };
 
-  return <Card className="overflow-hidden rounded-3xl relative group cursor-pointer border-none">
+  const handleCardClick = () => {
+    onPlayPause();
+  };
+
+  return <Card className="overflow-hidden rounded-3xl relative group cursor-pointer border-none" onClick={handleCardClick}>
       <div className="relative aspect-[4/5]">
         <img src={preview.image} alt={preview.title} className="w-full h-full object-cover" />
         
         <div className="absolute inset-0 bg-gradient-to-t from-black via-black/70 to-transparent opacity-60 pointer-events-none transition-opacity duration-300 group-hover:opacity-0"></div>
         
-        {preview.hasVideo && <Badge className="absolute top-5 left-5 bg-white text-black font-medium px-4 py-2 rounded-full">
-            <Video className="w-4 h-4 mr-1" />
-            Video
-          </Badge>}
+        <div className="absolute top-5 left-5 flex gap-2">
+          {preview.hasVideo && 
+            <Badge className="bg-white text-black font-medium px-4 py-2 rounded-full">
+              <Video className="w-4 h-4 mr-1" />
+              Video
+            </Badge>
+          }
+          
+          {preview.audioUrl && 
+            <Badge className="bg-white text-black font-medium px-4 py-2 rounded-full">
+              <FileAudio className="w-4 h-4 mr-1" />
+              Audio
+            </Badge>
+          }
+        </div>
         
         {preview.hasVideo && (
           <Badge 
@@ -161,10 +274,14 @@ const ImagePreviewCard = ({
           className="absolute bottom-7 left-7 opacity-0 group-hover:opacity-100 transition-opacity duration-300 h-10 w-10 bg-white hover:bg-white/90 text-black"
           onClick={handlePlay}
         >
-          <Play className="h-5 w-5" />
+          {isPlaying ? (
+            <Pause className="h-5 w-5" />
+          ) : (
+            <Play className="h-5 w-5" />
+          )}
         </Button>
         
-        <div className="absolute bottom-7 right-7 z-10">
+        <div className="absolute bottom-7 right-7 z-10 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
           <span className="text-sm font-medium text-white bg-black/50 px-2 py-1 rounded-md">{preview.duration}</span>
         </div>
       </div>
@@ -173,16 +290,25 @@ const ImagePreviewCard = ({
 
 const NoImagePreviewCard = ({
   preview,
-  artistName
+  artistName,
+  isPlaying,
+  onPlayPause
 }: {
   preview: MusicPreview;
   artistName: string;
+  isPlaying: boolean;
+  onPlayPause: () => void;
 }) => {
-  const handlePlay = () => {
-    console.log(`Reproduciendo: ${preview.title}`);
+  const handlePlay = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    onPlayPause();
   };
 
-  return <Card className="overflow-hidden rounded-3xl relative group cursor-pointer border-none bg-[#F7F7F7] dark:bg-vyba-dark-secondary/40">
+  const handleCardClick = () => {
+    onPlayPause();
+  };
+
+  return <Card className="overflow-hidden rounded-3xl relative group cursor-pointer border-none bg-[#F7F7F7] dark:bg-vyba-dark-secondary/40" onClick={handleCardClick}>
       <div className="relative aspect-[4/5] flex flex-col items-center justify-center p-7">
         <div className="mb-5 opacity-80 group-hover:opacity-40 transition-opacity duration-300">
           <Music className="w-20 h-20 stroke-1" />
@@ -199,10 +325,14 @@ const NoImagePreviewCard = ({
           className="absolute bottom-7 left-7 opacity-0 group-hover:opacity-100 transition-opacity duration-300 h-10 w-10"
           onClick={handlePlay}
         >
-          <Play className="h-5 w-5" />
+          {isPlaying ? (
+            <Pause className="h-5 w-5" />
+          ) : (
+            <Play className="h-5 w-5" />
+          )}
         </Button>
         
-        <div className="absolute bottom-7 right-7 z-10">
+        <div className="absolute bottom-7 right-7 z-10 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
           <span className="text-sm font-medium dark:text-white bg-gray-200 dark:bg-black/50 px-2 py-1 rounded-md">{preview.duration}</span>
         </div>
       </div>
