@@ -44,13 +44,16 @@ const ContactCard = ({
         if (currentScrollY > elementTop) {
           setIsVisible(true);
         } else {
-          // Solo ocultamos si estamos antes del elemento de referencia
           setIsVisible(false);
         }
       }
 
-      // Ya no ocultamos en ningún caso al hacer scroll hacia abajo
-      // para mantener la tarjeta siempre visible una vez que se muestra
+      // En móvil, no ocultamos al hacer scroll hacia abajo
+      if (!isMobile && currentScrollY > lastScrollY) {
+        setIsVisible(false);
+      } else {
+        setIsVisible(true);
+      }
       
       setLastScrollY(currentScrollY);
     };
