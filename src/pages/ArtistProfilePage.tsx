@@ -1,3 +1,4 @@
+
 import React, { useState, useRef, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { toast } from "sonner";
@@ -47,7 +48,7 @@ const artistsData = [{
       duration: "1:33",
       image: "https://images.unsplash.com/photo-1514525253161-7a46d19cd819?q=80&w=1000",
       hasVideo: true,
-      videoUrl: "https://www.youtube.com/watch?v=5qap5aO4i9A",
+      videoUrl: "/videos/dj-mujer-1.mp4",
       audioUrl: "https://assets.mixkit.co/music/preview/mixkit-hip-hop-02-614.mp3"
     }, 
     {
@@ -59,6 +60,8 @@ const artistsData = [{
       title: "Deep House Experience",
       duration: "1:52",
       image: "https://images.unsplash.com/photo-1429962714451-bb934ecdc4ec?q=80&w=2070",
+      hasVideo: true,
+      videoUrl: "/videos/dj-hombre-1.mp4",
       audioUrl: "https://assets.mixkit.co/music/preview/mixkit-a-very-happy-christmas-897.mp3"
     },
     {

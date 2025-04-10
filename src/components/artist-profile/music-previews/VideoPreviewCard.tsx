@@ -20,8 +20,9 @@ const VideoPreviewCard = ({
   const [videoError, setVideoError] = useState(false);
   const [retryCount, setRetryCount] = useState(0);
   
-  // Verificar si es un video de YouTube y extraer su ID
+  // Verificar si es un video de YouTube o un video local/web
   const isYoutubeVideo = preview.videoUrl?.includes('youtube.com') || preview.videoUrl?.includes('youtu.be');
+  const isLocalVideo = preview.videoUrl?.startsWith('/') || preview.videoUrl?.startsWith('./');
   
   const getYoutubeEmbedUrl = (url: string) => {
     if (!url) return '';
