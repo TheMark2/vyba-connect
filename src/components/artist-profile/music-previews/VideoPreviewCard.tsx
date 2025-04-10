@@ -92,6 +92,30 @@ const VideoPreviewCard = ({
     };
   }, [preview.videoUrl, isYoutubeVideo]);
   
+  // Efecto para sincronizar el estado de reproducción con isPlaying
+  useEffect(() => {
+    // No hacemos nada si es un video de YouTube o hay error
+    if (isYoutubeVideo || videoError) return;
+    
+    if (videoRef.current) {
+      if (isPlaying) {
+        // Restaurar volumen normal (no silenciado) cuando se reproduce como audio
+        videoRef.current.muted = false;
+        videoRef.current.volume = 1.0;
+        
+        const playPromise = videoRef.current.play();
+        if (playPromise !== undefined) {
+          playPromise.catch(error => {
+            console.error("Error al reproducir video como audio:", error);
+            // No mostramos toast aquí porque MusicPreviews ya maneja los errores
+          });
+        }
+      } else {
+        videoRef.current.pause();
+      }
+    }
+  }, [isPlaying, isYoutubeVideo, videoError]);
+  
   const handleRetry = (e: React.MouseEvent) => {
     e.stopPropagation();
     setRetryCount(prev => prev + 1);
@@ -111,7 +135,7 @@ const VideoPreviewCard = ({
   };
   
   const handleMouseEnter = () => {
-    if (isYoutubeVideo || videoError) return;
+    if (isYoutubeVideo || videoError || isPlaying) return; // No reproducir en hover si está sonando
     
     if (videoRef.current) {
       videoRef.current.currentTime = 0;
@@ -132,7 +156,7 @@ const VideoPreviewCard = ({
   };
   
   const handleMouseLeave = () => {
-    if (isYoutubeVideo || videoError) return;
+    if (isYoutubeVideo || videoError || isPlaying) return; // No detener en hover si está sonando
     
     if (videoRef.current) {
       videoRef.current.pause();
@@ -216,7 +240,7 @@ const VideoPreviewCard = ({
             ref={videoRef}
             src={preview.videoUrl}
             className="w-full h-full object-cover"
-            muted
+            muted={!isPlaying} // Solo silenciado cuando no se está reproduciendo como audio
             playsInline
             preload="metadata"
             poster={preview.image}
@@ -224,20 +248,13 @@ const VideoPreviewCard = ({
           />
         )}
         
-        <div className={`absolute inset-0 bg-gradient-to-t from-black via-black/70 to-transparent opacity-60 pointer-events-none transition-opacity duration-300 ${isVideoPlaying ? 'opacity-30' : 'group-hover:opacity-30'}`}></div>
+        <div className={`absolute inset-0 bg-gradient-to-t from-black via-black/70 to-transparent opacity-60 pointer-events-none transition-opacity duration-300 ${isVideoPlaying || isPlaying ? 'opacity-30' : 'group-hover:opacity-30'}`}></div>
         
         <div className="absolute top-5 left-5 flex gap-2">
           <Badge className="bg-white text-black font-medium px-4 py-2 rounded-full">
             <Video className="w-4 h-4 mr-1" />
             Video
           </Badge>
-          
-          {preview.audioUrl && 
-            <Badge className="bg-white text-black font-medium px-4 py-2 rounded-full">
-              <FileAudio className="w-4 h-4 mr-1" />
-              Audio
-            </Badge>
-          }
         </div>
         
         <Badge 
