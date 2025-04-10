@@ -206,15 +206,15 @@ const AudioPlayer = ({
               {isLoading ? (
                 <div className="h-5 w-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
               ) : (
-                <div className="relative z-10 w-8 h-8 text-black">
+                <div className="relative z-10 w-10 h-10 rounded-full bg-white/20 backdrop-blur-md text-black flex items-center justify-center shadow-md">
                   <Pause
-                    className={`absolute inset-0 h-8 w-8 transition-all duration-300 
+                    className={`absolute inset-0 h-6 w-6 transition-all duration-300 
                       ${isPlaying ? 'opacity-100 scale-100' : 'opacity-0 scale-50'}`}
                     fill="currentColor"
                     stroke="none"
                   />
                   <Play
-                    className={`absolute inset-0 h-8 w-8 transition-all duration-300 
+                    className={`absolute inset-0 h-6 w-6 transition-all duration-300 
                       ${isPlaying ? 'opacity-0 scale-50' : 'opacity-100 scale-100'}`}
                     fill="currentColor"
                     stroke="none"
