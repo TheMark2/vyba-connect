@@ -18,12 +18,14 @@ const VideoPreviewCard = ({
   
   useEffect(() => {
     if (videoRef.current) {
+      // Configurar el video para bucle de los primeros 10 segundos
       const handleMetadata = () => {
+        // Limitar a 10 segundos o a la duración del video si es menor
         const clipDuration = Math.min(10, videoRef.current?.duration || 10);
         
         const handleTimeUpdate = () => {
           if (videoRef.current && videoRef.current.currentTime > clipDuration) {
-            videoRef.current.currentTime = 0;
+            videoRef.current.currentTime = 0; // Reiniciar al principio cuando llega a 10s
           }
         };
         
@@ -88,7 +90,6 @@ const VideoPreviewCard = ({
         <video 
           ref={videoRef}
           src={preview.videoUrl}
-          poster={preview.image}
           className="w-full h-full object-cover"
           muted
           playsInline
