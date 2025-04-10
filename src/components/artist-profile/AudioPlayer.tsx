@@ -1,4 +1,3 @@
-
 import React, { useEffect, useState, useRef } from "react";
 import { Slider } from "@/components/ui/slider";
 import { Pause, Play } from "lucide-react";
@@ -125,9 +124,8 @@ const AudioPlayer = ({
   return (
     <div className="relative p-5 rounded-2xl overflow-hidden bg-transparent dark:bg-transparent">
       <div className="flex flex-col gap-4 rounded-xl">
-        <div className="flex items-start gap-4">
-          <div className="relative rounded-xl overflow-hidden w-16 h-16 flex-shrink-0">
-            {/* Imagen principal */}
+        <div className="flex items-center gap-4">
+          <div className="w-16 h-16 rounded-lg overflow-hidden bg-gray-200 flex-shrink-0">
             {preview.image ? (
               <Image 
                 src={preview.image} 
@@ -138,22 +136,6 @@ const AudioPlayer = ({
               <div className="w-full h-full bg-gray-200 flex items-center justify-center text-gray-400">
                 <span>No image</span>
               </div>
-            )}
-            
-            {/* Efecto de blur detrás de la imagen */}
-            {preview.image && (
-              <div 
-                className="absolute inset-0 -z-10 scale-150" 
-                style={{
-                  backgroundImage: `url(${preview.image})`,
-                  backgroundSize: 'cover',
-                  backgroundPosition: 'center',
-                  filter: 'blur(20px)',
-                  opacity: 0.5,
-                  transform: 'scale(2)',
-                  borderRadius: '8px'
-                }}
-              />
             )}
           </div>
           
