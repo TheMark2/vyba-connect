@@ -1,4 +1,3 @@
-
 import React, { useEffect, useState, useRef } from "react";
 import { Music, Video, Play, Expand, Pause, FileAudio } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
@@ -6,13 +5,14 @@ import { Badge } from "@/components/ui/badge";
 import { Carousel, CarouselContent, CarouselItem } from "@/components/ui/carousel";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { Button } from "@/components/ui/button";
+import AudioPlayer from "./AudioPlayer";
 
 interface MusicPreview {
   title: string;
   duration: string;
   image?: string;
   hasVideo?: boolean;
-  audioUrl?: string; // URL del archivo de audio
+  audioUrl?: string;
 }
 
 interface MusicPreviewsProps {
@@ -30,6 +30,7 @@ const MusicPreviews = ({
   const [useCarousel, setUseCarousel] = useState(isMobile || previews.length > 3);
   const [isNavbarVisible, setIsNavbarVisible] = useState(true);
   const [currentlyPlaying, setCurrentlyPlaying] = useState<string | null>(null);
+  const [currentPreview, setCurrentPreview] = useState<MusicPreview | null>(null);
 
   const observerRef = useRef<IntersectionObserver | null>(null);
   const audioRef = useRef<HTMLAudioElement | null>(null);
@@ -57,10 +58,8 @@ const MusicPreviews = ({
   }, []);
 
   useEffect(() => {
-    // Crear elemento de audio una vez
     audioRef.current = new Audio();
     
-    // Limpiar cuando el componente se desmonte
     return () => {
       if (audioRef.current) {
         audioRef.current.pause();
@@ -76,22 +75,22 @@ const MusicPreviews = ({
     }
 
     if (currentlyPlaying === preview.title) {
-      // Pausar si ya está sonando
       if (audioRef.current) {
         audioRef.current.pause();
       }
       setCurrentlyPlaying(null);
+      setCurrentPreview(null);
     } else {
-      // Reproducir si no está sonando o es una pista diferente
       if (audioRef.current) {
         audioRef.current.pause();
         audioRef.current.src = preview.audioUrl;
         audioRef.current.play().catch(e => console.error("Error al reproducir audio:", e));
         setCurrentlyPlaying(preview.title);
+        setCurrentPreview(preview);
         
-        // Añadir evento para cuando termine la reproducción
         audioRef.current.onended = () => {
           setCurrentlyPlaying(null);
+          setCurrentPreview(null);
         };
       }
     }
@@ -105,10 +104,8 @@ const MusicPreviews = ({
     };
 
     const checkCardDistortion = () => {
-      // Si la altura de la ventana es menor a 700px o la relación aspecto es desfavorable
-      // activamos el carrusel para evitar distorsión 
       const aspectRatio = window.innerWidth / window.innerHeight;
-      const heightThreshold = 700; // Umbral de altura para considerar activar carrusel
+      const heightThreshold = 700;
 
       if (!isNavbarVisible) {
         setUseCarousel(false);
@@ -135,75 +132,119 @@ const MusicPreviews = ({
     };
   }, [previews.length, isNavbarVisible]);
 
-  return <div className="mt-8 mb-16">
+  return (
+    <div className="mt-8 mb-16">
       <h2 className="text-3xl font-black mb-6">Preview</h2>
       
-      {previews?.length > 0 && <>
-          {useCarousel ? <Carousel opts={{
-        align: "start",
-        loop: false,
-        containScroll: "trimSnaps"
-      }} className="w-full">
+      {previews?.length > 0 && (
+        <>
+          {useCarousel ? (
+            <Carousel
+              opts={{
+                align: "start",
+                loop: false,
+                containScroll: "trimSnaps"
+              }}
+              className="w-full"
+            >
               <CarouselContent className="-ml-4">
-                {previews.map((preview, index) => <CarouselItem key={index} className={`pl-4 ${
-                  windowWidth < 640 ? 'basis-[85%]' : // Móvil: mostrar un poco de la siguiente card
-                  windowWidth < 768 ? 'basis-[45%]' : // Móviles grandes: mostrar 2 completas y un poco de la siguiente
-                  windowWidth < 1024 ? 'basis-1/2' : // Tablets: 2 por fila
-                  'basis-1/3' // Desktop: 3 por fila
-                }`}>
-                    {preview.image ? 
-                      <ImagePreviewCard 
-                        preview={preview} 
-                        artistName={artistName} 
+                {previews.map((preview, index) => (
+                  <CarouselItem
+                    key={index}
+                    className={`pl-4 ${
+                      windowWidth < 640
+                        ? "basis-[85%]"
+                        : windowWidth < 768
+                        ? "basis-[45%]"
+                        : windowWidth < 1024
+                        ? "basis-1/2"
+                        : "basis-1/3"
+                    }`}
+                  >
+                    {preview.image ? (
+                      <ImagePreviewCard
+                        preview={preview}
+                        artistName={artistName}
                         isPlaying={currentlyPlaying === preview.title}
                         onPlayPause={() => handlePlayPause(preview)}
-                      /> : 
-                      <NoImagePreviewCard 
-                        preview={preview} 
-                        artistName={artistName} 
+                      />
+                    ) : (
+                      <NoImagePreviewCard
+                        preview={preview}
+                        artistName={artistName}
                         isPlaying={currentlyPlaying === preview.title}
                         onPlayPause={() => handlePlayPause(preview)}
-                      />}
-                  </CarouselItem>)}
+                      />
+                    )}
+                  </CarouselItem>
+                ))}
               </CarouselContent>
-            </Carousel> :
-      <div className={`flex overflow-x-auto space-x-4 pb-4 ${isNavbarVisible ? 'hidden' : ''}`}>
-              {previews.map((preview, index) => <div key={index} className="flex-none w-80">
-                  {preview.image ? 
-                    <ImagePreviewCard 
-                      preview={preview} 
-                      artistName={artistName} 
+            </Carousel>
+          ) : (
+            <div
+              className={`flex overflow-x-auto space-x-4 pb-4 ${
+                isNavbarVisible ? "hidden" : ""
+              }`}
+            >
+              {previews.map((preview, index) => (
+                <div key={index} className="flex-none w-80">
+                  {preview.image ? (
+                    <ImagePreviewCard
+                      preview={preview}
+                      artistName={artistName}
                       isPlaying={currentlyPlaying === preview.title}
                       onPlayPause={() => handlePlayPause(preview)}
-                    /> : 
-                    <NoImagePreviewCard 
-                      preview={preview} 
-                      artistName={artistName} 
+                    />
+                  ) : (
+                    <NoImagePreviewCard
+                      preview={preview}
+                      artistName={artistName}
                       isPlaying={currentlyPlaying === preview.title}
                       onPlayPause={() => handlePlayPause(preview)}
-                    />}
-                </div>)}
-            </div>}
-          
-          {!useCarousel && isNavbarVisible && <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {previews.map((preview, index) => <div key={index}>
-                  {preview.image ? 
-                    <ImagePreviewCard 
-                      preview={preview} 
-                      artistName={artistName} 
+                    />
+                  )}
+                </div>
+              ))}
+            </div>
+          )}
+
+          {!useCarousel && isNavbarVisible && (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {previews.map((preview, index) => (
+                <div key={index}>
+                  {preview.image ? (
+                    <ImagePreviewCard
+                      preview={preview}
+                      artistName={artistName}
                       isPlaying={currentlyPlaying === preview.title}
                       onPlayPause={() => handlePlayPause(preview)}
-                    /> : 
-                    <NoImagePreviewCard 
-                      preview={preview} 
-                      artistName={artistName} 
+                    />
+                  ) : (
+                    <NoImagePreviewCard
+                      preview={preview}
+                      artistName={artistName}
                       isPlaying={currentlyPlaying === preview.title}
                       onPlayPause={() => handlePlayPause(preview)}
-                    />}
-                </div>)}
-            </div>}
-        </>}
-    </div>;
+                    />
+                  )}
+                </div>
+              ))}
+            </div>
+          )}
+        </>
+      )}
+
+      {currentlyPlaying && currentPreview && (
+        <AudioPlayer 
+          preview={currentPreview}
+          artistName={artistName}
+          isPlaying={!!currentlyPlaying}
+          onPlayPause={() => handlePlayPause(currentPreview)}
+          audioRef={audioRef}
+        />
+      )}
+    </div>
+  );
 };
 
 const ImagePreviewCard = ({
