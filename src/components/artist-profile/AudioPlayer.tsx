@@ -1,3 +1,4 @@
+
 import React, { useEffect, useState, useRef } from "react";
 import { Slider } from "@/components/ui/slider";
 import { Pause, Play } from "lucide-react";
@@ -32,8 +33,10 @@ const AudioPlayer = ({
   const [isDragging, setIsDragging] = useState(false);
   const titleRef = useRef<HTMLDivElement>(null);
   const artistRef = useRef<HTMLDivElement>(null);
+  
   useEffect(() => {
     if (!audioRef.current) return;
+    
     const updateProgress = () => {
       if (audioRef.current && !isDragging) {
         const currentTimeValue = audioRef.current.currentTime;
@@ -46,28 +49,37 @@ const AudioPlayer = ({
         setCurrentTime(`${minutes}:${seconds < 10 ? '0' : ''}${seconds}`);
       }
     };
+    
     const handleLoadedMetadata = () => {
       if (audioRef.current && !isNaN(audioRef.current.duration)) {
         const durationValue = audioRef.current.duration;
         const minutes = Math.floor(durationValue / 60);
         const seconds = Math.floor(durationValue % 60);
         setDuration(`${minutes}:${seconds < 10 ? '0' : ''}${seconds}`);
+      } else {
+        // Si no se puede obtener la duración del archivo de audio,
+        // usar la duración proporcionada en los datos
+        setDuration(preview.duration);
       }
     };
+    
     audioRef.current.addEventListener('timeupdate', updateProgress);
     audioRef.current.addEventListener('loadedmetadata', handleLoadedMetadata);
+    
     return () => {
       if (audioRef.current) {
         audioRef.current.removeEventListener('timeupdate', updateProgress);
         audioRef.current.removeEventListener('loadedmetadata', handleLoadedMetadata);
       }
     };
-  }, [audioRef, isDragging]);
+  }, [audioRef, isDragging, preview.duration]);
+  
   useEffect(() => {
     setProgress(0);
     setCurrentTime("0:00");
     setDuration(preview.duration);
   }, [preview]);
+  
   useEffect(() => {
     const checkTextOverflow = () => {
       if (titleRef.current) {
@@ -89,6 +101,7 @@ const AudioPlayer = ({
     window.addEventListener('resize', checkTextOverflow);
     return () => window.removeEventListener('resize', checkTextOverflow);
   }, [preview.title, artistName]);
+  
   const handleSliderChange = (value: number[]) => {
     setIsDragging(true);
     if (audioRef.current && audioRef.current.duration) {
@@ -101,6 +114,7 @@ const AudioPlayer = ({
       setCurrentTime(`${minutes}:${seconds < 10 ? '0' : ''}${seconds}`);
     }
   };
+  
   const handleSliderCommit = (value: number[]) => {
     if (audioRef.current && audioRef.current.duration) {
       const newTime = value[0] / 100 * audioRef.current.duration;
@@ -109,6 +123,7 @@ const AudioPlayer = ({
     }
     setTimeout(() => setIsDragging(false), 200);
   };
+  
   return <div className="relative rounded-2xl overflow-hidden bg-transparent dark:bg-transparent">
       <div className="flex flex-col gap-4 rounded-xl">
         <div className="flex items-center gap-4">

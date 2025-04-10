@@ -104,10 +104,24 @@ const MusicPreviews = ({
             })
             .catch(error => {
               console.error("Error al reproducir audio:", error);
-              // Intentar reproducir de nuevo después de la interacción del usuario
-              audioRef.current?.addEventListener('canplaythrough', () => {
-                audioRef.current?.play().catch(e => console.error("Error en segundo intento:", e));
-              }, { once: true });
+              // Intenta tratar con el error de reproducción automática
+              const attemptPlayAfterInteraction = () => {
+                document.removeEventListener('click', attemptPlayAfterInteraction);
+                if (audioRef.current) {
+                  audioRef.current.play()
+                    .then(() => {
+                      console.log("Reproducción iniciada después de interacción");
+                      setCurrentlyPlaying(preview.title);
+                      if (onPlaybackState) {
+                        onPlaybackState(preview, true);
+                      }
+                    })
+                    .catch(e => console.error("Error en segundo intento:", e));
+                }
+              };
+              
+              document.addEventListener('click', attemptPlayAfterInteraction, { once: true });
+              console.log("Esperando interacción del usuario para reproducir");
             });
         }
         
@@ -158,12 +172,20 @@ const MusicPreviews = ({
     };
   }, [previews.length, isNavbarVisible]);
 
+  // Precarga los archivos de audio para mejor respuesta
+  useEffect(() => {
+    previews.forEach(preview => {
+      if (preview.audioUrl) {
+        const audio = new Audio();
+        audio.src = preview.audioUrl;
+        audio.preload = "metadata";
+      }
+    });
+  }, [previews]);
+
   return (
     <div className="mt-8 mb-16">
       <h2 className="text-3xl font-black mb-6">Preview</h2>
-      
-      {/* Elemento de audio oculto */}
-      {/* No es necesario aquí porque usamos el audioRef del componente padre */}
       
       {previews?.length > 0 && (
         <>
