@@ -1,7 +1,6 @@
-
 import React, { useEffect, useState, useRef } from "react";
 import { Slider } from "@/components/ui/slider";
-import { Pause, Play, SkipBack, SkipForward } from "lucide-react";
+import { Pause, Play, Rewind, FastForward } from "lucide-react";
 import Image from "@/components/ui/image";
 import { Marquee } from "@/components/ui/marquee";
 
@@ -54,7 +53,6 @@ const AudioPlayer = ({
         const seconds = Math.floor(currentTimeValue % 60);
         setCurrentTime(`${minutes}:${seconds < 10 ? '0' : ''}${seconds}`);
         
-        // Calcular tiempo restante
         const remainingTimeValue = durationValue - currentTimeValue;
         const remainingMinutes = Math.floor(remainingTimeValue / 60);
         const remainingSeconds = Math.floor(remainingTimeValue % 60);
@@ -145,7 +143,6 @@ const AudioPlayer = ({
       const seconds = Math.floor(newTime % 60);
       setCurrentTime(`${minutes}:${seconds < 10 ? '0' : ''}${seconds}`);
       
-      // Actualizar tiempo restante al arrastrar
       const remainingTime = audioRef.current.duration - newTime;
       const remainingMinutes = Math.floor(remainingTime / 60);
       const remainingSeconds = Math.floor(remainingTime % 60);
@@ -233,7 +230,7 @@ const AudioPlayer = ({
               onClick={handleSkipBackward}
               disabled={isLoading}
             >
-              <SkipBack
+              <Rewind
                 className="h-6 w-6"
                 fill="white"
                 fillOpacity="1"
@@ -248,16 +245,16 @@ const AudioPlayer = ({
               {isLoading ? (
                 <div className="h-5 w-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
               ) : (
-                <div className="relative z-10 w-10 h-10">
+                <div className="relative z-10 flex items-center justify-center w-10 h-10">
                   <Pause
-                    className={`absolute inset-0 h-7 w-7 transition-all duration-300 
+                    className={`absolute h-7 w-7 transition-all duration-300 
                       ${isPlaying ? 'opacity-100 scale-100' : 'opacity-0 scale-50'}`}
                     fill="white"
                     fillOpacity="1"
                     stroke="none"
                   />
                   <Play
-                    className={`absolute inset-0 h-7 w-7 transition-all duration-300 
+                    className={`absolute h-7 w-7 transition-all duration-300 
                       ${isPlaying ? 'opacity-0 scale-50' : 'opacity-100 scale-100'}`}
                     fill="white"
                     fillOpacity="1"
@@ -271,7 +268,7 @@ const AudioPlayer = ({
               onClick={handleSkipForward}
               disabled={isLoading}
             >
-              <SkipForward
+              <FastForward
                 className="h-6 w-6"
                 fill="white"
                 fillOpacity="1"
@@ -330,7 +327,7 @@ const AudioPlayer = ({
               onClick={handleSkipBackward}
               disabled={isLoading}
             >
-              <SkipBack className="h-4 w-4 mx-auto" fill="currentColor" stroke="none" />
+              <Rewind className="h-4 w-4 mx-auto" fill="currentColor" stroke="none" />
             </button>
             <button 
               className={`h-10 w-10 ${isPlaying ? 'bg-green-500 hover:bg-green-600' : 'bg-blue-500 hover:bg-blue-600'} text-white rounded-full relative overflow-hidden ${isLoading ? 'opacity-70 cursor-wait' : ''}`} 
@@ -340,9 +337,9 @@ const AudioPlayer = ({
               {isLoading ? (
                 <div className="h-5 w-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
               ) : (
-                <div className="relative z-10 w-5 h-5">
-                  <Pause className={`absolute inset-0 h-5 w-5 fill-white transition-all duration-300 ${isPlaying ? 'opacity-100 scale-100' : 'opacity-0 scale-50'}`} />
-                  <Play className={`absolute inset-0 h-5 w-5 fill-white transition-all duration-300 ${isPlaying ? 'opacity-0 scale-50' : 'opacity-100 scale-100'}`} />
+                <div className="relative z-10 flex items-center justify-center w-5 h-5">
+                  <Pause className={`absolute h-5 w-5 fill-white transition-all duration-300 ${isPlaying ? 'opacity-100 scale-100' : 'opacity-0 scale-50'}`} />
+                  <Play className={`absolute h-5 w-5 fill-white transition-all duration-300 ${isPlaying ? 'opacity-0 scale-50' : 'opacity-100 scale-100'}`} />
                 </div>
               )}
             </button>
@@ -351,7 +348,7 @@ const AudioPlayer = ({
               onClick={handleSkipForward}
               disabled={isLoading}
             >
-              <SkipForward className="h-4 w-4 mx-auto" fill="currentColor" stroke="none" />
+              <FastForward className="h-4 w-4 mx-auto" fill="currentColor" stroke="none" />
             </button>
           </div>
         </div>
