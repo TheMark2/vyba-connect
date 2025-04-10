@@ -208,17 +208,17 @@ const AudioPlayer = ({
               ) : (
                 <div className="relative z-10 w-10 h-10">
                   <Pause
-                    className={`absolute inset-0 h-10 w-10 backdrop-blur-md transition-all duration-300 
+                    className={`absolute inset-0 h-7 w-7 transition-all duration-300 
                       ${isPlaying ? 'opacity-100 scale-100' : 'opacity-0 scale-50'}`}
                     fill="white"
-                    fillOpacity="0.8"
+                    fillOpacity="1"
                     stroke="none"
                   />
                   <Play
-                    className={`absolute inset-0 h-10 w-10 backdrop-blur-md transition-all duration-300 
+                    className={`absolute inset-0 h-7 w-7 transition-all duration-300 
                       ${isPlaying ? 'opacity-0 scale-50' : 'opacity-100 scale-100'}`}
                     fill="white"
-                    fillOpacity="0.8"
+                    fillOpacity="1"
                     stroke="none"
                   />
                 </div>
