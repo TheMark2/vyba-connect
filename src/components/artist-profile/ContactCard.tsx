@@ -23,40 +23,23 @@ const ContactCard = ({
   aboutMeRef,
   imagesRef
 }: ContactCardProps) => {
+  // Ahora siempre mantenemos la tarjeta visible
   const [isVisible, setIsVisible] = useState(true);
   const [lastScrollY, setLastScrollY] = useState(0);
 
+  // Mantenemos el useEffect para compatibilidad, pero simplificamos su comportamiento
   useEffect(() => {
-    if (!imagesRef && !aboutMeRef) return;
-    
     const handleScroll = () => {
       const currentScrollY = window.scrollY;
-      const isMobile = window.innerWidth < 768;
-
-      // Referencia a usar basada en si estamos en móvil o no
-      const referenceElement = isMobile ? imagesRef : aboutMeRef;
-
-      // Si el elemento de referencia existe y tiene una posición
-      if (referenceElement && referenceElement.current) {
-        const elementTop = referenceElement.current.getBoundingClientRect().top + window.scrollY;
-
-        // Si hemos pasado el elemento de referencia, mostramos la tarjeta
-        if (currentScrollY > elementTop) {
-          setIsVisible(true);
-        } else {
-          setIsVisible(false);
-        }
-      }
-      
       setLastScrollY(currentScrollY);
     };
 
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
-  }, [lastScrollY, aboutMeRef, imagesRef]);
+  }, [lastScrollY]);
 
   return (
-    <div className={`transition-transform duration-300 ${!isVisible ? 'translate-y-full' : 'translate-y-0'}`}>
+    <div className="transition-transform duration-300">
       <Card className="border-0 shadow-none bg-transparent">
         <CardContent className="p-0">
           <div className="bg-[#F7F7F7] rounded-3xl md:rounded-3xl">
