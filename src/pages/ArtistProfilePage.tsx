@@ -16,6 +16,7 @@ import NotFoundArtist from "@/components/artist-profile/NotFoundArtist";
 import GroupMembers from "@/components/artist-profile/GroupMembers";
 import AudioPlayer from "@/components/artist-profile/AudioPlayer";
 import { useIsMobile } from "@/hooks/use-mobile";
+
 const artistsData = [{
   id: "1",
   name: "Antonia Pedragosa",
@@ -34,22 +35,39 @@ const artistsData = [{
   equipment: ["Con equipo propio", "Para <100 personas"],
   timeRequirements: ["10-15 minutos de prueba de sonido", "1h de montaje"],
   education: ["Conservatorio Provincial de Música Luis Gianneo"],
-  musicPreviews: [{
-    title: "La Previa-Sesión Urbana Verano 2023",
-    duration: "40:34",
-    image: "https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?q=80&w=1000",
-    audioUrl: "https://assets.mixkit.co/music/preview/mixkit-tech-house-vibes-130.mp3"
-  }, {
-    title: "La Previa-Sesión Urbana Verano 2023",
-    duration: "40:34",
-    image: "https://images.unsplash.com/photo-1514525253161-7a46d19cd819?q=80&w=1000",
-    hasVideo: true,
-    audioUrl: "https://assets.mixkit.co/music/preview/mixkit-deep-urban-623.mp3"
-  }, {
-    title: "La Previa-Sesión Urbana Verano 2023",
-    duration: "40:34",
-    audioUrl: "https://assets.mixkit.co/music/preview/mixkit-hip-hop-02-738.mp3"
-  }],
+  musicPreviews: [
+    {
+      title: "Set House Verano 2023",
+      duration: "3:45",
+      image: "https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?q=80&w=1000",
+      audioUrl: "https://assets.mixkit.co/music/preview/mixkit-tech-house-vibes-130.mp3"
+    }, 
+    {
+      title: "Sesión Urbana Remix",
+      duration: "2:28",
+      image: "https://images.unsplash.com/photo-1514525253161-7a46d19cd819?q=80&w=1000",
+      hasVideo: true,
+      audioUrl: "https://assets.mixkit.co/music/preview/mixkit-deep-urban-623.mp3"
+    }, 
+    {
+      title: "Mix Hip-Hop 2024",
+      duration: "5:12",
+      audioUrl: "https://assets.mixkit.co/music/preview/mixkit-hip-hop-02-738.mp3"
+    },
+    {
+      title: "Deep House Experience",
+      duration: "4:16",
+      image: "https://images.unsplash.com/photo-1429962714451-bb934ecdc4ec?q=80&w=2070",
+      audioUrl: "https://assets.mixkit.co/music/preview/mixkit-a-very-happy-christmas-51.mp3"
+    },
+    {
+      title: "Summer Vibes DJ Set",
+      duration: "3:58",
+      image: "https://images.unsplash.com/photo-1516450360452-9312f5e86fc7?q=80&w=2070",
+      hasVideo: true,
+      audioUrl: "https://assets.mixkit.co/music/preview/mixkit-serene-view-443.mp3"
+    }
+  ],
   eventTypes: ["Bodas", "Fiestas Privadas", "Cumpleaños", "Eventos Corporativos", "Inauguraciones", "Aniversarios", "Cenas de Gala"],
   reviewsData: [{
     id: 1,
@@ -123,6 +141,7 @@ const artistsData = [{
   education: ["Conservatorio Provincial de Música Luis Gianneo"],
   eventTypes: ["Fiestas Privadas", "Inauguraciones", "Aniversarios"]
 }];
+
 const recommendedArtists = [{
   id: "101",
   name: "Marco Olivera",
@@ -169,6 +188,7 @@ const recommendedArtists = [{
   priceRange: "180-350€",
   isFavorite: true
 }];
+
 const ArtistProfilePage = () => {
   const {
     id
@@ -182,6 +202,7 @@ const ArtistProfilePage = () => {
   const [currentPlaying, setCurrentPlaying] = useState<any>(null);
   const [isAudioPlaying, setIsAudioPlaying] = useState(false);
   const audioRef = useRef<HTMLAudioElement>(null);
+
   useEffect(() => {
     if (!audioRef.current) {
       audioRef.current = new Audio();
@@ -200,43 +221,51 @@ const ArtistProfilePage = () => {
       }
     };
   }, []);
+
   const artist = artistsData.find(artist => artist.id === id);
   if (!artist) {
     return <NotFoundArtist onBack={() => navigate(-1)} />;
   }
+
   const handleFavorite = () => {
     toast.success("Añadido a favoritos", {
       icon: "❤️",
       position: "bottom-center"
     });
   };
+
   const handleReport = () => {
     toast.info("Gracias por informarnos", {
       description: "Revisaremos el perfil lo antes posible",
       position: "bottom-center"
     });
   };
+
   const handleShare = () => {
     toast.success("Enlace copiado al portapapeles", {
       position: "bottom-center"
     });
   };
+
   const handleContact = () => {
     toast.success(`Contactando con ${artist.name}`, {
       description: "Te conectaremos pronto",
       position: "bottom-center"
     });
   };
+
   const handleGenreClick = (genre: string) => {
     toast.success(`Buscando más artistas de ${genre}`, {
       position: "bottom-center"
     });
   };
+
   const handleEventTypeClick = (eventType: string) => {
     toast.success(`Buscando artistas para ${eventType}`, {
       position: "bottom-center"
     });
   };
+
   const artistContactData = {
     name: artist.name,
     location: artist.location || "",
@@ -244,6 +273,7 @@ const ArtistProfilePage = () => {
     priceRange: artist.priceRange,
     image: artist.images[0]
   };
+
   const handlePlaybackState = (preview: any, playing: boolean) => {
     console.log("Estado de reproducción cambiado:", {
       preview,
@@ -252,6 +282,7 @@ const ArtistProfilePage = () => {
     setCurrentPlaying(preview);
     setIsAudioPlaying(playing);
   };
+
   const handlePlayPause = () => {
     if (audioRef.current) {
       console.log("Play/Pause presionado. Estado actual:", isAudioPlaying);
@@ -263,6 +294,7 @@ const ArtistProfilePage = () => {
       setIsAudioPlaying(!isAudioPlaying);
     }
   };
+
   return <div className="bg-white dark:bg-vyba-dark-bg">
       <Navbar />
       <div className={`${isMobile ? 'px-0' : 'px-6 md:px-10 lg:px-14 xl:px-16'}`}>
@@ -314,4 +346,5 @@ const ArtistProfilePage = () => {
       <Footer />
     </div>;
 };
+
 export default ArtistProfilePage;
