@@ -152,35 +152,40 @@ const MusicPreviews = ({
   };
 
   const renderPreviewCard = (preview: MusicPreview, index: number) => {
-    return (preview.videoUrl && preview.hasVideo) ? (
-      <VideoPreviewCard
-        key={index}
-        preview={preview}
-        artistName={artistName}
-        isPlaying={currentlyPlaying === preview.title}
-        isLoading={loadingAudio === preview.title}
-        onPlayPause={() => handlePlayPause(preview)}
-        audioRef={audioRef}
-      />
-    ) : preview.image ? (
-      <ImagePreviewCard
-        key={index}
-        preview={preview}
-        artistName={artistName}
-        isPlaying={currentlyPlaying === preview.title}
-        isLoading={loadingAudio === preview.title}
-        onPlayPause={() => handlePlayPause(preview)}
-      />
-    ) : (
-      <NoImagePreviewCard
-        key={index}
-        preview={preview}
-        artistName={artistName}
-        isPlaying={currentlyPlaying === preview.title}
-        isLoading={loadingAudio === preview.title}
-        onPlayPause={() => handlePlayPause(preview)}
-      />
-    );
+    if (preview.videoUrl && preview.hasVideo) {
+      return (
+        <VideoPreviewCard
+          key={index}
+          preview={preview}
+          artistName={artistName}
+          isPlaying={currentlyPlaying === preview.title}
+          isLoading={loadingAudio === preview.title}
+          onPlayPause={() => handlePlayPause(preview)}
+        />
+      );
+    } else if (preview.image) {
+      return (
+        <ImagePreviewCard
+          key={index}
+          preview={preview}
+          artistName={artistName}
+          isPlaying={currentlyPlaying === preview.title}
+          isLoading={loadingAudio === preview.title}
+          onPlayPause={() => handlePlayPause(preview)}
+        />
+      );
+    } else {
+      return (
+        <NoImagePreviewCard
+          key={index}
+          preview={preview}
+          artistName={artistName}
+          isPlaying={currentlyPlaying === preview.title}
+          isLoading={loadingAudio === preview.title}
+          onPlayPause={() => handlePlayPause(preview)}
+        />
+      );
+    }
   };
 
   return (
