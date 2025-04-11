@@ -27,11 +27,6 @@ const ImageGalleryDialog = ({
       <DialogContent className={cn("p-0 w-full h-full max-w-none max-h-screen bg-white dark:bg-black text-black dark:text-white", isMobile ? "rounded-none" : "rounded-none")}>
         
         <div className="h-full w-full overflow-y-auto p-8 pt-16">
-          <div className="bg-[#F7F7F7] rounded-3xl p-8 mb-8">
-            <h1 className="text-5xl font-black mb-4 text-left pr-0 md:pr-32">Imágenes de {artistName}</h1>
-            <p className="text-3xl font-medium">{images.length} {images.length === 1 ? 'imagen' : 'imágenes'}</p>
-          </div>
-          
           <div className="flex flex-wrap gap-2 justify-center">
             {images.map((image, index) => <div key={index} className="mb-2" id={index === activeImageIndex ? "active-image" : undefined} ref={el => {
             if (el && index === activeImageIndex) {
@@ -63,3 +58,4 @@ const ImageGalleryDialog = ({
 };
 
 export default ImageGalleryDialog;
+
