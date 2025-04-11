@@ -177,7 +177,7 @@ const ContactDialog = ({
             max-w-[500px]
             p-0
             border-none 
-            bg-[#FAF8F6] dark:bg-vyba-dark-secondary
+            bg-white dark:bg-vyba-dark-secondary
             ${isMobile ? 'pt-10 pb-28 px-6 rounded-t-[32px] max-h-[85vh]' : 'rounded-[40px] pt-12 px-8 pb-8'}
           `}
         >
@@ -323,7 +323,7 @@ const ContactDialog = ({
                   </div>
                 </ScrollArea>
                 
-                <div className={`flex justify-end mt-6 mb-4 ${isMobile ? 'sticky bottom-6 z-10 pt-4 bg-[#FAF8F6] dark:bg-vyba-dark-secondary' : ''}`}>
+                <div className={`flex justify-end mt-6 mb-4 ${isMobile ? 'sticky bottom-6 z-10 pt-4 bg-white dark:bg-vyba-dark-secondary' : ''}`}>
                   <Button className="bg-blue-100 hover:bg-blue-200 text-black font-medium rounded-full px-8" onClick={handleNextView}>
                     Siguiente
                   </Button>
@@ -473,7 +473,7 @@ const ContactDialog = ({
                   </div>
                 </ScrollArea>
                 
-                <div className={`flex justify-between mt-6 mb-4 ${isMobile ? 'sticky bottom-6 z-10 pt-4 bg-[#FAF8F6] dark:bg-vyba-dark-secondary' : ''}`}>
+                <div className={`flex justify-between mt-6 mb-4 ${isMobile ? 'sticky bottom-6 z-10 pt-4 bg-white dark:bg-vyba-dark-secondary' : ''}`}>
                   <Button 
                     variant="secondary" 
                     className="bg-gray-100 hover:bg-gray-200 text-black font-medium rounded-full px-8"

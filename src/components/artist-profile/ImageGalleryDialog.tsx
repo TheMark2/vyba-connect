@@ -11,7 +11,7 @@ interface ImageGalleryDialogProps {
   isOpen: boolean;
   onClose: () => void;
   activeImageIndex?: number;
-  artistName?: string; // Añadimos este prop para que el nombre sea variable
+  artistName?: string;
 }
 
 const ImageGalleryDialog = ({
@@ -19,12 +19,12 @@ const ImageGalleryDialog = ({
   isOpen,
   onClose,
   activeImageIndex = 0,
-  artistName = "Artista" // Valor por defecto si no se proporciona un nombre
+  artistName = "Artista"
 }: ImageGalleryDialogProps) => {
   const isMobile = useIsMobile();
   
   return <Dialog open={isOpen} onOpenChange={open => !open && onClose()}>
-      <DialogContent className={cn("p-0 w-full h-full max-w-none max-h-screen bg-vyba-cream dark:bg-black text-black dark:text-white", isMobile ? "rounded-none" : "rounded-none")}>
+      <DialogContent className={cn("p-0 w-full h-full max-w-none max-h-screen bg-white dark:bg-black text-black dark:text-white", isMobile ? "rounded-none" : "rounded-none")}>
         
         <div className="h-full w-full overflow-y-auto p-8 pt-16">
           <div className="bg-[#F7F7F7] rounded-3xl p-8 mb-8">

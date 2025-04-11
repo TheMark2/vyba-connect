@@ -217,7 +217,7 @@ const ArtistReviews = ({
             sm:max-w-[700px] 
             p-6
             border-none 
-            bg-[#F5F1EB] 
+            bg-white 
             dark:bg-vyba-dark-bg 
             ${isMobile ? 'pt-10 pb-24 px-6' : 'rounded-[40px] pt-8 px-8 pb-0'}
           `}
