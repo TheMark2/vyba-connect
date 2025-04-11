@@ -6,7 +6,6 @@ import Footer from "@/components/Footer";
 import ArtistBanner from "@/components/artist-profile/ArtistBanner";
 import AboutArtist from "@/components/artist-profile/AboutArtist";
 import DetailedInformation from "@/components/artist-profile/DetailedInformation";
-import MusicPreviews from "@/components/artist-profile/MusicPreviews";
 import EventTypes from "@/components/artist-profile/EventTypes";
 import ArtistFAQ from "@/components/artist-profile/ArtistFAQ";
 import ArtistReviews from "@/components/artist-profile/ArtistReviews";
@@ -14,14 +13,8 @@ import ContactCard from "@/components/artist-profile/ContactCard";
 import RecommendedArtists from "@/components/artist-profile/RecommendedArtists";
 import NotFoundArtist from "@/components/artist-profile/NotFoundArtist";
 import GroupMembers from "@/components/artist-profile/GroupMembers";
-import AudioPlayer from "@/components/artist-profile/AudioPlayer";
 import MobileBottomSheet from "@/components/artist-profile/MobileBottomSheet";
 import { useIsMobile } from "@/hooks/use-mobile";
-
-const LOCAL_VIDEOS = {
-  badBunny: "/lovable-uploads/bad-bunny-moscow-mule.mp4",
-  westcol: "/lovable-uploads/westcol-la-plena.mp4"
-};
 
 const artistsData = [{
   id: "1",
@@ -41,33 +34,6 @@ const artistsData = [{
   equipment: ["Con equipo propio", "Para <100 personas"],
   timeRequirements: ["10-15 minutos de prueba de sonido", "1h de montaje"],
   education: ["Conservatorio Provincial de Música Luis Gianneo"],
-  musicPreviews: [{
-    title: "Set House Verano 2023",
-    duration: "1:42",
-    image: "https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?q=80&w=1000",
-    audioUrl: "https://assets.mixkit.co/music/preview/mixkit-tech-house-vibes-130.mp3"
-  }, {
-    title: "Sesión Urbana Remix",
-    duration: "3:45",
-    image: "https://images.unsplash.com/photo-1514525253161-7a46d19cd819?q=80&w=1000",
-    hasVideo: true,
-    videoUrl: LOCAL_VIDEOS.badBunny
-  }, {
-    title: "Mix Hip-Hop 2024",
-    duration: "1:31",
-    audioUrl: "https://assets.mixkit.co/music/preview/mixkit-hip-hop-03-612.mp3"
-  }, {
-    title: "Deep House Experience",
-    duration: "1:52",
-    image: "https://images.unsplash.com/photo-1429962714451-bb934ecdc4ec?q=80&w=2070",
-    audioUrl: "https://assets.mixkit.co/music/preview/mixkit-a-very-happy-christmas-897.mp3"
-  }, {
-    title: "Summer Vibes DJ Set",
-    duration: "2:15",
-    image: "https://images.unsplash.com/photo-1516450360452-9312f5e86fc7?q=80&w=2070",
-    hasVideo: true,
-    videoUrl: LOCAL_VIDEOS.westcol
-  }],
   eventTypes: ["Bodas", "Fiestas Privadas", "Cumpleaños", "Eventos Corporativos", "Inauguraciones", "Aniversarios", "Cenas de Gala"],
   reviewsData: [{
     id: 1,
@@ -196,10 +162,6 @@ const ArtistProfilePage = () => {
   const isMobile = useIsMobile();
   const aboutMeRef = useRef<HTMLDivElement>(null);
   const imagesRef = useRef<HTMLDivElement>(null);
-  const [currentPlaying, setCurrentPlaying] = useState<any>(null);
-  const [isAudioPlaying, setIsAudioPlaying] = useState(false);
-  const audioRef = useRef<HTMLAudioElement>(null);
-  const [showMobileAudioPlayer, setShowMobileAudioPlayer] = useState(true);
   const [showMobileBottomSheet, setShowMobileBottomSheet] = useState(false);
 
   useEffect(() => {
@@ -225,40 +187,6 @@ const ArtistProfilePage = () => {
       };
     }
   }, [isMobile, aboutMeRef]);
-
-  useEffect(() => {
-    if (!audioRef.current) {
-      const audio = new Audio();
-      audio.crossOrigin = "anonymous";
-      audio.preload = "metadata";
-      audio.addEventListener('ended', () => {
-        console.log("Audio terminado");
-        setIsAudioPlaying(false);
-      });
-      audio.addEventListener('error', e => {
-        console.error('Error en la reproducción de audio:', e);
-        toast.error("Error al reproducir audio", {
-          description: "Intente con otra pista"
-        });
-        setIsAudioPlaying(false);
-      });
-      audio.addEventListener('canplaythrough', () => {
-        console.log("Audio completamente cargado y listo para reproducir");
-      });
-      audioRef.current = audio;
-    }
-    
-    return () => {
-      if (audioRef.current) {
-        audioRef.current.pause();
-        audioRef.current.src = '';
-        const audioElement = audioRef.current;
-        audioElement.onended = null;
-        audioElement.onerror = null;
-        audioElement.oncanplaythrough = null;
-      }
-    };
-  }, []);
 
   const artist = artistsData.find(artist => artist.id === id);
   if (!artist) {
@@ -312,76 +240,6 @@ const ArtistProfilePage = () => {
     image: artist.images[0]
   };
 
-  const handlePlaybackState = (preview: any, playing: boolean) => {
-    console.log("Estado de reproducción cambiado:", {
-      preview,
-      playing
-    });
-    
-    setCurrentPlaying(preview);
-    setIsAudioPlaying(playing);
-    
-    if (playing && isMobile) {
-      setShowMobileAudioPlayer(true);
-      setShowMobileBottomSheet(true);
-    }
-  };
-
-  const handlePlayPause = () => {
-    if (!audioRef.current || !currentPlaying) return;
-    
-    console.log("Play/Pause presionado. Estado actual:", isAudioPlaying);
-    
-    try {
-      if (isAudioPlaying) {
-        audioRef.current.pause();
-        setIsAudioPlaying(false);
-      } else {
-        const sourceUrl = currentPlaying.hasVideo && currentPlaying.videoUrl 
-          ? currentPlaying.videoUrl 
-          : currentPlaying.audioUrl;
-        
-        if (sourceUrl) {
-          const encodedUrl = encodeURI(sourceUrl);
-          
-          if (!audioRef.current.src.includes(sourceUrl)) {
-            console.log("Estableciendo nueva URL:", encodedUrl);
-            audioRef.current.src = encodedUrl;
-            audioRef.current.crossOrigin = "anonymous";
-            audioRef.current.load();
-          }
-          
-          setTimeout(() => {
-            if (audioRef.current) {
-              const playPromise = audioRef.current.play();
-              if (playPromise !== undefined) {
-                playPromise.then(() => {
-                  console.log("Reproducción iniciada con éxito desde handlePlayPause");
-                  setIsAudioPlaying(true);
-                }).catch(error => {
-                  console.error("Error al reproducir audio:", error);
-                  toast.error("No se pudo reproducir el audio", {
-                    description: "Prueba con otra pista o recarga la página"
-                  });
-                });
-              }
-            }
-          }, 200);
-        } else {
-          console.error("No hay URL de audio o video asignada");
-          toast.error("No hay audio disponible");
-        }
-      }
-    } catch (error) {
-      console.error("Error en handlePlayPause:", error);
-      toast.error("Error al controlar la reproducción");
-    }
-  };
-
-  const handleToggleAudioPlayerVisibility = (visible: boolean) => {
-    setShowMobileAudioPlayer(visible);
-  };
-
   return (
     <div className="bg-white dark:bg-vyba-dark-bg">
       <Navbar />
@@ -400,17 +258,6 @@ const ArtistProfilePage = () => {
               
               {artist.groupMembers && <GroupMembers members={artist.groupMembers} />}
               
-              {artist.musicPreviews && (
-                <div ref={imagesRef}>
-                  <MusicPreviews 
-                    previews={artist.musicPreviews} 
-                    artistName={artist.name} 
-                    onPlaybackState={handlePlaybackState} 
-                    audioRef={audioRef} 
-                  />
-                </div>
-              )}
-              
               {artist.eventTypes && <EventTypes eventTypes={artist.eventTypes} onEventTypeClick={handleEventTypeClick} />}
               
               <ArtistFAQ artistName={artist.name} />
@@ -423,18 +270,6 @@ const ArtistProfilePage = () => {
                 <div className="bg-[#F7F7F7] p-6 rounded-3xl sticky top-24 h-fit">
                   <ContactCard artist={artistContactData} onContact={handleContact} aboutMeRef={aboutMeRef} />
                 </div>
-                
-                {currentPlaying && (
-                  <div className="bg-[#F7F7F7] dark:bg-vyba-dark-secondary/40 py-5 px-6 rounded-3xl sticky top-[calc(24rem+1.5rem)] h-fit">
-                    <AudioPlayer 
-                      preview={currentPlaying} 
-                      artistName={artist.name} 
-                      isPlaying={isAudioPlaying} 
-                      onPlayPause={handlePlayPause} 
-                      audioRef={audioRef} 
-                    />
-                  </div>
-                )}
               </div>
             )}
           </div>
@@ -443,16 +278,12 @@ const ArtistProfilePage = () => {
         <RecommendedArtists artists={recommendedArtists} />
       </div>
       
-      {isMobile && (showMobileBottomSheet || currentPlaying) && (
+      {isMobile && showMobileBottomSheet && (
         <MobileBottomSheet 
           artistContact={artistContactData} 
           onContact={handleContact} 
           aboutMeRef={aboutMeRef} 
           imagesRef={imagesRef}
-          currentPlaying={currentPlaying}
-          isAudioPlaying={isAudioPlaying}
-          onPlayPause={handlePlayPause}
-          audioRef={audioRef}
         />
       )}
       
