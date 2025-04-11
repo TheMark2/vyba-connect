@@ -58,7 +58,7 @@ const ReviewItem = ({
   
   return (
     <div className="mb-8">
-      <div className="bg-[#F7F7F7] rounded-3xl p-6 relative">
+      <div className="bg-[#F7F7F7] rounded-3xl px-6 py-12 relative">
         <div className="absolute top-6 right-6 flex gap-2">
           <Button 
             variant="ghost" 
