@@ -19,8 +19,8 @@ import MobileBottomSheet from "@/components/artist-profile/MobileBottomSheet";
 import { useIsMobile } from "@/hooks/use-mobile";
 
 const LOCAL_VIDEOS = {
-  badBunny: "/lovable-uploads/Bad Bunny - Moscow Mule (Video Oficial)  Un Verano Sin Ti.mp4",
-  westcol: "/lovable-uploads/W Sound 05 LA PLENA - Beéle, Westcol, Ovy On The Drums.mp4"
+  badBunny: "/lovable-uploads/bad-bunny-moscow-mule.mp4",
+  westcol: "/lovable-uploads/westcol-la-plena.mp4"
 };
 
 const artistsData = [{
@@ -342,9 +342,11 @@ const ArtistProfilePage = () => {
           : currentPlaying.audioUrl;
         
         if (sourceUrl) {
+          const encodedUrl = encodeURI(sourceUrl);
+          
           if (!audioRef.current.src.includes(sourceUrl)) {
-            console.log("Estableciendo nueva URL:", sourceUrl);
-            audioRef.current.src = sourceUrl;
+            console.log("Estableciendo nueva URL:", encodedUrl);
+            audioRef.current.src = encodedUrl;
             audioRef.current.crossOrigin = "anonymous";
             audioRef.current.load();
           }

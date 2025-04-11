@@ -1,4 +1,3 @@
-
 import React, { useEffect, useState, useRef } from "react";
 import { Music, Video, Play, Expand, Pause, FileAudio } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
@@ -25,10 +24,10 @@ interface MusicPreviewsProps {
   audioRef: React.RefObject<HTMLAudioElement>;
 }
 
-// Videos disponibles en el proyecto
+// Videos disponibles en el proyecto con nombres simplificados
 const LOCAL_VIDEOS = {
-  badBunny: "/lovable-uploads/Bad Bunny - Moscow Mule (Video Oficial)  Un Verano Sin Ti.mp4",
-  westcol: "/lovable-uploads/W Sound 05 LA PLENA - Beéle, Westcol, Ovy On The Drums.mp4"
+  badBunny: "/lovable-uploads/bad-bunny-moscow-mule.mp4",
+  westcol: "/lovable-uploads/westcol-la-plena.mp4"
 };
 
 const MusicPreviews = ({
@@ -109,8 +108,9 @@ const MusicPreviews = ({
           audioRef.current.onloadedmetadata = null;
           audioRef.current.onended = null;
           
-          // Configurar nueva fuente
-          audioRef.current.src = preview.videoUrl;
+          // Configurar nueva fuente - asegurarse de que la URL esté codificada correctamente
+          const encodedUrl = encodeURI(preview.videoUrl);
+          audioRef.current.src = encodedUrl;
           audioRef.current.crossOrigin = "anonymous";
           
           audioRef.current.oncanplaythrough = () => {
@@ -238,8 +238,10 @@ const MusicPreviews = ({
           }
         };
         
+        // Asegurarse de que la URL esté codificada correctamente
+        const encodedUrl = encodeURI(preview.audioUrl);
         audioRef.current.crossOrigin = "anonymous";
-        audioRef.current.src = preview.audioUrl;
+        audioRef.current.src = encodedUrl;
         console.log("URL asignada:", audioRef.current.src);
         audioRef.current.load();
         
@@ -510,7 +512,8 @@ const ImagePreviewCard = ({
             muted
             preload="metadata"
           >
-            <source src={preview.videoUrl} type="video/mp4" />
+            {/* Usar encodeURI para la URL del video */}
+            <source src={encodeURI(preview.videoUrl)} type="video/mp4" />
             <img src={preview.image} alt={preview.title} className="w-full h-full object-cover" />
           </video>
         ) : (

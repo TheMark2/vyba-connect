@@ -133,7 +133,10 @@ const AudioPlayer = ({
       if (sourceUrl && audioRef.current.src !== sourceUrl) {
         console.log("Actualizando URL de fuente en AudioPlayer:", sourceUrl);
         console.log("Es una fuente de video:", preview.hasVideo && preview.videoUrl ? "Sí" : "No");
-        audioRef.current.src = sourceUrl;
+        
+        // Asegurarse de que la URL esté codificada correctamente
+        const encodedUrl = encodeURI(sourceUrl);
+        audioRef.current.src = encodedUrl;
         audioRef.current.crossOrigin = "anonymous";
         audioRef.current.load();
       }
