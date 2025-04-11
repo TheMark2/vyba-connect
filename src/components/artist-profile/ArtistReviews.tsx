@@ -49,7 +49,7 @@ const ReviewItem = ({
 
   // Determine if the name is too long (more than 15 characters)
   const isNameLong = review.name.length > 15;
-  return <div className="mb-8">
+  return <div className="mb-6">
       <div className="bg-[#F7F7F7] rounded-3xl p-6 relative">
         <div className="absolute top-6 right-6 flex gap-2">
           <Button variant="ghost" size="icon" className="h-8 w-8" onClick={handleShareClick}>
