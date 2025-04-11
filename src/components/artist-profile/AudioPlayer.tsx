@@ -84,6 +84,11 @@ const AudioPlayer = ({
       setIsLoading(true);
     };
 
+    const handleCanPlay = () => {
+      setIsLoading(false);
+      console.log("Audio can play now");
+    };
+
     const handleError = (e: Event) => {
       console.error("Error en AudioPlayer:", e);
       setIsLoading(false);
@@ -93,6 +98,7 @@ const AudioPlayer = ({
     audioElement.addEventListener('timeupdate', updateProgress);
     audioElement.addEventListener('loadedmetadata', handleLoadedMetadata);
     audioElement.addEventListener('loadstart', handleLoadStart);
+    audioElement.addEventListener('canplay', handleCanPlay);
     audioElement.addEventListener('error', handleError);
 
     return () => {
@@ -100,6 +106,7 @@ const AudioPlayer = ({
         audioElement.removeEventListener('timeupdate', updateProgress);
         audioElement.removeEventListener('loadedmetadata', handleLoadedMetadata);
         audioElement.removeEventListener('loadstart', handleLoadStart);
+        audioElement.removeEventListener('canplay', handleCanPlay);
         audioElement.removeEventListener('error', handleError);
       }
     };
@@ -111,13 +118,16 @@ const AudioPlayer = ({
     setRemainingTime(`-${duration}`);
     setDuration(preview.duration);
 
-    const sourceUrl = preview.hasVideo && preview.videoUrl ? preview.videoUrl : preview.audioUrl;
-    
-    if (audioRef.current && sourceUrl && audioRef.current.src !== sourceUrl) {
-      console.log("Actualizando URL de fuente en AudioPlayer:", sourceUrl);
-      console.log("Es una fuente de video:", preview.hasVideo && preview.videoUrl ? "Sí" : "No");
-      audioRef.current.src = sourceUrl;
-      audioRef.current.crossOrigin = "anonymous";
+    if (audioRef.current) {
+      const sourceUrl = preview.hasVideo && preview.videoUrl ? preview.videoUrl : preview.audioUrl;
+      
+      if (sourceUrl && audioRef.current.src !== sourceUrl) {
+        console.log("Actualizando URL de fuente en AudioPlayer:", sourceUrl);
+        console.log("Es una fuente de video:", preview.hasVideo && preview.videoUrl ? "Sí" : "No");
+        audioRef.current.src = sourceUrl;
+        audioRef.current.crossOrigin = "anonymous";
+        audioRef.current.load();
+      }
     }
   }, [preview, duration]);
 
@@ -169,14 +179,6 @@ const AudioPlayer = ({
 
   const handlePlayPauseClick = () => {
     if (isLoading) return;
-
-    if (audioRef.current && preview.audioUrl && (!audioRef.current.src || !audioRef.current.src.includes(preview.audioUrl))) {
-      console.log("Actualizando URL de audio antes de reproducir:", preview.audioUrl);
-      audioRef.current.src = preview.audioUrl;
-      audioRef.current.crossOrigin = "anonymous";
-      audioRef.current.load();
-    }
-
     onPlayPause();
   };
 
@@ -192,87 +194,126 @@ const AudioPlayer = ({
     audioRef.current.currentTime = newTime;
   };
 
-  if (isMobile) {
-    return <div className="relative rounded-3xl overflow-hidden" style={{
+  return isMobile ? (
+    <div className="relative rounded-3xl overflow-hidden" style={{
       backgroundImage: preview.image ? `url(${preview.image})` : 'none',
       backgroundSize: 'cover',
       backgroundPosition: 'center'
     }}>
-        <div className="absolute inset-0 bg-black/30 backdrop-blur-[50px]"></div>
-        <div className="relative p-5 pt-5 pb-3 z-10">
-          <div className="flex items-center gap-4 mb-4">
-            <div className="w-20 h-20 rounded-2xl overflow-hidden bg-gray-200 flex-shrink-0">
-              {preview.image ? <Image src={preview.image} alt={preview.title} className="w-full h-full object-cover" /> : <div className="w-full h-full bg-gray-200 flex items-center justify-center text-gray-400">
-                  <span>No image</span>
-                </div>}
-            </div>
-            
-            <div className="flex-grow text-white overflow-hidden">
-              <div className="mb-1 w-full overflow-hidden">
-                <Marquee className="text-white" pauseOnHover>
-                  <div className="font-black text-lg">{preview.title}</div>
-                </Marquee>
+      <div className="absolute inset-0 bg-black/30 backdrop-blur-[50px]"></div>
+      <div className="relative p-5 pt-5 pb-3 z-10">
+        <div className="flex items-center gap-4 mb-4">
+          <div className="w-20 h-20 rounded-2xl overflow-hidden bg-gray-200 flex-shrink-0">
+            {preview.image ? (
+              <Image src={preview.image} alt={preview.title} className="w-full h-full object-cover" />
+            ) : (
+              <div className="w-full h-full bg-gray-200 flex items-center justify-center text-gray-400">
+                <span>No image</span>
               </div>
-              <div className="text-md opacity-90 font-medium">{artistName}</div>
-            </div>
+            )}
           </div>
           
-          <div className="mb-2">
-            <div className="flex items-center gap-2 mb-1">
-              <span className="text-xs text-white min-w-[35px]">{currentTime}</span>
-              <Slider value={[progress]} min={0} max={100} step={0.1} onValueChange={handleSliderChange} onValueCommit={handleSliderCommit} className="flex-grow" />
-              <span className="text-xs text-white min-w-[35px] text-right">{remainingTime}</span>
+          <div className="flex-grow text-white overflow-hidden">
+            <div className="mb-1 w-full overflow-hidden">
+              <Marquee className="text-white" pauseOnHover>
+                <div className="font-black text-lg">{preview.title}</div>
+              </Marquee>
             </div>
-          </div>
-          
-          <div className="flex justify-center items-center gap-3 mt-2">
-            <button className="text-white relative overflow-hidden w-10 h-10 flex items-center justify-center" onClick={handleSkipBackward} disabled={isLoading}>
-              <Rewind className="h-6 w-6" fill="white" fillOpacity="1" stroke="none" />
-            </button>
-            <button className="text-white relative overflow-hidden w-12 h-12 flex items-center justify-center" onClick={handlePlayPauseClick} disabled={isLoading}>
-              {isLoading ? <div className="h-5 w-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div> : <div className="relative z-10 flex items-center justify-center w-10 h-10">
-                  <Pause className={`absolute h-7 w-7 transition-all duration-300 
-                      ${isPlaying ? 'opacity-100 scale-100' : 'opacity-0 scale-50'}`} fill="white" fillOpacity="1" stroke="none" />
-                  <Play className={`absolute h-7 w-7 transition-all duration-300 
-                      ${isPlaying ? 'opacity-0 scale-50' : 'opacity-100 scale-100'}`} fill="white" fillOpacity="1" stroke="none" />
-                </div>}
-            </button>
-            <button className="text-white relative overflow-hidden w-10 h-10 flex items-center justify-center" onClick={handleSkipForward} disabled={isLoading}>
-              <FastForward className="h-6 w-6" fill="white" fillOpacity="1" stroke="none" />
-            </button>
+            <div className="text-md opacity-90 font-medium">{artistName}</div>
           </div>
         </div>
-      </div>;
-  }
-
-  return <div className="relative rounded-2xl overflow-hidden bg-transparent dark:bg-transparent">
+        
+        <div className="mb-2">
+          <div className="flex items-center gap-2 mb-1">
+            <span className="text-xs text-white min-w-[35px]">{currentTime}</span>
+            <Slider 
+              value={[progress]} 
+              min={0} 
+              max={100} 
+              step={0.1} 
+              onValueChange={handleSliderChange} 
+              onValueCommit={handleSliderCommit} 
+              className="flex-grow" 
+            />
+            <span className="text-xs text-white min-w-[35px] text-right">{remainingTime}</span>
+          </div>
+        </div>
+        
+        <div className="flex justify-center items-center gap-3 mt-2">
+          <button 
+            className="text-white relative overflow-hidden w-10 h-10 flex items-center justify-center" 
+            onClick={handleSkipBackward} 
+            disabled={isLoading}
+          >
+            <Rewind className="h-6 w-6" fill="white" fillOpacity="1" stroke="none" />
+          </button>
+          <button 
+            className="text-white relative overflow-hidden w-12 h-12 flex items-center justify-center" 
+            onClick={handlePlayPauseClick} 
+            disabled={isLoading}
+          >
+            {isLoading ? (
+              <div className="h-5 w-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+            ) : (
+              <div className="relative z-10 flex items-center justify-center w-10 h-10">
+                <Pause className={`absolute h-7 w-7 transition-all duration-300 
+                    ${isPlaying ? 'opacity-100 scale-100' : 'opacity-0 scale-50'}`} fill="white" fillOpacity="1" stroke="none" />
+                <Play className={`absolute h-7 w-7 transition-all duration-300 
+                    ${isPlaying ? 'opacity-0 scale-50' : 'opacity-100 scale-100'}`} fill="white" fillOpacity="1" stroke="none" />
+              </div>
+            )}
+          </button>
+          <button 
+            className="text-white relative overflow-hidden w-10 h-10 flex items-center justify-center" 
+            onClick={handleSkipForward} 
+            disabled={isLoading}
+          >
+            <FastForward className="h-6 w-6" fill="white" fillOpacity="1" stroke="none" />
+          </button>
+        </div>
+      </div>
+    </div>
+  ) : (
+    <div className="relative rounded-2xl overflow-hidden bg-transparent dark:bg-transparent">
       <div className="flex flex-col gap-3 rounded-xl">
         <div className="flex items-center gap-4">
           <div className="w-16 h-16 rounded-lg overflow-hidden bg-gray-200 flex-shrink-0">
-            {preview.image ? <Image src={preview.image} alt={preview.title} className="w-full h-full object-cover" /> : <div className="w-full h-full bg-gray-200 flex items-center justify-center text-gray-400">
+            {preview.image ? (
+              <Image src={preview.image} alt={preview.title} className="w-full h-full object-cover" />
+            ) : (
+              <div className="w-full h-full bg-gray-200 flex items-center justify-center text-gray-400">
                 <span>No image</span>
-              </div>}
+              </div>
+            )}
           </div>
           
           <div className="flex-grow overflow-hidden">
             <div className="h-6 overflow-hidden">
-              {textOverflow.title ? <div className="whitespace-nowrap animate-marquee-bounce">
+              {textOverflow.title ? (
+                <div className="whitespace-nowrap animate-marquee-bounce">
                   <div ref={titleRef} className="font-bold text-lg inline-block">
                     {preview.title}
                   </div>
-                </div> : <div ref={titleRef} className="font-bold text-lg truncate">
+                </div>
+              ) : (
+                <div ref={titleRef} className="font-bold text-lg truncate">
                   {preview.title}
-                </div>}
+                </div>
+              )}
             </div>
             
             <div className="h-5 overflow-hidden">
-              {textOverflow.artist ? <div className="whitespace-nowrap animate-marquee-bounce">
+              {textOverflow.artist ? (
+                <div className="whitespace-nowrap animate-marquee-bounce">
                   <div ref={artistRef} className="text-sm text-gray-500 dark:text-gray-400 inline-block">
                     {artistName}
                   </div>
-                </div> : <div ref={artistRef} className="text-sm text-gray-500 dark:text-gray-400 truncate">
+                </div>
+              ) : (
+                <div ref={artistRef} className="text-sm text-gray-500 dark:text-gray-400 truncate">
                   {artistName}
-                </div>}
+                </div>
+              )}
             </div>
           </div>
         </div>
@@ -280,27 +321,52 @@ const AudioPlayer = ({
         <div>
           <div className="flex items-center gap-2">
             <span className="text-xs text-gray-500 dark:text-gray-400 min-w-[35px]">{currentTime}</span>
-            <Slider value={[progress]} min={0} max={100} step={0.1} onValueChange={handleSliderChange} onValueCommit={handleSliderCommit} className="flex-grow" />
+            <Slider 
+              value={[progress]} 
+              min={0} 
+              max={100} 
+              step={0.1} 
+              onValueChange={handleSliderChange} 
+              onValueCommit={handleSliderCommit} 
+              className="flex-grow" 
+            />
             <span className="text-xs text-gray-500 dark:text-gray-400 min-w-[35px] text-right">{remainingTime}</span>
           </div>
           
           <div className="flex justify-center items-center gap-2 mt-2">
-            <button className="h-8 w-8 bg-gray-200 dark:bg-vyba-dark-secondary text-gray-700 dark:text-white rounded-full relative overflow-hidden" onClick={handleSkipBackward} disabled={isLoading}>
+            <button 
+              className="h-8 w-8 bg-gray-200 dark:bg-vyba-dark-secondary text-gray-700 dark:text-white rounded-full relative overflow-hidden" 
+              onClick={handleSkipBackward} 
+              disabled={isLoading}
+            >
               <Rewind className="h-4 w-4 mx-auto" fill="currentColor" stroke="none" />
             </button>
-            <button className={`h-10 w-10 ${isPlaying ? 'bg-green-500 hover:bg-green-600' : 'bg-blue-500 hover:bg-blue-600'} text-white rounded-full relative overflow-hidden ${isLoading ? 'opacity-70 cursor-wait' : ''}`} onClick={handlePlayPauseClick} disabled={isLoading}>
-              {isLoading ? <div className="h-5 w-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div> : <div className="relative z-10 flex items-center justify-center w-5 h-5">
+            <button 
+              className={`h-10 w-10 ${isPlaying ? 'bg-green-500 hover:bg-green-600' : 'bg-blue-500 hover:bg-blue-600'} text-white rounded-full relative overflow-hidden ${isLoading ? 'opacity-70 cursor-wait' : ''}`} 
+              onClick={handlePlayPauseClick} 
+              disabled={isLoading}
+            >
+              {isLoading ? (
+                <div className="h-5 w-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+              ) : (
+                <div className="relative z-10 flex items-center justify-center w-5 h-5">
                   <Pause className={`absolute h-5 w-5 fill-white transition-all duration-300 ${isPlaying ? 'opacity-100 scale-100' : 'opacity-0 scale-50'}`} />
                   <Play className={`absolute h-5 w-5 fill-white transition-all duration-300 ${isPlaying ? 'opacity-0 scale-50' : 'opacity-100 scale-100'}`} />
-                </div>}
+                </div>
+              )}
             </button>
-            <button className="h-8 w-8 bg-gray-200 dark:bg-vyba-dark-secondary text-gray-700 dark:text-white rounded-full relative overflow-hidden" onClick={handleSkipForward} disabled={isLoading}>
+            <button 
+              className="h-8 w-8 bg-gray-200 dark:bg-vyba-dark-secondary text-gray-700 dark:text-white rounded-full relative overflow-hidden" 
+              onClick={handleSkipForward} 
+              disabled={isLoading}
+            >
               <FastForward className="h-4 w-4 mx-auto" fill="currentColor" stroke="none" />
             </button>
           </div>
         </div>
       </div>
-    </div>;
+    </div>
+  );
 };
 
 export default AudioPlayer;

@@ -226,7 +226,7 @@ const ArtistProfilePage = () => {
   useEffect(() => {
     if (!audioRef.current) {
       const audio = new Audio();
-      audio.crossOrigin = "anonymous"; // Importante: Configurar CORS para todos los audios
+      audio.crossOrigin = "anonymous";
       audio.addEventListener('ended', () => {
         console.log("Audio terminado");
         setIsAudioPlaying(false);
@@ -243,6 +243,7 @@ const ArtistProfilePage = () => {
       });
       audioRef.current = audio;
     }
+    
     return () => {
       if (audioRef.current) {
         audioRef.current.pause();
@@ -324,7 +325,9 @@ const ArtistProfilePage = () => {
 
   const handlePlayPause = () => {
     if (!audioRef.current || !currentPlaying) return;
+    
     console.log("Play/Pause presionado. Estado actual:", isAudioPlaying);
+    
     try {
       if (isAudioPlaying) {
         audioRef.current.pause();
@@ -342,18 +345,22 @@ const ArtistProfilePage = () => {
             audioRef.current.load();
           }
           
-          const playPromise = audioRef.current.play();
-          if (playPromise !== undefined) {
-            playPromise.then(() => {
-              console.log("Reproducción iniciada con éxito desde handlePlayPause");
-              setIsAudioPlaying(true);
-            }).catch(error => {
-              console.error("Error al reproducir audio:", error);
-              toast.error("No se pudo reproducir el audio", {
-                description: "Prueba con otra pista o recarga la página"
-              });
-            });
-          }
+          setTimeout(() => {
+            if (audioRef.current) {
+              const playPromise = audioRef.current.play();
+              if (playPromise !== undefined) {
+                playPromise.then(() => {
+                  console.log("Reproducción iniciada con éxito desde handlePlayPause");
+                  setIsAudioPlaying(true);
+                }).catch(error => {
+                  console.error("Error al reproducir audio:", error);
+                  toast.error("No se pudo reproducir el audio", {
+                    description: "Prueba con otra pista o recarga la página"
+                  });
+                });
+              }
+            }
+          }, 200);
         } else {
           console.error("No hay URL de audio o video asignada");
           toast.error("No hay audio disponible");

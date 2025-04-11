@@ -97,10 +97,6 @@ const MusicPreviews = ({
       console.log("Usando audio del video:", preview.videoUrl);
       
       try {
-        const videoElement = document.createElement('video');
-        videoElement.src = preview.videoUrl;
-        videoElement.crossOrigin = "anonymous";
-        
         if (audioRef.current) {
           audioRef.current.pause();
           
@@ -142,11 +138,22 @@ const MusicPreviews = ({
           
           setTimeout(() => {
             if (loadingAudio === preview.title) {
-              console.warn("Timeout de carga de audio del video");
-              setLoadingAudio(null);
-              handlePlaybackError(preview);
+              audioRef.current?.play()
+                .then(() => {
+                  console.log("Reproducción forzada del audio iniciada correctamente");
+                  setCurrentlyPlaying(preview.title);
+                  setLoadingAudio(null);
+                  if (onPlaybackState) {
+                    onPlaybackState(preview, true);
+                  }
+                })
+                .catch(error => {
+                  console.error("Error en la reproducción forzada:", error);
+                  setLoadingAudio(null);
+                  handlePlaybackError(preview);
+                });
             }
-          }, 10000);
+          }, 3000);
         }
       } catch (error) {
         console.error("Error al configurar el audio del video:", error);
@@ -232,11 +239,22 @@ const MusicPreviews = ({
         
         setTimeout(() => {
           if (loadingAudio === preview.title) {
-            console.warn("Timeout de carga de audio");
-            setLoadingAudio(null);
-            handlePlaybackError(preview);
+            audioRef.current?.play()
+              .then(() => {
+                console.log("Reproducción forzada iniciada correctamente");
+                setCurrentlyPlaying(preview.title);
+                setLoadingAudio(null);
+                if (onPlaybackState) {
+                  onPlaybackState(preview, true);
+                }
+              })
+              .catch(error => {
+                console.error("Error en la reproducción forzada:", error);
+                setLoadingAudio(null);
+                handlePlaybackError(preview);
+              });
           }
-        }, 10000);
+        }, 3000);
       } catch (error) {
         console.error("Error al configurar el audio:", error);
         setLoadingAudio(null);
