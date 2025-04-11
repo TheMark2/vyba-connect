@@ -1,3 +1,4 @@
+
 import React, { useEffect, useState, useRef } from "react";
 import { Slider } from "@/components/ui/slider";
 import { Pause, Play, Rewind, FastForward } from "lucide-react";
@@ -67,15 +68,21 @@ const AudioPlayer = ({
           const durationValue = audioRef.current.duration;
           const minutes = Math.floor(durationValue / 60);
           const seconds = Math.floor(durationValue % 60);
-          setDuration(`${minutes}:${seconds < 10 ? '0' : ''}${seconds}`);
+          const formattedDuration = `${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
+          setDuration(formattedDuration);
+          setRemainingTime(`-${formattedDuration}`);
           setIsLoading(false);
+          console.log("Duración del audio cargada:", formattedDuration);
         } else {
+          console.log("Usando duración predeterminada:", preview.duration);
           setDuration(preview.duration);
+          setRemainingTime(`-${preview.duration}`);
           setIsLoading(false);
         }
       } catch (error) {
         console.error("Error al obtener metadatos de audio:", error);
         setDuration(preview.duration);
+        setRemainingTime(`-${preview.duration}`);
         setIsLoading(false);
       }
     };
@@ -116,6 +123,8 @@ const AudioPlayer = ({
     setProgress(0);
     setCurrentTime("0:00");
     setRemainingTime(`-${duration}`);
+    
+    // Actualizar la duración cuando cambia la previsualización
     setDuration(preview.duration);
 
     if (audioRef.current) {

@@ -1,3 +1,4 @@
+
 import React, { useEffect, useState, useRef } from "react";
 import { Music, Video, Play, Expand, Pause, FileAudio } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
@@ -24,6 +25,12 @@ interface MusicPreviewsProps {
   audioRef: React.RefObject<HTMLAudioElement>;
 }
 
+// Videos disponibles en el proyecto
+const LOCAL_VIDEOS = {
+  badBunny: "/lovable-uploads/Bad Bunny - Moscow Mule (Video Oficial)  Un Verano Sin Ti.mp4",
+  westcol: "/lovable-uploads/W Sound 05 LA PLENA - Beéle, Westcol, Ovy On The Drums.mp4"
+};
+
 const MusicPreviews = ({
   previews,
   artistName,
@@ -40,16 +47,12 @@ const MusicPreviews = ({
 
   const observerRef = useRef<IntersectionObserver | null>(null);
 
-  const availableVideos = [
-    "/lovable-uploads/Bad Bunny - Moscow Mule (Video Oficial)  Un Verano Sin Ti.mp4",
-    "/lovable-uploads/W Sound 05 LA PLENA - Beéle, Westcol, Ovy On The Drums.mp4"
-  ];
-
   useEffect(() => {
+    // Asignar videos locales a las previsualizaciones que tienen hasVideo=true
     previews.forEach((preview, index) => {
       if (preview.hasVideo && !preview.videoUrl) {
-        const videoIndex = index % availableVideos.length;
-        preview.videoUrl = availableVideos[videoIndex];
+        // Alternar entre los dos videos disponibles
+        preview.videoUrl = index % 2 === 0 ? LOCAL_VIDEOS.badBunny : LOCAL_VIDEOS.westcol;
       }
     });
   }, [previews]);
@@ -100,11 +103,13 @@ const MusicPreviews = ({
         if (audioRef.current) {
           audioRef.current.pause();
           
+          // Limpiar listeners antiguos
           audioRef.current.oncanplaythrough = null;
           audioRef.current.onerror = null;
           audioRef.current.onloadedmetadata = null;
           audioRef.current.onended = null;
           
+          // Configurar nueva fuente
           audioRef.current.src = preview.videoUrl;
           audioRef.current.crossOrigin = "anonymous";
           
@@ -136,6 +141,7 @@ const MusicPreviews = ({
           
           audioRef.current.load();
           
+          // Timeout para intentar reproducción forzada si toma demasiado tiempo
           setTimeout(() => {
             if (loadingAudio === preview.title) {
               audioRef.current?.play()
@@ -451,18 +457,38 @@ const ImagePreviewCard = ({
 
   const videoRef = useRef<HTMLVideoElement>(null);
   const [isHovering, setIsHovering] = useState(false);
+  const [videoDuration, setVideoDuration] = useState(preview.duration);
 
+  // Obtener duración real del video cuando está disponible
   useEffect(() => {
     if (videoRef.current && isHovering && preview.hasVideo && preview.videoUrl) {
-      videoRef.current.muted = true;
-      videoRef.current.loop = true;
+      const video = videoRef.current;
       
-      const playPromise = videoRef.current.play();
+      // Obtener duración del video cuando se cargan los metadatos
+      const handleMetadata = () => {
+        if (video.duration && !isNaN(video.duration)) {
+          const minutes = Math.floor(video.duration / 60);
+          const seconds = Math.floor(video.duration % 60);
+          setVideoDuration(`${minutes}:${seconds < 10 ? '0' : ''}${seconds}`);
+        }
+      };
+      
+      video.addEventListener('loadedmetadata', handleMetadata);
+      
+      // Reproducir video en silencio al hacer hover
+      video.muted = true;
+      video.loop = true;
+      
+      const playPromise = video.play();
       if (playPromise !== undefined) {
         playPromise.catch(error => {
           console.error("Error al reproducir video en hover:", error);
         });
       }
+      
+      return () => {
+        video.removeEventListener('loadedmetadata', handleMetadata);
+      };
     } else if (videoRef.current && !isHovering) {
       videoRef.current.pause();
     }
@@ -482,6 +508,7 @@ const ImagePreviewCard = ({
             className="w-full h-full object-cover"
             playsInline
             muted
+            preload="metadata"
           >
             <source src={preview.videoUrl} type="video/mp4" />
             <img src={preview.image} alt={preview.title} className="w-full h-full object-cover" />
@@ -540,7 +567,7 @@ const ImagePreviewCard = ({
         </Button>
         
         <div className="absolute bottom-7 right-7 z-10 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-          <span className="text-sm font-medium text-white bg-black/50 px-2 py-1 rounded-md">{preview.duration}</span>
+          <span className="text-sm font-medium text-white bg-black/50 px-2 py-1 rounded-md">{videoDuration || preview.duration}</span>
         </div>
       </div>
     </Card>

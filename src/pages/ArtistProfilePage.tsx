@@ -18,6 +18,11 @@ import AudioPlayer from "@/components/artist-profile/AudioPlayer";
 import MobileBottomSheet from "@/components/artist-profile/MobileBottomSheet";
 import { useIsMobile } from "@/hooks/use-mobile";
 
+const LOCAL_VIDEOS = {
+  badBunny: "/lovable-uploads/Bad Bunny - Moscow Mule (Video Oficial)  Un Verano Sin Ti.mp4",
+  westcol: "/lovable-uploads/W Sound 05 LA PLENA - Beéle, Westcol, Ovy On The Drums.mp4"
+};
+
 const artistsData = [{
   id: "1",
   name: "Antonia Pedragosa",
@@ -43,11 +48,10 @@ const artistsData = [{
     audioUrl: "https://assets.mixkit.co/music/preview/mixkit-tech-house-vibes-130.mp3"
   }, {
     title: "Sesión Urbana Remix",
-    duration: "1:33",
+    duration: "3:45",
     image: "https://images.unsplash.com/photo-1514525253161-7a46d19cd819?q=80&w=1000",
     hasVideo: true,
-    audioUrl: "https://assets.mixkit.co/music/preview/mixkit-hip-hop-02-614.mp3",
-    videoUrl: "/lovable-uploads/Bad Bunny - Moscow Mule (Video Oficial)  Un Verano Sin Ti.mp4"
+    videoUrl: LOCAL_VIDEOS.badBunny
   }, {
     title: "Mix Hip-Hop 2024",
     duration: "1:31",
@@ -59,11 +63,10 @@ const artistsData = [{
     audioUrl: "https://assets.mixkit.co/music/preview/mixkit-a-very-happy-christmas-897.mp3"
   }, {
     title: "Summer Vibes DJ Set",
-    duration: "1:44",
+    duration: "2:15",
     image: "https://images.unsplash.com/photo-1516450360452-9312f5e86fc7?q=80&w=2070",
     hasVideo: true,
-    audioUrl: "https://assets.mixkit.co/music/preview/mixkit-summer-fun-13.mp3",
-    videoUrl: "/lovable-uploads/W Sound 05 LA PLENA - Beéle, Westcol, Ovy On The Drums.mp4"
+    videoUrl: LOCAL_VIDEOS.westcol
   }],
   eventTypes: ["Bodas", "Fiestas Privadas", "Cumpleaños", "Eventos Corporativos", "Inauguraciones", "Aniversarios", "Cenas de Gala"],
   reviewsData: [{
@@ -227,6 +230,7 @@ const ArtistProfilePage = () => {
     if (!audioRef.current) {
       const audio = new Audio();
       audio.crossOrigin = "anonymous";
+      audio.preload = "metadata";
       audio.addEventListener('ended', () => {
         console.log("Audio terminado");
         setIsAudioPlaying(false);
