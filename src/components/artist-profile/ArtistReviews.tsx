@@ -1,11 +1,13 @@
+
 import React, { useState, useEffect } from "react";
-import { Star, X, MessageSquare } from "lucide-react";
+import { Star, Share, Flag, MessageSquareReply } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { toast } from "sonner";
+import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 
 interface Review {
   id: number;
@@ -14,6 +16,12 @@ interface Review {
   rating: number;
   badges: string[];
   comment: string;
+  title?: string;
+  reply?: {
+    name: string;
+    date: string;
+    comment: string;
+  };
 }
 
 interface ArtistReviewsProps {
@@ -30,57 +38,61 @@ const ReviewItem = ({
 }) => {
   const isMobile = useIsMobile();
   
+  const handleReportClick = () => {
+    toast.info("Reseña reportada", {
+      description: "Gracias por informarnos",
+      position: "bottom-center"
+    });
+  };
+
+  const handleShareClick = () => {
+    toast.success("Reseña compartida", {
+      description: "Enlace copiado al portapapeles",
+      position: "bottom-center"
+    });
+  };
+  
   return (
-    <div className="pb-8 border-b border-gray-200 dark:border-gray-700">
-      {isMobile ? (
-        <div className="flex flex-col">
-          <div className="flex items-center mb-3">
-            <div className="w-[60px] h-[60px] rounded-[16px] overflow-hidden mr-4 flex-shrink-0">
-              <img 
-                src={review.id === 1 ? "https://images.unsplash.com/photo-1580489944761-15a19d654956?q=80&w=1000" : 
-                    review.id === 2 ? "https://images.unsplash.com/photo-1633332755192-727a05c4013d?q=80&w=1000" : 
-                    "https://images.unsplash.com/photo-1494790108377-be9c29b29330?q=80&w=1000"} 
-                alt={review.name} 
-                className="w-full h-full object-cover" 
-              />
-            </div>
-            <div>
-              <h4 className="text-base font-bold">{review.name}</h4>
-              <p className="text-sm text-gray-500">hace {review.date}</p>
-            </div>
-          </div>
-          
-          <div className="flex items-center mb-4">
-            {[...Array(5)].map((_, index) => (
-              <Star 
-                key={index} 
-                className={`h-3 w-3 ${index < review.rating ? "text-black fill-black dark:text-white dark:fill-white" : "text-gray-300 dark:text-gray-600"}`} 
-              />
-            ))}
-          </div>
-          
-          <p className="text-base">{review.comment}</p>
+    <div className="mb-8">
+      <div className="bg-[#F7F7F7] rounded-3xl p-6 relative">
+        <div className="absolute top-6 right-6 flex gap-2">
+          <Button 
+            variant="ghost" 
+            size="icon" 
+            className="h-8 w-8" 
+            onClick={handleShareClick}
+          >
+            <Share className="h-4 w-4" />
+          </Button>
+          <Button 
+            variant="ghost" 
+            size="icon" 
+            className="h-8 w-8" 
+            onClick={handleReportClick}
+          >
+            <Flag className="h-4 w-4" />
+          </Button>
         </div>
-      ) : (
-        <div className="flex gap-6">
-          <div className="w-[90px] flex-shrink-0">
-            <div className="w-[72px] h-[72px] rounded-[16px] overflow-hidden mb-2">
-              <img 
-                src={review.id === 1 ? "https://images.unsplash.com/photo-1580489944761-15a19d654956?q=80&w=1000" : 
-                    review.id === 2 ? "https://images.unsplash.com/photo-1633332755192-727a05c4013d?q=80&w=1000" : 
-                    "https://images.unsplash.com/photo-1494790108377-be9c29b29330?q=80&w=1000"} 
-                alt={review.name} 
-                className="w-full h-full object-cover" 
-              />
-            </div>
-            <div className="text-left">
-              <h4 className="text-sm font-bold">{review.name}</h4>
-              <p className="text-xs text-gray-500">hace {review.date}</p>
-            </div>
-          </div>
-          
-          <div className="flex-1">
+        
+        <div className="flex flex-col md:flex-row gap-6">
+          <div className="md:w-1/4">
             <div className="flex items-center mb-2">
+              <Avatar className="h-12 w-12 rounded-lg mr-3">
+                <AvatarImage 
+                  src={review.id === 1 ? "https://images.unsplash.com/photo-1580489944761-15a19d654956?q=80&w=1000" : 
+                      review.id === 2 ? "https://images.unsplash.com/photo-1633332755192-727a05c4013d?q=80&w=1000" : 
+                      "https://images.unsplash.com/photo-1494790108377-be9c29b29330?q=80&w=1000"}
+                  alt={review.name}
+                />
+                <AvatarFallback className="rounded-lg">{review.name.charAt(0)}</AvatarFallback>
+              </Avatar>
+              <div>
+                <h4 className="text-base font-bold">{review.name}</h4>
+                <p className="text-sm text-gray-500">hace {review.date}</p>
+              </div>
+            </div>
+            
+            <div className="flex items-center mt-3">
               {[...Array(5)].map((_, index) => (
                 <Star 
                   key={index} 
@@ -88,8 +100,28 @@ const ReviewItem = ({
                 />
               ))}
             </div>
-            
+          </div>
+          
+          <div className="md:w-3/4">
+            <h3 className="text-xl font-bold mb-2">{review.title || "Muy buen servicio"}</h3>
             <p className="text-base">{review.comment}</p>
+          </div>
+        </div>
+      </div>
+      
+      {review.reply && (
+        <div className="bg-[#D9D9D9] rounded-3xl p-6 ml-8 md:ml-16 mt-3">
+          <div className="flex flex-col md:flex-row gap-6">
+            <div className="md:w-1/4">
+              <div>
+                <h4 className="text-base font-bold">{review.reply.name}</h4>
+                <p className="text-sm text-gray-500">hace {review.reply.date}</p>
+              </div>
+            </div>
+            
+            <div className="md:w-3/4">
+              <p className="text-base">{review.reply.comment}</p>
+            </div>
           </div>
         </div>
       )}
@@ -104,7 +136,13 @@ const moreReviewsData: Review[] = [
     date: "2 semanas",
     rating: 5,
     badges: ["Bodas", "Eventos corporativos"],
-    comment: "¡Increíble actuación! Todos mis invitados quedaron encantados con su música. Definitivamente lo volvería a contratar para futuros eventos."
+    comment: "¡Increíble actuación! Todos mis invitados quedaron encantados con su música. Definitivamente lo volvería a contratar para futuros eventos.",
+    title: "Excelente profesional",
+    reply: {
+      name: "Antonia Pedragosa",
+      date: "2 semanas",
+      comment: "Muchas gracias por tus amables palabras, Miguel. Fue un placer amenizar tu evento. ¡Espero volver a trabajar contigo pronto!"
+    }
   }, 
   {
     id: 5,
@@ -112,7 +150,8 @@ const moreReviewsData: Review[] = [
     date: "1 mes",
     rating: 4,
     badges: ["Bodas", "Fiestas privadas"],
-    comment: "Muy profesional y puntual. La música fue perfecta para nuestra celebración de aniversario. Recomendado."
+    comment: "Muy profesional y puntual. La música fue perfecta para nuestra celebración de aniversario. Recomendado.",
+    title: "Muy profesional"
   }, 
   {
     id: 6,
@@ -120,7 +159,13 @@ const moreReviewsData: Review[] = [
     date: "2 meses",
     rating: 5,
     badges: ["Eventos corporativos"],
-    comment: "Contratar a este artista fue la mejor decisión para nuestro evento corporativo. Su repertorio se adaptó perfectamente a nuestras necesidades."
+    comment: "Contratar a este artista fue la mejor decisión para nuestro evento corporativo. Su repertorio se adaptó perfectamente a nuestras necesidades.",
+    title: "Repertorio adaptado a nuestras necesidades",
+    reply: {
+      name: "Antonia Pedragosa",
+      date: "2 meses",
+      comment: "Gracias Carlos, me alegra que quedaran satisfechos con mi servicio. Fue un placer trabajar en su evento corporativo."
+    }
   }, 
   {
     id: 7,
@@ -128,7 +173,8 @@ const moreReviewsData: Review[] = [
     date: "3 meses",
     rating: 4,
     badges: ["Bodas"],
-    comment: "Nuestra boda fue especial gracias a su música. El ambiente que creó fue exactamente lo que buscábamos."
+    comment: "Nuestra boda fue especial gracias a su música. El ambiente que creó fue exactamente lo que buscábamos.",
+    title: "Creó el ambiente perfecto"
   }, 
   {
     id: 8,
@@ -136,7 +182,8 @@ const moreReviewsData: Review[] = [
     date: "4 meses",
     rating: 5,
     badges: ["Fiestas privadas"],
-    comment: "Un profesional excepcional. Su energía contagió a todos los invitados y la fiesta fue un éxito rotundo."
+    comment: "Un profesional excepcional. Su energía contagió a todos los invitados y la fiesta fue un éxito rotundo.",
+    title: "Energía contagiosa"
   }
 ];
 
@@ -161,7 +208,26 @@ const ArtistReviews = ({
     };
   }, []);
 
-  const allReviews = reviewsData ? [...reviewsData, ...moreReviewsData] : [];
+  // Añadir respuestas a algunas reseñas existentes
+  const enhancedReviewsData = reviewsData?.map(review => {
+    if (review.id === 1) {
+      return {
+        ...review,
+        title: "Muy buen servicio",
+        reply: {
+          name: "Antonia Pedragosa",
+          date: "3 días",
+          comment: "Muchas gracias, fue un placer acompañarte"
+        }
+      };
+    }
+    return {
+      ...review,
+      title: review.id === 2 ? "Excelente ambiente" : "Gran profesional"
+    };
+  });
+
+  const allReviews = enhancedReviewsData ? [...enhancedReviewsData, ...moreReviewsData] : [];
   
   const handleWriteReview = () => {
     toast.success("Función escribir reseña", {
@@ -185,14 +251,14 @@ const ArtistReviews = ({
               className="flex items-center gap-2"
               onClick={handleWriteReview}
             >
-              <MessageSquare className="h-4 w-4" />
+              <MessageSquareReply className="h-4 w-4" />
               Escribir una reseña
             </Button>
           </div>
         </div>
         
-        <div className="space-y-10">
-          {reviewsData?.slice(0, 3).map(review => (
+        <div className="space-y-2">
+          {enhancedReviewsData?.slice(0, 3).map(review => (
             <ReviewItem key={review.id} review={review} />
           ))}
         </div>
@@ -231,7 +297,7 @@ const ArtistReviews = ({
           </DialogHeader>
 
           <ScrollArea className={`${isMobile ? 'h-[calc(70vh-150px)]' : 'h-[60vh]'} pr-4`}>
-            <div className="space-y-8">
+            <div className="space-y-4">
               {allReviews.map(review => (
                 <ReviewItem key={review.id} review={review} />
               ))}
