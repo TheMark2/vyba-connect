@@ -1,4 +1,3 @@
-
 import React, { useState, useRef, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { toast } from "sonner";
@@ -313,8 +312,10 @@ const ArtistProfilePage = () => {
       preview,
       playing
     });
+    
     setCurrentPlaying(preview);
     setIsAudioPlaying(playing);
+    
     if (playing && isMobile) {
       setShowMobileAudioPlayer(true);
       setShowMobileBottomSheet(true);
@@ -329,10 +330,14 @@ const ArtistProfilePage = () => {
         audioRef.current.pause();
         setIsAudioPlaying(false);
       } else {
-        if (audioRef.current.src) {
-          // Aseguramos que el audio tenga la URL correcta
-          if (!audioRef.current.src.includes(currentPlaying.audioUrl)) {
-            audioRef.current.src = currentPlaying.audioUrl;
+        const sourceUrl = currentPlaying.hasVideo && currentPlaying.videoUrl 
+          ? currentPlaying.videoUrl 
+          : currentPlaying.audioUrl;
+        
+        if (sourceUrl) {
+          if (!audioRef.current.src.includes(sourceUrl)) {
+            console.log("Estableciendo nueva URL:", sourceUrl);
+            audioRef.current.src = sourceUrl;
             audioRef.current.crossOrigin = "anonymous";
             audioRef.current.load();
           }
@@ -350,26 +355,8 @@ const ArtistProfilePage = () => {
             });
           }
         } else {
-          console.error("No hay URL de audio asignada");
-          
-          // Reintentar con la URL desde currentPlaying
-          if (currentPlaying && currentPlaying.audioUrl) {
-            audioRef.current.src = currentPlaying.audioUrl;
-            audioRef.current.crossOrigin = "anonymous";
-            audioRef.current.load();
-            
-            audioRef.current.play()
-              .then(() => {
-                console.log("Reproducción iniciada después de reasignar URL");
-                setIsAudioPlaying(true);
-              })
-              .catch(error => {
-                console.error("Error al reproducir audio después de reasignar URL:", error);
-                toast.error("Error al reproducir el audio");
-              });
-          } else {
-            toast.error("No hay audio disponible");
-          }
+          console.error("No hay URL de audio o video asignada");
+          toast.error("No hay audio disponible");
         }
       }
     } catch (error) {

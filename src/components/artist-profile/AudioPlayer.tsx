@@ -9,6 +9,8 @@ interface AudioPlayerProps {
     title: string;
     image?: string;
     audioUrl?: string;
+    videoUrl?: string;
+    hasVideo?: boolean;
     duration: string;
   };
   artistName: string;
@@ -109,9 +111,12 @@ const AudioPlayer = ({
     setRemainingTime(`-${duration}`);
     setDuration(preview.duration);
 
-    if (audioRef.current && preview.audioUrl && audioRef.current.src !== preview.audioUrl) {
-      console.log("Actualizando URL de audio en AudioPlayer:", preview.audioUrl);
-      audioRef.current.src = preview.audioUrl;
+    const sourceUrl = preview.hasVideo && preview.videoUrl ? preview.videoUrl : preview.audioUrl;
+    
+    if (audioRef.current && sourceUrl && audioRef.current.src !== sourceUrl) {
+      console.log("Actualizando URL de fuente en AudioPlayer:", sourceUrl);
+      console.log("Es una fuente de video:", preview.hasVideo && preview.videoUrl ? "Sí" : "No");
+      audioRef.current.src = sourceUrl;
       audioRef.current.crossOrigin = "anonymous";
     }
   }, [preview, duration]);
