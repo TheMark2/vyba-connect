@@ -8,6 +8,7 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { toast } from "sonner";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
+import { Marquee } from "@/components/ui/marquee";
 
 interface Review {
   id: number;
@@ -52,6 +53,9 @@ const ReviewItem = ({
     });
   };
   
+  // Determine if the name is too long (more than 15 characters)
+  const isNameLong = review.name.length > 15;
+  
   return (
     <div className="mb-8">
       <div className="bg-[#F7F7F7] rounded-3xl p-6 relative">
@@ -87,7 +91,20 @@ const ReviewItem = ({
                 <AvatarFallback className="rounded-lg">{review.name.charAt(0)}</AvatarFallback>
               </Avatar>
               <div>
-                <h4 className="text-base font-bold">{review.name}</h4>
+                {isNameLong ? (
+                  <h4 className="text-base font-bold w-28 overflow-hidden">
+                    <Marquee 
+                      pauseOnHover 
+                      className="w-28" 
+                      gap="0.5rem"
+                      reverse={false}
+                    >
+                      {review.name}
+                    </Marquee>
+                  </h4>
+                ) : (
+                  <h4 className="text-base font-bold">{review.name}</h4>
+                )}
                 <p className="text-sm text-gray-500">hace {review.date}</p>
               </div>
             </div>
@@ -114,7 +131,20 @@ const ReviewItem = ({
           <div className="flex flex-col md:flex-row gap-6">
             <div className="md:w-1/4">
               <div>
-                <h4 className="text-base font-bold">{review.reply.name}</h4>
+                {review.reply.name.length > 15 ? (
+                  <h4 className="text-base font-bold w-28 overflow-hidden">
+                    <Marquee 
+                      pauseOnHover 
+                      className="w-28" 
+                      gap="0.5rem"
+                      reverse={false}
+                    >
+                      {review.reply.name}
+                    </Marquee>
+                  </h4>
+                ) : (
+                  <h4 className="text-base font-bold">{review.reply.name}</h4>
+                )}
                 <p className="text-sm text-gray-500">hace {review.reply.date}</p>
               </div>
             </div>
