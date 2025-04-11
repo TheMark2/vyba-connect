@@ -60,7 +60,7 @@ const ReviewItem = ({
           </Button>
         </div>
         
-        <div className="flex flex-col md:flex-row gap-6">
+        <div className="flex flex-col md:flex-row gap-12">
           <div className="md:w-1/4">
             <div className="flex items-center mb-2">
               <Avatar className="h-16 w-16 rounded-lg mr-3">
