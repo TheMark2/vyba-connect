@@ -47,7 +47,8 @@ const artistsData = [{
     duration: "1:33",
     image: "https://images.unsplash.com/photo-1514525253161-7a46d19cd819?q=80&w=1000",
     hasVideo: true,
-    audioUrl: "https://assets.mixkit.co/music/preview/mixkit-hip-hop-02-614.mp3"
+    audioUrl: "https://assets.mixkit.co/music/preview/mixkit-hip-hop-02-614.mp3",
+    videoUrl: "/lovable-uploads/Bad Bunny - Moscow Mule (Video Oficial)  Un Verano Sin Ti.mp4"
   }, {
     title: "Mix Hip-Hop 2024",
     duration: "1:31",
@@ -62,7 +63,8 @@ const artistsData = [{
     duration: "1:44",
     image: "https://images.unsplash.com/photo-1516450360452-9312f5e86fc7?q=80&w=2070",
     hasVideo: true,
-    audioUrl: "https://assets.mixkit.co/music/preview/mixkit-summer-fun-13.mp3"
+    audioUrl: "https://assets.mixkit.co/music/preview/mixkit-summer-fun-13.mp3",
+    videoUrl: "/lovable-uploads/W Sound 05 LA PLENA - Beéle, Westcol, Ovy On The Drums.mp4"
   }],
   eventTypes: ["Bodas", "Fiestas Privadas", "Cumpleaños", "Eventos Corporativos", "Inauguraciones", "Aniversarios", "Cenas de Gala"],
   reviewsData: [{

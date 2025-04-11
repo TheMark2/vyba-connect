@@ -1,3 +1,4 @@
+
 import React, { useEffect, useState, useRef } from "react";
 import { Music, Video, Play, Expand, Pause, FileAudio } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
@@ -6,6 +7,7 @@ import { Carousel, CarouselContent, CarouselItem } from "@/components/ui/carouse
 import { useIsMobile } from "@/hooks/use-mobile";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
+import { HoverCard, HoverCardTrigger, HoverCardContent } from "@/components/ui/hover-card";
 
 interface MusicPreview {
   title: string;
@@ -13,6 +15,7 @@ interface MusicPreview {
   image?: string;
   hasVideo?: boolean;
   audioUrl?: string;
+  videoUrl?: string;
 }
 
 interface MusicPreviewsProps {
@@ -37,6 +40,22 @@ const MusicPreviews = ({
   const [loadingAudio, setLoadingAudio] = useState<string | null>(null);
 
   const observerRef = useRef<IntersectionObserver | null>(null);
+
+  // Array de videos disponibles para usar
+  const availableVideos = [
+    "/lovable-uploads/Bad Bunny - Moscow Mule (Video Oficial)  Un Verano Sin Ti.mp4",
+    "/lovable-uploads/W Sound 05 LA PLENA - Beéle, Westcol, Ovy On The Drums.mp4"
+  ];
+
+  // Asignar videos a previews que tienen hasVideo=true pero no tienen videoUrl
+  useEffect(() => {
+    previews.forEach((preview, index) => {
+      if (preview.hasVideo && !preview.videoUrl) {
+        const videoIndex = index % availableVideos.length;
+        preview.videoUrl = availableVideos[videoIndex];
+      }
+    });
+  }, [previews]);
 
   useEffect(() => {
     const detectNavbarVisibility = () => {
@@ -354,9 +373,50 @@ const ImagePreviewCard = ({
     onPlayPause();
   };
 
-  return <Card className="overflow-hidden rounded-3xl relative group cursor-pointer border-none" onClick={handleCardClick}>
+  const videoRef = useRef<HTMLVideoElement>(null);
+  const [isHovering, setIsHovering] = useState(false);
+
+  // Manejar reproducción de video al hacer hover
+  useEffect(() => {
+    if (videoRef.current && isHovering && preview.hasVideo && preview.videoUrl) {
+      // Iniciar el video con mute y reproducción continua
+      videoRef.current.muted = true;
+      videoRef.current.loop = true;
+      
+      const playPromise = videoRef.current.play();
+      if (playPromise !== undefined) {
+        playPromise.catch(error => {
+          console.error("Error al reproducir video en hover:", error);
+        });
+      }
+    } else if (videoRef.current && !isHovering) {
+      // Pausar el video cuando no hay hover
+      videoRef.current.pause();
+    }
+  }, [isHovering, preview.hasVideo, preview.videoUrl]);
+
+  return (
+    <Card 
+      className="overflow-hidden rounded-3xl relative group cursor-pointer border-none" 
+      onClick={handleCardClick}
+      onMouseEnter={() => setIsHovering(true)}
+      onMouseLeave={() => setIsHovering(false)}
+    >
       <div className="relative aspect-[4/5]">
-        <img src={preview.image} alt={preview.title} className="w-full h-full object-cover" />
+        {preview.hasVideo && preview.videoUrl && isHovering ? (
+          <video 
+            ref={videoRef}
+            className="w-full h-full object-cover"
+            playsInline
+            muted
+          >
+            <source src={preview.videoUrl} type="video/mp4" />
+            {/* Imagen de fallback si el video no carga */}
+            <img src={preview.image} alt={preview.title} className="w-full h-full object-cover" />
+          </video>
+        ) : (
+          <img src={preview.image} alt={preview.title} className="w-full h-full object-cover" />
+        )}
         
         <div className="absolute inset-0 bg-gradient-to-t from-black via-black/70 to-transparent opacity-60 pointer-events-none transition-opacity duration-300 group-hover:opacity-0"></div>
         
@@ -411,7 +471,8 @@ const ImagePreviewCard = ({
           <span className="text-sm font-medium text-white bg-black/50 px-2 py-1 rounded-md">{preview.duration}</span>
         </div>
       </div>
-    </Card>;
+    </Card>
+  );
 };
 
 const NoImagePreviewCard = ({
@@ -471,3 +532,4 @@ const NoImagePreviewCard = ({
 };
 
 export default MusicPreviews;
+
