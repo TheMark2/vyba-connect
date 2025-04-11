@@ -2,8 +2,13 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
-import { Marquee } from "@/components/ui/marquee";
+import {
+  Carousel,
+  CarouselContent,
+  CarouselItem
+} from "@/components/ui/carousel";
 import ArtistProfileCard from "../ArtistProfileCard";
+import { useIsMobile } from "@/hooks/use-mobile";
 
 interface Artist {
   id: string;
@@ -22,6 +27,9 @@ interface RecommendedArtistsProps {
 
 const RecommendedArtists = ({ artists }: RecommendedArtistsProps) => {
   const navigate = useNavigate();
+  const isMobile = useIsMobile();
+
+  if (!artists || artists.length === 0) return null;
 
   return (
     <div className="mb-16">
@@ -29,32 +37,43 @@ const RecommendedArtists = ({ artists }: RecommendedArtistsProps) => {
         <h2 className="text-3xl font-black mb-6">Recomendados</h2>
       </div>
       <div className="relative max-w-7xl mx-auto overflow-hidden">
-        <Marquee 
-          pauseOnHover 
-          className="py-4" 
-          gap="0.75rem"
+        <Carousel
+          className="w-full"
+          opts={{
+            align: "start",
+            loop: true,
+            skipSnaps: false,
+            dragFree: true,
+          }}
         >
-          {artists.map(artist => (
-            <div key={artist.id} className="w-[300px] flex-shrink-0">
-              <ArtistProfileCard 
-                name={artist.name}
-                type={artist.type}
-                description={artist.description}
-                images={artist.images}
-                rating={artist.rating}
-                priceRange={artist.priceRange}
-                isFavorite={artist.isFavorite}
-                onClick={() => navigate(`/artista/${artist.id}`)} 
-                onFavoriteToggle={() => {
-                  toast.success(artist.isFavorite ? "Eliminado de favoritos" : "Añadido a favoritos", {
-                    icon: artist.isFavorite ? "👋" : "❤️",
-                    position: "bottom-center"
-                  });
-                }} 
-              />
-            </div>
-          ))}
-        </Marquee>
+          <CarouselContent className="-ml-5">
+            {artists.map((artist) => (
+              <CarouselItem
+                key={artist.id}
+                className={`pl-5 ${isMobile ? 'basis-4/5' : 'basis-1/4'}`}
+              >
+                <div className="w-full">
+                  <ArtistProfileCard 
+                    name={artist.name}
+                    type={artist.type}
+                    description={artist.description}
+                    images={artist.images}
+                    rating={artist.rating}
+                    priceRange={artist.priceRange}
+                    isFavorite={artist.isFavorite}
+                    onClick={() => navigate(`/artista/${artist.id}`)} 
+                    onFavoriteToggle={() => {
+                      toast.success(artist.isFavorite ? "Eliminado de favoritos" : "Añadido a favoritos", {
+                        icon: artist.isFavorite ? "👋" : "❤️",
+                        position: "bottom-center"
+                      });
+                    }} 
+                  />
+                </div>
+              </CarouselItem>
+            ))}
+          </CarouselContent>
+        </Carousel>
       </div>
     </div>
   );
