@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import { Heart, Flag, Share2, ArrowLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -133,6 +132,7 @@ const ArtistBanner = ({ artist, onFavorite, onReport, onShare }: ArtistBannerPro
         isOpen={galleryOpen}
         onClose={() => setGalleryOpen(false)}
         activeImageIndex={activeImageIndex}
+        artistName={artist.name}
       />
     </>
   );

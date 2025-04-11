@@ -1,27 +1,36 @@
+
 import React from "react";
 import { Dialog, DialogContent, DialogClose } from "@/components/ui/dialog";
 import { X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { useIsMobile } from "@/hooks/use-mobile";
+
 interface ImageGalleryDialogProps {
   images: string[];
   isOpen: boolean;
   onClose: () => void;
   activeImageIndex?: number;
+  artistName?: string; // Añadimos este prop para que el nombre sea variable
 }
+
 const ImageGalleryDialog = ({
   images,
   isOpen,
   onClose,
-  activeImageIndex = 0
+  activeImageIndex = 0,
+  artistName = "Artista" // Valor por defecto si no se proporciona un nombre
 }: ImageGalleryDialogProps) => {
   const isMobile = useIsMobile();
+  
   return <Dialog open={isOpen} onOpenChange={open => !open && onClose()}>
       <DialogContent className={cn("p-0 w-full h-full max-w-none max-h-screen bg-vyba-cream dark:bg-black text-black dark:text-white", isMobile ? "rounded-none" : "rounded-none")}>
         
         <div className="h-full w-full overflow-y-auto p-8 pt-16">
-          <h1 className="text-5xl font-black mb-8 text-left pr-0 md:pr-32">Imágenes de Antonia Pedragosa</h1>
+          <div className="bg-[#F7F7F7] rounded-3xl p-8 mb-8">
+            <h1 className="text-5xl font-black mb-4 text-left pr-0 md:pr-32">Imágenes de {artistName}</h1>
+            <p className="text-3xl font-medium">{images.length} {images.length === 1 ? 'imagen' : 'imágenes'}</p>
+          </div>
           
           <div className="flex flex-wrap gap-2 justify-center">
             {images.map((image, index) => <div key={index} className="mb-2" id={index === activeImageIndex ? "active-image" : undefined} ref={el => {
@@ -52,4 +61,5 @@ const ImageGalleryDialog = ({
       </DialogContent>
     </Dialog>;
 };
+
 export default ImageGalleryDialog;
