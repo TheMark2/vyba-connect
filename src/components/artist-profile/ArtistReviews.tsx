@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from "react";
 import { Star, ClockAlert, CornerDownRight, Plus, MessageCirclePlus, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -498,20 +497,20 @@ const ArtistReviews = ({
         onChange={setIsBottomSheetOpen} 
         fullScreen={true} 
         topShadow={false} 
-        shadowTip={false}
-        swipeableViewsProps={{
-          resistance: true,
-          enableMouseEvents: true,
-          animateHeight: true
-        }}
+        shadowTip={false} 
         bodyStyle={{
           borderTopLeftRadius: '0px',
           borderTopRightRadius: '0px',
           backgroundColor: '#FFFFFF',
-          zIndex: 50  // Mayor z-index para asegurar que esté por encima de todo
+          height: '100%',
+          position: 'fixed',
+          top: 0,
+          left: 0,
+          right: 0,
+          bottom: 0
         }}
       >
-        <div className="px-6 pt-6">
+        <div className="px-6 pt-6 pb-20 min-h-screen">
           <div className="flex justify-between items-center mb-6">
             <Button 
               variant="ghost" 
