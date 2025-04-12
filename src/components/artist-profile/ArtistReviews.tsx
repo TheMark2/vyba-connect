@@ -52,7 +52,7 @@ const ReviewItem = ({
   return <div className="mb-10">
       <div className="bg-[#F7F7F7] rounded-3xl p-6 relative">
         <div className="absolute top-6 right-6 flex gap-2">
-          <Button variant="primary" size="icon" className="h-8 w-8 bg-white" onClick={handleShareClick}>
+          <Button variant="default" size="icon" className="h-8 w-8" onClick={handleShareClick}>
             <CornerDownRight className="h-4 w-4 stroke-[2.5px]" />
           </Button>
           <Button variant="ghost" size="icon" className="h-8 w-8 bg-white" onClick={handleReportClick}>
