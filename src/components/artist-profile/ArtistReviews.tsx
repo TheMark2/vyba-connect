@@ -493,7 +493,7 @@ const ArtistReviews = ({
 
       {isMobile && <SwipeableBottomSheet 
         overflowHeight={0} 
-        marginTop={64} 
+        marginTop={0} 
         open={isBottomSheetOpen} 
         onChange={setIsBottomSheetOpen} 
         fullScreen={true} 
@@ -505,7 +505,7 @@ const ArtistReviews = ({
           backgroundColor: '#FFFFFF'
         }}
       >
-        <div className="px-6 pt-6 pb-20 min-h-screen">
+        <div className="px-6 pt-6">
           <div className="flex justify-between items-center mb-6">
             <Button 
               variant="ghost" 
