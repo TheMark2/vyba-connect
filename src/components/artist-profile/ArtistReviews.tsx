@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from "react";
 import { Star, ClockAlert, CornerDownRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -8,6 +9,8 @@ import { useIsMobile } from "@/hooks/use-mobile";
 import { toast } from "sonner";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { Marquee } from "@/components/ui/marquee";
+import SwipeableBottomSheet from "react-swipeable-bottom-sheet";
+
 interface Review {
   id: number;
   name: string;
@@ -40,23 +43,14 @@ const ReviewItem = ({
       position: "bottom-center"
     });
   };
-  const handleShareClick = () => {
-    toast.success("Reseña compartida", {
-      description: "Enlace copiado al portapapeles",
-      position: "bottom-center"
-    });
-  };
-
+  
   // Determine if the name is too long (more than 15 characters)
   const isNameLong = review.name.length > 15;
   return <div className="mb-10">
       <div className="bg-[#F7F7F7] rounded-3xl p-6 relative">
         <div className="absolute top-6 right-6 flex gap-2">
-          <Button variant="default" size="icon" className="h-8 w-8" onClick={handleShareClick}>
+          <Button variant="default" size="icon" className="h-8 w-8" onClick={handleReportClick}>
             <CornerDownRight className="h-4 w-4 stroke-[2.5px]" />
-          </Button>
-          <Button variant="ghost" size="icon" className="h-8 w-8 bg-white" onClick={handleReportClick}>
-            <ClockAlert className="h-4 w-4 stroke-[2.5px]" />
           </Button>
         </div>
         
@@ -165,10 +159,12 @@ const ArtistReviews = ({
   reviewsData
 }: ArtistReviewsProps) => {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [isBottomSheetOpen, setIsBottomSheetOpen] = useState(false);
   const isMobile = useIsMobile();
   useEffect(() => {
     const handleBeforeUnload = () => {
       setIsDialogOpen(false);
+      setIsBottomSheetOpen(false);
     };
     window.addEventListener('beforeunload', handleBeforeUnload);
     return () => {
@@ -201,6 +197,15 @@ const ArtistReviews = ({
       position: "bottom-center"
     });
   };
+
+  const handleVerTodas = () => {
+    if (isMobile) {
+      setIsBottomSheetOpen(true);
+    } else {
+      setIsDialogOpen(true);
+    }
+  };
+  
   return <div className="mt-8 mb-16">
       <h2 className="text-3xl font-black mb-3">Reseñas</h2>
       <div className="space-y-6">
@@ -217,41 +222,73 @@ const ArtistReviews = ({
           </div>
         </div>
         
-        <div className="space-y-6">
+        <div className="space-y-12">
           {enhancedReviewsData?.slice(0, 3).map(review => <ReviewItem key={review.id} review={review} />)}
         </div>
         
         <div className="flex justify-center mt-8">
-          <Button variant="secondary" className="px-12" onClick={() => setIsDialogOpen(true)}>
+          <Button variant="secondary" className="px-12" onClick={handleVerTodas}>
             Ver todas
           </Button>
         </div>
       </div>
 
-      <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-        <DialogContent className={`
-            sm:max-w-[700px] 
-            p-6
-            border-none 
-            bg-white 
-            dark:bg-vyba-dark-bg 
-            ${isMobile ? 'pt-10 pb-24 px-6' : 'rounded-[40px] pt-8 px-8 pb-0'}
-          `}>
-          <DialogHeader className="text-left mb-6">
-            <DialogTitle className="text-3xl font-black">Reseñas</DialogTitle>
-            <div className="flex items-baseline gap-2 mt-1">
+      {/* Diálogo para escritorio */}
+      {!isMobile && (
+        <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+          <DialogContent className="sm:max-w-[700px] p-6 border-none bg-white dark:bg-vyba-dark-bg rounded-[40px] pt-8 px-8 pb-0">
+            <DialogHeader className="text-left mb-6">
+              <DialogTitle className="text-3xl font-black">Reseñas</DialogTitle>
+              <div className="flex items-baseline gap-2 mt-1">
+                <span className="text-3xl font-medium">{rating}</span>
+                <span className="text-3xl font-medium">({allReviews.length})</span>
+              </div>
+            </DialogHeader>
+
+            <ScrollArea className="h-[60vh] pr-4">
+              <div className="space-y-12">
+                {allReviews.map(review => <ReviewItem key={review.id} review={review} />)}
+              </div>
+            </ScrollArea>
+          </DialogContent>
+        </Dialog>
+      )}
+
+      {/* Bottom Sheet para móvil */}
+      {isMobile && (
+        <SwipeableBottomSheet
+          overflowHeight={0}
+          marginTop={64}
+          open={isBottomSheetOpen}
+          onChange={setIsBottomSheetOpen}
+          fullScreen={false}
+          topShadow={false}
+          shadowTip={false}
+          bodyStyle={{ 
+            borderTopLeftRadius: '24px', 
+            borderTopRightRadius: '24px',
+            backgroundColor: '#FFFFFF'
+          }}
+        >
+          <div className="px-6 py-6">
+            <div className="flex justify-center w-full mb-3">
+              <div className="w-12 h-1 bg-gray-300 rounded-full"></div>
+            </div>
+            
+            <h2 className="text-3xl font-black mb-3">Reseñas</h2>
+            <div className="flex items-baseline gap-2 mb-6">
               <span className="text-3xl font-medium">{rating}</span>
               <span className="text-3xl font-medium">({allReviews.length})</span>
             </div>
-          </DialogHeader>
-
-          <ScrollArea className={`${isMobile ? 'h-[calc(70vh-150px)]' : 'h-[60vh]'} pr-4`}>
-            <div className="space-y-6">
-              {allReviews.map(review => <ReviewItem key={review.id} review={review} />)}
-            </div>
-          </ScrollArea>
-        </DialogContent>
-      </Dialog>
+            
+            <ScrollArea className="h-[calc(70vh-150px)] pr-4">
+              <div className="space-y-12">
+                {allReviews.map(review => <ReviewItem key={review.id} review={review} />)}
+              </div>
+            </ScrollArea>
+          </div>
+        </SwipeableBottomSheet>
+      )}
     </div>;
 };
 export default ArtistReviews;
