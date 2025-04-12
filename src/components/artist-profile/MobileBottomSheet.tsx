@@ -31,13 +31,12 @@ const MobileBottomSheet = ({
   onPlayPause,
   audioRef
 }: MobileBottomSheetProps) => {
-  // Altura para asegurar que la tarjeta de contacto se vea completa
   const contactCardHeight = 200;
   
   return (
     <SwipeableBottomSheet
       overflowHeight={contactCardHeight}
-      marginTop={64}
+      marginTop={0}  // Cambio: eliminamos el margen superior
       fullScreen={false}
       topShadow={false}
       shadowTip={false}
@@ -48,7 +47,9 @@ const MobileBottomSheet = ({
         position: 'fixed',
         bottom: 0,
         left: 0,
-        right: 0
+        right: 0,
+        width: '100%',  // Añadido: asegura que ocupe todo el ancho
+        maxWidth: '100%'  // Añadido: previene cualquier restricción de ancho
       }}
     >
       <div className={`px-5 pt-3 ${!currentPlaying ? 'pb-16' : 'pb-5'}`}>
