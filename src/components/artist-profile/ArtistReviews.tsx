@@ -493,7 +493,7 @@ const ArtistReviews = ({
 
       {isMobile && <SwipeableBottomSheet 
         overflowHeight={0} 
-        marginTop={64} 
+        marginTop={0} 
         open={isBottomSheetOpen} 
         onChange={setIsBottomSheetOpen} 
         fullScreen={true} 
