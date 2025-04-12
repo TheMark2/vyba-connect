@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from "react";
 import { Star, ClockAlert, CornerDownRight, Plus } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -335,7 +336,7 @@ const ArtistReviews = ({
             <div className="mb-10">
               <Carousel
                 opts={{
-                  align: 0.35,
+                  align: "0.35", // Changed from 0.35 to "0.35" to match the expected type
                   loop: false,
                 }}
                 className="w-full"

@@ -1,3 +1,4 @@
+
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
@@ -39,7 +40,7 @@ const RecommendedArtists = ({ artists }: RecommendedArtistsProps) => {
         <Carousel
           className="w-full"
           opts={{
-            align: 0.35,
+            align: "0.35", // Changed from 0.35 to "0.35" to match the expected type
             loop: true,
             skipSnaps: false,
             dragFree: true,

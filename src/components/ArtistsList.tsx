@@ -89,7 +89,7 @@ const ArtistsList = ({
         className="w-full"
         setApi={setApi}
         opts={{
-          align: 0.35,
+          align: "0.35",
           loop: false,
           skipSnaps: false,
           dragFree: true,
