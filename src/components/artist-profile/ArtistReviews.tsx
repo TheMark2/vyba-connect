@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Star, ClockAlert, CornerDownRight } from "lucide-react";
+import { Star, ClockAlert, CornerDownRight, Plus } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
@@ -46,6 +46,7 @@ const ReviewItem = ({
   isMobileCarousel?: boolean;
 }) => {
   const isMobile = useIsMobile();
+  const [expanded, setExpanded] = useState(false);
   
   const handleReportClick = () => {
     toast.info("Reseña reportada", {
@@ -62,12 +63,18 @@ const ReviewItem = ({
   };
   
   const isNameLong = review.name.length > 15;
+  
+  const wordLimit = 20;
+  const words = review.comment.split(' ');
+  const isTextLong = words.length > wordLimit && isMobile;
+  
+  const displayText = isTextLong && !expanded ? 
+    words.slice(0, wordLimit).join(' ') + '...' : 
+    review.comment;
 
-  // Si es para el carrusel móvil, usamos un diseño específico
   if (isMobileCarousel) {
     return (
-      <div className="bg-white rounded-3xl p-6 h-full">
-        {/* Botones en la esquina superior derecha */}
+      <div className="bg-white rounded-3xl p-6 h-full flex flex-col justify-between">
         <div className="absolute top-4 right-4 flex gap-2 z-10">
           <Button variant="outline" size="icon" className="h-8 w-8 bg-white" onClick={handleReminderClick}>
             <ClockAlert className="h-4 w-4 stroke-[2.5px]" />
@@ -77,23 +84,33 @@ const ReviewItem = ({
           </Button>
         </div>
         
-        {/* Estrellas en la parte superior */}
-        <div className="flex items-center mb-4">
-          {[...Array(5)].map((_, index) => (
-            <Star 
-              key={index} 
-              className={`h-3 w-3 ${index < review.rating ? "text-black fill-black dark:text-white dark:fill-white" : "text-gray-300 dark:text-gray-600"}`} 
-            />
-          ))}
+        <div className="flex-grow flex flex-col">
+          <div className="flex items-center mb-4">
+            {[...Array(5)].map((_, index) => (
+              <Star 
+                key={index} 
+                className={`h-3 w-3 ${index < review.rating ? "text-black fill-black dark:text-white dark:fill-white" : "text-gray-300 dark:text-gray-600"}`} 
+              />
+            ))}
+          </div>
+          
+          <h3 className="text-lg font-bold mb-3 pr-20">{review.title || "Muy buen servicio"}</h3>
+          
+          <p className="text-base mb-2">{displayText}</p>
+          
+          {isTextLong && (
+            <Button 
+              variant="ghost" 
+              size="sm" 
+              className="self-start p-0 h-8 mb-4 hover:bg-transparent"
+              onClick={() => setExpanded(!expanded)}
+            >
+              <Plus className="h-4 w-4 mr-1" />
+              {expanded ? "Ver menos" : "Ver más"}
+            </Button>
+          )}
         </div>
         
-        {/* Título */}
-        <h3 className="text-lg font-bold mb-3 pr-20">{review.title || "Muy buen servicio"}</h3>
-        
-        {/* Comentario */}
-        <p className="text-base mb-6">{review.comment}</p>
-        
-        {/* Información del autor en la parte inferior */}
         <div className="flex items-center mt-auto">
           <Avatar className="h-10 w-10 rounded-full mr-3">
             <AvatarImage src={review.id === 1 ? "https://images.unsplash.com/photo-1580489944761-15a19d654956?q=80&w=1000" : review.id === 2 ? "https://images.unsplash.com/photo-1633332755192-727a05c4013d?q=80&w=1000" : "https://images.unsplash.com/photo-1494790108377-be9c29b29330?q=80&w=1000"} alt={review.name} />
@@ -108,10 +125,9 @@ const ReviewItem = ({
     );
   }
 
-  // Para PC, adaptamos el formato para que sea similar al móvil
-  return <div className="mb-6">
+  return (
+    <div className="mb-6">
       <div className="bg-[#F7F7F7] rounded-3xl p-6 relative">
-        {/* Botones en la esquina superior derecha */}
         <div className="absolute top-4 right-4 flex gap-2 z-10">
           <Button variant="outline" size="icon" className="h-8 w-8 bg-white" onClick={handleReminderClick}>
             <ClockAlert className="h-4 w-4 stroke-[2.5px]" />
@@ -121,8 +137,7 @@ const ReviewItem = ({
           </Button>
         </div>
         
-        <div className="flex flex-col">
-          {/* Estrellas en la parte superior */}
+        <div className="flex flex-col h-full">
           <div className="flex items-center mb-4">
             {[...Array(5)].map((_, index) => (
               <Star 
@@ -132,14 +147,23 @@ const ReviewItem = ({
             ))}
           </div>
           
-          {/* Título */}
           <h3 className="text-lg font-bold mb-3 pr-20">{review.title || "Muy buen servicio"}</h3>
           
-          {/* Comentario */}
-          <p className="text-base mb-6">{review.comment}</p>
+          <p className="text-base mb-2">{displayText}</p>
           
-          {/* Información del autor en la parte inferior */}
-          <div className="flex items-center mt-2">
+          {isTextLong && (
+            <Button 
+              variant="ghost" 
+              size="sm" 
+              className="self-start p-0 h-8 mb-4 hover:bg-transparent"
+              onClick={() => setExpanded(!expanded)}
+            >
+              <Plus className="h-4 w-4 mr-1" />
+              {expanded ? "Ver menos" : "Ver más"}
+            </Button>
+          )}
+          
+          <div className="flex items-center mt-auto">
             <Avatar className="h-10 w-10 rounded-full mr-3">
               <AvatarImage src={review.id === 1 ? "https://images.unsplash.com/photo-1580489944761-15a19d654956?q=80&w=1000" : review.id === 2 ? "https://images.unsplash.com/photo-1633332755192-727a05c4013d?q=80&w=1000" : "https://images.unsplash.com/photo-1494790108377-be9c29b29330?q=80&w=1000"} alt={review.name} />
               <AvatarFallback className="rounded-full">{review.name.charAt(0)}</AvatarFallback>
@@ -152,7 +176,8 @@ const ReviewItem = ({
         </div>
       </div>
       
-      {review.reply && <div className="bg-[#D9D9D9] rounded-3xl p-6 ml-8 mt-3">
+      {review.reply && (
+        <div className="bg-[#D9D9D9] rounded-3xl p-6 ml-8 mt-3">
           <div className="flex flex-col">
             <p className="text-base mb-4">{review.reply.comment}</p>
             
@@ -166,8 +191,10 @@ const ReviewItem = ({
               </div>
             </div>
           </div>
-        </div>}
-    </div>;
+        </div>
+      )}
+    </div>
+  );
 };
 
 const moreReviewsData: Review[] = [
@@ -304,7 +331,6 @@ const ArtistReviews = ({
             </div>
           </div>
           
-          {/* Carousel for mobile devices */}
           {isMobile && (
             <div className="mb-10">
               <Carousel
@@ -327,7 +353,6 @@ const ArtistReviews = ({
             </div>
           )}
           
-          {/* Standard list for desktop */}
           {!isMobile && (
             <div className="space-y-6">
               {allReviews.slice(0, 3).map(review => <ReviewItem key={review.id} review={review} />)}
