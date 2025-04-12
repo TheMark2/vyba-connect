@@ -44,8 +44,7 @@ const MobileBottomSheet = ({
       bodyStyle={{ 
         borderTopLeftRadius: '24px', 
         borderTopRightRadius: '24px',
-        backgroundColor: 'white',
-        zIndex: 999
+        backgroundColor: 'white'
       }}
     >
       <div className="px-4 pt-4 pb-6">
