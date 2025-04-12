@@ -31,12 +31,10 @@ const MobileBottomSheet = ({
   onPlayPause,
   audioRef
 }: MobileBottomSheetProps) => {
-  const contactCardHeight = 200;
-  
   return (
     <SwipeableBottomSheet
-      overflowHeight={contactCardHeight}
-      marginTop={0}  // Cambio: eliminamos el margen superior
+      overflowHeight={200}
+      marginTop={0}
       fullScreen={false}
       topShadow={false}
       shadowTip={false}
@@ -48,8 +46,8 @@ const MobileBottomSheet = ({
         bottom: 0,
         left: 0,
         right: 0,
-        width: '100%',  // Añadido: asegura que ocupe todo el ancho
-        maxWidth: '100%'  // Añadido: previene cualquier restricción de ancho
+        width: '100%',
+        maxWidth: '100%'
       }}
     >
       <div className={`px-5 pt-3 ${!currentPlaying ? 'pb-16' : 'pb-5'}`}>
