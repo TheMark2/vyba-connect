@@ -15,15 +15,34 @@ interface ContactCardProps {
   onContact: () => void;
   aboutMeRef?: React.RefObject<HTMLDivElement>;
   imagesRef?: React.RefObject<HTMLDivElement>;
+  isMobile?: boolean;
 }
 
 const ContactCard = ({
   artist,
   onContact,
   aboutMeRef,
-  imagesRef
+  imagesRef,
+  isMobile = false
 }: ContactCardProps) => {
-  return <Card className="border-0 shadow-none bg-transparent">
+  if (isMobile) {
+    // Versión móvil simplificada
+    return (
+      <div className="flex items-center justify-between w-full">
+        <div>
+          <div className="text-base font-bold">{artist.priceRange}</div>
+          <div className="text-xs text-gray-600 mt-1">{artist.location}, {artist.availability}</div>
+        </div>
+        <Button className="px-4 py-2 text-sm" onClick={onContact}>
+          Contactar
+        </Button>
+      </div>
+    );
+  }
+
+  // Versión escritorio
+  return (
+    <Card className="border-0 shadow-none bg-transparent">
       <CardContent className="p-0">
         <div className="bg-[#F7F7F7] rounded-3xl md:rounded-3xl py-5">
           <div className="flex items-center justify-between mb-4">
@@ -39,7 +58,8 @@ const ContactCard = ({
           </Button>
         </div>
       </CardContent>
-    </Card>;
+    </Card>
+  );
 };
 
 export default ContactCard;

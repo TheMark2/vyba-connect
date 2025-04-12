@@ -31,8 +31,8 @@ const MobileBottomSheet = ({
   onPlayPause,
   audioRef
 }: MobileBottomSheetProps) => {
-  // Reduced height to make the bottom sheet even smaller
-  const contactCardHeight = 150;
+  // Altura reducida para la versión colapsada
+  const contactCardHeight = 80;
   
   return (
     <SwipeableBottomSheet
@@ -44,15 +44,16 @@ const MobileBottomSheet = ({
       bodyStyle={{ 
         borderTopLeftRadius: '24px', 
         borderTopRightRadius: '24px',
-        backgroundColor: '#F7F7F7'
+        backgroundColor: 'white'
       }}
     >
-      <div className={`px-5 pt-3 ${!currentPlaying ? 'pb-10' : 'pb-5'}`}>
+      <div className="px-4 pt-3 pb-4">
         <ContactCard 
           artist={artistContact} 
           onContact={onContact} 
           aboutMeRef={aboutMeRef} 
           imagesRef={imagesRef}
+          isMobile={true}
         />
         
         {currentPlaying && (
