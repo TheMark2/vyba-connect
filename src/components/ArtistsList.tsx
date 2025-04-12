@@ -92,7 +92,7 @@ const ArtistsList = ({
         className="w-full"
         setApi={setApi}
         opts={{
-          align: 0.35, // Ajustado a un valor entre 0 y 1 para posicionar el ítem activo más a la izquierda del centro
+          align: "start", // Usando "start" en lugar de un número (0.35)
           loop: false,
           skipSnaps: false,
           dragFree: true,
