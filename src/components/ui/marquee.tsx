@@ -6,12 +6,18 @@ interface MarqueeProps extends ComponentPropsWithoutRef<"div"> {
   className?: string;
   children: React.ReactNode;
   maxWidth?: number;
+  pauseOnHover?: boolean;
+  reverse?: boolean;
+  gap?: string;
 }
  
 export function Marquee({
   className,
   children,
   maxWidth = 200,
+  pauseOnHover,
+  reverse,
+  gap,
   ...props
 }: MarqueeProps) {
   return (
