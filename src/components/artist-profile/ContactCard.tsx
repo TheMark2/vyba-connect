@@ -30,10 +30,10 @@ const ContactCard = ({
     return (
       <div className="flex items-center justify-between w-full">
         <div>
-          <div className="text-base font-bold">{artist.priceRange}</div>
+          <div className="text-lg font-black">{artist.priceRange}</div>
           <div className="text-xs text-gray-600 mt-1">{artist.location}, {artist.availability}</div>
         </div>
-        <Button className="px-4 py-2 text-sm" onClick={onContact}>
+        <Button className="text-sm" onClick={onContact}>
           Contactar
         </Button>
       </div>
