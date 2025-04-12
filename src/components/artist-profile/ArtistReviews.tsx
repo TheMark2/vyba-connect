@@ -341,8 +341,11 @@ const ArtistReviews = ({
                 className="w-full"
               >
                 <CarouselContent className="-ml-2 pr-4">
-                  {allReviews.slice(0, 5).map((review) => (
-                    <CarouselItem key={review.id} className="pl-2 w-[calc(100%-16px)] max-w-[90%]">
+                  {allReviews.slice(0, 5).map((review, index) => (
+                    <CarouselItem 
+                      key={review.id} 
+                      className={`pl-2 w-[calc(100%-16px)] max-w-[90%] ${index === 0 ? 'ml-6' : ''}`}
+                    >
                       <div className="h-full">
                         <ReviewItem review={review} isMobileCarousel={true} />
                       </div>
