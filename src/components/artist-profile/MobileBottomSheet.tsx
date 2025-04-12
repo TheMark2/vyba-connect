@@ -44,7 +44,11 @@ const MobileBottomSheet = ({
       bodyStyle={{ 
         borderTopLeftRadius: '24px', 
         borderTopRightRadius: '24px',
-        backgroundColor: '#F7F7F7'
+        backgroundColor: '#F7F7F7',
+        position: 'fixed',
+        bottom: 0,
+        left: 0,
+        right: 0
       }}
     >
       <div className={`px-5 pt-3 ${!currentPlaying ? 'pb-16' : 'pb-5'}`}>
