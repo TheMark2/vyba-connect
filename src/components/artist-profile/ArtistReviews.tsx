@@ -81,7 +81,7 @@ const ReviewItem = ({
           </div>
           
           <div className="md:w-3/4">
-            <h3 className="text-xl font-bold mb-2">{review.title || "Muy buen servicio"}</h3>
+            <h3 className="text-xl font-bold mb-4">{review.title || "Muy buen servicio"}</h3>
             <p className="text-base">{review.comment}</p>
           </div>
         </div>
