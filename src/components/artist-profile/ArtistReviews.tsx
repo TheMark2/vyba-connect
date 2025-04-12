@@ -1,6 +1,6 @@
 
 import React, { useState, useEffect } from "react";
-import { Star, ClockAlert, CornerDownRight, Plus, MessageCirclePlus } from "lucide-react";
+import { Star, ClockAlert, CornerDownRight, Plus, MessageCirclePlus, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
@@ -41,10 +41,12 @@ interface ArtistReviewsProps {
 
 const ReviewItem = ({
   review,
-  isMobileCarousel = false
+  isMobileCarousel = false,
+  isMobileBottomSheet = false
 }: {
   review: Review;
   isMobileCarousel?: boolean;
+  isMobileBottomSheet?: boolean;
 }) => {
   const isMobile = useIsMobile();
   const [expanded, setExpanded] = useState(false);
@@ -72,6 +74,87 @@ const ReviewItem = ({
   const displayText = isTextLong && !expanded ? 
     words.slice(0, wordLimit).join(' ') + '...' : 
     review.comment;
+
+  if (isMobileBottomSheet) {
+    return (
+      <div className="mb-6">
+        <div className="bg-[#F8F8F8] rounded-3xl p-6 relative">
+          <div className="absolute top-4 right-4 flex gap-2 z-10">
+            <Button 
+              variant="ghost" 
+              size="icon" 
+              className="h-8 w-8 bg-[#E8E8FF] rounded-full border-none shadow-none" 
+              onClick={handleReminderClick}
+            >
+              <ClockAlert className="h-4 w-4 stroke-[2.5px]" />
+            </Button>
+            <Button 
+              variant="ghost" 
+              size="icon" 
+              className="h-8 w-8 bg-[#F1F1F1] rounded-full border-none shadow-none" 
+              onClick={handleReportClick}
+            >
+              <CornerDownRight className="h-4 w-4 stroke-[2.5px]" />
+            </Button>
+          </div>
+          
+          <div className="flex items-center mb-4">
+            {[...Array(5)].map((_, index) => (
+              <Star 
+                key={index} 
+                className={`h-4 w-4 ${index < review.rating ? "text-black fill-black dark:text-white dark:fill-white" : "text-gray-300 dark:text-gray-600"}`} 
+              />
+            ))}
+          </div>
+          
+          <h3 className="text-lg font-bold mb-3 pr-20">{review.title || "Muy buen servicio"}</h3>
+          
+          <p className="text-base mb-4">{displayText}</p>
+          
+          {isTextLong && (
+            <Button 
+              variant="ghost" 
+              size="sm" 
+              className="self-start p-0 h-8 mb-4 hover:bg-transparent"
+              onClick={() => setExpanded(!expanded)}
+            >
+              <Plus className="h-4 w-4 mr-1" />
+              {expanded ? "Ver menos" : "Ver más"}
+            </Button>
+          )}
+          
+          <div className="flex items-center mt-2">
+            <Avatar className="h-10 w-10 rounded-full mr-3">
+              <AvatarImage src={review.id === 1 ? "https://images.unsplash.com/photo-1580489944761-15a19d654956?q=80&w=1000" : review.id === 2 ? "https://images.unsplash.com/photo-1633332755192-727a05c4013d?q=80&w=1000" : "https://images.unsplash.com/photo-1494790108377-be9c29b29330?q=80&w=1000"} alt={review.name} />
+              <AvatarFallback className="rounded-full">{review.name.charAt(0)}</AvatarFallback>
+            </Avatar>
+            <div>
+              <p className="text-sm font-medium">{review.name}</p>
+              <p className="text-xs text-gray-500">hace {review.date}</p>
+            </div>
+          </div>
+        </div>
+        
+        {review.reply && (
+          <div className="bg-[#E6E6E6] rounded-3xl p-6 ml-8 mt-3">
+            <div className="flex flex-col">
+              <p className="text-base mb-4">{review.reply.comment}</p>
+              
+              <div className="flex items-center mt-2">
+                <Avatar className="h-10 w-10 rounded-full mr-3">
+                  <AvatarFallback className="rounded-full">{review.reply.name.charAt(0)}</AvatarFallback>
+                </Avatar>
+                <div>
+                  <p className="text-sm font-medium">{review.reply.name}</p>
+                  <p className="text-xs text-gray-500">hace {review.reply.date}</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+      </div>
+    );
+  }
 
   if (isMobileCarousel) {
     return (
@@ -320,6 +403,10 @@ const ArtistReviews = ({
     }
   };
   
+  const handleCloseBottomSheet = () => {
+    setIsBottomSheetOpen(false);
+  };
+  
   return <div className="mt-8 mb-16">
       <div className={`${isMobile ? 'bg-[#F7F7F7] py-8 -mx-6' : ''}`}>
         <h2 className="text-3xl font-black mb-1 px-6">Reseñas</h2>
@@ -404,29 +491,50 @@ const ArtistReviews = ({
           </DialogContent>
         </Dialog>}
 
-      {isMobile && <SwipeableBottomSheet overflowHeight={0} marginTop={64} open={isBottomSheetOpen} onChange={setIsBottomSheetOpen} fullScreen={false} topShadow={false} shadowTip={false} bodyStyle={{
-      borderTopLeftRadius: '24px',
-      borderTopRightRadius: '24px',
-      backgroundColor: '#FFFFFF'
-    }}>
-          <div className="px-6 py-6">
-            <div className="flex justify-center w-full mb-3">
-              <div className="w-12 h-1 bg-gray-300 rounded-full"></div>
-            </div>
-            
-            <h2 className="text-3xl font-black mb-3">Reseñas</h2>
-            <div className="flex items-baseline gap-2 mb-6">
-              <span className="text-3xl font-medium">{rating}</span>
-              <span className="text-3xl font-medium">({allReviews.length})</span>
-            </div>
-            
-            <ScrollArea className="h-[calc(70vh-150px)] pr-4">
-              <div className="space-y-6">
-                {allReviews.map(review => <ReviewItem key={review.id} review={review} />)}
-              </div>
-            </ScrollArea>
+      {isMobile && <SwipeableBottomSheet 
+        overflowHeight={0} 
+        marginTop={64} 
+        open={isBottomSheetOpen} 
+        onChange={setIsBottomSheetOpen} 
+        fullScreen={true} 
+        topShadow={false} 
+        shadowTip={false} 
+        bodyStyle={{
+          borderTopLeftRadius: '0px',
+          borderTopRightRadius: '0px',
+          backgroundColor: '#FFFFFF'
+        }}
+      >
+        <div className="px-6 pt-6 pb-20 min-h-screen">
+          <div className="flex justify-between items-center mb-6">
+            <Button 
+              variant="ghost" 
+              className="p-2 -ml-2 h-10 w-10" 
+              onClick={handleCloseBottomSheet}
+            >
+              <X className="h-6 w-6" />
+            </Button>
           </div>
-        </SwipeableBottomSheet>}
+          
+          <h2 className="text-3xl font-black mb-1">Todas las reseñas</h2>
+          <div className="flex items-baseline gap-2 mb-6">
+            <span className="text-2xl font-medium">{rating}</span>
+            <span className="text-2xl font-medium">({allReviews.length} reseñas)</span>
+          </div>
+          
+          <ScrollArea className="h-[calc(100vh-180px)]">
+            <div className="space-y-6 pb-10">
+              {allReviews.map(review => (
+                <ReviewItem 
+                  key={review.id} 
+                  review={review} 
+                  isMobileBottomSheet={true} 
+                />
+              ))}
+            </div>
+          </ScrollArea>
+        </div>
+      </SwipeableBottomSheet>}
     </div>;
 };
 
