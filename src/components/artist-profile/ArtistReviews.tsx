@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from "react";
 import { Star, ClockAlert, CornerDownRight, Plus } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -77,7 +76,12 @@ const ReviewItem = ({
     return (
       <div className="bg-white rounded-3xl p-6 h-full flex flex-col justify-between">
         <div className="absolute top-4 right-4 flex gap-2 z-10">
-          <Button variant="outline" size="icon" className="h-8 w-8 bg-white" onClick={handleReminderClick}>
+          <Button 
+            variant="ghost" 
+            size="icon" 
+            className="h-8 w-8 bg-white border-none" 
+            onClick={handleReminderClick}
+          >
             <ClockAlert className="h-4 w-4 stroke-[2.5px]" />
           </Button>
           <Button variant="default" size="icon" className="h-8 w-8" onClick={handleReportClick}>
@@ -336,7 +340,7 @@ const ArtistReviews = ({
             <div className="mb-10">
               <Carousel
                 opts={{
-                  align: "center", // Cambiado de "start" a "center" para centrar el ítem activo
+                  align: "center",
                   loop: false,
                 }}
                 className="w-full"
@@ -345,7 +349,7 @@ const ArtistReviews = ({
                   {allReviews.slice(0, 5).map((review, index) => (
                     <CarouselItem 
                       key={review.id} 
-                      className="pl-2 w-[85%] max-w-[85%]" // Ajustado para mantener la visibilidad de parte del siguiente ítem
+                      className={`pl-2 w-[85%] max-w-[85%] ${index === allReviews.slice(0, 5).length - 1 ? 'ml-6' : ''}`}
                     >
                       <div className="h-full">
                         <ReviewItem review={review} isMobileCarousel={true} />
