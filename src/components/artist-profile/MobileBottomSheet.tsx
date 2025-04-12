@@ -47,7 +47,7 @@ const MobileBottomSheet = ({
         backgroundColor: 'white'
       }}
     >
-      <div className="px-4 pt-3">
+      <div className="px-4 pt-3 pb-4">
         <ContactCard 
           artist={artistContact} 
           onContact={onContact} 
