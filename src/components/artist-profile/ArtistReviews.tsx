@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from "react";
 import { Star, ClockAlert, CornerDownRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -45,10 +46,20 @@ const ReviewItem = ({
     });
   };
   
+  const handleReminderClick = () => {
+    toast.info("Revisaremos esta reseña pronto", {
+      description: "Gracias por ayudarnos a mejorar",
+      position: "bottom-center"
+    });
+  };
+  
   const isNameLong = review.name.length > 15;
-  return <div className="mb-10">
+  return <div className="mb-6">
       <div className="bg-[#F7F7F7] rounded-3xl p-6 relative">
         <div className="absolute top-6 right-6 flex gap-2">
+          <Button variant="outline" size="icon" className="h-8 w-8 bg-white" onClick={handleReminderClick}>
+            <ClockAlert className="h-4 w-4 stroke-[2.5px]" />
+          </Button>
           <Button variant="default" size="icon" className="h-8 w-8" onClick={handleReportClick}>
             <CornerDownRight className="h-4 w-4 stroke-[2.5px]" />
           </Button>
@@ -70,7 +81,7 @@ const ReviewItem = ({
             </div>
             
             <div className="flex items-center mt-3">
-              {[...Array(5)].map((_, index) => <Star key={index} className={`h-4 w-4 ${index < review.rating ? "text-black fill-black dark:text-white dark:fill-white" : "text-gray-300 dark:text-gray-600"}`} />)}
+              {[...Array(5)].map((_, index) => <Star key={index} className={`h-3 w-3 ${index < review.rating ? "text-black fill-black dark:text-white dark:fill-white" : "text-gray-300 dark:text-gray-600"}`} />)}
             </div>
           </div>
           
@@ -238,7 +249,7 @@ const ArtistReviews = ({
           </div>
         </div>
         
-        <div className="space-y-12">
+        <div className="space-y-6">
           {enhancedReviewsData?.slice(0, 3).map(review => <ReviewItem key={review.id} review={review} />)}
         </div>
         
@@ -261,7 +272,7 @@ const ArtistReviews = ({
             </DialogHeader>
 
             <ScrollArea className="h-[60vh] pr-4">
-              <div className="space-y-12">
+              <div className="space-y-6">
                 {allReviews.map(review => <ReviewItem key={review.id} review={review} />)}
               </div>
             </ScrollArea>
@@ -296,7 +307,7 @@ const ArtistReviews = ({
             </div>
             
             <ScrollArea className="h-[calc(70vh-150px)] pr-4">
-              <div className="space-y-12">
+              <div className="space-y-6">
                 {allReviews.map(review => <ReviewItem key={review.id} review={review} />)}
               </div>
             </ScrollArea>
