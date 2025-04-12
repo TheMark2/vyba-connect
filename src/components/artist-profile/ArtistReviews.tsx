@@ -493,7 +493,7 @@ const ArtistReviews = ({
 
       {isMobile && <SwipeableBottomSheet 
         overflowHeight={0} 
-        marginTop={64} 
+        marginTop={0} 
         open={isBottomSheetOpen} 
         onChange={setIsBottomSheetOpen} 
         fullScreen={true} 
@@ -502,7 +502,13 @@ const ArtistReviews = ({
         bodyStyle={{
           borderTopLeftRadius: '0px',
           borderTopRightRadius: '0px',
-          backgroundColor: '#FFFFFF'
+          backgroundColor: '#FFFFFF',
+          height: '100vh',
+          width: '100vw',
+          overflow: 'hidden',
+          position: 'fixed',
+          top: 0,
+          left: 0
         }}
       >
         <div className="px-6 pt-6 pb-20 min-h-screen">
