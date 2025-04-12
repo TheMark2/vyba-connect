@@ -34,7 +34,7 @@ const ContactCard = ({
             <div className="text-md font-bold">{artist.priceRange}</div>
           </div>
           
-          <Button className="w-full mb-4 mt-2 py-2" onClick={onContact}>
+          <Button className="w-full mt-2" onClick={onContact}>
             Contactar
           </Button>
         </div>
