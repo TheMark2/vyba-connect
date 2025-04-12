@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from "react";
 import { Star, ClockAlert, CornerDownRight, Plus, MessageCirclePlus, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -492,7 +493,7 @@ const ArtistReviews = ({
 
       {isMobile && <SwipeableBottomSheet 
         overflowHeight={0} 
-        marginTop={0} 
+        marginTop={64} 
         open={isBottomSheetOpen} 
         onChange={setIsBottomSheetOpen} 
         fullScreen={true} 
@@ -501,13 +502,7 @@ const ArtistReviews = ({
         bodyStyle={{
           borderTopLeftRadius: '0px',
           borderTopRightRadius: '0px',
-          backgroundColor: '#FFFFFF',
-          height: '100%',
-          position: 'fixed',
-          top: 0,
-          left: 0,
-          right: 0,
-          bottom: 0
+          backgroundColor: '#FFFFFF'
         }}
       >
         <div className="px-6 pt-6 pb-20 min-h-screen">
