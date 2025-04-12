@@ -31,8 +31,8 @@ const MobileBottomSheet = ({
   onPlayPause,
   audioRef
 }: MobileBottomSheetProps) => {
-  // Altura para asegurar que la tarjeta de contacto se vea completa
-  const contactCardHeight = 200;
+  // Reduced height to make the bottom sheet smaller
+  const contactCardHeight = 180;
   
   return (
     <SwipeableBottomSheet
