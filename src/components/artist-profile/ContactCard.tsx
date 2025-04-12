@@ -25,8 +25,8 @@ const ContactCard = ({
 }: ContactCardProps) => {
   return <Card className="border-0 shadow-none bg-transparent">
       <CardContent className="p-0">
-        <div className="bg-[#F7F7F7] rounded-3xl md:rounded-3xl">
-          <div className="flex items-center justify-between mb-4 px-4">
+        <div className="bg-[#F7F7F7] rounded-3xl md:rounded-3xl py-5">
+          <div className="flex items-center justify-between mb-4">
             <div className="flex items-center gap-2">
               <Badge variant="secondary" className="bg-white py-1 px-2 text-xs">{artist.availability}</Badge>
               <Badge variant="secondary" className="bg-white py-1 px-2 text-xs">{artist.location}</Badge>
