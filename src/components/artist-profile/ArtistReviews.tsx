@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Star, Share, Flag, MessageSquareReply } from "lucide-react";
+import { Star, Share, ClockAlert, CornerDownRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
@@ -49,14 +49,14 @@ const ReviewItem = ({
 
   // Determine if the name is too long (more than 15 characters)
   const isNameLong = review.name.length > 15;
-  return <div className="mb-6">
+  return <div className="mb-10">
       <div className="bg-[#F7F7F7] rounded-3xl p-6 relative">
         <div className="absolute top-6 right-6 flex gap-2">
-          <Button variant="ghost" size="icon" className="h-8 w-8" onClick={handleShareClick}>
-            <Share className="h-4 w-4" />
+          <Button variant="ghost" size="icon" className="h-8 w-8 bg-white" onClick={handleShareClick}>
+            <Share className="h-4 w-4 stroke-[2.5px]" />
           </Button>
-          <Button variant="ghost" size="icon" className="h-8 w-8" onClick={handleReportClick}>
-            <Flag className="h-4 w-4" />
+          <Button variant="ghost" size="icon" className="h-8 w-8 bg-white" onClick={handleReportClick}>
+            <ClockAlert className="h-4 w-4 stroke-[2.5px]" />
           </Button>
         </div>
         
@@ -68,10 +68,8 @@ const ReviewItem = ({
                 <AvatarFallback className="rounded-lg">{review.name.charAt(0)}</AvatarFallback>
               </Avatar>
               <div>
-                {isNameLong ? <h4 className="text-base font-bold w-28 overflow-hidden">
-                    <Marquee pauseOnHover className="w-28" gap="0.5rem" reverse={false}>
-                      {review.name}
-                    </Marquee>
+                {isNameLong ? <h4 className="text-base font-bold w-28 overflow-hidden text-ellipsis whitespace-nowrap">
+                    {review.name}
                   </h4> : <h4 className="text-base font-bold">{review.name}</h4>}
                 <p className="text-sm">hace {review.date}</p>
               </div>
@@ -93,17 +91,20 @@ const ReviewItem = ({
           <div className="flex flex-col md:flex-row gap-6">
             <div className="md:w-1/4">
               <div>
-                {review.reply.name.length > 15 ? <h4 className="text-base font-bold w-28 overflow-hidden">
-                    <Marquee pauseOnHover className="w-28" gap="0.5rem" reverse={false}>
-                      {review.reply.name}
-                    </Marquee>
+                {review.reply.name.length > 15 ? <h4 className="text-base font-bold w-28 overflow-hidden text-ellipsis whitespace-nowrap">
+                    {review.reply.name}
                   </h4> : <h4 className="text-base font-bold">{review.reply.name}</h4>}
                 <p className="text-sm">hace {review.reply.date}</p>
               </div>
             </div>
             
             <div className="md:w-3/4">
-              <p className="text-base">{review.reply.comment}</p>
+              <div className="flex items-start gap-2">
+                <Button variant="default" size="icon" className="h-6 w-6 rounded-full flex-shrink-0 mt-0.5">
+                  <CornerDownRight className="h-3 w-3 stroke-[2.5px]" />
+                </Button>
+                <p className="text-base">{review.reply.comment}</p>
+              </div>
             </div>
           </div>
         </div>}
@@ -213,13 +214,13 @@ const ArtistReviews = ({
           </div>
           <div>
             <Button variant="secondary" className="flex items-center gap-2" onClick={handleWriteReview}>
-              <MessageSquareReply className="h-4 w-4" />
+              <CornerDownRight className="h-4 w-4 stroke-[2.5px]" />
               Escribir una reseña
             </Button>
           </div>
         </div>
         
-        <div className="space-y-2">
+        <div className="space-y-6">
           {enhancedReviewsData?.slice(0, 3).map(review => <ReviewItem key={review.id} review={review} />)}
         </div>
         
@@ -248,7 +249,7 @@ const ArtistReviews = ({
           </DialogHeader>
 
           <ScrollArea className={`${isMobile ? 'h-[calc(70vh-150px)]' : 'h-[60vh]'} pr-4`}>
-            <div className="space-y-4">
+            <div className="space-y-6">
               {allReviews.map(review => <ReviewItem key={review.id} review={review} />)}
             </div>
           </ScrollArea>
