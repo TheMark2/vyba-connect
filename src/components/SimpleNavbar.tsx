@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Button } from "@/components/ui/button";
 import { Link, useNavigate } from 'react-router-dom';
@@ -25,7 +24,6 @@ const SimpleNavbar = ({
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [currentTheme, setCurrentTheme] = useState<'light' | 'dark' | 'system'>('system');
   
-  // Detectar el tema inicial del sistema
   React.useEffect(() => {
     const savedTheme = localStorage.getItem('theme');
     if (savedTheme === 'dark') {
@@ -45,17 +43,14 @@ const SimpleNavbar = ({
     navigate(-1);
   };
   
-  // Manejar apertura del menú
   const handleOpenMenu = () => {
     setIsMenuOpen(true);
   };
 
-  // Manejar cierre del menú
   const handleCloseMenu = () => {
     setIsMenuOpen(false);
   };
   
-  // Función para cambiar el tema
   const setTheme = (theme: 'light' | 'dark' | 'system') => {
     const root = window.document.documentElement;
     
@@ -75,14 +70,12 @@ const SimpleNavbar = ({
     setCurrentTheme(theme);
   };
 
-  // Función para obtener el icono correcto según el tema actual
   const getThemeIcon = () => {
     if (currentTheme === 'dark') {
       return <Moon className="h-5 w-5" />;
     } else if (currentTheme === 'light') {
       return <Sun className="h-5 w-5" />;
     } else {
-      // Para 'system', comprobar la preferencia actual del sistema
       const isSystemDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
       return isSystemDark ? <Moon className="h-5 w-5" /> : <Sun className="h-5 w-5" />;
     }
@@ -91,19 +84,16 @@ const SimpleNavbar = ({
   return (
     <header 
       className={cn(
-        "w-full mx-auto flex items-center justify-between sticky top-0 z-50",
+        "w-full mx-auto flex items-center justify-between",
         "px-6 md:px-10 lg:px-14 xl:px-16 h-24 bg-white dark:bg-vyba-dark-bg",
         className
       )}
     >
-      {/* Logo */}
       <Link to="/" className="text-3xl font-bold dark:text-white">
         VYBA
       </Link>
 
-      {/* Botones de acción */}
       <div className="flex items-center space-x-3">
-        {/* Dropdown para cambio de tema (solo en pantallas grandes) */}
         {!isMobile && (
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
@@ -155,7 +145,6 @@ const SimpleNavbar = ({
 
         {isMobile ? (
           <>
-            {/* Botón de volver atrás */}
             <Button 
               variant="secondary"
               size="icon"
@@ -165,7 +154,6 @@ const SimpleNavbar = ({
               <ArrowLeft className="h-5 w-5" />
             </Button>
             
-            {/* Botón de iniciar sesión en móvil */}
             <Button 
               variant="default" 
               onClick={handleGetStarted}
@@ -173,7 +161,6 @@ const SimpleNavbar = ({
               Empezar
             </Button>
             
-            {/* Botón de menú hamburguesa */}
             <Button 
               variant="ghost" 
               size="icon" 
@@ -183,7 +170,6 @@ const SimpleNavbar = ({
               <Menu className="h-6 w-6" />
             </Button>
 
-            {/* Menú móvil como componente independiente */}
             <MobileMenu 
               isOpen={isMenuOpen} 
               onClose={handleCloseMenu} 
