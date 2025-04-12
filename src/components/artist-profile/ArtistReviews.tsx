@@ -56,7 +56,7 @@ const ReviewItem = ({
             <Share className="h-4 w-4 stroke-[2.5px]" />
           </Button>
           <Button variant="ghost" size="icon" className="h-8 w-8 bg-white" onClick={handleReportClick}>
-            <ClockAlert className="h-4 w-4 stroke-[2.5px]" />
+            <CornerDownRight className="h-4 w-4 stroke-[2.5px]" />
           </Button>
         </div>
         
