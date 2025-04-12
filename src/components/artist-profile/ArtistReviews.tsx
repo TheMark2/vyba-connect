@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from "react";
 import { Star, ClockAlert, CornerDownRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -30,7 +29,9 @@ interface ArtistReviewsProps {
   reviews: number;
   genres?: string[];
   reviewsData?: Review[];
+  onBottomSheetChange?: (isOpen: boolean) => void;
 }
+
 const ReviewItem = ({
   review
 }: {
@@ -44,7 +45,6 @@ const ReviewItem = ({
     });
   };
   
-  // Determine if the name is too long (more than 15 characters)
   const isNameLong = review.name.length > 15;
   return <div className="mb-10">
       <div className="bg-[#F7F7F7] rounded-3xl p-6 relative">
@@ -101,66 +101,82 @@ const ReviewItem = ({
         </div>}
     </div>;
 };
-const moreReviewsData: Review[] = [{
-  id: 4,
-  name: "Miguel López",
-  date: "2 semanas",
-  rating: 5,
-  badges: ["Bodas", "Eventos corporativos"],
-  comment: "¡Increíble actuación! Todos mis invitados quedaron encantados con su música. Definitivamente lo volvería a contratar para futuros eventos.",
-  title: "Excelente profesional",
-  reply: {
-    name: "Antonia Pedragosa",
+
+const moreReviewsData: Review[] = [
+  {
+    id: 4,
+    name: "Miguel López",
     date: "2 semanas",
-    comment: "Muchas gracias por tus amables palabras, Miguel. Fue un placer amenizar tu evento. ¡Espero volver a trabajar contigo pronto!"
-  }
-}, {
-  id: 5,
-  name: "Laura Gómez",
-  date: "1 mes",
-  rating: 4,
-  badges: ["Bodas", "Fiestas privadas"],
-  comment: "Muy profesional y puntual. La música fue perfecta para nuestra celebración de aniversario. Recomendado.",
-  title: "Muy profesional"
-}, {
-  id: 6,
-  name: "Carlos Martínez",
-  date: "2 meses",
-  rating: 5,
-  badges: ["Eventos corporativos"],
-  comment: "Contratar a este artista fue la mejor decisión para nuestro evento corporativo. Su repertorio se adaptó perfectamente a nuestras necesidades.",
-  title: "Repertorio adaptado a nuestras necesidades",
-  reply: {
-    name: "Antonia Pedragosa",
+    rating: 5,
+    badges: ["Bodas", "Eventos corporativos"],
+    comment: "¡Increíble actuación! Todos mis invitados quedaron encantados con su música. Definitivamente lo volvería a contratar para futuros eventos.",
+    title: "Excelente profesional",
+    reply: {
+      name: "Antonia Pedragosa",
+      date: "2 semanas",
+      comment: "Muchas gracias por tus amables palabras, Miguel. Fue un placer amenizar tu evento. ¡Espero volver a trabajar contigo pronto!"
+    }
+  },
+  {
+    id: 5,
+    name: "Laura Gómez",
+    date: "1 mes",
+    rating: 4,
+    badges: ["Bodas", "Fiestas privadas"],
+    comment: "Muy profesional y puntual. La música fue perfecta para nuestra celebración de aniversario. Recomendado.",
+    title: "Muy profesional"
+  },
+  {
+    id: 6,
+    name: "Carlos Martínez",
     date: "2 meses",
-    comment: "Gracias Carlos, me alegra que quedaran satisfechos con mi servicio. Fue un placer trabajar en su evento corporativo."
+    rating: 5,
+    badges: ["Eventos corporativos"],
+    comment: "Contratar a este artista fue la mejor decisión para nuestro evento corporativo. Su repertorio se adaptó perfectamente a nuestras necesidades.",
+    title: "Repertorio adaptado a nuestras necesidades",
+    reply: {
+      name: "Antonia Pedragosa",
+      date: "2 meses",
+      comment: "Gracias Carlos, me alegra que quedaran satisfechos con mi servicio. Fue un placer trabajar en su evento corporativo."
+    }
+  },
+  {
+    id: 7,
+    name: "Sofía Rodríguez",
+    date: "3 meses",
+    rating: 4,
+    badges: ["Bodas"],
+    comment: "Nuestra boda fue especial gracias a su música. El ambiente que creó fue exactamente lo que buscábamos.",
+    title: "Creó el ambiente perfecto"
+  },
+  {
+    id: 8,
+    name: "David García",
+    date: "4 meses",
+    rating: 5,
+    badges: ["Fiestas privadas"],
+    comment: "Un profesional excepcional. Su energía contagió a todos los invitados y la fiesta fue un éxito rotundo.",
+    title: "Energía contagiosa"
   }
-}, {
-  id: 7,
-  name: "Sofía Rodríguez",
-  date: "3 meses",
-  rating: 4,
-  badges: ["Bodas"],
-  comment: "Nuestra boda fue especial gracias a su música. El ambiente que creó fue exactamente lo que buscábamos.",
-  title: "Creó el ambiente perfecto"
-}, {
-  id: 8,
-  name: "David García",
-  date: "4 meses",
-  rating: 5,
-  badges: ["Fiestas privadas"],
-  comment: "Un profesional excepcional. Su energía contagió a todos los invitados y la fiesta fue un éxito rotundo.",
-  title: "Energía contagiosa"
-}];
+];
+
 const ArtistReviews = ({
   rating,
   reviews,
   genres,
-  reviewsData
+  reviewsData,
+  onBottomSheetChange
 }: ArtistReviewsProps) => {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [isBottomSheetOpen, setIsBottomSheetOpen] = useState(false);
   const isMobile = useIsMobile();
+  
+  useEffect(() => {
+    if (onBottomSheetChange) {
+      onBottomSheetChange(isBottomSheetOpen);
+    }
+  }, [isBottomSheetOpen, onBottomSheetChange]);
+
   useEffect(() => {
     const handleBeforeUnload = () => {
       setIsDialogOpen(false);
@@ -172,7 +188,6 @@ const ArtistReviews = ({
     };
   }, []);
 
-  // Añadir respuestas a algunas reseñas existentes
   const enhancedReviewsData = reviewsData?.map(review => {
     if (review.id === 1) {
       return {
@@ -190,6 +205,7 @@ const ArtistReviews = ({
       title: review.id === 2 ? "Excelente ambiente" : "Gran profesional"
     };
   });
+
   const allReviews = enhancedReviewsData ? [...enhancedReviewsData, ...moreReviewsData] : [];
   const handleWriteReview = () => {
     toast.success("Función escribir reseña", {
@@ -205,7 +221,7 @@ const ArtistReviews = ({
       setIsDialogOpen(true);
     }
   };
-  
+
   return <div className="mt-8 mb-16">
       <h2 className="text-3xl font-black mb-3">Reseñas</h2>
       <div className="space-y-6">
@@ -233,7 +249,6 @@ const ArtistReviews = ({
         </div>
       </div>
 
-      {/* Diálogo para escritorio */}
       {!isMobile && (
         <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
           <DialogContent className="sm:max-w-[700px] p-6 border-none bg-white dark:bg-vyba-dark-bg rounded-[40px] pt-8 px-8 pb-0">
@@ -254,7 +269,6 @@ const ArtistReviews = ({
         </Dialog>
       )}
 
-      {/* Bottom Sheet para móvil */}
       {isMobile && (
         <SwipeableBottomSheet
           overflowHeight={0}
@@ -291,4 +305,5 @@ const ArtistReviews = ({
       )}
     </div>;
 };
+
 export default ArtistReviews;

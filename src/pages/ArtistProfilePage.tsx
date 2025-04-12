@@ -164,6 +164,7 @@ const ArtistProfilePage = () => {
   const aboutMeRef = useRef<HTMLDivElement>(null);
   const imagesRef = useRef<HTMLDivElement>(null);
   const [showMobileBottomSheet, setShowMobileBottomSheet] = useState(false);
+  const [isReviewsBottomSheetOpen, setIsReviewsBottomSheetOpen] = useState(false);
   
   // Añadimos estos estados para solucionar el error con MobileBottomSheet
   const [currentPlaying, setCurrentPlaying] = useState("");
@@ -250,6 +251,11 @@ const ArtistProfilePage = () => {
     }
   };
 
+  // Handler for reviews bottom sheet state changes
+  const handleReviewsBottomSheetChange = (isOpen: boolean) => {
+    setIsReviewsBottomSheetOpen(isOpen);
+  };
+
   const artistContactData = {
     name: artist.name,
     location: artist.location || "",
@@ -280,7 +286,13 @@ const ArtistProfilePage = () => {
               
               <ArtistFAQ artistName={artist.name} />
               
-              <ArtistReviews rating={artist.rating} reviews={artist.reviews || 0} genres={artist.genres} reviewsData={artist.reviewsData} />
+              <ArtistReviews 
+                rating={artist.rating} 
+                reviews={artist.reviews || 0} 
+                genres={artist.genres} 
+                reviewsData={artist.reviewsData} 
+                onBottomSheetChange={handleReviewsBottomSheetChange}
+              />
             </div>
             
             {!isMobile && (
@@ -296,7 +308,7 @@ const ArtistProfilePage = () => {
         <RecommendedArtists artists={recommendedArtists} />
       </div>
       
-      {isMobile && showMobileBottomSheet && (
+      {isMobile && showMobileBottomSheet && !isReviewsBottomSheetOpen && (
         <MobileBottomSheet 
           artistContact={artistContactData} 
           onContact={handleContact} 
