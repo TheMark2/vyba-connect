@@ -41,6 +41,7 @@ const MobileBottomSheet = ({
       fullScreen={false}
       topShadow={false}
       shadowTip={false}
+      overlay={true}
       swipeableViewsProps={{
         resistance: true,
         animateHeight: true
@@ -49,7 +50,7 @@ const MobileBottomSheet = ({
         borderTopLeftRadius: '24px', 
         borderTopRightRadius: '24px',
         backgroundColor: 'white',
-        zIndex: 40
+        zIndex: 50
       }}
     >
       <div className="px-4 pt-4 pb-6">

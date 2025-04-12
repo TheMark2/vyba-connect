@@ -506,6 +506,7 @@ const ArtistReviews = ({
         fullScreen={true} 
         topShadow={false} 
         shadowTip={false}
+        overlay={true}
         swipeableViewsProps={{
           resistance: true,
           animateHeight: true
@@ -514,7 +515,7 @@ const ArtistReviews = ({
           borderTopLeftRadius: '32px',
           borderTopRightRadius: '32px',
           backgroundColor: '#FFFFFF',
-          zIndex: 60
+          zIndex: 1000
         }}
       >
         <div className="px-6 pt-12">
