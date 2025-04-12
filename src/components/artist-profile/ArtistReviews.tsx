@@ -336,7 +336,7 @@ const ArtistReviews = ({
             <div className="mb-10">
               <Carousel
                 opts={{
-                  align: "0.35", // Changed from 0.35 to "0.35" to match the expected type
+                  align: "center", // Cambiado de "start" a "center" para centrar el ítem activo
                   loop: false,
                 }}
                 className="w-full"
@@ -345,7 +345,7 @@ const ArtistReviews = ({
                   {allReviews.slice(0, 5).map((review, index) => (
                     <CarouselItem 
                       key={review.id} 
-                      className="pl-2 w-[85%] max-w-[85%]"
+                      className="pl-2 w-[85%] max-w-[85%]" // Ajustado para mantener la visibilidad de parte del siguiente ítem
                     >
                       <div className="h-full">
                         <ReviewItem review={review} isMobileCarousel={true} />

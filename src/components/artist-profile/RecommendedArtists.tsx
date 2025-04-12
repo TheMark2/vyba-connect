@@ -40,7 +40,7 @@ const RecommendedArtists = ({ artists }: RecommendedArtistsProps) => {
         <Carousel
           className="w-full"
           opts={{
-            align: "0.35", // Changed from 0.35 to "0.35" to match the expected type
+            align: "center", // Cambiado a "center" para centrar el ítem activo
             loop: true,
             skipSnaps: false,
             dragFree: true,
