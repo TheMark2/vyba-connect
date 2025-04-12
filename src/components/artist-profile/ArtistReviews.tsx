@@ -217,12 +217,12 @@ const ArtistReviews = ({
     }
   };
   return <div className="mt-8 mb-16">
-      <h2 className="text-3xl font-black mb-3">Reseñas</h2>
+      <h2 className="text-3xl font-black mb-1">Reseñas</h2>
       <div className="space-y-6">
         <div className="flex flex-wrap items-center gap-6 mb-8 justify-between">
           <div className="flex items-baseline gap-2">
-            <span className="text-3xl font-medium">{rating}</span>
-            <span className="text-3xl font-medium">({reviews})</span>
+            <span className="text-2xl font-medium">{rating}</span>
+            <span className="text-2xl font-medium">({reviews})</span>
           </div>
           <div>
             <Button variant="secondary" className="flex items-center gap-2" onClick={handleWriteReview}>
