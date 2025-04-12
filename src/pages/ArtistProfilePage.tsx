@@ -1,4 +1,3 @@
-
 import React, { useState, useRef, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { toast } from "sonner";
@@ -166,7 +165,6 @@ const ArtistProfilePage = () => {
   const [showMobileBottomSheet, setShowMobileBottomSheet] = useState(false);
   const [isReviewsBottomSheetOpen, setIsReviewsBottomSheetOpen] = useState(false);
   
-  // Añadimos estos estados para solucionar el error con MobileBottomSheet
   const [currentPlaying, setCurrentPlaying] = useState("");
   const [isAudioPlaying, setIsAudioPlaying] = useState(false);
   const audioRef = useRef<HTMLAudioElement>(null);
@@ -239,7 +237,6 @@ const ArtistProfilePage = () => {
     });
   };
 
-  // Añadimos esta función para cumplir con la interfaz de MobileBottomSheet
   const handlePlayPause = () => {
     if (audioRef.current) {
       if (isAudioPlaying) {
@@ -251,7 +248,6 @@ const ArtistProfilePage = () => {
     }
   };
 
-  // Handler for reviews bottom sheet state changes
   const handleReviewsBottomSheetChange = (isOpen: boolean) => {
     setIsReviewsBottomSheetOpen(isOpen);
   };

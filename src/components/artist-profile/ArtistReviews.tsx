@@ -14,8 +14,6 @@ import {
   Carousel,
   CarouselContent,
   CarouselItem,
-  CarouselNext,
-  CarouselPrevious,
 } from "@/components/ui/carousel";
 
 interface Review {
@@ -106,9 +104,10 @@ const ReviewItem = ({
     );
   }
 
+  // Para PC, adaptamos el formato para que sea similar al móvil
   return <div className="mb-6">
       <div className="bg-[#F7F7F7] rounded-3xl p-6 relative">
-        {/* Movemos los botones arriba a la derecha en una posición fija */}
+        {/* Botones en la esquina superior derecha */}
         <div className="absolute top-4 right-4 flex gap-2 z-10">
           <Button variant="outline" size="icon" className="h-8 w-8 bg-white" onClick={handleReminderClick}>
             <ClockAlert className="h-4 w-4 stroke-[2.5px]" />
@@ -118,48 +117,48 @@ const ReviewItem = ({
           </Button>
         </div>
         
-        <div className="flex flex-col md:flex-row gap-12">
-          <div className="md:w-1/4">
-            <div className="flex items-center mb-2">
-              <Avatar className="h-16 w-16 rounded-lg mr-3">
-                <AvatarImage src={review.id === 1 ? "https://images.unsplash.com/photo-1580489944761-15a19d654956?q=80&w=1000" : review.id === 2 ? "https://images.unsplash.com/photo-1633332755192-727a05c4013d?q=80&w=1000" : "https://images.unsplash.com/photo-1494790108377-be9c29b29330?q=80&w=1000"} alt={review.name} />
-                <AvatarFallback className="rounded-lg">{review.name.charAt(0)}</AvatarFallback>
-              </Avatar>
-              <div>
-                {isNameLong ? <h4 className="text-base font-bold w-28 overflow-hidden text-ellipsis whitespace-nowrap">
-                    {review.name}
-                  </h4> : <h4 className="text-base font-bold">{review.name}</h4>}
-                <p className="text-sm">hace {review.date}</p>
-              </div>
-            </div>
-            
-            <div className="flex items-center mt-3">
-              {[...Array(5)].map((_, index) => <Star key={index} className={`h-3 w-3 ${index < review.rating ? "text-black fill-black dark:text-white dark:fill-white" : "text-gray-300 dark:text-gray-600"}`} />)}
-            </div>
+        <div className="flex flex-col">
+          {/* Estrellas en la parte superior */}
+          <div className="flex items-center mb-4">
+            {[...Array(5)].map((_, index) => (
+              <Star 
+                key={index} 
+                className={`h-3 w-3 ${index < review.rating ? "text-black fill-black dark:text-white dark:fill-white" : "text-gray-300 dark:text-gray-600"}`} 
+              />
+            ))}
           </div>
           
-          <div className="md:w-3/4">
-            {/* Añadimos padding-right para dejar espacio a los botones en dispositivos móviles */}
-            <h3 className="text-lg font-bold mb-2 pr-20 md:pr-0">{review.title || "Muy buen servicio"}</h3>
-            <p className="text-base">{review.comment}</p>
+          {/* Título */}
+          <h3 className="text-lg font-bold mb-3 pr-20">{review.title || "Muy buen servicio"}</h3>
+          
+          {/* Comentario */}
+          <p className="text-base mb-6">{review.comment}</p>
+          
+          {/* Información del autor en la parte inferior */}
+          <div className="flex items-center mt-2">
+            <Avatar className="h-10 w-10 rounded-full mr-3">
+              <AvatarImage src={review.id === 1 ? "https://images.unsplash.com/photo-1580489944761-15a19d654956?q=80&w=1000" : review.id === 2 ? "https://images.unsplash.com/photo-1633332755192-727a05c4013d?q=80&w=1000" : "https://images.unsplash.com/photo-1494790108377-be9c29b29330?q=80&w=1000"} alt={review.name} />
+              <AvatarFallback className="rounded-full">{review.name.charAt(0)}</AvatarFallback>
+            </Avatar>
+            <div>
+              <p className="text-sm font-medium">{review.name}</p>
+              <p className="text-xs text-gray-500">hace {review.date}</p>
+            </div>
           </div>
         </div>
       </div>
       
-      {review.reply && <div className="bg-[#D9D9D9] rounded-3xl p-6 ml-8 md:ml-16 mt-3">
-          <div className="flex flex-col md:flex-row gap-6">
-            <div className="md:w-1/4">
-              <div>
-                {review.reply.name.length > 15 ? <h4 className="text-base font-bold w-28 overflow-hidden text-ellipsis whitespace-nowrap">
-                    {review.reply.name}
-                  </h4> : <h4 className="text-base font-bold">{review.reply.name}</h4>}
-                <p className="text-sm">hace {review.reply.date}</p>
-              </div>
-            </div>
+      {review.reply && <div className="bg-[#D9D9D9] rounded-3xl p-6 ml-8 mt-3">
+          <div className="flex flex-col">
+            <p className="text-base mb-4">{review.reply.comment}</p>
             
-            <div className="md:w-3/4">
-              <div className="flex items-start gap-2">
-                <p className="text-base">{review.reply.comment}</p>
+            <div className="flex items-center mt-2">
+              <Avatar className="h-10 w-10 rounded-full mr-3">
+                <AvatarFallback className="rounded-full">{review.reply.name.charAt(0)}</AvatarFallback>
+              </Avatar>
+              <div>
+                <p className="text-sm font-medium">{review.reply.name}</p>
+                <p className="text-xs text-gray-500">hace {review.reply.date}</p>
               </div>
             </div>
           </div>
@@ -311,8 +310,6 @@ const ArtistReviews = ({
                     </CarouselItem>
                   ))}
                 </CarouselContent>
-                <CarouselPrevious className="left-0" />
-                <CarouselNext className="right-0" />
               </Carousel>
             </div>
           )}
@@ -320,7 +317,7 @@ const ArtistReviews = ({
           {/* Standard list for desktop */}
           {!isMobile && (
             <div className="space-y-6">
-              {enhancedReviewsData?.slice(0, 3).map(review => <ReviewItem key={review.id} review={review} />)}
+              {allReviews.slice(0, 3).map(review => <ReviewItem key={review.id} review={review} />)}
             </div>
           )}
           
