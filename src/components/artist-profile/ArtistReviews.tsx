@@ -1,5 +1,6 @@
+
 import React, { useState, useEffect } from "react";
-import { Star, ClockAlert, CornerDownRight, Plus } from "lucide-react";
+import { Star, ClockAlert, CornerDownRight, Plus, MessageCirclePlus } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
@@ -134,7 +135,7 @@ const ReviewItem = ({
     <div className="mb-6">
       <div className="bg-[#F7F7F7] rounded-3xl p-6 relative">
         <div className="absolute top-4 right-4 flex gap-2 z-10">
-          <Button variant="outline" size="icon" className="h-8 w-8 bg-white" onClick={handleReminderClick}>
+          <Button variant="ghost" size="icon" className="h-8 w-8 bg-white" onClick={handleReminderClick}>
             <ClockAlert className="h-4 w-4 stroke-[2.5px]" />
           </Button>
           <Button variant="default" size="icon" className="h-8 w-8" onClick={handleReportClick}>
@@ -329,10 +330,16 @@ const ArtistReviews = ({
               <span className="text-2xl font-medium">({reviews})</span>
             </div>
             <div>
-              <Button variant="secondary" className="flex items-center gap-2" onClick={handleWriteReview}>
-                <CornerDownRight className="h-4 w-4 stroke-[2.5px]" />
-                Escribir una reseña
-              </Button>
+              {isMobile ? (
+                <Button variant="ghost" size="icon" className="bg-white border-none" onClick={handleWriteReview}>
+                  <MessageCirclePlus className="h-5 w-5 stroke-[2.5px]" />
+                </Button>
+              ) : (
+                <Button variant="secondary" className="flex items-center gap-2" onClick={handleWriteReview}>
+                  <CornerDownRight className="h-4 w-4 stroke-[2.5px]" />
+                  Escribir una reseña
+                </Button>
+              )}
             </div>
           </div>
           
@@ -349,7 +356,7 @@ const ArtistReviews = ({
                   {allReviews.slice(0, 5).map((review, index) => (
                     <CarouselItem 
                       key={review.id} 
-                      className={`pl-2 w-[85%] max-w-[85%] ${index === allReviews.slice(0, 5).length - 1 ? 'mr-6' : ''}`}
+                      className={`pl-2 w-[85%] max-w-[85%] ${index === allReviews.slice(0, 5).length - 1 ? 'mr-6 ml-6' : ''}`}
                     >
                       <div className="h-full">
                         <ReviewItem review={review} isMobileCarousel={true} />
@@ -368,7 +375,11 @@ const ArtistReviews = ({
           )}
           
           <div className="flex justify-center mt-8">
-            <Button variant="secondary" className="px-12" onClick={handleVerTodas}>
+            <Button 
+              variant={isMobile ? "ghost" : "secondary"} 
+              className={isMobile ? "px-12 bg-white border-none" : "px-12"} 
+              onClick={handleVerTodas}
+            >
               Ver todas
             </Button>
           </div>
