@@ -56,7 +56,8 @@ const ReviewItem = ({
   const isNameLong = review.name.length > 15;
   return <div className="mb-6">
       <div className="bg-[#F7F7F7] rounded-3xl p-6 relative">
-        <div className="absolute top-6 right-6 flex gap-2">
+        {/* Movemos los botones arriba a la derecha en una posición fija */}
+        <div className="absolute top-4 right-4 flex gap-2 z-10">
           <Button variant="outline" size="icon" className="h-8 w-8 bg-white" onClick={handleReminderClick}>
             <ClockAlert className="h-4 w-4 stroke-[2.5px]" />
           </Button>
@@ -86,7 +87,8 @@ const ReviewItem = ({
           </div>
           
           <div className="md:w-3/4">
-            <h3 className="text-xl font-bold mb-4">{review.title || "Muy buen servicio"}</h3>
+            {/* Añadimos padding-right para dejar espacio a los botones en dispositivos móviles */}
+            <h3 className="text-xl font-bold mb-4 pr-20 md:pr-0">{review.title || "Muy buen servicio"}</h3>
             <p className="text-base">{review.comment}</p>
           </div>
         </div>
