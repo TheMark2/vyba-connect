@@ -33,24 +33,23 @@ const MobileBottomSheet = ({
 }: MobileBottomSheetProps) => {
   return (
     <SwipeableBottomSheet
-      overflowHeight={200}
-      marginTop={0}
+      overflowHeight={0}
+      marginTop={64}
+      open={true}
       fullScreen={false}
       topShadow={false}
       shadowTip={false}
       bodyStyle={{ 
         borderTopLeftRadius: '24px', 
         borderTopRightRadius: '24px',
-        backgroundColor: '#F7F7F7',
-        position: 'fixed',
-        bottom: 0,
-        left: 0,
-        right: 0,
-        width: '100%',
-        maxWidth: '100%'
+        backgroundColor: '#FFFFFF'
       }}
     >
       <div className={`px-5 pt-3 ${!currentPlaying ? 'pb-16' : 'pb-5'}`}>
+        <div className="flex justify-center w-full mb-3">
+          <div className="w-12 h-1 bg-gray-300 rounded-full"></div>
+        </div>
+        
         <ContactCard 
           artist={artistContact} 
           onContact={onContact} 
