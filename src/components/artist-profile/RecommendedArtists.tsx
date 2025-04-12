@@ -40,7 +40,7 @@ const RecommendedArtists = ({ artists }: RecommendedArtistsProps) => {
         <Carousel
           className="w-full"
           opts={{
-            align: "center", // Cambiado a "center" para centrar el ítem activo
+            align: 0.35, // Ajustado a un valor entre 0 y 1 para posicionar el ítem activo más a la izquierda del centro
             loop: true,
             skipSnaps: false,
             dragFree: true,
