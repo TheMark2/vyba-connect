@@ -1,4 +1,3 @@
-
 import React, { useRef, useState, useEffect } from "react";
 import ArtistProfileCard from "./ArtistProfileCard";
 import {
@@ -60,7 +59,6 @@ const ArtistsList = ({
       const container = carouselRef.current.querySelector('[data-carousel-content]');
       if (container) {
         const isScrollable = container.scrollWidth > container.clientWidth;
-        // Siempre mantenemos el gradiente visible para indicar que hay más contenido
         setShowGradient(isScrollable);
       }
     }
@@ -81,9 +79,8 @@ const ArtistsList = ({
     };
   }, [artists]);
 
-  // Tamaño consistente para las tarjetas en todos los formatos de pantalla
   const getItemWidth = () => {
-    return "280px"; // Tamaño fijo para todas las tarjetas
+    return "280px";
   };
 
   return (
@@ -92,7 +89,7 @@ const ArtistsList = ({
         className="w-full"
         setApi={setApi}
         opts={{
-          align: "start", // Usando "start" en lugar de un número (0.35)
+          align: 0.35,
           loop: false,
           skipSnaps: false,
           dragFree: true,
@@ -100,14 +97,14 @@ const ArtistsList = ({
         onScroll={checkScrollable}
       >
         <CarouselContent 
-          className="-ml-5" // Increased negative margin for larger gap
+          className="-ml-5"
           data-carousel-content
         >
           {artists.map((artist, index) => (
             <CarouselItem
               key={artist.id}
               className={cn(
-                "pl-5 pr-2", // Increased padding for larger gap
+                "pl-5 pr-2",
                 index === 0 && current === 0 ? "ml-6" : "ml-0"
               )}
               style={{

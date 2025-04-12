@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from "react";
 import { Star, ClockAlert, CornerDownRight, Plus } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -336,7 +335,7 @@ const ArtistReviews = ({
             <div className="mb-10">
               <Carousel
                 opts={{
-                  align: "start", // Usando "start" en lugar de un número (0.35)
+                  align: 0.35,
                   loop: false,
                 }}
                 className="w-full"

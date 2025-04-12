@@ -1,4 +1,3 @@
-
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
@@ -40,7 +39,7 @@ const RecommendedArtists = ({ artists }: RecommendedArtistsProps) => {
         <Carousel
           className="w-full"
           opts={{
-            align: "start", // Usando "start" en lugar de un número (0.35)
+            align: 0.35,
             loop: true,
             skipSnaps: false,
             dragFree: true,
