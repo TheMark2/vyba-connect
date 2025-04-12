@@ -498,11 +498,17 @@ const ArtistReviews = ({
         onChange={setIsBottomSheetOpen} 
         fullScreen={true} 
         topShadow={false} 
-        shadowTip={false} 
+        shadowTip={false}
+        swipeableViewsProps={{
+          resistance: true,
+          enableMouseEvents: true,
+          animateHeight: true
+        }}
         bodyStyle={{
           borderTopLeftRadius: '0px',
           borderTopRightRadius: '0px',
-          backgroundColor: '#FFFFFF'
+          backgroundColor: '#FFFFFF',
+          zIndex: 50  // Mayor z-index para asegurar que esté por encima de todo
         }}
       >
         <div className="px-6 pt-6">
