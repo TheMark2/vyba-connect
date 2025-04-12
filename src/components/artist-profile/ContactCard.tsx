@@ -31,7 +31,7 @@ const ContactCard = ({
               <Badge variant="secondary" className="bg-white py-1 px-2 text-xs">{artist.availability}</Badge>
               <Badge variant="secondary" className="bg-white py-1 px-2 text-xs">{artist.location}</Badge>
             </div>
-            <div className="text-xs font-bold">{artist.priceRange}</div>
+            <div className="text-md font-bold">{artist.priceRange}</div>
           </div>
           
           <Button className="w-full mb-4 mt-2 py-2" onClick={onContact}>
