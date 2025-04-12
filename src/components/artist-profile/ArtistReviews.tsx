@@ -106,7 +106,7 @@ const ReviewItem = ({
               onClick={() => setExpanded(!expanded)}
             >
               <Plus className="h-4 w-4 mr-1" />
-              {expanded ? "Ver menos" : "Ver más"}
+              {expanded ? "Ver menos" : "Ver m��s"}
             </Button>
           )}
         </div>
@@ -315,8 +315,8 @@ const ArtistReviews = ({
   };
   
   return <div className="mt-8 mb-16">
-      <div className={`${isMobile ? 'bg-[#F7F7F7] px-6 py-8 -mx-6' : ''}`}>
-        <h2 className="text-3xl font-black mb-1">Reseñas</h2>
+      <div className={`${isMobile ? 'bg-[#F7F7F7]' : ''}`}>
+        <h2 className="text-3xl font-black mb-1 px-6">Reseñas</h2>
         <div className="space-y-6">
           <div className="flex flex-wrap items-center gap-6 mb-8 justify-between">
             <div className="flex items-baseline gap-2">
@@ -332,7 +332,7 @@ const ArtistReviews = ({
           </div>
           
           {isMobile && (
-            <div className="mb-10">
+            <div className="mb-10 -mx-6">
               <Carousel
                 opts={{
                   align: "start",
@@ -343,7 +343,7 @@ const ArtistReviews = ({
                 <CarouselContent className="-ml-2 pr-4">
                   {allReviews.slice(0, 5).map((review) => (
                     <CarouselItem key={review.id} className="pl-2 w-[calc(100%-16px)] max-w-[90%]">
-                      <div className="h-full">
+                      <div className="h-full px-6">
                         <ReviewItem review={review} isMobileCarousel={true} />
                       </div>
                     </CarouselItem>
