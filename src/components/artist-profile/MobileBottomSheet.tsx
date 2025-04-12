@@ -41,15 +41,10 @@ const MobileBottomSheet = ({
       fullScreen={false}
       topShadow={false}
       shadowTip={false}
-      swipeableViewsProps={{
-        resistance: true,
-        animateHeight: true
-      }}
       bodyStyle={{ 
         borderTopLeftRadius: '24px', 
         borderTopRightRadius: '24px',
-        backgroundColor: 'white',
-        zIndex: 40
+        backgroundColor: 'white'
       }}
     >
       <div className="px-4 pt-4 pb-6">
