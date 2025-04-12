@@ -1,9 +1,7 @@
-
 import React from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-
 interface ContactCardProps {
   artist: {
     name: string;
@@ -16,17 +14,15 @@ interface ContactCardProps {
   aboutMeRef?: React.RefObject<HTMLDivElement>;
   imagesRef?: React.RefObject<HTMLDivElement>;
 }
-
 const ContactCard = ({
   artist,
   onContact,
   aboutMeRef,
   imagesRef
 }: ContactCardProps) => {
-  return (
-    <Card className="border-0 shadow-none bg-transparent">
+  return <Card className="border-0 shadow-none bg-transparent">
       <CardContent className="p-0">
-        <div className="bg-[#F7F7F7] rounded-3xl md:rounded-3xl p-5">
+        <div className="bg-[#F7F7F7] rounded-3xl md:rounded-3xl py-5">
           <div className="flex items-center gap-3 mb-4">
             <Badge variant="secondary" className="bg-white py-2 px-4">{artist.availability}</Badge>
             <Badge variant="secondary" className="bg-white py-2 px-4">{artist.location}</Badge>
@@ -41,8 +37,6 @@ const ContactCard = ({
           </Button>
         </div>
       </CardContent>
-    </Card>
-  );
+    </Card>;
 };
-
 export default ContactCard;
