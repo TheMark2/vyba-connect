@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Star, Share, ClockAlert, CornerDownRight } from "lucide-react";
+import { Star, ClockAlert, CornerDownRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
@@ -53,10 +53,10 @@ const ReviewItem = ({
       <div className="bg-[#F7F7F7] rounded-3xl p-6 relative">
         <div className="absolute top-6 right-6 flex gap-2">
           <Button variant="ghost" size="icon" className="h-8 w-8 bg-white" onClick={handleShareClick}>
-            <Share className="h-4 w-4 stroke-[2.5px]" />
+            <CornerDownRight className="h-4 w-4 stroke-[2.5px]" />
           </Button>
           <Button variant="ghost" size="icon" className="h-8 w-8 bg-white" onClick={handleReportClick}>
-            <CornerDownRight className="h-4 w-4 stroke-[2.5px]" />
+            <ClockAlert className="h-4 w-4 stroke-[2.5px]" />
           </Button>
         </div>
         
@@ -100,9 +100,6 @@ const ReviewItem = ({
             
             <div className="md:w-3/4">
               <div className="flex items-start gap-2">
-                <Button variant="default" size="icon" className="h-6 w-6 rounded-full flex-shrink-0 mt-0.5">
-                  <CornerDownRight className="h-3 w-3 stroke-[2.5px]" />
-                </Button>
                 <p className="text-base">{review.reply.comment}</p>
               </div>
             </div>
