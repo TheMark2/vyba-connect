@@ -386,7 +386,7 @@ const ArtistReviews = ({
     };
   });
   
-  const allReviews = enhancedReviewsData ? [...enhancedReviewsData, ...moreReviewsData] : [];
+  const allReviews = enhancedReviewsData ? [...enhancedReviewsData, ...moreReviewsData] : moreReviewsData;
   
   const handleWriteReview = () => {
     toast.success("Función escribir reseña", {
@@ -398,14 +398,18 @@ const ArtistReviews = ({
   const handleVerTodas = () => {
     if (isMobile) {
       setIsBottomSheetOpen(true);
+      console.log("Abriendo BottomSheet en móvil:", isBottomSheetOpen);
     } else {
       setIsDialogOpen(true);
+      console.log("Abriendo Dialog en desktop:", isDialogOpen);
     }
   };
   
   const handleCloseBottomSheet = () => {
     setIsBottomSheetOpen(false);
   };
+  
+  console.log("Estado del BottomSheet:", isBottomSheetOpen);
   
   return <div className="mt-8 mb-16">
       <div className={`${isMobile ? 'bg-[#F7F7F7] py-8 -mx-6' : ''}`}>
@@ -473,7 +477,8 @@ const ArtistReviews = ({
         </div>
       </div>
 
-      {!isMobile && <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+      {!isMobile && (
+        <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
           <DialogContent className="sm:max-w-[700px] p-6 border-none bg-white dark:bg-vyba-dark-bg rounded-[40px] pt-8 px-8 pb-0">
             <DialogHeader className="text-left mb-6">
               <DialogTitle className="text-3xl font-black">Reseñas</DialogTitle>
@@ -489,58 +494,62 @@ const ArtistReviews = ({
               </div>
             </ScrollArea>
           </DialogContent>
-        </Dialog>}
+        </Dialog>
+      )}
 
-      {isMobile && <SwipeableBottomSheet 
-        overflowHeight={0} 
-        marginTop={0} 
-        open={isBottomSheetOpen} 
-        onChange={setIsBottomSheetOpen} 
-        fullScreen={true} 
-        topShadow={false} 
-        shadowTip={false} 
-        bodyStyle={{
-          borderTopLeftRadius: '0px',
-          borderTopRightRadius: '0px',
-          backgroundColor: '#FFFFFF',
-          height: '100vh',
-          width: '100vw',
-          overflow: 'hidden',
-          position: 'fixed',
-          top: 0,
-          left: 0
-        }}
-      >
-        <div className="px-6 pt-6 pb-20 min-h-screen">
-          <div className="flex justify-between items-center mb-6">
-            <Button 
-              variant="ghost" 
-              className="p-2 -ml-2 h-10 w-10" 
-              onClick={handleCloseBottomSheet}
-            >
-              <X className="h-6 w-6" />
-            </Button>
-          </div>
-          
-          <h2 className="text-3xl font-black mb-1">Todas las reseñas</h2>
-          <div className="flex items-baseline gap-2 mb-6">
-            <span className="text-2xl font-medium">{rating}</span>
-            <span className="text-2xl font-medium">({allReviews.length} reseñas)</span>
-          </div>
-          
-          <ScrollArea className="h-[calc(100vh-180px)]">
-            <div className="space-y-6 pb-10">
-              {allReviews.map(review => (
-                <ReviewItem 
-                  key={review.id} 
-                  review={review} 
-                  isMobileBottomSheet={true} 
-                />
-              ))}
+      {isMobile && (
+        <SwipeableBottomSheet 
+          overflowHeight={0} 
+          marginTop={0} 
+          open={isBottomSheetOpen} 
+          onChange={setIsBottomSheetOpen} 
+          fullScreen={true} 
+          topShadow={false} 
+          shadowTip={false} 
+          bodyStyle={{
+            borderTopLeftRadius: '0px',
+            borderTopRightRadius: '0px',
+            backgroundColor: '#FFFFFF',
+            height: '100vh',
+            width: '100vw',
+            overflow: 'hidden',
+            position: 'fixed',
+            top: 0,
+            left: 0,
+            zIndex: 1000
+          }}
+        >
+          <div className="px-6 pt-6 pb-20 min-h-screen">
+            <div className="flex justify-between items-center mb-6">
+              <Button 
+                variant="ghost" 
+                className="p-2 -ml-2 h-10 w-10" 
+                onClick={handleCloseBottomSheet}
+              >
+                <X className="h-6 w-6" />
+              </Button>
             </div>
-          </ScrollArea>
-        </div>
-      </SwipeableBottomSheet>}
+            
+            <h2 className="text-3xl font-black mb-1">Todas las reseñas</h2>
+            <div className="flex items-baseline gap-2 mb-6">
+              <span className="text-2xl font-medium">{rating}</span>
+              <span className="text-2xl font-medium">({allReviews.length} reseñas)</span>
+            </div>
+            
+            <ScrollArea className="h-[calc(100vh-180px)]">
+              <div className="space-y-6 pb-10">
+                {allReviews.map(review => (
+                  <ReviewItem 
+                    key={review.id} 
+                    review={review} 
+                    isMobileBottomSheet={true} 
+                  />
+                ))}
+              </div>
+            </ScrollArea>
+          </div>
+        </SwipeableBottomSheet>
+      )}
     </div>;
 };
 
