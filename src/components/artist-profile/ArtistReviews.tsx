@@ -315,7 +315,7 @@ const ArtistReviews = ({
   };
   
   return <div className="mt-8 mb-16">
-      <div className={`${isMobile ? 'bg-[#F7F7F7] px-6 py-8 -mx-6' : ''}`}>
+      <div className={`${isMobile ? 'bg-[#F7F7F7] py-8 -mx-6' : ''}`}>
         <h2 className="text-3xl font-black mb-1">Reseñas</h2>
         <div className="space-y-6">
           <div className="flex flex-wrap items-center gap-6 mb-8 justify-between">
