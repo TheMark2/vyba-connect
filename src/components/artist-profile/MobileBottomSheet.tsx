@@ -31,25 +31,23 @@ const MobileBottomSheet = ({
   onPlayPause,
   audioRef
 }: MobileBottomSheetProps) => {
+  // Altura para asegurar que la tarjeta de contacto se vea completa
+  const contactCardHeight = 200;
+  
   return (
     <SwipeableBottomSheet
-      overflowHeight={0}
+      overflowHeight={contactCardHeight}
       marginTop={64}
-      open={true}
       fullScreen={false}
       topShadow={false}
       shadowTip={false}
       bodyStyle={{ 
         borderTopLeftRadius: '24px', 
         borderTopRightRadius: '24px',
-        backgroundColor: '#FFFFFF'
+        backgroundColor: '#F7F7F7'
       }}
     >
       <div className={`px-5 pt-3 ${!currentPlaying ? 'pb-16' : 'pb-5'}`}>
-        <div className="flex justify-center w-full mb-3">
-          <div className="w-12 h-1 bg-gray-300 rounded-full"></div>
-        </div>
-        
         <ContactCard 
           artist={artistContact} 
           onContact={onContact} 
