@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from "react";
 import { Star, ClockAlert, CornerDownRight, Plus } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -340,11 +341,11 @@ const ArtistReviews = ({
                 }}
                 className="w-full"
               >
-                <CarouselContent className="-ml-2 pr-4">
+                <CarouselContent className="-ml-2 pr-6 pl-6">
                   {allReviews.slice(0, 5).map((review, index) => (
                     <CarouselItem 
                       key={review.id} 
-                      className="pl-2 w-[calc(100%-32px)] max-w-[85%] ml-6"
+                      className="pl-2 w-[calc(100%-32px)] max-w-[85%]"
                     >
                       <div className="h-full">
                         <ReviewItem review={review} isMobileCarousel={true} />
