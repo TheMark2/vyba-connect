@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from "react";
 import { Star, ClockAlert, CornerDownRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -9,6 +10,14 @@ import { toast } from "sonner";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { Marquee } from "@/components/ui/marquee";
 import SwipeableBottomSheet from "react-swipeable-bottom-sheet";
+import { 
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+  CarouselNext,
+  CarouselPrevious,
+} from "@/components/ui/carousel";
+
 interface Review {
   id: number;
   name: string;
@@ -31,9 +40,11 @@ interface ArtistReviewsProps {
   onBottomSheetChange?: (isOpen: boolean) => void;
 }
 const ReviewItem = ({
-  review
+  review,
+  isMobileCarousel = false
 }: {
   review: Review;
+  isMobileCarousel?: boolean;
 }) => {
   const isMobile = useIsMobile();
   const handleReportClick = () => {
@@ -49,6 +60,52 @@ const ReviewItem = ({
     });
   };
   const isNameLong = review.name.length > 15;
+
+  // Si es para el carrusel móvil, usamos un diseño específico
+  if (isMobileCarousel) {
+    return (
+      <div className="bg-white rounded-3xl p-6 h-full">
+        {/* Botones en la esquina superior derecha */}
+        <div className="absolute top-4 right-4 flex gap-2 z-10">
+          <Button variant="outline" size="icon" className="h-8 w-8 bg-white" onClick={handleReminderClick}>
+            <ClockAlert className="h-4 w-4 stroke-[2.5px]" />
+          </Button>
+          <Button variant="default" size="icon" className="h-8 w-8" onClick={handleReportClick}>
+            <CornerDownRight className="h-4 w-4 stroke-[2.5px]" />
+          </Button>
+        </div>
+        
+        {/* Estrellas en la parte superior */}
+        <div className="flex items-center mb-4">
+          {[...Array(5)].map((_, index) => (
+            <Star 
+              key={index} 
+              className={`h-3 w-3 ${index < review.rating ? "text-black fill-black dark:text-white dark:fill-white" : "text-gray-300 dark:text-gray-600"}`} 
+            />
+          ))}
+        </div>
+        
+        {/* Título */}
+        <h3 className="text-lg font-bold mb-3 pr-20">{review.title || "Muy buen servicio"}</h3>
+        
+        {/* Comentario */}
+        <p className="text-base mb-6">{review.comment}</p>
+        
+        {/* Información del autor en la parte inferior */}
+        <div className="flex items-center mt-auto">
+          <Avatar className="h-10 w-10 rounded-full mr-3">
+            <AvatarImage src={review.id === 1 ? "https://images.unsplash.com/photo-1580489944761-15a19d654956?q=80&w=1000" : review.id === 2 ? "https://images.unsplash.com/photo-1633332755192-727a05c4013d?q=80&w=1000" : "https://images.unsplash.com/photo-1494790108377-be9c29b29330?q=80&w=1000"} alt={review.name} />
+            <AvatarFallback className="rounded-full">{review.name.charAt(0)}</AvatarFallback>
+          </Avatar>
+          <div>
+            <p className="text-sm font-medium">{review.name}</p>
+            <p className="text-xs text-gray-500">hace {review.date}</p>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   return <div className="mb-6">
       <div className="bg-[#F7F7F7] rounded-3xl p-6 relative">
         {/* Movemos los botones arriba a la derecha en una posición fija */}
@@ -109,6 +166,7 @@ const ReviewItem = ({
         </div>}
     </div>;
 };
+
 const moreReviewsData: Review[] = [{
   id: 4,
   name: "Miguel López",
@@ -216,30 +274,61 @@ const ArtistReviews = ({
       setIsDialogOpen(true);
     }
   };
+  
   return <div className="mt-8 mb-16">
-      <h2 className="text-3xl font-black mb-1">Reseñas</h2>
-      <div className="space-y-6">
-        <div className="flex flex-wrap items-center gap-6 mb-8 justify-between">
-          <div className="flex items-baseline gap-2">
-            <span className="text-2xl font-medium">{rating}</span>
-            <span className="text-2xl font-medium">({reviews})</span>
+      <div className={`${isMobile ? 'bg-[#F7F7F7] px-6 py-8 -mx-6' : ''}`}>
+        <h2 className="text-3xl font-black mb-1">Reseñas</h2>
+        <div className="space-y-6">
+          <div className="flex flex-wrap items-center gap-6 mb-8 justify-between">
+            <div className="flex items-baseline gap-2">
+              <span className="text-2xl font-medium">{rating}</span>
+              <span className="text-2xl font-medium">({reviews})</span>
+            </div>
+            <div>
+              <Button variant="secondary" className="flex items-center gap-2" onClick={handleWriteReview}>
+                <CornerDownRight className="h-4 w-4 stroke-[2.5px]" />
+                Escribir una reseña
+              </Button>
+            </div>
           </div>
-          <div>
-            <Button variant="secondary" className="flex items-center gap-2" onClick={handleWriteReview}>
-              <CornerDownRight className="h-4 w-4 stroke-[2.5px]" />
-              Escribir una reseña
+          
+          {/* Carousel for mobile devices */}
+          {isMobile && (
+            <div className="mb-10">
+              <Carousel
+                opts={{
+                  align: "start",
+                  loop: false,
+                }}
+                className="w-full"
+              >
+                <CarouselContent className="-ml-2">
+                  {allReviews.slice(0, 5).map((review) => (
+                    <CarouselItem key={review.id} className="pl-2 md:basis-1/2 lg:basis-1/3">
+                      <div className="h-full">
+                        <ReviewItem review={review} isMobileCarousel={true} />
+                      </div>
+                    </CarouselItem>
+                  ))}
+                </CarouselContent>
+                <CarouselPrevious className="left-0" />
+                <CarouselNext className="right-0" />
+              </Carousel>
+            </div>
+          )}
+          
+          {/* Standard list for desktop */}
+          {!isMobile && (
+            <div className="space-y-6">
+              {enhancedReviewsData?.slice(0, 3).map(review => <ReviewItem key={review.id} review={review} />)}
+            </div>
+          )}
+          
+          <div className="flex justify-center mt-8">
+            <Button variant="secondary" className="px-12" onClick={handleVerTodas}>
+              Ver todas
             </Button>
           </div>
-        </div>
-        
-        <div className="space-y-6">
-          {enhancedReviewsData?.slice(0, 3).map(review => <ReviewItem key={review.id} review={review} />)}
-        </div>
-        
-        <div className="flex justify-center mt-8">
-          <Button variant="secondary" className="px-12" onClick={handleVerTodas}>
-            Ver todas
-          </Button>
         </div>
       </div>
 
