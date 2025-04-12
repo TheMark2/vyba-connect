@@ -1,9 +1,8 @@
-
 import React, { useState, useEffect } from "react";
 import { Star, ClockAlert, CornerDownRight, Plus, MessageCirclePlus, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Dialog, DialogContent, DialogHeader } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { toast } from "sonner";
@@ -474,19 +473,18 @@ const ArtistReviews = ({
       </div>
 
       {!isMobile && <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-          <DialogContent className="sm:max-w-[700px] p-6 border-none bg-white dark:bg-vyba-dark-bg rounded-[40px] pt-12 px-8 pb-0">
-            <DialogHeader className="text-left mb-6">
-              <div className="flex justify-between items-center">
-                <div>
-                  <h2 className="text-3xl font-black">Todas las reseñas</h2>
-                  <div className="flex items-center gap-2 mt-1">
-                    <p className="text-base text-gray-500">{allReviews.length} reseñas</p>
-                  </div>
+          <DialogContent className="sm:max-w-[700px] p-6 border-none bg-white dark:bg-vyba-dark-bg rounded-[40px] pt-8 px-8 pb-0">
+            <DialogHeader className="text-left mb-6 flex justify-between items-start">
+              <div>
+                <DialogTitle className="text-3xl font-black">Todas las reseñas</DialogTitle>
+                <div className="flex items-baseline gap-2 mt-1">
+                  <span className="text-2xl font-medium">{rating}</span>
+                  <span className="text-2xl font-medium">({allReviews.length})</span>
                 </div>
-                <div className="flex items-center">
-                  <Star className="w-6 h-6 mr-2 fill-black" />
-                  <span className="text-3xl font-bold">{rating}</span>
-                </div>
+              </div>
+              <div className="flex items-center">
+                <Star className="w-6 h-6 mr-2 fill-black" />
+                <span className="text-3xl font-bold">{rating}</span>
               </div>
             </DialogHeader>
 
@@ -506,7 +504,6 @@ const ArtistReviews = ({
         fullScreen={true} 
         topShadow={false} 
         shadowTip={false}
-        overlay={true}
         swipeableViewsProps={{
           resistance: true,
           animateHeight: true
@@ -515,27 +512,28 @@ const ArtistReviews = ({
           borderTopLeftRadius: '32px',
           borderTopRightRadius: '32px',
           backgroundColor: '#FFFFFF',
-          zIndex: 1000
+          zIndex: 60
         }}
       >
-        <div className="px-6 pt-12">
+        <div className="px-6 pt-6">
           <div className="flex justify-between items-center mb-6">
-            <div>
-              <h2 className="text-3xl font-black">Todas las reseñas</h2>
-              <p className="text-base text-gray-500 mt-1">{allReviews.length} reseñas</p>
+            <div className="flex items-center gap-2">
+              <Button 
+                variant="ghost" 
+                className="p-2 -ml-2 h-10 w-10" 
+                onClick={handleCloseBottomSheet}
+              >
+                <X className="h-6 w-6" />
+              </Button>
             </div>
             <div className="flex items-center">
               <Star className="w-6 h-6 mr-2 fill-black" />
               <span className="text-3xl font-bold">{rating}</span>
             </div>
-            <Button 
-              variant="ghost" 
-              className="p-2 -mr-2 h-10 w-10 absolute right-6 top-4" 
-              onClick={handleCloseBottomSheet}
-            >
-              <X className="h-6 w-6" />
-            </Button>
           </div>
+          
+          <h2 className="text-3xl font-black mb-1">Todas las reseñas</h2>
+          <div className="text-base text-gray-500 mb-6">{allReviews.length} reseñas</div>
           
           <ScrollArea className="h-[calc(100vh-180px)]">
             <div className="space-y-6 pb-10">
