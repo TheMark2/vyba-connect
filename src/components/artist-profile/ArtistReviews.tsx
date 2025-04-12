@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from "react";
 import { Star, ClockAlert, CornerDownRight, Plus, MessageCirclePlus, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -475,11 +474,17 @@ const ArtistReviews = ({
 
       {!isMobile && <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
           <DialogContent className="sm:max-w-[700px] p-6 border-none bg-white dark:bg-vyba-dark-bg rounded-[40px] pt-8 px-8 pb-0">
-            <DialogHeader className="text-left mb-6">
-              <DialogTitle className="text-3xl font-black">Reseñas</DialogTitle>
-              <div className="flex items-baseline gap-2 mt-1">
-                <span className="text-3xl font-medium">{rating}</span>
-                <span className="text-3xl font-medium">({allReviews.length})</span>
+            <DialogHeader className="text-left mb-6 flex justify-between items-start">
+              <div>
+                <DialogTitle className="text-3xl font-black">Todas las reseñas</DialogTitle>
+                <div className="flex items-baseline gap-2 mt-1">
+                  <span className="text-2xl font-medium">{rating}</span>
+                  <span className="text-2xl font-medium">({allReviews.length})</span>
+                </div>
+              </div>
+              <div className="flex items-center">
+                <Star className="w-6 h-6 mr-2 fill-black" />
+                <span className="text-3xl font-bold">{rating}</span>
               </div>
             </DialogHeader>
 
@@ -498,29 +503,37 @@ const ArtistReviews = ({
         onChange={setIsBottomSheetOpen} 
         fullScreen={true} 
         topShadow={false} 
-        shadowTip={false} 
+        shadowTip={false}
+        swipeableViewsProps={{
+          resistance: true,
+          animateHeight: true
+        }} 
         bodyStyle={{
-          borderTopLeftRadius: '0px',
-          borderTopRightRadius: '0px',
-          backgroundColor: '#FFFFFF'
+          borderTopLeftRadius: '32px',
+          borderTopRightRadius: '32px',
+          backgroundColor: '#FFFFFF',
+          zIndex: 60
         }}
       >
         <div className="px-6 pt-6">
           <div className="flex justify-between items-center mb-6">
-            <Button 
-              variant="ghost" 
-              className="p-2 -ml-2 h-10 w-10" 
-              onClick={handleCloseBottomSheet}
-            >
-              <X className="h-6 w-6" />
-            </Button>
+            <div className="flex items-center gap-2">
+              <Button 
+                variant="ghost" 
+                className="p-2 -ml-2 h-10 w-10" 
+                onClick={handleCloseBottomSheet}
+              >
+                <X className="h-6 w-6" />
+              </Button>
+            </div>
+            <div className="flex items-center">
+              <Star className="w-6 h-6 mr-2 fill-black" />
+              <span className="text-3xl font-bold">{rating}</span>
+            </div>
           </div>
           
           <h2 className="text-3xl font-black mb-1">Todas las reseñas</h2>
-          <div className="flex items-baseline gap-2 mb-6">
-            <span className="text-2xl font-medium">{rating}</span>
-            <span className="text-2xl font-medium">({allReviews.length} reseñas)</span>
-          </div>
+          <div className="text-base text-gray-500 mb-6">{allReviews.length} reseñas</div>
           
           <ScrollArea className="h-[calc(100vh-180px)]">
             <div className="space-y-6 pb-10">
