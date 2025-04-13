@@ -38,45 +38,47 @@ const RecommendedArtists = ({ artists }: RecommendedArtistsProps) => {
         <h2 className="text-3xl font-black mb-6">Recomendados</h2>
       </div>
       
-      {/* Carrusel a todo ancho en móvil */}
-      <div className={`relative ${isMobile ? 'w-full' : 'max-w-7xl mx-auto'} overflow-hidden`}>
-        <Carousel
-          className="w-full"
-          opts={{
-            align: "center",
-            loop: true,
-            skipSnaps: false,
-            dragFree: true,
-          }}
-        >
-          <CarouselContent className={`${isMobile ? '-ml-4 pl-4' : '-ml-6'}`}>
-            {artists.map((artist) => (
-              <CarouselItem
-                key={artist.id}
-                className={`${isMobile ? 'pl-4 pr-2' : 'pl-6'} ${isMobile ? 'basis-4/5' : 'basis-1/3'}`}
-              >
-                <div className="w-full">
-                  <ArtistProfileCard 
-                    name={artist.name}
-                    type={artist.type}
-                    description={artist.description}
-                    images={artist.images}
-                    rating={artist.rating}
-                    priceRange={artist.priceRange}
-                    isFavorite={artist.isFavorite}
-                    onClick={() => navigate(`/artista/${artist.id}`)} 
-                    onFavoriteToggle={() => {
-                      toast.success(artist.isFavorite ? "Eliminado de favoritos" : "Añadido a favoritos", {
-                        icon: artist.isFavorite ? "👋" : "❤️",
-                        position: "bottom-center"
-                      });
-                    }} 
-                  />
-                </div>
-              </CarouselItem>
-            ))}
-          </CarouselContent>
-        </Carousel>
+      {/* Carrusel que se extiende a todo el ancho en móvil */}
+      <div className={isMobile ? 'relative w-full' : 'relative max-w-7xl mx-auto'}>
+        <div className={isMobile ? 'mx-[-1.5rem]' : ''}>
+          <Carousel
+            className="w-full"
+            opts={{
+              align: "center",
+              loop: true,
+              skipSnaps: false,
+              dragFree: true,
+            }}
+          >
+            <CarouselContent className={`${isMobile ? '-ml-1 pl-6' : '-ml-6'}`}>
+              {artists.map((artist) => (
+                <CarouselItem
+                  key={artist.id}
+                  className={`${isMobile ? 'pl-2 pr-2' : 'pl-6'} ${isMobile ? 'basis-4/5' : 'basis-1/3'}`}
+                >
+                  <div className="w-full">
+                    <ArtistProfileCard 
+                      name={artist.name}
+                      type={artist.type}
+                      description={artist.description}
+                      images={artist.images}
+                      rating={artist.rating}
+                      priceRange={artist.priceRange}
+                      isFavorite={artist.isFavorite}
+                      onClick={() => navigate(`/artista/${artist.id}`)} 
+                      onFavoriteToggle={() => {
+                        toast.success(artist.isFavorite ? "Eliminado de favoritos" : "Añadido a favoritos", {
+                          icon: artist.isFavorite ? "👋" : "❤️",
+                          position: "bottom-center"
+                        });
+                      }} 
+                    />
+                  </div>
+                </CarouselItem>
+              ))}
+            </CarouselContent>
+          </Carousel>
+        </div>
       </div>
     </div>
   );
