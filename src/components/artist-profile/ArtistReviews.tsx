@@ -10,6 +10,7 @@ import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { Marquee } from "@/components/ui/marquee";
 import SwipeableBottomSheet from "react-swipeable-bottom-sheet";
 import { Carousel, CarouselContent, CarouselItem } from "@/components/ui/carousel";
+
 interface Review {
   id: number;
   name: string;
@@ -24,6 +25,7 @@ interface Review {
     comment: string;
   };
 }
+
 interface ArtistReviewsProps {
   rating: number;
   reviews: number;
@@ -31,6 +33,7 @@ interface ArtistReviewsProps {
   reviewsData?: Review[];
   onBottomSheetChange?: (isOpen: boolean) => void;
 }
+
 const ReviewItem = ({
   review,
   isMobileCarousel = false,
@@ -42,23 +45,27 @@ const ReviewItem = ({
 }) => {
   const isMobile = useIsMobile();
   const [expanded, setExpanded] = useState(false);
+
   const handleReportClick = () => {
     toast.info("Reseña reportada", {
       description: "Gracias por informarnos",
       position: "bottom-center"
     });
   };
+
   const handleReminderClick = () => {
     toast.info("Revisaremos esta reseña pronto", {
       description: "Gracias por ayudarnos a mejorar",
       position: "bottom-center"
     });
   };
+
   const isNameLong = review.name.length > 15;
   const wordLimit = 20;
   const words = review.comment.split(' ');
   const isTextLong = words.length > wordLimit && isMobile;
   const displayText = isTextLong && !expanded ? words.slice(0, wordLimit).join(' ') + '...' : review.comment;
+
   if (isMobileBottomSheet) {
     return <div className="mb-6">
         <div className="bg-[#F8F8F8] rounded-3xl p-6 relative">
@@ -113,6 +120,7 @@ const ReviewItem = ({
           </div>}
       </div>;
   }
+
   if (isMobileCarousel) {
     return <div className="bg-white rounded-3xl p-6 h-full flex flex-col justify-between">
         <div className="absolute top-4 right-4 flex gap-2 z-10">
@@ -151,6 +159,7 @@ const ReviewItem = ({
         </div>
       </div>;
   }
+
   return <div className="mb-6">
       <div className="bg-[#F7F7F7] rounded-3xl p-6 relative">
         <div className="absolute top-4 right-4 flex gap-2 z-10">
@@ -206,57 +215,65 @@ const ReviewItem = ({
         </div>}
     </div>;
 };
-const moreReviewsData: Review[] = [{
-  id: 4,
-  name: "Miguel López",
-  date: "2 semanas",
-  rating: 5,
-  badges: ["Bodas", "Eventos corporativos"],
-  comment: "¡Increíble actuación! Todos mis invitados quedaron encantados con su música. Definitivamente lo volvería a contratar para futuros eventos.",
-  title: "Excelente profesional",
-  reply: {
-    name: "Antonia Pedragosa",
+
+const moreReviewsData: Review[] = [
+  {
+    id: 4,
+    name: "Miguel López",
     date: "2 semanas",
-    comment: "Muchas gracias por tus amables palabras, Miguel. Fue un placer amenizar tu evento. ¡Espero volver a trabajar contigo pronto!"
-  }
-}, {
-  id: 5,
-  name: "Laura Gómez",
-  date: "1 mes",
-  rating: 4,
-  badges: ["Bodas", "Fiestas privadas"],
-  comment: "Muy profesional y puntual. La música fue perfecta para nuestra celebración de aniversario. Recomendado.",
-  title: "Muy profesional"
-}, {
-  id: 6,
-  name: "Carlos Martínez",
-  date: "2 meses",
-  rating: 5,
-  badges: ["Eventos corporativos"],
-  comment: "Contratar a este artista fue la mejor decisión para nuestro evento corporativo. Su repertorio se adaptó perfectamente a nuestras necesidades.",
-  title: "Repertorio adaptado a nuestras necesidades",
-  reply: {
-    name: "Antonia Pedragosa",
+    rating: 5,
+    badges: ["Bodas", "Eventos corporativos"],
+    comment: "¡Increíble actuación! Todos mis invitados quedaron encantados con su música. Definitivamente lo volvería a contratar para futuros eventos.",
+    title: "Excelente profesional",
+    reply: {
+      name: "Antonia Pedragosa",
+      date: "2 semanas",
+      comment: "Muchas gracias por tus amables palabras, Miguel. Fue un placer amenizar tu evento. ¡Espero volver a trabajar contigo pronto!"
+    }
+  },
+  {
+    id: 5,
+    name: "Laura Gómez",
+    date: "1 mes",
+    rating: 4,
+    badges: ["Bodas", "Fiestas privadas"],
+    comment: "Muy profesional y puntual. La música fue perfecta para nuestra celebración de aniversario. Recomendado.",
+    title: "Muy profesional"
+  },
+  {
+    id: 6,
+    name: "Carlos Martínez",
     date: "2 meses",
-    comment: "Gracias Carlos, me alegra que quedaran satisfechos con mi servicio. Fue un placer trabajar en su evento corporativo."
+    rating: 5,
+    badges: ["Eventos corporativos"],
+    comment: "Contratar a este artista fue la mejor decisión para nuestro evento corporativo. Su repertorio se adaptó perfectamente a nuestras necesidades.",
+    title: "Repertorio adaptado a nuestras necesidades",
+    reply: {
+      name: "Antonia Pedragosa",
+      date: "2 meses",
+      comment: "Gracias Carlos, me alegra que quedaran satisfechos con mi servicio. Fue un placer trabajar en su evento corporativo."
+    }
+  },
+  {
+    id: 7,
+    name: "Sofía Rodríguez",
+    date: "3 meses",
+    rating: 4,
+    badges: ["Bodas"],
+    comment: "Nuestra boda fue especial gracias a su música. El ambiente que creó fue exactamente lo que buscábamos.",
+    title: "Creó el ambiente perfecto"
+  },
+  {
+    id: 8,
+    name: "David García",
+    date: "4 meses",
+    rating: 5,
+    badges: ["Fiestas privadas"],
+    comment: "Un profesional excepcional. Su energía contagió a todos los invitados y la fiesta fue un éxito rotundo.",
+    title: "Energía contagiosa"
   }
-}, {
-  id: 7,
-  name: "Sofía Rodríguez",
-  date: "3 meses",
-  rating: 4,
-  badges: ["Bodas"],
-  comment: "Nuestra boda fue especial gracias a su música. El ambiente que creó fue exactamente lo que buscábamos.",
-  title: "Creó el ambiente perfecto"
-}, {
-  id: 8,
-  name: "David García",
-  date: "4 meses",
-  rating: 5,
-  badges: ["Fiestas privadas"],
-  comment: "Un profesional excepcional. Su energía contagió a todos los invitados y la fiesta fue un éxito rotundo.",
-  title: "Energía contagiosa"
-}];
+];
+
 const ArtistReviews = ({
   rating,
   reviews,
@@ -267,11 +284,13 @@ const ArtistReviews = ({
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [isBottomSheetOpen, setIsBottomSheetOpen] = useState(false);
   const isMobile = useIsMobile();
+
   useEffect(() => {
     if (onBottomSheetChange) {
       onBottomSheetChange(isBottomSheetOpen);
     }
   }, [isBottomSheetOpen, onBottomSheetChange]);
+
   useEffect(() => {
     const handleBeforeUnload = () => {
       setIsDialogOpen(false);
@@ -282,6 +301,7 @@ const ArtistReviews = ({
       window.removeEventListener('beforeunload', handleBeforeUnload);
     };
   }, []);
+
   const enhancedReviewsData = reviewsData?.map(review => {
     if (review.id === 1) {
       return {
@@ -299,13 +319,16 @@ const ArtistReviews = ({
       title: review.id === 2 ? "Excelente ambiente" : "Gran profesional"
     };
   });
+
   const allReviews = enhancedReviewsData ? [...enhancedReviewsData, ...moreReviewsData] : [];
+
   const handleWriteReview = () => {
     toast.success("Función escribir reseña", {
       description: "Esta función estará disponible próximamente",
       position: "bottom-center"
     });
   };
+
   const handleVerTodas = () => {
     if (isMobile) {
       setIsBottomSheetOpen(true);
@@ -313,9 +336,11 @@ const ArtistReviews = ({
       setIsDialogOpen(true);
     }
   };
+
   const handleCloseBottomSheet = () => {
     setIsBottomSheetOpen(false);
   };
+
   return <div className="mt-8 mb-16">
       <div className={`${isMobile ? 'bg-[#F7F7F7] py-8 -mx-6' : ''}`}>
         <h2 className="text-3xl font-black mb-1 px-6 sm:px-0">Reseñas</h2>
@@ -366,9 +391,12 @@ const ArtistReviews = ({
           <DialogContent className="sm:max-w-[700px] p-6 border-none bg-white dark:bg-vyba-dark-bg rounded-[40px] pt-8 px-8 pb-0">
             <DialogHeader className="text-left mb-6 mt-10">
               <DialogTitle className="text-3xl font-black">Reseñas</DialogTitle>
-              <div className="flex items-baseline gap-2 mt-1">
-                <span className="text-3xl font-medium">{rating}</span>
-                <span className="text-3xl font-medium">({allReviews.length})</span>
+              <div className="flex justify-between items-center mt-1">
+                <div className="text-lg text-gray-600">{allReviews.length} reseñas</div>
+                <div className="flex items-center gap-1">
+                  <Star className="h-5 w-5 fill-black text-black dark:fill-white dark:text-white" />
+                  <span className="text-xl font-medium">{rating}</span>
+                </div>
               </div>
             </DialogHeader>
 
@@ -380,10 +408,11 @@ const ArtistReviews = ({
           </DialogContent>
         </Dialog>}
 
-      {isMobile && <SwipeableBottomSheet overflowHeight={0} marginTop={0} open={isBottomSheetOpen} onChange={setIsBottomSheetOpen} fullScreen={true} topShadow={false} shadowTip={false} bodyStyle={{
+      {isMobile && <SwipeableBottomSheet overlay={true} overflowHeight={0} marginTop={0} open={isBottomSheetOpen} onChange={setIsBottomSheetOpen} fullScreen={true} topShadow={false} shadowTip={false} bodyStyle={{
       borderTopLeftRadius: '0px',
       borderTopRightRadius: '0px',
-      backgroundColor: '#FFFFFF'
+      backgroundColor: '#FFFFFF',
+      zIndex: 100
     }}>
         <div className="px-6 pt-6">
           <div className="flex justify-between items-center mb-6">
@@ -393,9 +422,12 @@ const ArtistReviews = ({
           </div>
           
           <h2 className="text-3xl font-black mb-1">Todas las reseñas</h2>
-          <div className="flex items-baseline gap-2 mb-6">
-            <span className="text-2xl font-medium">{rating}</span>
-            <span className="text-2xl font-medium">({allReviews.length} reseñas)</span>
+          <div className="flex justify-between items-center mb-6">
+            <div className="text-lg text-gray-600">{allReviews.length} reseñas</div>
+            <div className="flex items-center gap-1">
+              <Star className="h-5 w-5 fill-black text-black dark:fill-white dark:text-white" />
+              <span className="text-xl font-medium">{rating}</span>
+            </div>
           </div>
           
           <ScrollArea className="h-[calc(100vh-180px)]">
@@ -407,4 +439,5 @@ const ArtistReviews = ({
       </SwipeableBottomSheet>}
     </div>;
 };
+
 export default ArtistReviews;
