@@ -26,12 +26,12 @@ const DrawerContent = React.forwardRef<React.ElementRef<typeof DrawerPrimitive.C
   <DrawerPrimitive.Content 
     ref={ref} 
     className={cn(
-      "fixed inset-x-0 bottom-0 z-50 flex h-auto flex-col rounded-t-[10px] border bg-background pt-20 px-6",
+      "fixed inset-x-0 bottom-0 z-50 flex h-auto flex-col rounded-t-[10px] border bg-background px-6",
       className
     )} 
     {...props}
   >
-    <DrawerPrimitive.Close className="absolute top-8 right-6 z-50 rounded-full p-2 hover:bg-muted/20">
+    <DrawerPrimitive.Close className="absolute top-8 left-6 z-50 rounded-full p-2 hover:bg-muted/20">
       <X className="h-6 w-6" />
       <span className="sr-only">Close</span>
     </DrawerPrimitive.Close>
