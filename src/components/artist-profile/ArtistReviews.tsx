@@ -405,7 +405,7 @@ const ArtistReviews = ({
           className="p-0"
         >
           <div className="px-6 pt-6">
-            <h2 className="text-3xl font-black mb-1">Todas las reseñas</h2>
+            <h2 className="text-3xl font-black mb-1 mt-6">Todas las reseñas</h2>
             <div className="flex justify-between items-center mb-6">
               <div className="text-lg text-gray-600">{allReviews.length} reseñas</div>
               <div className="flex items-center gap-1">
