@@ -1,3 +1,4 @@
+
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Dialog, DialogContent, DialogHeader } from "@/components/ui/dialog";
@@ -7,10 +8,12 @@ import { Mail, Loader2, ArrowLeft } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { toast } from "sonner";
 import { useIsMobile } from "@/hooks/use-mobile";
+
 interface LoginDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
 }
+
 const LoginDialog = ({
   open,
   onOpenChange
@@ -21,9 +24,11 @@ const LoginDialog = ({
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+
   const handleEmailLogin = () => {
     setShowEmailForm(true);
   };
+
   const handleSocialLogin = (provider: string) => {
     setIsLoading(true);
 
@@ -38,6 +43,7 @@ const LoginDialog = ({
       navigate("/artists");
     }, 1500);
   };
+
   const handleSubmitEmailLogin = (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
@@ -53,9 +59,11 @@ const LoginDialog = ({
       navigate("/artists");
     }, 1500);
   };
+
   const handleBackToOptions = () => {
     setShowEmailForm(false);
   };
+
   const dialogContent = <>
       <div className="flex flex-col space-y-2 mt-10">
         <div className="text-2xl font-black">
@@ -128,11 +136,13 @@ const LoginDialog = ({
           </form>
         </div>}
     </>;
+
   if (isMobile) {
-    return <BottomDrawer open={open} onOpenChange={onOpenChange} className="pt-8 pb-6 px-6">
+    return <BottomDrawer open={open} onOpenChange={onOpenChange} className="pb-6 px-6 pt-16">
         {dialogContent}
       </BottomDrawer>;
   }
+
   return <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-md">
         <DialogHeader>
@@ -141,4 +151,5 @@ const LoginDialog = ({
       </DialogContent>
     </Dialog>;
 };
+
 export default LoginDialog;

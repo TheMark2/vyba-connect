@@ -2,6 +2,7 @@
 import React, { useRef, useEffect } from "react";
 import ContactCard from "./ContactCard";
 import AudioPlayer from "./AudioPlayer";
+import { BottomDrawer } from "@/components/ui/bottom-drawer";
 import { cn } from "@/lib/utils";
 
 interface MobileBottomSheetProps {
@@ -32,8 +33,8 @@ const MobileBottomSheet = ({
   audioRef
 }: MobileBottomSheetProps) => {
   return (
-    <div className="fixed bottom-0 left-0 right-0 bg-white z-50 shadow-lg rounded-t-3xl border-t border-gray-200">
-      <div className="px-4 pt-4 pb-6 relative">
+    <BottomDrawer open={true} onOpenChange={() => {}} className="px-4 pt-16 pb-6">
+      <div className="relative">
         <ContactCard 
           artist={artistContact} 
           onContact={onContact} 
@@ -55,7 +56,7 @@ const MobileBottomSheet = ({
           </div>
         )}
       </div>
-    </div>
+    </BottomDrawer>
   );
 };
 
