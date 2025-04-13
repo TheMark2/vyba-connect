@@ -41,8 +41,7 @@ const RecommendedArtists = ({
           <Carousel className="w-full" opts={{
           align: "center",
           loop: false,
-          skipSnaps: false,
-          dragFree: true
+          skipSnaps: false
         }}>
             <CarouselContent className={`${isMobile ? '-ml-1 pl-6' : '-ml-6'}`}>
               {artists.map(artist => <CarouselItem key={artist.id} className={`${isMobile ? 'pl-2 pr-2' : 'pl-6'} ${isMobile ? 'basis-4/5' : 'basis-1/3'}`}>
