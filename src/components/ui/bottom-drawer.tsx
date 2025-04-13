@@ -4,9 +4,11 @@ import {
   Drawer,
   DrawerContent,
   DrawerPortal,
-  DrawerOverlay
+  DrawerOverlay,
+  DrawerClose
 } from "@/components/ui/drawer";
 import { cn } from "@/lib/utils";
+import { X } from "lucide-react";
 
 interface BottomDrawerProps {
   open: boolean;
@@ -14,6 +16,7 @@ interface BottomDrawerProps {
   children: React.ReactNode;
   className?: string;
   showOverlay?: boolean;
+  showCloseButton?: boolean;
 }
 
 const BottomDrawer = forwardRef<HTMLDivElement, BottomDrawerProps>(
@@ -22,7 +25,8 @@ const BottomDrawer = forwardRef<HTMLDivElement, BottomDrawerProps>(
     onOpenChange, 
     children, 
     className, 
-    showOverlay = true
+    showOverlay = true,
+    showCloseButton = true
   }, ref) => {
     return (
       <Drawer
@@ -36,7 +40,13 @@ const BottomDrawer = forwardRef<HTMLDivElement, BottomDrawerProps>(
             "fixed bottom-0 left-0 right-0 z-50 bg-background rounded-t-[24px] border-t border-border",
             className
           )}>
-            <div ref={ref} className="h-full w-full">
+            <div ref={ref} className="h-full w-full relative">
+              {showCloseButton && (
+                <DrawerClose className="absolute left-6 top-8 rounded-full p-2 hover:bg-muted/20 z-50">
+                  <X className="h-6 w-6" />
+                  <span className="sr-only">Cerrar</span>
+                </DrawerClose>
+              )}
               {children}
             </div>
           </DrawerContent>
