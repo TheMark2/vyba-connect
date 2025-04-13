@@ -5,10 +5,8 @@ import {
   DrawerContent,
   DrawerPortal,
   DrawerOverlay,
-  DrawerClose
 } from "@/components/ui/drawer";
 import { cn } from "@/lib/utils";
-import { X } from "lucide-react";
 
 interface BottomDrawerProps {
   open: boolean;
@@ -38,10 +36,6 @@ const BottomDrawer = forwardRef<HTMLDivElement, BottomDrawerProps>(
             "fixed bottom-0 left-0 right-0 z-50 bg-background rounded-t-[24px] border-t border-border",
             className
           )}>
-            <DrawerClose className="absolute left-6 top-8 z-50 rounded-full p-2 hover:bg-muted/20">
-              <X className="h-5 w-5" />
-              <span className="sr-only">Close</span>
-            </DrawerClose>
             <div ref={ref} className="h-full w-full">
               {children}
             </div>

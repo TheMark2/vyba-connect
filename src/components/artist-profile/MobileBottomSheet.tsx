@@ -1,9 +1,11 @@
 
-import React, { useRef, useEffect } from "react";
+import React from "react";
 import ContactCard from "./ContactCard";
 import AudioPlayer from "./AudioPlayer";
 import { BottomDrawer } from "@/components/ui/bottom-drawer";
 import { cn } from "@/lib/utils";
+import { X } from "lucide-react";
+import { DrawerClose } from "@/components/ui/drawer";
 
 interface MobileBottomSheetProps {
   artistContact: {
@@ -20,6 +22,7 @@ interface MobileBottomSheetProps {
   isAudioPlaying: boolean;
   onPlayPause: () => void;
   audioRef: React.RefObject<HTMLAudioElement>;
+  onClose?: () => void;
 }
 
 const MobileBottomSheet = ({
@@ -30,11 +33,20 @@ const MobileBottomSheet = ({
   currentPlaying,
   isAudioPlaying,
   onPlayPause,
-  audioRef
+  audioRef,
+  onClose
 }: MobileBottomSheetProps) => {
   return (
-    <BottomDrawer open={true} onOpenChange={() => {}} className="px-4 pt-16 pb-6">
+    <BottomDrawer open={true} onOpenChange={onClose || (() => {})} className="px-4 pt-16 pb-6">
       <div className="relative">
+        <DrawerClose 
+          className="absolute left-0 top-[-40px] z-50 rounded-full p-2 hover:bg-muted/20"
+          onClick={onClose}
+        >
+          <X className="h-5 w-5" />
+          <span className="sr-only">Close</span>
+        </DrawerClose>
+        
         <ContactCard 
           artist={artistContact} 
           onContact={onContact} 
