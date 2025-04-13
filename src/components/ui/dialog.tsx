@@ -1,3 +1,4 @@
+
 import * as React from "react"
 import * as DialogPrimitive from "@radix-ui/react-dialog"
 import { X } from "lucide-react"
@@ -48,6 +49,7 @@ const DialogContent = React.forwardRef<
           isMobile ? 
             "max-h-[85vh] bottom-0 top-auto rounded-t-[32px] border-none pb-24 pt-8 translate-y-0 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:slide-out-to-bottom-full data-[state=open]:slide-in-from-bottom-full" : 
             "rounded-[40px]",
+          "pt-16", // Remove the top padding to start content right below the close button
           className
         )}
         {...props}
@@ -133,3 +135,4 @@ export {
   DialogTitle,
   DialogDescription,
 }
+
