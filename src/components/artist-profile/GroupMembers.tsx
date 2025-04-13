@@ -1,4 +1,3 @@
-
 import React, { useEffect, useState } from "react";
 import { Badge as UIBadge } from "@/components/ui/badge";
 import Image from "@/components/ui/image";
@@ -28,23 +27,17 @@ const GroupMembers = ({
     const handleResize = () => {
       setWindowWidth(window.innerWidth);
 
-      // Determina si usamos carrusel basado en el ancho de la ventana y cantidad de miembros
       if (window.innerWidth < 768) {
-        // Móvil siempre carrusel
         setUseCarousel(true);
       } else if (window.innerWidth < 1024) {
-        // Tablet: carrusel si hay más de 2 miembros
         setUseCarousel(members.length > 2);
       } else if (window.innerWidth < 1280) {
-        // Desktop pequeño: carrusel si hay más de 3 miembros
         setUseCarousel(members.length > 3);
       } else {
-        // Desktop grande: carrusel si hay más de 4 miembros
         setUseCarousel(members.length > 4);
       }
     };
 
-    // Ejecutar al montar y cuando cambia el tamaño de la ventana
     handleResize();
     window.addEventListener("resize", handleResize);
     return () => {
@@ -58,7 +51,6 @@ const GroupMembers = ({
     return <div className="mt-8 mb-12">
         <h2 className="text-3xl font-black mb-6">Integrantes del grupo</h2>
         
-        {/* Carrusel que se extiende a todo el ancho en móvil */}
         <div className={isMobile ? 'relative w-full' : 'relative w-full'}>
           <div className={isMobile ? 'mx-[-1.5rem]' : ''}>
             <Carousel className="w-full" opts={{
@@ -76,7 +68,7 @@ const GroupMembers = ({
                       ${index === members.length - 1 ? 'mr-6' : ''}
                     `}
                   >
-                    <div className="w-full">
+                    <div className="w-full h-full">
                       <MemberCard member={member} />
                     </div>
                   </CarouselItem>
@@ -88,18 +80,16 @@ const GroupMembers = ({
       </div>;
   }
 
-  // Grid layout para pocos miembros en pantallas grandes
   return <div className="mt-8 mb-12">
       <h2 className="text-3xl font-black mb-6">Integrantes del grupo</h2>
       <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-        {members.map(member => <div key={member.id} className="aspect-square w-full max-w-[300px]">
+        {members.map(member => <div key={member.id} className="h-full max-w-[300px]">
             <MemberCard member={member} />
           </div>)}
       </div>
     </div>;
 };
 
-// Componente tarjeta para evitar duplicación de código
 const MemberCard = ({
   member
 }: {
@@ -111,7 +101,7 @@ const MemberCard = ({
             <div className="flex flex-col justify-between h-full p-6">
               <span className="text-white font-bold text-xl">{member.name}</span>
               <div className="flex flex-wrap gap-2">
-                {member.roles.map((role, index) => <UIBadge key={index} className="bg-white/30 backdrop-blur-md text-white px-4 py-2 rounded-full">
+                {member.roles.map((role, index) => <UIBadge key={index} className="bg-white/30 backdrop-blur-md text-white px-4 py-2 rounded-full border-0 hover:bg-white/30">
                     {role}
                   </UIBadge>)}
               </div>
@@ -121,7 +111,7 @@ const MemberCard = ({
         </div> : <Card className="h-full w-full p-6 bg-[#F7F7F7] flex flex-col justify-between rounded-[28px] border-0">
           <span className="font-bold text-xl">{member.name}</span>
           <div className="flex flex-wrap gap-2">
-            {member.roles.map((role, index) => <UIBadge key={index} className="bg-white/80 backdrop-blur-md text-black px-4 py-2 rounded-full">
+            {member.roles.map((role, index) => <UIBadge key={index} className="bg-white/80 backdrop-blur-md text-black px-4 py-2 rounded-full border-0 hover:bg-white/80">
                 {role}
               </UIBadge>)}
           </div>
