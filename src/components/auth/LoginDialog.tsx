@@ -69,7 +69,7 @@ const LoginDialog = ({
         </div>}
       
       <div className={cn("flex flex-col space-y-2")}>
-        {!isMobile && <div className="text-2xl font-black">
+        {!isMobile && <div className="text-3xl font-black">
             Inicia sesión para continuar
           </div>}
         <p className="text-muted-foreground mb-6">
