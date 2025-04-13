@@ -10,7 +10,6 @@ import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { Marquee } from "@/components/ui/marquee";
 import SwipeableBottomSheet from "react-swipeable-bottom-sheet";
 import { Carousel, CarouselContent, CarouselItem } from "@/components/ui/carousel";
-
 interface Review {
   id: number;
   name: string;
@@ -25,7 +24,6 @@ interface Review {
     comment: string;
   };
 }
-
 interface ArtistReviewsProps {
   rating: number;
   reviews: number;
@@ -33,7 +31,6 @@ interface ArtistReviewsProps {
   reviewsData?: Review[];
   onBottomSheetChange?: (isOpen: boolean) => void;
 }
-
 const ReviewItem = ({
   review,
   isMobileCarousel = false,
@@ -209,7 +206,6 @@ const ReviewItem = ({
         </div>}
     </div>;
 };
-
 const moreReviewsData: Review[] = [{
   id: 4,
   name: "Miguel López",
@@ -261,7 +257,6 @@ const moreReviewsData: Review[] = [{
   comment: "Un profesional excepcional. Su energía contagió a todos los invitados y la fiesta fue un éxito rotundo.",
   title: "Energía contagiosa"
 }];
-
 const ArtistReviews = ({
   rating,
   reviews,
@@ -369,7 +364,7 @@ const ArtistReviews = ({
 
       {!isMobile && <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
           <DialogContent className="sm:max-w-[700px] p-6 border-none bg-white dark:bg-vyba-dark-bg rounded-[40px] pt-8 px-8 pb-0">
-            <DialogHeader className="text-left mb-6 mt-12">
+            <DialogHeader className="text-left mb-2 mt-12">
               <DialogTitle className="text-3xl font-black">Reseñas</DialogTitle>
               <div className="flex justify-between items-center mt-1">
                 <div className="text-lg text-gray-600">{allReviews.length} reseñas</div>
@@ -421,5 +416,4 @@ const ArtistReviews = ({
       </SwipeableBottomSheet>}
     </div>;
 };
-
 export default ArtistReviews;
