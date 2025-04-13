@@ -23,48 +23,28 @@ const ImageGalleryDialog = ({
 }: ImageGalleryDialogProps) => {
   const isMobile = useIsMobile();
   
-  return (
-    <Dialog open={isOpen} onOpenChange={open => !open && onClose()}>
-      <DialogContent className={cn(
-        "p-0 w-full h-full max-w-none max-h-screen bg-white dark:bg-black text-black dark:text-white", 
-        isMobile ? "rounded-none" : "rounded-none"
-      )}>
-        <DialogClose className="absolute left-6 top-8 z-50 rounded-full p-2 hover:bg-muted/20">
-          <X className="h-5 w-5" />
-          <span className="sr-only">Close</span>
-        </DialogClose>
+  return <Dialog open={isOpen} onOpenChange={open => !open && onClose()}>
+      <DialogContent className={cn("p-0 w-full h-full max-w-none max-h-screen bg-white dark:bg-black text-black dark:text-white", isMobile ? "rounded-none" : "rounded-none")}>
         
         <div className="h-full w-full overflow-y-auto p-8 pt-16">
           <div className="flex flex-wrap gap-2 justify-center">
-            {images.map((image, index) => (
-              <div 
-                key={index} 
-                className="mb-2" 
-                id={index === activeImageIndex ? "active-image" : undefined} 
-                ref={el => {
-                  if (el && index === activeImageIndex) {
-                    setTimeout(() => {
-                      el.scrollIntoView({
-                        behavior: 'smooth',
-                        block: 'center'
-                      });
-                    }, 100);
-                  }
-                }}
-              >
+            {images.map((image, index) => <div key={index} className="mb-2" id={index === activeImageIndex ? "active-image" : undefined} ref={el => {
+            if (el && index === activeImageIndex) {
+              setTimeout(() => {
+                el.scrollIntoView({
+                  behavior: 'smooth',
+                  block: 'center'
+                });
+              }, 100);
+            }
+          }}>
                 <div className="rounded-3xl overflow-hidden">
-                  <img 
-                    src={image} 
-                    alt={`Imagen ${index + 1}`} 
-                    className="object-contain rounded-3xl" 
-                    style={{
-                      maxWidth: isMobile ? '85vw' : '70vw',
-                      maxHeight: isMobile ? '85vh' : '70vh'
-                    }} 
-                  />
+                  <img src={image} alt={`Imagen ${index + 1}`} className="object-contain rounded-3xl" style={{
+                maxWidth: isMobile ? '85vw' : '70vw',
+                maxHeight: isMobile ? '85vh' : '70vh'
+              }} />
                 </div>
-              </div>
-            ))}
+              </div>)}
           </div>
         </div>
         
@@ -74,8 +54,8 @@ const ImageGalleryDialog = ({
           </Button>
         </div>
       </DialogContent>
-    </Dialog>
-  );
+    </Dialog>;
 };
 
 export default ImageGalleryDialog;
+

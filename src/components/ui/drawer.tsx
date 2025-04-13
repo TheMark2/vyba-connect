@@ -1,7 +1,7 @@
-
 import * as React from "react";
 import { Drawer as DrawerPrimitive } from "vaul";
 import { cn } from "@/lib/utils";
+import { X } from "lucide-react";
 
 const Drawer = ({
   shouldScaleBackground = true,
@@ -31,6 +31,10 @@ const DrawerContent = React.forwardRef<React.ElementRef<typeof DrawerPrimitive.C
     )} 
     {...props}
   >
+    <DrawerPrimitive.Close className="absolute top-8 right-6 z-50 rounded-full p-2 hover:bg-muted/20">
+      <X className="h-6 w-6" />
+      <span className="sr-only">Close</span>
+    </DrawerPrimitive.Close>
     {children}
   </DrawerPrimitive.Content>
 ));
