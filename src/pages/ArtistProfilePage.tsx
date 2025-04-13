@@ -304,7 +304,7 @@ const ArtistProfilePage = () => {
         <RecommendedArtists artists={recommendedArtists} />
       </div>
       
-      {isMobile && showMobileBottomSheet && !isReviewsBottomSheetOpen && (
+      {isMobile && showMobileBottomSheet && (
         <MobileBottomSheet 
           artistContact={artistContactData} 
           onContact={handleContact} 

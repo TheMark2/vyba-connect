@@ -216,57 +216,59 @@ const ReviewItem = ({
     </div>;
 };
 
-const moreReviewsData: Review[] = [{
-  id: 4,
-  name: "Miguel López",
-  date: "2 semanas",
-  rating: 5,
-  badges: ["Bodas", "Eventos corporativos"],
-  comment: "¡Increíble actuación! Todos mis invitados quedaron encantados con su música. Definitivamente lo volvería a contratar para futuros eventos.",
-  title: "Excelente profesional",
-  reply: {
-    name: "Antonia Pedragosa",
+const moreReviewsData: Review[] = [
+  {
+    id: 4,
+    name: "Miguel López",
     date: "2 semanas",
-    comment: "Muchas gracias por tus amables palabras, Miguel. Fue un placer amenizar tu evento. ¡Espero volver a trabajar contigo pronto!"
-  }
-}, {
-  id: 5,
-  name: "Laura Gómez",
-  date: "1 mes",
-  rating: 4,
-  badges: ["Bodas", "Fiestas privadas"],
-  comment: "Muy profesional y puntual. La música fue perfecta para nuestra celebración de aniversario. Recomendado.",
-  title: "Muy profesional"
-}, {
-  id: 6,
-  name: "Carlos Martínez",
-  date: "2 meses",
-  rating: 5,
-  badges: ["Eventos corporativos"],
-  comment: "Contratar a este artista fue la mejor decisión para nuestro evento corporativo. Su repertorio se adaptó perfectamente a nuestras necesidades.",
-  title: "Repertorio adaptado a nuestras necesidades",
-  reply: {
-    name: "Antonia Pedragosa",
+    rating: 5,
+    badges: ["Bodas", "Eventos corporativos"],
+    comment: "¡Increíble actuación! Todos mis invitados quedaron encantados con su música. Definitivamente lo volvería a contratar para futuros eventos.",
+    title: "Excelente profesional",
+    reply: {
+      name: "Antonia Pedragosa",
+      date: "2 semanas",
+      comment: "Muchas gracias por tus amables palabras, Miguel. Fue un placer amenizar tu evento. ¡Espero volver a trabajar contigo pronto!"
+    }
+  }, {
+    id: 5,
+    name: "Laura Gómez",
+    date: "1 mes",
+    rating: 4,
+    badges: ["Bodas", "Fiestas privadas"],
+    comment: "Muy profesional y puntual. La música fue perfecta para nuestra celebración de aniversario. Recomendado.",
+    title: "Muy profesional"
+  }, {
+    id: 6,
+    name: "Carlos Martínez",
     date: "2 meses",
-    comment: "Gracias Carlos, me alegra que quedaran satisfechos con mi servicio. Fue un placer trabajar en su evento corporativo."
+    rating: 5,
+    badges: ["Eventos corporativos"],
+    comment: "Contratar a este artista fue la mejor decisión para nuestro evento corporativo. Su repertorio se adaptó perfectamente a nuestras necesidades.",
+    title: "Repertorio adaptado a nuestras necesidades",
+    reply: {
+      name: "Antonia Pedragosa",
+      date: "2 meses",
+      comment: "Gracias Carlos, me alegra que quedaran satisfechos con mi servicio. Fue un placer trabajar en su evento corporativo."
+    }
+  }, {
+    id: 7,
+    name: "Sofía Rodríguez",
+    date: "3 meses",
+    rating: 4,
+    badges: ["Bodas"],
+    comment: "Nuestra boda fue especial gracias a su música. El ambiente que creó fue exactamente lo que buscábamos.",
+    title: "Creó el ambiente perfecto"
+  }, {
+    id: 8,
+    name: "David García",
+    date: "4 meses",
+    rating: 5,
+    badges: ["Fiestas privadas"],
+    comment: "Un profesional excepcional. Su energía contagió a todos los invitados y la fiesta fue un éxito rotundo.",
+    title: "Energía contagiosa"
   }
-}, {
-  id: 7,
-  name: "Sofía Rodríguez",
-  date: "3 meses",
-  rating: 4,
-  badges: ["Bodas"],
-  comment: "Nuestra boda fue especial gracias a su música. El ambiente que creó fue exactamente lo que buscábamos.",
-  title: "Creó el ambiente perfecto"
-}, {
-  id: 8,
-  name: "David García",
-  date: "4 meses",
-  rating: 5,
-  badges: ["Fiestas privadas"],
-  comment: "Un profesional excepcional. Su energía contagió a todos los invitados y la fiesta fue un éxito rotundo.",
-  title: "Energía contagiosa"
-}];
+];
 
 const ArtistReviews = ({
   rating,
@@ -299,7 +301,6 @@ const ArtistReviews = ({
 
   useEffect(() => {
     return () => {
-      setIsBottomSheetOpen(false);
       if (onBottomSheetChange) {
         onBottomSheetChange(false);
       }
