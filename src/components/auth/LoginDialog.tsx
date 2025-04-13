@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Dialog, DialogContent, DialogHeader } from "@/components/ui/dialog";
@@ -140,7 +139,7 @@ const LoginDialog = ({
             
             <div className="pt-2 flex space-x-4">
               <Button type="button" variant="secondary" size="icon" onClick={handleBackToOptions} disabled={isLoading} className="w-12 h-12">
-                <ArrowLeft size={24} />
+                <ChevronLeft size={24} />
               </Button>
               
               <Button type="submit" className="flex-1" disabled={isLoading}>
@@ -185,4 +184,3 @@ const LoginDialog = ({
 };
 
 export default LoginDialog;
-
