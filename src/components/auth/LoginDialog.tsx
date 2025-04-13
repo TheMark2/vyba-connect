@@ -66,7 +66,7 @@ const LoginDialog = ({
 
   const dialogContent = (
     <>
-      <div className="flex flex-col space-y-2 mt-10">
+      <div className="flex flex-col space-y-2">
         <div className="text-2xl font-black">
           Inicia sesión para continuar
         </div>
