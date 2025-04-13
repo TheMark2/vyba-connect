@@ -1,3 +1,4 @@
+
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Dialog, DialogContent, DialogHeader } from "@/components/ui/dialog";
@@ -8,10 +9,12 @@ import { Input } from "@/components/ui/input";
 import { toast } from "sonner";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { cn } from "@/lib/utils";
+
 interface LoginDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
 }
+
 const LoginDialog = ({
   open,
   onOpenChange
@@ -22,9 +25,11 @@ const LoginDialog = ({
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+
   const handleEmailLogin = () => {
     setShowEmailForm(true);
   };
+
   const handleSocialLogin = (provider: string) => {
     setIsLoading(true);
 
@@ -39,6 +44,7 @@ const LoginDialog = ({
       navigate("/artists");
     }, 1500);
   };
+
   const handleSubmitEmailLogin = (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
@@ -54,12 +60,21 @@ const LoginDialog = ({
       navigate("/artists");
     }, 1500);
   };
+
   const handleBackToOptions = () => {
     setShowEmailForm(false);
   };
-  const dialogContent = <>
-      {isMobile && <div className="absolute top-4 left-0 w-full flex flex-col">
-          <Button variant="ghost" size="icon" className="ml-2 p-2" onClick={() => onOpenChange(false)}>
+
+  const dialogContent = (
+    <>
+      {isMobile && (
+        <div className="absolute top-4 left-0 w-full flex items-center">
+          <Button 
+            variant="ghost" 
+            size="icon" 
+            className="ml-2 p-2"
+            onClick={() => onOpenChange(false)}
+          >
             <ChevronLeft size={24} />
           </Button>
           <div className="flex-1 text-center pr-10">
@@ -67,18 +82,25 @@ const LoginDialog = ({
               Inicia sesión para continuar
             </div>
           </div>
-        </div>}
+        </div>
+      )}
       
-      <div className={cn("flex flex-col space-y-2", isMobile ? "mt-20" : "")}>
-        {!isMobile && <div className="text-2xl font-black">
+      <div className={cn(
+        "flex flex-col space-y-2", 
+        isMobile ? "mt-20" : ""
+      )}>
+        {!isMobile && (
+          <div className="text-2xl font-black">
             Inicia sesión para continuar
-          </div>}
+          </div>
+        )}
         <p className="text-muted-foreground mb-6">
           Para añadir artistas a favoritos, necesitas iniciar sesión
         </p>
       </div>
 
-      {!showEmailForm ? <div className="space-y-4 py-4">
+      {!showEmailForm ? (
+        <div className="space-y-4 py-4">
           <div className="space-y-4">
             <Button variant="secondary" className="w-full flex items-center justify-center gap-2 bg-[#F7F7F7] text-black" onClick={() => handleSocialLogin("Google")} disabled={isLoading}>
               {isLoading ? <Loader2 className="h-4 w-4 animate-spin" /> : <img src="/logos/google-logo.svg" alt="Google" width={20} height={20} />}
@@ -106,7 +128,9 @@ const LoginDialog = ({
               Continuar con Mail
             </Button>
           </div>
-        </div> : <div className="space-y-4 py-4">
+        </div>
+      ) : (
+        <div className="space-y-4 py-4">
           <form onSubmit={handleSubmitEmailLogin} className="space-y-4">
             <div className="space-y-2">
               <label htmlFor="email" className="text-sm font-medium">
@@ -134,26 +158,44 @@ const LoginDialog = ({
               </Button>
               
               <Button type="submit" className="flex-1" disabled={isLoading}>
-                {isLoading ? <>
+                {isLoading ? (
+                  <>
                     <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                     Iniciando...
-                  </> : "Iniciar sesión"}
+                  </>
+                ) : (
+                  "Iniciar sesión"
+                )}
               </Button>
             </div>
           </form>
-        </div>}
-    </>;
+        </div>
+      )}
+    </>
+  );
+
   if (isMobile) {
-    return <BottomDrawer open={open} onOpenChange={onOpenChange} className="pt-8 pb-6 px-6" showCloseButton={false}>
+    return (
+      <BottomDrawer 
+        open={open} 
+        onOpenChange={onOpenChange} 
+        className="pt-8 pb-6 px-6"
+        showCloseButton={false}
+      >
         {dialogContent}
-      </BottomDrawer>;
+      </BottomDrawer>
+    );
   }
-  return <Dialog open={open} onOpenChange={onOpenChange}>
+
+  return (
+    <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-md">
         <DialogHeader>
           {dialogContent}
         </DialogHeader>
       </DialogContent>
-    </Dialog>;
+    </Dialog>
+  );
 };
+
 export default LoginDialog;
