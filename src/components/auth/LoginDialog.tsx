@@ -1,3 +1,4 @@
+
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Dialog, DialogContent, DialogHeader } from "@/components/ui/dialog";
@@ -66,19 +67,32 @@ const LoginDialog = ({
   const dialogContent = (
     <>
       {isMobile && (
-        <Button 
-          variant="ghost" 
-          size="icon" 
-          className="absolute left-0 top-0 p-2"
-          onClick={() => onOpenChange(false)}
-        >
-          <ChevronLeft size={24} />
-        </Button>
-      )}
-      <div className="flex flex-col space-y-2">
-        <div className="text-2xl font-black">
-          Inicia sesión para continuar
+        <div className="absolute top-4 left-0 w-full flex items-center">
+          <Button 
+            variant="ghost" 
+            size="icon" 
+            className="ml-2 p-2"
+            onClick={() => onOpenChange(false)}
+          >
+            <ChevronLeft size={24} />
+          </Button>
+          <div className="flex-1 text-center pr-10">
+            <div className="text-2xl font-black">
+              Inicia sesión para continuar
+            </div>
+          </div>
         </div>
+      )}
+      
+      <div className={cn(
+        "flex flex-col space-y-2", 
+        isMobile ? "mt-20" : ""
+      )}>
+        {!isMobile && (
+          <div className="text-2xl font-black">
+            Inicia sesión para continuar
+          </div>
+        )}
         <p className="text-muted-foreground mb-6">
           Para añadir artistas a favoritos, necesitas iniciar sesión
         </p>
