@@ -10,6 +10,7 @@ import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { Marquee } from "@/components/ui/marquee";
 import SwipeableBottomSheet from "react-swipeable-bottom-sheet";
 import { Carousel, CarouselContent, CarouselItem } from "@/components/ui/carousel";
+
 interface Review {
   id: number;
   name: string;
@@ -24,6 +25,7 @@ interface Review {
     comment: string;
   };
 }
+
 interface ArtistReviewsProps {
   rating: number;
   reviews: number;
@@ -31,6 +33,7 @@ interface ArtistReviewsProps {
   reviewsData?: Review[];
   onBottomSheetChange?: (isOpen: boolean) => void;
 }
+
 const ReviewItem = ({
   review,
   isMobileCarousel = false,
@@ -206,6 +209,7 @@ const ReviewItem = ({
         </div>}
     </div>;
 };
+
 const moreReviewsData: Review[] = [{
   id: 4,
   name: "Miguel López",
@@ -257,6 +261,7 @@ const moreReviewsData: Review[] = [{
   comment: "Un profesional excepcional. Su energía contagió a todos los invitados y la fiesta fue un éxito rotundo.",
   title: "Energía contagiosa"
 }];
+
 const ArtistReviews = ({
   rating,
   reviews,
@@ -369,10 +374,7 @@ const ArtistReviews = ({
               <div className="flex justify-between items-center mt-1">
                 <div className="text-lg text-gray-600">{allReviews.length} reseñas</div>
                 <div className="flex items-center gap-1">
-                  <div className="flex items-center gap-1 ml-2">
-                    <Star className="h-8 w-8 fill-black text-black dark:fill-white dark:text-white" />
-                    <span className="text-3xl font-medium">{rating}</span>
-                  </div>
+                  <span className="text-3xl font-medium ml-2">{rating}</span>
                 </div>
               </div>
             </DialogHeader>
@@ -402,8 +404,7 @@ const ArtistReviews = ({
           <div className="flex justify-between items-center mb-6">
             <div className="text-lg text-gray-600">{allReviews.length} reseñas</div>
             <div className="flex items-center gap-1">
-              <Star className="h-5 w-5 fill-black text-black dark:fill-white dark:text-white" />
-              <span className="text-xl font-medium">{rating}</span>
+              <span className="text-xl font-medium ml-2">{rating}</span>
             </div>
           </div>
           
@@ -416,4 +417,5 @@ const ArtistReviews = ({
       </SwipeableBottomSheet>}
     </div>;
 };
+
 export default ArtistReviews;
