@@ -43,8 +43,16 @@ const RecommendedArtists = ({
           loop: false,
           skipSnaps: false
         }}>
-            <CarouselContent className={`${isMobile ? '-ml-1 pl-6' : '-ml-6'}`}>
-              {artists.map(artist => <CarouselItem key={artist.id} className={`${isMobile ? 'pl-2 pr-2' : 'pl-6'} ${isMobile ? 'basis-4/5' : 'basis-1/3'}`}>
+            <CarouselContent className={`${isMobile ? '-ml-1 pl-6' : '-ml-6'} gap-3`}>
+              {artists.map((artist, index) => (
+                <CarouselItem 
+                  key={artist.id} 
+                  className={`
+                    ${isMobile ? 'pl-2 pr-2' : 'pl-6'} 
+                    ${isMobile ? 'basis-4/5' : 'basis-1/3'}
+                    ${index === artists.length - 1 ? 'mr-6' : ''}
+                  `}
+                >
                   <div className="w-full">
                     <ArtistProfileCard 
                       name={artist.name} 
@@ -64,7 +72,8 @@ const RecommendedArtists = ({
                       isRecommended={true}
                     />
                   </div>
-                </CarouselItem>)}
+                </CarouselItem>
+              ))}
             </CarouselContent>
           </Carousel>
         </div>
