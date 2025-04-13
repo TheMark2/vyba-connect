@@ -62,7 +62,7 @@ const LoginDialog = ({ open, onOpenChange }: LoginDialogProps) => {
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-md">
         <DialogHeader>
-          <div className="flex flex-col space-y-4">
+          <div className="flex flex-col space-y-2">
             <div className="text-2xl font-black">Inicia sesión para continuar</div>
             <p className="text-muted-foreground mb-6">
               Para añadir artistas a favoritos, necesitas iniciar sesión
