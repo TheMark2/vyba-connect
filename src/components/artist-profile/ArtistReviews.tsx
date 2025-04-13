@@ -1,6 +1,5 @@
-
 import React, { useState, useEffect } from "react";
-import { Star, ClockAlert, CornerDownRight, Plus, MessageCirclePlus } from "lucide-react";
+import { Star, ClockAlert, CornerDownRight, Plus, MessageCirclePlus, ChevronLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
@@ -11,6 +10,7 @@ import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { Marquee } from "@/components/ui/marquee";
 import { BottomDrawer } from "@/components/ui/bottom-drawer";
 import { Carousel, CarouselContent, CarouselItem } from "@/components/ui/carousel";
+import { cn } from "@/lib/utils";
 
 interface Review {
   id: number;
@@ -406,14 +406,16 @@ const ArtistReviews = ({
           className="p-0"
           showCloseButton={false}
         >
-          <div className="px-6 pt-6">
-            <div className="flex justify-between items-center mb-6">
-              <Button variant="ghost" className="p-2 -ml-2 h-10 w-10" onClick={handleCloseBottomSheet}>
+          <div className="px-6 pt-8">
+            <div className="mb-6">
+              <Button variant="ghost" size="icon" className="p-2 -ml-2 h-10 w-10 mb-4" onClick={handleCloseBottomSheet}>
+                <ChevronLeft size={24} />
                 <span className="sr-only">Cerrar</span>
               </Button>
+              
+              <div className="text-3xl font-black">Todas las reseñas</div>
             </div>
             
-            <h2 className="text-3xl font-black mb-1">Todas las reseñas</h2>
             <div className="flex justify-between items-center mb-6">
               <div className="text-lg text-gray-600">{allReviews.length} reseñas</div>
               <div className="flex items-center gap-1">
