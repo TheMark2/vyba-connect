@@ -10,7 +10,6 @@ import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { Marquee } from "@/components/ui/marquee";
 import SwipeableBottomSheet from "react-swipeable-bottom-sheet";
 import { Carousel, CarouselContent, CarouselItem } from "@/components/ui/carousel";
-
 interface Review {
   id: number;
   name: string;
@@ -25,7 +24,6 @@ interface Review {
     comment: string;
   };
 }
-
 interface ArtistReviewsProps {
   rating: number;
   reviews: number;
@@ -33,7 +31,6 @@ interface ArtistReviewsProps {
   reviewsData?: Review[];
   onBottomSheetChange?: (isOpen: boolean) => void;
 }
-
 const ReviewItem = ({
   review,
   isMobileCarousel = false,
@@ -209,7 +206,6 @@ const ReviewItem = ({
         </div>}
     </div>;
 };
-
 const moreReviewsData: Review[] = [{
   id: 4,
   name: "Miguel López",
@@ -261,7 +257,6 @@ const moreReviewsData: Review[] = [{
   comment: "Un profesional excepcional. Su energía contagió a todos los invitados y la fiesta fue un éxito rotundo.",
   title: "Energía contagiosa"
 }];
-
 const ArtistReviews = ({
   rating,
   reviews,
@@ -380,7 +375,7 @@ const ArtistReviews = ({
             </DialogHeader>
 
             <ScrollArea className="h-[60vh] pr-4">
-              <div className="space-y-6">
+              <div className="space-y-6 pb-6">
                 {allReviews.map(review => <ReviewItem key={review.id} review={review} />)}
               </div>
             </ScrollArea>
@@ -417,5 +412,4 @@ const ArtistReviews = ({
       </SwipeableBottomSheet>}
     </div>;
 };
-
 export default ArtistReviews;
