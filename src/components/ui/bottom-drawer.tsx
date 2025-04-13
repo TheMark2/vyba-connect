@@ -14,7 +14,6 @@ interface BottomDrawerProps {
   children: React.ReactNode;
   className?: string;
   showOverlay?: boolean;
-  snapPoints?: number[];
 }
 
 const BottomDrawer = forwardRef<HTMLDivElement, BottomDrawerProps>(
@@ -23,8 +22,7 @@ const BottomDrawer = forwardRef<HTMLDivElement, BottomDrawerProps>(
     onOpenChange, 
     children, 
     className, 
-    showOverlay = true,
-    snapPoints = [0.9],
+    showOverlay = true
   }, ref) => {
     return (
       <Drawer
@@ -35,7 +33,7 @@ const BottomDrawer = forwardRef<HTMLDivElement, BottomDrawerProps>(
         {showOverlay && <DrawerOverlay className="fixed inset-0 z-40 bg-black/40 backdrop-blur-sm" />}
         <DrawerPortal>
           <DrawerContent className={cn(
-            "fixed bottom-0 left-0 right-0 z-50 mt-24 bg-background rounded-t-[24px] border-t border-border",
+            "fixed bottom-0 left-0 right-0 z-50 bg-background rounded-t-[24px] border-t border-border",
             className
           )}>
             <div ref={ref} className="h-full w-full">
