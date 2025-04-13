@@ -156,6 +156,7 @@ const LoginDialog = ({
         open={open} 
         onOpenChange={onOpenChange} 
         className="pt-8 pb-6 px-6"
+        showCloseButton={false}
       >
         {dialogContent}
       </BottomDrawer>

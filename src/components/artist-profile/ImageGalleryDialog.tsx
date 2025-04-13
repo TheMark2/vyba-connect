@@ -1,6 +1,6 @@
+
 import React from "react";
 import { Dialog, DialogContent, DialogClose } from "@/components/ui/dialog";
-import { X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { useIsMobile } from "@/hooks/use-mobile";
@@ -25,11 +25,6 @@ const ImageGalleryDialog = ({
   return (
     <Dialog open={isOpen} onOpenChange={open => !open && onClose()}>
       <DialogContent className={cn("p-0 w-full h-full max-w-none max-h-screen bg-white dark:bg-black text-black dark:text-white", isMobile ? "rounded-none" : "rounded-none")}>
-        <DialogClose className="absolute left-6 top-6 z-50 rounded-full p-2 bg-white/10 backdrop-blur-sm hover:bg-white/20 text-black dark:text-white">
-          <X className="h-6 w-6" />
-          <span className="sr-only">Cerrar</span>
-        </DialogClose>
-        
         <div className="h-full w-full overflow-y-auto p-8 pt-16">
           <div className="flex flex-wrap gap-2 justify-center">
             {images.map((image, index) => <div key={index} className="mb-2" id={index === activeImageIndex ? "active-image" : undefined} ref={el => {

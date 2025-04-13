@@ -26,7 +26,7 @@ const BottomDrawer = forwardRef<HTMLDivElement, BottomDrawerProps>(
     children, 
     className, 
     showOverlay = true,
-    showCloseButton = true
+    showCloseButton = false
   }, ref) => {
     return (
       <Drawer

@@ -1,5 +1,6 @@
+
 import React, { useState, useEffect } from "react";
-import { Star, ClockAlert, CornerDownRight, Plus, MessageCirclePlus, X } from "lucide-react";
+import { Star, ClockAlert, CornerDownRight, Plus, MessageCirclePlus } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
@@ -403,11 +404,12 @@ const ArtistReviews = ({
           open={isBottomSheetOpen} 
           onOpenChange={setIsBottomSheetOpen} 
           className="p-0"
+          showCloseButton={false}
         >
           <div className="px-6 pt-6">
             <div className="flex justify-between items-center mb-6">
               <Button variant="ghost" className="p-2 -ml-2 h-10 w-10" onClick={handleCloseBottomSheet}>
-                <X className="h-6 w-6" />
+                <span className="sr-only">Cerrar</span>
               </Button>
             </div>
             
