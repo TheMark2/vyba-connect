@@ -32,7 +32,7 @@ const DrawerContent = React.forwardRef<React.ElementRef<typeof DrawerPrimitive.C
     {...props}
   >
     <DrawerPrimitive.Close className="absolute top-8 left-6 z-50 rounded-full p-2 hover:bg-muted/20">
-      <X className="h-6 w-6" />
+      <X className="h-5 w-5" />
       <span className="sr-only">Close</span>
     </DrawerPrimitive.Close>
     {children}
