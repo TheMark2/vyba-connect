@@ -1,4 +1,3 @@
-
 import React, { useState, useRef, useEffect, TouchEvent } from "react";
 import { Heart, ChevronLeft, ChevronRight, Star } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
@@ -142,7 +141,7 @@ const ArtistProfileCard = ({
         cursor: isHovered ? 'pointer' : 'default'
       }}
     >
-      <div className={cn("relative w-full overflow-hidden rounded-[28px]", "aspect-[1.2/1]")}>
+      <div className={cn("relative w-full overflow-hidden rounded-xl", "aspect-[1/1.1]")}>
         <div 
           className="relative w-full h-full overflow-hidden" 
           onTouchStart={handleTouchStart} 
@@ -227,7 +226,7 @@ const ArtistProfileCard = ({
         
         <button 
           onClick={handleFavoriteClick} 
-          className="absolute top-2 right-2 z-10 bg-white rounded-full p-1.5 w-9 h-9 flex items-center justify-center" 
+          className="absolute top-2 right-2 z-10 bg-white/30 backdrop-blur-md rounded-full p-1.5 w-9 h-9 flex items-center justify-center" 
           aria-label={favorite ? "Quitar de favoritos" : "Añadir a favoritos"}
         >
           <Heart 
