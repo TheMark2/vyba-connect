@@ -40,7 +40,7 @@ const RecommendedArtists = ({
         <div className={isMobile ? 'mx-[-1.5rem]' : ''}>
           <Carousel className="w-full" opts={{
           align: "center",
-          loop: true,
+          loop: false,
           skipSnaps: false,
           dragFree: true
         }}>
@@ -62,7 +62,8 @@ const RecommendedArtists = ({
                           position: "bottom-center"
                         });
                       }} 
-                      isRecommended={true} 
+                      isRecommended={true}
+                      className="rounded-2xl"
                     />
                   </div>
                 </CarouselItem>)}
