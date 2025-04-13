@@ -63,7 +63,6 @@ const RecommendedArtists = ({
                         });
                       }} 
                       isRecommended={true}
-                      className="rounded-2xl"
                     />
                   </div>
                 </CarouselItem>)}
