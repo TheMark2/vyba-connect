@@ -17,6 +17,7 @@ interface ArtistProfileCardProps {
   isFavorite?: boolean;
   className?: string;
   onClick?: () => void;
+  isRecommended?: boolean;
 }
 
 const ArtistProfileCard = ({
@@ -29,7 +30,8 @@ const ArtistProfileCard = ({
   onFavoriteToggle,
   isFavorite = false,
   className,
-  onClick
+  onClick,
+  isRecommended = false
 }: ArtistProfileCardProps) => {
   const [favorite, setFavorite] = useState(isFavorite);
   const [isHovered, setIsHovered] = useState(false);
@@ -304,19 +306,28 @@ const ArtistProfileCard = ({
           </Badge>
         </div>
         
-        <div className="pt-3 flex flex-col gap-1 bg-transparent">
-          <div className="flex justify-between items-center">
-            <h3 className="text-base font-bold">{name}</h3>
-            <div className="flex items-center gap-1">
-              <Star className="h-4 w-4 fill-black stroke-black dark:fill-white dark:stroke-white" />
-              <span className="text-base font-bold">{rating.toFixed(1)}</span>
+        {isRecommended ? (
+          <div className="pt-3 flex flex-col gap-1 bg-transparent">
+            <div className="flex justify-between items-center">
+              <h3 className="text-base font-bold">{name}</h3>
+              <p className="text-sm font-bold">{priceRange}</p>
             </div>
           </div>
-          <p className="text-sm text-gray-500 dark:text-gray-400 line-clamp-1">{description}</p>
-          <p className="text-sm font-bold">
-            {priceRange}
-          </p>
-        </div>
+        ) : (
+          <div className="pt-3 flex flex-col gap-1 bg-transparent">
+            <div className="flex justify-between items-center">
+              <h3 className="text-base font-bold">{name}</h3>
+              <div className="flex items-center gap-1">
+                <Star className="h-4 w-4 fill-black stroke-black dark:fill-white dark:stroke-white" />
+                <span className="text-base font-bold">{rating.toFixed(1)}</span>
+              </div>
+            </div>
+            <p className="text-sm text-gray-500 dark:text-gray-400 line-clamp-1">{description}</p>
+            <p className="text-sm font-bold">
+              {priceRange}
+            </p>
+          </div>
+        )}
       </div>
       
       <LoginDialog 
