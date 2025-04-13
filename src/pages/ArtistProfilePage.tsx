@@ -1,3 +1,4 @@
+
 import React, { useState, useRef, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { toast } from "sonner";
@@ -272,6 +273,14 @@ const ArtistProfilePage = () => {
         <div className="pb-16 max-w-7xl mx-auto">
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-16">
             <div className="lg:col-span-2">
+              <ArtistReviews 
+                rating={artist.rating} 
+                reviews={artist.reviews || 0} 
+                genres={artist.genres} 
+                reviewsData={artist.reviewsData} 
+                onBottomSheetChange={handleReviewsBottomSheetChange}
+              />
+
               <AboutArtist ref={aboutMeRef} description={artist.description} genres={artist.genres} onGenreClick={handleGenreClick} />
               
               <DetailedInformation artist={artist} />
@@ -281,14 +290,6 @@ const ArtistProfilePage = () => {
               {artist.eventTypes && <EventTypes eventTypes={artist.eventTypes} onEventTypeClick={handleEventTypeClick} />}
               
               <ArtistFAQ artistName={artist.name} />
-              
-              <ArtistReviews 
-                rating={artist.rating} 
-                reviews={artist.reviews || 0} 
-                genres={artist.genres} 
-                reviewsData={artist.reviewsData} 
-                onBottomSheetChange={handleReviewsBottomSheetChange}
-              />
             </div>
             
             {!isMobile && (
@@ -323,3 +324,4 @@ const ArtistProfilePage = () => {
 };
 
 export default ArtistProfilePage;
+
