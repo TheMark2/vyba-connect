@@ -5,21 +5,25 @@ import Image from "@/components/ui/image";
 import { Card } from "@/components/ui/card";
 import { Carousel, CarouselContent, CarouselItem } from "@/components/ui/carousel";
 import { useIsMobile } from "@/hooks/use-mobile";
+
 interface GroupMember {
   id: string;
   name: string;
   image?: string;
   roles: string[];
 }
+
 interface GroupMembersProps {
   members: GroupMember[];
 }
+
 const GroupMembers = ({
   members
 }: GroupMembersProps) => {
   const isMobile = useIsMobile();
   const [windowWidth, setWindowWidth] = useState(window.innerWidth);
   const [useCarousel, setUseCarousel] = useState(isMobile || members.length > 4);
+
   useEffect(() => {
     const handleResize = () => {
       setWindowWidth(window.innerWidth);
@@ -47,27 +51,32 @@ const GroupMembers = ({
       window.removeEventListener("resize", handleResize);
     };
   }, [members.length]);
+
   if (!members || members.length === 0) return null;
+
   if (useCarousel) {
     return <div className="mt-8 mb-12">
         <h2 className="text-3xl font-black mb-6">Integrantes del grupo</h2>
-        {isMobile ? (
-          // Versión móvil con carrusel a ancho completo
-          <div className="relative mx-[-1.5rem]">
-            <Carousel opts={{
-              align: "start",
+        
+        {/* Carrusel que se extiende a todo el ancho en móvil */}
+        <div className={isMobile ? 'relative w-full' : 'relative w-full'}>
+          <div className={isMobile ? 'mx-[-1.5rem]' : ''}>
+            <Carousel className="w-full" opts={{
+              align: "center",
               loop: false,
-              containScroll: "trimSnaps"
-            }} className="w-full">
-              <CarouselContent className="-ml-4 pl-4">
-                {members.map(member => (
+              skipSnaps: false
+            }}>
+              <CarouselContent className={`${isMobile ? '-ml-1 pl-6' : '-ml-6'} gap-3`}>
+                {members.map((member, index) => (
                   <CarouselItem 
                     key={member.id} 
-                    className={`pl-4 pr-2 ${
-                      windowWidth < 640 ? 'basis-3/4' : 'basis-3/4'
-                    }`}
+                    className={`
+                      ${isMobile ? 'pl-2 pr-2' : 'pl-6'} 
+                      ${isMobile ? 'basis-4/5' : 'basis-1/3'}
+                      ${index === members.length - 1 ? 'mr-6' : ''}
+                    `}
                   >
-                    <div className="aspect-square w-full">
+                    <div className="w-full">
                       <MemberCard member={member} />
                     </div>
                   </CarouselItem>
@@ -75,33 +84,7 @@ const GroupMembers = ({
               </CarouselContent>
             </Carousel>
           </div>
-        ) : (
-          // Versión desktop con carrusel normal
-          <div className="w-full">
-            <Carousel opts={{
-              align: "start",
-              loop: false,
-              containScroll: "trimSnaps"
-            }} className="w-full">
-              <CarouselContent className="-ml-4">
-                {members.map(member => (
-                  <CarouselItem 
-                    key={member.id} 
-                    className={`pl-4 ${
-                      windowWidth < 1024 ? 'basis-1/3' :
-                      windowWidth < 1280 ? 'basis-1/3' :
-                      'basis-1/4'
-                    }`}
-                  >
-                    <div className="aspect-square w-full">
-                      <MemberCard member={member} />
-                    </div>
-                  </CarouselItem>
-                ))}
-              </CarouselContent>
-            </Carousel>
-          </div>
-        )}
+        </div>
       </div>;
   }
 
@@ -145,4 +128,5 @@ const MemberCard = ({
         </Card>}
     </div>;
 };
+
 export default GroupMembers;
