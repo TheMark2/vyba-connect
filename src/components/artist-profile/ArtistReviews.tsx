@@ -405,12 +405,6 @@ const ArtistReviews = ({
           className="p-0"
         >
           <div className="px-6 pt-6">
-            <div className="flex justify-between items-center mb-6">
-              <Button variant="ghost" className="p-2 -ml-2 h-10 w-10" onClick={handleCloseBottomSheet}>
-                <X className="h-6 w-6" />
-              </Button>
-            </div>
-            
             <h2 className="text-3xl font-black mb-1">Todas las reseñas</h2>
             <div className="flex justify-between items-center mb-6">
               <div className="text-lg text-gray-600">{allReviews.length} reseñas</div>
