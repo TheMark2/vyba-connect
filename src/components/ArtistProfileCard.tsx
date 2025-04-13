@@ -203,7 +203,7 @@ const ArtistProfileCard = ({
               <button 
                 key={index} 
                 className={cn(
-                  "w-1.5 h-1.5 rounded-full transition-all duration-300 backdrop-blur-lg",
+                  "w-1.5 h-1.5 rounded-full transition-all duration-300 backdrop-blur-xl",
                   currentImageIndex === index 
                     ? "bg-white" 
                     : "bg-white/30"
@@ -226,7 +226,7 @@ const ArtistProfileCard = ({
         
         <button 
           onClick={handleFavoriteClick} 
-          className="absolute top-2 right-2 z-10 bg-white/30 backdrop-blur-lg rounded-full p-1.5 w-9 h-9 flex items-center justify-center" 
+          className="absolute top-2 right-2 z-10 bg-white/30 backdrop-blur-xl rounded-full p-1.5 w-9 h-9 flex items-center justify-center" 
           aria-label={favorite ? "Quitar de favoritos" : "Añadir a favoritos"}
         >
           <Heart 
@@ -239,7 +239,7 @@ const ArtistProfileCard = ({
         
         <Badge 
           variant="secondary" 
-          className="absolute top-2 left-2 font-medium text-sm bg-white/30 backdrop-blur-lg text-black z-10 px-4 py-1.5 dark:text-white rounded-full"
+          className="absolute top-2 left-2 font-medium text-sm bg-white/30 backdrop-blur-xl text-black z-10 px-4 py-1.5 dark:text-white rounded-full"
         >
           {type}
         </Badge>
@@ -247,14 +247,14 @@ const ArtistProfileCard = ({
       
       <div className="pt-3 flex flex-col gap-1 bg-transparent">
         <div className="flex justify-between items-center">
-          <h3 className="text-xl font-bold">{name}</h3>
+          <h3 className="text-base font-bold">{name}</h3>
           <div className="flex items-center gap-1">
             <Star className="h-4 w-4 fill-black stroke-black dark:fill-white dark:stroke-white" />
-            <span className="text-sm font-medium">{rating.toFixed(1)}</span>
+            <span className="text-base font-bold">{rating.toFixed(1)}</span>
           </div>
         </div>
-        <p className="text-sm text-gray-500 dark:text-gray-400 line-clamp-1">{description}</p>
-        <p className="text-xl font-medium mt-0.5">
+        <p className="text-base text-gray-500 dark:text-gray-400 line-clamp-1">{description}</p>
+        <p className="text-base font-bold mt-1">
           {priceRange}
         </p>
       </div>
