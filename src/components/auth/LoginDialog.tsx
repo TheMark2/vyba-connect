@@ -8,6 +8,7 @@ import { Mail, Loader2, ChevronLeft } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { toast } from "sonner";
 import { useIsMobile } from "@/hooks/use-mobile";
+import { cn } from "@/lib/utils";
 
 interface LoginDialogProps {
   open: boolean;
