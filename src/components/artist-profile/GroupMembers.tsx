@@ -1,3 +1,4 @@
+
 import React, { useEffect, useState } from "react";
 import { Badge as UIBadge } from "@/components/ui/badge";
 import Image from "@/components/ui/image";
@@ -68,7 +69,7 @@ const GroupMembers = ({
                       ${index === members.length - 1 ? 'mr-6' : ''}
                     `}
                   >
-                    <div className="w-full h-full">
+                    <div className="w-full h-[420px]">
                       <MemberCard member={member} />
                     </div>
                   </CarouselItem>
@@ -83,7 +84,7 @@ const GroupMembers = ({
   return <div className="mt-8 mb-12">
       <h2 className="text-3xl font-black mb-6">Integrantes del grupo</h2>
       <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-        {members.map(member => <div key={member.id} className="h-full max-w-[300px]">
+        {members.map(member => <div key={member.id} className="h-[420px] max-w-[300px]">
             <MemberCard member={member} />
           </div>)}
       </div>
