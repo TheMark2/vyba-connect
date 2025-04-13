@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from "react";
 import { Star, ClockAlert, CornerDownRight, Plus, MessageCirclePlus, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -404,7 +403,6 @@ const ArtistReviews = ({
         <BottomDrawer 
           open={isBottomSheetOpen} 
           onOpenChange={setIsBottomSheetOpen} 
-          snapPoints={[0.9]} 
           className="p-0"
         >
           <div className="px-6 pt-6">

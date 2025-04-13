@@ -15,8 +15,6 @@ interface BottomDrawerProps {
   className?: string;
   showOverlay?: boolean;
   snapPoints?: number[];
-  defaultSnapPoint?: number;
-  closeThreshold?: number;
 }
 
 const BottomDrawer = forwardRef<HTMLDivElement, BottomDrawerProps>(
@@ -27,17 +25,12 @@ const BottomDrawer = forwardRef<HTMLDivElement, BottomDrawerProps>(
     className, 
     showOverlay = true,
     snapPoints = [0.9],
-    defaultSnapPoint = 0,
-    closeThreshold = 0.2
   }, ref) => {
     return (
       <Drawer
         open={open}
         onOpenChange={onOpenChange}
         shouldScaleBackground={false}
-        snapPoints={snapPoints}
-        defaultSnapPoint={defaultSnapPoint}
-        closeThreshold={closeThreshold}
       >
         {showOverlay && <DrawerOverlay className="fixed inset-0 z-40 bg-black/40" />}
         <DrawerPortal>

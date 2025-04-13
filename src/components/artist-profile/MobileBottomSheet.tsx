@@ -2,7 +2,7 @@
 import React, { useRef, useEffect } from "react";
 import ContactCard from "./ContactCard";
 import AudioPlayer from "./AudioPlayer";
-import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
+import { Sheet, SheetContent } from "@/components/ui/sheet";
 
 interface MobileBottomSheetProps {
   artistContact: {
@@ -38,8 +38,7 @@ const MobileBottomSheet = ({
     <Sheet defaultOpen>
       <SheetContent 
         side="bottom" 
-        className="px-0 pt-0 pb-0 h-auto rounded-t-3xl" 
-        showX={false}
+        className="px-0 pt-0 pb-0 h-auto rounded-t-3xl"
       >
         <div className="px-4 pt-4 pb-6 relative z-50">
           <ContactCard 
