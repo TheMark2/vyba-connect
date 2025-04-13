@@ -2,7 +2,7 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
-import { Carousel, CarouselContent, CarouselItem, CarouselPrevious, CarouselNext } from "@/components/ui/carousel";
+import { Carousel, CarouselContent, CarouselItem } from "@/components/ui/carousel";
 import ArtistProfileCard from "../ArtistProfileCard";
 import { useIsMobile } from "@/hooks/use-mobile";
 
@@ -39,15 +39,14 @@ const RecommendedArtists = ({
       <div className={isMobile ? 'relative w-full' : 'relative max-w-7xl mx-auto'}>
         <div className={isMobile ? 'mx-[-1.5rem]' : ''}>
           <Carousel className="w-full" opts={{
-            align: "start",
-            loop: true,
-            skipSnaps: false,
-            dragFree: false
-          }}>
-            <CarouselContent className={`${isMobile ? '-ml-2 pl-4' : '-ml-4'}`}>
-              {artists.map(artist => (
-                <CarouselItem key={artist.id} className={`${isMobile ? 'pl-2 md:basis-1/2' : 'pl-4 md:basis-1/3'}`}>
-                  <div className="w-full rounded-2xl overflow-hidden">
+          align: "center",
+          loop: true,
+          skipSnaps: false,
+          dragFree: true
+        }}>
+            <CarouselContent className={`${isMobile ? '-ml-1 pl-6' : '-ml-6'}`}>
+              {artists.map(artist => <CarouselItem key={artist.id} className={`${isMobile ? 'pl-2 pr-2' : 'pl-6'} ${isMobile ? 'basis-4/5' : 'basis-1/3'}`}>
+                  <div className="w-full">
                     <ArtistProfileCard 
                       name={artist.name} 
                       type={artist.type} 
@@ -64,18 +63,10 @@ const RecommendedArtists = ({
                         });
                       }} 
                       isRecommended={true} 
-                      className="rounded-2xl"
                     />
                   </div>
-                </CarouselItem>
-              ))}
+                </CarouselItem>)}
             </CarouselContent>
-            {!isMobile && (
-              <>
-                <CarouselPrevious className="left-1" />
-                <CarouselNext className="right-1" />
-              </>
-            )}
           </Carousel>
         </div>
       </div>
