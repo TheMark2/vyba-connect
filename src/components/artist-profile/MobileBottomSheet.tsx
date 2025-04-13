@@ -2,7 +2,7 @@
 import React, { useRef, useEffect } from "react";
 import ContactCard from "./ContactCard";
 import AudioPlayer from "./AudioPlayer";
-import { Sheet, SheetContent } from "@/components/ui/sheet";
+import { cn } from "@/lib/utils";
 
 interface MobileBottomSheetProps {
   artistContact: {
@@ -31,39 +31,31 @@ const MobileBottomSheet = ({
   onPlayPause,
   audioRef
 }: MobileBottomSheetProps) => {
-  // Altura reducida para la versión colapsada
-  const contactCardHeight = 80;
-  
   return (
-    <Sheet defaultOpen>
-      <SheetContent 
-        side="bottom" 
-        className="px-0 pt-0 pb-0 h-auto rounded-t-3xl"
-      >
-        <div className="px-4 pt-4 pb-6 relative z-50">
-          <ContactCard 
-            artist={artistContact} 
-            onContact={onContact} 
-            aboutMeRef={aboutMeRef} 
-            imagesRef={imagesRef}
-            isMobile={true}
-          />
-          
-          {currentPlaying && (
-            <div className="mt-4">
-              <AudioPlayer 
-                preview={currentPlaying} 
-                artistName={artistContact.name} 
-                isPlaying={isAudioPlaying} 
-                onPlayPause={onPlayPause} 
-                audioRef={audioRef} 
-                isMobile={true}
-              />
-            </div>
-          )}
-        </div>
-      </SheetContent>
-    </Sheet>
+    <div className="fixed bottom-0 left-0 right-0 bg-white z-50 shadow-lg rounded-t-3xl border-t border-gray-200">
+      <div className="px-4 pt-4 pb-6 relative">
+        <ContactCard 
+          artist={artistContact} 
+          onContact={onContact} 
+          aboutMeRef={aboutMeRef} 
+          imagesRef={imagesRef}
+          isMobile={true}
+        />
+        
+        {currentPlaying && (
+          <div className="mt-4">
+            <AudioPlayer 
+              preview={currentPlaying} 
+              artistName={artistContact.name} 
+              isPlaying={isAudioPlaying} 
+              onPlayPause={onPlayPause} 
+              audioRef={audioRef} 
+              isMobile={true}
+            />
+          </div>
+        )}
+      </div>
+    </div>
   );
 };
 

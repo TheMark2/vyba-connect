@@ -285,16 +285,26 @@ const ArtistReviews = ({
     }
   }, [isBottomSheetOpen, onBottomSheetChange]);
 
+  const handleVerTodas = () => {
+    if (isMobile) {
+      setIsBottomSheetOpen(true);
+    } else {
+      setIsDialogOpen(true);
+    }
+  };
+
+  const handleCloseBottomSheet = () => {
+    setIsBottomSheetOpen(false);
+  };
+
   useEffect(() => {
-    const handleBeforeUnload = () => {
-      setIsDialogOpen(false);
-      setIsBottomSheetOpen(false);
-    };
-    window.addEventListener('beforeunload', handleBeforeUnload);
     return () => {
-      window.removeEventListener('beforeunload', handleBeforeUnload);
+      setIsBottomSheetOpen(false);
+      if (onBottomSheetChange) {
+        onBottomSheetChange(false);
+      }
     };
-  }, []);
+  }, [onBottomSheetChange]);
 
   const enhancedReviewsData = reviewsData?.map(review => {
     if (review.id === 1) {
@@ -321,18 +331,6 @@ const ArtistReviews = ({
       description: "Esta función estará disponible próximamente",
       position: "bottom-center"
     });
-  };
-
-  const handleVerTodas = () => {
-    if (isMobile) {
-      setIsBottomSheetOpen(true);
-    } else {
-      setIsDialogOpen(true);
-    }
-  };
-
-  const handleCloseBottomSheet = () => {
-    setIsBottomSheetOpen(false);
   };
 
   return (

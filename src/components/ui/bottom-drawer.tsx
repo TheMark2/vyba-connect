@@ -32,7 +32,7 @@ const BottomDrawer = forwardRef<HTMLDivElement, BottomDrawerProps>(
         onOpenChange={onOpenChange}
         shouldScaleBackground={false}
       >
-        {showOverlay && <DrawerOverlay className="fixed inset-0 z-40 bg-black/40" />}
+        {showOverlay && <DrawerOverlay className="fixed inset-0 z-40 bg-black/40 backdrop-blur-sm" />}
         <DrawerPortal>
           <DrawerContent className={cn(
             "fixed bottom-0 left-0 right-0 z-50 mt-24 bg-background rounded-t-[24px] border-t border-border",
