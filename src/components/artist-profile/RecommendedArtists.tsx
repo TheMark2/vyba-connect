@@ -33,10 +33,13 @@ const RecommendedArtists = ({ artists }: RecommendedArtistsProps) => {
 
   return (
     <div className="mb-16">
-      <div className="max-w-7xl mx-auto">
+      {/* Título con padding normal */}
+      <div className="max-w-7xl mx-auto px-6 md:px-0">
         <h2 className="text-3xl font-black mb-6">Recomendados</h2>
       </div>
-      <div className="relative max-w-7xl mx-auto overflow-hidden">
+      
+      {/* Carrusel a todo ancho en móvil */}
+      <div className={`relative ${isMobile ? 'w-full' : 'max-w-7xl mx-auto'} overflow-hidden`}>
         <Carousel
           className="w-full"
           opts={{
@@ -46,11 +49,11 @@ const RecommendedArtists = ({ artists }: RecommendedArtistsProps) => {
             dragFree: true,
           }}
         >
-          <CarouselContent className="-ml-6">
+          <CarouselContent className={`${isMobile ? '-ml-4 pl-4' : '-ml-6'}`}>
             {artists.map((artist) => (
               <CarouselItem
                 key={artist.id}
-                className={`pl-6 ${isMobile ? 'basis-4/5' : 'basis-1/3'}`}
+                className={`${isMobile ? 'pl-4 pr-2' : 'pl-6'} ${isMobile ? 'basis-4/5' : 'basis-1/3'}`}
               >
                 <div className="w-full">
                   <ArtistProfileCard 

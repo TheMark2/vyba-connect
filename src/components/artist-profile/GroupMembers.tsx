@@ -60,35 +60,37 @@ const GroupMembers = ({ members }: GroupMembersProps) => {
   if (useCarousel) {
     return (
       <div className="mt-8 mb-12">
-        <h2 className="text-3xl font-black mb-6">Integrantes del grupo</h2>
-        <Carousel
-          opts={{
-            align: "start",
-            loop: false,
-            containScroll: "trimSnaps"
-          }}
-          className="w-full"
-        >
-          <CarouselContent className="-ml-4">
-            {members.map((member) => (
-              <CarouselItem 
-                key={member.id} 
-                className={`pl-4 ${
-                  windowWidth < 640 ? 'basis-3/4' : // Móviles pequeños: tarjetas más grandes (75% del ancho)
-                  windowWidth < 768 ? 'basis-3/4' : // Móviles: tarjetas más grandes (75% del ancho)
-                  windowWidth < 1024 ? 'basis-1/3' : // Tablets: 3 por fila
-                  windowWidth < 1280 ? 'basis-1/3' : // Desktop pequeño: mantiene 3 por fila
-                  'basis-1/4' // Desktop grande: mantiene 4 por fila
-                }`}
-              >
-                <div className="aspect-square w-full">
-                  <MemberCard member={member} />
-                </div>
-              </CarouselItem>
-            ))}
-          </CarouselContent>
-          {/* Se han eliminado los botones de navegación del carrusel */}
-        </Carousel>
+        <h2 className="text-3xl font-black mb-6 px-6 md:px-0">Integrantes del grupo</h2>
+        <div className={`${isMobile ? 'w-full' : 'w-full'}`}>
+          <Carousel
+            opts={{
+              align: "start",
+              loop: false,
+              containScroll: "trimSnaps"
+            }}
+            className="w-full"
+          >
+            <CarouselContent className={`${isMobile ? '-ml-4 pl-4' : '-ml-4'}`}>
+              {members.map((member) => (
+                <CarouselItem 
+                  key={member.id} 
+                  className={`${isMobile ? 'pl-4 pr-2' : 'pl-4'} ${
+                    windowWidth < 640 ? 'basis-3/4' : // Móviles pequeños: tarjetas más grandes (75% del ancho)
+                    windowWidth < 768 ? 'basis-3/4' : // Móviles: tarjetas más grandes (75% del ancho)
+                    windowWidth < 1024 ? 'basis-1/3' : // Tablets: 3 por fila
+                    windowWidth < 1280 ? 'basis-1/3' : // Desktop pequeño: mantiene 3 por fila
+                    'basis-1/4' // Desktop grande: mantiene 4 por fila
+                  }`}
+                >
+                  <div className="aspect-square w-full">
+                    <MemberCard member={member} />
+                  </div>
+                </CarouselItem>
+              ))}
+            </CarouselContent>
+            {/* Se han eliminado los botones de navegación del carrusel */}
+          </Carousel>
+        </div>
       </div>
     );
   }

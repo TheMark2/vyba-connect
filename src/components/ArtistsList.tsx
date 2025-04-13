@@ -87,7 +87,7 @@ const ArtistsList = ({
   };
 
   return (
-    <div className="relative w-full" ref={carouselRef}>      
+    <div className={`relative w-full ${isMobile ? 'px-0' : ''}`} ref={carouselRef}>      
       <Carousel
         className="w-full"
         setApi={setApi}
@@ -100,15 +100,15 @@ const ArtistsList = ({
         onScroll={checkScrollable}
       >
         <CarouselContent 
-          className="-ml-6" // Increased negative margin for larger gap
+          className={isMobile ? '-ml-4 pl-4' : '-ml-6'} // Ajustado para móvil
           data-carousel-content
         >
           {artists.map((artist, index) => (
             <CarouselItem
               key={artist.id}
               className={cn(
-                "pl-6 pr-3", // Increased padding for larger gap
-                index === 0 && current === 0 ? "ml-6" : "ml-0"
+                isMobile ? 'pl-4 pr-2' : 'pl-6 pr-3', // Ajustado para móvil
+                index === 0 && current === 0 ? (isMobile ? 'ml-0' : 'ml-6') : 'ml-0'
               )}
               style={{
                 width: getItemWidth(),
