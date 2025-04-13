@@ -254,7 +254,7 @@ const ArtistProfileCard = ({
           </div>
         </div>
         <p className="text-base text-gray-500 dark:text-gray-400 line-clamp-1">{description}</p>
-        <p className="text-base font-bold mt-1">
+        <p className="text-base font-bold">
           {priceRange}
         </p>
       </div>
