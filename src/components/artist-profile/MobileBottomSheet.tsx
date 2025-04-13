@@ -1,8 +1,8 @@
 
-import React from "react";
-import SwipeableBottomSheet from "react-swipeable-bottom-sheet";
+import React, { useRef, useEffect } from "react";
 import ContactCard from "./ContactCard";
 import AudioPlayer from "./AudioPlayer";
+import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 
 interface MobileBottomSheetProps {
   artistContact: {
@@ -35,43 +35,36 @@ const MobileBottomSheet = ({
   const contactCardHeight = 80;
   
   return (
-    <SwipeableBottomSheet
-      overflowHeight={contactCardHeight}
-      marginTop={64}
-      fullScreen={false}
-      topShadow={false}
-      shadowTip={false}
-      bodyStyle={{ 
-        borderTopLeftRadius: '24px', 
-        borderTopRightRadius: '24px',
-        backgroundColor: 'white',
-        zIndex: 50,
-        position: 'relative'
-      }}
-    >
-      <div className="px-4 pt-4 pb-6 relative z-50">
-        <ContactCard 
-          artist={artistContact} 
-          onContact={onContact} 
-          aboutMeRef={aboutMeRef} 
-          imagesRef={imagesRef}
-          isMobile={true}
-        />
-        
-        {currentPlaying && (
-          <div className="mt-4">
-            <AudioPlayer 
-              preview={currentPlaying} 
-              artistName={artistContact.name} 
-              isPlaying={isAudioPlaying} 
-              onPlayPause={onPlayPause} 
-              audioRef={audioRef} 
-              isMobile={true}
-            />
-          </div>
-        )}
-      </div>
-    </SwipeableBottomSheet>
+    <Sheet defaultOpen>
+      <SheetContent 
+        side="bottom" 
+        className="px-0 pt-0 pb-0 h-auto rounded-t-3xl" 
+        showX={false}
+      >
+        <div className="px-4 pt-4 pb-6 relative z-50">
+          <ContactCard 
+            artist={artistContact} 
+            onContact={onContact} 
+            aboutMeRef={aboutMeRef} 
+            imagesRef={imagesRef}
+            isMobile={true}
+          />
+          
+          {currentPlaying && (
+            <div className="mt-4">
+              <AudioPlayer 
+                preview={currentPlaying} 
+                artistName={artistContact.name} 
+                isPlaying={isAudioPlaying} 
+                onPlayPause={onPlayPause} 
+                audioRef={audioRef} 
+                isMobile={true}
+              />
+            </div>
+          )}
+        </div>
+      </SheetContent>
+    </Sheet>
   );
 };
 

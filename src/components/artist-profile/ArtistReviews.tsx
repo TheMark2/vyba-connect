@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from "react";
 import { Star, ClockAlert, CornerDownRight, Plus, MessageCirclePlus, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -8,7 +9,7 @@ import { useIsMobile } from "@/hooks/use-mobile";
 import { toast } from "sonner";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { Marquee } from "@/components/ui/marquee";
-import SwipeableBottomSheet from "react-swipeable-bottom-sheet";
+import { BottomDrawer } from "@/components/ui/bottom-drawer";
 import { Carousel, CarouselContent, CarouselItem } from "@/components/ui/carousel";
 
 interface Review {
@@ -335,7 +336,8 @@ const ArtistReviews = ({
     setIsBottomSheetOpen(false);
   };
 
-  return <div className="mt-8 mb-16">
+  return (
+    <div className="mt-8 mb-16">
       <div className={`${isMobile ? 'bg-[#F7F7F7] py-8 -mx-6' : ''}`}>
         <h2 className="text-3xl font-black mb-1 px-6 sm:px-0">Reseñas</h2>
         <div className="space-y-6">
@@ -398,35 +400,38 @@ const ArtistReviews = ({
           </DialogContent>
         </Dialog>}
 
-      {isMobile && <SwipeableBottomSheet overlay={true} overflowHeight={0} marginTop={0} open={isBottomSheetOpen} onChange={setIsBottomSheetOpen} fullScreen={true} topShadow={false} shadowTip={false} bodyStyle={{
-      borderTopLeftRadius: '0px',
-      borderTopRightRadius: '0px',
-      backgroundColor: '#FFFFFF',
-      zIndex: 100
-    }}>
-        <div className="px-6 pt-6">
-          <div className="flex justify-between items-center mb-6">
-            <Button variant="ghost" className="p-2 -ml-2 h-10 w-10" onClick={handleCloseBottomSheet}>
-              <X className="h-6 w-6" />
-            </Button>
-          </div>
-          
-          <h2 className="text-3xl font-black mb-1">Todas las reseñas</h2>
-          <div className="flex justify-between items-center mb-6">
-            <div className="text-lg text-gray-600">{allReviews.length} reseñas</div>
-            <div className="flex items-center gap-1">
-              <span className="text-xl font-medium ml-2">{rating}</span>
+      {isMobile && 
+        <BottomDrawer 
+          open={isBottomSheetOpen} 
+          onOpenChange={setIsBottomSheetOpen} 
+          snapPoints={[0.9]} 
+          className="p-0"
+        >
+          <div className="px-6 pt-6">
+            <div className="flex justify-between items-center mb-6">
+              <Button variant="ghost" className="p-2 -ml-2 h-10 w-10" onClick={handleCloseBottomSheet}>
+                <X className="h-6 w-6" />
+              </Button>
             </div>
-          </div>
-          
-          <ScrollArea className="h-[calc(100vh-180px)]">
-            <div className="space-y-6 pb-10">
-              {allReviews.map(review => <ReviewItem key={review.id} review={review} isMobileBottomSheet={true} />)}
+            
+            <h2 className="text-3xl font-black mb-1">Todas las reseñas</h2>
+            <div className="flex justify-between items-center mb-6">
+              <div className="text-lg text-gray-600">{allReviews.length} reseñas</div>
+              <div className="flex items-center gap-1">
+                <span className="text-xl font-medium ml-2">{rating}</span>
+              </div>
             </div>
-          </ScrollArea>
-        </div>
-      </SwipeableBottomSheet>}
-    </div>;
+            
+            <ScrollArea className="h-[calc(100vh-180px)]">
+              <div className="space-y-6 pb-10">
+                {allReviews.map(review => <ReviewItem key={review.id} review={review} isMobileBottomSheet={true} />)}
+              </div>
+            </ScrollArea>
+          </div>
+        </BottomDrawer>
+      }
+    </div>
+  );
 };
 
 export default ArtistReviews;
