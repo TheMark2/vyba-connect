@@ -69,7 +69,7 @@ const GroupMembers = ({
                       ${index === members.length - 1 ? 'mr-6' : ''}
                     `}
                   >
-                    <div className="w-full h-[250px]">
+                    <div className="w-full h-[200px]">
                       <MemberCard member={member} />
                     </div>
                   </CarouselItem>
