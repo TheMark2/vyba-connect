@@ -1,5 +1,6 @@
+
 import React, { useState, useEffect } from "react";
-import { Star, ClockAlert, CornerDownRight, Plus, MessageCirclePlus, ChevronLeft } from "lucide-react";
+import { Star, ClockAlert, CornerDownRight, Plus, MessageCirclePlus, ChevronLeft, Minus } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
@@ -85,10 +86,10 @@ const ReviewItem = ({
           
           <h3 className="text-lg font-bold mb-3 pr-20">{review.title || "Muy buen servicio"}</h3>
           
-          <p className="text-base mb-4">{displayText}</p>
+          <p className="text-base mb-4 transition-all duration-300">{displayText}</p>
           
           {isTextLong && <Button variant="ghost" size="sm" className="self-start p-0 h-8 mb-4 hover:bg-transparent" onClick={() => setExpanded(!expanded)}>
-              <Plus className="h-4 w-4 mr-1" />
+              {expanded ? <Minus className="h-4 w-4 mr-1" /> : <Plus className="h-4 w-4 mr-1" />}
               {expanded ? "Ver menos" : "Ver más"}
             </Button>}
           
@@ -140,10 +141,10 @@ const ReviewItem = ({
           
           <h3 className="text-lg font-bold mb-3 pr-20">{review.title || "Muy buen servicio"}</h3>
           
-          <p className="text-base mb-2">{displayText}</p>
+          <p className="text-base mb-2 transition-all duration-300">{displayText}</p>
           
           {isTextLong && <Button variant="ghost" size="sm" className="self-start p-0 h-8 mb-4 hover:bg-transparent" onClick={() => setExpanded(!expanded)}>
-              <Plus className="h-4 w-4 mr-1" />
+              {expanded ? <Minus className="h-4 w-4 mr-1" /> : <Plus className="h-4 w-4 mr-1" />}
               {expanded ? "Ver menos" : "Ver más"}
             </Button>}
         </div>
@@ -179,10 +180,10 @@ const ReviewItem = ({
           
           <h3 className="text-lg font-bold mb-3 pr-20">{review.title || "Muy buen servicio"}</h3>
           
-          <p className="text-base mb-2">{displayText}</p>
+          <p className="text-base mb-2 transition-all duration-300">{displayText}</p>
           
           {isTextLong && <Button variant="ghost" size="sm" className="self-start p-0 h-8 mb-4 hover:bg-transparent" onClick={() => setExpanded(!expanded)}>
-              <Plus className="h-4 w-4 mr-1" />
+              {expanded ? <Minus className="h-4 w-4 mr-1" /> : <Plus className="h-4 w-4 mr-1" />}
               {expanded ? "Ver menos" : "Ver más"}
             </Button>}
           
