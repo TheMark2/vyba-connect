@@ -1,11 +1,10 @@
 
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogHeader } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
-import { Mail, Loader2 } from "lucide-react";
+import { Mail, Loader2, ArrowLeft } from "lucide-react";
 import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
 import { toast } from "sonner";
 
 interface LoginDialogProps {
@@ -63,7 +62,9 @@ const LoginDialog = ({ open, onOpenChange }: LoginDialogProps) => {
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-md">
         <DialogHeader>
-          <DialogTitle className="text-center text-2xl font-black mb-2 mt-4">Inicia sesión para continuar</DialogTitle>
+          <div className="flex flex-col items-center space-y-4 mb-4">
+            <div className="text-2xl font-black">Inicia sesión para continuar</div>
+          </div>
         </DialogHeader>
         
         {!showEmailForm ? (
@@ -157,23 +158,24 @@ const LoginDialog = ({ open, onOpenChange }: LoginDialogProps) => {
                 </a>
               </div>
               
-              <div className="pt-2 space-y-4">
+              <div className="pt-2 flex space-x-4">
                 <Button 
-                  type="submit" 
-                  className="w-full"
-                  isLoading={isLoading}
+                  type="button"
+                  variant="secondary"
+                  size="icon"
+                  onClick={handleBackToOptions}
+                  disabled={isLoading}
+                  className="w-12 h-12"
                 >
-                  Iniciar sesión
+                  <ArrowLeft size={24} />
                 </Button>
                 
                 <Button 
-                  type="button" 
-                  variant="outline" 
-                  className="w-full"
-                  onClick={handleBackToOptions}
-                  disabled={isLoading}
+                  type="submit" 
+                  className="flex-1"
+                  isLoading={isLoading}
                 >
-                  Volver
+                  Iniciar sesión
                 </Button>
               </div>
             </form>
