@@ -1,3 +1,4 @@
+
 import React, { useState, useRef, useEffect, TouchEvent } from "react";
 import { Heart, ChevronLeft, ChevronRight, Star } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
@@ -33,8 +34,8 @@ const ArtistProfileCard = ({
   const [favorite, setFavorite] = useState(isFavorite);
   const [isHovered, setIsHovered] = useState(false);
   const [isAnimating, setIsAnimating] = useState(false);
-  const [showCenterHeart, setShowCenterHeart] = useState(false);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
+  const [isDarkImage, setIsDarkImage] = useState(false);
   const isMobile = useIsMobile();
   const lastClickTimeRef = useRef<number>(0);
   const touchStartX = useRef<number>(0);
@@ -50,20 +51,17 @@ const ArtistProfileCard = ({
     const newFavoriteState = !favorite;
     setFavorite(newFavoriteState);
     setIsAnimating(true);
-    if (newFavoriteState) {
-      setShowCenterHeart(true);
-      setTimeout(() => {
-        setShowCenterHeart(false);
-      }, 800);
-    }
+    
     toast.success(favorite ? "Eliminado de favoritos" : "Añadido a favoritos", {
       icon: favorite ? "👋" : "❤️",
       duration: 1500,
       position: "bottom-center"
     });
+    
     setTimeout(() => {
       setIsAnimating(false);
     }, 600);
+    
     if (onFavoriteToggle) {
       onFavoriteToggle();
     }
@@ -131,6 +129,58 @@ const ArtistProfileCard = ({
     }
   };
 
+  // Detectar si la imagen actual es oscura
+  useEffect(() => {
+    if (images.length <= 0 || !images[currentImageIndex]) {
+      setIsDarkImage(false);
+      return;
+    }
+
+    const img = new Image();
+    img.crossOrigin = "Anonymous";
+    img.src = images[currentImageIndex];
+    
+    img.onload = () => {
+      const canvas = document.createElement('canvas');
+      const ctx = canvas.getContext('2d');
+      if (!ctx) {
+        setIsDarkImage(false);
+        return;
+      }
+
+      // Dibujar solo la parte superior de la imagen donde están los controles
+      const width = img.width;
+      const height = img.height / 3; // Solo analizamos el tercio superior
+      
+      canvas.width = width;
+      canvas.height = height;
+      
+      ctx.drawImage(img, 0, 0, width, height, 0, 0, width, height);
+      
+      const imageData = ctx.getImageData(0, 0, width, height).data;
+      
+      let totalBrightness = 0;
+      // Analizar cada pixel
+      for (let i = 0; i < imageData.length; i += 4) {
+        const r = imageData[i];
+        const g = imageData[i + 1];
+        const b = imageData[i + 2];
+        // Fórmula para calcular el brillo percibido
+        const brightness = (r * 0.299 + g * 0.587 + b * 0.114) / 255;
+        totalBrightness += brightness;
+      }
+      
+      // Calcular el brillo promedio
+      const avgBrightness = totalBrightness / (imageData.length / 4);
+      // Si el brillo promedio es menor que 0.5, consideramos que la imagen es oscura
+      setIsDarkImage(avgBrightness < 0.5);
+    };
+
+    img.onerror = () => {
+      setIsDarkImage(false);
+    };
+  }, [currentImageIndex, images]);
+
   return (
     <div 
       className={cn("flex flex-col overflow-hidden bg-transparent transition-all duration-300", className)} 
@@ -177,22 +227,24 @@ const ArtistProfileCard = ({
             <button 
               onClick={handlePrevImage} 
               className={cn(
-                "absolute left-2 top-1/2 transform -translate-y-1/2 bg-white p-1.5 rounded-full opacity-90 hover:opacity-100 transition-opacity z-10 w-7 h-7 flex items-center justify-center", 
-                isMobile ? "opacity-90" : isHovered ? "opacity-90" : "opacity-0"
+                "absolute left-2 top-1/2 transform -translate-y-1/2 p-1.5 rounded-full opacity-90 hover:opacity-100 transition-opacity z-10 w-7 h-7 flex items-center justify-center", 
+                isMobile ? "opacity-90" : isHovered ? "opacity-90" : "opacity-0",
+                isDarkImage ? "bg-white/30 backdrop-blur-xl" : "bg-black/30 backdrop-blur-xl"
               )} 
               aria-label="Imagen anterior"
             >
-              <ChevronLeft className="h-4 w-4 text-black" />
+              <ChevronLeft className={cn("h-4 w-4", isDarkImage ? "text-white" : "text-white")} />
             </button>
             <button 
               onClick={handleNextImage} 
               className={cn(
-                "absolute right-2 top-1/2 transform -translate-y-1/2 bg-white p-1.5 rounded-full opacity-90 hover:opacity-100 transition-opacity z-10 w-7 h-7 flex items-center justify-center", 
-                isMobile ? "opacity-90" : isHovered ? "opacity-90" : "opacity-0"
+                "absolute right-2 top-1/2 transform -translate-y-1/2 p-1.5 rounded-full opacity-90 hover:opacity-100 transition-opacity z-10 w-7 h-7 flex items-center justify-center", 
+                isMobile ? "opacity-90" : isHovered ? "opacity-90" : "opacity-0",
+                isDarkImage ? "bg-white/30 backdrop-blur-xl" : "bg-black/30 backdrop-blur-xl"
               )} 
               aria-label="Siguiente imagen"
             >
-              <ChevronRight className="h-4 w-4 text-black" />
+              <ChevronRight className={cn("h-4 w-4", isDarkImage ? "text-white" : "text-white")} />
             </button>
           </>
         )}
@@ -203,10 +255,10 @@ const ArtistProfileCard = ({
               <button 
                 key={index} 
                 className={cn(
-                  "w-1.5 h-1.5 rounded-full transition-all duration-300 backdrop-blur-xl",
+                  "w-1.5 h-1.5 rounded-full transition-all duration-300",
                   currentImageIndex === index 
                     ? "bg-white" 
-                    : "bg-white/30"
+                    : "bg-white/30 backdrop-blur-xl"
                 )} 
                 onClick={e => {
                   e.stopPropagation();
@@ -218,15 +270,12 @@ const ArtistProfileCard = ({
           </div>
         )}
         
-        {showCenterHeart && (
-          <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-            <Heart className={cn("h-16 w-16 fill-black stroke-white opacity-0 animate-fadeInOut z-10")} />
-          </div>
-        )}
-        
         <button 
           onClick={handleFavoriteClick} 
-          className="absolute top-2 right-2 z-10 bg-white/30 backdrop-blur-xl rounded-full p-1.5 w-9 h-9 flex items-center justify-center" 
+          className={cn(
+            "absolute top-2 right-2 z-10 backdrop-blur-xl rounded-full p-1.5 w-9 h-9 flex items-center justify-center",
+            isDarkImage ? "bg-white/30" : "bg-black/30"
+          )} 
           aria-label={favorite ? "Quitar de favoritos" : "Añadir a favoritos"}
         >
           <Heart 
@@ -239,7 +288,10 @@ const ArtistProfileCard = ({
         
         <Badge 
           variant="secondary" 
-          className="absolute top-2 left-2 font-bold text-sm bg-white/30 backdrop-blur-xl text-white z-10 px-4 py-1.5 dark:text-white rounded-full"
+          className={cn(
+            "absolute top-2 left-2 font-bold text-sm backdrop-blur-xl text-white z-10 px-4 py-1.5 dark:text-white rounded-full",
+            isDarkImage ? "bg-white/30" : "bg-black/30"
+          )}
         >
           {type}
         </Badge>
