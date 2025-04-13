@@ -141,7 +141,7 @@ const ArtistProfileCard = ({
         cursor: isHovered ? 'pointer' : 'default'
       }}
     >
-      <div className={cn("relative w-full overflow-hidden rounded-2xl", "aspect-[1.1/1]")}>
+      <div className={cn("relative w-full overflow-hidden rounded-3xl", "aspect-[1.1/1]")}>
         <div 
           className="relative w-full h-full overflow-hidden" 
           onTouchStart={handleTouchStart} 
