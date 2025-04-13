@@ -37,12 +37,12 @@ const MobileBottomSheet = ({
 
   useEffect(() => {
     const handleScroll = () => {
-      if (imagesRef?.current && reviewsRef?.current) {
-        const imagesPosition = imagesRef.current.getBoundingClientRect().bottom;
-        const reviewsPosition = reviewsRef.current.getBoundingClientRect().top;
+      if (aboutMeRef?.current && reviewsRef?.current) {
+        const aboutMePosition = aboutMeRef.current.getBoundingClientRect().top;
+        const reviewsPosition = reviewsRef.current.getBoundingClientRect().bottom;
         
-        // Mostrar cuando pasemos la sección de imágenes y esconder cuando lleguemos a las reseñas
-        if (imagesPosition < 0 && reviewsPosition > window.innerHeight) {
+        // Mostrar cuando estemos en la sección "Sobre Mi" y esconder cuando hayamos pasado completamente la sección de reseñas
+        if (aboutMePosition < 0 && reviewsPosition > 0) {
           setIsVisible(true);
         } else {
           setIsVisible(false);
@@ -56,7 +56,7 @@ const MobileBottomSheet = ({
     return () => {
       window.removeEventListener('scroll', handleScroll);
     };
-  }, [imagesRef, reviewsRef]);
+  }, [aboutMeRef, reviewsRef]);
 
   return (
     <div 
