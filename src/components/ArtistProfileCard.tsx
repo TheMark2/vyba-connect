@@ -232,14 +232,14 @@ const ArtistProfileCard = ({
           <Heart 
             className={cn(
               "h-4 w-4 transition-colors duration-300", 
-              favorite ? "fill-black stroke-black" : "fill-transparent stroke-black stroke-[2px]"
+              favorite ? "fill-black stroke-black" : "fill-transparent stroke-white"
             )} 
           />
         </button>
         
         <Badge 
           variant="secondary" 
-          className="absolute top-2 left-2 font-medium text-sm bg-white/30 backdrop-blur-xl text-black z-10 px-4 py-1.5 dark:text-white rounded-full"
+          className="absolute top-2 left-2 font-bold text-sm bg-white/30 backdrop-blur-xl text-white z-10 px-4 py-1.5 dark:text-white rounded-full"
         >
           {type}
         </Badge>
