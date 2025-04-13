@@ -203,7 +203,7 @@ const ArtistProfileCard = ({
               <button 
                 key={index} 
                 className={cn(
-                  "w-1.5 h-1.5 rounded-full transition-all duration-300 backdrop-blur-md",
+                  "w-1.5 h-1.5 rounded-full transition-all duration-300 backdrop-blur-lg",
                   currentImageIndex === index 
                     ? "bg-white" 
                     : "bg-white/30"
@@ -226,7 +226,7 @@ const ArtistProfileCard = ({
         
         <button 
           onClick={handleFavoriteClick} 
-          className="absolute top-2 right-2 z-10 bg-white/30 backdrop-blur-md rounded-full p-1.5 w-9 h-9 flex items-center justify-center" 
+          className="absolute top-2 right-2 z-10 bg-white/30 backdrop-blur-lg rounded-full p-1.5 w-9 h-9 flex items-center justify-center" 
           aria-label={favorite ? "Quitar de favoritos" : "Añadir a favoritos"}
         >
           <Heart 
@@ -239,7 +239,7 @@ const ArtistProfileCard = ({
         
         <Badge 
           variant="secondary" 
-          className="absolute top-2 left-2 font-medium text-sm bg-white/30 backdrop-blur-md text-black z-10 px-4 py-1.5 dark:text-white rounded-full"
+          className="absolute top-2 left-2 font-medium text-sm bg-white/30 backdrop-blur-lg text-black z-10 px-4 py-1.5 dark:text-white rounded-full"
         >
           {type}
         </Badge>
