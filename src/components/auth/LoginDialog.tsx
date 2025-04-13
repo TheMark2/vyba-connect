@@ -62,7 +62,7 @@ const LoginDialog = ({ open, onOpenChange }: LoginDialogProps) => {
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-md">
         <DialogHeader>
-          <div className="flex flex-col items-center space-y-4 mb-4">
+          <div className="flex flex-col space-y-4 mb-4">
             <div className="text-2xl font-black">Inicia sesión para continuar</div>
           </div>
         </DialogHeader>
