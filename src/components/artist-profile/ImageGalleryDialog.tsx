@@ -5,6 +5,7 @@ import { X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { useIsMobile } from "@/hooks/use-mobile";
+import { BottomDrawer } from "@/components/ui/bottom-drawer";
 
 interface ImageGalleryDialogProps {
   images: string[];
@@ -25,6 +26,13 @@ const ImageGalleryDialog = ({
   
   return <Dialog open={isOpen} onOpenChange={open => !open && onClose()}>
       <DialogContent className={cn("p-0 w-full h-full max-w-none max-h-screen bg-white dark:bg-black text-black dark:text-white", isMobile ? "rounded-none" : "rounded-none")}>
+        <button 
+          onClick={onClose}
+          className="absolute top-8 left-6 z-50 rounded-full p-2 hover:bg-muted/20"
+        >
+          <X className="h-6 w-6" />
+          <span className="sr-only">Cerrar</span>
+        </button>
         
         <div className="h-full w-full overflow-y-auto p-8 pt-16">
           <div className="flex flex-wrap gap-2 justify-center">
@@ -58,4 +66,3 @@ const ImageGalleryDialog = ({
 };
 
 export default ImageGalleryDialog;
-
