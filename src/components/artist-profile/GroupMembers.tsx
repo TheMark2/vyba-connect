@@ -111,15 +111,15 @@ const GroupMembers = ({ members }: GroupMembersProps) => {
 // Componente tarjeta para evitar duplicación de código
 const MemberCard = ({ member }: { member: GroupMember }) => {
   return (
-    <div className="h-full w-full overflow-hidden rounded-xl">
+    <div className="h-full w-full overflow-hidden rounded-[28px]">
       {member.image ? (
-        <div className="relative h-full w-full overflow-hidden rounded-3xl border-0">
+        <div className="relative h-full w-full overflow-hidden rounded-[28px] border-0">
           <div className="absolute inset-0 bg-black/60 z-10">
             <div className="flex flex-col justify-between h-full p-6">
               <span className="text-white font-bold text-xl">{member.name}</span>
               <div className="flex flex-wrap gap-2">
                 {member.roles.map((role, index) => (
-                  <UIBadge key={index} className="bg-white text-black px-4 py-2">
+                  <UIBadge key={index} className="bg-white/30 backdrop-blur-md text-white px-4 py-2 rounded-full">
                     {role}
                   </UIBadge>
                 ))}
@@ -133,11 +133,11 @@ const MemberCard = ({ member }: { member: GroupMember }) => {
           />
         </div>
       ) : (
-        <Card className="h-full w-full p-6 bg-[#F7F7F7] flex flex-col justify-between rounded-3xl border-0">
+        <Card className="h-full w-full p-6 bg-[#F7F7F7] flex flex-col justify-between rounded-[28px] border-0">
           <span className="font-bold text-xl">{member.name}</span>
           <div className="flex flex-wrap gap-2">
             {member.roles.map((role, index) => (
-              <UIBadge key={index} className="bg-white text-black px-4 py-2">
+              <UIBadge key={index} className="bg-white/80 backdrop-blur-md text-black px-4 py-2 rounded-full">
                 {role}
               </UIBadge>
             ))}

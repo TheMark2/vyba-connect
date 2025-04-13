@@ -1,3 +1,4 @@
+
 import React, { useState, useRef, useEffect, TouchEvent } from "react";
 import { Heart, ChevronLeft, ChevronRight, Star } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
@@ -141,7 +142,7 @@ const ArtistProfileCard = ({
         cursor: isHovered ? 'pointer' : 'default'
       }}
     >
-      <div className={cn("relative w-full overflow-hidden rounded-2xl", "aspect-[1/1]")}>
+      <div className={cn("relative w-full overflow-hidden rounded-[28px]", "aspect-[1.2/1]")}>
         <div 
           className="relative w-full h-full overflow-hidden" 
           onTouchStart={handleTouchStart} 
@@ -203,10 +204,10 @@ const ArtistProfileCard = ({
               <button 
                 key={index} 
                 className={cn(
-                  "w-1.5 h-1.5 rounded-full transition-all duration-300",
+                  "w-1.5 h-1.5 rounded-full transition-all duration-300 backdrop-blur-md",
                   currentImageIndex === index 
                     ? "bg-white" 
-                    : "bg-white/40"
+                    : "bg-white/30"
                 )} 
                 onClick={e => {
                   e.stopPropagation();
@@ -239,7 +240,7 @@ const ArtistProfileCard = ({
         
         <Badge 
           variant="secondary" 
-          className="absolute top-2 left-2 font-medium text-sm bg-white text-black z-10 px-4 py-1.5 dark:bg-black dark:text-white"
+          className="absolute top-2 left-2 font-medium text-sm bg-white/30 backdrop-blur-md text-black z-10 px-4 py-1.5 dark:text-white rounded-full"
         >
           {type}
         </Badge>
@@ -247,15 +248,15 @@ const ArtistProfileCard = ({
       
       <div className="pt-3 flex flex-col gap-1 bg-transparent">
         <div className="flex justify-between items-center">
-          <h3 className="text-base font-bold">{name}</h3>
+          <h3 className="text-xl font-bold">{name}</h3>
           <div className="flex items-center gap-1">
             <Star className="h-4 w-4 fill-black stroke-black dark:fill-white dark:stroke-white" />
             <span className="text-sm font-medium">{rating.toFixed(1)}</span>
           </div>
         </div>
         <p className="text-sm text-gray-500 dark:text-gray-400 line-clamp-1">{description}</p>
-        <p className="text-sm font-medium mt-0.5">
-          <span className="font-bold">{priceRange}</span>
+        <p className="text-xl font-medium mt-0.5">
+          {priceRange}
         </p>
       </div>
     </div>

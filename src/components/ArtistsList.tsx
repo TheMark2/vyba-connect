@@ -83,7 +83,7 @@ const ArtistsList = ({
 
   // Tamaño consistente para las tarjetas en todos los formatos de pantalla
   const getItemWidth = () => {
-    return "280px"; // Tamaño fijo para todas las tarjetas
+    return "300px"; // Tamaño ajustado para todas las tarjetas
   };
 
   return (
@@ -100,14 +100,14 @@ const ArtistsList = ({
         onScroll={checkScrollable}
       >
         <CarouselContent 
-          className="-ml-5" // Increased negative margin for larger gap
+          className="-ml-6" // Increased negative margin for larger gap
           data-carousel-content
         >
           {artists.map((artist, index) => (
             <CarouselItem
               key={artist.id}
               className={cn(
-                "pl-5 pr-2", // Increased padding for larger gap
+                "pl-6 pr-3", // Increased padding for larger gap
                 index === 0 && current === 0 ? "ml-6" : "ml-0"
               )}
               style={{
@@ -152,8 +152,8 @@ const ArtistsList = ({
             <button
               key={i}
               className={cn(
-                "h-2 rounded-full transition-all",
-                i === current ? "w-6 bg-black dark:bg-white" : "w-2 bg-gray-300 dark:bg-gray-600"
+                "h-2 rounded-full transition-all backdrop-blur-md",
+                i === current ? "w-6 bg-black dark:bg-white" : "w-2 bg-white/30"
               )}
               onClick={() => api?.scrollTo(i)}
               aria-label={`Ir a la página ${i + 1}`}

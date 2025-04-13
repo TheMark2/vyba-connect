@@ -40,17 +40,17 @@ const RecommendedArtists = ({ artists }: RecommendedArtistsProps) => {
         <Carousel
           className="w-full"
           opts={{
-            align: "center", // Cambiado a "center" para centrar el ítem activo
+            align: "center",
             loop: true,
             skipSnaps: false,
             dragFree: true,
           }}
         >
-          <CarouselContent className="-ml-5">
+          <CarouselContent className="-ml-6">
             {artists.map((artist) => (
               <CarouselItem
                 key={artist.id}
-                className={`pl-5 ${isMobile ? 'basis-4/5' : 'basis-1/4'}`}
+                className={`pl-6 ${isMobile ? 'basis-4/5' : 'basis-1/3'}`}
               >
                 <div className="w-full">
                   <ArtistProfileCard 
