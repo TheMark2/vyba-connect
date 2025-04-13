@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { Dialog, DialogContent, DialogHeader } from "@/components/ui/dialog";
 import { BottomDrawer } from "@/components/ui/bottom-drawer";
 import { Button } from "@/components/ui/button";
-import { Mail, Loader2, ArrowLeft } from "lucide-react";
+import { Mail, Loader2, ChevronLeft } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { toast } from "sonner";
 import { useIsMobile } from "@/hooks/use-mobile";
@@ -66,6 +66,16 @@ const LoginDialog = ({
 
   const dialogContent = (
     <>
+      {isMobile && (
+        <Button 
+          variant="ghost" 
+          size="icon" 
+          className="absolute left-0 top-0 p-2"
+          onClick={() => onOpenChange(false)}
+        >
+          <ChevronLeft size={24} />
+        </Button>
+      )}
       <div className="flex flex-col space-y-2">
         <div className="text-2xl font-black">
           Inicia sesión para continuar
@@ -175,3 +185,4 @@ const LoginDialog = ({
 };
 
 export default LoginDialog;
+
