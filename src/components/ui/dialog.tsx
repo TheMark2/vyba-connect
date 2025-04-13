@@ -55,7 +55,7 @@ const DialogContent = React.forwardRef<
       >
         <DialogPrimitive.Close className={cn(
           "absolute left-6 top-6 rounded-full p-2 transition-colors hover:bg-black/5",
-          isMobile ? "top-3 left-5" : "top-8 left-8"
+          isMobile ? "top-3 left-5" : "top-6 left-6"
         )}>
           <X className={cn("h-6 w-6", isMobile ? "h-7 w-7" : "")} />
           <span className="sr-only">Close</span>
