@@ -10,6 +10,7 @@ import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { Marquee } from "@/components/ui/marquee";
 import SwipeableBottomSheet from "react-swipeable-bottom-sheet";
 import { Carousel, CarouselContent, CarouselItem } from "@/components/ui/carousel";
+
 interface Review {
   id: number;
   name: string;
@@ -24,6 +25,7 @@ interface Review {
     comment: string;
   };
 }
+
 interface ArtistReviewsProps {
   rating: number;
   reviews: number;
@@ -31,6 +33,7 @@ interface ArtistReviewsProps {
   reviewsData?: Review[];
   onBottomSheetChange?: (isOpen: boolean) => void;
 }
+
 const ReviewItem = ({
   review,
   isMobileCarousel = false,
@@ -42,31 +45,35 @@ const ReviewItem = ({
 }) => {
   const isMobile = useIsMobile();
   const [expanded, setExpanded] = useState(false);
+
   const handleReportClick = () => {
     toast.info("Reseña reportada", {
       description: "Gracias por informarnos",
       position: "bottom-center"
     });
   };
+
   const handleReminderClick = () => {
     toast.info("Revisaremos esta reseña pronto", {
       description: "Gracias por ayudarnos a mejorar",
       position: "bottom-center"
     });
   };
+
   const isNameLong = review.name.length > 15;
   const wordLimit = 20;
   const words = review.comment.split(' ');
   const isTextLong = words.length > wordLimit && isMobile;
   const displayText = isTextLong && !expanded ? words.slice(0, wordLimit).join(' ') + '...' : review.comment;
+
   if (isMobileBottomSheet) {
     return <div className="mb-6">
         <div className="bg-[#F8F8F8] rounded-3xl p-6 relative">
           <div className="absolute top-4 right-4 flex gap-2 z-10">
-            <Button variant="ghost" size="icon" className="h-8 w-8 bg-[#E8E8FF] rounded-full border-none shadow-none" onClick={handleReminderClick}>
+            <Button variant="ghost" size="icon" className="h-8 w-8 bg-white rounded-full border-none shadow-none" onClick={handleReminderClick}>
               <ClockAlert className="h-4 w-4 stroke-[2.5px]" />
             </Button>
-            <Button variant="ghost" size="icon" className="h-8 w-8 bg-[#F1F1F1] rounded-full border-none shadow-none" onClick={handleReportClick}>
+            <Button variant="default" size="icon" className="h-8 w-8 rounded-full" onClick={handleReportClick}>
               <CornerDownRight className="h-4 w-4 stroke-[2.5px]" />
             </Button>
           </div>
@@ -113,6 +120,7 @@ const ReviewItem = ({
           </div>}
       </div>;
   }
+
   if (isMobileCarousel) {
     return <div className="bg-white rounded-3xl p-6 h-full flex flex-col justify-between">
         <div className="absolute top-4 right-4 flex gap-2 z-10">
@@ -151,6 +159,7 @@ const ReviewItem = ({
         </div>
       </div>;
   }
+
   return <div className="mb-6">
       <div className="bg-[#F7F7F7] rounded-3xl p-6 relative">
         <div className="absolute top-4 right-4 flex gap-2 z-10">
@@ -206,6 +215,7 @@ const ReviewItem = ({
         </div>}
     </div>;
 };
+
 const moreReviewsData: Review[] = [{
   id: 4,
   name: "Miguel López",
@@ -257,6 +267,7 @@ const moreReviewsData: Review[] = [{
   comment: "Un profesional excepcional. Su energía contagió a todos los invitados y la fiesta fue un éxito rotundo.",
   title: "Energía contagiosa"
 }];
+
 const ArtistReviews = ({
   rating,
   reviews,
@@ -267,11 +278,13 @@ const ArtistReviews = ({
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [isBottomSheetOpen, setIsBottomSheetOpen] = useState(false);
   const isMobile = useIsMobile();
+
   useEffect(() => {
     if (onBottomSheetChange) {
       onBottomSheetChange(isBottomSheetOpen);
     }
   }, [isBottomSheetOpen, onBottomSheetChange]);
+
   useEffect(() => {
     const handleBeforeUnload = () => {
       setIsDialogOpen(false);
@@ -282,6 +295,7 @@ const ArtistReviews = ({
       window.removeEventListener('beforeunload', handleBeforeUnload);
     };
   }, []);
+
   const enhancedReviewsData = reviewsData?.map(review => {
     if (review.id === 1) {
       return {
@@ -299,13 +313,16 @@ const ArtistReviews = ({
       title: review.id === 2 ? "Excelente ambiente" : "Gran profesional"
     };
   });
+
   const allReviews = enhancedReviewsData ? [...enhancedReviewsData, ...moreReviewsData] : [];
+
   const handleWriteReview = () => {
     toast.success("Función escribir reseña", {
       description: "Esta función estará disponible próximamente",
       position: "bottom-center"
     });
   };
+
   const handleVerTodas = () => {
     if (isMobile) {
       setIsBottomSheetOpen(true);
@@ -313,9 +330,11 @@ const ArtistReviews = ({
       setIsDialogOpen(true);
     }
   };
+
   const handleCloseBottomSheet = () => {
     setIsBottomSheetOpen(false);
   };
+
   return <div className="mt-8 mb-16">
       <div className={`${isMobile ? 'bg-[#F7F7F7] py-8 -mx-6' : ''}`}>
         <h2 className="text-3xl font-black mb-1 px-6 sm:px-0">Reseñas</h2>
@@ -326,7 +345,7 @@ const ArtistReviews = ({
               <span className="text-2xl font-medium">({reviews})</span>
             </div>
             <div>
-              {isMobile ? <Button variant="ghost" size="icon" className="bg-white border-none" onClick={handleWriteReview}>
+              {isMobile ? <Button variant="default" size="icon" className="bg-gradient-to-br from-[#D4DDFF] to-[#F0F3FF] border-none" onClick={handleWriteReview}>
                   <MessageCirclePlus className="h-5 w-5 stroke-[2.5px]" />
                 </Button> : <Button variant="secondary" className="flex items-center gap-2" onClick={handleWriteReview}>
                   <CornerDownRight className="h-4 w-4 stroke-[2.5px]" />
@@ -409,4 +428,5 @@ const ArtistReviews = ({
       </SwipeableBottomSheet>}
     </div>;
 };
+
 export default ArtistReviews;

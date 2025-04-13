@@ -44,10 +44,12 @@ const MobileBottomSheet = ({
       bodyStyle={{ 
         borderTopLeftRadius: '24px', 
         borderTopRightRadius: '24px',
-        backgroundColor: 'white'
+        backgroundColor: 'white',
+        zIndex: 50,
+        position: 'relative'
       }}
     >
-      <div className="px-4 pt-4 pb-6">
+      <div className="px-4 pt-4 pb-6 relative z-50">
         <ContactCard 
           artist={artistContact} 
           onContact={onContact} 
