@@ -162,6 +162,7 @@ const ArtistProfilePage = () => {
   const isMobile = useIsMobile();
   const aboutMeRef = useRef<HTMLDivElement>(null);
   const imagesRef = useRef<HTMLDivElement>(null);
+  const reviewsRef = useRef<HTMLDivElement>(null);
   const [showMobileBottomSheet, setShowMobileBottomSheet] = useState(false);
   const [isReviewsBottomSheetOpen, setIsReviewsBottomSheetOpen] = useState(false);
   
@@ -274,7 +275,9 @@ const ArtistProfilePage = () => {
             <div className="lg:col-span-2">
               <AboutArtist ref={aboutMeRef} description={artist.description} genres={artist.genres} onGenreClick={handleGenreClick} />
               
-              <DetailedInformation artist={artist} />
+              <div ref={imagesRef}>
+                <DetailedInformation artist={artist} />
+              </div>
               
               {artist.groupMembers && <GroupMembers members={artist.groupMembers} />}
               
@@ -282,13 +285,15 @@ const ArtistProfilePage = () => {
               
               <ArtistFAQ artistName={artist.name} />
               
-              <ArtistReviews 
-                rating={artist.rating} 
-                reviews={artist.reviews || 0} 
-                genres={artist.genres} 
-                reviewsData={artist.reviewsData} 
-                onBottomSheetChange={handleReviewsBottomSheetChange}
-              />
+              <div ref={reviewsRef}>
+                <ArtistReviews 
+                  rating={artist.rating} 
+                  reviews={artist.reviews || 0} 
+                  genres={artist.genres} 
+                  reviewsData={artist.reviewsData} 
+                  onBottomSheetChange={handleReviewsBottomSheetChange}
+                />
+              </div>
             </div>
             
             {!isMobile && (
@@ -310,6 +315,7 @@ const ArtistProfilePage = () => {
           onContact={handleContact} 
           aboutMeRef={aboutMeRef} 
           imagesRef={imagesRef}
+          reviewsRef={reviewsRef}
           currentPlaying={currentPlaying}
           isAudioPlaying={isAudioPlaying}
           onPlayPause={handlePlayPause}
