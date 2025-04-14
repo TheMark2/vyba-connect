@@ -173,10 +173,6 @@ const WriteReviewDialog = ({
 
   const renderReviewContent = () => (
     <div className="flex flex-col w-full">
-      <DialogClose className="absolute right-6 top-6 rounded-full p-1 text-black hover:bg-black/5 border-none dark:text-white">
-        <X className="h-6 w-6" />
-        <span className="sr-only">Cerrar</span>
-      </DialogClose>
       
       <h2 className="text-3xl font-semibold mb-6">Escribe una reseña</h2>
       
