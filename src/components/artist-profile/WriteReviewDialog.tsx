@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import { Dialog, DialogContent, DialogClose } from "@/components/ui/dialog";
 import { BottomDrawer } from "@/components/ui/bottom-drawer";
@@ -155,7 +154,10 @@ const WriteReviewDialog = ({
         <Textarea id="comment" value={comment} onChange={e => setComment(e.target.value)} placeholder="Muy buen servicio" className="min-h-32" />
       </div>
       
-      <div className="flex items-center mb-8 bg-[#F7F7F7] rounded-xl p-4 relative overflow-hidden transition-all duration-300 hover:bg-[#F0F0F0] dark:bg-vyba-dark-secondary/20 dark:hover:bg-vyba-dark-secondary/30">
+      <div 
+        className="flex items-center mb-8 bg-[#F7F7F7] rounded-xl p-4 relative overflow-hidden transition-all duration-300 hover:bg-[#F0F0F0] dark:bg-vyba-dark-secondary/20 dark:hover:bg-vyba-dark-secondary/30 cursor-pointer"
+        onClick={() => setAcceptedPolicy(!acceptedPolicy)}
+      >
         <div className="flex items-center justify-between w-full">
           <div className="flex items-center gap-3">
             <Checkbox 
