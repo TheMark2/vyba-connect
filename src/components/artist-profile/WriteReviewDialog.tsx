@@ -88,7 +88,6 @@ const WriteReviewDialog = ({
             </Avatar>
             <div>
               <div className="text-base font-medium">Alejandro Pérez</div>
-              <div className="text-xs text-gray-500">hace 2 días</div>
             </div>
           </div>
         </div>
@@ -189,3 +188,4 @@ const WriteReviewDialog = ({
 };
 
 export default WriteReviewDialog;
+
