@@ -1,4 +1,3 @@
-
 import React, { useState, useRef, useEffect, TouchEvent } from "react";
 import { Heart, ChevronLeft, ChevronRight, Star } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
@@ -277,7 +276,7 @@ const ArtistProfileCard = ({
             </div>
           )}
           
-          {!hideHeart && (
+          {!hideHeart && isRecommended === false && (
             <button 
               onClick={handleFavoriteClick} 
               className={cn(
@@ -299,7 +298,7 @@ const ArtistProfileCard = ({
             variant="secondary" 
             className={cn(
               "absolute top-2 left-2 text-sm backdrop-blur-xl text-white z-10 px-4 py-1.5 dark:text-white rounded-full transition-colors duration-300", 
-              regularBadge ? "font-normal" : "font-bold",
+              regularBadge || isRecommended ? "font-normal" : "font-bold",
               isDarkImage ? "bg-white/30" : "bg-black/30"
             )}
           >
@@ -310,8 +309,8 @@ const ArtistProfileCard = ({
         {isRecommended ? (
           <div className="pt-3 flex flex-col gap-1 bg-transparent">
             <div className="flex justify-between items-center">
-              <h3 className={cn("text-base", regularText ? "font-normal" : "font-bold")}>{name}</h3>
-              <p className={cn("text-base text-gray-500", regularText ? "font-normal" : "font-bold")}>{priceRange}</p>
+              <h3 className="text-base font-normal">{name}</h3>
+              <p className="text-base text-gray-500 font-normal">{priceRange}</p>
             </div>
           </div>
         ) : (
@@ -323,7 +322,7 @@ const ArtistProfileCard = ({
                 <span className="text-base font-bold">{rating.toFixed(1)}</span>
               </div>
             </div>
-            <p className="text-sm text-gray-500 dark:text-gray-400 line-clamp-1">{description}</p>
+            <p className="text-sm text-gray-500 dark:text-gray-400 line-clamp-1 font-light">{description}</p>
             <p className="text-sm font-bold">
               {priceRange}
             </p>
