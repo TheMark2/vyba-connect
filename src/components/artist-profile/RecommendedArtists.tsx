@@ -39,17 +39,19 @@ const RecommendedArtists = ({
       <div className={isMobile ? 'relative w-full' : 'relative max-w-7xl mx-auto'}>
         <div className={isMobile ? 'mx-[-1.5rem]' : ''}>
           <Carousel className="w-full" opts={{
-          align: "center",
-          loop: false,
-          skipSnaps: false
-        }}>
+            align: "start", // Cambiado de "center" a "start" para alinear desde el inicio
+            loop: false,
+            slidesToScroll: 4, // Deslizar 4 elementos a la vez
+            slidesPerView: 4,  // Mostrar 4 elementos
+            skipSnaps: false
+          }}>
             <CarouselContent className={`${isMobile ? '-ml-1 pl-6' : '-ml-6'} gap-3`}>
               {artists.map((artist, index) => (
                 <CarouselItem 
                   key={artist.id} 
                   className={`
-                    ${isMobile ? 'pl-2 pr-2' : 'pl-6'} 
-                    ${isMobile ? 'basis-4/5' : 'basis-1/3'}
+                    ${isMobile ? 'pl-2 pr-2' : 'pl-6 pr-6'} 
+                    ${isMobile ? 'basis-4/5' : 'basis-1/4'} // Cambiado a basis-1/4 para mostrar 4 en pantalla completa
                     ${index === artists.length - 1 ? 'mr-6' : ''}
                   `}
                 >
@@ -82,3 +84,4 @@ const RecommendedArtists = ({
 };
 
 export default RecommendedArtists;
+
