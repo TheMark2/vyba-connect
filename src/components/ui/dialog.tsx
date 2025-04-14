@@ -38,10 +38,10 @@ const DialogContent = React.forwardRef<
       )}
       {...props}
     >
-      {/* Contenedor del botón */}
-      <div className="absolute items-left w-full mb-4 px-6 mt-4">
+      {/* Contenedor del botón - modificado para asegurar que esté encima */}
+      <div className="absolute left-0 top-0 w-full px-6 pt-4 z-[51]">
         <DialogPrimitive.Close
-          className="p-2 rounded-full hover:bg-black/5 dark:hover:bg-white/10 transition"
+          className="ml-auto block p-2 rounded-full hover:bg-black/5 dark:hover:bg-white/10 transition"
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -98,7 +98,7 @@ const DialogTitle = React.forwardRef<
   <DialogPrimitive.Title
     ref={ref}
     className={cn(
-      "text-2xl font-semibold font-figtree leading-none tracking-tight", /* Cambiado de font-medium a font-semibold */
+      "text-2xl font-semibold font-figtree leading-none tracking-tight",
       className
     )}
     {...props}

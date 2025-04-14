@@ -43,7 +43,7 @@ const AlertDialogContent = React.forwardRef<
     >
       {props.children}
       <AlertDialogPrimitive.Cancel className={cn(
-        "absolute right-6 top-4 rounded-full p-1 transition-colors hover:bg-black/5 border-none"
+        "absolute right-6 top-4 rounded-full p-1 transition-colors hover:bg-black/5 border-none z-[51]"
       )}>
         <X className="h-6 w-6" />
         <span className="sr-only">Close</span>
