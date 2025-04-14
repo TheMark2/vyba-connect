@@ -1,4 +1,3 @@
-
 import React from "react";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 
@@ -6,11 +5,10 @@ interface ArtistFAQProps {
   artistName: string;
 }
 
-const ArtistFAQ = ({
-  artistName
-}: ArtistFAQProps) => {
-  return <div className="mt-8 mb-16">
-      <h2 className="text-3xl font-black mb-6">FAQ</h2>
+const ArtistFAQ = ({ artistName }: ArtistFAQProps) => {
+  return (
+    <div className="mt-8 mb-16">
+      <h2 className="text-3xl font-medium font-figtree mb-6">FAQ</h2>
       <Accordion type="single" collapsible className="space-y-3">
         <AccordionItem value="item-1" className="border-none rounded-xl overflow-hidden bg-[#F7F7F7] dark:bg-vyba-dark-secondary/30">
           <AccordionTrigger className="px-6 py-5 text-base font-bold hover:no-underline text-left">
@@ -61,7 +59,8 @@ const ArtistFAQ = ({
           </AccordionContent>
         </AccordionItem>
       </Accordion>
-    </div>;
+    </div>
+  );
 };
 
 export default ArtistFAQ;
