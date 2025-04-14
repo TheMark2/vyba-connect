@@ -39,7 +39,7 @@ const DialogContent = React.forwardRef<
       {...props}
     >
       {/* Contenedor del botón */}
-      <div className="absolute items-left w-full mb-4">
+      <div className="absolute items-left w-full mb-4 px-6 mt-4">
         <DialogPrimitive.Close
           className="p-2 rounded-full hover:bg-black/5 dark:hover:bg-white/10 transition"
         >
