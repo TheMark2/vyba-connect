@@ -1,3 +1,4 @@
+
 import React, { useState, useRef, useEffect, TouchEvent } from "react";
 import { Heart, ChevronLeft, ChevronRight, Star } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
@@ -18,6 +19,9 @@ interface ArtistProfileCardProps {
   className?: string;
   onClick?: () => void;
   isRecommended?: boolean;
+  hideHeart?: boolean;
+  regularBadge?: boolean;
+  regularText?: boolean;
 }
 
 const ArtistProfileCard = ({
@@ -31,7 +35,10 @@ const ArtistProfileCard = ({
   isFavorite = false,
   className,
   onClick,
-  isRecommended = false
+  isRecommended = false,
+  hideHeart = false,
+  regularBadge = false,
+  regularText = false
 }: ArtistProfileCardProps) => {
   const [favorite, setFavorite] = useState(isFavorite);
   const [isHovered, setIsHovered] = useState(false);
@@ -270,26 +277,29 @@ const ArtistProfileCard = ({
             </div>
           )}
           
-          <button 
-            onClick={handleFavoriteClick} 
-            className={cn(
-              "absolute top-2 right-2 z-10 backdrop-blur-xl rounded-full p-1.5 w-9 h-9 flex items-center justify-center transition-colors duration-300", 
-              isDarkImage ? "bg-white/30" : "bg-black/30"
-            )} 
-            aria-label={favorite ? "Quitar de favoritos" : "Añadir a favoritos"}
-          >
-            <Heart 
+          {!hideHeart && (
+            <button 
+              onClick={handleFavoriteClick} 
               className={cn(
-                "h-4 w-4 transition-all duration-300", 
-                favorite ? "fill-black stroke-black" : "fill-transparent stroke-white"
+                "absolute top-2 right-2 z-10 backdrop-blur-xl rounded-full p-1.5 w-9 h-9 flex items-center justify-center transition-colors duration-300", 
+                isDarkImage ? "bg-white/30" : "bg-black/30"
               )} 
-            />
-          </button>
+              aria-label={favorite ? "Quitar de favoritos" : "Añadir a favoritos"}
+            >
+              <Heart 
+                className={cn(
+                  "h-4 w-4 transition-all duration-300", 
+                  favorite ? "fill-black stroke-black" : "fill-transparent stroke-white"
+                )} 
+              />
+            </button>
+          )}
           
           <Badge 
             variant="secondary" 
             className={cn(
-              "absolute top-2 left-2 font-bold text-sm backdrop-blur-xl text-white z-10 px-4 py-1.5 dark:text-white rounded-full transition-colors duration-300", 
+              "absolute top-2 left-2 text-sm backdrop-blur-xl text-white z-10 px-4 py-1.5 dark:text-white rounded-full transition-colors duration-300", 
+              regularBadge ? "font-normal" : "font-bold",
               isDarkImage ? "bg-white/30" : "bg-black/30"
             )}
           >
@@ -297,12 +307,15 @@ const ArtistProfileCard = ({
           </Badge>
         </div>
         
-        {isRecommended ? <div className="pt-3 flex flex-col gap-1 bg-transparent">
+        {isRecommended ? (
+          <div className="pt-3 flex flex-col gap-1 bg-transparent">
             <div className="flex justify-between items-center">
-              <h3 className="text-base font-bold">{name}</h3>
-              <p className="text-base font-bold text-gray-500">{priceRange}</p>
+              <h3 className={cn("text-base", regularText ? "font-normal" : "font-bold")}>{name}</h3>
+              <p className={cn("text-base text-gray-500", regularText ? "font-normal" : "font-bold")}>{priceRange}</p>
             </div>
-          </div> : <div className="pt-3 flex flex-col gap-1 bg-transparent">
+          </div>
+        ) : (
+          <div className="pt-3 flex flex-col gap-1 bg-transparent">
             <div className="flex justify-between items-center">
               <h3 className="text-base font-bold">{name}</h3>
               <div className="flex items-center gap-1">
@@ -314,7 +327,8 @@ const ArtistProfileCard = ({
             <p className="text-sm font-bold">
               {priceRange}
             </p>
-          </div>}
+          </div>
+        )}
       </div>
       
       <LoginDialog open={showLoginDialog} onOpenChange={setShowLoginDialog} />

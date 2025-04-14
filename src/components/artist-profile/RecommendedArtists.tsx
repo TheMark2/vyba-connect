@@ -71,6 +71,9 @@ const RecommendedArtists = ({
                         });
                       }} 
                       isRecommended={true}
+                      hideHeart={true}
+                      regularBadge={true}
+                      regularText={true}
                     />
                   </div>
                 </CarouselItem>
