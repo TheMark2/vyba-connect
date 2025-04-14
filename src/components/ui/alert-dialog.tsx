@@ -36,16 +36,18 @@ const AlertDialogContent = React.forwardRef<
     <AlertDialogPrimitive.Content
       ref={ref}
       className={cn(
-        "fixed left-[50%] top-[50%] z-50 grid w-full max-w-lg translate-x-[-50%] translate-y-[-50%] gap-6 bg-white p-8 shadow-lg duration-200 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[state=closed]:slide-out-to-left-1/2 data-[state=closed]:slide-out-to-top-[48%] data-[state=open]:slide-in-from-left-1/2 data-[state=open]:slide-in-from-top-[48%] sm:rounded-2xl border-none",
+        "fixed left-[50%] top-[50%] z-50 grid w-full max-w-lg translate-x-[-50%] translate-y-[-50%] gap-4 bg-white p-0 shadow-lg duration-200 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[state=closed]:slide-out-to-left-1/2 data-[state=closed]:slide-out-to-top-[48%] data-[state=open]:slide-in-from-left-1/2 data-[state=open]:slide-in-from-top-[48%] sm:rounded-3xl border-none",
         className
       )}
       {...props}
     >
+      <div className="p-6 pb-0">
+        <AlertDialogPrimitive.Cancel className="text-gray-500 hover:text-gray-700 transition-colors">
+          <X className="h-5 w-5" />
+          <span className="sr-only">Cerrar</span>
+        </AlertDialogPrimitive.Cancel>
+      </div>
       {props.children}
-      <AlertDialogPrimitive.Cancel className="absolute right-5 top-5 rounded-full p-1.5 text-stone-500 hover:text-stone-900 focus:outline-none focus:ring-2 focus:ring-stone-400 focus:ring-offset-2 disabled:pointer-events-none z-[51]">
-        <X className="h-4 w-4" />
-        <span className="sr-only">Cerrar</span>
-      </AlertDialogPrimitive.Cancel>
     </AlertDialogPrimitive.Content>
   </AlertDialogPortal>
 ))
@@ -57,7 +59,7 @@ const AlertDialogHeader = ({
 }: React.HTMLAttributes<HTMLDivElement>) => (
   <div
     className={cn(
-      "flex flex-col space-y-2 text-left mb-2",
+      "px-6 pt-2 pb-4",
       className
     )}
     {...props}
@@ -71,7 +73,7 @@ const AlertDialogFooter = ({
 }: React.HTMLAttributes<HTMLDivElement>) => (
   <div
     className={cn(
-      "flex flex-col-reverse sm:flex-row sm:justify-end sm:space-x-2",
+      "p-6 flex justify-end",
       className
     )}
     {...props}
@@ -85,7 +87,7 @@ const AlertDialogTitle = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <AlertDialogPrimitive.Title
     ref={ref}
-    className={cn("text-2xl font-semibold font-figtree tracking-tight text-stone-900", className)}
+    className={cn("text-xl font-semibold font-figtree", className)}
     {...props}
   />
 ))
