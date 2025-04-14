@@ -8,7 +8,7 @@ import {
   DrawerClose
 } from "@/components/ui/drawer";
 import { cn } from "@/lib/utils";
-import { X } from "lucide-react";
+import { ChevronLeft } from "lucide-react";
 
 interface BottomDrawerProps {
   open: boolean;
@@ -42,8 +42,8 @@ const BottomDrawer = forwardRef<HTMLDivElement, BottomDrawerProps>(
           )}>
             <div ref={ref} className="h-full w-full relative">
               {showCloseButton && (
-                <DrawerClose className="absolute left-6 top-8 rounded-full p-2 hover:bg-muted/20 z-50 border-none">
-                  <X className="h-6 w-6" />
+                <DrawerClose className="absolute left-4 top-4 rounded-full p-2 hover:bg-muted/20 z-50 border-none">
+                  <ChevronLeft className="h-6 w-6" />
                   <span className="sr-only">Cerrar</span>
                 </DrawerClose>
               )}

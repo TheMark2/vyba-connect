@@ -71,10 +71,10 @@ const ImageGalleryDialog = ({
         showCloseButton={false}
       >
         <div className="h-full flex flex-col">
-          <div className="flex items-center justify-center pt-4">
+          <div className="sticky top-0 z-10 bg-white dark:bg-black flex items-center justify-start pt-4 px-5 pb-2">
             <Button 
               variant="ghost" 
-              className="absolute left-5 top-2" 
+              className="p-0 h-10 w-10" 
               size="icon" 
               onClick={onClose}>
               <ChevronLeft className="h-6 w-6" />
