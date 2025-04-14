@@ -178,7 +178,7 @@ const WriteReviewDialog = ({
         <span className="sr-only">Cerrar</span>
       </DialogClose>
       
-      <h2 className="text-3xl font-black mb-6">Escribe una reseña</h2>
+      <h2 className="text-3xl font-semibold mb-6">Escribe una reseña</h2>
       
       <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-6 gap-4">
         <div className="bg-[#F7F7F7] rounded-full px-4 py-2 dark:bg-vyba-dark-secondary/20">
