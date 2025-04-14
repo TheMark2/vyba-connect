@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import { Dialog, DialogContent, DialogClose } from "@/components/ui/dialog";
 import { BottomDrawer } from "@/components/ui/bottom-drawer";
@@ -9,20 +8,17 @@ import { Textarea } from "@/components/ui/textarea";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Star, Smile, Frown, Meh, X } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-
 interface WriteReviewDialogProps {
   isOpen: boolean;
   onOpenChange: (open: boolean) => void;
   onSubmit: (reviewData: ReviewData) => void;
 }
-
 export interface ReviewData {
   title: string;
   comment: string;
   rating: number;
   acceptedPolicy: boolean;
 }
-
 const WriteReviewDialog = ({
   isOpen,
   onOpenChange,
@@ -33,7 +29,6 @@ const WriteReviewDialog = ({
   const [comment, setComment] = useState("");
   const [rating, setRating] = useState(4);
   const [acceptedPolicy, setAcceptedPolicy] = useState(false);
-
   const handleSubmit = () => {
     if (!title || !comment || !acceptedPolicy) return;
     onSubmit({
@@ -50,7 +45,6 @@ const WriteReviewDialog = ({
     setAcceptedPolicy(false);
     onOpenChange(false);
   };
-
   const getFaceIcon = (rating: number) => {
     switch (rating) {
       case 1:
@@ -66,10 +60,8 @@ const WriteReviewDialog = ({
       default:
         return null;
     }
-  };  
-
-  const renderContent = () => (
-    <div className="flex flex-col w-full">
+  };
+  const renderContent = () => <div className="flex flex-col w-full">
       <DialogClose className="absolute right-6 top-6 rounded-full p-1 text-black hover:bg-black/5 border-none dark:text-white">
         <X className="h-6 w-6" />
         <span className="sr-only">Cerrar</span>
@@ -78,8 +70,8 @@ const WriteReviewDialog = ({
       <h2 className="text-3xl font-black mb-6">Escribe una reseña</h2>
       
       <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-6 gap-4">
-        <div className="bg-[#F7F7F7] rounded-3xl px-6 py-3 dark:bg-vyba-dark-secondary/20">
-          <p className="text-[#918E8E] font-medium mb-1">Escribiendo como</p>
+        <div className="bg-[#F7F7F7] rounded-2xl px-6 py-3 dark:bg-vyba-dark-secondary/20">
+          <p className="text-[#918E8E] font-medium mb-3">Escribiendo como</p>
           <div className="flex items-center gap-3">
             <Avatar className="h-11 w-11 rounded-full">
               <AvatarFallback className="rounded-full">R</AvatarFallback>
@@ -98,13 +90,7 @@ const WriteReviewDialog = ({
           </div>
           
           <div className="flex items-center gap-2">
-            {[...Array(5)].map((_, index) => (
-              <Star 
-                key={index} 
-                className={`h-8 w-8 cursor-pointer ${index < rating ? "text-black fill-black dark:text-white dark:fill-white" : "text-gray-300 dark:text-gray-600"}`} 
-                onClick={() => setRating(index + 1)} 
-              />
-            ))}
+            {[...Array(5)].map((_, index) => <Star key={index} className={`h-8 w-8 cursor-pointer ${index < rating ? "text-black fill-black dark:text-white dark:fill-white" : "text-gray-300 dark:text-gray-600"}`} onClick={() => setRating(index + 1)} />)}
           </div>
         </div>
       </div>
@@ -113,35 +99,18 @@ const WriteReviewDialog = ({
         <label htmlFor="title" className="text-base font-medium mb-2 block">
           Dale un título a la reseña
         </label>
-        <Input 
-          id="title" 
-          value={title} 
-          onChange={e => setTitle(e.target.value)} 
-          placeholder="Muy buen servicio" 
-          className="bg-[#F7F7F7] border-none focus-visible:ring-0 focus:ring-0 dark:bg-vyba-dark-secondary/20" 
-        />
+        <Input id="title" value={title} onChange={e => setTitle(e.target.value)} placeholder="Muy buen servicio" className="bg-[#F7F7F7] border-none focus-visible:ring-0 focus:ring-0 dark:bg-vyba-dark-secondary/20" />
       </div>
       
       <div className="mb-8">
         <label htmlFor="comment" className="text-base font-medium mb-2 block">
           Describe la reseña
         </label>
-        <Textarea 
-          id="comment" 
-          value={comment} 
-          onChange={e => setComment(e.target.value)} 
-          placeholder="Muy buen servicio" 
-          className="min-h-32 bg-[#F7F7F7] border-none focus-visible:ring-0 focus:ring-0 dark:bg-vyba-dark-secondary/20" 
-        />
+        <Textarea id="comment" value={comment} onChange={e => setComment(e.target.value)} placeholder="Muy buen servicio" className="min-h-32 bg-[#F7F7F7] border-none focus-visible:ring-0 focus:ring-0 dark:bg-vyba-dark-secondary/20" />
       </div>
       
       <div className="flex items-start space-x-2 mb-8">
-        <Checkbox 
-          id="terms" 
-          checked={acceptedPolicy} 
-          onCheckedChange={checked => setAcceptedPolicy(checked as boolean)} 
-          className="mt-1" 
-        />
+        <Checkbox id="terms" checked={acceptedPolicy} onCheckedChange={checked => setAcceptedPolicy(checked as boolean)} className="mt-1" />
         <div className="grid gap-1.5 leading-none">
           <label htmlFor="terms" className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
             Acepto la política de privacidad
@@ -154,37 +123,20 @@ const WriteReviewDialog = ({
       </div>
       
       <div className="flex justify-end">
-        <Button 
-          onClick={handleSubmit} 
-          disabled={!title || !comment || !acceptedPolicy} 
-          className="px-8 bg-[#D4DDFF] hover:bg-[#C0D0FF] text-black dark:text-white rounded-full"
-        >
+        <Button onClick={handleSubmit} disabled={!title || !comment || !acceptedPolicy} className="px-8 bg-[#D4DDFF] hover:bg-[#C0D0FF] text-black dark:text-white rounded-full">
           Enviar
         </Button>
       </div>
-    </div>
-  );
-
+    </div>;
   if (isMobile) {
-    return (
-      <BottomDrawer 
-        open={isOpen} 
-        onOpenChange={onOpenChange} 
-        className="p-6 pt-0" 
-        showCloseButton={false}
-      >
+    return <BottomDrawer open={isOpen} onOpenChange={onOpenChange} className="p-6 pt-0" showCloseButton={false}>
         {renderContent()}
-      </BottomDrawer>
-    );
+      </BottomDrawer>;
   }
-
-  return (
-    <Dialog open={isOpen} onOpenChange={onOpenChange}>
+  return <Dialog open={isOpen} onOpenChange={onOpenChange}>
       <DialogContent className="max-w-[700px] p-8 rounded-[32px] border-none">
         {renderContent()}
       </DialogContent>
-    </Dialog>
-  );
+    </Dialog>;
 };
-
 export default WriteReviewDialog;
