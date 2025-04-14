@@ -211,14 +211,14 @@ const WriteReviewDialog = ({
       </div>
       
       <div className="mb-6">
-        <label htmlFor="title" className="text-base font-medium mb-2 block">
+        <label htmlFor="title" className="text-sm font-medium mb-2 block">
           Dale un título a la reseña
         </label>
         <Input id="title" value={title} onChange={e => setTitle(e.target.value)} placeholder="Muy buen servicio" />
       </div>
       
       <div className="mb-8">
-        <label htmlFor="comment" className="text-base font-medium mb-2 block">
+        <label htmlFor="comment" className="text-sm font-medium mb-2 block">
           Describe la reseña
         </label>
         <Textarea id="comment" value={comment} onChange={e => setComment(e.target.value)} placeholder="Muy buen servicio" className="min-h-32" />
