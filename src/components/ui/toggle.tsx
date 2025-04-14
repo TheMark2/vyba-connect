@@ -22,9 +22,9 @@ const toggleVariants = cva(
       },
       position: {
         default: "",
-        start: "rounded-l-full",
+        start: "rounded-full",
         middle: "rounded-none border-l-0",
-        end: "rounded-r-full border-l-0",
+        end: "rounded-full border-l-0",
         single: "rounded-full",
       }
     },

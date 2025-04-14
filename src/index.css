@@ -1,3 +1,4 @@
+
 @import url('https://api.fontshare.com/v2/css?f[]=satoshi@900,700,500,400&display=swap');
 
 @tailwind base;
@@ -70,7 +71,7 @@
 
 @layer base {
   * {
-    @apply border-border font-satoshi;
+    @apply border-border font-figtree;
   }
   body {
     @apply bg-white text-black antialiased dark:bg-vyba-dark-bg dark:text-white;

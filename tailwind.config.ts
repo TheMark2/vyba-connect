@@ -1,3 +1,4 @@
+
 import type { Config } from "tailwindcss";
 
 export default {
@@ -55,6 +56,7 @@ export default {
         sm: "0.5rem",
       },
       fontFamily: {
+        figtree: ["Figtree", "sans-serif"],
         satoshi: ["Satoshi", "sans-serif"],
       },
       transitionProperty: {
