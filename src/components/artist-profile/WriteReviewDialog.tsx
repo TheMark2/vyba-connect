@@ -184,7 +184,7 @@ const WriteReviewDialog = ({
               <AvatarFallback className="rounded-full">AP</AvatarFallback>
             </Avatar>
             <div className="flex flex-col">
-              <p className="text-[#918E8E] text-xs font-medium">Escribiendo como</p>
+              <p className="text-[#918E8E] text-xs font-regular">Escribiendo como</p>
               <div className="text-base font-medium">Alejandro Pérez</div>
             </div>
           </div>
