@@ -12,8 +12,8 @@ const AboutArtist = forwardRef<HTMLDivElement, AboutArtistProps>(
   ({ description, genres, onGenreClick }, ref) => {
     return (
       <div className="mb-10" ref={ref}>
-        <h2 className="text-3xl font-black mb-6">Sobre mi</h2>
-        <p className="text-base mb-5 leading-relaxed font-light">
+        <h2 className="text-3xl font-semibold mb-6">Sobre mi</h2>
+        <p className="text-base mb-5 leading-relaxed">
           {description}
         </p>
         

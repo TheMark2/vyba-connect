@@ -20,13 +20,13 @@ const DetailedInformation = ({
   const [showFullInfo, setShowFullInfo] = useState(false);
   
   return <div className="mt-8 mb-12">
-      <h2 className="text-3xl font-black mb-6">Más información</h2>
+      <h2 className="text-3xl font-semibold mb-6">Más información</h2>
       
       <div className={`relative overflow-hidden transition-all duration-500 ease-in-out ${!showFullInfo ? "max-h-[400px]" : ""}`}>
         <div className="space-y-8">
           {/* Experiencia */}
           <div>
-            <h3 className="text-xl font-bold mb-3 flex items-center">
+            <h3 className="text-xl font-semibold mb-3 flex items-center">
               Experiencia
             </h3>
             <p className="mb-4">
@@ -64,7 +64,7 @@ const DetailedInformation = ({
 
           {/* Repertorio */}
           <div>
-            <h3 className="text-xl font-bold mb-3 flex items-center">
+            <h3 className="text-xl font-semibold mb-3 flex items-center">
               Repertorio
             </h3>
             <p className="mb-4">
@@ -75,7 +75,7 @@ const DetailedInformation = ({
 
           {/* Logística y equipamiento */}
           <div>
-            <h3 className="text-xl font-bold mb-3 flex items-center">
+            <h3 className="text-xl font-semibold mb-3 flex items-center">
               Logística y equipamiento
             </h3>
             <p className="mb-4">
@@ -104,7 +104,7 @@ const DetailedInformation = ({
 
           {/* Tiempos */}
           <div>
-            <h3 className="text-xl font-bold mb-3 flex items-center">
+            <h3 className="text-xl font-semibold mb-3 flex items-center">
               Tiempos
             </h3>
             <p className="mb-4">
@@ -133,7 +133,7 @@ const DetailedInformation = ({
 
           {/* Formación */}
           <div>
-            <h3 className="text-xl font-bold mb-3 flex items-center">
+            <h3 className="text-xl font-semibold mb-3 flex items-center">
               Formación
             </h3>
             <p className="mb-4">

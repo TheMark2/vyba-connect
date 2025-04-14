@@ -32,7 +32,7 @@ const RecommendedArtists = ({
   return <div className="mb-16">
       {/* Título con padding normal */}
       <div className="max-w-7xl mx-auto">
-        <h2 className="text-3xl font-black mb-6">Recomendados</h2>
+        <h2 className="text-3xl font-semibold mb-6">Recomendados</h2>
       </div>
       
       {/* Carrusel que se extiende a todo el ancho en móvil */}
