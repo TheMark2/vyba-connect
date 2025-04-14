@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import { Dialog, DialogContent, DialogClose } from "@/components/ui/dialog";
 import { BottomDrawer } from "@/components/ui/bottom-drawer";
@@ -12,21 +11,18 @@ import { Star, Smile, Frown, Meh, X, Mail, Facebook, Apple } from "lucide-react"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { motion, AnimatePresence } from "framer-motion";
 import LoginDialog from "../auth/LoginDialog";
-
 interface WriteReviewDialogProps {
   isOpen: boolean;
   onOpenChange: (open: boolean) => void;
   onSubmit: (reviewData: ReviewData) => void;
   isLoggedIn?: boolean;
 }
-
 export interface ReviewData {
   title: string;
   comment: string;
   rating: number;
   acceptedPolicy: boolean;
 }
-
 const WriteReviewDialog = ({
   isOpen,
   onOpenChange,
@@ -40,7 +36,6 @@ const WriteReviewDialog = ({
   const [acceptedPolicy, setAcceptedPolicy] = useState(false);
   const [hoveredRating, setHoveredRating] = useState<number | null>(null);
   const [isLoginDialogOpen, setIsLoginDialogOpen] = useState(false);
-
   const handleSubmit = () => {
     if (!title || !comment || !acceptedPolicy) return;
     onSubmit({
@@ -57,7 +52,6 @@ const WriteReviewDialog = ({
     setAcceptedPolicy(false);
     onOpenChange(false);
   };
-
   const getFaceIcon = (rating: number) => {
     switch (rating) {
       case 1:
@@ -79,29 +73,22 @@ const WriteReviewDialog = ({
   const handleRippleEffect = (event: React.MouseEvent<HTMLDivElement>) => {
     const element = event.currentTarget;
     const rect = element.getBoundingClientRect();
-    
     const x = event.clientX - rect.left;
     const y = event.clientY - rect.top;
-    
     const ripple = document.createElement('span');
     ripple.className = 'ripple-effect';
     ripple.style.left = `${x}px`;
     ripple.style.top = `${y}px`;
-    
     element.appendChild(ripple);
-    
     setTimeout(() => {
       ripple.remove();
     }, 800);
   };
-
   const handleLoginClick = () => {
     setIsLoginDialogOpen(true);
     onOpenChange(false);
   };
-
-  const renderLoginContent = () => (
-    <div className="flex flex-col w-full">
+  const renderLoginContent = () => <div className="flex flex-col w-full">
       <DialogClose className="absolute right-6 top-6 rounded-full p-1 text-black hover:bg-black/5 border-none dark:text-white">
         <X className="h-6 w-6" />
         <span className="sr-only">Cerrar</span>
@@ -116,48 +103,28 @@ const WriteReviewDialog = ({
         
         <div className="grid grid-cols-4 gap-4 mb-8">
           <div className="flex flex-col items-center">
-            <Button 
-              variant="outline" 
-              size="icon" 
-              className="w-16 h-16 rounded-full mb-2 bg-white dark:bg-black border-0 hover:bg-gray-100 dark:hover:bg-gray-900"
-              onClick={handleLoginClick}
-            >
+            <Button variant="outline" size="icon" className="w-16 h-16 rounded-full mb-2 bg-white dark:bg-black border-0 hover:bg-gray-100 dark:hover:bg-gray-900" onClick={handleLoginClick}>
               <img src="/logos/google-logo.svg" alt="Google" className="w-8 h-8" />
             </Button>
             <span className="text-sm">Google</span>
           </div>
           
           <div className="flex flex-col items-center">
-            <Button 
-              variant="outline" 
-              size="icon" 
-              className="w-16 h-16 rounded-full mb-2 bg-white dark:bg-black border-0 hover:bg-gray-100 dark:hover:bg-gray-900"
-              onClick={handleLoginClick}
-            >
+            <Button variant="outline" size="icon" className="w-16 h-16 rounded-full mb-2 bg-white dark:bg-black border-0 hover:bg-gray-100 dark:hover:bg-gray-900" onClick={handleLoginClick}>
               <img src="/logos/facebook-logo.svg" alt="Facebook" className="w-8 h-8" />
             </Button>
             <span className="text-sm">Facebook</span>
           </div>
           
           <div className="flex flex-col items-center">
-            <Button 
-              variant="outline" 
-              size="icon" 
-              className="w-16 h-16 rounded-full mb-2 bg-white dark:bg-black border-0 hover:bg-gray-100 dark:hover:bg-gray-900"
-              onClick={handleLoginClick}
-            >
+            <Button variant="outline" size="icon" className="w-16 h-16 rounded-full mb-2 bg-white dark:bg-black border-0 hover:bg-gray-100 dark:hover:bg-gray-900" onClick={handleLoginClick}>
               <img src="/logos/apple-logo.svg" alt="Apple" className="w-8 h-8" />
             </Button>
             <span className="text-sm">Apple</span>
           </div>
           
           <div className="flex flex-col items-center">
-            <Button 
-              variant="outline" 
-              size="icon" 
-              className="w-16 h-16 rounded-full mb-2 bg-white dark:bg-black border-0 hover:bg-gray-100 dark:hover:bg-gray-900"
-              onClick={handleLoginClick}
-            >
+            <Button variant="outline" size="icon" className="w-16 h-16 rounded-full mb-2 bg-white dark:bg-black border-0 hover:bg-gray-100 dark:hover:bg-gray-900" onClick={handleLoginClick}>
               <Mail className="h-8 w-8" />
             </Button>
             <span className="text-sm">Mail</span>
@@ -168,11 +135,8 @@ const WriteReviewDialog = ({
           Iniciar sesión
         </Button>
       </div>
-    </div>
-  );
-
-  const renderReviewContent = () => (
-    <div className="flex flex-col w-full">
+    </div>;
+  const renderReviewContent = () => <div className="flex flex-col w-full">
       
       <h2 className="text-3xl font-semibold mb-6">Escribe una reseña</h2>
       
@@ -191,59 +155,57 @@ const WriteReviewDialog = ({
         </div>
 
         <div className="flex flex-col items-end gap-2">
-          <motion.div 
-            className="flex items-center gap-2 bg-[#F7F7F7] rounded-full px-4 py-2 dark:bg-vyba-dark-secondary/20"
-            initial={{ scale: 0.9 }}
-            animate={{ scale: 1 }}
-            transition={{ duration: 0.2 }}
-          >
+          <motion.div className="flex items-center gap-2 bg-[#F7F7F7] rounded-full px-4 py-2 dark:bg-vyba-dark-secondary/20" initial={{
+          scale: 0.9
+        }} animate={{
+          scale: 1
+        }} transition={{
+          duration: 0.2
+        }}>
             <div className="w-6 h-6 relative">
               <AnimatePresence mode="wait">
-                <motion.div
-                  key={rating}
-                  initial={{ opacity: 0, scale: 0.5 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  exit={{ opacity: 0, scale: 0.5 }}
-                  transition={{ duration: 0.2 }}
-                  className="absolute inset-0"
-                >
+                <motion.div key={rating} initial={{
+                opacity: 0,
+                scale: 0.5
+              }} animate={{
+                opacity: 1,
+                scale: 1
+              }} exit={{
+                opacity: 0,
+                scale: 0.5
+              }} transition={{
+                duration: 0.2
+              }} className="absolute inset-0">
                   {getFaceIcon(rating)}
                 </motion.div>
               </AnimatePresence>
             </div>
             <AnimatePresence mode="wait">
-              <motion.span 
-                className="text-xl font-medium"
-                key={rating}
-                initial={{ y: -5, opacity: 0 }}
-                animate={{ y: 0, opacity: 1 }}
-                exit={{ y: 5, opacity: 0 }}
-                transition={{ duration: 0.2 }}
-              >
+              <motion.span className="text-xl font-medium" key={rating} initial={{
+              y: -5,
+              opacity: 0
+            }} animate={{
+              y: 0,
+              opacity: 1
+            }} exit={{
+              y: 5,
+              opacity: 0
+            }} transition={{
+              duration: 0.2
+            }}>
                 {rating}/5
               </motion.span>
             </AnimatePresence>
           </motion.div>
           
           <div className="flex items-center gap-2">
-            {[...Array(5)].map((_, index) => (
-              <motion.div
-                key={index}
-                whileHover={{ scale: 1.2 }}
-                whileTap={{ scale: 0.9 }}
-              >
-                <Star 
-                  className={`h-8 w-8 cursor-pointer transition-colors duration-300 ${
-                    (hoveredRating !== null ? index < hoveredRating : index < rating) 
-                      ? "text-black fill-black dark:text-white dark:fill-white" 
-                      : "text-gray-300 fill-gray-300 dark:text-gray-600 dark:fill-gray-600"
-                  }`} 
-                  onClick={() => setRating(index + 1)}
-                  onMouseEnter={() => setHoveredRating(index + 1)}
-                  onMouseLeave={() => setHoveredRating(null)}
-                />
-              </motion.div>
-            ))}
+            {[...Array(5)].map((_, index) => <motion.div key={index} whileHover={{
+            scale: 1.2
+          }} whileTap={{
+            scale: 0.9
+          }}>
+                <Star className={`h-8 w-8 cursor-pointer transition-colors duration-300 ${(hoveredRating !== null ? index < hoveredRating : index < rating) ? "text-black fill-black dark:text-white dark:fill-white" : "text-gray-300 fill-gray-300 dark:text-gray-600 dark:fill-gray-600"}`} onClick={() => setRating(index + 1)} onMouseEnter={() => setHoveredRating(index + 1)} onMouseLeave={() => setHoveredRating(null)} />
+              </motion.div>)}
           </div>
         </div>
       </div>
@@ -262,39 +224,24 @@ const WriteReviewDialog = ({
         <Textarea id="comment" value={comment} onChange={e => setComment(e.target.value)} placeholder="Muy buen servicio" className="min-h-32" />
       </div>
       
-      <div 
-        className="flex items-center mb-8 bg-[#F7F7F7] rounded-xl p-4 relative overflow-hidden transition-all duration-200 hover:bg-[#F0F0F0] dark:bg-vyba-dark-secondary/20 dark:hover:bg-vyba-dark-secondary/30 cursor-pointer"
-        onClick={(e) => {
-          handleRippleEffect(e);
-          setAcceptedPolicy(!acceptedPolicy);
-        }}
-      >
+      <div className="flex items-center mb-8 bg-[#F7F7F7] rounded-xl p-4 relative overflow-hidden transition-all duration-200 hover:bg-[#F0F0F0] dark:bg-vyba-dark-secondary/20 dark:hover:bg-vyba-dark-secondary/30 cursor-pointer" onClick={e => {
+      handleRippleEffect(e);
+      setAcceptedPolicy(!acceptedPolicy);
+    }}>
         <div className="flex items-center justify-between w-full">
           <div className="flex items-center gap-3">
-            <Checkbox 
-              id="terms" 
-              checked={acceptedPolicy} 
-              onCheckedChange={checked => setAcceptedPolicy(checked as boolean)} 
-              className="h-5 w-5 rounded-sm border-2 border-black dark:border-white data-[state=checked]:border-black dark:data-[state=checked]:border-white transition-all duration-200" 
-            />
-            <label 
-              htmlFor="terms" 
-              className="text-sm font-medium cursor-pointer"
-            >
+            <Checkbox id="terms" checked={acceptedPolicy} onCheckedChange={checked => setAcceptedPolicy(checked as boolean)} className="h-5 w-5 rounded-sm border-2 border-black dark:border-white data-[state=checked]:border-black dark:data-[state=checked]:border-white transition-all duration-200" />
+            <label htmlFor="terms" className="text-sm font-medium cursor-pointer">
               Acepto la política de privacidad
             </label>
           </div>
           
-          <a 
-            href="#" 
-            className="text-sm text-black font-medium underline decoration-1 underline-offset-2 hover:no-underline transition-all"
-            onClick={(e) => {
-              e.preventDefault();
-              e.stopPropagation();
-              // TODO: Add logic to show privacy policy
-              console.log("Open privacy policy");
-            }}
-          >
+          <a href="#" className="text-sm text-black font-medium underline decoration-1 underline-offset-2 hover:no-underline transition-all" onClick={e => {
+          e.preventDefault();
+          e.stopPropagation();
+          // TODO: Add logic to show privacy policy
+          console.log("Open privacy policy");
+        }}>
             Ver política
           </a>
         </div>
@@ -305,38 +252,23 @@ const WriteReviewDialog = ({
           Enviar
         </Button>
       </div>
-    </div>
-  );
-
+    </div>;
   const renderContent = () => isLoggedIn ? renderReviewContent() : renderLoginContent();
-
   if (isMobile) {
-    return (
-      <>
+    return <>
         <BottomDrawer open={isOpen} onOpenChange={onOpenChange} className="p-6 pt-0" showCloseButton={false}>
           {renderContent()}
         </BottomDrawer>
-        <LoginDialog 
-          open={isLoginDialogOpen} 
-          onOpenChange={setIsLoginDialogOpen} 
-        />
-      </>
-    );
+        <LoginDialog open={isLoginDialogOpen} onOpenChange={setIsLoginDialogOpen} />
+      </>;
   }
-
-  return (
-    <>
+  return <>
       <Dialog open={isOpen} onOpenChange={onOpenChange}>
-        <DialogContent className="max-w-[700px] p-8 rounded-[32px] border-none">
+        <DialogContent className="max-w-[700px] rounded-[32px] border-none">
           {renderContent()}
         </DialogContent>
       </Dialog>
-      <LoginDialog 
-        open={isLoginDialogOpen} 
-        onOpenChange={setIsLoginDialogOpen} 
-      />
-    </>
-  );
+      <LoginDialog open={isLoginDialogOpen} onOpenChange={setIsLoginDialogOpen} />
+    </>;
 };
-
 export default WriteReviewDialog;
