@@ -12,7 +12,6 @@ import { BottomDrawer } from "@/components/ui/bottom-drawer";
 import { Carousel, CarouselContent, CarouselItem } from "@/components/ui/carousel";
 import { cn } from "@/lib/utils";
 import WriteReviewDialog, { ReviewData } from "./WriteReviewDialog";
-
 interface Review {
   id: number;
   name: string;
@@ -27,7 +26,6 @@ interface Review {
     comment: string;
   };
 }
-
 interface ArtistReviewsProps {
   rating: number;
   reviews: number;
@@ -35,7 +33,6 @@ interface ArtistReviewsProps {
   reviewsData?: Review[];
   onBottomSheetChange?: (isOpen: boolean) => void;
 }
-
 const ReviewItem = ({
   review,
   isMobileCarousel = false,
@@ -47,27 +44,23 @@ const ReviewItem = ({
 }) => {
   const isMobile = useIsMobile();
   const [expanded, setExpanded] = useState(false);
-
   const handleReportClick = () => {
     toast.info("Reseña reportada", {
       description: "Gracias por informarnos",
       position: "bottom-center"
     });
   };
-
   const handleReminderClick = () => {
     toast.info("Revisaremos esta reseña pronto", {
       description: "Gracias por ayudarnos a mejorar",
       position: "bottom-center"
     });
   };
-
   const isNameLong = review.name.length > 15;
   const wordLimit = 20;
   const words = review.comment.split(' ');
   const isTextLong = words.length > wordLimit && isMobile;
   const displayText = isTextLong && !expanded ? words.slice(0, wordLimit).join(' ') + '...' : review.comment;
-
   if (isMobileBottomSheet) {
     return <div className="mb-6">
         <div className="bg-[#F8F8F8] rounded-3xl p-6 relative">
@@ -122,7 +115,6 @@ const ReviewItem = ({
           </div>}
       </div>;
   }
-
   if (isMobileCarousel) {
     return <div className="bg-white rounded-3xl p-6 h-full flex flex-col justify-between">
         <div className="absolute top-4 right-4 flex gap-2 z-10">
@@ -161,7 +153,6 @@ const ReviewItem = ({
         </div>
       </div>;
   }
-
   return <div className="mb-6">
       <div className="bg-[#F7F7F7] rounded-3xl p-6 relative">
         <div className="absolute top-4 right-4 flex gap-2 z-10">
@@ -217,61 +208,57 @@ const ReviewItem = ({
         </div>}
     </div>;
 };
-
-const moreReviewsData: Review[] = [
-  {
-    id: 4,
-    name: "Miguel López",
+const moreReviewsData: Review[] = [{
+  id: 4,
+  name: "Miguel López",
+  date: "2 semanas",
+  rating: 5,
+  badges: ["Bodas", "Eventos corporativos"],
+  comment: "¡Increíble actuación! Todos mis invitados quedaron encantados con su música. Definitivamente lo volvería a contratar para futuros eventos.",
+  title: "Excelente profesional",
+  reply: {
+    name: "Antonia Pedragosa",
     date: "2 semanas",
-    rating: 5,
-    badges: ["Bodas", "Eventos corporativos"],
-    comment: "¡Increíble actuación! Todos mis invitados quedaron encantados con su música. Definitivamente lo volvería a contratar para futuros eventos.",
-    title: "Excelente profesional",
-    reply: {
-      name: "Antonia Pedragosa",
-      date: "2 semanas",
-      comment: "Muchas gracias por tus amables palabras, Miguel. Fue un placer amenizar tu evento. ¡Espero volver a trabajar contigo pronto!"
-    }
-  }, {
-    id: 5,
-    name: "Laura Gómez",
-    date: "1 mes",
-    rating: 4,
-    badges: ["Bodas", "Fiestas privadas"],
-    comment: "Muy profesional y puntual. La música fue perfecta para nuestra celebración de aniversario. Recomendado.",
-    title: "Muy profesional"
-  }, {
-    id: 6,
-    name: "Carlos Martínez",
-    date: "2 meses",
-    rating: 5,
-    badges: ["Eventos corporativos"],
-    comment: "Contratar a este artista fue la mejor decisión para nuestro evento corporativo. Su repertorio se adaptó perfectamente a nuestras necesidades.",
-    title: "Repertorio adaptado a nuestras necesidades",
-    reply: {
-      name: "Antonia Pedragosa",
-      date: "2 meses",
-      comment: "Gracias Carlos, me alegra que quedaran satisfechos con mi servicio. Fue un placer trabajar en su evento corporativo."
-    }
-  }, {
-    id: 7,
-    name: "Sofía Rodríguez",
-    date: "3 meses",
-    rating: 4,
-    badges: ["Bodas"],
-    comment: "Nuestra boda fue especial gracias a su música. El ambiente que creó fue exactamente lo que buscábamos.",
-    title: "Creó el ambiente perfecto"
-  }, {
-    id: 8,
-    name: "David García",
-    date: "4 meses",
-    rating: 5,
-    badges: ["Fiestas privadas"],
-    comment: "Un profesional excepcional. Su energía contagió a todos los invitados y la fiesta fue un éxito rotundo.",
-    title: "Energía contagiosa"
+    comment: "Muchas gracias por tus amables palabras, Miguel. Fue un placer amenizar tu evento. ¡Espero volver a trabajar contigo pronto!"
   }
-];
-
+}, {
+  id: 5,
+  name: "Laura Gómez",
+  date: "1 mes",
+  rating: 4,
+  badges: ["Bodas", "Fiestas privadas"],
+  comment: "Muy profesional y puntual. La música fue perfecta para nuestra celebración de aniversario. Recomendado.",
+  title: "Muy profesional"
+}, {
+  id: 6,
+  name: "Carlos Martínez",
+  date: "2 meses",
+  rating: 5,
+  badges: ["Eventos corporativos"],
+  comment: "Contratar a este artista fue la mejor decisión para nuestro evento corporativo. Su repertorio se adaptó perfectamente a nuestras necesidades.",
+  title: "Repertorio adaptado a nuestras necesidades",
+  reply: {
+    name: "Antonia Pedragosa",
+    date: "2 meses",
+    comment: "Gracias Carlos, me alegra que quedaran satisfechos con mi servicio. Fue un placer trabajar en su evento corporativo."
+  }
+}, {
+  id: 7,
+  name: "Sofía Rodríguez",
+  date: "3 meses",
+  rating: 4,
+  badges: ["Bodas"],
+  comment: "Nuestra boda fue especial gracias a su música. El ambiente que creó fue exactamente lo que buscábamos.",
+  title: "Creó el ambiente perfecto"
+}, {
+  id: 8,
+  name: "David García",
+  date: "4 meses",
+  rating: 5,
+  badges: ["Fiestas privadas"],
+  comment: "Un profesional excepcional. Su energía contagió a todos los invitados y la fiesta fue un éxito rotundo.",
+  title: "Energía contagiosa"
+}];
 const ArtistReviews = ({
   rating,
   reviews,
@@ -284,13 +271,11 @@ const ArtistReviews = ({
   const [isWriteReviewOpen, setIsWriteReviewOpen] = useState(false);
   const isMobile = useIsMobile();
   const isLoggedIn = true;
-
   useEffect(() => {
     if (onBottomSheetChange) {
       onBottomSheetChange(isBottomSheetOpen);
     }
   }, [isBottomSheetOpen, onBottomSheetChange]);
-
   const handleVerTodas = () => {
     if (isMobile) {
       setIsBottomSheetOpen(true);
@@ -298,11 +283,9 @@ const ArtistReviews = ({
       setIsDialogOpen(true);
     }
   };
-
   const handleCloseBottomSheet = () => {
     setIsBottomSheetOpen(false);
   };
-
   useEffect(() => {
     return () => {
       if (onBottomSheetChange) {
@@ -310,7 +293,6 @@ const ArtistReviews = ({
       }
     };
   }, [onBottomSheetChange]);
-
   const enhancedReviewsData = reviewsData?.map(review => {
     if (review.id === 1) {
       return {
@@ -328,22 +310,17 @@ const ArtistReviews = ({
       title: review.id === 2 ? "Excelente ambiente" : "Gran profesional"
     };
   });
-
   const allReviews = enhancedReviewsData ? [...enhancedReviewsData, ...moreReviewsData] : [];
-
   const handleWriteReview = () => {
     setIsWriteReviewOpen(true);
   };
-
   const handleSubmitReview = (reviewData: ReviewData) => {
     toast.success("Reseña enviada con éxito", {
       description: "Gracias por compartir tu experiencia",
       position: "bottom-center"
     });
   };
-
-  return (
-    <div className="mt-8 mb-16">
+  return <div className="mt-8 mb-16">
       <div className={`${isMobile ? 'bg-[#F7F7F7] py-8 -mx-6' : ''}`}>
         <h2 className="text-3xl font-medium font-figtree mb-1 px-6 sm:px-0">
           Reseñas
@@ -392,7 +369,7 @@ const ArtistReviews = ({
       </div>
 
       {!isMobile && <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-          <DialogContent className="sm:max-w-[700px] p-6 border-none bg-white dark:bg-vyba-dark-bg rounded-[40px] pt-8 px-8 pb-0">
+          <DialogContent className="sm:max-w-[700px] border-none bg-white dark:bg-vyba-dark-bg rounded-[40px] pt-8 px-8 pb-0">
             <DialogHeader className="text-left mb-2 mt-12">
               <div className="flex justify-between">
                 <DialogTitle className="text-3xl font-black">Reseñas</DialogTitle>
@@ -408,13 +385,7 @@ const ArtistReviews = ({
           </DialogContent>
         </Dialog>}
 
-      {isMobile && 
-        <BottomDrawer 
-          open={isBottomSheetOpen} 
-          onOpenChange={setIsBottomSheetOpen} 
-          className="p-0"
-          showCloseButton={false}
-        >
+      {isMobile && <BottomDrawer open={isBottomSheetOpen} onOpenChange={setIsBottomSheetOpen} className="p-0" showCloseButton={false}>
           <div className="px-6 pt-8">
             <div className="mb-6">
               <Button variant="ghost" size="icon" className="p-2 -ml-2 h-10 w-10 mb-4" onClick={handleCloseBottomSheet}>
@@ -438,17 +409,9 @@ const ArtistReviews = ({
               </div>
             </ScrollArea>
           </div>
-        </BottomDrawer>
-      }
+        </BottomDrawer>}
 
-      <WriteReviewDialog 
-        isOpen={isWriteReviewOpen} 
-        onOpenChange={setIsWriteReviewOpen} 
-        onSubmit={handleSubmitReview}
-        isLoggedIn={isLoggedIn}
-      />
-    </div>
-  );
+      <WriteReviewDialog isOpen={isWriteReviewOpen} onOpenChange={setIsWriteReviewOpen} onSubmit={handleSubmitReview} isLoggedIn={isLoggedIn} />
+    </div>;
 };
-
 export default ArtistReviews;
