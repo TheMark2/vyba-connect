@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from "react";
 import { Star, ClockAlert, CornerDownRight, Plus, MessagesSquare, ChevronLeft, Minus } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -437,7 +438,7 @@ const ArtistReviews = ({
               }} className="w-full">
                 <CarouselContent className="-ml-2">
                   {allReviews.slice(0, 4).map((review) => (
-                    <CarouselItem key={review.id} className="pl-2 basis-1/2 lg:basis-1/3">
+                    <CarouselItem key={review.id} className="pl-2 basis-1/2 lg:basis-1/2">
                       <div className="h-full">
                         <ReviewItem review={review} isDesktopCarousel={true} />
                       </div>
