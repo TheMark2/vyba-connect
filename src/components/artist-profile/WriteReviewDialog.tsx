@@ -1,3 +1,4 @@
+
 import React, { useState } from "react";
 import { Dialog, DialogContent, DialogClose } from "@/components/ui/dialog";
 import { BottomDrawer } from "@/components/ui/bottom-drawer";
@@ -114,7 +115,7 @@ const WriteReviewDialog = ({
       <h2 className="text-3xl font-black mb-6">Inicia sesión o regístrate</h2>
       
       <div className="bg-[#F7F7F7] rounded-2xl p-6 mb-8 text-center dark:bg-vyba-dark-secondary/20">
-        <p className="text-lg font-medium text-gray-600 dark:text-gray-300 mb-8">
+        <p className="text-lg font-light text-gray-600 dark:text-gray-300 mb-8">
           Para escribir una reseña, primero debes iniciar sesión
         </p>
         
@@ -123,32 +124,32 @@ const WriteReviewDialog = ({
             <Button variant="outline" size="icon" className="w-16 h-16 rounded-full mb-2 bg-white dark:bg-black border-0 hover:bg-gray-100 dark:hover:bg-gray-900" onClick={handleLoginClick}>
               <img src="/logos/google-logo.svg" alt="Google" className="w-8 h-8" />
             </Button>
-            <span className="text-sm">Google</span>
+            <span className="text-sm font-medium">Google</span>
           </div>
           
           <div className="flex flex-col items-center">
             <Button variant="outline" size="icon" className="w-16 h-16 rounded-full mb-2 bg-white dark:bg-black border-0 hover:bg-gray-100 dark:hover:bg-gray-900" onClick={handleLoginClick}>
               <img src="/logos/facebook-logo.svg" alt="Facebook" className="w-8 h-8" />
             </Button>
-            <span className="text-sm">Facebook</span>
+            <span className="text-sm font-medium">Facebook</span>
           </div>
           
           <div className="flex flex-col items-center">
             <Button variant="outline" size="icon" className="w-16 h-16 rounded-full mb-2 bg-white dark:bg-black border-0 hover:bg-gray-100 dark:hover:bg-gray-900" onClick={handleLoginClick}>
               <img src="/logos/apple-logo.svg" alt="Apple" className="w-8 h-8" />
             </Button>
-            <span className="text-sm">Apple</span>
+            <span className="text-sm font-medium">Apple</span>
           </div>
           
           <div className="flex flex-col items-center">
             <Button variant="outline" size="icon" className="w-16 h-16 rounded-full mb-2 bg-white dark:bg-black border-0 hover:bg-gray-100 dark:hover:bg-gray-900" onClick={handleLoginClick}>
               <Mail className="h-8 w-8" />
             </Button>
-            <span className="text-sm">Mail</span>
+            <span className="text-sm font-medium">Mail</span>
           </div>
         </div>
         
-        <Button onClick={handleLoginClick} className="px-8 bg-[#D4DDFF] hover:bg-[#C0D0FF] text-black dark:text-white rounded-full transition-all duration-200">
+        <Button onClick={handleLoginClick} className="px-8 bg-[#D4DDFF] hover:bg-[#C0D0FF] text-black dark:text-white rounded-full transition-all duration-200 font-medium">
           Iniciar sesión
         </Button>
       </div>
@@ -161,37 +162,68 @@ const WriteReviewDialog = ({
       
       <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-6 gap-4">
         {isLoading ? (
-          <motion.div 
-            className="bg-[#F7F7F7] rounded-full pl-3 pr-6 py-3 dark:bg-vyba-dark-secondary/20 relative overflow-hidden"
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.3 }}
-          >
+          <div className="bg-[#F7F7F7] rounded-full pl-3 pr-6 py-3 dark:bg-vyba-dark-secondary/20 relative overflow-hidden">
             <div className="flex items-center gap-5">
-              <Skeleton className="h-11 w-11 rounded-full">
-                {/* No children needed for shimmer effect */}
-              </Skeleton>
+              <motion.div
+                initial={{ opacity: 0, y: 5 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.3 }}
+              >
+                <Skeleton className="h-11 w-11 rounded-full" />
+              </motion.div>
               <div className="flex flex-col">
-                <Skeleton className="w-24 h-3 mb-2" />
-                <Skeleton className="w-32 h-5" />
+                <motion.div
+                  initial={{ opacity: 0, y: 5 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.3, delay: 0.1 }}
+                >
+                  <Skeleton className="w-24 h-3 mb-2" />
+                </motion.div>
+                <motion.div
+                  initial={{ opacity: 0, y: 5 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.3, delay: 0.2 }}
+                >
+                  <Skeleton className="w-32 h-5" />
+                </motion.div>
               </div>
             </div>
-          </motion.div>
+          </div>
         ) : (
           <motion.div 
             className="bg-[#F7F7F7] rounded-full pl-3 pr-6 py-3 dark:bg-vyba-dark-secondary/20"
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.3, delay: 0.1 }}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.3 }}
           >
             <div className="flex items-center gap-5">
-              <Avatar className="h-11 w-11 rounded-full">
-                <AvatarImage src="https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?q=80&w=1887&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="Avatar de usuario" />
-                <AvatarFallback className="rounded-full">AP</AvatarFallback>
-              </Avatar>
+              <motion.div
+                initial={{ opacity: 0, y: 5 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.3 }}
+              >
+                <Avatar className="h-11 w-11 rounded-full">
+                  <AvatarImage src="https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?q=80&w=1887&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="Avatar de usuario" />
+                  <AvatarFallback className="rounded-full">AP</AvatarFallback>
+                </Avatar>
+              </motion.div>
               <div className="flex flex-col">
-                <p className="text-[#918E8E] text-xs font-regular">Escribiendo como</p>
-                <div className="text-base font-medium">Alejandro Pérez</div>
+                <motion.p 
+                  className="text-[#918E8E] text-xs font-light"
+                  initial={{ opacity: 0, y: 5 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.3, delay: 0.1 }}
+                >
+                  Escribiendo como
+                </motion.p>
+                <motion.div 
+                  className="text-base font-medium"
+                  initial={{ opacity: 0, y: 5 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.3, delay: 0.2 }}
+                >
+                  Alejandro Pérez
+                </motion.div>
               </div>
             </div>
           </motion.div>
@@ -290,7 +322,7 @@ const WriteReviewDialog = ({
       </div>
       
       <div className="flex justify-end">
-        <Button onClick={handleSubmit} disabled={!title || !comment || !acceptedPolicy} className="px-8 bg-[#D4DDFF] hover:bg-[#C0D0FF] text-black dark:text-white rounded-full transition-all duration-200">
+        <Button onClick={handleSubmit} disabled={!title || !comment || !acceptedPolicy} className="px-8 bg-[#D4DDFF] hover:bg-[#C0D0FF] text-black dark:text-white rounded-full transition-all duration-200 font-medium">
           Enviar
         </Button>
       </div>

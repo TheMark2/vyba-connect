@@ -15,7 +15,7 @@ const ArtistFAQ = ({ artistName }: ArtistFAQProps) => {
           <AccordionTrigger className="px-6 py-5 text-base font-bold hover:no-underline text-left">
             ¿Cómo puedo reservar una fecha?
           </AccordionTrigger>
-          <AccordionContent className="px-6 text-base">
+          <AccordionContent className="px-6 text-base font-light">
             Para reservar una fecha con {artistName}, simplemente haz clic en el botón "Contactar" y nuestro equipo te ayudará a coordinar los detalles de tu evento. Asegúrate de proporcionar toda la información relevante como fecha, ubicación y tipo de evento.
           </AccordionContent>
         </AccordionItem>
@@ -23,7 +23,7 @@ const ArtistFAQ = ({ artistName }: ArtistFAQProps) => {
           <AccordionTrigger className="px-6 py-5 text-base font-bold hover:no-underline text-left">
             ¿Qué incluye el precio?
           </AccordionTrigger>
-          <AccordionContent className="px-6 text-base">
+          <AccordionContent className="px-6 text-base font-light">
             El precio incluye la actuación completa de {artistName}, equipo de sonido básico para espacios pequeños y una consulta previa al evento para discutir tus preferencias musicales. Cualquier requisito adicional se cotizará por separado.
           </AccordionContent>
         </AccordionItem>
@@ -31,7 +31,7 @@ const ArtistFAQ = ({ artistName }: ArtistFAQProps) => {
           <AccordionTrigger className="px-6 py-5 text-base font-bold hover:no-underline text-left">
             ¿Cuánto tiempo dura una actuación?
           </AccordionTrigger>
-          <AccordionContent className="px-6 text-base">
+          <AccordionContent className="px-6 text-base font-light">
             Las actuaciones estándar suelen durar entre 2 y 3 horas, con descansos breves. Sin embargo, podemos adaptar la duración según las necesidades específicas de tu evento.
           </AccordionContent>
         </AccordionItem>
@@ -39,7 +39,7 @@ const ArtistFAQ = ({ artistName }: ArtistFAQProps) => {
           <AccordionTrigger className="px-6 py-5 text-base font-bold hover:no-underline text-left">
             ¿Puedo solicitar canciones específicas?
           </AccordionTrigger>
-          <AccordionContent className="px-6 text-base">
+          <AccordionContent className="px-6 text-base font-light">
             ¡Por supuesto! Puedes proporcionar una lista de canciones que te gustaría escuchar y haremos todo lo posible para incluirlas en el repertorio. Recomendamos compartir estas solicitudes con al menos dos semanas de anticipación.
           </AccordionContent>
         </AccordionItem>
@@ -47,7 +47,7 @@ const ArtistFAQ = ({ artistName }: ArtistFAQProps) => {
           <AccordionTrigger className="px-6 py-5 text-base font-bold hover:no-underline text-left">
             ¿Qué pasa si necesito cancelar?
           </AccordionTrigger>
-          <AccordionContent className="px-6 text-base">
+          <AccordionContent className="px-6 text-base font-light">
             Nuestra política de cancelación requiere un aviso con 30 días de anticipación para un reembolso completo. Las cancelaciones con menos tiempo pueden estar sujetas a cargos parciales. Cada caso se evalúa individualmente.
           </AccordionContent>
         </AccordionItem>
@@ -55,7 +55,7 @@ const ArtistFAQ = ({ artistName }: ArtistFAQProps) => {
           <AccordionTrigger className="px-6 py-5 text-base font-bold hover:no-underline text-left">
             ¿Cómo funciona el pago?
           </AccordionTrigger>
-          <AccordionContent className="px-6 text-base">
+          <AccordionContent className="px-6 text-base font-light">
             Requerimos un depósito del 50% para confirmar la reserva, y el saldo restante debe pagarse una semana antes del evento. Aceptamos transferencias bancarias y otros métodos de pago que se acordarán al momento de la reserva.
           </AccordionContent>
         </AccordionItem>
