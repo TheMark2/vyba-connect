@@ -369,7 +369,7 @@ const ArtistReviews = ({
       </div>
 
       {!isMobile && <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-          <DialogContent className="sm:max-w-[700px] border-none bg-white dark:bg-vyba-dark-bg rounded-[40px] pt-8 px-8 pb-0">
+          <DialogContent className="sm:max-w-[700px] border-none bg-white dark:bg-vyba-dark-bg rounded-[40px] pb-0">
             <DialogHeader className="text-left mb-2 mt-12">
               <div className="flex justify-between">
                 <DialogTitle className="text-3xl font-black">Reseñas</DialogTitle>
