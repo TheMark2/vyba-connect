@@ -69,42 +69,44 @@ const WriteReviewDialog = ({
   };  
 
   const renderContent = () => (
-    <div className="flex flex-col w-full pt-8">
-      <DialogClose className="absolute left-6 top-6 rounded-full p-1 text-black hover:bg-black/5 border-none dark:text-white">
+    <div className="flex flex-col w-full">
+      <DialogClose className="absolute right-6 top-6 rounded-full p-1 text-black hover:bg-black/5 border-none dark:text-white">
         <X className="h-6 w-6" />
         <span className="sr-only">Cerrar</span>
       </DialogClose>
       
-      <h2 className="text-3xl font-black mb-8">Escribe una reseña</h2>
+      <h2 className="text-3xl font-black mb-6">Escribe una reseña</h2>
       
-      <div className="bg-[#F7F7F7] rounded-3xl px-6 py-3 mb-6 dark:bg-vyba-dark-secondary/20">
-        <p className="text-[#918E8E] font-medium mb-1">Escribiendo como</p>
-        <div className="flex items-center gap-3">
-          <Avatar className="h-11 w-11 rounded-full">
-            <AvatarFallback className="rounded-full">R</AvatarFallback>
-          </Avatar>
-          <div>
-            <div className="text-base font-medium">Ramón</div>
+      <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-6 gap-4">
+        <div className="bg-[#F7F7F7] rounded-3xl px-6 py-3 dark:bg-vyba-dark-secondary/20">
+          <p className="text-[#918E8E] font-medium mb-1">Escribiendo como</p>
+          <div className="flex items-center gap-3">
+            <Avatar className="h-11 w-11 rounded-full">
+              <AvatarFallback className="rounded-full">R</AvatarFallback>
+            </Avatar>
+            <div>
+              <div className="text-base font-medium">Ramón</div>
+              <div className="text-xs text-gray-500">hace 2 días</div>
+            </div>
           </div>
         </div>
-      </div>
-      
-      <div className="flex items-center justify-between mb-6">
-        <div className="flex items-center gap-2">
-          {[...Array(5)].map((_, index) => (
-            <Star 
-              key={index} 
-              className={`h-8 w-8 cursor-pointer ${index < rating ? "text-black fill-black dark:text-white dark:fill-white" : "text-gray-300 dark:text-gray-600"}`} 
-              onClick={() => setRating(index + 1)} 
-            />
-          ))}
-        </div>
 
-        <div className="flex items-center gap-2 bg-[#F7F7F7] rounded-full px-4 py-2 dark:bg-vyba-dark-secondary/20">
-          {getFaceIcon(rating)}
-          <span className="text-xl font-medium">{rating}/5</span>
+        <div className="flex flex-col items-end gap-2">
+          <div className="flex items-center gap-2 bg-[#F7F7F7] rounded-full px-4 py-2 dark:bg-vyba-dark-secondary/20">
+            {getFaceIcon(rating)}
+            <span className="text-xl font-medium">{rating}/5</span>
+          </div>
+          
+          <div className="flex items-center gap-2">
+            {[...Array(5)].map((_, index) => (
+              <Star 
+                key={index} 
+                className={`h-8 w-8 cursor-pointer ${index < rating ? "text-black fill-black dark:text-white dark:fill-white" : "text-gray-300 dark:text-gray-600"}`} 
+                onClick={() => setRating(index + 1)} 
+              />
+            ))}
+          </div>
         </div>
-
       </div>
       
       <div className="mb-6">
@@ -155,7 +157,7 @@ const WriteReviewDialog = ({
         <Button 
           onClick={handleSubmit} 
           disabled={!title || !comment || !acceptedPolicy} 
-          className="px-8 bg-[#D4DDFF] text-black dark:text-white"
+          className="px-8 bg-[#D4DDFF] hover:bg-[#C0D0FF] text-black dark:text-white rounded-full"
         >
           Enviar
         </Button>
@@ -178,7 +180,7 @@ const WriteReviewDialog = ({
 
   return (
     <Dialog open={isOpen} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-md p-8 rounded-[32px] border-none">
+      <DialogContent className="max-w-[700px] p-8 rounded-[32px] border-none">
         {renderContent()}
       </DialogContent>
     </Dialog>
