@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from "react";
 import { Star, ClockAlert, CornerDownRight, Plus, MessageCirclePlus, ChevronLeft, Minus } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -12,6 +11,7 @@ import { Marquee } from "@/components/ui/marquee";
 import { BottomDrawer } from "@/components/ui/bottom-drawer";
 import { Carousel, CarouselContent, CarouselItem } from "@/components/ui/carousel";
 import { cn } from "@/lib/utils";
+import WriteReviewDialog, { ReviewData } from "./WriteReviewDialog";
 
 interface Review {
   id: number;
@@ -281,6 +281,7 @@ const ArtistReviews = ({
 }: ArtistReviewsProps) => {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [isBottomSheetOpen, setIsBottomSheetOpen] = useState(false);
+  const [isWriteReviewOpen, setIsWriteReviewOpen] = useState(false);
   const isMobile = useIsMobile();
 
   useEffect(() => {
@@ -330,8 +331,12 @@ const ArtistReviews = ({
   const allReviews = enhancedReviewsData ? [...enhancedReviewsData, ...moreReviewsData] : [];
 
   const handleWriteReview = () => {
-    toast.success("Función escribir reseña", {
-      description: "Esta función estará disponible próximamente",
+    setIsWriteReviewOpen(true);
+  };
+
+  const handleSubmitReview = (reviewData: ReviewData) => {
+    toast.success("Reseña enviada con éxito", {
+      description: "Gracias por compartir tu experiencia",
       position: "bottom-center"
     });
   };
@@ -432,6 +437,12 @@ const ArtistReviews = ({
           </div>
         </BottomDrawer>
       }
+
+      <WriteReviewDialog 
+        isOpen={isWriteReviewOpen} 
+        onOpenChange={setIsWriteReviewOpen} 
+        onSubmit={handleSubmitReview}
+      />
     </div>
   );
 };
