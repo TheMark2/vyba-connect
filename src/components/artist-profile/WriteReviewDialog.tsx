@@ -161,24 +161,29 @@ const WriteReviewDialog = ({
       
       <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-6 gap-4">
         {isLoading ? (
-          <div className="bg-[#F7F7F7] rounded-full pl-3 pr-6 py-3 dark:bg-vyba-dark-secondary/20 relative overflow-hidden">
+          <motion.div 
+            className="bg-[#F7F7F7] rounded-full pl-3 pr-6 py-3 dark:bg-vyba-dark-secondary/20 relative overflow-hidden"
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.3 }}
+          >
             <div className="flex items-center gap-5">
-              <Skeleton className="h-11 w-11 rounded-full relative overflow-hidden">
-                <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent animate-[shimmer_1.5s_infinite]"></div>
+              <Skeleton className="h-11 w-11 rounded-full">
+                {/* No children needed for shimmer effect */}
               </Skeleton>
               <div className="flex flex-col">
-                <Skeleton className="w-24 h-3 mb-2 relative overflow-hidden">
-                  <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent animate-[shimmer_1.5s_infinite]"></div>
-                </Skeleton>
-                <Skeleton className="w-32 h-5 relative overflow-hidden">
-                  <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent animate-[shimmer_1.5s_infinite]"></div>
-                </Skeleton>
+                <Skeleton className="w-24 h-3 mb-2" />
+                <Skeleton className="w-32 h-5" />
               </div>
             </div>
-            <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent animate-[shimmer_1.5s_infinite]"></div>
-          </div>
+          </motion.div>
         ) : (
-          <div className="bg-[#F7F7F7] rounded-full pl-3 pr-6 py-3 dark:bg-vyba-dark-secondary/20">
+          <motion.div 
+            className="bg-[#F7F7F7] rounded-full pl-3 pr-6 py-3 dark:bg-vyba-dark-secondary/20"
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.3, delay: 0.1 }}
+          >
             <div className="flex items-center gap-5">
               <Avatar className="h-11 w-11 rounded-full">
                 <AvatarImage src="https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?q=80&w=1887&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="Avatar de usuario" />
@@ -189,7 +194,7 @@ const WriteReviewDialog = ({
                 <div className="text-base font-medium">Alejandro Pérez</div>
               </div>
             </div>
-          </div>
+          </motion.div>
         )}
         
         <div className="flex flex-col items-end gap-2">

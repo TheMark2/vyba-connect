@@ -119,6 +119,9 @@ export default {
           "100%": { transform: "scale(1)", opacity: "1" },
         },
         shimmer: {
+          '0%': {
+            transform: 'translateX(-100%)',
+          },
           '100%': {
             transform: 'translateX(100%)',
           },
@@ -140,7 +143,7 @@ export default {
         "radial-out": "radial-out 0.3s ease-out forwards",
         "scale-in": "scale-in 0.2s ease-out",
         "spin-slow": "spin 3s linear infinite",
-        shimmer: 'shimmer 1.5s infinite',
+        shimmer: 'shimmer 2s ease-in-out infinite',
       },
       fontSize: {
         "section-title": ["2rem", { fontWeight: 500 }],
