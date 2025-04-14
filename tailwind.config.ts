@@ -118,6 +118,11 @@ export default {
           "0%": { transform: "scale(0.9)", opacity: "0" },
           "100%": { transform: "scale(1)", opacity: "1" },
         },
+        shimmer: {
+          '100%': {
+            transform: 'translateX(100%)',
+          },
+        },
       },
       animation: {
         "accordion-down": "accordion-down 0.5s ease-out",
@@ -135,6 +140,7 @@ export default {
         "radial-out": "radial-out 0.3s ease-out forwards",
         "scale-in": "scale-in 0.2s ease-out",
         "spin-slow": "spin 3s linear infinite",
+        shimmer: 'shimmer 1.5s infinite',
       },
       fontSize: {
         "section-title": ["2rem", { fontWeight: 500 }],

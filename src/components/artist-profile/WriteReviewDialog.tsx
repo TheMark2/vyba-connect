@@ -104,7 +104,8 @@ const WriteReviewDialog = ({
     onOpenChange(false);
   };
 
-  const renderLoginContent = () => <div className="flex flex-col w-full">
+  const renderLoginContent = () => {
+    return <div className="flex flex-col w-full">
       <DialogClose className="absolute right-6 top-6 rounded-full p-1 text-black hover:bg-black/5 border-none dark:text-white">
         <X className="h-6 w-6" />
         <span className="sr-only">Cerrar</span>
@@ -152,6 +153,7 @@ const WriteReviewDialog = ({
         </Button>
       </div>
     </div>;
+  };
 
   const renderReviewContent = () => <div className="flex flex-col w-full">
       
@@ -159,14 +161,21 @@ const WriteReviewDialog = ({
       
       <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-6 gap-4">
         {isLoading ? (
-          <div className="bg-[#F7F7F7] rounded-full pl-3 pr-6 py-3 dark:bg-vyba-dark-secondary/20">
+          <div className="bg-[#F7F7F7] rounded-full pl-3 pr-6 py-3 dark:bg-vyba-dark-secondary/20 relative overflow-hidden">
             <div className="flex items-center gap-5">
-              <Skeleton className="h-11 w-11 rounded-full" />
+              <Skeleton className="h-11 w-11 rounded-full relative overflow-hidden">
+                <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent animate-[shimmer_1.5s_infinite]"></div>
+              </Skeleton>
               <div className="flex flex-col">
-                <Skeleton className="w-24 h-3 mb-2" />
-                <Skeleton className="w-32 h-5" />
+                <Skeleton className="w-24 h-3 mb-2 relative overflow-hidden">
+                  <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent animate-[shimmer_1.5s_infinite]"></div>
+                </Skeleton>
+                <Skeleton className="w-32 h-5 relative overflow-hidden">
+                  <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent animate-[shimmer_1.5s_infinite]"></div>
+                </Skeleton>
               </div>
             </div>
+            <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent animate-[shimmer_1.5s_infinite]"></div>
           </div>
         ) : (
           <div className="bg-[#F7F7F7] rounded-full pl-3 pr-6 py-3 dark:bg-vyba-dark-secondary/20">
