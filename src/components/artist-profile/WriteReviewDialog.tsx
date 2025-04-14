@@ -54,7 +54,7 @@ const WriteReviewDialog = ({
       
       <h2 className="text-3xl font-black mb-8">Escribe una reseña</h2>
       
-      <div className="bg-[#F7F7F7] rounded-3xl p-6 mb-6 dark:bg-vyba-dark-secondary/20">
+      <div className="bg-[#F7F7F7] rounded-3xl px-6 py-3 mb-6 dark:bg-vyba-dark-secondary/20">
         <p className="text-[#918E8E] font-medium mb-1">Escribiendo como</p>
         <div className="flex items-center gap-3">
           <Avatar className="h-11 w-11 rounded-full">
