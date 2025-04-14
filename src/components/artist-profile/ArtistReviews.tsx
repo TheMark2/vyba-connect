@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Star, ClockAlert, CornerDownRight, Plus, MessageCirclePlus, ChevronLeft, Minus } from "lucide-react";
+import { Star, ClockAlert, CornerDownRight, Plus, MessagesSquare, ChevronLeft, Minus } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
@@ -271,7 +271,7 @@ const moreReviewsData: Review[] = [
     reply: {
       name: "Antonia Pedragosa",
       date: "2 semanas",
-      comment: "Muchas gracias por tus amables palabras, Miguel. Fue un placer amenizar tu evento. ¡Espero volver a trabajar contigo pronto!"
+      comment: "Muchas gracias por informarnos, Miguel. Fue un placer amenizar tu evento. ¡Espero volver a trabajar contigo pronto!"
     }
   }, {
     id: 5,
@@ -394,14 +394,17 @@ const ArtistReviews = ({
               <span className="text-2xl font-medium">{rating}</span>
               <span className="text-2xl font-medium">({reviews})</span>
             </div>
-            <div>
-              {isMobile ? <Button variant="default" size="icon" className="bg-gradient-to-br from-[#D4DDFF] to-[#F0F3FF] border-none" onClick={handleWriteReview}>
-                  <MessageCirclePlus className="h-5 w-5 stroke-[2.5px]" />
-                </Button> : <Button variant="secondary" className="flex items-center gap-2 font-medium" onClick={handleWriteReview}>
-                  <CornerDownRight className="h-4 w-4 stroke-[2.5px]" />
-                  Escribir una reseña
-                </Button>}
-            </div>
+            
+            {isMobile ? (
+              <Button variant="default" size="icon" className="bg-gradient-to-br from-[#D4DDFF] to-[#F0F3FF] border-none" onClick={handleWriteReview}>
+                <MessagesSquare className="h-5 w-5 stroke-[2.5px]" />
+              </Button>
+            ) : (
+              <div className="flex items-center gap-2">
+                <CarouselPrevious className="relative static translate-y-0 mr-2" />
+                <CarouselNext className="relative static translate-y-0" />
+              </div>
+            )}
           </div>
           
           {isMobile && <div className="mb-10">
@@ -434,18 +437,21 @@ const ArtistReviews = ({
                     </CarouselItem>
                   ))}
                 </CarouselContent>
-                <div className="flex justify-end mt-4">
-                  <CarouselPrevious className="relative static translate-y-0 mr-2" />
-                  <CarouselNext className="relative static translate-y-0" />
-                </div>
               </Carousel>
             </div>
           )}
           
-          <div className="flex justify-center mt-8">
+          <div className="flex justify-center mt-8 gap-4">
             <Button variant={isMobile ? "ghost" : "secondary"} className={isMobile ? "px-12 bg-white border-none font-medium" : "px-12 font-medium"} onClick={handleVerTodas}>
               Ver todas
             </Button>
+            
+            {!isMobile && (
+              <Button variant="secondary" className="flex items-center gap-2 font-medium" onClick={handleWriteReview}>
+                <MessagesSquare className="h-4 w-4 stroke-[2.5px]" />
+                Escribir una reseña
+              </Button>
+            )}
           </div>
         </div>
       </div>
