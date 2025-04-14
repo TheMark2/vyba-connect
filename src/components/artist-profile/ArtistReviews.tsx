@@ -169,9 +169,9 @@ const ReviewItem = ({
             {[...Array(5)].map((_, index) => <Star key={index} className={`h-3 w-3 ${index < review.rating ? "text-black fill-black dark:text-white dark:fill-white" : "text-gray-300 dark:text-gray-600"}`} />)}
           </div>
           
-          <h3 className="text-lg font-bold mb-3 pr-20">{review.title || "Muy buen servicio"}</h3>
+          <h3 className="text-lg font-semibold mb-3 pr-20">{review.title || "Muy buen servicio"}</h3>
           
-          <p className="text-base mb-2 transition-all duration-300">{displayText}</p>
+          <p className="text-base font-light mb-2 transition-all duration-300">{displayText}</p>
           
           {isTextLong && <Button variant="ghost" size="sm" className="self-start p-0 h-8 mb-4 hover:bg-transparent" onClick={() => setExpanded(!expanded)}>
               {expanded ? <Minus className="h-4 w-4 mr-1" /> : <Plus className="h-4 w-4 mr-1" />}
@@ -193,7 +193,7 @@ const ReviewItem = ({
       
       {review.reply && <div className="bg-[#D9D9D9] rounded-3xl p-6 ml-8 mt-3">
           <div className="flex flex-col">
-            <p className="text-base mb-4">{review.reply.comment}</p>
+            <p className="text-base mb-4 font-light">{review.reply.comment}</p>
             
             <div className="flex items-center mt-2">
               <Avatar className="h-10 w-10 rounded-full mr-3">
