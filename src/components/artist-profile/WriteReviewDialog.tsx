@@ -6,34 +6,31 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Checkbox } from "@/components/ui/checkbox";
-import { Star, Smile, Meh, Frown, SmilePlus, FrownPlus } from "lucide-react";
+import { Star, Smile, SmilePlus, Meh, Frown, FrownPlus } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { X } from "lucide-react";
-
 interface WriteReviewDialogProps {
   isOpen: boolean;
   onOpenChange: (open: boolean) => void;
   onSubmit: (reviewData: ReviewData) => void;
 }
-
 export interface ReviewData {
   title: string;
   comment: string;
   rating: number;
   acceptedPolicy: boolean;
 }
-
 const WriteReviewDialog = ({
   isOpen,
   onOpenChange,
   onSubmit
+
 }: WriteReviewDialogProps) => {
   const isMobile = useIsMobile();
   const [title, setTitle] = useState("");
   const [comment, setComment] = useState("");
   const [rating, setRating] = useState(4);
   const [acceptedPolicy, setAcceptedPolicy] = useState(false);
-
   const handleSubmit = () => {
     if (!title || !comment || !acceptedPolicy) return;
     onSubmit({
@@ -50,30 +47,23 @@ const WriteReviewDialog = ({
     setAcceptedPolicy(false);
     onOpenChange(false);
   };
-
-  // Función para obtener el icono según la calificación
-  const getRatingIcon = (starIndex) => {
-    // El índice va de 0 a 4, pero queremos contar de 1 a 5
-    const starValue = starIndex + 1;
-    
-    switch (starValue) {
+  const getFaceIcon = (rating: number) => {
+    switch (rating) {
       case 1:
-        return <FrownPlus className="mr-2" />;
+        return <FrownPlus className="w-6 h-6 text-red-500" />;
       case 2:
-        return <Frown className="mr-2" />;
+        return <Frown className="w-6 h-6 text-orange-500" />;
       case 3:
-        return <Meh className="mr-2" />;
+        return <Meh className="w-6 h-6 text-yellow-500" />;
       case 4:
-        return <Smile className="mr-2" />;
+        return <Smile className="w-6 h-6 text-green-500" />;
       case 5:
-        return <SmilePlus className="mr-2" />;
+        return <SmilePlus className="w-6 h-6 text-green-600" />;
       default:
-        return <Smile className="mr-2" />;
+        return null;
     }
-  };
-
-  const renderContent = () => (
-    <div className="flex flex-col w-full pt-8">
+  };  
+  const renderContent = () => <div className="flex flex-col w-full pt-8">
       <DialogClose className="absolute left-6 top-6 rounded-full p-1 text-black hover:bg-black/5 border-none dark:text-white">
         <X className="h-6 w-6" />
         <span className="sr-only">Cerrar</span>
@@ -94,71 +84,33 @@ const WriteReviewDialog = ({
       </div>
       
       <div className="flex items-center justify-between mb-6">
-        <div className="flex items-center">
-          {[...Array(5)].map((_, index) => (
-            <div 
-              key={index} 
-              onClick={() => setRating(index + 1)}
-              className={`flex items-center cursor-pointer rounded-full p-2 mr-1 ${
-                index < rating 
-                  ? "bg-[#F7F7F7] text-black dark:text-white" 
-                  : "text-gray-300 dark:text-gray-600"
-              }`}
-            >
-              {index === 0 && index < rating && getRatingIcon(0)}
-              {index === 1 && index < rating && getRatingIcon(1)}
-              {index === 2 && index < rating && getRatingIcon(2)}
-              {index === 3 && index < rating && getRatingIcon(3)}
-              {index === 4 && index < rating && getRatingIcon(4)}
-              <Star 
-                className={`h-8 w-8 ${
-                  index < rating ? "fill-black dark:fill-white" : ""
-                }`} 
-              />
-            </div>
-          ))}
+        <div className="flex items-center gap-2">
+          {[...Array(5)].map((_, index) => <Star key={index} className={`h-8 w-8 cursor-pointer ${index < rating ? "text-black fill-black dark:text-white dark:fill-white" : "text-gray-300 dark:text-gray-600"}`} onClick={() => setRating(index + 1)} />)}
         </div>
-        <div className="text-xl font-medium">{rating}/5</div>
+        <div className="flex items-center gap-2 bg-[#F7F7F7] rounded-full px-4 py-2 dark:bg-vyba-dark-secondary/20">
+          {getFaceIcon(rating)}
+          <span className="text-xl font-medium">{rating}/5</span>
+        </div>
       </div>
       
       <div className="mb-6">
         <label htmlFor="title" className="text-base font-medium mb-2 block">
           Dale un título a la reseña
         </label>
-        <Input 
-          id="title" 
-          value={title} 
-          onChange={e => setTitle(e.target.value)} 
-          placeholder="Muy buen servicio" 
-          className="bg-[#F7F7F7] border-none focus-visible:ring-0 focus:ring-0 dark:bg-vyba-dark-secondary/20" 
-        />
+        <Input id="title" value={title} onChange={e => setTitle(e.target.value)} placeholder="Muy buen servicio" className="bg-[#F7F7F7] border-none focus-visible:ring-0 focus:ring-0 dark:bg-vyba-dark-secondary/20" />
       </div>
       
       <div className="mb-8">
         <label htmlFor="comment" className="text-base font-medium mb-2 block">
           Describe la reseña
         </label>
-        <Textarea 
-          id="comment" 
-          value={comment} 
-          onChange={e => setComment(e.target.value)} 
-          placeholder="Muy buen servicio" 
-          className="min-h-32 bg-[#F7F7F7] border-none focus-visible:ring-0 focus:ring-0 dark:bg-vyba-dark-secondary/20" 
-        />
+        <Textarea id="comment" value={comment} onChange={e => setComment(e.target.value)} placeholder="Muy buen servicio" className="min-h-32 bg-[#F7F7F7] border-none focus-visible:ring-0 focus:ring-0 dark:bg-vyba-dark-secondary/20" />
       </div>
       
       <div className="flex items-start space-x-2 mb-8">
-        <Checkbox 
-          id="terms" 
-          checked={acceptedPolicy} 
-          onCheckedChange={checked => setAcceptedPolicy(checked as boolean)} 
-          className="mt-1" 
-        />
+        <Checkbox id="terms" checked={acceptedPolicy} onCheckedChange={checked => setAcceptedPolicy(checked as boolean)} className="mt-1" />
         <div className="grid gap-1.5 leading-none">
-          <label 
-            htmlFor="terms" 
-            className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-          >
+          <label htmlFor="terms" className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
             Acepto la política de privacidad
           </label>
           <p className="text-xs text-gray-500">
@@ -169,37 +121,20 @@ const WriteReviewDialog = ({
       </div>
       
       <div className="flex justify-end">
-        <Button 
-          onClick={handleSubmit} 
-          disabled={!title || !comment || !acceptedPolicy} 
-          className="px-8 bg-[#D4DDFF] text-black dark:text-white"
-        >
+        <Button onClick={handleSubmit} disabled={!title || !comment || !acceptedPolicy} className="px-8 bg-[#D4DDFF] text-black dark:text-white">
           Enviar
         </Button>
       </div>
-    </div>
-  );
-
+    </div>;
   if (isMobile) {
-    return (
-      <BottomDrawer 
-        open={isOpen} 
-        onOpenChange={onOpenChange} 
-        className="p-6 pt-0" 
-        showCloseButton={false}
-      >
+    return <BottomDrawer open={isOpen} onOpenChange={onOpenChange} className="p-6 pt-0" showCloseButton={false}>
         {renderContent()}
-      </BottomDrawer>
-    );
+      </BottomDrawer>;
   }
-
-  return (
-    <Dialog open={isOpen} onOpenChange={onOpenChange}>
+  return <Dialog open={isOpen} onOpenChange={onOpenChange}>
       <DialogContent className="max-w-md p-8 rounded-[32px] border-none">
         {renderContent()}
       </DialogContent>
-    </Dialog>
-  );
+    </Dialog>;
 };
-
 export default WriteReviewDialog;
