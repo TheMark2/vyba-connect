@@ -50,7 +50,7 @@ const GroupMembers = ({
 
   if (useCarousel) {
     return <div className="mt-8 mb-12">
-        <h2 className="text-3xl font-bold mb-6">Integrantes del grupo</h2>
+        <h2 className="text-3xl font-semibold mb-6">Integrantes del grupo</h2>
         
         <div className={isMobile ? 'relative w-full' : 'relative w-full'}>
           <div className={isMobile ? 'mx-[-1.5rem]' : ''}>
