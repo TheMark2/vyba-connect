@@ -1,6 +1,6 @@
 
 import React, { useState } from "react";
-import { Book, List, Clock, Badge } from "lucide-react";
+import { Book, List, Clock, Badge, ChevronDown, ChevronUp } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge as UIBadge } from "@/components/ui/badge";
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/carousel";
@@ -167,8 +167,22 @@ const DetailedInformation = ({
       
       {/* Button to toggle full content */}
       <div className="flex justify-center mt-6">
-        <Button variant="secondary" className="px-6 rounded-full" onClick={() => setShowFullInfo(!showFullInfo)}>
-          {showFullInfo ? "Ver menos" : "Ver toda la información"}
+        <Button 
+          variant="secondary" 
+          className="px-6 rounded-full group relative" 
+          onClick={() => setShowFullInfo(!showFullInfo)}
+        >
+          {showFullInfo ? (
+            <>
+              <ChevronUp className="w-4 h-4 mr-2 transform transition-transform duration-300 ease-in-out group-hover:-translate-y-1" />
+              Ver menos
+            </>
+          ) : (
+            <>
+              <ChevronDown className="w-4 h-4 mr-2 transform transition-transform duration-300 ease-in-out group-hover:translate-y-1" />
+              Ver toda la información
+            </>
+          )}
         </Button>
       </div>
     </div>;
