@@ -1,3 +1,4 @@
+
 import React, { useState } from "react";
 import { Dialog, DialogContent, DialogClose } from "@/components/ui/dialog";
 import { BottomDrawer } from "@/components/ui/bottom-drawer";
@@ -154,33 +155,34 @@ const WriteReviewDialog = ({
         <Textarea id="comment" value={comment} onChange={e => setComment(e.target.value)} placeholder="Muy buen servicio" className="min-h-32" />
       </div>
       
-      <div className="flex items-start space-x-2 mb-8 bg-[#F7F7F7] rounded-lg p-4">
-        <Checkbox 
-          id="terms" 
-          checked={acceptedPolicy} 
-          onCheckedChange={checked => setAcceptedPolicy(checked as boolean)} 
-          className="mt-1" 
-        />
-        <div className="grid gap-1.5 leading-none flex-1 text-center">
-          <div className="flex justify-between items-center">
+      <div className="flex items-center mb-8 bg-[#F7F7F7] rounded-xl p-4 relative overflow-hidden transition-all duration-300 hover:bg-[#F0F0F0] dark:bg-vyba-dark-secondary/20 dark:hover:bg-vyba-dark-secondary/30">
+        <div className="flex items-center justify-between w-full">
+          <div className="flex items-center gap-3">
+            <Checkbox 
+              id="terms" 
+              checked={acceptedPolicy} 
+              onCheckedChange={checked => setAcceptedPolicy(checked as boolean)} 
+              className="h-5 w-5 rounded-sm border-2 border-black data-[state=checked]:border-black" 
+            />
             <label 
               htmlFor="terms" 
-              className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 w-full"
+              className="text-sm font-medium cursor-pointer"
             >
               Acepto la política de privacidad
             </label>
-            <a 
-              href="#" 
-              className="text-sm text-black font-medium underline hover:no-underline"
-              onClick={(e) => {
-                e.preventDefault();
-                // TODO: Add logic to show privacy policy
-                console.log("Open privacy policy");
-              }}
-            >
-              Ver política
-            </a>
           </div>
+          
+          <a 
+            href="#" 
+            className="text-sm text-black font-medium underline decoration-1 underline-offset-2 hover:no-underline transition-all"
+            onClick={(e) => {
+              e.preventDefault();
+              // TODO: Add logic to show privacy policy
+              console.log("Open privacy policy");
+            }}
+          >
+            Ver política
+          </a>
         </div>
       </div>
       
