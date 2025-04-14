@@ -7,14 +7,16 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Checkbox } from "@/components/ui/checkbox";
-import { Star, Smile, Frown, Meh, X } from "lucide-react";
+import { Star, Smile, Frown, Meh, X, Mail, Facebook, Mail, Apple } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { motion } from "framer-motion";
+import LoginDialog from "../auth/LoginDialog";
 
 interface WriteReviewDialogProps {
   isOpen: boolean;
   onOpenChange: (open: boolean) => void;
   onSubmit: (reviewData: ReviewData) => void;
+  isLoggedIn?: boolean;
 }
 
 export interface ReviewData {
@@ -27,7 +29,8 @@ export interface ReviewData {
 const WriteReviewDialog = ({
   isOpen,
   onOpenChange,
-  onSubmit
+  onSubmit,
+  isLoggedIn = false
 }: WriteReviewDialogProps) => {
   const isMobile = useIsMobile();
   const [title, setTitle] = useState("");
@@ -35,6 +38,7 @@ const WriteReviewDialog = ({
   const [rating, setRating] = useState(4);
   const [acceptedPolicy, setAcceptedPolicy] = useState(false);
   const [hoveredRating, setHoveredRating] = useState<number | null>(null);
+  const [isLoginDialogOpen, setIsLoginDialogOpen] = useState(false);
 
   const handleSubmit = () => {
     if (!title || !comment || !acceptedPolicy) return;
@@ -90,7 +94,84 @@ const WriteReviewDialog = ({
     }, 800);
   };
 
-  const renderContent = () => <div className="flex flex-col w-full">
+  const handleLoginClick = () => {
+    setIsLoginDialogOpen(true);
+    onOpenChange(false);
+  };
+
+  const renderLoginContent = () => (
+    <div className="flex flex-col w-full">
+      <DialogClose className="absolute right-6 top-6 rounded-full p-1 text-black hover:bg-black/5 border-none dark:text-white">
+        <X className="h-6 w-6" />
+        <span className="sr-only">Cerrar</span>
+      </DialogClose>
+      
+      <h2 className="text-3xl font-black mb-6">Inicia sesión o regístrate</h2>
+      
+      <div className="bg-[#F7F7F7] rounded-2xl p-6 mb-8 text-center dark:bg-vyba-dark-secondary/20">
+        <p className="text-lg font-medium text-gray-600 dark:text-gray-300 mb-8">
+          Para escribir una reseña, primero debes iniciar sesión
+        </p>
+        
+        <div className="grid grid-cols-4 gap-4 mb-8">
+          <div className="flex flex-col items-center">
+            <Button 
+              variant="outline" 
+              size="icon" 
+              className="w-16 h-16 rounded-full mb-2 bg-white dark:bg-black border-0 hover:bg-gray-100 dark:hover:bg-gray-900"
+              onClick={handleLoginClick}
+            >
+              <img src="/logos/google-logo.svg" alt="Google" className="w-8 h-8" />
+            </Button>
+            <span className="text-sm">Google</span>
+          </div>
+          
+          <div className="flex flex-col items-center">
+            <Button 
+              variant="outline" 
+              size="icon" 
+              className="w-16 h-16 rounded-full mb-2 bg-white dark:bg-black border-0 hover:bg-gray-100 dark:hover:bg-gray-900"
+              onClick={handleLoginClick}
+            >
+              <img src="/logos/facebook-logo.svg" alt="Facebook" className="w-8 h-8" />
+            </Button>
+            <span className="text-sm">Facebook</span>
+          </div>
+          
+          <div className="flex flex-col items-center">
+            <Button 
+              variant="outline" 
+              size="icon" 
+              className="w-16 h-16 rounded-full mb-2 bg-white dark:bg-black border-0 hover:bg-gray-100 dark:hover:bg-gray-900"
+              onClick={handleLoginClick}
+            >
+              <img src="/logos/apple-logo.svg" alt="Apple" className="w-8 h-8" />
+            </Button>
+            <span className="text-sm">Apple</span>
+          </div>
+          
+          <div className="flex flex-col items-center">
+            <Button 
+              variant="outline" 
+              size="icon" 
+              className="w-16 h-16 rounded-full mb-2 bg-white dark:bg-black border-0 hover:bg-gray-100 dark:hover:bg-gray-900"
+              onClick={handleLoginClick}
+            >
+              <Mail className="h-8 w-8" />
+            </Button>
+            <span className="text-sm">Mail</span>
+          </div>
+        </div>
+        
+        <Button onClick={handleLoginClick} className="px-8 bg-[#D4DDFF] hover:bg-[#C0D0FF] text-black dark:text-white rounded-full transition-all duration-200">
+          Iniciar sesión
+        </Button>
+      </div>
+    </div>
+  );
+
+  const renderReviewContent = () => (
+    <div className="flex flex-col w-full">
       <DialogClose className="absolute right-6 top-6 rounded-full p-1 text-black hover:bg-black/5 border-none dark:text-white">
         <X className="h-6 w-6" />
         <span className="sr-only">Cerrar</span>
@@ -218,18 +299,38 @@ const WriteReviewDialog = ({
           Enviar
         </Button>
       </div>
-    </div>;
+    </div>
+  );
+
+  const renderContent = () => isLoggedIn ? renderReviewContent() : renderLoginContent();
 
   if (isMobile) {
-    return <BottomDrawer open={isOpen} onOpenChange={onOpenChange} className="p-6 pt-0" showCloseButton={false}>
-        {renderContent()}
-      </BottomDrawer>;
+    return (
+      <>
+        <BottomDrawer open={isOpen} onOpenChange={onOpenChange} className="p-6 pt-0" showCloseButton={false}>
+          {renderContent()}
+        </BottomDrawer>
+        <LoginDialog 
+          open={isLoginDialogOpen} 
+          onOpenChange={setIsLoginDialogOpen} 
+        />
+      </>
+    );
   }
-  return <Dialog open={isOpen} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-[700px] p-8 rounded-[32px] border-none">
-        {renderContent()}
-      </DialogContent>
-    </Dialog>;
+
+  return (
+    <>
+      <Dialog open={isOpen} onOpenChange={onOpenChange}>
+        <DialogContent className="max-w-[700px] p-8 rounded-[32px] border-none">
+          {renderContent()}
+        </DialogContent>
+      </Dialog>
+      <LoginDialog 
+        open={isLoginDialogOpen} 
+        onOpenChange={setIsLoginDialogOpen} 
+      />
+    </>
+  );
 };
 
 export default WriteReviewDialog;

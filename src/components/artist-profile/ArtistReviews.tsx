@@ -283,6 +283,7 @@ const ArtistReviews = ({
   const [isBottomSheetOpen, setIsBottomSheetOpen] = useState(false);
   const [isWriteReviewOpen, setIsWriteReviewOpen] = useState(false);
   const isMobile = useIsMobile();
+  const isLoggedIn = true;
 
   useEffect(() => {
     if (onBottomSheetChange) {
@@ -442,6 +443,7 @@ const ArtistReviews = ({
         isOpen={isWriteReviewOpen} 
         onOpenChange={setIsWriteReviewOpen} 
         onSubmit={handleSubmitReview}
+        isLoggedIn={isLoggedIn}
       />
     </div>
   );
