@@ -118,11 +118,32 @@ export default {
           "0%": { transform: "scale(0.9)", opacity: "0" },
           "100%": { transform: "scale(1)", opacity: "1" },
         },
-        shimmer: {
+        "shimmer": {
+          '0%': {
+            transform: 'translateX(-100%)'
+          },
           '100%': {
-            transform: 'translateX(100%)',
+            transform: 'translateX(100%)'
           },
         },
+        "fade-up": {
+          '0%': {
+            opacity: '0',
+            transform: 'translateY(10px)'
+          },
+          '100%': {
+            opacity: '1',
+            transform: 'translateY(0)'
+          }
+        },
+        "fade-in-fast": {
+          '0%': {
+            opacity: '0'
+          },
+          '100%': {
+            opacity: '1'
+          }
+        }
       },
       animation: {
         "accordion-down": "accordion-down 0.5s ease-out",
@@ -140,7 +161,9 @@ export default {
         "radial-out": "radial-out 0.3s ease-out forwards",
         "scale-in": "scale-in 0.2s ease-out",
         "spin-slow": "spin 3s linear infinite",
-        shimmer: 'shimmer 1.5s infinite',
+        "shimmer": 'shimmer 2s infinite ease-in-out',
+        "fade-up": 'fade-up 0.4s ease-out forwards',
+        "fade-in-fast": 'fade-in-fast 0.3s ease-out forwards'
       },
       fontSize: {
         "section-title": ["2rem", { fontWeight: 500 }],
