@@ -181,14 +181,14 @@ const WriteReviewDialog = ({
       <h2 className="text-3xl font-black mb-6">Escribe una reseña</h2>
       
       <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-6 gap-4">
-        <div className="bg-[#F7F7F7] rounded-2xl px-6 py-3 dark:bg-vyba-dark-secondary/20">
-          <p className="text-[#918E8E] text-sm font-medium mb-3">Escribiendo como</p>
+        <div className="bg-[#F7F7F7] rounded-full px-4 py-2 dark:bg-vyba-dark-secondary/20">
           <div className="flex items-center gap-3">
             <Avatar className="h-11 w-11 rounded-full">
               <AvatarImage src="https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?q=80&w=1887&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="Avatar de usuario" />
               <AvatarFallback className="rounded-full">AP</AvatarFallback>
             </Avatar>
-            <div>
+            <div className="flex flex-col gap-2">
+              <p className="text-[#918E8E] text-sm font-medium mb-3">Escribiendo como</p>
               <div className="text-base font-medium">Alejandro Pérez</div>
             </div>
           </div>
