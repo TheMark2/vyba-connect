@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from "react";
 import { Star, ClockAlert, CornerDownRight, Plus, MessagesSquare, ChevronLeft, Minus } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -260,7 +259,7 @@ const ReviewItem = ({
     </div>;
 };
 
-const moreReviewsData: Review[] = [
+const moreReviewsData = [
   {
     id: 4,
     name: "Miguel López",
@@ -386,21 +385,18 @@ const ArtistReviews = ({
   
   return <div className="mt-8 mb-16">
       <div className={`${isMobile ? 'bg-[#F7F7F7] py-8 -mx-6' : ''}`}>
-        <h2 className="text-3xl font-medium font-figtree mb-1 px-6 sm:px-0">
-          Reseñas
-        </h2>
-        <div className="space-y-6">
-          <div className="flex flex-wrap items-center gap-6 mb-8 justify-between px-6 sm:px-0">
-            <div className="flex items-baseline gap-2">
-              <span className="text-2xl font-medium">{rating}</span>
-              <span className="text-2xl font-medium">({reviews})</span>
-            </div>
-            
-            {isMobile ? (
-              <Button variant="default" size="icon" className="bg-gradient-to-br from-[#D4DDFF] to-[#F0F3FF] border-none" onClick={handleWriteReview}>
-                <MessagesSquare className="h-5 w-5 stroke-[2.5px]" />
-              </Button>
-            ) : (
+        <div className="flex items-center justify-between mb-6 px-6 sm:px-0">
+          <div className="flex items-center gap-2">
+            <h2 className="text-4xl font-black font-figtree">
+              Reseñas
+            </h2>
+            <span className="text-4xl font-black">•</span>
+            <span className="text-4xl font-black">{rating}</span>
+            <span className="text-4xl font-black">({reviews})</span>
+          </div>
+
+          {!isMobile && (
+            <div className="flex items-center gap-2">
               <Carousel className="w-auto">
                 <CarouselContent className="hidden">
                   <CarouselItem>
@@ -412,7 +408,17 @@ const ArtistReviews = ({
                   <CarouselNext className="relative static translate-y-0" />
                 </div>
               </Carousel>
-            )}
+            </div>
+          )}
+        </div>
+        
+        <div className="space-y-6">
+          <div className="flex flex-wrap items-center gap-6 mb-8 justify-between px-6 sm:px-0">
+            {isMobile ? (
+              <Button variant="default" size="icon" className="bg-gradient-to-br from-[#D4DDFF] to-[#F0F3FF] border-none" onClick={handleWriteReview}>
+                <MessagesSquare className="h-5 w-5 stroke-[2.5px]" />
+              </Button>
+            ) : null}
           </div>
           
           {isMobile && <div className="mb-10">
