@@ -17,7 +17,7 @@ const DialogContent = React.forwardRef<React.ElementRef<typeof DialogPrimitive.C
   ...props
 }, ref) => <DialogPortal>
     <DialogOverlay />
-    <DialogPrimitive.Content ref={ref} className={cn("fixed left-[50%] top-[50%] z-50 grid w-full max-w-lg translate-x-[-50%] translate-y-[-50%] gap-0 bg-white p-0 shadow-lg duration-200 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[state=closed]:slide-out-to-left-1/2 data-[state=closed]:slide-out-to-top-[48%] data-[state=open]:slide-in-from-left-1/2 data-[state=open]:slide-in-from-top-[48%] sm:rounded-3xl border-none max-h-[90vh] my-4 overflow-y-auto", className)} {...props}>
+    <DialogPrimitive.Content ref={ref} className={cn("fixed left-[50%] top-[50%] z-50 grid w-full max-w-lg translate-x-[-50%] translate-y-[-50%] gap-0 bg-white p-0 shadow-lg duration-200 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[state=closed]:slide-out-to-left-1/2 data-[state=closed]:slide-out-to-top-[48%] data-[state=open]:slide-in-from-left-1/2 data-[state=open]:slide-in-from-top-[48%] sm:rounded-[20px] border-none max-h-[90vh] my-4 overflow-y-auto", className)} {...props}>
       <div className="sticky top-0 z-10 pt-4 px-4 pb-2 bg-white sm:rounded-t-3xl">
         <DialogPrimitive.Close className="hover:text-gray-500 transition-colors hover:bg-gray-100/80 p-2 rounded-full">
           <X className="h-5 w-5" />
