@@ -5,16 +5,16 @@
 
 @layer base {
   h1, h2, h3, h4, h5, h6 {
-    @apply font-figtree font-medium; /* Equivalent to weight 500 */
+    @apply font-figtree font-semibold; /* Cambiado de font-medium a font-semibold (600) */
   }
 }
 
 @layer components {
   .section-title {
-    @apply text-3xl font-medium font-figtree;
+    @apply text-3xl font-semibold font-figtree; /* Cambiado de font-medium a font-semibold */
   }
   
   .dialog-title {
-    @apply text-2xl font-medium font-figtree;
+    @apply text-2xl font-semibold font-figtree; /* Cambiado de font-medium a font-semibold */
   }
 }
