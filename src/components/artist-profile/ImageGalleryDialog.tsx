@@ -73,7 +73,7 @@ const ImageGalleryDialog = ({
           <div className="flex items-center justify-center pt-4">
             <Button 
               variant="ghost" 
-              className="absolute left-5 top-3" 
+              className="absolute left-5 top-2" 
               size="icon" 
               onClick={onClose}>
               <ChevronLeft className="h-6 w-6" />
