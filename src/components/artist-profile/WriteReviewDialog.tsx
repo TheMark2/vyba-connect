@@ -7,7 +7,8 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Checkbox } from "@/components/ui/checkbox";
-import { Star, Smile, Frown, Meh, X, Mail, Facebook, Mail, Apple } from "lucide-react";
+// Remove duplicate Mail import
+import { Star, Smile, Frown, Meh, X, Mail, Facebook, Apple } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { motion } from "framer-motion";
 import LoginDialog from "../auth/LoginDialog";
