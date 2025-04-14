@@ -46,7 +46,7 @@ const WriteReviewDialog = ({
     // Reset form
     setTitle("");
     setComment("");
-    setRating(4);
+    setRating(1);
     setAcceptedPolicy(false);
     onOpenChange(false);
   };
@@ -99,10 +99,12 @@ const WriteReviewDialog = ({
             />
           ))}
         </div>
+
         <div className="flex items-center gap-2 bg-[#F7F7F7] rounded-full px-4 py-2 dark:bg-vyba-dark-secondary/20">
           {getFaceIcon(rating)}
           <span className="text-xl font-medium">{rating}/5</span>
         </div>
+
       </div>
       
       <div className="mb-6">
