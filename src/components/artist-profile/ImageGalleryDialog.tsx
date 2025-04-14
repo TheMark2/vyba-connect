@@ -1,9 +1,9 @@
 
 import React from "react";
-import { Dialog, DialogContent, DialogClose } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogClose, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
-import { useIsMobile } from "@/hooks/use-mobile";
+import { useIsMobile, useIsSmallMobile } from "@/hooks/use-mobile";
 import { BottomDrawer } from "@/components/ui/bottom-drawer";
 import { ChevronLeft } from "lucide-react";
 
@@ -23,6 +23,7 @@ const ImageGalleryDialog = ({
   artistName = "Artista"
 }: ImageGalleryDialogProps) => {
   const isMobile = useIsMobile();
+  const isSmallMobile = useIsSmallMobile();
   
   const imageGalleryContent = (
     <div className="h-full w-full overflow-y-auto p-8 pt-16">
@@ -50,7 +51,7 @@ const ImageGalleryDialog = ({
                 className="object-contain rounded-3xl" 
                 style={{
                   maxWidth: isMobile ? '85vw' : '70vw',
-                  maxHeight: isMobile ? '85vh' : '70vh'
+                  maxHeight: isMobile ? (isSmallMobile ? '70vh' : '75vh') : '70vh'
                 }} 
               />
             </div>
@@ -65,9 +66,9 @@ const ImageGalleryDialog = ({
       <BottomDrawer 
         open={isOpen} 
         onOpenChange={(open) => !open && onClose()}
-        className="h-[95vh] px-0 py-0 rounded-t-[32px]"
+        className={`${isSmallMobile ? 'h-[90vh]' : 'h-[95vh]'} px-0 py-0 rounded-t-[32px]`}
         showOverlay={true}
-        showCloseButton={true}
+        showCloseButton={false}
       >
         <div className="h-full flex flex-col">
           <div className="flex items-center justify-center pt-4">
@@ -93,6 +94,7 @@ const ImageGalleryDialog = ({
   return (
     <Dialog open={isOpen} onOpenChange={open => !open && onClose()}>
       <DialogContent className={cn("p-0 w-full h-full max-w-none max-h-screen bg-white dark:bg-black text-black dark:text-white rounded-none")}>
+        <DialogTitle className="sr-only">Galería de imágenes</DialogTitle>
         {imageGalleryContent}
         
         <div className="fixed bottom-6 left-0 right-0 flex justify-center">
