@@ -154,24 +154,24 @@ const WriteReviewDialog = ({
         <Textarea id="comment" value={comment} onChange={e => setComment(e.target.value)} placeholder="Muy buen servicio" className="min-h-32" />
       </div>
       
-      <div className="flex items-start space-x-2 mb-8">
+      <div className="flex items-start space-x-2 mb-8 bg-[#F7F7F7] rounded-lg p-4">
         <Checkbox 
           id="terms" 
           checked={acceptedPolicy} 
           onCheckedChange={checked => setAcceptedPolicy(checked as boolean)} 
           className="mt-1" 
         />
-        <div className="grid gap-1.5 leading-none flex-1">
+        <div className="grid gap-1.5 leading-none flex-1 text-center">
           <div className="flex justify-between items-center">
             <label 
               htmlFor="terms" 
-              className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+              className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 w-full"
             >
               Acepto la política de privacidad
             </label>
             <a 
               href="#" 
-              className="text-sm text-blue-500 hover:underline"
+              className="text-sm text-black font-medium underline hover:no-underline"
               onClick={(e) => {
                 e.preventDefault();
                 // TODO: Add logic to show privacy policy
