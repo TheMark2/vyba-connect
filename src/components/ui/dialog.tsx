@@ -24,7 +24,7 @@ const DialogContent = React.forwardRef<React.ElementRef<typeof DialogPrimitive.C
           <span className="sr-only">Cerrar</span>
         </DialogPrimitive.Close>
       </div>
-      <div className="px-12 py-2">
+      <div className="px-12 pt-2">
         {children}
       </div>
     </DialogPrimitive.Content>
