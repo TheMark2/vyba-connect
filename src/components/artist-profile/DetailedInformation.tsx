@@ -29,7 +29,7 @@ const DetailedInformation = ({
             <h3 className="text-xl font-semibold mb-3 flex items-center">
               Experiencia
             </h3>
-            <p className="mb-4">
+            <p className="mb-4 font-light">
               ¿Buscas añadir un toque de elegancia y encanto musical a tu próximo evento? ¡Estás en el lugar indicado!
               Soy Antonia Pedragosa, una apasionada DJ especializada en jazz, bossa nova y blues. ✨✨
             </p>
@@ -67,7 +67,7 @@ const DetailedInformation = ({
             <h3 className="text-xl font-semibold mb-3 flex items-center">
               Repertorio
             </h3>
-            <p className="mb-4">
+            <p className="mb-4 font-light">
               ¿Buscas añadir un toque de elegancia y encanto musical a tu próximo evento? ¡Estás en el lugar indicado!
               Soy Antonia Pedragosa, una apasionada DJ especializada en jazz, bossa nova y blues. ✨✨
             </p>
@@ -78,7 +78,7 @@ const DetailedInformation = ({
             <h3 className="text-xl font-semibold mb-3 flex items-center">
               Logística y equipamiento
             </h3>
-            <p className="mb-4">
+            <p className="mb-4 font-light">
               ¿Buscas añadir un toque de elegancia y encanto musical a tu próximo evento? ¡Estás en el lugar indicado!
               Soy Antonia Pedragosa, una apasionada DJ especializada en jazz, bossa nova y blues. ✨✨
             </p>
@@ -107,7 +107,7 @@ const DetailedInformation = ({
             <h3 className="text-xl font-semibold mb-3 flex items-center">
               Tiempos
             </h3>
-            <p className="mb-4">
+            <p className="mb-4 font-light">
               ¿Buscas añadir un toque de elegancia y encanto musical a tu próximo evento? ¡Estás en el lugar indicado!
               Soy Antonia Pedragosa, una apasionada DJ especializada en jazz, bossa nova y blues. ✨✨
             </p>
@@ -136,7 +136,7 @@ const DetailedInformation = ({
             <h3 className="text-xl font-semibold mb-3 flex items-center">
               Formación
             </h3>
-            <p className="mb-4">
+            <p className="mb-4 font-light">
               ¿Buscas añadir un toque de elegancia y encanto musical a tu próximo evento? ¡Estás en el lugar indicado!
               Soy Antonia Pedragosa, una apasionada DJ especializada en jazz, bossa nova y blues. ✨✨
             </p>
