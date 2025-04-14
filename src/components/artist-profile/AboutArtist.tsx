@@ -13,7 +13,7 @@ const AboutArtist = forwardRef<HTMLDivElement, AboutArtistProps>(
     return (
       <div className="mb-10" ref={ref}>
         <h2 className="text-3xl font-semibold mb-6">Sobre mi</h2>
-        <p className="text-base mb-5 leading-relaxed">
+        <p className="text-base mb-5 font-light leading-relaxed">
           {description}
         </p>
         
