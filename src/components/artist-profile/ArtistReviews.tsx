@@ -400,10 +400,17 @@ const ArtistReviews = ({
                 <MessagesSquare className="h-5 w-5 stroke-[2.5px]" />
               </Button>
             ) : (
-              <div className="flex items-center gap-2">
-                <CarouselPrevious className="relative static translate-y-0 mr-2" />
-                <CarouselNext className="relative static translate-y-0" />
-              </div>
+              <Carousel className="w-auto">
+                <CarouselContent className="hidden">
+                  <CarouselItem>
+                    <div></div>
+                  </CarouselItem>
+                </CarouselContent>
+                <div className="flex items-center gap-2">
+                  <CarouselPrevious className="relative static translate-y-0 mr-2" />
+                  <CarouselNext className="relative static translate-y-0" />
+                </div>
+              </Carousel>
             )}
           </div>
           
