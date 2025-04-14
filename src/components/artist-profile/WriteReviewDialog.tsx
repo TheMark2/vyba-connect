@@ -10,7 +10,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 // Remove duplicate Mail import
 import { Star, Smile, Frown, Meh, X, Mail, Facebook, Apple } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import LoginDialog from "../auth/LoginDialog";
 
 interface WriteReviewDialogProps {
@@ -201,23 +201,32 @@ const WriteReviewDialog = ({
             animate={{ scale: 1 }}
             transition={{ duration: 0.2 }}
           >
-            <motion.div
-              key={rating}
-              initial={{ scale: 0.5, opacity: 0 }}
-              animate={{ scale: 1, opacity: 1 }}
-              transition={{ duration: 0.3 }}
-            >
-              {getFaceIcon(rating)}
-            </motion.div>
-            <motion.span 
-              className="text-xl font-medium"
-              key={rating}
-              initial={{ y: -5, opacity: 0 }}
-              animate={{ y: 0, opacity: 1 }}
-              transition={{ duration: 0.3 }}
-            >
-              {rating}/5
-            </motion.span>
+            <div className="w-6 h-6 relative">
+              <AnimatePresence mode="wait">
+                <motion.div
+                  key={rating}
+                  initial={{ opacity: 0, scale: 0.5 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  exit={{ opacity: 0, scale: 0.5 }}
+                  transition={{ duration: 0.2 }}
+                  className="absolute inset-0"
+                >
+                  {getFaceIcon(rating)}
+                </motion.div>
+              </AnimatePresence>
+            </div>
+            <AnimatePresence mode="wait">
+              <motion.span 
+                className="text-xl font-medium"
+                key={rating}
+                initial={{ y: -5, opacity: 0 }}
+                animate={{ y: 0, opacity: 1 }}
+                exit={{ y: 5, opacity: 0 }}
+                transition={{ duration: 0.2 }}
+              >
+                {rating}/5
+              </motion.span>
+            </AnimatePresence>
           </motion.div>
           
           <div className="flex items-center gap-2">
