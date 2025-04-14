@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { BottomDrawer } from "@/components/ui/bottom-drawer";
-import { X } from "lucide-react";
+import { ChevronLeft } from "lucide-react";
 
 interface ImageGalleryDialogProps {
   images: string[];
@@ -70,8 +70,14 @@ const ImageGalleryDialog = ({
         showCloseButton={true}
       >
         <div className="h-full flex flex-col">
-          <div className="flex items-center justify-center pt-2 pb-4 border-b">
-            <h3 className="font-semibold">Galería de {artistName}</h3>
+          <div className="flex items-center justify-center pt-4">
+            <Button 
+              variant="ghost" 
+              className="absolute left-5 top-3" 
+              size="icon" 
+              onClick={onClose}>
+              <ChevronLeft className="h-6 w-6" />
+            </Button>
           </div>
           {imageGalleryContent}
           <div className="fixed bottom-6 left-0 right-0 flex justify-center">
