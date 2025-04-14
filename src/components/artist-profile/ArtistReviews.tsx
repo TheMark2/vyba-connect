@@ -387,12 +387,12 @@ const ArtistReviews = ({
       <div className={`${isMobile ? 'bg-[#F7F7F7] py-8 -mx-6' : ''}`}>
         <div className="flex items-center justify-between mb-6 px-6 sm:px-0">
           <div className="flex items-center gap-2">
-            <h2 className="text-4xl font-black font-figtree">
+            <h2 className="text-4xl font-semibold font-figtree">
               Reseñas
             </h2>
-            <span className="text-4xl font-black">•</span>
-            <span className="text-4xl font-black">{rating}</span>
-            <span className="text-4xl font-black">({reviews})</span>
+            <span className="text-4xl font-semibold">•</span>
+            <span className="text-4xl font-semibold">{rating}</span>
+            <span className="text-4xl font-semibold">({reviews})</span>
           </div>
 
           {!isMobile && (
