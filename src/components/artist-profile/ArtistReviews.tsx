@@ -461,8 +461,14 @@ const ArtistReviews = ({
             </Button>
             
             {!isMobile && (
-              <Button variant="secondary" className="flex items-center gap-2 font-medium" onClick={handleWriteReview}>
-                <MessagesSquare className="h-4 w-4 stroke-[2.5px]" />
+              <Button 
+                variant="secondary" 
+                className="flex items-center gap-2 font-medium group" 
+                onClick={handleWriteReview}
+              >
+                <MessagesSquare 
+                  className="h-4 w-4 stroke-[2.5px] transition-all duration-300 group-hover:scale-110 group-hover:rotate-6 group-hover:text-[#7E69AB]" 
+                />
                 Escribir una reseña
               </Button>
             )}
