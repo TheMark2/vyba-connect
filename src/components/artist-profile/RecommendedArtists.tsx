@@ -31,8 +31,9 @@ const RecommendedArtists = ({
 
   return <div className="mb-16">
       {/* Título con padding normal */}
-      <div className="max-w-7xl mx-auto">
-        <h2 className="text-3xl font-semibold mb-6">Recomendados</h2>
+      <div className="max-w-7xl mx-auto mb-6 flex flex-col gap-2">
+        <h2 className="text-3xl font-semibold">Recomendados</h2>
+        <p className="text-xl font-medium text-gray-500">Sabemos que estos artistas te van a gustar</p>
       </div>
       
       {/* Carrusel que se extiende a todo el ancho en móvil */}
