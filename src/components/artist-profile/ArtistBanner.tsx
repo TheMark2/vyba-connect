@@ -1,6 +1,6 @@
 
 import React, { useState } from "react";
-import { Heart, Flag, Share2, ArrowLeft } from "lucide-react";
+import { Heart, Flag, Share2, ArrowLeft, Images } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { 
@@ -90,6 +90,16 @@ const ArtistBanner = ({ artist, onFavorite, onReport, onShare }: ArtistBannerPro
         
         {/* Buttons in top right corner - siempre visibles con fondo semitransparente */}
         <div className="absolute top-4 right-4 sm:top-6 sm:right-6 flex space-x-2 z-30">
+          {isMobile && (
+            <Button 
+              variant="secondary" 
+              size="icon" 
+              className="w-10 h-10 rounded-full bg-white/30 backdrop-blur-xl hover:bg-white/50" 
+              onClick={() => setGalleryOpen(true)}
+            >
+              <Images className="h-5 w-5 text-white" />
+            </Button>
+          )}
           <Button variant="secondary" size="icon" className="w-10 h-10 rounded-full bg-white/30 backdrop-blur-xl hover:bg-white/50" onClick={onFavorite}>
             <Heart className="h-5 w-5 text-white" />
           </Button>
@@ -127,7 +137,7 @@ const ArtistBanner = ({ artist, onFavorite, onReport, onShare }: ArtistBannerPro
         )}
       </div>
 
-      {/* Imagen con diálogo a pantalla completa */}
+      {/* Imagen con diálogo a pantalla completa o drawer en móvil */}
       <ImageGalleryDialog 
         images={allImages}
         isOpen={galleryOpen}
