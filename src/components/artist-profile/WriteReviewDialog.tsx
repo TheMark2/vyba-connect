@@ -181,7 +181,7 @@ const WriteReviewDialog = ({
       <h2 className="text-3xl font-semibold mb-6">Escribe una reseña</h2>
       
       <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-6 gap-4">
-        <div className="bg-[#F7F7F7] rounded-full pl-2 pr-6 py-2 dark:bg-vyba-dark-secondary/20">
+        <div className="bg-[#F7F7F7] rounded-full pxl-2 pxr-6 py-2 dark:bg-vyba-dark-secondary/20">
           <div className="flex items-center gap-3">
             <Avatar className="h-11 w-11 rounded-full">
               <AvatarImage src="https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?q=80&w=1887&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="Avatar de usuario" />
