@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import { Dialog, DialogContent, DialogClose } from "@/components/ui/dialog";
 import { BottomDrawer } from "@/components/ui/bottom-drawer";
@@ -156,15 +155,32 @@ const WriteReviewDialog = ({
       </div>
       
       <div className="flex items-start space-x-2 mb-8">
-        <Checkbox id="terms" checked={acceptedPolicy} onCheckedChange={checked => setAcceptedPolicy(checked as boolean)} className="mt-1" />
-        <div className="grid gap-1.5 leading-none">
-          <label htmlFor="terms" className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
-            Acepto la política de privacidad
-          </label>
-          <p className="text-xs text-gray-500">
-            La mayoría de los músicos toman un descanso de 15 minutos después de 45 minutos de música, 
-            por lo que "2 horas de música" significa 2 sets de 45 minutos, con descanso.
-          </p>
+        <Checkbox 
+          id="terms" 
+          checked={acceptedPolicy} 
+          onCheckedChange={checked => setAcceptedPolicy(checked as boolean)} 
+          className="mt-1" 
+        />
+        <div className="grid gap-1.5 leading-none flex-1">
+          <div className="flex justify-between items-center">
+            <label 
+              htmlFor="terms" 
+              className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+            >
+              Acepto la política de privacidad
+            </label>
+            <a 
+              href="#" 
+              className="text-sm text-blue-500 hover:underline"
+              onClick={(e) => {
+                e.preventDefault();
+                // TODO: Add logic to show privacy policy
+                console.log("Open privacy policy");
+              }}
+            >
+              Ver política
+            </a>
+          </div>
         </div>
       </div>
       
@@ -188,4 +204,3 @@ const WriteReviewDialog = ({
 };
 
 export default WriteReviewDialog;
-
