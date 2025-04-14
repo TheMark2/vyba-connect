@@ -39,7 +39,7 @@ const DialogContent = React.forwardRef<
       {...props}
     >
       <DialogPrimitive.Close
-        className="absolute top-4 right-4 p-2 rounded-full hover:bg-black/5 dark:hover:bg-white/10 transition"
+        className="absolute top-4 left-4 p-2 rounded-full hover:bg-black/5 dark:hover:bg-white/10 transition"
       >
         <svg
           xmlns="http://www.w3.org/2000/svg"
@@ -52,6 +52,7 @@ const DialogContent = React.forwardRef<
         </svg>
         <span className="sr-only">Cerrar</span>
       </DialogPrimitive.Close>
+
 
       {children}
     </DialogPrimitive.Content>
