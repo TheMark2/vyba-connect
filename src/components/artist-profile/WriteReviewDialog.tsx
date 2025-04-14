@@ -1,3 +1,4 @@
+
 import React, { useState } from "react";
 import { Dialog, DialogContent, DialogClose } from "@/components/ui/dialog";
 import { BottomDrawer } from "@/components/ui/bottom-drawer";
@@ -8,17 +9,21 @@ import { Textarea } from "@/components/ui/textarea";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Star, Smile, Frown, Meh, X } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { motion } from "framer-motion";
+
 interface WriteReviewDialogProps {
   isOpen: boolean;
   onOpenChange: (open: boolean) => void;
   onSubmit: (reviewData: ReviewData) => void;
 }
+
 export interface ReviewData {
   title: string;
   comment: string;
   rating: number;
   acceptedPolicy: boolean;
 }
+
 const WriteReviewDialog = ({
   isOpen,
   onOpenChange,
@@ -29,6 +34,8 @@ const WriteReviewDialog = ({
   const [comment, setComment] = useState("");
   const [rating, setRating] = useState(4);
   const [acceptedPolicy, setAcceptedPolicy] = useState(false);
+  const [hoveredRating, setHoveredRating] = useState<number | null>(null);
+
   const handleSubmit = () => {
     if (!title || !comment || !acceptedPolicy) return;
     onSubmit({
@@ -45,6 +52,7 @@ const WriteReviewDialog = ({
     setAcceptedPolicy(false);
     onOpenChange(false);
   };
+
   const getFaceIcon = (rating: number) => {
     switch (rating) {
       case 1:
@@ -61,6 +69,7 @@ const WriteReviewDialog = ({
         return null;
     }
   };
+
   const renderContent = () => <div className="flex flex-col w-full">
       <DialogClose className="absolute right-6 top-6 rounded-full p-1 text-black hover:bg-black/5 border-none dark:text-white">
         <X className="h-6 w-6" />
@@ -74,23 +83,61 @@ const WriteReviewDialog = ({
           <p className="text-[#918E8E] font-medium mb-3">Escribiendo como</p>
           <div className="flex items-center gap-3">
             <Avatar className="h-11 w-11 rounded-full">
-              <AvatarFallback className="rounded-full">R</AvatarFallback>
+              <AvatarImage src="https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?q=80&w=1887&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="Avatar de usuario" />
+              <AvatarFallback className="rounded-full">AP</AvatarFallback>
             </Avatar>
             <div>
-              <div className="text-base font-medium">Ramón</div>
+              <div className="text-base font-medium">Alejandro Pérez</div>
               <div className="text-xs text-gray-500">hace 2 días</div>
             </div>
           </div>
         </div>
 
         <div className="flex flex-col items-end gap-2">
-          <div className="flex items-center gap-2 bg-[#F7F7F7] rounded-full px-4 py-2 dark:bg-vyba-dark-secondary/20">
-            {getFaceIcon(rating)}
-            <span className="text-xl font-medium">{rating}/5</span>
-          </div>
+          <motion.div 
+            className="flex items-center gap-2 bg-[#F7F7F7] rounded-full px-4 py-2 dark:bg-vyba-dark-secondary/20"
+            initial={{ scale: 0.9 }}
+            animate={{ scale: 1 }}
+            transition={{ duration: 0.2 }}
+          >
+            <motion.div
+              key={rating}
+              initial={{ scale: 0.5, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              transition={{ duration: 0.3 }}
+            >
+              {getFaceIcon(rating)}
+            </motion.div>
+            <motion.span 
+              className="text-xl font-medium"
+              key={rating}
+              initial={{ y: -5, opacity: 0 }}
+              animate={{ y: 0, opacity: 1 }}
+              transition={{ duration: 0.3 }}
+            >
+              {rating}/5
+            </motion.span>
+          </motion.div>
           
           <div className="flex items-center gap-2">
-            {[...Array(5)].map((_, index) => <Star key={index} className={`h-8 w-8 cursor-pointer ${index < rating ? "text-black fill-black dark:text-white dark:fill-white" : "text-gray-300 dark:text-gray-600"}`} onClick={() => setRating(index + 1)} />)}
+            {[...Array(5)].map((_, index) => (
+              <motion.div
+                key={index}
+                whileHover={{ scale: 1.2 }}
+                whileTap={{ scale: 0.9 }}
+              >
+                <Star 
+                  className={`h-8 w-8 cursor-pointer transition-colors duration-300 ${
+                    (hoveredRating !== null ? index < hoveredRating : index < rating) 
+                      ? "text-black fill-black dark:text-white dark:fill-white" 
+                      : "text-gray-300 fill-gray-300 dark:text-gray-600 dark:fill-gray-600"
+                  }`} 
+                  onClick={() => setRating(index + 1)}
+                  onMouseEnter={() => setHoveredRating(index + 1)}
+                  onMouseLeave={() => setHoveredRating(null)}
+                />
+              </motion.div>
+            ))}
           </div>
         </div>
       </div>
@@ -128,6 +175,7 @@ const WriteReviewDialog = ({
         </Button>
       </div>
     </div>;
+
   if (isMobile) {
     return <BottomDrawer open={isOpen} onOpenChange={onOpenChange} className="p-6 pt-0" showCloseButton={false}>
         {renderContent()}
@@ -139,4 +187,5 @@ const WriteReviewDialog = ({
       </DialogContent>
     </Dialog>;
 };
+
 export default WriteReviewDialog;
