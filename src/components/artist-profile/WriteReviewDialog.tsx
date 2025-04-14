@@ -1,3 +1,4 @@
+
 import React, { useState } from "react";
 import { Dialog, DialogContent, DialogClose } from "@/components/ui/dialog";
 import { BottomDrawer } from "@/components/ui/bottom-drawer";
@@ -67,6 +68,26 @@ const WriteReviewDialog = ({
       default:
         return null;
     }
+  };
+
+  // Efecto de ripple para los clicks
+  const handleRippleEffect = (event: React.MouseEvent<HTMLDivElement>) => {
+    const element = event.currentTarget;
+    const rect = element.getBoundingClientRect();
+    
+    const x = event.clientX - rect.left;
+    const y = event.clientY - rect.top;
+    
+    const ripple = document.createElement('span');
+    ripple.className = 'ripple-effect';
+    ripple.style.left = `${x}px`;
+    ripple.style.top = `${y}px`;
+    
+    element.appendChild(ripple);
+    
+    setTimeout(() => {
+      ripple.remove();
+    }, 800);
   };
 
   const renderContent = () => <div className="flex flex-col w-full">
@@ -155,8 +176,11 @@ const WriteReviewDialog = ({
       </div>
       
       <div 
-        className="flex items-center mb-8 bg-[#F7F7F7] rounded-xl p-4 relative overflow-hidden transition-all duration-300 hover:bg-[#F0F0F0] dark:bg-vyba-dark-secondary/20 dark:hover:bg-vyba-dark-secondary/30 cursor-pointer"
-        onClick={() => setAcceptedPolicy(!acceptedPolicy)}
+        className="flex items-center mb-8 bg-[#F7F7F7] rounded-xl p-4 relative overflow-hidden transition-all duration-200 hover:bg-[#F0F0F0] dark:bg-vyba-dark-secondary/20 dark:hover:bg-vyba-dark-secondary/30 cursor-pointer"
+        onClick={(e) => {
+          handleRippleEffect(e);
+          setAcceptedPolicy(!acceptedPolicy);
+        }}
       >
         <div className="flex items-center justify-between w-full">
           <div className="flex items-center gap-3">
@@ -164,7 +188,7 @@ const WriteReviewDialog = ({
               id="terms" 
               checked={acceptedPolicy} 
               onCheckedChange={checked => setAcceptedPolicy(checked as boolean)} 
-              className="h-5 w-5 rounded-sm border-2 border-black data-[state=checked]:border-black" 
+              className="h-5 w-5 rounded-sm border-2 border-black dark:border-white data-[state=checked]:border-black dark:data-[state=checked]:border-white transition-all duration-200" 
             />
             <label 
               htmlFor="terms" 
@@ -179,6 +203,7 @@ const WriteReviewDialog = ({
             className="text-sm text-black font-medium underline decoration-1 underline-offset-2 hover:no-underline transition-all"
             onClick={(e) => {
               e.preventDefault();
+              e.stopPropagation();
               // TODO: Add logic to show privacy policy
               console.log("Open privacy policy");
             }}
@@ -189,7 +214,7 @@ const WriteReviewDialog = ({
       </div>
       
       <div className="flex justify-end">
-        <Button onClick={handleSubmit} disabled={!title || !comment || !acceptedPolicy} className="px-8 bg-[#D4DDFF] hover:bg-[#C0D0FF] text-black dark:text-white rounded-full">
+        <Button onClick={handleSubmit} disabled={!title || !comment || !acceptedPolicy} className="px-8 bg-[#D4DDFF] hover:bg-[#C0D0FF] text-black dark:text-white rounded-full transition-all duration-200">
           Enviar
         </Button>
       </div>
