@@ -78,7 +78,7 @@ const GroupMembers = ({
               }}
               setApi={setApi}
             >
-              <CarouselContent className={`${isMobile ? '-ml-1 pl-6' : '-ml-6'} gap-3`}>
+              <CarouselContent className="pl-4 gap-4">
                 {members.map((member, index) => (
                   <CarouselItem 
                     key={member.id} 
