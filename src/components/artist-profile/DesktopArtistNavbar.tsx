@@ -48,7 +48,7 @@ const DesktopArtistNavbar = ({
         <div className="flex items-center">
           <div className="relative mr-6 flex-shrink-0">
             {artist.image && (
-              <div className="w-18 h-22 overflow-hidden rounded-2xl rotate-6 transform">
+              <div className="w-28 h-32 overflow-hidden rounded-2xl rotate-6 transform">
                 <img
                   src={artist.image}
                   alt={artist.name}
