@@ -170,6 +170,11 @@ const ArtistProfilePage = () => {
   const [currentPlaying, setCurrentPlaying] = useState("");
   const [isAudioPlaying, setIsAudioPlaying] = useState(false);
   const audioRef = useRef<HTMLAudioElement>(null);
+  const [currentPreview, setCurrentPreview] = useState<{
+    title: string;
+    duration: string;
+    image?: string;
+  } | null>(null);
 
   useEffect(() => {
     if (isMobile && aboutMeRef.current) {
@@ -266,9 +271,9 @@ const ArtistProfilePage = () => {
 
   const previews = [
     {
-      title: "Set de música urbana",
-      duration: "30:40",
-      image: "https://images.unsplash.com/photo-1513836279014-a89f7a76ae86",
+      title: "Sesión urbano variada",
+      duration: "34:32",
+      image: "/lovable-uploads/fbca38a6-a8f8-4a17-8a6d-122ce8f4d2cd.png",
       hasVideo: true,
       videoUrl: "/lovable-uploads/bad-bunny-moscow-mule.mp4"
     },
@@ -303,6 +308,13 @@ const ArtistProfilePage = () => {
   const handleMusicPlayback = (preview: any, isPlaying: boolean) => {
     setCurrentPlaying(isPlaying ? preview.title : "");
     setIsAudioPlaying(isPlaying);
+    if (isPlaying) {
+      setCurrentPreview({
+        title: preview.title,
+        duration: preview.duration,
+        image: preview.image
+      });
+    }
   };
 
   return (
@@ -356,6 +368,10 @@ const ArtistProfilePage = () => {
                   aboutMeRef={aboutMeRef}
                   imagesRef={imagesRef}
                   reviewsRef={reviewsRef}
+                  audioRef={audioRef}
+                  isAudioPlaying={isAudioPlaying}
+                  onPlayPause={handlePlayPause}
+                  currentPreview={currentPreview || undefined}
                 />
               </div>
             )}
