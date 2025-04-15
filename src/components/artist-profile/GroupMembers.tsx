@@ -24,31 +24,9 @@ const GroupMembers = ({
 }: GroupMembersProps) => {
   const isMobile = useIsMobile();
   const [windowWidth, setWindowWidth] = useState(window.innerWidth);
-  const [useCarousel, setUseCarousel] = useState(isMobile || members.length > 4);
+  const useCarousel = true;
   const [api, setApi] = useState<any>(null);
   const carouselRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    const handleResize = () => {
-      setWindowWidth(window.innerWidth);
-
-      if (window.innerWidth < 768) {
-        setUseCarousel(true);
-      } else if (window.innerWidth < 1024) {
-        setUseCarousel(members.length > 2);
-      } else if (window.innerWidth < 1280) {
-        setUseCarousel(members.length > 3);
-      } else {
-        setUseCarousel(members.length > 4);
-      }
-    };
-
-    handleResize();
-    window.addEventListener("resize", handleResize);
-    return () => {
-      window.removeEventListener("resize", handleResize);
-    };
-  }, [members.length]);
 
   const scrollPrev = () => {
     if (api) api.scrollPrev();
