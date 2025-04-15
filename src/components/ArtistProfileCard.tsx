@@ -298,7 +298,7 @@ const ArtistProfileCard = ({
             variant="secondary" 
             className={cn(
               "absolute top-2 left-2 text-sm backdrop-blur-xl text-white z-10 px-4 py-1.5 dark:text-white rounded-full transition-colors duration-300", 
-              regularBadge || isRecommended ? "font-normal" : "font-bold",
+              regularBadge || isRecommended ? "font-medium" : "font-medium",
               isDarkImage ? "bg-white/30" : "bg-black/30"
             )}
           >
