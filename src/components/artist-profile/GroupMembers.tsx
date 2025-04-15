@@ -1,4 +1,3 @@
-
 import React, { useEffect, useState, useRef } from "react";
 import { Badge as UIBadge } from "@/components/ui/badge";
 import Image from "@/components/ui/image";
@@ -83,7 +82,12 @@ const GroupMembers = ({
                   <CarouselItem 
                     key={member.id} 
                     className={`
-                      ${isMobile ? 'pl-2 pr-2 basis-4/5' : 'pl-4 pr-2'}
+                      ${isMobile 
+                        ? (index === 0 ? 'pl-6' : '') + 
+                          (index === members.length - 1 ? ' pr-6' : '') 
+                        : ''
+                      } 
+                      ${isMobile ? 'basis-4/5' : 'pl-4 pr-2'}
                       shrink-0
                     `}
                     style={{ maxWidth: 260 }}
