@@ -128,8 +128,8 @@ const ArtistsPage = () => {
           <div className={`${isMobile ? "text-center mb-4" : ""}`}>
             <h1 className={`
               ${isMobile 
-                ? "text-3xl font-black mb-1" 
-                : "text-5xl font-black mb-2"
+                ? "text-3xl font-semibold mb-1" 
+                : "text-5xl font-semibold mb-2"
               }
             `}>
               Todos los artistas
@@ -137,7 +137,7 @@ const ArtistsPage = () => {
             <p className={`
               ${isMobile 
                 ? "text-2xl" 
-                : "text-5xl"
+                : "text-4xl"
               }
             `}>
               {artists.length} artistas
