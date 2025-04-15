@@ -9,13 +9,13 @@ import DetailedInformation from "@/components/artist-profile/DetailedInformation
 import EventTypes from "@/components/artist-profile/EventTypes";
 import ArtistFAQ from "@/components/artist-profile/ArtistFAQ";
 import ArtistReviews from "@/components/artist-profile/ArtistReviews";
-import ContactCard from "@/components/artist-profile/ContactCard";
 import RecommendedArtists from "@/components/artist-profile/RecommendedArtists";
 import NotFoundArtist from "@/components/artist-profile/NotFoundArtist";
 import GroupMembers from "@/components/artist-profile/GroupMembers";
-import MobileBottomSheet from "@/components/artist-profile/MobileBottomSheet";
 import MusicPreviews from "@/components/artist-profile/MusicPreviews";
 import { useIsMobile } from "@/hooks/use-mobile";
+import DesktopArtistNavbar from "@/components/artist-profile/DesktopArtistNavbar";
+import MobileArtistNavbar from "@/components/artist-profile/MobileArtistNavbar";
 
 const artistsData = [{
   id: "1",
@@ -348,9 +348,13 @@ const ArtistProfilePage = () => {
             
             {!isMobile && (
               <div className="space-y-6">
-                <div className="bg-[#F7F7F7] p-6 rounded-3xl sticky top-24 h-fit">
-                  <ContactCard artist={artistContactData} onContact={handleContact} aboutMeRef={aboutMeRef} />
-                </div>
+                <DesktopArtistNavbar 
+                  artist={artistContactData} 
+                  onContact={handleContact} 
+                  aboutMeRef={aboutMeRef}
+                  imagesRef={imagesRef}
+                  reviewsRef={reviewsRef}
+                />
               </div>
             )}
           </div>
@@ -360,7 +364,7 @@ const ArtistProfilePage = () => {
       </div>
       
       {isMobile && showMobileBottomSheet && (
-        <MobileBottomSheet 
+        <MobileArtistNavbar 
           artistContact={artistContactData} 
           onContact={handleContact} 
           aboutMeRef={aboutMeRef} 
