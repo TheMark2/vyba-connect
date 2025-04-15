@@ -48,7 +48,7 @@ const DesktopArtistNavbar = ({
         <div className="flex items-center">
           <div className="relative mr-6 flex-shrink-0">
             {artist.image && (
-              <div className="w-28 h-32 overflow-hidden rounded-2xl rotate-6 transform">
+              <div className="w-18 h-22 overflow-hidden rounded-2xl rotate-6 transform">
                 <img
                   src={artist.image}
                   alt={artist.name}
@@ -58,7 +58,7 @@ const DesktopArtistNavbar = ({
             )}
           </div>
           <div>
-            <h1 className="text-2xl font-bold mb-1" style={{ color: "#222222" }}>
+            <h1 className="text-2xl font-semibold mb-1" style={{ color: "#222222" }}>
               {artist.name}
             </h1>
             {artist.location && (
@@ -70,7 +70,7 @@ const DesktopArtistNavbar = ({
         </div>
 
         {/* Price range */}
-        <div className="text-2xl font-bold" style={{ color: "#222222" }}>
+        <div className="text-2xl font-semibold" style={{ color: "#222222" }}>
           {artist.priceRange}
         </div>
 
