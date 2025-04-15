@@ -1,3 +1,4 @@
+
 import React, { useState, useRef, useEffect, TouchEvent } from "react";
 import { Heart, ChevronLeft, ChevronRight, Star } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
@@ -54,6 +55,25 @@ const ArtistProfileCard = ({
 
   const handleFavoriteClick = (e: React.MouseEvent) => {
     e.stopPropagation();
+    
+    // Create ripple effect
+    const button = e.currentTarget;
+    const rect = button.getBoundingClientRect();
+    const x = e.clientX - rect.left;
+    const y = e.clientY - rect.top;
+    
+    const ripple = document.createElement('span');
+    ripple.className = 'ripple-effect';
+    ripple.style.left = `${x}px`;
+    ripple.style.top = `${y}px`;
+    
+    button.appendChild(ripple);
+    
+    // Remove the ripple element after animation completes
+    setTimeout(() => {
+      ripple.remove();
+    }, 800);
+    
     if (isAuthenticated) {
       toggleFavorite();
     } else {
@@ -97,17 +117,75 @@ const ArtistProfileCard = ({
 
   const handlePrevImage = (e: React.MouseEvent) => {
     e.stopPropagation();
+    
+    // Create ripple effect
+    const button = e.currentTarget;
+    const rect = button.getBoundingClientRect();
+    const x = e.clientX - rect.left;
+    const y = e.clientY - rect.top;
+    
+    const ripple = document.createElement('span');
+    ripple.className = 'ripple-effect';
+    ripple.style.left = `${x}px`;
+    ripple.style.top = `${y}px`;
+    
+    button.appendChild(ripple);
+    
+    // Remove the ripple element after animation completes
+    setTimeout(() => {
+      ripple.remove();
+    }, 800);
+    
     if (images.length <= 1) return;
     setCurrentImageIndex(prev => prev > 0 ? prev - 1 : images.length - 1);
   };
 
   const handleNextImage = (e: React.MouseEvent) => {
     e.stopPropagation();
+    
+    // Create ripple effect
+    const button = e.currentTarget;
+    const rect = button.getBoundingClientRect();
+    const x = e.clientX - rect.left;
+    const y = e.clientY - rect.top;
+    
+    const ripple = document.createElement('span');
+    ripple.className = 'ripple-effect';
+    ripple.style.left = `${x}px`;
+    ripple.style.top = `${y}px`;
+    
+    button.appendChild(ripple);
+    
+    // Remove the ripple element after animation completes
+    setTimeout(() => {
+      ripple.remove();
+    }, 800);
+    
     if (images.length <= 1) return;
     setCurrentImageIndex(prev => prev < images.length - 1 ? prev + 1 : 0);
   };
 
-  const handleSlideChange = (index: number) => {
+  const handleSlideChange = (index: number, e: React.MouseEvent) => {
+    e.stopPropagation();
+    
+    // Create ripple effect
+    const button = e.currentTarget;
+    const rect = button.getBoundingClientRect();
+    const x = e.clientX - rect.left;
+    const y = e.clientY - rect.top;
+    
+    const ripple = document.createElement('span');
+    ripple.className = 'ripple-effect';
+    ripple.style.left = `${x}px`;
+    ripple.style.top = `${y}px`;
+    
+    button.appendChild(ripple);
+    
+    // Remove the ripple element after animation completes
+    setTimeout(() => {
+      ripple.remove();
+    }, 800);
+    
     if (index === currentImageIndex || index < 0 || index >= images.length) return;
     setCurrentImageIndex(index);
   };
@@ -266,10 +344,7 @@ const ArtistProfileCard = ({
                     "w-1.5 h-1.5 rounded-full transition-all duration-300", 
                     currentImageIndex === index ? "bg-white" : "bg-white/30 backdrop-blur-xl"
                   )} 
-                  onClick={e => {
-                    e.stopPropagation();
-                    handleSlideChange(index);
-                  }} 
+                  onClick={(e) => handleSlideChange(index, e)} 
                   aria-label={`Ir a imagen ${index + 1}`} 
                 />
               ))}
