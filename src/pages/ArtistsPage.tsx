@@ -136,8 +136,8 @@ const ArtistsPage = () => {
             </h1>
             <p className={`
               ${isMobile 
-                ? "text-2xl font-medium" 
-                : "text-4xl font-medium"
+                ? "text-2xl font-regular" 
+                : "text-4xl font-regular"
               }
             `}>
               {artists.length} artistas
@@ -160,7 +160,7 @@ const ArtistsPage = () => {
           ${isSmallMobile
             ? "grid grid-cols-1 gap-6" // Increased vertical gap from 4 to 6
             : isMobile
-              ? "grid grid-cols-2 gap-6" // Increased vertical gap from 4 to 6
+              ? "grid grid-cols-2 gap-8" // Increased vertical gap from 4 to 6
               : "grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-6" // Increased vertical gap from 4 to 6
           }
         `}>
