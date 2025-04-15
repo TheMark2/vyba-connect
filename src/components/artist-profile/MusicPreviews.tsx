@@ -272,7 +272,7 @@ const MusicPreviews = ({
 
   return (
     <div className="mt-8 mb-16">
-      <h2 className="text-3xl font-black mb-6">Preview</h2>
+      <h2 className="text-3xl font-semibold mb-6">Preview</h2>
       
       {previews?.length > 0 && (
         <>
