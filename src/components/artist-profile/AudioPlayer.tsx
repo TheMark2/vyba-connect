@@ -3,6 +3,7 @@ import React from "react";
 import { Progress } from "@/components/ui/progress";
 import { Play } from "lucide-react";
 import Image from "@/components/ui/image";
+import { Marquee } from "@/components/ui/marquee";
 
 interface AudioPlayerProps {
   preview: {
@@ -35,13 +36,22 @@ const AudioPlayer = ({
         
         <div className="flex-grow">
           <div className="flex items-center justify-between mb-1">
-            <div className="text-base font-regular truncate pr-2">{preview.title}</div>
+            <div className="max-w-[180px]">
+              <Marquee className="text-base font-regular truncate pr-2" maxWidth={180}>
+                {preview.title}
+              </Marquee>
+              <div className="text-sm font-light" style={{ color: "#9B9B9B" }}>
+                (30 minutos) restantes
+              </div>
+            </div>
             <button className="h-8 w-8 bg-[#F7F7F7] text-black rounded-full flex items-center justify-center">
               <Play className="h-4 w-4 ml-0.5" fill="black" />
             </button>
           </div>
           
-          <Progress value={30} className="h-1.5" />
+          <div className="mt-2">
+            <Progress value={30} className="h-1.5" />
+          </div>
         </div>
       </div>
     );
@@ -68,8 +78,14 @@ const AudioPlayer = ({
           </div>
           
           <div className="flex-grow text-white overflow-hidden">
-            <div className="mb-1 font-medium text-lg">{preview.title}</div>
-            <div className="text-md opacity-90 font-medium">{artistName}</div>
+            <div className="mb-1 font-medium text-lg">
+              <Marquee maxWidth={150}>
+                {preview.title}
+              </Marquee>
+            </div>
+            <div className="text-sm font-light opacity-80">
+              (30 minutos) restantes
+            </div>
           </div>
         </div>
         
