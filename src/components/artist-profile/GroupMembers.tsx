@@ -83,12 +83,12 @@ const GroupMembers = ({
                   <CarouselItem 
                     key={member.id} 
                     className={`
-                      ${isMobile ? 'pl-2 pr-2' : 'pl-6'} 
-                      ${isMobile ? 'basis-4/5' : 'basis-1/3'}
-                      ${index === members.length - 1 ? 'mr-6' : ''}
+                      ${isMobile ? 'pl-2 pr-2 basis-4/5' : 'pl-4 pr-2'}
+                      shrink-0
                     `}
+                    style={{ maxWidth: 260 }}
                   >
-                    <div className="w-full h-[260px]">
+                    <div className="w-[260px] h-[260px]">
                       <MemberCard member={member} />
                     </div>
                   </CarouselItem>
