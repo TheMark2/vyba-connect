@@ -369,11 +369,11 @@ const PreviewCard = ({
         </div>
         
         {/* Botón de play centrado */}
-        <div className="absolute inset-0 flex items-center justify-center">
+        <div className="absolute bottom-4 left-4">
           <Button 
             variant="outline"
-            size="icon" 
-            className="h-14 w-14 rounded-full bg-white hover:bg-white/90 border-0 shadow-lg"
+            size="icon"
+            className="h-10 w-10 rounded-full bg-white hover:bg-white/90 border-0 shadow-md"
             onClick={(e) => {
               e.stopPropagation();
               onPlayPause();
@@ -381,11 +381,11 @@ const PreviewCard = ({
             disabled={isLoading}
           >
             {isLoading ? (
-              <div className="h-6 w-6 border-2 border-black border-t-transparent rounded-full animate-spin" />
+              <div className="h-5 w-5 border-2 border-black border-t-transparent rounded-full animate-spin" />
             ) : isPlaying ? (
-              <Pause className="h-6 w-6 fill-black text-black" />
+              <Pause className="h-5 w-5 fill-black text-black" />
             ) : (
-              <Play className="h-6 w-6 fill-black text-black ml-1" />
+              <Play className="h-5 w-5 fill-black text-black ml-0.5" />
             )}
           </Button>
         </div>
