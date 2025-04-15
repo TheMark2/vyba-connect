@@ -259,7 +259,9 @@ const ArtistProfilePage = () => {
     location: artist.location || "",
     availability: artist.availability || "",
     priceRange: artist.priceRange,
-    image: artist.images[0]
+    image: artist.images[0],
+    type: artist.type,
+    rating: artist.rating
   };
 
   const previews = [
