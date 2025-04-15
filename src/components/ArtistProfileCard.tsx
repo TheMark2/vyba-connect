@@ -314,7 +314,7 @@ const ArtistProfileCard = ({
             </div>
           </div>
         ) : (
-          <div className="pt-3 flex flex-col gap-1 bg-transparent">
+          <div className="pt-3 flex flex-col bg-transparent">
             <div className="flex justify-between items-center">
               <h3 className="text-base font-medium">{name}</h3>
               <div className="flex items-center gap-1">
@@ -323,7 +323,7 @@ const ArtistProfileCard = ({
               </div>
             </div>
             <p className="text-base text-gray-500 dark:text-gray-400 line-clamp-1 font-regular">{description}</p>
-            <p className="text-base font-medium">
+            <p className="text-base font-medium mt-2">
               {priceRange}
             </p>
           </div>
