@@ -322,7 +322,7 @@ const ArtistProfileCard = ({
                 <span className="text-base font-medium">{rating.toFixed(1)}</span>
               </div>
             </div>
-            <p className="text-base text-[#F7F7F7] dark:text-gray-400 line-clamp-1 font-light">{description}</p>
+            <p className="text-sm text-[#C0C0C0] dark:text-gray-400 line-clamp-1 font-light">{description}</p>
             <p className="text-base font-medium mt-2">
               {priceRange}
             </p>
