@@ -11,13 +11,13 @@ const buttonVariants = cva(
     variants: {
       variant: {
         default: "bg-gradient-to-br from-[#D4DDFF] to-[#F0F3FF] text-primary-foreground hover:from-[#C6D0FF] hover:to-[#E2E6FF]",
-        destructive:
-          "bg-destructive text-destructive-foreground hover:bg-destructive/90",
+        destructive: "bg-destructive text-destructive-foreground hover:bg-destructive/90",
         outline:
           "border border-[#F7F7F7] bg-transparent text-[#222222] hover:bg-[#EBEBEB]/10 dark:border-vyba-dark-secondary dark:text-white dark:hover:bg-vyba-dark-secondary/10",
         secondary:
           "bg-[#F7F7F7] text-[#222222] hover:bg-[#F7F7F7]/80 dark:bg-vyba-dark-secondary dark:text-white dark:hover:bg-vyba-dark-secondary/80",
-        ghost: "hover:bg-secondary hover:text-secondary-foreground dark:hover:bg-vyba-dark-secondary dark:text-white dark:hover:text-white",
+        ghost:
+          "hover:bg-secondary hover:text-secondary-foreground dark:hover:bg-vyba-dark-secondary dark:text-white dark:hover:text-white",
         link: "text-primary underline-offset-4 hover:underline dark:text-white",
       },
       size: {
@@ -44,33 +44,7 @@ export interface ButtonProps
 const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
   ({ className, variant, size, asChild = false, isLoading = false, children, ...props }, ref) => {
     const Comp = asChild ? Slot : "button"
-    
-    // Función para manejar el efecto de onda desde el punto de clic
-    const handleRippleEffect = (event: React.MouseEvent<HTMLButtonElement>) => {
-      const button = event.currentTarget;
-      const rect = button.getBoundingClientRect();
-      
-      const x = event.clientX - rect.left;
-      const y = event.clientY - rect.top;
-      
-      const ripple = document.createElement('span');
-      ripple.className = 'ripple-effect';
-      ripple.style.left = `${x}px`;
-      ripple.style.top = `${y}px`;
-      
-      button.appendChild(ripple);
-      
-      // Eliminar el elemento después de la animación
-      setTimeout(() => {
-        ripple.remove();
-      }, 800);
-      
-      // Llamar al onClick original si existe
-      if (props.onClick) {
-        props.onClick(event);
-      }
-    };
-    
+
     return (
       <Comp
         className={cn(
@@ -80,7 +54,6 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
         ref={ref}
         disabled={isLoading || props.disabled}
         {...props}
-        onClick={handleRippleEffect}
       >
         {isLoading && (
           <Loader2 className="mr-2 h-4 w-4 animate-spin" />
