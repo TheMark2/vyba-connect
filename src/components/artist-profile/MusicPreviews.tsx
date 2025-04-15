@@ -338,7 +338,7 @@ const PreviewCard = ({
     <div className="space-y-2">
       {/* Contenedor principal de la imagen */}
       <div 
-        className="relative overflow-hidden rounded-3xl aspect-square cursor-pointer"
+        className="relative overflow-hidden rounded-3xl cursor-pointer"
         onClick={onPlayPause}
       >
         {/* Imagen de fondo */}
