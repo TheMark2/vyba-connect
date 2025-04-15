@@ -1,4 +1,3 @@
-
 import React, { useRef } from "react";
 import { Button } from "@/components/ui/button";
 import {
@@ -43,74 +42,93 @@ const DesktopArtistNavbar = ({
   };
 
   return (
-    <div className="bg-[#F7F7F7] p-6 rounded-3xl sticky top-24 h-fit dark:bg-vyba-dark-secondary">
-      <div className="space-y-4">
-        <div className="flex items-center gap-4">
-          {artist.image && (
-            <img 
-              src={artist.image} 
-              alt={artist.name} 
-              className="w-16 h-16 rounded-full object-cover"
-            />
-          )}
+    <div className="bg-white rounded-3xl shadow-lg p-6 sticky top-24 h-fit">
+      <div className="space-y-6">
+        {/* Header with rotated image and artist info */}
+        <div className="flex items-center">
+          <div className="relative mr-6 flex-shrink-0">
+            {artist.image && (
+              <div className="w-28 h-32 overflow-hidden rounded-2xl rotate-6 transform">
+                <img
+                  src={artist.image}
+                  alt={artist.name}
+                  className="w-full h-full object-cover"
+                />
+              </div>
+            )}
+          </div>
           <div>
-            <h3 className="text-xl font-semibold dark:text-white">{artist.name}</h3>
-            {artist.location && <p className="text-sm text-gray-600 dark:text-gray-300">{artist.location}</p>}
+            <h1 className="text-2xl font-bold mb-1" style={{ color: "#222222" }}>
+              {artist.name}
+            </h1>
+            {artist.location && (
+              <p style={{ color: "#9B9B9B" }}>
+                {artist.location}
+              </p>
+            )}
           </div>
         </div>
-        
+
+        {/* Price range */}
+        <div className="text-2xl font-bold" style={{ color: "#222222" }}>
+          {artist.priceRange}
+        </div>
+
+        {/* Availability */}
         {artist.availability && (
-          <div className="px-4 py-2 bg-[#E6F2E6] text-[#4CAF50] rounded-full text-sm font-medium inline-block">
-            {artist.availability}
-          </div>
-        )}
-        
-        <div className="border-t border-gray-200 dark:border-gray-700 pt-4">
-          <div className="flex flex-col space-y-2">
-            <div className="flex justify-between items-center">
-              <span className="text-sm text-gray-600 dark:text-gray-300">Presupuesto</span>
-              <span className="font-semibold text-gray-800 dark:text-white">{artist.priceRange}</span>
+          <div className="flex items-start mb-4">
+            <div className="mt-1 w-5 h-5 rounded-full bg-green-500 flex-shrink-0 mr-4"></div>
+            <div>
+              <p className="text-lg font-medium" style={{ color: "#222222" }}>
+                {artist.availability}
+              </p>
             </div>
           </div>
-        </div>
-        
-        <Button 
+        )}
+
+        {/* Contact button */}
+        <button
           onClick={onContact}
-          className="w-full"
+          className="w-full bg-blue-50 py-4 px-6 rounded-full text-lg font-medium"
+          style={{ color: "#222222" }}
         >
           Contactar
-        </Button>
+        </button>
 
-        <div className="border-t border-gray-200 dark:border-gray-700 pt-4">
+        {/* Navigation menu */}
+        <div className="pt-4 border-t border-gray-200">
           <NavigationMenu>
             <NavigationMenuList className="flex flex-col space-y-2">
               <NavigationMenuItem>
-                <Button 
+                <Button
                   variant="ghost"
-                  className="w-full justify-start px-4 py-2 dark:text-white"
+                  className="w-full justify-start px-4 py-2 text-left"
+                  style={{ color: "#222222" }}
                   onClick={() => scrollToSection(aboutMeRef)}
                 >
                   Sobre {artist.name}
                 </Button>
               </NavigationMenuItem>
-              
+
               {imagesRef && (
                 <NavigationMenuItem>
-                  <Button 
+                  <Button
                     variant="ghost"
-                    className="w-full justify-start px-4 py-2 dark:text-white"
+                    className="w-full justify-start px-4 py-2 text-left"
+                    style={{ color: "#222222" }}
                     onClick={() => scrollToSection(imagesRef)}
                   >
                     Experiencia
                   </Button>
                 </NavigationMenuItem>
               )}
-              
+
               {reviewsRef && (
                 <NavigationMenuItem>
-                  <Button 
+                  <Button
                     variant="ghost"
-                    className="w-full justify-start px-4 py-2 dark:text-white"
+                    className="w-full justify-start px-4 py-2 text-left"
+                    style={{ color: "#222222" }}
                     onClick={() => scrollToSection(reviewsRef)}
                   >
                     Reseñas
