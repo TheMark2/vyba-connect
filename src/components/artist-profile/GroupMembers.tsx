@@ -125,7 +125,7 @@ const GroupMembers = ({
   return <div className="mt-8 mb-12">
       <h2 className="text-3xl font-semibold mb-6">Integrantes del grupo</h2>
       <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-        {members.map(member => <div key={member.id} className="h-[420px] max-w-[300px]">
+        {members.map(member => <div key={member.id} className="h-[260px] w-[260px] max-w-[260px]">
             <MemberCard member={member} />
           </div>)}
       </div>
