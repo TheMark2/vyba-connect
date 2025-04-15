@@ -93,50 +93,6 @@ const DesktopArtistNavbar = ({
         >
           Contactar
         </button>
-
-        {/* Navigation menu */}
-        <div className="pt-4 border-t border-gray-200">
-          <NavigationMenu>
-            <NavigationMenuList className="flex flex-col space-y-2">
-              <NavigationMenuItem>
-                <Button
-                  variant="ghost"
-                  className="w-full justify-start px-4 py-2 text-left"
-                  style={{ color: "#222222" }}
-                  onClick={() => scrollToSection(aboutMeRef)}
-                >
-                  Sobre {artist.name}
-                </Button>
-              </NavigationMenuItem>
-
-              {imagesRef && (
-                <NavigationMenuItem>
-                  <Button
-                    variant="ghost"
-                    className="w-full justify-start px-4 py-2 text-left"
-                    style={{ color: "#222222" }}
-                    onClick={() => scrollToSection(imagesRef)}
-                  >
-                    Experiencia
-                  </Button>
-                </NavigationMenuItem>
-              )}
-
-              {reviewsRef && (
-                <NavigationMenuItem>
-                  <Button
-                    variant="ghost"
-                    className="w-full justify-start px-4 py-2 text-left"
-                    style={{ color: "#222222" }}
-                    onClick={() => scrollToSection(reviewsRef)}
-                  >
-                    Reseñas
-                  </Button>
-                </NavigationMenuItem>
-              )}
-            </NavigationMenuList>
-          </NavigationMenu>
-        </div>
       </div>
     </div>
   );
