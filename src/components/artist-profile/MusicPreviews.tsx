@@ -285,11 +285,11 @@ const MusicPreviews = ({
               }}
               className="w-full"
             >
-              <CarouselContent className="-ml-4">
+              <CarouselContent className="-ml-2">
                 {previews.map((preview, index) => (
                   <CarouselItem
                     key={index}
-                    className="pl-4 max-w-[260px] flex-shrink-0"
+                    className="pl-2 max-w-[260px] flex-shrink-0"
                   >
                     <PreviewCard 
                       preview={preview} 
