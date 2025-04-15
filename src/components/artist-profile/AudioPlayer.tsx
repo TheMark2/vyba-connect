@@ -13,6 +13,10 @@ interface AudioPlayerProps {
   };
   artistName: string;
   isMobile: boolean;
+  // Añadimos las props faltantes
+  isPlaying?: boolean;
+  onPlayPause?: () => void;
+  audioRef?: React.RefObject<HTMLAudioElement>;
 }
 
 const AudioPlayer = ({
