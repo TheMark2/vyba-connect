@@ -41,9 +41,9 @@ const DesktopArtistNavbar = ({
   currentPreview
 }: DesktopArtistNavbarProps) => {
   return (
-    <div className="space-y-6">
+    <div className="sticky top-24 space-y-6">
       <div 
-        className="bg-white rounded-3xl p-6 sticky top-24 h-fit"
+        className="bg-white rounded-3xl p-6"
         style={{ 
           boxShadow: "0px 4px 34.2px rgba(0, 0, 0, 0.11)" 
         }}
@@ -129,7 +129,7 @@ const DesktopArtistNavbar = ({
 
       {/* Audio player - mostrado siempre */}
       <div 
-        className="bg-white rounded-3xl overflow-hidden p-6 sticky top-[calc(24rem+1.5rem)]"
+        className="bg-white rounded-3xl overflow-hidden p-6"
         style={{ 
           boxShadow: "0px 4px 34.2px rgba(0, 0, 0, 0.11)" 
         }}
