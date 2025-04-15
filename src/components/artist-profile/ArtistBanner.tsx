@@ -130,7 +130,7 @@ const ArtistBanner = ({ artist, onFavorite, onReport, onShare }: ArtistBannerPro
             </div>
             
             <div className="text-white space-y-4 max-w-[80%]">
-              <h1 className="text-3xl md:text-5xl font-black truncate">{artist.name}</h1>
+              <h1 className="text-3xl md:text-5xl font-bold truncate">{artist.name}</h1>
               <p className="text-xl md:text-2xl opacity-90 line-clamp-2">{artist.type}</p>
             </div>
           </div>
