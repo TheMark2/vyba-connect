@@ -120,8 +120,8 @@ const ArtistsPage = () => {
       <div className="px-6 md:px-14 lg:px-16 mx-auto mt-6 mb-8">
         <div className={`
           ${isMobile 
-            ? "bg-secondary dark:bg-vyba-dark-secondary/40 rounded-3xl py-6 mb-6 px-6"
-            : "bg-secondary dark:bg-vyba-dark-secondary/40 rounded-3xl py-8 mb-12 px-16"
+            ? "bg-[#F7F7F7] dark:bg-vyba-dark-secondary/40 rounded-3xl py-6 mb-6 px-6"
+            : "bg-[#F7F7F7] dark:bg-vyba-dark-secondary/40 rounded-3xl py-8 mb-12 px-16"
           }
           flex flex-col md:flex-row md:justify-between items-center
         `}>
