@@ -127,14 +127,14 @@ const DesktopArtistNavbar = ({
         </div>
       </div>
 
-      {/* Audio player */}
-      {currentPreview && audioRef && onPlayPause && (
-        <div 
-          className="bg-white rounded-3xl overflow-hidden p-6"
-          style={{ 
-            boxShadow: "0px 4px 34.2px rgba(0, 0, 0, 0.11)" 
-          }}
-        >
+      {/* Audio player - mostrado siempre */}
+      <div 
+        className="bg-white rounded-3xl overflow-hidden p-6 sticky top-[calc(24rem+1.5rem)]"
+        style={{ 
+          boxShadow: "0px 4px 34.2px rgba(0, 0, 0, 0.11)" 
+        }}
+      >
+        {audioRef && onPlayPause && currentPreview ? (
           <AudioPlayer 
             preview={{
               title: currentPreview.title,
@@ -149,8 +149,23 @@ const DesktopArtistNavbar = ({
             onPlayPause={onPlayPause}
             audioRef={audioRef}
           />
-        </div>
-      )}
+        ) : (
+          <AudioPlayer 
+            preview={{
+              title: "Prévisualisations de música",
+              image: artist.image,
+              audioUrl: "",
+              videoUrl: "",
+              hasVideo: false,
+              duration: "0:00"
+            }}
+            artistName={artist.name}
+            isPlaying={false}
+            onPlayPause={() => {}}
+            audioRef={React.createRef<HTMLAudioElement>()}
+          />
+        )}
+      </div>
     </div>
   );
 };
