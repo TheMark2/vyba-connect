@@ -39,7 +39,7 @@ const DesktopArtistNavbar = ({
         <div className="flex items-center">
           <div className="relative mr-5 flex-shrink-0">
             {artist.image && (
-              <div className="w-14 h-16 overflow-hidden rounded-2xl rotate-6 transform shadow-md">
+              <div className="w-14 h-16 overflow-hidden rounded-2xl rotate-12 transform">
                 <img src={artist.image} alt={artist.name} className="w-full h-full object-cover" />
               </div>
             )}
@@ -50,7 +50,7 @@ const DesktopArtistNavbar = ({
             }}>
               {artist.name}
             </h1>
-            <p className="text-sm" style={{
+            <p className="text-sm font-light" style={{
               color: "#9B9B9B"
             }}>
               {artist.type} · {artist.rating}
@@ -70,9 +70,9 @@ const DesktopArtistNavbar = ({
           {artist.availability && (
             <div>
               <div className="flex items-start mb-1">
-                <div className="mt-1 w-4 h-4 rounded-full bg-green-500 flex-shrink-0 mr-4"></div>
+                <div className="mt-1 w-3 h-3 rounded-full bg-green-500 flex-shrink-0 mr-3"></div>
                 <div>
-                  <p className="text-base font-medium" style={{
+                  <p className="text-base font-regular" style={{
                     color: "#222222"
                   }}>
                     {artist.availability}
@@ -81,7 +81,7 @@ const DesktopArtistNavbar = ({
               </div>
               <p style={{
                 color: "#9B9B9B"
-              }} className="text-sm ml-8 font-light">
+              }} className="text-sm ml-6 font-light">
                 El artista ha indicado disponibilidad esta semana
               </p>
             </div>
@@ -89,9 +89,9 @@ const DesktopArtistNavbar = ({
           
           <div>
             <div className="flex items-start mb-1">
-              <div className="mt-1 w-4 h-4 rounded-full bg-green-500 flex-shrink-0 mr-4"></div>
+              <div className="mt-1 w-3 h-3 rounded-full bg-green-500 flex-shrink-0 mr-3"></div>
               <div>
-                <p className="text-base font-medium" style={{
+                <p className="text-base font-regular" style={{
                   color: "#222222"
                 }}>
                   Barcelona
@@ -100,7 +100,7 @@ const DesktopArtistNavbar = ({
             </div>
             <p style={{
               color: "#9B9B9B"
-            }} className="text-sm ml-8 font-light">
+            }} className="text-sm ml-6 font-light">
               El artista ha indicado que se mueve en un radio de unos 12km aproximados
             </p>
           </div>
