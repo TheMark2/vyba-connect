@@ -68,7 +68,7 @@ const DesktopArtistNavbar = ({
               </div>
               <p style={{
             color: "#9B9B9B"
-          }} className="text-sm ml-8 font-regular">
+          }} className="text-sm ml-8 font-light">
                 El artista ha indicado disponibilidad esta semana
               </p>
             </div>}
@@ -86,7 +86,7 @@ const DesktopArtistNavbar = ({
             </div>
             <p style={{
             color: "#9B9B9B"
-          }} className="text-sm ml-8 font-regular">
+          }} className="text-sm ml-8 font-light">
               El artista ha indicado que se mueve en un radio de unos 12km aproximados
             </p>
           </div>
