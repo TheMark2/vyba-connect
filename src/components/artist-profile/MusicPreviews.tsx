@@ -394,7 +394,7 @@ const PreviewCard = ({
       {/* Textos debajo de la tarjeta */}
       <div className="space-y-0.5 px-0.5">
         <h3 className="text-base font-semibold line-clamp-1">{preview.title}</h3>
-        <p className="text-sm font-normal text-[#C0C0C0]">{preview.duration}</p>
+        <p className="text-sm font-normal text-[#999999]">{preview.duration}</p>
       </div>
     </div>
   );
