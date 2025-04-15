@@ -46,9 +46,9 @@ const DesktopArtistNavbar = ({
       <div className="space-y-6">
         {/* Header with rotated image and artist info */}
         <div className="flex items-center">
-          <div className="relative mr-6 flex-shrink-0">
+          <div className="relative mr-5 flex-shrink-0">
             {artist.image && (
-              <div className="w-28 h-32 overflow-hidden rounded-2xl rotate-6 transform">
+              <div className="w-20 h-24 overflow-hidden rounded-2xl rotate-6 transform shadow-md">
                 <img
                   src={artist.image}
                   alt={artist.name}
@@ -58,7 +58,7 @@ const DesktopArtistNavbar = ({
             )}
           </div>
           <div>
-            <h1 className="text-2xl font-semibold mb-1" style={{ color: "#222222" }}>
+            <h1 className="text-2xl font-bold mb-1" style={{ color: "#222222" }}>
               {artist.name}
             </h1>
             {artist.location && (
@@ -70,7 +70,7 @@ const DesktopArtistNavbar = ({
         </div>
 
         {/* Price range */}
-        <div className="text-2xl font-semibold" style={{ color: "#222222" }}>
+        <div className="text-2xl font-bold" style={{ color: "#222222" }}>
           {artist.priceRange}
         </div>
 
@@ -89,10 +89,55 @@ const DesktopArtistNavbar = ({
         {/* Contact button */}
         <button
           onClick={onContact}
-          className="w-full"
+          className="w-full bg-blue-50 py-4 px-6 rounded-full text-lg font-medium"
+          style={{ color: "#222222" }}
         >
           Contactar
         </button>
+
+        {/* Navigation menu */}
+        <div className="pt-4 border-t border-gray-200">
+          <NavigationMenu>
+            <NavigationMenuList className="flex flex-col space-y-2">
+              <NavigationMenuItem>
+                <Button
+                  variant="ghost"
+                  className="w-full justify-start px-4 py-2 text-left"
+                  style={{ color: "#222222" }}
+                  onClick={() => scrollToSection(aboutMeRef)}
+                >
+                  Sobre {artist.name}
+                </Button>
+              </NavigationMenuItem>
+
+              {imagesRef && (
+                <NavigationMenuItem>
+                  <Button
+                    variant="ghost"
+                    className="w-full justify-start px-4 py-2 text-left"
+                    style={{ color: "#222222" }}
+                    onClick={() => scrollToSection(imagesRef)}
+                  >
+                    Experiencia
+                  </Button>
+                </NavigationMenuItem>
+              )}
+
+              {reviewsRef && (
+                <NavigationMenuItem>
+                  <Button
+                    variant="ghost"
+                    className="w-full justify-start px-4 py-2 text-left"
+                    style={{ color: "#222222" }}
+                    onClick={() => scrollToSection(reviewsRef)}
+                  >
+                    Reseñas
+                  </Button>
+                </NavigationMenuItem>
+              )}
+            </NavigationMenuList>
+          </NavigationMenu>
+        </div>
       </div>
     </div>
   );
