@@ -136,8 +136,8 @@ const ArtistsPage = () => {
             </h1>
             <p className={`
               ${isMobile 
-                ? "text-2xl" 
-                : "text-4xl"
+                ? "text-2xl font-medium" 
+                : "text-4xl font-medium"
               }
             `}>
               {artists.length} artistas
