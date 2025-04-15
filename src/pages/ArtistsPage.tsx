@@ -161,7 +161,7 @@ const ArtistsPage = () => {
             ? "grid grid-cols-1 gap-6" // Increased vertical gap from 4 to 6
             : isMobile
               ? "grid grid-cols-2 gap-8" // Increased vertical gap from 4 to 6
-              : "grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-6" // Increased vertical gap from 4 to 6
+              : "grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-8" // Increased vertical gap from 4 to 6
           }
         `}>
           {artists.map(artist => (
