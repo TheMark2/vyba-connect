@@ -34,7 +34,7 @@ const DesktopArtistNavbar = ({
         <div className="flex items-center">
           <div className="relative mr-5 flex-shrink-0">
             {artist.image && (
-              <div className="w-16 h-20 overflow-hidden rounded-2xl rotate-6 transform shadow-md">
+              <div className="w-14 h-16 overflow-hidden rounded-2xl rotate-6 transform shadow-md">
                 <img
                   src={artist.image}
                   alt={artist.name}
@@ -44,40 +44,50 @@ const DesktopArtistNavbar = ({
             )}
           </div>
           <div>
-            <h1 className="text-2xl font-bold mb-1" style={{ color: "#222222" }}>
+            <h1 className="text-2xl font-semibold mb-1" style={{ color: "#222222" }}>
               {artist.name}
             </h1>
-            <p style={{ color: "#9B9B9B" }}>
-              {artist.type} · {artist.rating}⭐
+            <p className="text-sm" style={{ color: "#9B9B9B" }}>
+              {artist.type} · {artist.rating}
             </p>
           </div>
         </div>
 
         {/* Price range */}
-        <div className="text-2xl font-bold" style={{ color: "#222222" }}>
+        <div className="text-2xl font-semibold" style={{ color: "#222222" }}>
           {artist.priceRange}
         </div>
 
         {/* Availability */}
-        <div className="flex flex-col gap-2">
+        <div className="flex flex-col gap-4">
           {artist.availability && (
-            <div className="flex items-start">
-              <div className="mt-1 w-5 h-5 rounded-full bg-green-500 flex-shrink-0 mr-4"></div>
-              <div>
-                <p className="text-lg font-medium" style={{ color: "#222222" }}>
-                  {artist.availability}
-                </p>
+            <div>
+              <div className="flex items-start mb-1">
+                <div className="mt-1 w-4 h-4 rounded-full bg-green-500 flex-shrink-0 mr-4"></div>
+                <div>
+                  <p className="text-base font-medium" style={{ color: "#222222" }}>
+                    {artist.availability}
+                  </p>
+                </div>
               </div>
+              <p className="text-sm ml-8" style={{ color: "#9B9B9B" }}>
+                El artista ha indicado disponibilidad esta semana
+              </p>
             </div>
           )}
           
-          <div className="flex items-start">
-            <div className="mt-1 w-5 h-5 rounded-full bg-green-500 flex-shrink-0 mr-4"></div>
-            <div>
-              <p className="text-lg font-medium" style={{ color: "#222222" }}>
-                Barcelona
-              </p>
+          <div>
+            <div className="flex items-start mb-1">
+              <div className="mt-1 w-4 h-4 rounded-full bg-green-500 flex-shrink-0 mr-4"></div>
+              <div>
+                <p className="text-base font-medium" style={{ color: "#222222" }}>
+                  Barcelona
+                </p>
+              </div>
             </div>
+            <p className="text-sm ml-8" style={{ color: "#9B9B9B" }}>
+              El artista ha indicado que se mueve en un radio de unos 12km aproximados
+            </p>
           </div>
         </div>
 
@@ -85,7 +95,6 @@ const DesktopArtistNavbar = ({
         <Button
           onClick={onContact}
           className="w-full"
-          variant="default"
         >
           Contactar
         </Button>
