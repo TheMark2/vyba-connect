@@ -1,7 +1,8 @@
 
 import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { Loader2, Play, Pause } from "lucide-react";
+import { Loader2, Play } from "lucide-react";
+import { Progress } from "@/components/ui/progress";
 
 interface ArtistContactProps {
   name: string;
@@ -29,10 +30,7 @@ const MobileArtistNavbar = ({
   aboutMeRef,
   imagesRef,
   reviewsRef,
-  currentPlaying,
-  isAudioPlaying,
-  onPlayPause,
-  audioRef
+  currentPlaying
 }: MobileArtistNavbarProps) => {
   const [isContacting, setIsContacting] = useState(false);
 
@@ -54,22 +52,18 @@ const MobileArtistNavbar = ({
   return (
     <div className="fixed bottom-0 left-0 right-0 bg-white dark:bg-vyba-dark-bg border-t border-gray-200 dark:border-gray-800 z-50">
       {currentPlaying && (
-        <div className="px-4 py-2 bg-[#F5F5F5] dark:bg-vyba-dark-secondary flex items-center justify-between border-b border-gray-200 dark:border-gray-800">
-          <div className="flex items-center space-x-3">
+        <div className="px-4 py-2 bg-[#F5F5F5] dark:bg-vyba-dark-secondary">
+          <div className="flex items-center space-x-3 mb-2">
             <button 
-              onClick={onPlayPause}
               className="w-8 h-8 rounded-full bg-white dark:bg-vyba-dark-bg shadow-sm flex items-center justify-center"
             >
-              {isAudioPlaying ? (
-                <Pause className="h-4 w-4" />
-              ) : (
-                <Play className="h-4 w-4" />
-              )}
+              <Play className="h-4 w-4 ml-0.5" />
             </button>
             <div className="text-sm font-medium truncate max-w-[200px]">
               {currentPlaying}
             </div>
           </div>
+          <Progress value={30} className="h-1.5" />
         </div>
       )}
       
