@@ -14,6 +14,7 @@ import RecommendedArtists from "@/components/artist-profile/RecommendedArtists";
 import NotFoundArtist from "@/components/artist-profile/NotFoundArtist";
 import GroupMembers from "@/components/artist-profile/GroupMembers";
 import MobileBottomSheet from "@/components/artist-profile/MobileBottomSheet";
+import MusicPreviews from "@/components/artist-profile/MusicPreviews";
 import { useIsMobile } from "@/hooks/use-mobile";
 
 const artistsData = [{
@@ -261,9 +262,51 @@ const ArtistProfilePage = () => {
     image: artist.images[0]
   };
 
+  const previews = [
+    {
+      title: "Set de música urbana",
+      duration: "30:40",
+      image: "https://images.unsplash.com/photo-1513836279014-a89f7a76ae86",
+      hasVideo: true,
+      videoUrl: "/lovable-uploads/bad-bunny-moscow-mule.mp4"
+    },
+    {
+      title: "Jazz session",
+      duration: "15:22",
+      image: "https://images.unsplash.com/photo-1509316975850-ff9c5deb0cd9",
+      hasVideo: false,
+      audioUrl: "/lovable-uploads/bad-bunny-moscow-mule.mp4"
+    },
+    {
+      title: "DJ mix - Summer vibes",
+      duration: "45:30",
+      hasVideo: true,
+      videoUrl: "/lovable-uploads/westcol-la-plena.mp4"
+    },
+    {
+      title: "Instrumental acústico",
+      duration: "12:15",
+      image: "https://images.unsplash.com/photo-1500673922987-e212871fec22",
+      hasVideo: false,
+      audioUrl: "/lovable-uploads/westcol-la-plena.mp4"
+    },
+    {
+      title: "Live session",
+      duration: "22:40",
+      image: "/lovable-uploads/5956b7b8-43c9-4094-b9f5-ee7f2ecc8dcc.png",
+      hasVideo: true
+    }
+  ];
+
+  const handleMusicPlayback = (preview: any, isPlaying: boolean) => {
+    setCurrentPlaying(isPlaying ? preview.title : "");
+    setIsAudioPlaying(isPlaying);
+  };
+
   return (
     <div className="bg-white dark:bg-vyba-dark-bg">
       <Navbar />
+      <audio ref={audioRef} className="hidden" />
       
       <div className={`${isMobile ? 'px-0' : 'px-6 md:px-10 lg:px-14 xl:px-16'}`}>
         <ArtistBanner artist={artist} onFavorite={handleFavorite} onReport={handleReport} onShare={handleShare} />
@@ -274,6 +317,13 @@ const ArtistProfilePage = () => {
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-16">
             <div className="lg:col-span-2">
               <AboutArtist ref={aboutMeRef} description={artist.description} genres={artist.genres} onGenreClick={handleGenreClick} />
+              
+              <MusicPreviews 
+                previews={previews} 
+                artistName={artist.name} 
+                onPlaybackState={handleMusicPlayback}
+                audioRef={audioRef}
+              />
               
               <div ref={imagesRef}>
                 <DetailedInformation artist={artist} />
