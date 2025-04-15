@@ -89,8 +89,7 @@ const DesktopArtistNavbar = ({
         {/* Contact button */}
         <button
           onClick={onContact}
-          className="w-full bg-blue-50 py-4 px-6 rounded-full text-lg font-medium"
-          style={{ color: "#222222" }}
+          className="w-full"
         >
           Contactar
         </button>
