@@ -23,7 +23,7 @@ const AudioPlayer = ({
   if (!isMobile) {
     return (
       <div className="flex items-center gap-4">
-        <div className="w-12 h-12 rounded-lg overflow-hidden bg-gray-200 flex-shrink-0">
+        <div className="w-20 h-20 rounded-lg overflow-hidden bg-gray-200 flex-shrink-0">
           {preview.image ? (
             <Image src={preview.image} alt={preview.title} className="w-full h-full object-cover" />
           ) : (
@@ -36,8 +36,8 @@ const AudioPlayer = ({
         <div className="flex-grow">
           <div className="flex items-center justify-between mb-1">
             <div className="text-base font-regular truncate pr-2">{preview.title}</div>
-            <button className="h-8 w-8 bg-blue-500 text-white rounded-full flex items-center justify-center">
-              <Play className="h-4 w-4 ml-0.5" fill="white" />
+            <button className="h-8 w-8 bg-[#F7F7F7] text-black rounded-full flex items-center justify-center">
+              <Play className="h-4 w-4 ml-0.5" fill="black" />
             </button>
           </div>
           

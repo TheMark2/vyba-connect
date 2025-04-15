@@ -129,7 +129,7 @@ const DesktopArtistNavbar = ({
 
       {/* Audio player - simplificado sin funcionalidad */}
       <div 
-        className="bg-white rounded-3xl overflow-hidden p-6"
+        className="bg-white rounded-3xl overflow-hidden p-4"
         style={{ 
           boxShadow: "0px 4px 34.2px rgba(0, 0, 0, 0.11)" 
         }}
