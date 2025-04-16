@@ -128,7 +128,7 @@ const GroupMembers = ({
           <div className="flex items-center gap-2">
             <Button 
               onClick={scrollPrevDesktop}
-              variant="outline" 
+              variant="secondary" 
               size="icon" 
               className="w-10 h-10 rounded-full border border-[#F7F7F7] bg-transparent"
               aria-label="Anterior integrante"
@@ -137,7 +137,7 @@ const GroupMembers = ({
             </Button>
             <Button 
               onClick={scrollNextDesktop}
-              variant="outline" 
+              variant="secondary" 
               size="icon" 
               className="w-10 h-10 rounded-full border border-[#F7F7F7] bg-transparent"
               aria-label="Siguiente integrante"
@@ -230,7 +230,9 @@ const MemberCard = ({
         </div>
         <div className="flex flex-col gap-1">
           <span className="font-semibold text-xl">{member.name}</span>
-          <span className="text-sm text-[#969494]">{member.roles[0]}</span>
+          <span className="text-sm text-[#969494]">
+            {member.roles.join(', ')}
+          </span>
         </div>
       </div>
     </Card>
