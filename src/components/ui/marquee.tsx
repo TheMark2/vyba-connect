@@ -1,6 +1,6 @@
 
 import { cn } from "@/lib/utils";
-import { ComponentPropsWithoutRef } from "react";
+import { ComponentPropsWithoutRef, useEffect, useRef, useState } from "react";
  
 interface MarqueeProps extends ComponentPropsWithoutRef<"div"> {
   className?: string;
@@ -20,11 +20,26 @@ export function Marquee({
   gap,
   ...props
 }: MarqueeProps) {
+  const containerRef = useRef<HTMLDivElement>(null);
+  const contentRef = useRef<HTMLDivElement>(null);
+  const [animate, setAnimate] = useState(false);
+  const [contentWidth, setContentWidth] = useState(0);
+
+  useEffect(() => {
+    if (contentRef.current && containerRef.current) {
+      const contentWidth = contentRef.current.scrollWidth;
+      const containerWidth = containerRef.current.clientWidth;
+      setContentWidth(contentWidth);
+      setAnimate(contentWidth > containerWidth);
+    }
+  }, [children]);
+
   return (
     <div
       {...props}
+      ref={containerRef}
       className={cn(
-        "group overflow-hidden text-ellipsis whitespace-nowrap",
+        "group overflow-hidden whitespace-nowrap",
         className
       )}
       style={{ 
@@ -32,7 +47,19 @@ export function Marquee({
         overflow: 'hidden' 
       }}
     >
-      {children}
+      <div 
+        ref={contentRef}
+        className={cn(
+          "inline-block transition-transform",
+          animate && "animate-marquee",
+          pauseOnHover && animate && "group-hover:pause-animation"
+        )}
+        style={{
+          animationDirection: reverse ? 'reverse' : 'normal',
+        }}
+      >
+        {children}
+      </div>
     </div>
   );
 }
