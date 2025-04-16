@@ -41,11 +41,11 @@ const AudioPlayer = ({
         <div className="flex-grow">
           <div className="flex items-center justify-between mb-1">
             <div className="max-w-[180px]">
-              <Marquee className="text-base font-regular truncate pr-2" maxWidth={180}>
+              <Marquee className="text-base font-semibold truncate pr-2" maxWidth={180}>
                 {preview.title}
               </Marquee>
               <div className="text-sm font-light" style={{ color: "#9B9B9B" }}>
-                (30 minutos) restantes
+                30 min restantes
               </div>
             </div>
             <button className="h-8 w-8 bg-[#F7F7F7] text-black rounded-full flex items-center justify-center">
