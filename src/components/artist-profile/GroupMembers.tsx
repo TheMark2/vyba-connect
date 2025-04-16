@@ -22,17 +22,17 @@ const getRoleIcon = (role: string) => {
   const lowerRole = role.toLowerCase();
   
   if (lowerRole.includes("guitar") || lowerRole.includes("guitarr")) {
-    return <Guitar className="h-8 w-8 text-gray-700" />;
+    return <Guitar className="h-16 w-16 stroke-[1.5]" />;
   } else if (lowerRole.includes("vocal") || lowerRole.includes("cantante") || lowerRole.includes("voz")) {
-    return <Mic className="h-8 w-8 text-gray-700" />;
+    return <Mic className="h-16 w-16 stroke-[1.5]" />;
   } else if (lowerRole.includes("dj") || lowerRole.includes("productor")) {
-    return <Headphones className="h-8 w-8 text-gray-700" />;
+    return <Headphones className="h-16 w-16 stroke-[1.5]" />;
   } else if (lowerRole.includes("piano") || lowerRole.includes("tecl")) {
-    return <Piano className="h-8 w-8 text-gray-700" />;
+    return <Piano className="h-16 w-16 stroke-[1.5]" />;
   } else if (lowerRole.includes("bater") || lowerRole.includes("drum")) {
-    return <Drum className="h-8 w-8 text-gray-700" />;
+    return <Drum className="h-16 w-16 stroke-[1.5]" />;
   } else {
-    return <Music className="h-8 w-8 text-gray-700" />;
+    return <Music className="h-16 w-16 stroke-[1.5]" />;
   }
 };
 
@@ -164,27 +164,17 @@ const MemberCard = ({
   member: GroupMember;
 }) => {
   // Determinar el icono basado en el primer rol
-  const roleIcon = member.roles.length > 0 ? getRoleIcon(member.roles[0]) : <Music className="h-8 w-8 text-gray-700" />;
+  const roleIcon = member.roles.length > 0 ? getRoleIcon(member.roles[0]) : <Music className="h-16 w-16 stroke-[1.5]" />;
 
   return (
-    <Card className="h-full w-full p-6 bg-[#F7F7F7] flex flex-col justify-between rounded-[28px] border-0">
-      <div className="flex flex-col h-full">
-        <div className="mb-4">
+    <Card className="h-full w-full p-8 bg-[#F7F7F7] flex flex-col rounded-3xl border-0">
+      <div className="flex flex-col h-full justify-between">
+        <div>
           {roleIcon}
         </div>
-        <div className="flex-grow">
-          <span className="font-semibold text-xl block mb-2">{member.name}</span>
-          <span className="text-sm text-[#969494] block mb-4">{member.roles[0]}</span>
-        </div>
-        <div className="flex flex-wrap gap-2">
-          {member.roles.slice(1).map((role, index) => (
-            <UIBadge 
-              key={index} 
-              className="bg-white/80 backdrop-blur-md text-black px-4 py-2 rounded-full border-0 hover:bg-white/80 font-normal"
-            >
-              {role}
-            </UIBadge>
-          ))}
+        <div className="flex flex-col gap-1">
+          <span className="font-semibold text-xl">{member.name}</span>
+          <span className="text-sm text-[#969494]">{member.roles[0]}</span>
         </div>
       </div>
     </Card>
