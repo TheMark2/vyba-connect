@@ -16,7 +16,7 @@ import {
   CircleHelp,
   SlidersVertical,
   UserRound,
-  Trumpet
+  Music4
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
@@ -46,7 +46,7 @@ const getRoleIcon = (role: string) => {
   } else if (lowerRole.includes("bater") || lowerRole.includes("drum")) {
     return <Drum className="h-16 w-16 stroke-[1.5]" />;
   } else if (lowerRole.includes("saxo")) {
-    return <Trumpet className="h-16 w-16 stroke-[1.5]" />;
+    return <Music4 className="h-16 w-16 stroke-[1.5]" />;
   } else if (lowerRole.includes("ayudante") || lowerRole.includes("asistente")) {
     return <CircleHelp className="h-16 w-16 stroke-[1.5]" />;
   } else if (lowerRole.includes("técnico") || lowerRole.includes("tecnico") || lowerRole.includes("sonido")) {
@@ -81,7 +81,7 @@ const getRoleIcons = (roles: string[]) => {
     } else if (lowerRole.includes("bater") || lowerRole.includes("drum")) {
       return <Drum key={`role-${index}`} className="h-10 w-10 stroke-[1.5]" />;
     } else if (lowerRole.includes("saxo")) {
-      return <Trumpet key={`role-${index}`} className="h-10 w-10 stroke-[1.5]" />;
+      return <Music4 key={`role-${index}`} className="h-10 w-10 stroke-[1.5]" />;
     } else if (lowerRole.includes("ayudante") || lowerRole.includes("asistente")) {
       return <CircleHelp key={`role-${index}`} className="h-10 w-10 stroke-[1.5]" />;
     } else if (lowerRole.includes("técnico") || lowerRole.includes("tecnico") || lowerRole.includes("sonido")) {
