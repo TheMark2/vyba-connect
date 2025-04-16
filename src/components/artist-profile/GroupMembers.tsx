@@ -1,4 +1,3 @@
-
 import React, { useState, useRef } from "react";
 import { Badge as UIBadge } from "@/components/ui/badge";
 import { Card } from "@/components/ui/card";
@@ -56,7 +55,32 @@ const getRoleIcon = (role: string) => {
   }
 };
 
-// Función para obtener múltiples iconos cuando un miembro tiene varios roles
+// Función para clasificar el tipo de rol
+const getRoleType = (role: string): string => {
+  const lowerRole = role.toLowerCase();
+  
+  if (lowerRole.includes("guitar") || lowerRole.includes("guitarr")) {
+    return "guitar";
+  } else if (lowerRole.includes("vocal") || lowerRole.includes("cantante") || lowerRole.includes("voz")) {
+    return "vocal";
+  } else if (lowerRole.includes("dj") || lowerRole.includes("productor")) {
+    return "dj";
+  } else if (lowerRole.includes("piano") || lowerRole.includes("tecl")) {
+    return "piano";
+  } else if (lowerRole.includes("bater") || lowerRole.includes("drum")) {
+    return "drum";
+  } else if (lowerRole.includes("saxo")) {
+    return "saxo";
+  } else if (lowerRole.includes("ayudante") || lowerRole.includes("asistente")) {
+    return "helper";
+  } else if (lowerRole.includes("técnico") || lowerRole.includes("tecnico") || lowerRole.includes("sonido")) {
+    return "tech";
+  } else {
+    return "other";
+  }
+};
+
+// Función para obtener los iconos de roles únicos
 const getRoleIcons = (roles: string[]) => {
   if (!roles || roles.length === 0) {
     return [<Music key="default" className="h-16 w-16 stroke-[1.5]" />];
@@ -66,8 +90,25 @@ const getRoleIcons = (roles: string[]) => {
     return [getRoleIcon(roles[0])];
   }
   
-  // Si hay múltiples roles, mostramos iconos más pequeños
-  return roles.map((role, index) => {
+  // Filtrar roles únicos basados en su tipo
+  const uniqueRoleTypes: string[] = [];
+  const uniqueRoles: string[] = [];
+  
+  roles.forEach(role => {
+    const roleType = getRoleType(role);
+    if (!uniqueRoleTypes.includes(roleType)) {
+      uniqueRoleTypes.push(roleType);
+      uniqueRoles.push(role);
+    }
+  });
+  
+  // Si después de filtrar aún hay solo un rol único, mostrar solo ese icono
+  if (uniqueRoles.length === 1) {
+    return [getRoleIcon(uniqueRoles[0])];
+  }
+  
+  // Si hay múltiples roles únicos, mostrar iconos más pequeños
+  return uniqueRoles.map((role, index) => {
     const lowerRole = role.toLowerCase();
     
     if (lowerRole.includes("guitar") || lowerRole.includes("guitarr")) {
