@@ -192,35 +192,31 @@ const GroupMembers = ({
       {/* Carrusel para dispositivos móviles */}
       {isMobile && (
         <div className="relative w-full" ref={mobileCarouselRef}>
-          <div className="mx-[-1.5rem]">
-            <Carousel 
-              className="w-full" 
-              opts={{
-                align: "center",
-                loop: false,
-                skipSnaps: false
-              }}
-              setApi={setMobileApi}
-            >
-              <CarouselContent className="px-0 gap-6">
-                {members.map((member, index) => (
-                  <CarouselItem 
-                    key={member.id} 
-                    className={`
-                      ${index === 0 ? 'pl-6' : ''} 
-                      ${index === members.length - 1 ? ' pr-6' : ''} 
-                      basis-4/5 shrink-0
-                    `}
-                  >
-                    <div className="w-[260px] h-[260px]">
-                      <MemberCard member={member} />
-                    </div>
-                  </CarouselItem>
-                ))}
-              </CarouselContent>
-            </Carousel>
-          </div>
+          <Carousel
+            className="w-full"
+            opts={{
+              align: "start",
+              loop: false,
+              skipSnaps: false,
+            }}
+            setApi={setMobileApi}
+          >
+            <CarouselContent className="gap-4">
+              {members.map((member) => (
+                <CarouselItem
+                  key={member.id}
+                  className="basis-[55%] sm:basis-[45%] shrink-0"
+                >
+                  <div className="h-[280px] w-full">
+                    <MemberCard member={member} />
+                  </div>
+                </CarouselItem>
+              ))}
+            </CarouselContent>
+          </Carousel>
         </div>
+
+
       )}
 
       {/* Carrusel para escritorio */}
