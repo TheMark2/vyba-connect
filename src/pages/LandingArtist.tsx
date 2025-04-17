@@ -71,32 +71,43 @@ const ArtistBenefitsPage = () => {
   };
 
   const container = {
-    hidden: { opacity: 0 },
-    visible: (i = 1) => ({
+    hidden: { 
+      opacity: 0,
+      scale: 0.9
+    },
+    visible: {
       opacity: 1,
-      transition: { staggerChildren: 0.03, delayChildren: 0.04 * i },
-    }),
+      scale: 1,
+      transition: {
+        duration: 0.3,
+        ease: [0.4, 0, 0.2, 1],
+        staggerChildren: 0.04
+      }
+    },
+    exit: {
+      opacity: 0,
+      scale: 0.9,
+      transition: {
+        duration: 0.2,
+        ease: [0.4, 0, 0.2, 1]
+      }
+    }
   };
 
   const child = {
+    hidden: { 
+      opacity: 0,
+      y: 10
+    },
     visible: {
       opacity: 1,
       y: 0,
       transition: {
         type: "spring",
         damping: 12,
-        stiffness: 200,
-      },
-    },
-    hidden: {
-      opacity: 0,
-      y: 20,
-      transition: {
-        type: "spring",
-        damping: 12,
-        stiffness: 200,
-      },
-    },
+        stiffness: 200
+      }
+    }
   };
   
   return (
@@ -124,8 +135,8 @@ const ArtistBenefitsPage = () => {
           layout
           transition={{
             layout: {
-              duration: 0.4,
-              ease: [0.4, 0, 0.2, 1]
+              duration: 0.6,
+              ease: [0.22, 1, 0.36, 1]
             }
           }}
         >
@@ -154,7 +165,7 @@ const ArtistBenefitsPage = () => {
                   rotate: 30,
                   transition: {
                     duration: 0.3,
-                    ease: [0.4, 0, 0.2, 1]
+                    ease: [0.22, 1, 0.36, 1]
                   }
                 }}
                 className="absolute inset-0 flex items-center justify-center"
