@@ -1,12 +1,12 @@
 
 import React, { useState, useEffect } from 'react';
 import { Badge } from "@/components/ui/badge";
-import { Headphones, Music, Plus } from 'lucide-react';
+import { Headphones, Music, Plus, X } from 'lucide-react';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { motion, AnimatePresence } from 'framer-motion';
-
+import { MUSIC_GENRES } from '@/constants/music';
 
 interface MusicGenresStepProps {
   onSelect: (genres: string[]) => void;
@@ -24,11 +24,22 @@ const MusicGenresStep: React.FC<MusicGenresStepProps> = ({
   const isMobile = useIsMobile();
 
   // Lista reducida de géneros musicales populares
-  const musicGenres = ["Pop", "Rock", "Hip-Hop", "Electrónica", "Reggaetón", "House", "Trap", "Jazz", "Indie", "R&B", "Techno", "Salsa", "Bachata", "Cumbia", "Metal"];
+  const musicGenres = MUSIC_GENRES.slice(0, 15);
+
+  // Estado para manejar géneros personalizados
+  const [customGenres, setCustomGenres] = useState<string[]>([]);
+  const [showCustomInput, setShowCustomInput] = useState(false);
+  const [customGenre, setCustomGenre] = useState('');
 
   useEffect(() => {
     // Si hay valores iniciales, notificamos al componente padre
     if (initialValues && initialValues.length > 0) {
+      setSelectedGenres(initialValues);
+      // Separar los géneros predefinidos de los personalizados
+      const customOnes = initialValues.filter(genre => !MUSIC_GENRES.includes(genre));
+      if (customOnes.length > 0) {
+        setCustomGenres(customOnes);
+      }
       onSelect(initialValues);
     }
   }, [initialValues, onSelect]);
@@ -38,6 +49,11 @@ const MusicGenresStep: React.FC<MusicGenresStepProps> = ({
     if (selectedGenres.includes(genre)) {
       // Si ya está seleccionado, lo quitamos
       newSelectedGenres = selectedGenres.filter(g => g !== genre);
+      
+      // Si es un género personalizado, también lo eliminamos de la lista de personalizados
+      if (customGenres.includes(genre)) {
+        setCustomGenres(prev => prev.filter(g => g !== genre));
+      }
     } else {
       // Si no está seleccionado y no hemos llegado al máximo, lo añadimos
       if (selectedGenres.length < maxSelections) {
@@ -68,20 +84,24 @@ const MusicGenresStep: React.FC<MusicGenresStepProps> = ({
     return <Music className="w-4 h-4" />;
   };
 
-  const [showCustomInput, setShowCustomInput] = useState(false);
-  const [customGenre, setCustomGenre] = useState('');
-
   const handleAddCustomGenre = () => {
     const trimmed = customGenre.trim();
-    if (!trimmed || selectedGenres.includes(trimmed)) return;
+    if (!trimmed || selectedGenres.includes(trimmed) || selectedGenres.length >= maxSelections) return;
   
+    // Añadir a los géneros personalizados
+    setCustomGenres(prev => [...prev, trimmed]);
+    
+    // Añadir a los géneros seleccionados
     const newGenres = [...selectedGenres, trimmed];
     setSelectedGenres(newGenres);
     onSelect(newGenres);
+    
     setCustomGenre('');
     setShowCustomInput(false);
   };
-  
+
+  // Todos los géneros que se mostrarán (predefinidos + personalizados)
+  const allDisplayedGenres = [...musicGenres, ...customGenres];
 
   return (
     <div className="content-container">
@@ -100,7 +120,7 @@ const MusicGenresStep: React.FC<MusicGenresStepProps> = ({
         
         {/* Grid de géneros musicales */}
         <div className={`flex flex-wrap justify-center gap-3 ${isMobile ? 'max-w-[90vw]' : 'max-w-xl'} mx-auto`}>
-          {musicGenres.map(genre => (
+          {allDisplayedGenres.map(genre => (
             <Badge 
               key={genre} 
               variant="outline" 
@@ -120,7 +140,7 @@ const MusicGenresStep: React.FC<MusicGenresStepProps> = ({
             </Badge>
           ))}
 
-          {!showCustomInput && (
+          {!showCustomInput && selectedGenres.length < maxSelections && (
             <Badge
               variant="outline"
               className="py-3 px-6 cursor-pointer transition-all duration-150 flex items-center gap-2 text-sm font-medium rounded-full border-none bg-[#F7F7F7] dark:bg-vyba-dark-secondary hover:bg-[#E9E9E9] dark:hover:bg-vyba-dark-secondary/80"
@@ -146,6 +166,7 @@ const MusicGenresStep: React.FC<MusicGenresStepProps> = ({
                   onChange={(e) => setCustomGenre(e.target.value)}
                   placeholder="Escribe un género"
                   className="min-w-[160px]"
+                  autoFocus
                 />
                 <Button
                   variant="secondary"
