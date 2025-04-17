@@ -70,6 +70,35 @@ const ArtistBenefitsPage = () => {
   const handleGetStarted = () => {
     navigate('/artist-onboarding');
   };
+
+  const container = {
+    hidden: { opacity: 0 },
+    visible: (i = 1) => ({
+      opacity: 1,
+      transition: { staggerChildren: 0.03, delayChildren: 0.04 * i },
+    }),
+  };
+
+  const child = {
+    visible: {
+      opacity: 1,
+      y: 0,
+      transition: {
+        type: "spring",
+        damping: 12,
+        stiffness: 200,
+      },
+    },
+    hidden: {
+      opacity: 0,
+      y: 20,
+      transition: {
+        type: "spring",
+        damping: 12,
+        stiffness: 200,
+      },
+    },
+  };
   
   return (
     <div className="min-h-screen bg-white dark:bg-black">
@@ -137,33 +166,27 @@ const ArtistBenefitsPage = () => {
             </AnimatePresence>
           </div>
           
-          {/* Word Animation Container */}
+          {/* Letter Animation Container */}
           <div className="overflow-hidden h-[4.5rem] md:h-[6rem] flex items-center">
             <AnimatePresence mode="wait">
-              <motion.h1
+              <motion.div
                 key={`word-${currentIndex}`}
-                initial={{ y: 40, opacity: 0 }}
-                animate={{ 
-                  y: 0, 
-                  opacity: 1,
-                  transition: {
-                    duration: 0.5,
-                    ease: [0.22, 1, 0.36, 1],
-                    delay: 0.1
-                  }
-                }}
-                exit={{ 
-                  y: -40, 
-                  opacity: 0,
-                  transition: {
-                    duration: 0.3,
-                    ease: [0.22, 1, 0.36, 1]
-                  }
-                }}
-                className="text-4xl md:text-7xl font-medium"
+                variants={container}
+                initial="hidden"
+                animate="visible"
+                exit="hidden"
+                className="flex"
               >
-                {content[currentIndex].word}
-              </motion.h1>
+                {content[currentIndex].word.split("").map((letter, index) => (
+                  <motion.span
+                    key={index}
+                    variants={child}
+                    className="text-4xl md:text-7xl font-medium"
+                  >
+                    {letter}
+                  </motion.span>
+                ))}
+              </motion.div>
             </AnimatePresence>
           </div>
         </motion.div>
