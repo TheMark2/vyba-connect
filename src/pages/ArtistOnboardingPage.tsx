@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { PageTransition } from '@/components/ui/page-transition';
@@ -43,6 +44,8 @@ const ArtistOnboardingPage = () => {
   const isMobile = useIsMobile();
   
   const [onboardingData, setOnboardingData] = useState<OnboardingData>({});
+  const [currentGroup, setCurrentGroup] = useState(0);
+  const [currentStepInGroup, setCurrentStepInGroup] = useState(0);
   
   const stepGroups: StepGroup[] = [
     {
@@ -82,73 +85,32 @@ const ArtistOnboardingPage = () => {
     }
   ];
   
-  const [currentGroup, setCurrentGroup] = useState(0);
-  const [currentStepInGroup, setCurrentStepInGroup] = useState(0);
-  
-  const handleArtistTypeSelect = (type: string) => {
-    setOnboardingData({
-      ...onboardingData,
-      artistType: type
-    });
+  // Handlers para actualizar datos
+  const updateOnboardingData = (key: keyof OnboardingData, value: any) => {
+    setOnboardingData(prevData => ({
+      ...prevData,
+      [key]: value
+    }));
   };
   
-  const handleArtistNameChange = (name: string) => {
-    setOnboardingData({
-      ...onboardingData,
-      artistName: name
-    });
-  };
-  
-  const handleMusicGenresSelect = (genres: string[]) => {
-    setOnboardingData({
-      ...onboardingData,
-      musicGenres: genres
-    });
-  };
-  
-  const handleBioChange = (bio: string) => {
-    setOnboardingData({
-      ...onboardingData,
-      bio: bio
-    });
-  };
-  
-  const handleExperienceChange = (experience: string) => {
-    setOnboardingData({
-      ...onboardingData,
-      experience: experience
-    });
-  };
-  
-  const handleProfilePhotoChange = (photo: File | null) => {
-    setOnboardingData({
-      ...onboardingData,
-      profilePhoto: photo
-    });
-  };
-  
-  const handleGalleryImagesChange = (images: File[]) => {
-    setOnboardingData({
-      ...onboardingData,
-      galleryImages: images
-    });
-  };
-  
-  const handlePhoneChange = (phone: string) => {
-    setOnboardingData({
-      ...onboardingData,
-      phone: phone
-    });
-  };
+  const handleArtistTypeSelect = (type: string) => updateOnboardingData('artistType', type);
+  const handleArtistNameChange = (name: string) => updateOnboardingData('artistName', name);
+  const handleMusicGenresSelect = (genres: string[]) => updateOnboardingData('musicGenres', genres);
+  const handleBioChange = (bio: string) => updateOnboardingData('bio', bio);
+  const handleExperienceChange = (experience: string) => updateOnboardingData('experience', experience);
+  const handleProfilePhotoChange = (photo: File | null) => updateOnboardingData('profilePhoto', photo);
+  const handleGalleryImagesChange = (images: File[]) => updateOnboardingData('galleryImages', images);
+  const handlePhoneChange = (phone: string) => updateOnboardingData('phone', phone);
   
   const handlePriceRangeChange = (minPrice: string, maxPrice: string) => {
-    setOnboardingData({
-      ...onboardingData,
+    setOnboardingData(prevData => ({
+      ...prevData,
       minPrice,
       maxPrice
-    });
+    }));
   };
   
+  // Navegación entre pasos
   const handleNext = () => {
     const currentGroupObj = stepGroups[currentGroup];
     
@@ -179,6 +141,7 @@ const ArtistOnboardingPage = () => {
     navigate('/artist-benefits');
   };
   
+  // Validación para habilitar/deshabilitar el botón Siguiente
   const canGoNext = () => {
     if (currentGroup === 0 && currentStepInGroup === 1) {
       return !!onboardingData.artistType;
@@ -207,6 +170,7 @@ const ArtistOnboardingPage = () => {
     return true;
   };
   
+  // Renderizar el paso actual
   const renderCurrentStep = () => {
     const currentGroupObj = stepGroups[currentGroup];
     
@@ -221,115 +185,95 @@ const ArtistOnboardingPage = () => {
       );
     }
     
+    // Paso 1: Información básica del artista
     if (currentGroup === 0) {
-      if (currentStepInGroup === 1) {
-        return (
-          <ArtistTypeStep 
-            onSelect={handleArtistTypeSelect} 
-            initialValue={onboardingData.artistType}
-          />
-        );
-      }
-      
-      if (currentStepInGroup === 2) {
-        return (
-          <ArtistNameStep 
-            onInputChange={handleArtistNameChange}
-            initialValue={onboardingData.artistName}
-          />
-        );
-      }
-      
-      if (currentStepInGroup === 3) {
-        return (
-          <MusicGenresStep
-            onSelect={handleMusicGenresSelect}
-            initialValues={onboardingData.musicGenres}
-          />
-        );
+      switch (currentStepInGroup) {
+        case 1:
+          return (
+            <ArtistTypeStep 
+              onSelect={handleArtistTypeSelect} 
+              initialValue={onboardingData.artistType}
+            />
+          );
+        case 2:
+          return (
+            <ArtistNameStep 
+              onInputChange={handleArtistNameChange}
+              initialValue={onboardingData.artistName}
+            />
+          );
+        case 3:
+          return (
+            <MusicGenresStep
+              onSelect={handleMusicGenresSelect}
+              initialValues={onboardingData.musicGenres}
+            />
+          );
       }
     }
     
+    // Paso 2: Presentación y experiencia
     if (currentGroup === 1) {
-      if (currentStepInGroup === 1) {
-        return (
-          <BioStep 
-            onInputChange={handleBioChange}
-            initialValue={onboardingData.bio}
-          />
-        );
-      }
-      if (currentStepInGroup === 2) {
-        return (
-          <ExperienceStep 
-            onInputChange={handleExperienceChange}
-            initialValue={onboardingData.experience}
-          />
-        );
+      switch (currentStepInGroup) {
+        case 1:
+          return (
+            <BioStep 
+              onInputChange={handleBioChange}
+              initialValue={onboardingData.bio}
+            />
+          );
+        case 2:
+          return (
+            <ExperienceStep 
+              onInputChange={handleExperienceChange}
+              initialValue={onboardingData.experience}
+            />
+          );
       }
     }
     
+    // Paso 3: Imágenes
     if (currentGroup === 2) {
-      if (currentStepInGroup === 1) {
-        return (
-          <ProfilePhotoStep 
-            onPhotoChange={handleProfilePhotoChange}
-          />
-        );
-      }
-      if (currentStepInGroup === 2) {
-        return (
-          <GalleryImagesStep
-            onImagesChange={handleGalleryImagesChange}
-            initialImages={onboardingData.galleryImages}
-          />
-        );
-      }
-    }
-    
-    if (currentGroup === 3) {
-      if (currentStepInGroup === 1) {
-        return (
-          <PhoneVerificationStep
-            onPhoneChange={handlePhoneChange}
-            initialValue={onboardingData.phone}
-          />
-        );
+      switch (currentStepInGroup) {
+        case 1:
+          return (
+            <ProfilePhotoStep 
+              onPhotoChange={handleProfilePhotoChange}
+            />
+          );
+        case 2:
+          return (
+            <GalleryImagesStep
+              onImagesChange={handleGalleryImagesChange}
+              initialImages={onboardingData.galleryImages}
+            />
+          );
       }
     }
     
-    if (currentGroup === 4) {
-      if (currentStepInGroup === 1) {
-        return (
-          <CachePriceStep
-            onPriceRangeChange={handlePriceRangeChange}
-            initialMinPrice={onboardingData.minPrice}
-            initialMaxPrice={onboardingData.maxPrice}
-          />
-        );
-      }
+    // Paso 4: Verificación telefónica
+    if (currentGroup === 3 && currentStepInGroup === 1) {
+      return (
+        <PhoneVerificationStep
+          onPhoneChange={handlePhoneChange}
+          initialValue={onboardingData.phone}
+        />
+      );
     }
     
-    return (
-      <div className="flex flex-col items-center justify-center h-full w-full pt-28 px-6 sm:px-4 md:px-8">
-        <div className="max-w-2xl w-full text-center">
-          <h2 className="text-3xl md:text-5xl font-black mb-6">
-            Paso {currentStepInGroup} del Grupo {currentGroup + 1}
-          </h2>
-          <p className="text-gray-500 mb-8">
-            Aquí iría el formulario o contenido para este paso específico.
-          </p>
-          
-          <div className="bg-[#F7F7F7] dark:bg-vyba-dark-secondary/30 rounded-3xl p-8 md:p-12">
-            <div className="w-full max-w-md mx-auto">
-              <p className="text-center text-gray-500">
-                Contenido del formulario
-              </p>
-            </div>
-          </div>
-        </div>
-      </div>
-    );
+    // Paso 5: Caché y precio
+    if (currentGroup === 4 && currentStepInGroup === 1) {
+      return (
+        <CachePriceStep
+          onPriceRangeChange={handlePriceRangeChange}
+          initialMinPrice={onboardingData.minPrice}
+          initialMaxPrice={onboardingData.maxPrice}
+        />
+      );
+    }
+    
+    // Paso por defecto (no debería llegar aquí)
+    return null;
   };
   
   return (
@@ -346,17 +290,9 @@ const ArtistOnboardingPage = () => {
           canGoNext={canGoNext()}
         />
         
-        <div className={`
-          flex-1 
-          flex items-center justify-center 
-          min-h-[calc(100vh-100px)] 
-          w-full 
-          px-4 
-          sm:px-6 
-          md:px-8
-        `}>
+        <main className="flex-1 flex items-center justify-center min-h-[calc(100vh-100px)] w-full px-4 sm:px-6 md:px-8">
           {renderCurrentStep()}
-        </div>
+        </main>
       </div>
     </PageTransition>
   );

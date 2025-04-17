@@ -35,9 +35,9 @@ const BioStep: React.FC<BioStepProps> = ({
   return (
     <div className="flex flex-col w-full px-6 sm:px-4 md:px-8 pt-8 lg:pt-0">
       <div className="max-w-2xl w-full text-center mx-auto">
-        <h2 className="text-4xl md:text-6xl font-black mb-4">
+        <h1 className="text-4xl md:text-6xl font-bold mb-4">
           Sobre ti
-        </h2>
+        </h1>
         <p className="text-gray-500 mb-6">
           ¿Quién eres? Explícanos un poco la biografía del proyecto
         </p>
@@ -50,6 +50,7 @@ const BioStep: React.FC<BioStepProps> = ({
                 className={`min-h-[180px] ${isMobile ? 'text-sm' : ''}`}
                 value={bio} 
                 onChange={handleBioChange} 
+                aria-label="Biografía del artista"
               />
               <div className="flex justify-end">
                 <span className="text-sm text-gray-500">

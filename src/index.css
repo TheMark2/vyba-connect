@@ -1,4 +1,5 @@
 
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -6,6 +7,10 @@
 @layer base {
   h1, h2, h3, h4, h5, h6 {
     @apply font-figtree font-semibold; /* Cambiado de font-medium a font-semibold (600) */
+  }
+  
+  h1 {
+    @apply font-bold; /* Cambiado de font-black a font-bold (700) */
   }
 }
 
@@ -18,3 +23,4 @@
     @apply text-2xl font-semibold font-figtree; /* Cambiado de font-medium a font-semibold */
   }
 }
+
