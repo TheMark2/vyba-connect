@@ -16,9 +16,10 @@ import {
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
-const ArtistBenefitsPage = () => {
+const LandingArtist = () => {
   const navigate = useNavigate();
   const [currentIndex, setCurrentIndex] = useState(0);
+  const [nextWidth, setNextWidth] = useState('auto');
   
   const content = [
     { 
@@ -60,11 +61,20 @@ const ArtistBenefitsPage = () => {
   
   useEffect(() => {
     const interval = setInterval(() => {
-      setCurrentIndex((prevIndex) => (prevIndex + 1) % content.length);
+      // Calculate next index
+      const nextIndex = (currentIndex + 1) % content.length;
+      // Get next word length to approximate width
+      const nextWord = content[nextIndex].word;
+      setNextWidth(`${nextWord.length * 2}rem`);
+      
+      // Delay the actual word change
+      setTimeout(() => {
+        setCurrentIndex(nextIndex);
+      }, 200); // Delay word change by 200ms after background starts expanding
     }, 3000);
     
     return () => clearInterval(interval);
-  }, []);
+  }, [currentIndex]);
   
   const handleGetStarted = () => {
     navigate('/artist-onboarding');
@@ -137,6 +147,7 @@ const ArtistBenefitsPage = () => {
           animate={{ 
             scale: 1, 
             opacity: 1,
+            width: nextWidth,
             transition: {
               duration: 0.4,
               ease: [0.22, 1, 0.36, 1]
@@ -216,4 +227,4 @@ const ArtistBenefitsPage = () => {
   );
 };
 
-export default ArtistBenefitsPage;
+export default LandingArtist;
