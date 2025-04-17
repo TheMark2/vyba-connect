@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { useIsMobile } from '@/hooks/use-mobile';
 
@@ -18,8 +17,8 @@ const CoverStep: React.FC<CoverStepProps> = ({
   const isMobile = useIsMobile();
   
   return (
-    <article className="w-full h-full flex items-center justify-center px-6 md:px-8">
-      <div className="centered-content lg:flex-row items-center justify-center max-w-6xl w-full">
+    <article className="w-full flex items-center justify-center px-6 md:px-8">
+      <div className="h-full max-h-[80vh] flex lg:flex-row items-center justify-center max-w-6xl w-full">
         <div className="w-full lg:w-1/2 mb-10 lg:mb-0 text-center lg:text-left lg:pr-8">
           <div className="text-sm font-bold mb-3 text-gray-500 dark:text-gray-400" aria-label={`Grupo ${group}`}>
             GRUPO {group}
