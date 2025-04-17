@@ -150,7 +150,7 @@ const PhoneVerificationStep: React.FC<PhoneVerificationStepProps> = ({
               </>}
           </> : <>
             <div className="flex flex-col items-center">
-              <h2 className="text-4xl md:text-6xl font-black mb-6">
+              <h2 className="text-4xl md:text-6xl font-bold mb-6">
                 Código correcto
               </h2>
               <p className="text-gray-400 mb-12">
