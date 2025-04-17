@@ -224,7 +224,7 @@ const MusicPreviews = ({
         </div>
       )}
 
-      {/* Image Dialog */}
+      {/* Image Dialog - Ajustado para adaptarse mejor a las proporciones */}
       <Dialog open={!!selectedImage} onOpenChange={(open) => !open && closeImageDialog()}>
         <DialogContent className="sm:max-w-[85vw] md:max-w-[75vw] p-0 pb-6">
           <DialogTitle className="text-center pt-6 pb-4">
@@ -232,11 +232,11 @@ const MusicPreviews = ({
           </DialogTitle>
           <div className="p-4 flex justify-center">
             {selectedImage && (
-              <div className="rounded-lg overflow-hidden aspect-square max-w-[80vw] md:max-w-[500px]">
+              <div className="rounded-lg overflow-hidden max-w-[70vw] md:max-w-[450px]">
                 <img
                   src={selectedImage.image}
                   alt={selectedImage.title}
-                  className="w-full h-full object-cover"
+                  className="w-full h-auto object-contain"
                 />
               </div>
             )}
