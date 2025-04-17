@@ -38,7 +38,7 @@
   }
   
   .content-container {
-    @apply flex-1 flex items-center justify-center px-4 sm:px-6 md:px-8;
+    @apply flex-1 flex items-center justify-center px-4 sm:px-6 md:px-8 py-6;
   }
   
   .centered-content {

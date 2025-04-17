@@ -276,7 +276,7 @@ const DesktopArtistOnboardingPage = () => {
   
   return (
     <PageTransition>
-      <div className="h-auto bg-white dark:bg-vyba-dark-bg flex flex-col">
+      <div className="h-auto min-h-screen bg-white dark:bg-vyba-dark-bg flex flex-col">
         <StepsNavbar
           currentGroup={currentGroup}
           totalGroups={stepGroups.length}
@@ -288,7 +288,7 @@ const DesktopArtistOnboardingPage = () => {
           canGoNext={canGoNext()}
         />
         
-        <main className="flex-1 flex items-center justify-center min-h-[calc(100vh-100px)] w-full px-8 md:px-8">
+        <main className="flex-1 flex items-center justify-center min-h-[calc(100vh-100px)] w-full px-4 sm:px-6 lg:px-8">
           {renderCurrentStep()}
         </main>
       </div>

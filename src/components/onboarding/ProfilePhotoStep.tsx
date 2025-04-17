@@ -38,7 +38,7 @@ const ProfilePhotoStep: React.FC<ProfilePhotoStepProps> = ({
   const avatarSize = isMobile ? "w-40 h-40" : "w-48 h-48";
 
   return (
-    <div className="content-container">
+    <div className="content-container w-full max-w-6xl mx-auto">
       <div className="form-container text-center">
         <h1 className="form-title text-gray-900 dark:text-white">
           Elige tu foto de perfil

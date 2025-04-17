@@ -25,7 +25,7 @@ const ArtistNameStep: React.FC<ArtistNameStepProps> = ({ onInputChange, initialV
   };
 
   return (
-    <div className="content-container">
+    <div className="content-container w-full max-w-6xl mx-auto">
       <div className="form-container">
         <h1 className="form-title text-gray-900 dark:text-white" id="artist-name-title">
           Tu nombre artístico

@@ -31,7 +31,7 @@ const CachePriceStep: React.FC<CachePriceStepProps> = ({
   };
 
   return (
-    <div className="content-container">
+    <div className="content-container w-full max-w-6xl mx-auto">
       <div className="form-container">
         <h1 className="form-title text-gray-900 dark:text-white" id="cache-price-title">
           Define tu caché
@@ -40,7 +40,7 @@ const CachePriceStep: React.FC<CachePriceStepProps> = ({
           ¿Cuál es tu rango de precios? Puedes dar una cifra orientativa
         </p>
 
-        <div className="center-xy w-full mt-12">
+        <div className="center-xy w-full mt-12 max-w-2xl mx-auto">
           <div className="center-xy w-full gap-2 flex-wrap">
             <label htmlFor="min-price" className="text-gray-900 dark:text-white font-medium">
               Entre

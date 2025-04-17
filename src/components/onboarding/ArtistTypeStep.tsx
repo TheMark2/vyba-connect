@@ -45,16 +45,16 @@ const ArtistTypeStep: React.FC<ArtistTypeStepProps> = ({ onSelect, initialValue 
   };
 
   return (
-    <div className="content-container">
+    <div className="content-container w-full max-w-6xl mx-auto">
       <div className="form-container">
-        <h1 className="form-title" id="artist-type-title">
+        <h1 className="form-title text-gray-900 dark:text-white" id="artist-type-title">
           Descríbete a ti mismo
         </h1>
         <p className="form-description">
           ¿Eres DJ, cantante, banda, performer...? Cuéntanos tu tipo de propuesta artística.
         </p>
         
-        <div className="flex flex-wrap justify-center gap-3" role="radiogroup" aria-labelledby="artist-type-title">
+        <div className="flex flex-wrap justify-center gap-3 max-w-xl mx-auto" role="radiogroup" aria-labelledby="artist-type-title">
           {artistTypes.map(type => (
             <Badge
               key={type.id}
