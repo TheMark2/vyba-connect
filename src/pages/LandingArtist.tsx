@@ -124,8 +124,8 @@ const ArtistBenefitsPage = () => {
           layout
           transition={{
             layout: {
-              duration: 0.3,
-              ease: "easeInOut"
+              duration: 0.4,
+              ease: [0.4, 0, 0.2, 1]
             }
           }}
         >
@@ -133,23 +133,28 @@ const ArtistBenefitsPage = () => {
             <AnimatePresence mode="wait">
               <motion.div
                 key={`icon-${currentIndex}`}
-                initial={{ opacity: 0, scale: 0.8, y: 20 }}
+                initial={{ 
+                  opacity: 0, 
+                  scale: 0.5,
+                  rotate: -30 
+                }}
                 animate={{ 
                   opacity: 1, 
-                  scale: 1, 
-                  y: 0,
+                  scale: 1,
+                  rotate: 0,
                   transition: {
-                    duration: 0.5,
-                    ease: [0.22, 1, 0.36, 1]
+                    type: "spring",
+                    stiffness: 200,
+                    damping: 15
                   }
                 }}
                 exit={{ 
                   opacity: 0, 
-                  scale: 0.8, 
-                  y: -20,
+                  scale: 0.5,
+                  rotate: 30,
                   transition: {
                     duration: 0.3,
-                    ease: [0.22, 1, 0.36, 1]
+                    ease: [0.4, 0, 0.2, 1]
                   }
                 }}
                 className="absolute inset-0 flex items-center justify-center"
