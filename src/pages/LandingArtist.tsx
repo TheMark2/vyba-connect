@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { useNavigate } from 'react-router-dom';
@@ -102,7 +101,6 @@ const ArtistBenefitsPage = () => {
   
   return (
     <div className="min-h-screen bg-white dark:bg-black">
-      {/* Navbar fixed */}
       <nav className="fixed top-0 left-0 w-full bg-white dark:bg-black z-50">
         <div className="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between">
           <button onClick={() => navigate('/')} className="p-1">
@@ -122,16 +120,15 @@ const ArtistBenefitsPage = () => {
         </h1>
         
         <motion.div 
-          animate={{
-            backgroundColor: currentIndex % 2 === 0 ? "#F7F7F7" : "#EFEFEF",
-          }}
-          transition={{
-            duration: 0.5,
-            ease: "easeInOut"
-          }}
           className="bg-gray-50 dark:bg-gray-900 rounded-full px-8 py-6 md:px-16 md:py-8 mt-8 flex items-center gap-6 md:gap-8"
+          layout
+          transition={{
+            layout: {
+              duration: 0.3,
+              ease: "easeInOut"
+            }
+          }}
         >
-          {/* Icon Animation Container */}
           <div className="relative w-10 h-10 md:w-16 md:h-16">
             <AnimatePresence mode="wait">
               <motion.div
@@ -166,7 +163,6 @@ const ArtistBenefitsPage = () => {
             </AnimatePresence>
           </div>
           
-          {/* Letter Animation Container */}
           <div className="overflow-hidden h-[4.5rem] md:h-[6rem] flex items-center">
             <AnimatePresence mode="wait">
               <motion.div
