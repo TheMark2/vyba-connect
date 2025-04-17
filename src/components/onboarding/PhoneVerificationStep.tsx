@@ -90,7 +90,7 @@ const PhoneVerificationStep: React.FC<PhoneVerificationStepProps> = ({
       });
     }, 1500);
   };
-  return <div className="flex flex-col items-center justify-center h-full w-full pt-28 px-4">
+  return <div className="flex flex-col items-center justify-center h-full w-full px-4">
       <div className="max-w-md w-full text-center">
         {!verified ? <>
             {!showOTP ? <>
