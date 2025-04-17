@@ -1,9 +1,10 @@
 
 import React from 'react';
-import { Dialog, DialogContent } from '@/components/ui/dialog';
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { useState } from 'react';
+import { MapPin } from 'lucide-react';
 
 export interface Location {
   venue: string;
@@ -36,10 +37,10 @@ export const FeaturedLocationDialog: React.FC<FeaturedLocationDialogProps> = ({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="w-[90%] max-w-md rounded-lg">
-        <form onSubmit={handleSubmit} className="space-y-4 p-4 sm:p-6">
+      <DialogContent className="max-w-2xl">
+        <form onSubmit={handleSubmit} className="space-y-4 mt-4">
           <div className="space-y-2">
-            <label className="text-sm font-medium leading-none">
+            <label className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
               Nombre del sitio
             </label>
             <Input
@@ -49,7 +50,7 @@ export const FeaturedLocationDialog: React.FC<FeaturedLocationDialogProps> = ({
             />
           </div>
           <div className="space-y-2">
-            <label className="text-sm font-medium leading-none">
+            <label className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
               Ciudad o pueblo
             </label>
             <Input
