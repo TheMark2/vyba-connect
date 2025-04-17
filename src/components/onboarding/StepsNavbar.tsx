@@ -26,44 +26,36 @@ const StepsNavbar: React.FC<StepsNavbarProps> = ({
 }) => {
   const isMobile = useIsMobile();
   
-  // Calcular el progreso para el grupo actual (0-100)
   const groupProgress = totalStepsInGroup > 0 
     ? Math.min(100, (currentStepInGroup / totalStepsInGroup) * 100) 
     : 0;
   
-  // Calcular el progreso general (qué grupo de pasos están completados)
   const overallProgress = (currentGroup / totalGroups) * 100;
 
   return (
     <>
       <div className={`${isMobile ? 'fixed' : 'fixed'} top-0 left-0 right-0 z-30 px-4 md:px-6 lg:px-8 pt-6 bg-white dark:bg-vyba-dark-bg mb-6`}>
-        {/* Barra de progreso con fondo redondeado */}
         <div className="bg-[#F7F7F7] dark:bg-vyba-dark-secondary rounded-full py-3 px-5 max-w-6xl mx-auto w-full">
           <div className="flex space-x-2 items-center w-full">
             {Array.from({ length: totalGroups }).map((_, index) => (
               <div key={index} className="h-1.5 rounded-full overflow-hidden bg-[#D9D9D9] dark:bg-vyba-dark-secondary/50 flex-1">
                 {index < currentGroup ? (
-                  // Grupo completado (negro completo)
-                  <div className="h-full w-full bg-black dark:bg-white" />
+                  <div className="h-full w-full bg-black dark:bg-white transition-all duration-500 ease-in-out" />
                 ) : index === currentGroup ? (
-                  // Grupo actual (progreso parcial)
                   <div 
-                    className="h-full bg-black dark:bg-white" 
+                    className="h-full bg-black dark:bg-white transition-all duration-500 ease-in-out" 
                     style={{ width: `${groupProgress}%` }} 
                   />
                 ) : (
-                  // Grupo futuro (sin progreso)
-                  <div className="h-full w-0" />
+                  <div className="h-full w-0 transition-all duration-500 ease-in-out" />
                 )}
               </div>
             ))}
           </div>
         </div>
         
-        {/* En dispositivos no móviles, mostramos los botones en la parte superior */}
         {!isMobile && (
           <div className="flex items-center justify-between max-w-6xl mx-auto w-full px-1 mt-4">
-            {/* Botón Cancelar */}
             <Button 
               variant="ghost" 
               className="text-black dark:text-white font-normal rounded-full"
@@ -73,7 +65,6 @@ const StepsNavbar: React.FC<StepsNavbarProps> = ({
               Cerrar
             </Button>
             
-            {/* Botones de navegación */}
             <div className="flex items-center space-x-2">
               <Button 
                 variant="secondary" 
@@ -97,11 +88,9 @@ const StepsNavbar: React.FC<StepsNavbarProps> = ({
         )}
       </div>
 
-      {/* En dispositivos móviles, mostramos los botones en la parte inferior */}
       {isMobile && (
         <div className="fixed bottom-0 left-0 right-0 z-30 bg-white dark:bg-vyba-dark-bg py-4 px-6 border-t border-gray-100 dark:border-vyba-dark-secondary">
           <div className="flex items-center justify-between w-full">
-            {/* Botón Cancelar */}
             <Button 
               variant="ghost" 
               className="text-black dark:text-white font-normal rounded-full"
@@ -111,7 +100,6 @@ const StepsNavbar: React.FC<StepsNavbarProps> = ({
               Cerrar
             </Button>
             
-            {/* Botones de navegación */}
             <div className="flex items-center space-x-2">
               <Button 
                 variant="secondary" 
