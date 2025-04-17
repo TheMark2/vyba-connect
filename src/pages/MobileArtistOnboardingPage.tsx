@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { PageTransition } from '@/components/ui/page-transition';
@@ -83,7 +82,6 @@ const MobileArtistOnboardingPage = () => {
     }
   ];
   
-  // Handlers para actualizar datos
   const updateOnboardingData = (key: keyof OnboardingData, value: any) => {
     setOnboardingData(prevData => ({
       ...prevData,
@@ -108,7 +106,6 @@ const MobileArtistOnboardingPage = () => {
     }));
   };
   
-  // Navegación entre pasos
   const handleNext = () => {
     const currentGroupObj = stepGroups[currentGroup];
     
@@ -139,7 +136,6 @@ const MobileArtistOnboardingPage = () => {
     navigate('/artist-benefits');
   };
   
-  // Validación para habilitar/deshabilitar el botón Siguiente
   const canGoNext = () => {
     if (currentGroup === 0 && currentStepInGroup === 1) {
       return !!onboardingData.artistType;
@@ -168,7 +164,6 @@ const MobileArtistOnboardingPage = () => {
     return true;
   };
   
-  // Renderizar el paso actual
   const renderCurrentStep = () => {
     const currentGroupObj = stepGroups[currentGroup];
     
@@ -183,7 +178,6 @@ const MobileArtistOnboardingPage = () => {
       );
     }
     
-    // Paso 1: Información básica del artista
     if (currentGroup === 0) {
       switch (currentStepInGroup) {
         case 1:
@@ -210,7 +204,6 @@ const MobileArtistOnboardingPage = () => {
       }
     }
     
-    // Paso 2: Presentación y experiencia
     if (currentGroup === 1) {
       switch (currentStepInGroup) {
         case 1:
@@ -230,7 +223,6 @@ const MobileArtistOnboardingPage = () => {
       }
     }
     
-    // Paso 3: Imágenes
     if (currentGroup === 2) {
       switch (currentStepInGroup) {
         case 1:
@@ -249,7 +241,6 @@ const MobileArtistOnboardingPage = () => {
       }
     }
     
-    // Paso 4: Verificación telefónica
     if (currentGroup === 3 && currentStepInGroup === 1) {
       return (
         <PhoneVerificationStep
@@ -259,7 +250,6 @@ const MobileArtistOnboardingPage = () => {
       );
     }
     
-    // Paso 5: Caché y precio
     if (currentGroup === 4 && currentStepInGroup === 1) {
       return (
         <CachePriceStep
@@ -270,7 +260,6 @@ const MobileArtistOnboardingPage = () => {
       );
     }
     
-    // Paso por defecto (no debería llegar aquí)
     return null;
   };
   
@@ -298,3 +287,4 @@ const MobileArtistOnboardingPage = () => {
   );
 };
 
+export { MobileArtistOnboardingPage };

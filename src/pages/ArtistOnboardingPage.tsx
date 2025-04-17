@@ -1,8 +1,8 @@
 
 import React from 'react';
 import { useIsMobile } from '@/hooks/use-mobile';
-import MobileArtistOnboardingPage from './MobileArtistOnboardingPage';
-import DesktopArtistOnboardingPage from './DesktopArtistOnboardingPage';
+import { MobileArtistOnboardingPage } from './MobileArtistOnboardingPage';
+import { DesktopArtistOnboardingPage } from './DesktopArtistOnboardingPage';
 import { PageTransition } from '@/components/ui/page-transition';
 
 /**
