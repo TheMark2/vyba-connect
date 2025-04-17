@@ -5,6 +5,7 @@ import Image from "@/components/ui/image";
 import { Card } from "@/components/ui/card";
 import { Play, Pause, Music } from "lucide-react";
 import { useIsMobile } from "@/hooks/use-mobile";
+import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
 
 interface MusicPreview {
   title: string;
@@ -30,6 +31,7 @@ const MusicPreviews = ({
   const [progress, setProgress] = useState(0);
   const [duration, setDuration] = useState(0);
   const [currentTime, setCurrentTime] = useState(0);
+  const [selectedImage, setSelectedImage] = useState<{title: string, image: string} | null>(null);
   const isMobile = useIsMobile();
 
   // Handle audio playback updates
@@ -111,6 +113,19 @@ const MusicPreviews = ({
     return `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
   };
 
+  const handleImageClick = (preview: MusicPreview) => {
+    if (preview.image) {
+      setSelectedImage({
+        title: preview.title,
+        image: preview.image
+      });
+    }
+  };
+
+  const closeImageDialog = () => {
+    setSelectedImage(null);
+  };
+
   return (
     <div className="mt-8 mb-16">
       <h2 className="text-3xl font-semibold mb-6">Preview</h2>
@@ -130,7 +145,12 @@ const MusicPreviews = ({
               >
                 <div className="flex items-center gap-4 p-2">
                   {/* Left side - Image (square) */}
-                  <div className="w-[70px] h-[70px] md:w-[100px] md:h-[100px] rounded-md overflow-hidden flex-shrink-0">
+                  <div 
+                    className={`w-[70px] h-[70px] md:w-[100px] md:h-[100px] rounded-md overflow-hidden flex-shrink-0 cursor-pointer transition-transform duration-200 ${
+                      preview.image ? "hover:scale-105" : ""
+                    }`}
+                    onClick={() => preview.image && handleImageClick(preview)}
+                  >
                     {preview.image ? (
                       <Image 
                         src={preview.image} 
@@ -203,6 +223,26 @@ const MusicPreviews = ({
           </p>
         </div>
       )}
+
+      {/* Image Dialog */}
+      <Dialog open={!!selectedImage} onOpenChange={(open) => !open && closeImageDialog()}>
+        <DialogContent className="sm:max-w-[85vw] md:max-w-[75vw] p-0 pb-6">
+          <DialogTitle className="text-center pt-6 pb-4">
+            {selectedImage?.title}
+          </DialogTitle>
+          <div className="p-4 flex justify-center">
+            {selectedImage && (
+              <div className="rounded-lg overflow-hidden max-h-[70vh]">
+                <img
+                  src={selectedImage.image}
+                  alt={selectedImage.title}
+                  className="object-contain max-h-[70vh] w-auto"
+                />
+              </div>
+            )}
+          </div>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };
