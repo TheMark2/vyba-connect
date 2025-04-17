@@ -25,43 +25,36 @@ const ArtistBenefitsPage = () => {
     { 
       Icon: Music2,
       word: "vyba",
-      description: "conecta",
       iconColor: "#222222"
     },
     { 
       Icon: Star,
       word: "crece",
-      description: "brilla",
       iconColor: "#222222"
     },
     { 
       Icon: Rocket,
       word: "gana",
-      description: "avanza",
       iconColor: "#222222"
     },
     { 
       Icon: Globe2,
       word: "suena",
-      description: "impacta",
       iconColor: "#222222"
     },
     { 
       Icon: Sparkles,
       word: "triunfa",
-      description: "destaca",
       iconColor: "#222222"
     },
     { 
       Icon: Heart,
       word: "vyba",
-      description: "inspira",
       iconColor: "#222222"
     },
     { 
       Icon: Headphones,
       word: "vibra",
-      description: "conecta",
       iconColor: "#222222"
     }
   ];
@@ -164,36 +157,6 @@ const ArtistBenefitsPage = () => {
               </motion.h1>
             </AnimatePresence>
           </div>
-        </div>
-        
-        {/* Description Animation Container */}
-        <div className="h-12 mt-4 overflow-hidden">
-          <AnimatePresence mode="wait">
-            <motion.p
-              key={`desc-${currentIndex}`}
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ 
-                opacity: 1, 
-                y: 0,
-                transition: {
-                  duration: 0.5,
-                  ease: [0.22, 1, 0.36, 1],
-                  delay: 0.2
-                }
-              }}
-              exit={{ 
-                opacity: 0, 
-                y: -10,
-                transition: {
-                  duration: 0.3,
-                  ease: [0.22, 1, 0.36, 1]
-                }
-              }}
-              className="text-xl md:text-2xl text-gray-600 dark:text-gray-300 font-light text-center"
-            >
-              {content[currentIndex].description}
-            </motion.p>
-          </AnimatePresence>
         </div>
       </div>
     </div>
