@@ -87,12 +87,21 @@ const ArtistBenefitsPage = () => {
         </div>
       </nav>
       
-      <div className="pt-32 flex flex-col items-center justify-center">
+      <div className="pt-40 flex flex-col items-center justify-center">
         <h1 className="text-4xl md:text-7xl font-semibold text-center">
           Impulsa tu carrera con
         </h1>
         
-        <div className="bg-gray-50 dark:bg-gray-900 rounded-full px-8 py-5 md:px-16 md:py-7 mt-8 flex items-center gap-6 md:gap-8">
+        <motion.div 
+          animate={{
+            backgroundColor: currentIndex % 2 === 0 ? "#F7F7F7" : "#EFEFEF",
+          }}
+          transition={{
+            duration: 0.5,
+            ease: "easeInOut"
+          }}
+          className="bg-gray-50 dark:bg-gray-900 rounded-full px-8 py-6 md:px-16 md:py-8 mt-8 flex items-center gap-6 md:gap-8"
+        >
           {/* Icon Animation Container */}
           <div className="relative w-10 h-10 md:w-16 md:h-16">
             <AnimatePresence mode="wait">
@@ -129,7 +138,7 @@ const ArtistBenefitsPage = () => {
           </div>
           
           {/* Word Animation Container */}
-          <div className="overflow-hidden">
+          <div className="overflow-hidden h-[4.5rem] md:h-[6rem] flex items-center">
             <AnimatePresence mode="wait">
               <motion.h1
                 key={`word-${currentIndex}`}
@@ -151,13 +160,13 @@ const ArtistBenefitsPage = () => {
                     ease: [0.22, 1, 0.36, 1]
                   }
                 }}
-                className="text-4xl md:text-7xl font-medium mb-0"
+                className="text-4xl md:text-7xl font-medium"
               >
                 {content[currentIndex].word}
               </motion.h1>
             </AnimatePresence>
           </div>
-        </div>
+        </motion.div>
       </div>
     </div>
   );
