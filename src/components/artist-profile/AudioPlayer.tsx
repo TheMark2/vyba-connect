@@ -1,7 +1,7 @@
 
 import React from "react";
 import { Progress } from "@/components/ui/progress";
-import { Play } from "lucide-react";
+import { Play, Pause, SkipBack, SkipForward } from "lucide-react";
 import Image from "@/components/ui/image";
 import { Marquee } from "@/components/ui/marquee";
 
@@ -13,7 +13,6 @@ interface AudioPlayerProps {
   };
   artistName: string;
   isMobile: boolean;
-  // Añadimos las props faltantes
   isPlaying?: boolean;
   onPlayPause?: () => void;
   audioRef?: React.RefObject<HTMLAudioElement>;
@@ -22,9 +21,11 @@ interface AudioPlayerProps {
 const AudioPlayer = ({
   preview,
   artistName,
-  isMobile
+  isMobile,
+  isPlaying = false,
+  onPlayPause
 }: AudioPlayerProps) => {
-  // Versión de escritorio simplificada sin funcionalidad
+  // Versión de escritorio simplificada
   if (!isMobile) {
     return (
       <div className="flex items-center gap-4">
@@ -50,8 +51,15 @@ const AudioPlayer = ({
                 (minutos) restantes
               </div>
             </div>
-            <button className="h-8 w-8 bg-[#F7F7F7] text-black rounded-full flex items-center justify-center">
-              <Play className="h-4 w-4 ml-0.5" fill="black" />
+            <button 
+              className="h-8 w-8 bg-[#F7F7F7] text-black rounded-full flex items-center justify-center"
+              onClick={onPlayPause}
+            >
+              {isPlaying ? (
+                <Pause className="h-4 w-4" />
+              ) : (
+                <Play className="h-4 w-4 ml-0.5" fill="black" />
+              )}
             </button>
           </div>
           
@@ -63,7 +71,7 @@ const AudioPlayer = ({
     );
   }
   
-  // Versión móvil simplificada sin funcionalidad
+  // Versión móvil
   return (
     <div className="relative rounded-3xl overflow-hidden" style={{
       backgroundImage: preview.image ? `url(${preview.image})` : 'none',
@@ -99,9 +107,24 @@ const AudioPlayer = ({
           <Progress value={30} className="h-1.5 bg-white/30" />
         </div>
         
-        <div className="flex justify-center items-center">
-          <button className="w-12 h-12 bg-white rounded-full flex items-center justify-center">
-            <Play className="h-5 w-5 ml-0.5" fill="#000" />
+        <div className="flex justify-center items-center gap-4">
+          <button className="w-12 h-12 bg-white/20 backdrop-blur-md rounded-full flex items-center justify-center">
+            <SkipBack className="h-5 w-5 text-white" />
+          </button>
+          
+          <button 
+            className="w-12 h-12 bg-white rounded-full flex items-center justify-center"
+            onClick={onPlayPause}
+          >
+            {isPlaying ? (
+              <Pause className="h-5 w-5" fill="#000" />
+            ) : (
+              <Play className="h-5 w-5 ml-0.5" fill="#000" />
+            )}
+          </button>
+          
+          <button className="w-12 h-12 bg-white/20 backdrop-blur-md rounded-full flex items-center justify-center">
+            <SkipForward className="h-5 w-5 text-white" />
           </button>
         </div>
       </div>
