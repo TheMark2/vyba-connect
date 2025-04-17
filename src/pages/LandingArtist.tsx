@@ -1,7 +1,20 @@
+
 import React, { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { useNavigate } from 'react-router-dom';
-import { Mic, Star, TrendingUp, Radio, Award, Music, Headphones } from 'lucide-react';
+import { 
+  Mic, 
+  Star, 
+  TrendingUp, 
+  Radio, 
+  Award, 
+  Music2, 
+  Headphones, 
+  Sparkles, 
+  Heart, 
+  Globe2, 
+  Rocket 
+} from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
 const ArtistBenefitsPage = () => {
@@ -10,53 +23,53 @@ const ArtistBenefitsPage = () => {
   
   const content = [
     { 
-      Icon: Mic, 
-      color: "#222222",
+      Icon: Music2,
       word: "vyba",
-      description: "conecta"
+      description: "conecta",
+      iconColor: "#222222"
     },
     { 
-      Icon: Star, 
-      color: "#222222",
+      Icon: Star,
       word: "crece",
-      description: "brilla"
+      description: "brilla",
+      iconColor: "#222222"
     },
     { 
-      Icon: TrendingUp, 
-      color: "#222222",
+      Icon: Rocket,
       word: "gana",
-      description: "avanza"
+      description: "avanza",
+      iconColor: "#222222"
     },
     { 
-      Icon: Radio, 
-      color: "#222222",
+      Icon: Globe2,
       word: "suena",
-      description: "impacta"
+      description: "impacta",
+      iconColor: "#222222"
     },
     { 
-      Icon: Award, 
-      color: "#222222",
+      Icon: Sparkles,
       word: "triunfa",
-      description: "destaca"
+      description: "destaca",
+      iconColor: "#222222"
     },
     { 
-      Icon: Music, 
-      color: "#222222",
+      Icon: Heart,
       word: "vyba",
-      description: "inspira"
+      description: "inspira",
+      iconColor: "#222222"
     },
     { 
-      Icon: Headphones, 
-      color: "#222222",
+      Icon: Headphones,
       word: "vibra",
-      description: "conecta"
+      description: "conecta",
+      iconColor: "#222222"
     }
   ];
   
   useEffect(() => {
     const interval = setInterval(() => {
       setCurrentIndex((prevIndex) => (prevIndex + 1) % content.length);
-    }, 2500);
+    }, 3000);
     
     return () => clearInterval(interval);
   }, []);
@@ -70,64 +83,80 @@ const ArtistBenefitsPage = () => {
       {/* Navbar fixed */}
       <nav className="fixed top-0 left-0 w-full bg-white dark:bg-black z-50">
         <div className="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between">
-          {/* Imagen más pequeña y clickeable */}
           <button onClick={() => navigate('/')} className="p-1">
             <img
               src="/lovable-uploads/logovybaartists.png"
               alt="Logo Vyba Artists"
-              className="h-10 w-auto" // Tamaño reducido de la imagen
+              className="h-10 w-auto"
             />
           </button>
           <Button onClick={handleGetStarted}>Empezar ahora</Button>
         </div>
       </nav>
       
-      {/* Offset para que no se solape el contenido */}
       <div className="pt-32 flex flex-col items-center justify-center">
         <h1 className="text-4xl md:text-7xl font-semibold text-center">
           Impulsa tu carrera con
         </h1>
         
         <div className="bg-gray-50 dark:bg-gray-900 rounded-full px-8 py-5 md:px-16 md:py-7 mt-8 flex items-center gap-6 md:gap-8">
-          {/* Contenedor de iconos con animación */}
+          {/* Icon Animation Container */}
           <div className="relative w-10 h-10 md:w-16 md:h-16">
             <AnimatePresence mode="wait">
               <motion.div
                 key={`icon-${currentIndex}`}
-                initial={{ opacity: 0, scale: 0.5, rotate: -20 }}
-                animate={{ opacity: 1, scale: 1, rotate: 0 }}
-                exit={{ opacity: 0, scale: 0.5, rotate: 20 }}
-                transition={{ 
-                  duration: 0.6, 
-                  ease: [0.16, 1, 0.3, 1], // Ease out expo
-                  type: "spring",
-                  stiffness: 200,
-                  damping: 20
+                initial={{ opacity: 0, scale: 0.8, y: 20 }}
+                animate={{ 
+                  opacity: 1, 
+                  scale: 1, 
+                  y: 0,
+                  transition: {
+                    duration: 0.5,
+                    ease: [0.22, 1, 0.36, 1]
+                  }
+                }}
+                exit={{ 
+                  opacity: 0, 
+                  scale: 0.8, 
+                  y: -20,
+                  transition: {
+                    duration: 0.3,
+                    ease: [0.22, 1, 0.36, 1]
+                  }
                 }}
                 className="absolute inset-0 flex items-center justify-center"
               >
                 {React.createElement(content[currentIndex].Icon, {
                   size: 62,
-                  color: content[currentIndex].color,
-                  strokeWidth: 2,
-                  className: "drop-shadow-md"
+                  color: content[currentIndex].iconColor,
+                  strokeWidth: 1.5
                 })}
               </motion.div>
             </AnimatePresence>
           </div>
           
-          {/* Palabra animada */}
+          {/* Word Animation Container */}
           <div className="overflow-hidden">
             <AnimatePresence mode="wait">
               <motion.h1
                 key={`word-${currentIndex}`}
                 initial={{ y: 40, opacity: 0 }}
-                animate={{ y: 0, opacity: 1 }}
-                exit={{ y: -40, opacity: 0 }}
-                transition={{ 
-                  duration: 0.5, 
-                  ease: [0.16, 1, 0.3, 1], 
-                  type: "tween" 
+                animate={{ 
+                  y: 0, 
+                  opacity: 1,
+                  transition: {
+                    duration: 0.5,
+                    ease: [0.22, 1, 0.36, 1],
+                    delay: 0.1
+                  }
+                }}
+                exit={{ 
+                  y: -40, 
+                  opacity: 0,
+                  transition: {
+                    duration: 0.3,
+                    ease: [0.22, 1, 0.36, 1]
+                  }
                 }}
                 className="text-4xl md:text-7xl font-medium mb-0"
               >
@@ -137,18 +166,28 @@ const ArtistBenefitsPage = () => {
           </div>
         </div>
         
-        {/* Descripción adicional animada */}
+        {/* Description Animation Container */}
         <div className="h-12 mt-4 overflow-hidden">
           <AnimatePresence mode="wait">
             <motion.p
               key={`desc-${currentIndex}`}
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -20 }}
-              transition={{ 
-                duration: 0.4, 
-                delay: 0.2,
-                ease: "easeOut" 
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ 
+                opacity: 1, 
+                y: 0,
+                transition: {
+                  duration: 0.5,
+                  ease: [0.22, 1, 0.36, 1],
+                  delay: 0.2
+                }
+              }}
+              exit={{ 
+                opacity: 0, 
+                y: -10,
+                transition: {
+                  duration: 0.3,
+                  ease: [0.22, 1, 0.36, 1]
+                }
               }}
               className="text-xl md:text-2xl text-gray-600 dark:text-gray-300 font-light text-center"
             >
