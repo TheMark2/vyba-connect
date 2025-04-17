@@ -35,29 +35,34 @@ const ExperienceStep: React.FC<ExperienceStepProps> = ({
   };
 
   return (
-    <div className="flex flex-col w-full px-6 sm:px-4 md:px-8 pt-8 lg:pt-0">
-      <div className="max-w-2xl w-full text-center mx-auto">
-        <h2 className="text-4xl md:text-6xl font-black mb-4">
+    <div className="content-container">
+      <div className="form-container text-center">
+        <h1 className="form-title text-gray-900 dark:text-white" id="experience-title">
           ¿Tienes experiencia?
-        </h2>
-        <p className="text-gray-500 mb-6">
+        </h1>
+        <p className="form-description">
           Explícanos tu experiencia y los lugares destacados donde has trabajado
         </p>
         
-        <div className="bg-transparent rounded-3xl p-0 md:p-12">
+        <div className="bg-transparent rounded-3xl p-0 md:p-12 w-full">
           <div className="w-full mx-auto">
             <div className="space-y-4">
               <Textarea 
                 placeholder="Es importante que el texto sea original. No se pueden insertar enlaces ni números de teléfono." 
                 className={`min-h-[180px] ${isMobile ? 'text-sm' : ''}`}
                 value={experience} 
-                onChange={handleExperienceChange} 
+                onChange={handleExperienceChange}
+                aria-label="Experiencia del artista" 
+                aria-describedby="experience-description"
               />
               <div className="flex justify-end">
                 <span className="text-sm text-gray-500">
                   Palabras escritas <span className={`rounded-full px-2 py-1 ml-1 ${getWordCountColor()}`}>{wordCount}</span>
                 </span>
               </div>
+              <p id="experience-description" className="sr-only">
+                Describe tu experiencia como artista y los lugares donde has trabajado
+              </p>
             </div>
             
             <div className="mt-6 flex justify-center">

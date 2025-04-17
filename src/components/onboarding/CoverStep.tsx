@@ -18,15 +18,15 @@ const CoverStep: React.FC<CoverStepProps> = ({
   const isMobile = useIsMobile();
   
   return (
-    <article className="centered-content lg:flex-row items-start lg:items-center justify-start lg:justify-center px-6 md:px-8 pt-8 lg:pt-0 lg:h-full">
-      <div className="w-full lg:w-1/2 mb-10 lg:mb-0 text-left lg:pr-8">
-        <div className="text-sm font-bold mb-3 dark:text-gray-400" aria-label={`Grupo ${group}`}>
+    <article className="w-full centered-content lg:flex-row items-center justify-center px-6 md:px-8 h-full">
+      <div className="w-full lg:w-1/2 mb-10 lg:mb-0 text-center lg:text-left lg:pr-8">
+        <div className="text-sm font-bold mb-3 text-gray-500 dark:text-gray-400" aria-label={`Grupo ${group}`}>
           GRUPO {group}
         </div>
-        <h1 className="dark:text-white" id={`onboarding-group-${group}`}>
+        <h1 className="font-bold text-gray-900 dark:text-white mb-4" id={`onboarding-group-${group}`}>
           {title}
         </h1>
-        <p className="text-gray-500 dark:text-gray-400">
+        <p className="text-gray-500 dark:text-gray-400 max-w-lg mx-auto lg:mx-0">
           {description}
         </p>
       </div>

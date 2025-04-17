@@ -6,7 +6,7 @@
 @layer base {
   /* Typography base styles */
   h1, h2, h3, h4, h5, h6 {
-    @apply font-figtree font-semibold;
+    @apply font-figtree font-semibold text-gray-900 dark:text-white;
   }
   
   h1 {
@@ -18,7 +18,7 @@
   }
   
   p {
-    @apply text-base md:text-lg mb-6;
+    @apply text-base md:text-lg mb-6 text-gray-500 dark:text-gray-400;
   }
 }
 
@@ -47,11 +47,11 @@
   
   /* Form elements */
   .form-container {
-    @apply max-w-2xl w-full mx-auto;
+    @apply max-w-2xl w-full mx-auto flex flex-col items-center;
   }
   
   .form-title {
-    @apply text-center dark:text-white;
+    @apply text-center;
   }
   
   .form-description {
