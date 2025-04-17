@@ -1,39 +1,29 @@
-
 import React, { useState, useEffect } from 'react';
 import { Badge } from "@/components/ui/badge";
 import { Headphones, Music } from 'lucide-react';
-
 interface MusicGenresStepProps {
   onSelect: (genres: string[]) => void;
   initialValues?: string[];
   maxSelections?: number;
 }
-
-const MusicGenresStep: React.FC<MusicGenresStepProps> = ({ 
-  onSelect, 
-  initialValues = [], 
-  maxSelections = 5 
+const MusicGenresStep: React.FC<MusicGenresStepProps> = ({
+  onSelect,
+  initialValues = [],
+  maxSelections = 5
 }) => {
   const [selectedGenres, setSelectedGenres] = useState<string[]>(initialValues || []);
   const [activePress, setActivePress] = useState<string | null>(null);
 
   // Lista reducida de géneros musicales populares
-  const musicGenres = [
-    "Pop", "Rock", "Hip-Hop", "Electrónica", "Reggaetón", 
-    "House", "Trap", "Jazz", "Indie", "R&B",
-    "Techno", "Salsa", "Bachata", "Cumbia", "Metal"
-  ];
-  
+  const musicGenres = ["Pop", "Rock", "Hip-Hop", "Electrónica", "Reggaetón", "House", "Trap", "Jazz", "Indie", "R&B", "Techno", "Salsa", "Bachata", "Cumbia", "Metal"];
   useEffect(() => {
     // Si hay valores iniciales, notificamos al componente padre
     if (initialValues && initialValues.length > 0) {
       onSelect(initialValues);
     }
   }, [initialValues, onSelect]);
-
   const handleSelect = (genre: string) => {
     let newSelectedGenres;
-    
     if (selectedGenres.includes(genre)) {
       // Si ya está seleccionado, lo quitamos
       newSelectedGenres = selectedGenres.filter(g => g !== genre);
@@ -46,15 +36,12 @@ const MusicGenresStep: React.FC<MusicGenresStepProps> = ({
         return;
       }
     }
-    
     setSelectedGenres(newSelectedGenres);
     onSelect(newSelectedGenres);
   };
-  
   const handleMouseDown = (genre: string) => {
     setActivePress(genre);
   };
-  
   const handleMouseUp = () => {
     setActivePress(null);
   };
@@ -67,11 +54,9 @@ const MusicGenresStep: React.FC<MusicGenresStepProps> = ({
     }
     return <Music className="w-4 h-4" />;
   };
-
-  return (
-    <div className="flex flex-col items-center justify-center w-full pt-28 px-4 md:px-8">
+  return <div className="flex flex-col items-center justify-center w-full pt-28 px-4 md:px-8">
       <div className="max-w-2xl w-full text-center">
-        <h2 className="text-4xl md:text-6xl font-black mb-6 dark:text-white">
+        <h2 className="text-4xl md:text-6xl font-bold mb-6 dark:text-white">
           Tus géneros musicales
         </h2>
         <p className="text-gray-500 text-center mb-8 max-w-md mx-auto">
@@ -85,32 +70,17 @@ const MusicGenresStep: React.FC<MusicGenresStepProps> = ({
         
         {/* Grid de géneros musicales */}
         <div className="flex flex-wrap justify-center gap-3">
-          {musicGenres.map(genre => (
-            <Badge
-              key={genre}
-              variant="outline"
-              className={`
+          {musicGenres.map(genre => <Badge key={genre} variant="outline" className={`
                 py-3 px-6 cursor-pointer transition-all duration-150
                 flex items-center gap-2 text-sm font-medium rounded-full border-none
-                ${selectedGenres.includes(genre) 
-                  ? 'bg-[#D9D9D9] dark:bg-[#444444]' 
-                  : 'bg-[#F7F7F7] dark:bg-vyba-dark-secondary hover:bg-[#E9E9E9] dark:hover:bg-vyba-dark-secondary/80'
-                }
+                ${selectedGenres.includes(genre) ? 'bg-[#D9D9D9] dark:bg-[#444444]' : 'bg-[#F7F7F7] dark:bg-vyba-dark-secondary hover:bg-[#E9E9E9] dark:hover:bg-vyba-dark-secondary/80'}
                 ${activePress === genre ? 'transform scale-95' : ''}
-              `}
-              onClick={() => handleSelect(genre)}
-              onMouseDown={() => handleMouseDown(genre)}
-              onMouseUp={handleMouseUp}
-              onMouseLeave={handleMouseUp}
-            >
+              `} onClick={() => handleSelect(genre)} onMouseDown={() => handleMouseDown(genre)} onMouseUp={handleMouseUp} onMouseLeave={handleMouseUp}>
               {getGenreIcon(genre)}
               {genre}
-            </Badge>
-          ))}
+            </Badge>)}
         </div>
       </div>
-    </div>
-  );
+    </div>;
 };
-
 export default MusicGenresStep;
