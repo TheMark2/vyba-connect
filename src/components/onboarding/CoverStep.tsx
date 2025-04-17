@@ -27,7 +27,7 @@ const CoverStep: React.FC<CoverStepProps> = ({
           </p>
         </div>
         
-        <div className="w-full center-xy">
+        <div className="w-full center-xy lg:w-1/2">
           <div className={`feature-card ${isMobile ? 'rounded-[2rem] p-8' : 'rounded-[3rem] p-12'} center-xy w-full max-w-md aspect-square`} aria-hidden="true">
             <div className={isMobile ? "w-24 h-24" : "w-32 h-32"}>
               {icon}
