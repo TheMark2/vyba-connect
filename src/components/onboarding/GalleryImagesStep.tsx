@@ -244,7 +244,7 @@ const GalleryImagesStep: React.FC<GalleryImagesStepProps> = ({
       targetElem.classList.remove('scale-105');
     }, 300);
   };
-  return <div className="flex flex-col items-center justify-center w-full pt-28 px-4 md:px-8">
+  return <div className="flex flex-col items-center justify-center w-full pt-8 px-4 md:px-8">
       <div className="max-w-3xl w-full text-center">
         <h2 className="text-4xl md:text-6xl font-bold mb-6 dark:text-white">
           Elige 5 fotos
