@@ -11,8 +11,6 @@ interface MusicPreview {
   duration: string;
   image?: string;
   audioUrl?: string;
-  videoUrl?: string;
-  hasVideo?: boolean;
 }
 
 interface MusicPreviewsProps {
@@ -48,13 +46,13 @@ const MusicPreviews = ({
     <div className="mt-8 mb-16">
       <h2 className="text-3xl font-semibold mb-6">Preview</h2>
       
-      <div className="space-y-4">
+      <div className="space-y-3">
         {previews.map((preview, index) => (
           <div key={index} className="flex flex-col">
             <Card className="p-0 border-0 shadow-none bg-transparent hover:bg-gray-50 dark:hover:bg-vyba-dark-secondary/5 transition-colors rounded-xl">
-              <div className="flex items-center gap-6">
+              <div className="flex items-center gap-4 p-2">
                 {/* Left side - Image (square) */}
-                <div className="w-[70px] h-[70px] md:w-[100px] md:h-[100px] rounded-xl overflow-hidden flex-shrink-0">
+                <div className="w-[70px] h-[70px] md:w-[80px] md:h-[80px] rounded-lg overflow-hidden flex-shrink-0 shadow-sm">
                   {preview.image ? (
                     <Image 
                       src={preview.image} 
@@ -68,45 +66,38 @@ const MusicPreviews = ({
                   )}
                 </div>
                 
-                {/* Right side - Content with play button on left */}
-                <div className="flex-1 pt-2 pr-3">
-                  <div className="flex items-center gap-4 mb-2">
-                    {/* Play button left side */}
-                    <button 
-                      className="w-10 h-10 md:w-12 md:h-12 rounded-full bg-black flex items-center justify-center"
-                      onClick={() => handlePlayPause(preview)}
-                    >
-                      {currentlyPlaying === preview.title ? (
-                        <Pause className="w-5 h-5 md:w-6 md:h-6 text-white" />
-                      ) : (
-                        <Play className="w-5 h-5 md:w-6 md:h-6 text-white ml-1" fill="white" />
-                      )}
-                    </button>
-                    
-                    {/* Title and artist info */}
-                    <div>
-                      <h3 className="text-xs md:text-sm font-medium text-[#969494]">{artistName}</h3>
-                      <h2 className="text-sm md:text-lg font-semibold truncate">{preview.title}</h2>
-                      <span className="text-xs text-gray-400 mt-1 hidden md:block">{preview.duration}</span>
+                {/* Play button left side */}
+                <button 
+                  className="w-10 h-10 md:w-11 md:h-11 rounded-full bg-black dark:bg-gray-800 hover:bg-gray-800 dark:hover:bg-black transition-colors flex items-center justify-center flex-shrink-0 shadow-sm"
+                  onClick={() => handlePlayPause(preview)}
+                >
+                  {currentlyPlaying === preview.title ? (
+                    <Pause className="w-5 h-5 md:w-5 md:h-5 text-white" />
+                  ) : (
+                    <Play className="w-5 h-5 md:w-5 md:h-5 text-white ml-1" fill="white" />
+                  )}
+                </button>
+                
+                {/* Right side - Content */}
+                <div className="flex-1 pt-1 pr-3">
+                  {/* Title and artist info */}
+                  <div>
+                    <h3 className="text-xs md:text-sm font-medium text-[#969494] truncate">{artistName}</h3>
+                    <h2 className="text-sm md:text-base font-semibold truncate">{preview.title}</h2>
+                    <div className="flex justify-between items-center mt-1">
+                      <span className="text-xs text-gray-400">{preview.duration}</span>
+                      <span className="text-xs bg-gray-100 dark:bg-vyba-dark-secondary/20 px-2 py-0.5 rounded-full text-gray-500">
+                        Audio
+                      </span>
                     </div>
                   </div>
                   
                   {/* Progress bar */}
-                  <div className="mb-3 mt-2 pr-2">
+                  <div className="mb-1 mt-2 pr-1">
                     <Progress 
                       value={progress} 
-                      className="h-1 bg-gray-200" 
+                      className="h-1 bg-gray-200 dark:bg-vyba-dark-secondary/30" 
                     />
-                    
-                    {/* Duration on mobile */}
-                    <div className="flex justify-between mt-1">
-                      <span className="text-xs text-gray-400 md:hidden">{preview.duration}</span>
-                      {preview.hasVideo && (
-                        <span className="text-xs bg-gray-100 dark:bg-vyba-dark-secondary/20 px-2 py-0.5 rounded-full text-gray-500">
-                          {preview.hasVideo ? "Video" : "Audio"}
-                        </span>
-                      )}
-                    </div>
                   </div>
                 </div>
               </div>
