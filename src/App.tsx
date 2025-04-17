@@ -13,6 +13,7 @@ import ArtistBenefitsPage from './pages/ArtistBenefitsPage';
 import ArtistOnboardingPage from './pages/ArtistOnboardingPage';
 import NotFound from './pages/NotFound';
 import { Toaster } from "@/components/ui/toaster";
+import LandingArtist from './pages/LandingArtist';
 
 function App() {
   const location = useLocation();
@@ -30,6 +31,7 @@ function App() {
           <Route path="/artista/:id" element={<ArtistProfilePage />} />
           <Route path="/artist-benefits" element={<ArtistBenefitsPage />} />
           <Route path="/artist-onboarding" element={<ArtistOnboardingPage />} />
+          <Route path="/landing-artist" element={<LandingArtist />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </AnimatePresence>
