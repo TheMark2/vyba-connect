@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Button } from "@/components/ui/button";
 import { ArrowLeft, X } from "lucide-react";
@@ -37,7 +36,7 @@ const StepsNavbar: React.FC<StepsNavbarProps> = ({
 
   return (
     <>
-      <div className={`${isMobile ? 'fixed' : 'fixed'} top-0 left-0 right-0 z-30 px-4 md:px-6 lg:px-8 pt-6 ${isMobile ? 'bg-white dark:bg-vyba-dark-bg' : ''}`}>
+      <div className={`${isMobile ? 'fixed' : 'fixed'} top-0 left-0 right-0 z-30 px-4 md:px-6 lg:px-8 pt-6 bg-white dark:bg-vyba-dark-bg mb-6`}>
         {/* Barra de progreso con fondo redondeado */}
         <div className="bg-[#F7F7F7] dark:bg-vyba-dark-secondary rounded-full py-3 px-5 max-w-6xl mx-auto w-full">
           <div className="flex space-x-2 items-center w-full">
