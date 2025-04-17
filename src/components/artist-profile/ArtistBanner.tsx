@@ -13,6 +13,8 @@ import {
 } from "@/components/ui/carousel";
 import { useNavigate } from "react-router-dom";
 import ImageGalleryDialog from "./ImageGalleryDialog";
+import ReportDialog from "./ReportDialog";
+import { toast } from "sonner";
 
 interface ArtistBannerProps {
   artist: {
@@ -32,6 +34,7 @@ const ArtistBanner = ({ artist, onFavorite, onReport, onShare }: ArtistBannerPro
   const [isHovering, setIsHovering] = useState(false);
   const [galleryOpen, setGalleryOpen] = useState(false);
   const [activeImageIndex, setActiveImageIndex] = useState(0);
+  const [reportDialogOpen, setReportDialogOpen] = useState(false);
   
   // Combinamos la imagen de portada con el resto de las imágenes para el carrusel
   const allImages = [artist.coverImage, ...artist.images];
@@ -39,6 +42,17 @@ const ArtistBanner = ({ artist, onFavorite, onReport, onShare }: ArtistBannerPro
   const openGallery = (index: number) => {
     setActiveImageIndex(index);
     setGalleryOpen(true);
+  };
+
+  const handleReportClick = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    setReportDialogOpen(true);
+  };
+
+  const handleReportSubmit = (reason: string, details: string) => {
+    console.log("Denuncia enviada:", { artistName: artist.name, reason, details });
+    // Aquí normalmente enviarías los datos a tu backend
+    onReport();
   };
 
   return (
@@ -103,7 +117,12 @@ const ArtistBanner = ({ artist, onFavorite, onReport, onShare }: ArtistBannerPro
           <Button variant="secondary" size="icon" className="w-10 h-10 rounded-full bg-white/30 backdrop-blur-xl hover:bg-white/50" onClick={onFavorite}>
             <Heart className="h-5 w-5 text-white" />
           </Button>
-          <Button variant="secondary" size="icon" className="w-10 h-10 rounded-full bg-white/30 backdrop-blur-xl hover:bg-white/50" onClick={onReport}>
+          <Button 
+            variant="secondary" 
+            size="icon" 
+            className="w-10 h-10 rounded-full bg-white/30 backdrop-blur-xl hover:bg-white/50" 
+            onClick={handleReportClick}
+          >
             <Flag className="h-5 w-5 text-white" />
           </Button>
           <Button variant="secondary" size="icon" className="w-10 h-10 rounded-full bg-white/30 backdrop-blur-xl hover:bg-white/50" onClick={onShare}>
@@ -144,6 +163,14 @@ const ArtistBanner = ({ artist, onFavorite, onReport, onShare }: ArtistBannerPro
         onClose={() => setGalleryOpen(false)}
         activeImageIndex={activeImageIndex}
         artistName={artist.name}
+      />
+
+      {/* Diálogo de denuncia */}
+      <ReportDialog 
+        artistName={artist.name}
+        isOpen={reportDialogOpen}
+        onClose={() => setReportDialogOpen(false)}
+        onSubmit={handleReportSubmit}
       />
     </>
   );
