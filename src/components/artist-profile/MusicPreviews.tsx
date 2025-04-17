@@ -1,4 +1,3 @@
-
 import React, { useEffect, useState, useRef } from "react";
 import { Video, Play, Pause, FileAudio } from "lucide-react";
 import { Card } from "@/components/ui/card";
