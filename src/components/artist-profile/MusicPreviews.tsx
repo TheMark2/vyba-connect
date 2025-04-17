@@ -50,9 +50,9 @@ const MusicPreviews = ({
         {previews.map((preview, index) => (
           <div key={index} className="flex flex-col">
             <Card className="p-0 border-0 shadow-none bg-transparent">
-              <div className="flex items-start gap-4">
+              <div className="flex items-center gap-8">
                 {/* Left side - Image (now square) */}
-                <div className="w-[200px] h-[200px] rounded-xl overflow-hidden flex-shrink-0">
+                <div className="w-[200px] h-[180px] rounded-xl overflow-hidden flex-shrink-0">
                   {preview.image ? (
                     <Image 
                       src={preview.image} 
@@ -83,8 +83,8 @@ const MusicPreviews = ({
                     
                     {/* Title and artist info */}
                     <div>
-                      <h3 className="text-lg font-medium text-black">{artistName}</h3>
-                      <h2 className="text-2xl font-bold text-black">{preview.title}</h2>
+                      <h3 className="text-sm font-medium text-[#969494]">{artistName}</h3>
+                      <h2 className="text-lg font-semibold">{preview.title}</h2>
                     </div>
                   </div>
                   
@@ -92,7 +92,7 @@ const MusicPreviews = ({
                   <div className="mb-8 mt-4">
                     <Progress 
                       value={progress} 
-                      className="h-2 bg-gray-200" 
+                      className="h-1 bg-gray-200" 
                     />
                   </div>
                   
