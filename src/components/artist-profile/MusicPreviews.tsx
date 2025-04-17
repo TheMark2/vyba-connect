@@ -130,7 +130,7 @@ const MusicPreviews = ({
               >
                 <div className="flex items-center gap-4 p-2">
                   {/* Left side - Image (square) */}
-                  <div className="w-[70px] h-[70px] md:w-[80px] md:h-[80px] rounded-lg overflow-hidden flex-shrink-0 shadow-sm">
+                  <div className="w-[70px] h-[70px] md:w-[100px] md:h-[100px] rounded-md overflow-hidden flex-shrink-0">
                     {preview.image ? (
                       <Image 
                         src={preview.image} 
@@ -139,7 +139,7 @@ const MusicPreviews = ({
                       />
                     ) : (
                       <div className="w-full h-full bg-[#F7F7F7] dark:bg-vyba-dark-secondary/20 flex items-center justify-center">
-                        <Music className="text-gray-400 w-8 h-8" />
+                        <Music className="stroke[1.5] w-8 h-8" />
                       </div>
                     )}
                   </div>
@@ -155,7 +155,7 @@ const MusicPreviews = ({
                     aria-label={isPlaying ? "Pause" : "Play"}
                   >
                     {isPlaying ? (
-                      <Pause className="w-5 h-5 md:w-5 md:h-5 text-white" />
+                      <Pause className="w-5 h-5 md:w-5 md:h-5 text-white" fill="white" />
                     ) : (
                       <Play className="w-5 h-5 md:w-5 md:h-5 text-white ml-1" fill="white" />
                     )}
