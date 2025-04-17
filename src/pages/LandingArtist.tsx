@@ -133,6 +133,15 @@ const ArtistBenefitsPage = () => {
         <motion.div 
           className="bg-gray-50 dark:bg-gray-900 rounded-full px-8 py-6 md:px-16 md:py-8 mt-8 flex items-center gap-6 md:gap-8"
           layout
+          initial={{ scale: 0.95, opacity: 0 }}
+          animate={{ 
+            scale: 1, 
+            opacity: 1,
+            transition: {
+              duration: 0.4,
+              ease: [0.22, 1, 0.36, 1]
+            }
+          }}
           transition={{
             layout: {
               duration: 0.6,
