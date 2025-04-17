@@ -16,13 +16,13 @@ const CoverStep: React.FC<CoverStepProps> = ({
   return <article className="w-full flex items-center justify-center px-6 md:px-8">
       <div className="h-full max-h-[80vh] flex lg:flex-row items-center justify-center max-w-6xl w-full gap-8">
         <div className="w-full lg:w-1/2 mb-10 lg:mb-0 text-left lg:pr-8">
-          <div className="text-sm font-bold mb-3 text-gray-500 dark:text-gray-400" aria-label={`Grupo ${group}`}>
+          <div className="text-sm font-regular mb-3 text-gray-500 dark:text-gray-400" aria-label={`Grupo ${group}`}>
             GRUPO {group}
           </div>
-          <h1 className="font-bold text-gray-900 dark:text-white mb-4" id={`onboarding-group-${group}`}>
+          <h1 className="font-bold mb-4" id={`onboarding-group-${group}`}>
             {title}
           </h1>
-          <p className="text-gray-500 dark:text-gray-400 max-w-lg mx-auto lg:mx-0">
+          <p className="font-light max-w-lg mx-auto lg:mx-0">
             {description}
           </p>
         </div>

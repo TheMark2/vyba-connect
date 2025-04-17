@@ -6,7 +6,7 @@
 @layer base {
   /* Typography base styles */
   h1, h2, h3, h4, h5, h6 {
-    @apply font-figtree font-semibold text-gray-900 dark:text-white;
+    @apply font-figtree font-semibold text-[#222222] dark:text-white;
   }
   
   h1 {
@@ -18,7 +18,7 @@
   }
   
   p {
-    @apply text-base md:text-lg mb-6 text-gray-500 dark:text-gray-400;
+    @apply text-base md:text-lg mb-6 text-[#717171] dark:text-gray-400;
   }
 }
 
@@ -51,11 +51,11 @@
   }
   
   .form-title {
-    @apply text-center;
+    @apply text-center text-[#222222];
   }
   
   .form-description {
-    @apply text-gray-500 text-center mb-8 max-w-md mx-auto;
+    @apply text-[#717171] font-light text-center mb-8 max-w-md mx-auto;
   }
   
   /* Card styles */

@@ -47,7 +47,7 @@ const ArtistTypeStep: React.FC<ArtistTypeStepProps> = ({ onSelect, initialValue 
   return (
     <div className="content-container w-full max-w-6xl mx-auto">
       <div className="form-container">
-        <h1 className="form-title text-gray-900 dark:text-white" id="artist-type-title">
+        <h1 className="form-title" id="artist-type-title">
           Descríbete a ti mismo
         </h1>
         <p className="form-description">
@@ -60,7 +60,8 @@ const ArtistTypeStep: React.FC<ArtistTypeStepProps> = ({ onSelect, initialValue 
               key={type.id}
               variant="outline"
               className={`
-                selection-badge
+                selection-badge py-3 px-6 cursor-pointer transition-all duration-150
+                text-sm font-medium rounded-full border-none
                 ${selectedType === type.id ? 'selection-badge-active' : 'selection-badge-inactive'}
                 ${activePress === type.id ? 'transform scale-95' : ''}
               `}

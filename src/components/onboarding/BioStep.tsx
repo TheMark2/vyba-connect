@@ -42,7 +42,7 @@ const BioStep: React.FC<BioStepProps> = ({
           ¿Quién eres? Explícanos un poco la biografía del proyecto
         </p>
         
-        <div className="bg-transparent rounded-3xl p-0 md:p-12 w-full max-w-xl mx-auto">
+        <div className="bg-transparent rounded-3xl p-0 md:p-12 w-full mx-auto">
           <div className="w-full mx-auto">
             <div className="space-y-4">
               <Textarea 

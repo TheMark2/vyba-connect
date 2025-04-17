@@ -43,7 +43,7 @@ const ProfilePhotoStep: React.FC<ProfilePhotoStepProps> = ({
         <h1 className="form-title text-gray-900 dark:text-white">
           Elige tu foto de perfil
         </h1>
-        <p className="text-gray-500 text-center mb-10 max-w-lg mx-auto">
+        <p className="font-light mb-10 max-w-lg mx-auto">
           Las imágenes con buena calidad y profesionales aumentan la probabilidad de contratación un 75%
         </p>
         

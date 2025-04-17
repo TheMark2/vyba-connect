@@ -97,7 +97,7 @@ const PhoneVerificationStep: React.FC<PhoneVerificationStepProps> = ({
                 <h2 className="text-4xl md:text-6xl font-bold mb-6">
                   Escribe tu móvil
                 </h2>
-                <p className="text-gray-500 mb-8">
+                <p className="font-light mb-8">
                   Es imprescindible que al crear un proyecto nuevo pongas tu móvil para poder verificar y proteger tu cuenta
                 </p>
                 
@@ -118,7 +118,7 @@ const PhoneVerificationStep: React.FC<PhoneVerificationStepProps> = ({
                 <h2 className="text-4xl md:text-6xl font-bold mb-6">
                   Escribe el código
                 </h2>
-                <p className="text-gray-500 mb-8">
+                <p className="font-light mb-8">
                   Hemos enviado un código a tu móvil. Introdúcelo a continuación.
                   {" "}
                   <span className="text-gray-500">
@@ -153,7 +153,7 @@ const PhoneVerificationStep: React.FC<PhoneVerificationStepProps> = ({
               <h2 className="text-4xl md:text-6xl font-bold mb-6">
                 Código correcto
               </h2>
-              <p className="text-gray-400 mb-12">
+              <p className="mb-8">
                 Puedes continuar
               </p>
               

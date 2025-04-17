@@ -67,10 +67,10 @@ const MusicGenresStep: React.FC<MusicGenresStepProps> = ({
   return (
     <div className="content-container">
       <div className="form-container text-center">
-        <h1 className="form-title text-gray-900 dark:text-white">
+        <h1 className="form-title">
           Tus géneros musicales
         </h1>
-        <p className="text-gray-500 text-center mb-8 max-w-md mx-auto">
+        <p className="font-light mb-8 max-w-md mx-auto">
           Selecciona los estilos musicales en los que te especializas o que ofreces.
         </p>
         

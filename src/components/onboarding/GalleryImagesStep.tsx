@@ -249,7 +249,7 @@ const GalleryImagesStep: React.FC<GalleryImagesStepProps> = ({
         <h2 className="text-4xl md:text-6xl font-bold mb-6 dark:text-white">
           Elige 5 fotos
         </h2>
-        <p className="text-gray-500 text-center mb-10 max-w-lg mx-auto">
+        <p className="font-light mb-10 max-w-lg mx-auto">
           Las imágenes con buena calidad y profesionales aumentan la probabilidad de contratación un 75%
         </p>
         
