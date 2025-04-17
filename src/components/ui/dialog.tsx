@@ -24,7 +24,7 @@ const DialogContent = React.forwardRef<React.ElementRef<typeof DialogPrimitive.C
           <span className="sr-only">Cerrar</span>
         </DialogPrimitive.Close>
       </div>
-      <div className="px-12 pt-2">
+      <div className="px-12 pb-8">
         {children}
       </div>
     </DialogPrimitive.Content>
@@ -43,7 +43,7 @@ DialogFooter.displayName = "DialogFooter";
 const DialogTitle = React.forwardRef<React.ElementRef<typeof DialogPrimitive.Title>, React.ComponentPropsWithoutRef<typeof DialogPrimitive.Title>>(({
   className,
   ...props
-}, ref) => <DialogPrimitive.Title ref={ref} className={cn("text-xl font-semibold font-figtree", className)} {...props} />);
+}, ref) => <DialogPrimitive.Title ref={ref} className={cn("text-3xl font-semibold font-figtree", className)} {...props} />);
 DialogTitle.displayName = DialogPrimitive.Title.displayName;
 const DialogDescription = React.forwardRef<React.ElementRef<typeof DialogPrimitive.Description>, React.ComponentPropsWithoutRef<typeof DialogPrimitive.Description>>(({
   className,

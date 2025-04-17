@@ -37,10 +37,7 @@ export const FeaturedLocationDialog: React.FC<FeaturedLocationDialogProps> = ({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-lg">
-        <DialogHeader>
-          <DialogTitle>Añadir lugar destacado</DialogTitle>
-        </DialogHeader>
+      <DialogContent className="max-w-2xl">
         <form onSubmit={handleSubmit} className="space-y-4 mt-4">
           <div className="space-y-2">
             <label className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
