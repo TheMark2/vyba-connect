@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from "react";
 import { Progress } from "@/components/ui/progress";
 import Image from "@/components/ui/image";
@@ -224,19 +223,24 @@ const MusicPreviews = ({
         </div>
       )}
 
-      {/* Image Dialog - Ajustado para adaptarse mejor a las proporciones */}
+      {/* Image Dialog - Adaptativo a las proporciones de la imagen */}
       <Dialog open={!!selectedImage} onOpenChange={(open) => !open && closeImageDialog()}>
-        <DialogContent className="sm:max-w-[85vw] md:max-w-[75vw] p-0 pb-6">
-          <DialogTitle className="text-center pt-6 pb-4">
+        <DialogContent className="sm:max-w-[85vw] md:max-w-[75vw] lg:max-w-[65vw] p-0 overflow-hidden">
+          <DialogTitle className="text-center pt-6 pb-2">
             {selectedImage?.title}
           </DialogTitle>
-          <div className="p-4 flex justify-center">
+          <div className="p-4 flex justify-center items-center">
             {selectedImage && (
-              <div className="rounded-lg overflow-hidden max-w-[70vw] md:max-w-[450px]">
+              <div className="rounded-lg overflow-hidden" style={{ maxHeight: 'calc(85vh - 120px)' }}>
                 <img
                   src={selectedImage.image}
                   alt={selectedImage.title}
-                  className="w-full h-auto object-contain"
+                  className="max-h-full max-w-full object-contain"
+                  style={{ 
+                    aspectRatio: '1/1',
+                    width: 'auto',
+                    height: 'auto'
+                  }}
                 />
               </div>
             )}
