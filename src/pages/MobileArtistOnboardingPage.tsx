@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { PageTransition } from '@/components/ui/page-transition';
-import StepsNavbar from '@/components/onboarding/StepsNavbar';
+import { OnboardingLayout } from '@/components/layouts/OnboardingLayout';
 import CoverStep from '@/components/onboarding/CoverStep';
 import ArtistTypeStep from '@/components/onboarding/ArtistTypeStep';
 import ArtistNameStep from '@/components/onboarding/ArtistNameStep';
@@ -264,26 +263,18 @@ const MobileArtistOnboardingPage = () => {
   };
   
   return (
-    <PageTransition>
-      <div className="min-h-screen bg-white dark:bg-vyba-dark-bg flex flex-col">
-        <StepsNavbar
-          currentGroup={currentGroup}
-          totalGroups={stepGroups.length}
-          currentStepInGroup={currentStepInGroup}
-          totalStepsInGroup={stepGroups[currentGroup].totalSteps}
-          onBack={handleBack}
-          onNext={handleNext}
-          onCancel={handleCancel}
-          canGoNext={canGoNext()}
-        />
-        
-        <main className="flex-1 flex min-h-0 w-full px-4 sm:px-6 mt-24">
-          <div className="w-full flex items-start justify-center">
-            {renderCurrentStep()}
-          </div>
-        </main>
-      </div>
-    </PageTransition>
+    <OnboardingLayout
+      currentGroup={currentGroup}
+      totalGroups={stepGroups.length}
+      currentStepInGroup={currentStepInGroup}
+      totalStepsInGroup={stepGroups[currentGroup].totalSteps}
+      onBack={handleBack}
+      onNext={handleNext}
+      onCancel={handleCancel}
+      canGoNext={canGoNext()}
+    >
+      {renderCurrentStep()}
+    </OnboardingLayout>
   );
 };
 
