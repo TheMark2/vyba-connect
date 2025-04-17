@@ -16,6 +16,7 @@ import MusicPreviews from "@/components/artist-profile/MusicPreviews";
 import { useIsMobile } from "@/hooks/use-mobile";
 import DesktopArtistNavbar from "@/components/artist-profile/DesktopArtistNavbar";
 import MobileArtistNavbar from "@/components/artist-profile/MobileArtistNavbar";
+import LoginDialog from "@/components/auth/LoginDialog";
 
 const artistsData = [{
   id: "1",
@@ -166,6 +167,7 @@ const ArtistProfilePage = () => {
   const reviewsRef = useRef<HTMLDivElement>(null);
   const [showMobileBottomSheet, setShowMobileBottomSheet] = useState(false);
   const [isReviewsBottomSheetOpen, setIsReviewsBottomSheetOpen] = useState(false);
+  const [showLoginDialog, setShowLoginDialog] = useState(false);
   
   const [currentPlaying, setCurrentPlaying] = useState("");
   const [isAudioPlaying, setIsAudioPlaying] = useState(false);
@@ -206,10 +208,7 @@ const ArtistProfilePage = () => {
   }
 
   const handleFavorite = () => {
-    toast.success("Añadido a favoritos", {
-      icon: "❤️",
-      position: "bottom-center"
-    });
+    setShowLoginDialog(true);
   };
 
   const handleReport = () => {
@@ -220,9 +219,27 @@ const ArtistProfilePage = () => {
   };
 
   const handleShare = () => {
-    toast.success("Enlace copiado al portapapeles", {
-      position: "bottom-center"
-    });
+    if (navigator.share) {
+      navigator.share({
+        title: `${artist?.name} - ${artist?.type}`,
+        text: `Descubre a ${artist?.name}, ${artist?.type} en Vyba`,
+        url: window.location.href
+      })
+      .then(() => {
+        toast.success("Perfil compartido", {
+          position: "bottom-center"
+        });
+      })
+      .catch((error) => console.log('Error al compartir:', error));
+    } else {
+      navigator.clipboard.writeText(window.location.href)
+        .then(() => {
+          toast.success("Enlace copiado al portapapeles", {
+            position: "bottom-center"
+          });
+        })
+        .catch(err => console.error('Error al copiar URL: ', err));
+    }
   };
 
   const handleContact = () => {
@@ -394,6 +411,8 @@ const ArtistProfilePage = () => {
           audioRef={audioRef}
         />
       )}
+      
+      <LoginDialog open={showLoginDialog} onOpenChange={setShowLoginDialog} />
       
       <Footer />
     </div>

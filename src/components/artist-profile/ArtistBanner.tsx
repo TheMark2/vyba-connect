@@ -15,6 +15,7 @@ import { useNavigate } from "react-router-dom";
 import ImageGalleryDialog from "./ImageGalleryDialog";
 import ReportDialog from "./ReportDialog";
 import { toast } from "sonner";
+import LoginDialog from "@/components/auth/LoginDialog";
 
 interface ArtistBannerProps {
   artist: {
@@ -35,6 +36,7 @@ const ArtistBanner = ({ artist, onFavorite, onReport, onShare }: ArtistBannerPro
   const [galleryOpen, setGalleryOpen] = useState(false);
   const [activeImageIndex, setActiveImageIndex] = useState(0);
   const [reportDialogOpen, setReportDialogOpen] = useState(false);
+  const [showLoginDialog, setShowLoginDialog] = useState(false);
   
   // Combinamos la imagen de portada con el resto de las imágenes para el carrusel
   const allImages = [artist.coverImage, ...artist.images];
@@ -53,6 +55,30 @@ const ArtistBanner = ({ artist, onFavorite, onReport, onShare }: ArtistBannerPro
     console.log("Denuncia enviada:", { artistName: artist.name, reason, details });
     // Aquí normalmente enviarías los datos a tu backend
     onReport();
+  };
+
+  const handleFavoriteClick = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    setShowLoginDialog(true);
+  };
+
+  const handleShareClick = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    
+    if (navigator.share) {
+      navigator.share({
+        title: `${artist.name} - ${artist.type}`,
+        text: `Descubre a ${artist.name}, ${artist.type} en Vyba`,
+        url: window.location.href
+      })
+      .then(() => onShare())
+      .catch((error) => console.log('Error al compartir:', error));
+    } else {
+      // Fallback para navegadores que no soportan Web Share API
+      navigator.clipboard.writeText(window.location.href)
+        .then(() => onShare())
+        .catch(err => console.error('Error al copiar URL: ', err));
+    }
   };
 
   return (
@@ -114,7 +140,12 @@ const ArtistBanner = ({ artist, onFavorite, onReport, onShare }: ArtistBannerPro
               <Images className="h-5 w-5 text-white" />
             </Button>
           )}
-          <Button variant="secondary" size="icon" className="w-10 h-10 rounded-full bg-white/30 backdrop-blur-xl hover:bg-white/50" onClick={onFavorite}>
+          <Button 
+            variant="secondary" 
+            size="icon" 
+            className="w-10 h-10 rounded-full bg-white/30 backdrop-blur-xl hover:bg-white/50" 
+            onClick={handleFavoriteClick}
+          >
             <Heart className="h-5 w-5 text-white" />
           </Button>
           <Button 
@@ -125,7 +156,12 @@ const ArtistBanner = ({ artist, onFavorite, onReport, onShare }: ArtistBannerPro
           >
             <Flag className="h-5 w-5 text-white" />
           </Button>
-          <Button variant="secondary" size="icon" className="w-10 h-10 rounded-full bg-white/30 backdrop-blur-xl hover:bg-white/50" onClick={onShare}>
+          <Button 
+            variant="secondary" 
+            size="icon" 
+            className="w-10 h-10 rounded-full bg-white/30 backdrop-blur-xl hover:bg-white/50" 
+            onClick={handleShareClick}
+          >
             <Share2 className="h-5 w-5 text-white" />
           </Button>
         </div>
@@ -171,6 +207,12 @@ const ArtistBanner = ({ artist, onFavorite, onReport, onShare }: ArtistBannerPro
         isOpen={reportDialogOpen}
         onClose={() => setReportDialogOpen(false)}
         onSubmit={handleReportSubmit}
+      />
+
+      {/* Diálogo de login */}
+      <LoginDialog
+        open={showLoginDialog}
+        onOpenChange={setShowLoginDialog}
       />
     </>
   );

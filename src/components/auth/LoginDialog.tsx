@@ -1,3 +1,4 @@
+
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Dialog, DialogContent, DialogHeader } from "@/components/ui/dialog";
@@ -47,13 +48,13 @@ const LoginDialog = ({
             <ChevronLeft size={24} />
           </Button>
           
-          <div className="text-3xl font-black">
+          <div className="text-3xl font-semibold">
             Inicia sesión para continuar
           </div>
         </div>}
       
       <div className={cn("flex flex-col space-y-2")}>
-        {!isMobile && <div className="text-3xl font-black">
+        {!isMobile && <div className="text-3xl font-semibold">
             Inicia sesión para continuar
           </div>}
         <p className="text-muted-foreground mb-6">
