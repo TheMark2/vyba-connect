@@ -13,7 +13,6 @@ const ArtistNameStep: React.FC<ArtistNameStepProps> = ({ onInputChange, initialV
   const isMobile = useIsMobile();
 
   useEffect(() => {
-    // Si hay un valor inicial, notificamos al componente padre
     if (initialValue) {
       onInputChange(initialValue);
     }
@@ -26,16 +25,16 @@ const ArtistNameStep: React.FC<ArtistNameStepProps> = ({ onInputChange, initialV
   };
 
   return (
-    <div className="flex flex-col w-full px-6 sm:px-4 md:px-8 pt-8 lg:pt-0">
-      <div className="max-w-2xl w-full text-center mx-auto">
-        <h1 className="text-4xl md:text-6xl font-bold mb-6 dark:text-white">
+    <div className="content-container">
+      <div className="form-container">
+        <h1 className="form-title" id="artist-name-title">
           Tu nombre artístico
         </h1>
-        <p className="text-gray-500 text-center mb-8 max-w-md mx-auto">
+        <p className="form-description">
           El nombre con el que te presentas. Asegúrate de que sea fácil de recordar.
         </p>
         
-        <div className="w-full max-w-md mx-auto mt-8">
+        <div className="input-container">
           <Input
             type="text"
             placeholder="DJ Mave"
@@ -43,7 +42,12 @@ const ArtistNameStep: React.FC<ArtistNameStepProps> = ({ onInputChange, initialV
             onChange={handleInputChange}
             className={`w-full h-14 ${isMobile ? 'text-sm' : ''}`}
             aria-label="Nombre artístico"
+            aria-required="true"
+            aria-describedby="artist-name-description"
           />
+          <p id="artist-name-description" className="sr-only">
+            Introduce tu nombre artístico, debe ser fácil de recordar
+          </p>
         </div>
       </div>
     </div>

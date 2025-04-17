@@ -26,19 +26,19 @@ const BioStep: React.FC<BioStepProps> = ({
   };
 
   // Determinar el color del contador de palabras según la cantidad
-  const getWordCountColor = () => {
-    if (wordCount >= 100) return "bg-green-100 text-green-600";
-    if (wordCount >= 50) return "bg-blue-100 text-blue-600";
-    return "bg-pink-100 text-pink-500";
+  const getWordCountClass = () => {
+    if (wordCount >= 100) return "word-count-high";
+    if (wordCount >= 50) return "word-count-medium";
+    return "word-count-low";
   };
 
   return (
-    <div className="flex flex-col w-full px-6 sm:px-4 md:px-8 pt-8 lg:pt-0">
-      <div className="max-w-2xl w-full text-center mx-auto">
-        <h1 className="text-4xl md:text-6xl font-bold mb-4">
+    <div className="content-container">
+      <div className="form-container">
+        <h1 className="form-title" id="bio-title">
           Sobre ti
         </h1>
-        <p className="text-gray-500 mb-6">
+        <p className="form-description">
           ¿Quién eres? Explícanos un poco la biografía del proyecto
         </p>
         
@@ -51,12 +51,16 @@ const BioStep: React.FC<BioStepProps> = ({
                 value={bio} 
                 onChange={handleBioChange} 
                 aria-label="Biografía del artista"
+                aria-describedby="bio-description"
               />
               <div className="flex justify-end">
-                <span className="text-sm text-gray-500">
-                  Palabras escritas <span className={`rounded-full px-2 py-1 ml-1 ${getWordCountColor()}`}>{wordCount}</span>
+                <span className="word-count">
+                  Palabras escritas <span className={getWordCountClass()}>{wordCount}</span>
                 </span>
               </div>
+              <p id="bio-description" className="sr-only">
+                Escribe aquí tu biografía, no incluyas enlaces ni números de teléfono
+              </p>
             </div>
           </div>
         </div>
