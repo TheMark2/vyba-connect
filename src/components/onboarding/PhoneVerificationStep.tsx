@@ -115,7 +115,7 @@ const PhoneVerificationStep: React.FC<PhoneVerificationStepProps> = ({
                     </Button>}
                 </div>
               </> : <>
-                <h2 className="text-4xl md:text-6xl font-black mb-6">
+                <h2 className="text-4xl md:text-6xl font-bold mb-6">
                   Escribe el código
                 </h2>
                 <p className="text-gray-500 mb-8">
