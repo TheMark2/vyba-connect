@@ -2,7 +2,7 @@
 import React, { useState } from 'react';
 import { Textarea } from '@/components/ui/textarea';
 import { Button } from '@/components/ui/button';
-import { Plus, MapPin } from 'lucide-react';
+import { Plus, MapPin, X } from 'lucide-react';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { FeaturedLocationDialog, Location } from './FeaturedLocationDialog';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -38,6 +38,11 @@ const ExperienceStep: React.FC<ExperienceStepProps> = ({
     if (wordCount >= 50) return "bg-blue-100 text-blue-600";
     return "bg-pink-100 text-pink-500";
   };
+
+  const handleRemoveLocation = (indexToRemove) => {
+    setLocations((prev) => prev.filter((_, index) => index !== indexToRemove));
+  };
+  
 
   return (
     <div className="content-container">
@@ -82,7 +87,7 @@ const ExperienceStep: React.FC<ExperienceStepProps> = ({
                     initial={{ opacity: 0, height: 0 }}
                     animate={{ opacity: 1, height: "auto" }}
                     exit={{ opacity: 0, height: 0 }}
-                    className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6"
+                    className="flex flex-wrap gap-4 mb-6"
                   >
                     {locations.map((location, index) => (
                       <motion.div
@@ -90,14 +95,24 @@ const ExperienceStep: React.FC<ExperienceStepProps> = ({
                         initial={{ opacity: 0, scale: 0.9 }}
                         animate={{ opacity: 1, scale: 1 }}
                         transition={{ duration: 0.2 }}
-                        className="bg-[#F7F7F7] dark:bg-vyba-dark-secondary/30 rounded-2xl p-4 flex items-center gap-3"
+                        className="relative bg-[#F7F7F7] dark:bg-vyba-dark-secondary/30 rounded-full px-5 py-3 flex items-center gap-3 group"
                       >
-                        <MapPin className="h-5 w-5 text-gray-500" />
-                        <div>
-                          <p className="font-medium text-black dark:text-white m-0">{location.venue}</p>
-                          <p className="text-gray-500 text-sm m-0">{location.city}</p>
+                        {/* Botón para borrar */}
+                        <button
+                          onClick={() => handleRemoveLocation(index)}
+                          className="absolute -top-2 -right-2 bg-[#F7F7F7] text-black rounded-full p-1 opacity-0 group-hover:opacity-100 transition-opacity border border-white border-2"
+                        >
+                          <X className="h-4 w-4" />
+                        </button>
+
+                        <MapPin className="h-5 w-5" />
+                        <div className="flex gap-1 items-center">
+                          <p className="font-medium text-sm text-[#222222] dark:text-white m-0">{location.venue}</p>
+                          <span className="text-xl font-bold">·</span>
+                          <p className="text-[#717171] text-sm font-light m-0">{location.city}</p>
                         </div>
                       </motion.div>
+
                     ))}
                   </motion.div>
                 )}
@@ -106,7 +121,7 @@ const ExperienceStep: React.FC<ExperienceStepProps> = ({
               <div className="mt-6 flex justify-center">
                 <Button 
                   variant="secondary" 
-                  className="flex items-center gap-2 transition-transform duration-200 hover:scale-105" 
+                  className="flex items-center gap-2" 
                   onClick={() => setIsDialogOpen(true)}
                 >
                   <Plus className="h-4 w-4" />

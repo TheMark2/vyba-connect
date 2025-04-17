@@ -130,11 +130,10 @@ const RegisterPage = () => {
   return <main className="min-h-screen bg-white dark:bg-vyba-dark-bg flex flex-col">
       <Navbar />
       
-      <div className="container mx-auto flex flex-col items-center px-6 pt-24 md:pt-12 pb-20 flex-1">
+      <div className="container mx-auto flex flex-col items-center px-6 pt-24 md:pt-12 pb-20 flex-1 h-full justify-center">
         <div className="w-full space-y-6 md:mt-8">
-          <div className="text-center">
-            <h1 className="text-4xl md:text-6xl font-bold">Bienvenido/a a VYBA</h1>
-            <p className="mt-3 text-2xl md:text-4xl">Regístrate</p>
+          <div className="text-center mb-12">
+            <h1 className="text-4xl md:text-5xl font-bold mb-2">Te damos la bienvenida a VYBA</h1>
           </div>
 
           {!showEmailForm ? <div className="space-y-4 mt-16 max-w-sm mx-auto">
@@ -198,7 +197,7 @@ const RegisterPage = () => {
             </form>}
           
           {!showEmailForm && <div className="text-center text-sm mt-6">
-              <p>Ya tienes cuenta. <Link to="/auth" className="font-bold">Iniciar Sesión</Link></p>
+              <p className="text-center text-sm font-light">Ya tienes cuenta. <Link to="/auth" className="font-medium text-black">Iniciar Sesión</Link></p>
             </div>}
         </div>
       </div>

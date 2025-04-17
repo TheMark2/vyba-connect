@@ -82,14 +82,14 @@ const AuthPage = () => {
       }
     };
   }, [emailVerificationTimeout]);
-  return <main className="min-h-screen bg-white dark:bg-vyba-dark-bg flex flex-col">
+  return (
+    <main className="min-h-screen bg-white dark:bg-vyba-dark-bg flex flex-col">
       <Navbar />
       
-      <div className="container mx-auto flex flex-col items-center px-6 pt-24 md:pt-12 pb-20 flex-1">
+      <div className="container mx-auto flex flex-col items-center px-6 pt-24 md:pt-12 pb-20 flex-1 h-full justify-center">
         <div className="w-full space-y-6 md:mt-8">
-          <div className="text-center">
-            <h1 className="text-4xl md:text-6xl font-bold">Bienvenido/a a VYBA</h1>
-            {!showEmailForm ? <p className="mt-3 text-2xl md:text-4xl">Inicia sesión o regístrate</p> : <p className="mt-3 text-2xl md:text-4xl">Inicia sesión</p>}
+          <div className="text-center mb-12">
+            <h1 className="text-4xl md:text-5xl font-bold mb-2">Te damos la bienvenida a VYBA</h1>
           </div>
 
           {!showEmailForm ? <div className="space-y-4 mt-16 max-w-sm mx-auto">
@@ -147,10 +147,11 @@ const AuthPage = () => {
             </form>}
           
           {!showEmailForm && <div className="text-center text-sm mt-6">
-              <p>No tienes cuenta. <Link to="/register" className="font-bold">Regístrate</Link></p>
+              <p className="text-center text-sm mt-6 font-light">No tienes cuenta. <Link to="/register" className="font-medium text-black">Regístrate</Link></p>
             </div>}
         </div>
       </div>
-    </main>;
+    </main>
+  );
 };
 export default AuthPage;

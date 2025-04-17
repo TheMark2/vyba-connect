@@ -1,8 +1,12 @@
 
 import React, { useState, useEffect } from 'react';
 import { Badge } from "@/components/ui/badge";
-import { Headphones, Music } from 'lucide-react';
+import { Headphones, Music, Plus } from 'lucide-react';
 import { useIsMobile } from '@/hooks/use-mobile';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { motion, AnimatePresence } from 'framer-motion';
+
 
 interface MusicGenresStepProps {
   onSelect: (genres: string[]) => void;
@@ -64,6 +68,21 @@ const MusicGenresStep: React.FC<MusicGenresStepProps> = ({
     return <Music className="w-4 h-4" />;
   };
 
+  const [showCustomInput, setShowCustomInput] = useState(false);
+  const [customGenre, setCustomGenre] = useState('');
+
+  const handleAddCustomGenre = () => {
+    const trimmed = customGenre.trim();
+    if (!trimmed || selectedGenres.includes(trimmed)) return;
+  
+    const newGenres = [...selectedGenres, trimmed];
+    setSelectedGenres(newGenres);
+    onSelect(newGenres);
+    setCustomGenre('');
+    setShowCustomInput(false);
+  };
+  
+
   return (
     <div className="content-container">
       <div className="form-container text-center">
@@ -100,7 +119,46 @@ const MusicGenresStep: React.FC<MusicGenresStepProps> = ({
               {genre}
             </Badge>
           ))}
+
+          {!showCustomInput && (
+            <Badge
+              variant="outline"
+              className="py-3 px-6 cursor-pointer transition-all duration-150 flex items-center gap-2 text-sm font-medium rounded-full border-none bg-[#F7F7F7] dark:bg-vyba-dark-secondary hover:bg-[#E9E9E9] dark:hover:bg-vyba-dark-secondary/80"
+              onClick={() => setShowCustomInput(true)}
+            >
+              <Plus className="h-4 w-4 text-black dark:text-white" />
+              Otro
+            </Badge>
+          )}
+
+          <AnimatePresence>
+            {showCustomInput && (
+              <motion.div
+                initial={{ opacity: 0, scale: 0.95 }}
+                animate={{ opacity: 1, scale: 1 }}
+                exit={{ opacity: 0, scale: 0.95 }}
+                transition={{ duration: 0.2 }}
+                className="flex gap-2 items-center"
+              >
+                <Input
+                  type="text"
+                  value={customGenre}
+                  onChange={(e) => setCustomGenre(e.target.value)}
+                  placeholder="Escribe un género"
+                  className="min-w-[160px]"
+                />
+                <Button
+                  variant="secondary"
+                  onClick={handleAddCustomGenre}
+                  className="px-6"
+                >
+                  Añadir
+                </Button>
+              </motion.div>
+            )}
+          </AnimatePresence>
         </div>
+
       </div>
     </div>
   );
