@@ -232,11 +232,11 @@ const MusicPreviews = ({
           </DialogTitle>
           <div className="p-4 flex justify-center">
             {selectedImage && (
-              <div className="rounded-lg overflow-hidden max-h-[70vh]">
+              <div className="rounded-lg overflow-hidden aspect-square max-w-[80vw] md:max-w-[500px]">
                 <img
                   src={selectedImage.image}
                   alt={selectedImage.title}
-                  className="object-contain max-h-[70vh] w-auto"
+                  className="w-full h-full object-cover"
                 />
               </div>
             )}
