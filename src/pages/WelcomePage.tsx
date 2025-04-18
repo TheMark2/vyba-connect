@@ -7,7 +7,8 @@ import Navbar from "@/components/Navbar";
 import { Link } from 'react-router-dom';
 import { PageTransition } from '@/components/ui/page-transition';
 import { useIsMobile } from '@/hooks/use-mobile';
-import RecommendedArtists from '@/components/artist-profile/RecommendedArtists';
+import ArtistProfileCard from '@/components/ArtistProfileCard';
+import { Marquee } from '@/components/ui/marquee';
 
 const WelcomePage = () => {
   const navigate = useNavigate();
@@ -72,6 +73,33 @@ const WelcomePage = () => {
     navigate('/');
   };
 
+  const renderArtistMarquee = () => (
+    <div className="w-full overflow-hidden">
+      <Marquee pauseOnHover className="py-4" maxWidth={isMobile ? window.innerWidth - 32 : 1200}>
+        <div className="flex gap-6">
+          {mockArtists.map((artist) => (
+            <ArtistProfileCard
+              key={artist.id}
+              name={artist.name}
+              type={artist.type}
+              description={artist.description}
+              images={artist.images}
+              rating={artist.rating}
+              priceRange={artist.priceRange}
+              isFavorite={artist.isFavorite}
+              onClick={() => navigate(`/artista/${artist.id}`)}
+              isRecommended={true}
+              hideHeart={true}
+              regularBadge={true}
+              regularText={true}
+              className="min-w-[280px]"
+            />
+          ))}
+        </div>
+      </Marquee>
+    </div>
+  );
+
   return (
     <PageTransition>
       <div className="bg-white dark:bg-vyba-dark-bg min-h-screen">
@@ -96,9 +124,7 @@ const WelcomePage = () => {
                 </h2>
               </div>
               
-              <div className="w-full mb-6">
-                <RecommendedArtists artists={mockArtists} />
-              </div>
+              {renderArtistMarquee()}
               
               <Button onClick={handleSearchArtists} className="mb-3 bg-[#E8EEFF] hover:bg-[#D8E0FF]">
                 Empezar a buscar
@@ -126,7 +152,7 @@ const WelcomePage = () => {
             </h1>
             
             <div className="max-w-6xl mx-auto my-16">
-              <RecommendedArtists artists={mockArtists} />
+              {renderArtistMarquee()}
             </div>
             
             <div className="flex flex-col items-center my-8">
