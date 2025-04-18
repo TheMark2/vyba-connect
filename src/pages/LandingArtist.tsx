@@ -23,7 +23,6 @@ import Footer from '@/components/Footer';
 const LandingArtist = () => {
   const navigate = useNavigate();
   const [currentIndex, setCurrentIndex] = useState(0);
-  const [nextWidth, setNextWidth] = useState('auto');
   
   const content = [
     { 
@@ -60,20 +59,11 @@ const LandingArtist = () => {
   
   useEffect(() => {
     const interval = setInterval(() => {
-      // Calculate next index
-      const nextIndex = (currentIndex + 1) % content.length;
-      // Get next word length to approximate width
-      const nextWord = content[nextIndex].word;
-      setNextWidth(`${nextWord.length * 2}rem`);
-      
-      // Delay the actual word change
-      setTimeout(() => {
-        setCurrentIndex(nextIndex);
-      }, 200); // Delay word change by 200ms after background starts expanding
+      setCurrentIndex((prevIndex) => (prevIndex + 1) % content.length);
     }, 3000);
     
     return () => clearInterval(interval);
-  }, [currentIndex]);
+  }, []);
   
   const handleGetStarted = () => {
     navigate('/artist-onboarding');
@@ -139,73 +129,35 @@ const LandingArtist = () => {
           La plataforma <span className="text-blue-500">creada</span> para
         </h1>
         
-        <motion.div 
-          className="bg-gray-50 dark:bg-gray-900 rounded-full px-8 py-6 md:px-12 md:py-3 flex items-center gap-6 md:gap-8"
-          layout
-          initial={{ scale: 0.95, opacity: 0 }}
-          animate={{ 
-            scale: 1, 
-            opacity: 1,
-            width: nextWidth,
-            transition: {
-              duration: 0.4,
-              ease: [0.22, 1, 0.36, 1]
-            }
-          }}
-          transition={{
-            layout: {
-              duration: 0.6,
-              ease: [0.22, 1, 0.36, 1]
-            }
-          }}
-        >
-          <div className="relative w-10 h-10 md:w-16 md:h-16">
-            <AnimatePresence mode="wait">
-              <motion.div
-                key={`icon-${currentIndex}`}
-                initial={{ 
-                  opacity: 0, 
-                  scale: 0.5,
-                  rotate: -30 
-                }}
-                animate={{ 
-                  opacity: 1, 
-                  scale: 1,
-                  rotate: 0,
-                  transition: {
-                    type: "spring",
-                    stiffness: 200,
-                    damping: 15
-                  }
-                }}
-                exit={{ 
-                  opacity: 0, 
-                  scale: 0.5,
-                  rotate: 30,
-                  transition: {
-                    duration: 0.3,
-                    ease: [0.22, 1, 0.36, 1]
-                  }
-                }}
-                className="absolute inset-0 flex items-center justify-center"
-              >
+        <div className="relative h-24 md:h-28 mt-4 md:mt-8">
+          <AnimatePresence mode="wait">
+            <motion.div 
+              key={`container-${currentIndex}`}
+              className="bg-gray-50 dark:bg-gray-900 rounded-full px-8 py-6 md:px-12 md:py-3 flex items-center gap-6 md:gap-8 absolute left-1/2 transform -translate-x-1/2"
+              initial={{ opacity: 0, y: 20, scale: 0.9 }}
+              animate={{ opacity: 1, y: 0, scale: 1 }}
+              exit={{ opacity: 0, y: -20, scale: 0.9 }}
+              transition={{
+                type: "spring",
+                stiffness: 300,
+                damping: 30,
+                duration: 0.4
+              }}
+            >
+              <div className="w-10 h-10 md:w-16 md:h-16 relative flex items-center justify-center">
                 {React.createElement(content[currentIndex].Icon, {
                   size: 62,
                   color: content[currentIndex].iconColor,
-                  strokeWidth: 1.5
+                  strokeWidth: 1.5,
+                  className: "animate-scale-in"
                 })}
-              </motion.div>
-            </AnimatePresence>
-          </div>
-          
-          <div className="overflow-hidden h-[4.5rem] md:h-[6rem] flex items-center">
-            <AnimatePresence mode="wait">
+              </div>
+              
               <motion.div
-                key={`word-${currentIndex}`}
                 variants={container}
                 initial="hidden"
                 animate="visible"
-                exit="hidden"
+                exit="exit"
                 className="flex"
               >
                 {content[currentIndex].word.split("").map((letter, index) => (
@@ -218,10 +170,11 @@ const LandingArtist = () => {
                   </motion.span>
                 ))}
               </motion.div>
-            </AnimatePresence>
-          </div>
-        </motion.div>
+            </motion.div>
+          </AnimatePresence>
+        </div>
       </div>
+      
       <div className="relative flex items-center justify-center h-[700px] mt-32 w-full">
         {/* Imagen izquierda (sobresale) */}
         <div className="h-full w-[30%] overflow-hidden rounded-3xl relative z-10 translate-x-[-5%]">
@@ -250,10 +203,12 @@ const LandingArtist = () => {
             />
         </div>
       </div>
+      
       <div className="flex flex-col items-center justify-center mt-24 max-w-2xl mx-auto">
         <h4 className="text-3xl font-medium text-center">Tan sencillo como abrirse una cuenta en 2 minutos y empezar a recibir mensajes</h4>
         <Button variant="secondary" className="mt-4 text-xl bg-[#222222] text-white font-light">Empezar ahora</Button>
       </div>
+      
       <div className="flex flex-col items-center justify-center mt-24 max-w-7xl mx-auto">
         <h1 className="text-7xl font-bold text-center max-w-4xl">
             Promocionarte como artista es muy fácil
@@ -282,6 +237,7 @@ const LandingArtist = () => {
             </div>
         </div>
       </div>
+      
       <Footer className="mt-24"/>
     </div>
   );
