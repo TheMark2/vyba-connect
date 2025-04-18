@@ -11,8 +11,7 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { CheckCircle, XCircle } from "lucide-react";
-import { cn } from "@/lib/utils"; // Añadido el import faltante
-
+import { cn } from "@/lib/utils";
 
 type Step = 'email' | 'verification' | 'registration';
 
@@ -53,7 +52,6 @@ const RegisterDialog = ({ open, onOpenChange, onSuccess }: RegisterDialogProps) 
     if (!email) return;
     
     setIsLoading(true);
-    // Simulamos envío de código
     setTimeout(() => {
       setIsLoading(false);
       setCurrentStep('verification');
@@ -65,7 +63,6 @@ const RegisterDialog = ({ open, onOpenChange, onSuccess }: RegisterDialogProps) 
 
   const handleResendCode = () => {
     setResendLoading(true);
-    // Simulamos envío de código nuevamente
     setTimeout(() => {
       setResendLoading(false);
       toast.success("Código de verificación reenviado", {
@@ -79,7 +76,6 @@ const RegisterDialog = ({ open, onOpenChange, onSuccess }: RegisterDialogProps) 
     if (code.length !== 6) return;
 
     setIsLoading(true);
-    // Simulamos verificación
     setTimeout(() => {
       setIsLoading(false);
       setCurrentStep('registration');
@@ -88,10 +84,8 @@ const RegisterDialog = ({ open, onOpenChange, onSuccess }: RegisterDialogProps) 
 
   const onSubmit = async (data: RegistrationData) => {
     setIsLoading(true);
-    // Simulamos registro
     setTimeout(() => {
       setIsLoading(false);
-      // Importante: Ejecutamos el callback de éxito con los datos del usuario
       if (onSuccess) {
         console.log("Llamando a onSuccess con:", { 
           fullName: `${data.name} ${data.lastName}`, 
@@ -103,14 +97,12 @@ const RegisterDialog = ({ open, onOpenChange, onSuccess }: RegisterDialogProps) 
         });
       }
       
-      // Cerramos el diálogo de registro después de registrar al usuario
       onOpenChange(false);
       
       toast.success("Registro completado", {
         description: "¡Bienvenido a VYBA!"
       });
       
-      // Reseteamos el estado después del registro exitoso
       setTimeout(() => {
         setCurrentStep('email');
         setEmail('');
@@ -130,7 +122,6 @@ const RegisterDialog = ({ open, onOpenChange, onSuccess }: RegisterDialogProps) 
 
   const handleClose = () => {
     onOpenChange(false);
-    // Reseteamos el estado con un pequeño retraso para evitar problemas de UI
     setTimeout(() => {
       setCurrentStep('email');
       setEmail('');
@@ -167,14 +158,14 @@ const RegisterDialog = ({ open, onOpenChange, onSuccess }: RegisterDialogProps) 
       const alreadyValidated = validatedRules.includes(index);
   
       if (isValid && !alreadyValidated) {
-        // Si se valida ahora y aún no estaba en la lista, la añadimos tras breve delay
         setTimeout(() => {
           setValidatedRules((prev) => [...prev, index]);
-        }, 500); // espera antes de desaparecer (500ms)
+        }, 500);
+      } else if (!isValid && alreadyValidated) {
+        setValidatedRules((prev) => prev.filter(i => i !== index));
       }
     });
   }, [passwordValue]);
-  
 
   return (
     <Dialog open={open} onOpenChange={handleClose}>
@@ -323,16 +314,15 @@ const RegisterDialog = ({ open, onOpenChange, onSuccess }: RegisterDialogProps) 
                         {...field}
                         value={passwordValue}
                         onChange={(e) => {
-                          field.onChange(e); // Actualiza react-hook-form
-                          setPasswordValue(e.target.value); // Actualiza validaciones visuales
+                          field.onChange(e);
+                          setPasswordValue(e.target.value);
                         }}
                         className="focus:ring-0 focus-visible:ring-0 focus-visible:ring-offset-0 focus:ring-offset-0"
                       />
                     </FormControl>
                     <FormMessage />
 
-                    {/* Requisitos de la contraseña */}
-                    <ul className="mt-2 text-xs space-y-1 transition-all duration-300">
+                    <ul className="mt-2 text-xs space-y-1">
                       {passwordRequirements.map((req, index) => {
                         const isValid = req.test(passwordValue);
                         const isValidated = validatedRules.includes(index);
@@ -341,9 +331,10 @@ const RegisterDialog = ({ open, onOpenChange, onSuccess }: RegisterDialogProps) 
                           <li
                             key={index}
                             className={cn(
-                              "flex items-center gap-2 text-[#C13515] transition-opacity duration-300 ease-in-out",
+                              "flex items-center gap-2 text-[#C13515] transition-all duration-500 ease-in-out",
                               {
-                                "opacity-0 max-h-0 overflow-hidden": isValid, // transición para desaparecer
+                                "opacity-0 h-0 my-0 overflow-hidden pointer-events-none": isValid,
+                                "opacity-100 h-auto": !isValid
                               }
                             )}
                           >
@@ -362,7 +353,6 @@ const RegisterDialog = ({ open, onOpenChange, onSuccess }: RegisterDialogProps) 
                 )}
               />
 
-              
               <div className="mt-8">
                 <Button 
                   variant="terciary"
