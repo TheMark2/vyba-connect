@@ -126,7 +126,7 @@ const LandingArtist = () => {
       
       <div className="pt-48 flex flex-col items-center justify-center">
         <h1 className="text-4xl md:text-8xl font-semibold text-center">
-          La plataforma <span className="text-blue-500">creada</span> para
+          La plataforma <span className="bg-gradient-to-r from-[#9b87f5] to-[#6E59A5] text-transparent bg-clip-text">creada</span> para
         </h1>
         
         <div className="relative h-24 md:h-28 mt-4 md:mt-8">
