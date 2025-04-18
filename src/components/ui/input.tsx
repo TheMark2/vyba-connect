@@ -20,15 +20,16 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
             "h-10": inputSize === "sm",
             "h-14": inputSize === "md",
             "h-16": inputSize === "lg",
-            "bg-[#F7F7F7]": variant === "default",
+            "bg-[#F1F1F1]": variant === "default",
             "bg-transparent border-2 border-black dark:border-white": variant === "hero",
             "bg-transparent": variant === "ghost",
             "border-[#C13515] border-2": error,
-            "focus:outline-none focus:ring-2 focus:ring-black dark:focus:ring-white": variant === "default",
-            "focus:outline-none focus:ring-0": variant === "hero" || variant === "ghost",
+            "focus:bg-[#F1F1F1] hover:bg-[#F1F1F1] transition-all duration-500": variant === "default",
           },
+          "focus:outline-none focus:ring-0 focus:ring-transparent", // <-- siempre quita el ring
           className
         )}
+
         ref={ref}
         {...props}
       />
