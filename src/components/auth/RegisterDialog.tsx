@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
@@ -21,7 +20,8 @@ interface RegisterDialogProps {
 }
 
 const registrationSchema = z.object({
-  fullName: z.string().min(1, "Nombre completo es requerido"),
+  name: z.string().min(1, "Nombre es requerido"),
+  lastName: z.string().min(1, "Apellido es requerido"),
   birthDate: z.string().min(1, "Fecha de nacimiento es requerida")
 });
 
@@ -36,7 +36,8 @@ const RegisterDialog = ({ open, onOpenChange, onSuccess }: RegisterDialogProps) 
   const form = useForm<RegistrationData>({
     resolver: zodResolver(registrationSchema),
     defaultValues: {
-      fullName: '',
+      name: '',
+      lastName: '',
       birthDate: ''
     }
   });
@@ -75,7 +76,7 @@ const RegisterDialog = ({ open, onOpenChange, onSuccess }: RegisterDialogProps) 
       setIsLoading(false);
       onOpenChange(false);
       if (onSuccess) onSuccess({ 
-        fullName: data.fullName, 
+        fullName: `${data.name} ${data.lastName}`, 
         email 
       });
       toast.success("Registro completado", {
@@ -114,7 +115,7 @@ const RegisterDialog = ({ open, onOpenChange, onSuccess }: RegisterDialogProps) 
                 key={index}
                 {...slot}
                 index={index}
-                className="rounded-md border-gray-200 bg-white w-10 h-12 text-center text-lg"
+                className="rounded-md bg-[#F7F7F7] w-10 h-12 text-center text-lg"
               />
             ))}
           </InputOTPGroup>
@@ -125,7 +126,7 @@ const RegisterDialog = ({ open, onOpenChange, onSuccess }: RegisterDialogProps) 
 
   return (
     <Dialog open={open} onOpenChange={handleClose}>
-      <DialogContent className="sm:max-w-[400px]">
+      <DialogContent className="sm:max-w-xl">
         <DialogHeader>
           {currentStep !== 'email' && (
             <Button 
@@ -138,14 +139,14 @@ const RegisterDialog = ({ open, onOpenChange, onSuccess }: RegisterDialogProps) 
             </Button>
           )}
           <DialogTitle className="text-center">
-            {currentStep === 'email' && 'Ingresa tu email'}
-            {currentStep === 'verification' && 'Verifica tu email'}
-            {currentStep === 'registration' && 'Completa tu registro'}
+            {currentStep === 'email' && 'Ingresa tu correo'}
+            {currentStep === 'verification' && 'Verifica tu correo'}
+            {currentStep === 'registration' && '¡Estás solo a un paso!'}
           </DialogTitle>
         </DialogHeader>
 
         {currentStep === 'email' && (
-          <form onSubmit={handleEmailSubmit} className="space-y-4">
+          <form onSubmit={handleEmailSubmit} className="space-y-8 px-12">
             <div className="space-y-2">
               <Label htmlFor="email">Email</Label>
               <Input
@@ -158,45 +159,70 @@ const RegisterDialog = ({ open, onOpenChange, onSuccess }: RegisterDialogProps) 
               />
             </div>
             <Button 
+              variant="terciary"
               type="submit" 
               className="w-full"
               disabled={isLoading}
+              isLoading={isLoading}
             >
-              {isLoading ? "Enviando..." : "Continuar"}
+              {isLoading ? "Enviando" : "Enviar código"}
             </Button>
           </form>
         )}
 
         {currentStep === 'verification' && (
-          <form onSubmit={handleVerificationSubmit} className="space-y-4">
-            <div className="space-y-2">
-              <Label>Código de verificación</Label>
-              <p className="text-sm text-gray-500">
-                Te hemos enviado un código a {email}
+          <form onSubmit={handleVerificationSubmit} className="space-y-8 px-12">
+            <div className="space-y-2 flex flex-col items-center justify-center">
+              <p className="text-sm font-light mb-4 text-black">
+                Inserta el código que te hemos enviado por correo a {email}
               </p>
               {renderOTPInput()}
             </div>
+            <div className="flex gap-2 justify-between">
             <Button 
-              type="submit" 
-              className="w-full"
-              disabled={code.length !== 6 || isLoading}
-            >
-              {isLoading ? "Verificando..." : "Verificar código"}
-            </Button>
+                variant="secondary"
+                type="submit" 
+              >
+                Mas opciones
+              </Button>
+              <Button 
+                  variant="terciary"
+                  type="submit" 
+                  disabled={code.length !== 6 || isLoading}
+                  isLoading={isLoading}
+                  className="px-12"
+              >
+                {isLoading ? "Verificando" : "Verificar código"}
+              </Button>
+            </div>
           </form>
         )}
 
         {currentStep === 'registration' && (
           <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4 px-12">
               <FormField
                 control={form.control}
-                name="fullName"
+                name="name"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Nombre completo</FormLabel>
+                    <FormLabel>Nombre</FormLabel>
                     <FormControl>
-                      <Input placeholder="Juan Pérez" {...field} />
+                      <Input placeholder="Juan" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name="lastName"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Apellido</FormLabel>
+                    <FormControl>
+                      <Input placeholder="Pérez" {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -216,15 +242,18 @@ const RegisterDialog = ({ open, onOpenChange, onSuccess }: RegisterDialogProps) 
                   </FormItem>
                 )}
               />
-
+            </form>
+            <div className="px-12 mt-8">
               <Button 
+                variant="terciary"
                 type="submit" 
                 className="w-full"
                 disabled={isLoading}
+                isLoading={isLoading}
               >
-                {isLoading ? "Procesando..." : "Completar registro"}
+                {isLoading ? "Registrando..." : "Registrarse"}
               </Button>
-            </form>
+            </div>
           </Form>
         )}
       </DialogContent>

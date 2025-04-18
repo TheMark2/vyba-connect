@@ -15,7 +15,7 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
       <input
         type={type}
         className={cn(
-          "flex w-full rounded-xl bg-[#F7F7F7] px-6 py-3 text-base md:text-sm placeholder:text-gray-500 placeholder:font-regular disabled:cursor-not-allowed disabled:opacity-50 text-black font-medium",
+          "flex w-full font-figtree placeholder:font-figtree rounded-xl bg-[#F7F7F7] px-6 py-3 text-base md:text-sm placeholder:text-[#969494] disabled:cursor-not-allowed disabled:opacity-50 text-black font-regular placeholder:font-regular",
           {
             "h-10": inputSize === "sm",
             "h-14": inputSize === "md",
@@ -24,7 +24,7 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
             "bg-transparent border-2 border-black dark:border-white": variant === "hero",
             "bg-transparent": variant === "ghost",
             "border-[#C13515] border-2": error,
-            "focus:bg-[#F1F1F1] hover:bg-[#F1F1F1] transition-all duration-500": variant === "default",
+            "focus:bg-[#F1F1F1] hover:bg-[#EAEAEA] transition-all duration-500 ease-in-out": variant === "default",
           },
           "focus:outline-none focus:ring-0 focus:ring-transparent", // <-- siempre quita el ring
           className
