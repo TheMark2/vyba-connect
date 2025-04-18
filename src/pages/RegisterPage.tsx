@@ -5,13 +5,18 @@ import { Link, useNavigate } from "react-router-dom";
 import { Mail } from "lucide-react";
 import Navbar from "@/components/Navbar";
 import RegisterDialog from '@/components/auth/RegisterDialog';
+import WelcomeDialog from '@/components/WelcomeDialog';
 
 const RegisterPage = () => {
   const [showRegisterDialog, setShowRegisterDialog] = useState(false);
+  const [showWelcomeDialog, setShowWelcomeDialog] = useState(false);
+  const [registeredUserInfo, setRegisteredUserInfo] = useState<{ fullName: string; email?: string }>({ fullName: '' });
   const navigate = useNavigate();
 
-  const handleRegistrationSuccess = () => {
-    navigate('/');
+  const handleRegistrationSuccess = (userInfo: { fullName: string; email?: string }) => {
+    setShowRegisterDialog(false);
+    setRegisteredUserInfo(userInfo);
+    setShowWelcomeDialog(true);
   };
 
   return (
@@ -68,6 +73,12 @@ const RegisterPage = () => {
         open={showRegisterDialog}
         onOpenChange={setShowRegisterDialog}
         onSuccess={handleRegistrationSuccess}
+      />
+
+      <WelcomeDialog 
+        open={showWelcomeDialog}
+        onOpenChange={setShowWelcomeDialog}
+        userInfo={registeredUserInfo}
       />
     </main>
   );

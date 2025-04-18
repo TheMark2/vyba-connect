@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -6,6 +5,7 @@ import { Link } from "react-router-dom";
 import { Mail } from "lucide-react";
 import Navbar from "@/components/Navbar";
 import RegisterDialog from '@/components/auth/RegisterDialog';
+import WelcomeDialog from '@/components/WelcomeDialog';
 import { useNavigate } from 'react-router-dom';
 
 const mockEmailDatabase = {
@@ -23,6 +23,8 @@ const AuthPage = () => {
   const [passwordError, setPasswordError] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [showRegisterDialog, setShowRegisterDialog] = useState(false);
+  const [showWelcomeDialog, setShowWelcomeDialog] = useState(false);
+  const [registeredUserInfo, setRegisteredUserInfo] = useState<{ fullName: string; email?: string }>({ fullName: '' });
   const navigate = useNavigate();
 
   const handleShowEmailForm = () => {
@@ -31,9 +33,10 @@ const AuthPage = () => {
     }
   };
 
-  const handleRegistrationSuccess = () => {
+  const handleRegistrationSuccess = (userInfo: { fullName: string; email?: string }) => {
     setShowRegisterDialog(false);
-    navigate('/register');
+    setRegisteredUserInfo(userInfo);
+    setShowWelcomeDialog(true);
   };
 
   const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -174,6 +177,12 @@ const AuthPage = () => {
         open={showRegisterDialog}
         onOpenChange={setShowRegisterDialog}
         onSuccess={handleRegistrationSuccess}
+      />
+
+      <WelcomeDialog 
+        open={showWelcomeDialog}
+        onOpenChange={setShowWelcomeDialog}
+        userInfo={registeredUserInfo}
       />
     </main>
   );

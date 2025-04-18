@@ -17,7 +17,7 @@ type Step = 'email' | 'verification' | 'registration';
 interface RegisterDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
-  onSuccess?: () => void;
+  onSuccess?: (userInfo: { fullName: string; email?: string }) => void;
 }
 
 const registrationSchema = z.object({
@@ -74,7 +74,10 @@ const RegisterDialog = ({ open, onOpenChange, onSuccess }: RegisterDialogProps) 
     setTimeout(() => {
       setIsLoading(false);
       onOpenChange(false);
-      if (onSuccess) onSuccess();
+      if (onSuccess) onSuccess({ 
+        fullName: data.fullName, 
+        email 
+      });
       toast.success("Registro completado", {
         description: "¡Bienvenido a VYBA!"
       });
