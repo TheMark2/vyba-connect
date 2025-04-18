@@ -72,23 +72,23 @@ const LandingArtist = () => {
   const container = {
     hidden: { 
       opacity: 0,
-      scale: 0.9
+      scale: 0.95
     },
     visible: {
       opacity: 1,
       scale: 1,
       transition: {
-        duration: 0.3,
-        ease: [0.4, 0, 0.2, 1],
-        staggerChildren: 0.04
+        duration: 0.4,
+        ease: "easeInOut",
+        staggerChildren: 0.05
       }
     },
     exit: {
       opacity: 0,
-      scale: 0.9,
+      scale: 0.95,
       transition: {
-        duration: 0.2,
-        ease: [0.4, 0, 0.2, 1]
+        duration: 0.3,
+        ease: "easeInOut"
       }
     }
   };
@@ -96,15 +96,15 @@ const LandingArtist = () => {
   const child = {
     hidden: { 
       opacity: 0,
-      y: 10
+      y: 20
     },
     visible: {
       opacity: 1,
       y: 0,
       transition: {
         type: "spring",
-        damping: 12,
-        stiffness: 200
+        damping: 15,
+        stiffness: 250
       }
     }
   };
@@ -134,14 +134,26 @@ const LandingArtist = () => {
             <motion.div 
               key={`container-${currentIndex}`}
               className="bg-gray-50 dark:bg-gray-900 rounded-full px-8 py-6 md:px-12 md:py-3 flex items-center gap-6 md:gap-8 absolute left-1/2 transform -translate-x-1/2"
-              initial={{ opacity: 0, y: 20, scale: 0.9 }}
-              animate={{ opacity: 1, y: 0, scale: 1 }}
-              exit={{ opacity: 0, y: -20, scale: 0.9 }}
+              initial={{ 
+                opacity: 0, 
+                y: 30, 
+                scale: 0.9 
+              }}
+              animate={{ 
+                opacity: 1, 
+                y: 0, 
+                scale: 1 
+              }}
+              exit={{ 
+                opacity: 0, 
+                y: -30, 
+                scale: 0.9 
+              }}
               transition={{
                 type: "spring",
                 stiffness: 300,
-                damping: 30,
-                duration: 0.4
+                damping: 25,
+                duration: 0.5
               }}
             >
               <div className="w-10 h-10 md:w-16 md:h-16 relative flex items-center justify-center">
@@ -176,7 +188,6 @@ const LandingArtist = () => {
       </div>
       
       <div className="relative flex items-center justify-center h-[700px] mt-32 w-full">
-        {/* Imagen izquierda (sobresale) */}
         <div className="h-full w-[30%] overflow-hidden rounded-3xl relative z-10 translate-x-[-5%]">
             <img
             src="/lovable-uploads/image.png"
@@ -185,7 +196,6 @@ const LandingArtist = () => {
             />
         </div>
 
-        {/* Imagen central (más grande) */}
         <div className="h-[110%] w-[40%] overflow-hidden rounded-3xl z-20">
             <img
             src="/lovable-uploads/image1.png"
@@ -194,7 +204,6 @@ const LandingArtist = () => {
             />
         </div>
 
-        {/* Imagen derecha (sobresale) */}
         <div className="h-full w-[30%] overflow-hidden rounded-3xl relative z-10 translate-x-[5%]">
             <img
             src="/lovable-uploads/image2.png"
