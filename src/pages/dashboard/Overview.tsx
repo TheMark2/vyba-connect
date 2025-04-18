@@ -1,8 +1,7 @@
-
 import React, { useState } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Bell, Mail, User, Settings, BarChart, CalendarClock, MessageSquare, Clock, Lightbulb, Star, CircleAlert, Music, Wrench, Timer, GraduationCap, Users } from "lucide-react";
+import { Bell, UserSearch, Hourglass, Speaker, Theater, CalendarClock, MessageSquare, Clock, Lightbulb, Star, CircleAlert, FileUser, Wrench, Timer, GraduationCap, Users } from "lucide-react";
 import { Progress } from "@/components/ui/progress";
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/carousel";
 import { type ArtistProfile, type OnboardingCard } from "@/types/artist";
@@ -20,26 +19,41 @@ const Overview = () => {
     teamMembers: undefined
   });
 
+  const getCardStatus = (field: keyof ArtistProfile) => {
+    if (artistProfile[field] === undefined) return false;
+    if (Array.isArray(artistProfile[field])) {
+      return (artistProfile[field] as any[]).length > 0;
+    }
+    return true;
+  };
+
   const onboardingCards: OnboardingCard[] = [
+    {
+      id: "essentials",
+      title: "¡Rellena información importante!",
+      description: "Informacion como tu biografia, genero musical, redes sociales, etc.",
+      icon: <FileUser className="h-12 w-12 text-vyba-navy self-start mb-auto" strokeWidth={1.5} />,
+      field: "teamMembers"
+    },
     {
       id: "experience",
       title: "Experiéncia",
       description: "Cuéntanos qué has hecho hasta ahora: shows, proyectos, trayectoria...",
-      icon: <Star className="h-12 w-12 text-vyba-navy self-start mb-auto" strokeWidth={1.5} />,
+      icon: <Theater className="h-12 w-12 text-vyba-navy self-start mb-auto" strokeWidth={1.5} />,
       field: "experience"
     },
     {
       id: "equipment",
       title: "¿Tienes equipo propio?",
       description: "¿Tienes tu propio sonido, luces o set para tocar? ¡Esto suma puntos!",
-      icon: <Wrench className="h-12 w-12 text-vyba-navy self-start mb-auto" strokeWidth={1.5} />,
+      icon: <Speaker className="h-12 w-12 text-vyba-navy self-start mb-auto" strokeWidth={1.5} />,
       field: "equipment"
     },
     {
       id: "timeRequirements",
       title: "¿Cuáles son tus tiempos?",
       description: "Dinos cuánto tardas en montar y en realizar la prueba de sonido.",
-      icon: <Timer className="h-12 w-12 text-vyba-navy self-start mb-auto" strokeWidth={1.5} />,
+      icon: <Hourglass className="h-12 w-12 text-vyba-navy self-start mb-auto" strokeWidth={1.5} />,
       field: "timeRequirements"
     },
     {
@@ -53,7 +67,7 @@ const Overview = () => {
       id: "teamMembers",
       title: "¿Quiénes son los integrantes?",
       description: "Presenta a tu crew o banda. ¡Queremos saber quiénes están detrás del show!",
-      icon: <Users className="h-12 w-12 text-vyba-navy self-start mb-auto" strokeWidth={1.5} />,
+      icon: <UserSearch className="h-12 w-12 text-vyba-navy self-start mb-auto" strokeWidth={1.5} />,
       field: "teamMembers"
     }
   ];
@@ -61,7 +75,7 @@ const Overview = () => {
   const incompleteCards = onboardingCards.filter(card => !artistProfile[card.field] || artistProfile[card.field]?.length === 0);
 
   return (
-    <div className="mt-32">
+    <div className="mt-48">
       <div className="flex flex-col justify-between items-left mb-8 px-32 ">
         <h1 className="text-6xl font-semibold mb-6">Bienvenido, {userName}</h1>
         <p className="text-xl font-light text-muted-foreground text-vyba-tertiary">Acaba de completar tu perfil para recibir mas solicitudes</p>
@@ -79,7 +93,7 @@ const Overview = () => {
               Verificar ahora
             </Button>
           </div>
-          <CircleAlert className="absolute top-1/2 right-6 -translate-y-1/2 h-9 w-9 text-red-500" />
+          <CircleAlert className="absolute top-1/2 right-6 stroke-[1.5] -translate-y-1/2 h-10 w-10 text-red-500" />
         </div>
 
         <div className="bg-vyba-gray rounded-2xl p-6 relative">
@@ -139,7 +153,7 @@ const Overview = () => {
               </Button>
             </div>
           </div>
-          <CalendarClock className="absolute top-1/2 right-6 -translate-y-1/2 h-9 w-9 text-vyba-navy stroke-[1.5]" />
+          <CalendarClock className="absolute top-1/2 right-6 -translate-y-1/2 h-10 w-10 text-vyba-navy stroke-[1.5]" />
         </div>
 
         <div className="bg-vyba-gray rounded-2xl p-6 relative">
@@ -155,7 +169,7 @@ const Overview = () => {
               </Button>
             </div>
           </div>
-          <MessageSquare className="absolute top-1/2 right-6 -translate-y-1/2 h-9 w-9 text-vyba-navy" />
+          <MessageSquare className="absolute top-1/2 right-6 stroke-[1.5] -translate-y-1/2 h-10 w-10 text-vyba-navy" />
         </div>
 
         <div className="bg-vyba-gray rounded-2xl p-6 relative">
@@ -171,7 +185,7 @@ const Overview = () => {
               </Button>
             </div>
           </div>
-          <Clock className="absolute top-1/2 right-6 -translate-y-1/2 h-9 w-9 text-vyba-navy" />
+          <Clock className="absolute top-1/2 right-6 stroke-[1.5] -translate-y-1/2 h-10 w-10 text-vyba-navy" />
         </div>
 
         <div className="bg-vyba-gray rounded-2xl p-6 relative">
@@ -187,7 +201,7 @@ const Overview = () => {
               </Button>
             </div>
           </div>
-          <Lightbulb className="absolute top-1/2 right-6 -translate-y-1/2 h-9 w-9 text-vyba-navy" />
+          <Lightbulb className="absolute top-1/2 right-6 stroke-[1.5] -translate-y-1/2 h-10 w-10 text-vyba-navy" />
         </div>
 
         <div className="bg-vyba-gray rounded-2xl p-6 relative">
@@ -203,52 +217,43 @@ const Overview = () => {
               </Button>
             </div>
           </div>
-          <Star className="absolute top-1/2 right-6 -translate-y-1/2 h-9 w-9 text-vyba-navy" />
+          <Star className="absolute top-1/2 right-6 stroke-[1.5] -translate-y-1/2 h-10 w-10 text-vyba-navy" />
         </div>
       </div>
 
       {incompleteCards.length > 0 && (
-        <section className="px-32 mt-24 relative overflow-hidden">
+        <section className="px-32 py-12 mt-24 relative overflow-hidden">
           <div 
             className="absolute inset-0 bg-cover bg-center" 
             style={{ backgroundImage: "url('/lovable-uploads/dashboardbannersteps.jpg')" }}
           ></div>
-          <div className="absolute inset-0 bg-black bg-opacity-50"></div>
-          <div className="relative z-10 p-8 text-white h-full flex flex-col justify-center">
-            <h2 className="text-5xl font-semibold text-white mb-4">Pasos esenciales</h2>
+          <div className="absolute inset-0 bg-black bg-opacity-70 backdrop-blur-sm"></div>
+          <div className="relative z-10 pt-16 text-white h-full flex flex-col justify-center">
+            <h2 className="text-5xl font-semibold text-white mb-2">Pasos esenciales</h2>
             <p className="text-lg mb-6 text-white/80 font-light">Completa tu perfil para aumentar tus oportunidades de recibir más solicitudes</p>
-            <Button className="w-max bg-vyba-navy hover:bg-vyba-navy/90">Completar perfil</Button>
           </div>
           
-          <div className="relative z-10 px-12 py-8">
-            <Carousel
-              opts={{
-                align: "start",
-                loop: false,
-              }}
-              className="w-full"
-            >
-              <CarouselContent className="-ml-4">
-                {incompleteCards.map((card) => (
-                  <CarouselItem key={card.id} className="pl-4 basis-80">
-                    <div className="h-64 bg-vyba-gray rounded-[32px] p-8 flex flex-col">
-                      {card.icon}
-                      <div className="mt-auto">
-                        <h2 className="text-[32px] font-bold text-[#222222] leading-tight mb-2">
-                          {card.title}
-                        </h2>
-                        <p className="text-[#717171] text-base font-light leading-snug">
-                          {card.description}
-                        </p>
-                      </div>
-                    </div>
-                  </CarouselItem>
-                ))}
-              </CarouselContent>
-              <CarouselPrevious className="absolute left-0 top-1/2 -translate-y-1/2" />
-              <CarouselNext className="absolute right-0 top-1/2 -translate-y-1/2" />
-            </Carousel>
+          <div className="relative z-10 pt-24 pb-12">
+            <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-6 gap-6">
+              {incompleteCards.map((card) => (
+                <div key={card.id} className="h-64 bg-vyba-gray rounded-2xl p-6 flex flex-col justify-between">
+                  <div className="flex items-start justify-between">
+                    {card.icon}
+                    <div className={`w-3 h-3 rounded-full ${getCardStatus(card.field) ? 'bg-green-500' : 'bg-red-500'} self-start`}></div>
+                  </div>
+                  <div className="mt-auto">
+                    <h2 className="text-lg font-medium text-vyba-navy mb-2">
+                      {card.title}
+                    </h2>
+                    <p className="text-vyba-tertiary text-sm font-light mb-0">
+                      {card.description}
+                    </p>
+                  </div>
+                </div>
+              ))}
+            </div>
           </div>
+          <Button variant="secondary" className="w-max">Acabar de completar el perfil</Button>
         </section>
       )}
     </div>
