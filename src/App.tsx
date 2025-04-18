@@ -5,7 +5,6 @@ import { AnimatePresence } from 'framer-motion';
 import Index from './pages/Index';
 import AuthPage from './pages/AuthPage';
 import RegisterPage from './pages/RegisterPage';
-import WelcomePage from './pages/WelcomePage';
 import SeekerThankYouPage from './pages/SeekerThankYouPage';
 import ArtistsPage from './pages/ArtistsPage';
 import ArtistProfilePage from './pages/ArtistProfilePage';
@@ -25,7 +24,6 @@ function App() {
           <Route path="/" element={<Index />} />
           <Route path="/auth" element={<AuthPage />} />
           <Route path="/register" element={<RegisterPage />} />
-          <Route path="/welcome" element={<WelcomePage />} />
           <Route path="/seeker-thank-you" element={<SeekerThankYouPage />} />
           <Route path="/artists" element={<ArtistsPage />} />
           <Route path="/artista/:id" element={<ArtistProfilePage />} />

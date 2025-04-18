@@ -4,6 +4,8 @@ import { Input } from "@/components/ui/input";
 import { Link, useNavigate } from "react-router-dom";
 import { Mail } from "lucide-react";
 import Navbar from "@/components/Navbar";
+import WelcomeDialog from '@/components/WelcomeDialog';
+
 const RegisterPage = () => {
   const navigate = useNavigate();
   const [showEmailForm, setShowEmailForm] = useState(false);
@@ -15,23 +17,28 @@ const RegisterPage = () => {
   const [passwordError, setPasswordError] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [passwordStrength, setPasswordStrength] = useState<'weak' | 'medium' | 'strong' | null>(null);
+  const [showWelcomeDialog, setShowWelcomeDialog] = useState(false);
+  const [registeredUserInfo, setRegisteredUserInfo] = useState<{ fullName: string; email: string } | null>(null);
+
   const handleShowEmailForm = () => {
     setShowEmailForm(true);
   };
+
   const handleFullNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFullName(e.target.value);
     setFullNameError(false);
   };
+
   const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setEmail(e.target.value);
     setEmailError(false);
   };
+
   const handlePasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const newPassword = e.target.value;
     setPassword(newPassword);
     setPasswordError(false);
 
-    // Evaluar la fortaleza de la contraseña
     if (newPassword.length === 0) {
       setPasswordStrength(null);
     } else if (newPassword.length < 6) {
@@ -39,7 +46,6 @@ const RegisterPage = () => {
     } else if (newPassword.length >= 6 && newPassword.length < 10) {
       setPasswordStrength('medium');
     } else {
-      // Verificamos si tiene al menos una mayúscula, una minúscula y un número
       const hasUpperCase = /[A-Z]/.test(newPassword);
       const hasLowerCase = /[a-z]/.test(newPassword);
       const hasNumbers = /\d/.test(newPassword);
@@ -50,6 +56,7 @@ const RegisterPage = () => {
       }
     }
   };
+
   const handleRegister = (e: React.FormEvent) => {
     e.preventDefault();
     let hasError = false;
@@ -66,25 +73,17 @@ const RegisterPage = () => {
       hasError = true;
     }
     if (!hasError) {
-      // Proceder con el registro
       setIsLoading(true);
       console.log("Intentando registrar con:", fullName, email, password);
 
-      // Simular un tiempo de carga y luego redirigir
       setTimeout(() => {
         setIsLoading(false);
-        // Redirigir a la página de bienvenida con los datos del usuario
-        navigate('/welcome', {
-          state: {
-            userInfo: {
-              fullName,
-              email
-            }
-          }
-        });
+        setRegisteredUserInfo({ fullName, email });
+        setShowWelcomeDialog(true);
       }, 2000);
     }
   };
+
   const renderPasswordStrengthIndicator = () => {
     if (passwordStrength === null) return null;
     if (passwordStrength === 'weak') {
@@ -101,6 +100,7 @@ const RegisterPage = () => {
         </div>;
     }
   };
+
   const getPasswordRequirements = () => {
     if (!password || passwordStrength === null) return null;
     const hasUpperCase = /[A-Z]/.test(password);
@@ -127,6 +127,7 @@ const RegisterPage = () => {
       return <div className="text-xs text-[#4CAF50]">Contraseña segura</div>;
     }
   };
+
   return <main className="min-h-screen bg-white dark:bg-vyba-dark-bg flex flex-col">
       <Navbar />
       
@@ -201,6 +202,15 @@ const RegisterPage = () => {
             </div>}
         </div>
       </div>
+
+      {registeredUserInfo && (
+        <WelcomeDialog
+          open={showWelcomeDialog}
+          onOpenChange={setShowWelcomeDialog}
+          userInfo={registeredUserInfo}
+        />
+      )}
     </main>;
 };
+
 export default RegisterPage;
