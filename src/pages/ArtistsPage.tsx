@@ -123,9 +123,9 @@ const ArtistsPage = () => {
             ? "bg-[#F7F7F7] dark:bg-vyba-dark-secondary/40 rounded-3xl py-6 mb-6 px-6"
             : "bg-[#F7F7F7] dark:bg-vyba-dark-secondary/40 rounded-3xl py-8 mb-12 px-16"
           }
-          flex flex-col md:flex-row md:justify-between items-center
+          flex flex-col md:flex-row md:justify-between items-center justify-center h-[200px] overflow-hidden group
         `}>
-          <div className={`${isMobile ? "text-center mb-4" : ""}`}>
+          <div className={`${isMobile ? "text-center" : ""}`}>
             <h1 className={`
               ${isMobile 
                 ? "text-3xl font-semibold mb-1" 
@@ -136,23 +136,37 @@ const ArtistsPage = () => {
             </h1>
             <p className={`
               ${isMobile 
-                ? "text-2xl font-regular" 
-                : "text-4xl font-regular"
+                ? "text-2xl font-regular mb-0" 
+                : "text-4xl font-regular mb-0"
               }
             `}>
               {artists.length} artistas
             </p>
           </div>
           
-          <div className={`space-x-3 ${isMobile ? "w-full flex justify-center" : ""}`}>
-            <Button variant="secondary" className="bg-white">
-              <Sparkles className="h-5 w-5 ml-1" />
-              Buscar con IA
-            </Button>
-            <Button variant="secondary" className="bg-white">
-              <Blend className="h-5 w-5 ml-1" />
-              Filtros
-            </Button>
+          <div className="min-h-screen flex items-center justify-center p-10 translate-y-[7%] grup-ho">
+            <div className="relative w-[250px] h-[250px]">
+              {/* Imagen 1 (atrás, rotada a la izquierda) */}
+              <img
+                src="/lovable-uploads/image.png"
+                alt="Imagen 1"
+                className="absolute top-0 left-0 w-full h-full object-cover rounded-3xl transform -rotate-12 z-0 shadow-xl group-hover:-rotate-[18deg] transition-transform duration-300 ease-in-out z-0"
+              />
+              
+              {/* Imagen 2 (medio, recta pero desplazada un poco) */}
+              <img
+                src="/lovable-uploads/image1.png"
+                alt="Imagen 2"
+                className="absolute top-2 left-6 w-full h-full object-cover rounded-3xl transform rotate-1 z-10 shadow-2xl group-hover:top-[-10px] transition-all duration-300 ease-in-out z-10"
+              />
+              
+              {/* Imagen 3 (frontal, rotada a la derecha) */}
+              <img
+                src="/lovable-uploads/image2.png"
+                alt="Imagen 3"
+                className="absolute top-5 left-12 w-full h-full object-cover rounded-3xl transform rotate-12 z-20 shadow-2xl group-hover:-rotate-[-18deg] transition-transform duration-300 ease-in-out z-20"
+              />
+            </div>
           </div>
         </div>
 

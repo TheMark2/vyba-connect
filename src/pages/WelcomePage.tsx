@@ -82,14 +82,10 @@ const WelcomePage = () => {
                   Promocionarse como artista
                 </Button>
                 
-                <Button variant="secondary" size="icon" onClick={handleClose} className="rounded-full" aria-label="Cerrar">
-                  <X className="h-6 w-6" />
+                <Button variant="secondary" onClick={handleClose} className="rounded-full py-2" aria-label="Cerrar">
+                  <X className="h-8 w-8" />
                 </Button>
               </div>
-              
-              <p className="mt-6 text-sm text-gray-600 dark:text-gray-400">
-                No tienes cuenta. <Link to="/register" className="font-medium text-primary-foreground">Regístrate</Link>
-              </p>
             </div>
           </div>}
       </div>
@@ -147,7 +143,7 @@ const ArtistCardsMobile = () => {
   };
   return <div className="relative h-40 w-full flex justify-center items-center">
       {artists.slice(0, 3).map((artist, index) => <div key={artist.id} className={`
-            absolute rounded-xl border-2 border-white
+            absolute rounded-xl
             w-24 h-32 flex flex-col justify-end
             transition-all duration-300 ease-in-out
             overflow-hidden shadow-[0_5px_10px_rgba(0,0,0,0.15)]
@@ -163,8 +159,8 @@ const ArtistCardsMobile = () => {
           
           {/* Contenido de texto */}
           <div className="relative z-2 p-2 text-white">
-            <h2 className="text-xs font-bold truncate">{artist.name}</h2>
-            <p className="text-[10px]">{artist.type}</p>
+            <h2 className="font-semibold text-sm text-white truncate">{artist.name}</h2>
+            <p className="text-[10px] text-white">{artist.type}</p>
           </div>
         </div>)}
     </div>;

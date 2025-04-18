@@ -1,6 +1,6 @@
 import type { Config } from "tailwindcss";
 
-export default {
+const config: Config = {
   darkMode: ["class"],
   content: [
     "./pages/**/*.{ts,tsx}",
@@ -20,13 +20,13 @@ export default {
     extend: {
       colors: {
         vyba: {
-          cream: "#F7F7F7", // Neutral 01
-          blue: "#D4E1FF", // Similar al Primary 01 en la imagen
-          beige: "#EBEBEB", // Neutral 02
-          navy: "#222222", // Shade 02
+          cream: "#F7F7F7",
+          blue: "#D4E1FF",
+          beige: "#EBEBEB",
+          navy: "#222222",
           dark: {
-            bg: "#222222", // Shade 02
-            secondary: "#5E5E5E" // Similar a Neutral 08
+            bg: "#222222",
+            secondary: "#5E5E5E"
           }
         },
         border: "hsl(var(--border))",
@@ -35,14 +35,14 @@ export default {
         background: "hsl(var(--background))",
         foreground: "hsl(var(--foreground))",
         primary: {
-          DEFAULT: "#D4E1FF", // Primary color
-          hover: "#E6ECFD", // Versión más clara del Primary
-          foreground: "#222222", // Shade 02 - texto negro sobre fondo primary
+          DEFAULT: "#D4E1FF",
+          hover: "#E6ECFD",
+          foreground: "#222222",
         },
         secondary: {
-          DEFAULT: "#EBEBEB", // Neutral 02
-          hover: "#DDDDDD", // Neutral 03
-          foreground: "#222222", // Shade 02
+          DEFAULT: "#EBEBEB",
+          hover: "#DDDDDD",
+          foreground: "#222222",
         },
         muted: {
           DEFAULT: "hsl(var(--muted))",
@@ -62,6 +62,10 @@ export default {
         'max-height': 'max-height',
       },
       keyframes: {
+        marquee: {
+          "0%": { transform: "translateX(0%)" },
+          "100%": { transform: "translateX(-100%)" },
+        },
         "accordion-down": {
           from: { height: "0", opacity: "0" },
           to: { height: "var(--radix-accordion-content-height)", opacity: "1" },
@@ -119,15 +123,12 @@ export default {
           "100%": { transform: "scale(1)", opacity: "1" },
         },
         shimmer: {
-          '0%': {
-            transform: 'translateX(-100%)',
-          },
-          '100%': {
-            transform: 'translateX(100%)',
-          },
+          '0%': { transform: 'translateX(-100%)' },
+          '100%': { transform: 'translateX(100%)' },
         },
       },
       animation: {
+        marquee: "marquee 10s linear infinite",
         "accordion-down": "accordion-down 0.5s ease-out",
         "accordion-up": "accordion-up 0.5s ease-out",
         "collapsible-down": "collapsible-down 0.5s ease-out",
@@ -152,4 +153,6 @@ export default {
     },
   },
   plugins: [require("tailwindcss-animate")],
-} satisfies Config;
+};
+
+export default config;
