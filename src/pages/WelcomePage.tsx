@@ -1,7 +1,8 @@
+
 import React from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { Button } from "@/components/ui/button";
-import { X, Star } from "lucide-react";
+import { X } from "lucide-react";
 import Navbar from "@/components/Navbar";
 import { Link } from 'react-router-dom';
 import { PageTransition } from '@/components/ui/page-transition';
@@ -72,47 +73,32 @@ const WelcomePage = () => {
     navigate('/');
   };
 
-  const renderArtistMarquee = () => {
-    const displayArtists = mockArtists.length > 0 ? mockArtists : [
-      {
-        id: "placeholder-1",
-        name: "Artista no encontrado",
-        type: "Placeholder",
-        description: "Próximamente más artistas",
-        images: ["/lovable-uploads/placeholder.svg"],
-        rating: 0,
-        priceRange: "Consultar",
-        isFavorite: false
-      }
-    ];
-
-    return (
-      <div className="w-full overflow-hidden">
-        <Marquee pauseOnHover className="py-4" maxWidth={isMobile ? window.innerWidth - 32 : 1200}>
-          <div className="flex gap-6">
-            {displayArtists.map((artist) => (
-              <ArtistProfileCard
-                key={artist.id}
-                name={artist.name}
-                type={artist.type}
-                description={artist.description}
-                images={artist.images}
-                rating={artist.rating}
-                priceRange={artist.priceRange}
-                isFavorite={artist.isFavorite}
-                onClick={() => navigate(artist.id !== "placeholder-1" ? `/artista/${artist.id}` : "#")}
-                isRecommended={artist.id === "placeholder-1"}
-                hideHeart={true}
-                regularBadge={true}
-                regularText={true}
-                className="min-w-[280px]"
-              />
-            ))}
-          </div>
-        </Marquee>
-      </div>
-    );
-  };
+  const renderArtistMarquee = () => (
+    <div className="w-full overflow-hidden">
+      <Marquee pauseOnHover className="py-4" maxWidth={isMobile ? window.innerWidth - 32 : 1200}>
+        <div className="flex gap-6">
+          {mockArtists.map((artist) => (
+            <ArtistProfileCard
+              key={artist.id}
+              name={artist.name}
+              type={artist.type}
+              description={artist.description}
+              images={artist.images}
+              rating={artist.rating}
+              priceRange={artist.priceRange}
+              isFavorite={artist.isFavorite}
+              onClick={() => navigate(`/artista/${artist.id}`)}
+              isRecommended={true}
+              hideHeart={true}
+              regularBadge={true}
+              regularText={true}
+              className="min-w-[280px]"
+            />
+          ))}
+        </div>
+      </Marquee>
+    </div>
+  );
 
   return (
     <PageTransition>
