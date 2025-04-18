@@ -25,7 +25,11 @@ const registrationSchema = z.object({
   name: z.string().min(1, "Nombre es requerido"),
   lastName: z.string().min(1, "Apellido es requerido"),
   birthDate: z.string().min(1, "Fecha de nacimiento es requerida"),
-  password: z.string().min(1, "Contraseña es requerida")
+  password: z.string()
+    .min(8, "La contraseña debe tener al menos 8 caracteres")
+    .regex(/\d/, "La contraseña debe contener al menos un número")
+    .regex(/[A-Z]/, "La contraseña debe contener al menos una letra mayúscula")
+    .regex(/[!@#$%^&*(),.?":{}|<>]/, "La contraseña debe contener al menos un carácter especial")
 });
 
 type RegistrationData = z.infer<typeof registrationSchema>;
@@ -151,6 +155,10 @@ const RegisterDialog = ({ open, onOpenChange, onSuccess }: RegisterDialogProps) 
 
   const [validatedRules, setValidatedRules] = useState<number[]>([]);
   const [passwordValue, setPasswordValue] = useState('');
+
+  const areAllRequirementsMet = passwordRequirements.every(
+    (req) => req.test(passwordValue)
+  );
 
   React.useEffect(() => {
     passwordRequirements.forEach((req, index) => {
@@ -331,10 +339,10 @@ const RegisterDialog = ({ open, onOpenChange, onSuccess }: RegisterDialogProps) 
                           <li
                             key={index}
                             className={cn(
-                              "flex items-center gap-2 text-[#C13515] transition-all duration-500 ease-in-out",
+                              "flex items-center gap-2 text-[#C13515] transition-all duration-700 ease-in-out",
                               {
-                                "opacity-0 h-0 my-0 overflow-hidden pointer-events-none": isValid,
-                                "opacity-100 h-auto": !isValid
+                                "opacity-0 h-0 my-0 overflow-hidden pointer-events-none transform translate-y-[-10px]": isValid,
+                                "opacity-100 h-auto transform translate-y-0": !isValid
                               }
                             )}
                           >
@@ -358,7 +366,7 @@ const RegisterDialog = ({ open, onOpenChange, onSuccess }: RegisterDialogProps) 
                   variant="terciary"
                   type="submit" 
                   className="w-full"
-                  disabled={isLoading}
+                  disabled={isLoading || !areAllRequirementsMet}
                   isLoading={isLoading}
                 >
                   {isLoading ? "Registrando" : "Registrarse"}
