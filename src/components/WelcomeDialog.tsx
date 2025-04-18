@@ -3,7 +3,7 @@ import React from 'react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { useNavigate } from 'react-router-dom';
-import { ArtistProfileCard } from './ArtistProfileCard';
+import ArtistProfileCard from './ArtistProfileCard';
 import { Marquee } from './ui/marquee';
 import { useIsMobile } from '@/hooks/use-mobile';
 
