@@ -1,12 +1,14 @@
-import React, { useState } from 'react';
+
+import React from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { Button } from "@/components/ui/button";
 import { X } from "lucide-react";
 import Navbar from "@/components/Navbar";
 import { Link } from 'react-router-dom';
-import ArtistCards from '@/components/ArtistCards';
 import { PageTransition } from '@/components/ui/page-transition';
 import { useIsMobile } from '@/hooks/use-mobile';
+import RecommendedArtists from '@/components/artist-profile/RecommendedArtists';
+
 const WelcomePage = () => {
   const navigate = useNavigate();
   const location = useLocation();
@@ -14,20 +16,69 @@ const WelcomePage = () => {
   const userInfo = location.state?.userInfo || {
     fullName: "Ramón Prado"
   };
+
+  const mockArtists = [
+    {
+      id: "1",
+      name: "Antonia Pedragosa",
+      type: "DJ",
+      description: "DJ profesional con más de 10 años de experiencia",
+      images: ["/lovable-uploads/77591a97-10cd-4c8b-b768-5b17483c3d9f.png"],
+      rating: 4.8,
+      priceRange: "200€ - 500€",
+      isFavorite: false
+    },
+    {
+      id: "2",
+      name: "Carlos Martínez",
+      type: "Banda",
+      description: "Banda versátil para todo tipo de eventos",
+      images: ["/lovable-uploads/64cabbe3-ce62-4190-830d-0e5defd31a1b.png"],
+      rating: 4.9,
+      priceRange: "500€ - 1000€",
+      isFavorite: false
+    },
+    {
+      id: "3",
+      name: "Laura González",
+      type: "Solista",
+      description: "Cantante solista con repertorio variado",
+      images: ["/lovable-uploads/c89ee394-3c08-48f6-b69b-bddd81dffa8b.png"],
+      rating: 4.7,
+      priceRange: "300€ - 600€",
+      isFavorite: false
+    },
+    {
+      id: "4",
+      name: "Miguel Torres",
+      type: "Grupo",
+      description: "Grupo musical para bodas y eventos",
+      images: ["/lovable-uploads/7e7c2282-785a-46fb-84b2-f7b14b762e64.png"],
+      rating: 4.6,
+      priceRange: "600€ - 1200€",
+      isFavorite: false
+    }
+  ];
+
   const handlePromoteArtist = () => {
     navigate('/artist-benefits');
   };
+
   const handleSearchArtists = () => {
     navigate('/artists');
   };
+
   const handleClose = () => {
     navigate('/');
   };
-  return <PageTransition>
+
+  return (
+    <PageTransition>
       <div className="bg-white dark:bg-vyba-dark-bg min-h-screen">
         <Navbar />
         
-        {isMobile ? <div className="container mx-auto px-4 pt-32 pb-10">
+        {isMobile ? (
+          <div className="container mx-auto px-4 pt-32 pb-10">
             <h1 className="text-4xl font-black text-center mb-1 dark:text-white">
               Bienvenido
             </h1>
@@ -46,7 +97,7 @@ const WelcomePage = () => {
               </div>
               
               <div className="w-full mb-6">
-                <ArtistCardsMobile />
+                <RecommendedArtists artists={mockArtists} />
               </div>
               
               <Button onClick={handleSearchArtists} className="mb-3 bg-[#E8EEFF] hover:bg-[#D8E0FF]">
@@ -67,13 +118,15 @@ const WelcomePage = () => {
             <p className="text-center text-sm text-gray-600 dark:text-gray-400">
               No tienes cuenta. <Link to="/register" className="font-medium text-primary-foreground">Regístrate</Link>
             </p>
-          </div> : <div className="container mx-auto pt-16">
+          </div>
+        ) : (
+          <div className="container mx-auto pt-16">
             <h1 className="text-6xl font-bold text-center mb-12 dark:text-white">
               Bienvenido {userInfo.fullName}
             </h1>
             
             <div className="max-w-6xl mx-auto my-16">
-              <ArtistCards />
+              <RecommendedArtists artists={mockArtists} />
             </div>
             
             <div className="flex flex-col items-center my-8">
@@ -87,82 +140,11 @@ const WelcomePage = () => {
                 </Button>
               </div>
             </div>
-          </div>}
-      </div>
-    </PageTransition>;
-};
-
-// Componente para mostrar las tarjetas de artistas en formato móvil similar a PC pero más pequeñas
-const ArtistCardsMobile = () => {
-  // Estado para rastrear la tarjeta en hover (aunque en móvil no hay hover)
-  const [hoveredCard, setHoveredCard] = useState<number | null>(null);
-
-  // Datos de artistas (igual que en ArtistCards.tsx)
-  const artists = [{
-    id: 1,
-    name: "Antonia Pedragosa",
-    type: "DJ",
-    image: "/lovable-uploads/77591a97-10cd-4c8b-b768-5b17483c3d9f.png"
-  }, {
-    id: 2,
-    name: "Carlos Martínez",
-    type: "Banda",
-    image: "/lovable-uploads/64cabbe3-ce62-4190-830d-0e5defd31a1b.png"
-  }, {
-    id: 3,
-    name: "Laura González",
-    type: "Solista",
-    image: "/lovable-uploads/c89ee394-3c08-48f6-b69b-bddd81dffa8b.png"
-  }, {
-    id: 4,
-    name: "Miguel Torres",
-    type: "Grupo",
-    image: "/lovable-uploads/7e7c2282-785a-46fb-84b2-f7b14b762e64.png"
-  }];
-
-  // Función para obtener los estilos de las tarjetas (versión simplificada para móvil)
-  const getCardStyles = (index: number) => {
-    // Posiciones fijas para cada tarjeta en móvil, adaptadas para un espacio más pequeño
-    const mobilePositions = ["translate-x-[-60px]",
-    // Más a la izquierda
-    "translate-x-[0px]",
-    // Centro 
-    "translate-x-[60px]" // Más a la derecha
-    ];
-
-    // Rotaciones para cada tarjeta (mantenemos el mismo estilo visual que en desktop)
-    const mobileRotations = ["rotate-[-10deg]",
-    // Rotación izquierda
-    "rotate-[5deg]",
-    // Rotación derecha
-    "rotate-[-5deg]" // Rotación izquierda
-    ];
-
-    // Devolvemos la combinación de posición y rotación
-    return `${mobilePositions[index]} ${mobileRotations[index]}`;
-  };
-  return <div className="relative h-40 w-full flex justify-center items-center">
-      {artists.slice(0, 3).map((artist, index) => <div key={artist.id} className={`
-            absolute rounded-xl
-            w-24 h-32 flex flex-col justify-end
-            transition-all duration-300 ease-in-out
-            overflow-hidden shadow-[0_5px_10px_rgba(0,0,0,0.15)]
-            ${getCardStyles(index)}
-          `}>
-          {/* Imagen de fondo con degradado */}
-          <div className="absolute inset-0 bg-cover bg-center z-0 blur-[1px]" style={{
-        backgroundImage: `url(${artist.image})`
-      }} />
-          
-          {/* Degradado negro de abajo hacia arriba */}
-          <div className="absolute inset-0 bg-gradient-to-t from-black via-black/70 to-transparent z-1"></div>
-          
-          {/* Contenido de texto */}
-          <div className="relative z-2 p-2 text-white">
-            <h2 className="font-semibold text-sm text-white truncate">{artist.name}</h2>
-            <p className="text-[10px] text-white">{artist.type}</p>
           </div>
-        </div>)}
-    </div>;
+        )}
+      </div>
+    </PageTransition>
+  );
 };
+
 export default WelcomePage;
