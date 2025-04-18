@@ -169,10 +169,10 @@ const Overview = () => {
         <div>
           <Carousel className="w-full">
             <CarouselItem className="w-64 h-64 bg-vyba-gray rounded-[32px] p-8">
-              <div className="flex flex-col justify-between h-full">
-                <Star className="h-12 w-12 text-vyba-navy mb-6" strokeWidth={1.5} />
-                <div className="flex flex-col">
-                  <h2 className="text-[32px] font-bold text-[#222222] leading-tight mb-4">
+              <div className="flex flex-col h-full">
+                <Star className="h-12 w-12 text-vyba-navy self-start mb-auto" strokeWidth={1.5} />
+                <div className="flex flex-col mt-auto">
+                  <h2 className="text-[32px] font-bold text-[#222222] leading-tight mb-2">
                     Experiéncia
                   </h2>
                   <p className="text-[#717171] text-base font-light leading-snug">
