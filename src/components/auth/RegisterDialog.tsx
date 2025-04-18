@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
@@ -11,6 +10,9 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { CheckCircle, XCircle } from "lucide-react";
+import { cn } from "@/lib/utils"; // Añadido el import faltante
+
 
 type Step = 'email' | 'verification' | 'registration';
 
@@ -23,7 +25,8 @@ interface RegisterDialogProps {
 const registrationSchema = z.object({
   name: z.string().min(1, "Nombre es requerido"),
   lastName: z.string().min(1, "Apellido es requerido"),
-  birthDate: z.string().min(1, "Fecha de nacimiento es requerida")
+  birthDate: z.string().min(1, "Fecha de nacimiento es requerida"),
+  password: z.string().min(1, "Contraseña es requerida")
 });
 
 type RegistrationData = z.infer<typeof registrationSchema>;
@@ -40,7 +43,8 @@ const RegisterDialog = ({ open, onOpenChange, onSuccess }: RegisterDialogProps) 
     defaultValues: {
       name: '',
       lastName: '',
-      birthDate: ''
+      birthDate: '',
+      password: ''
     }
   });
 
@@ -135,6 +139,43 @@ const RegisterDialog = ({ open, onOpenChange, onSuccess }: RegisterDialogProps) 
     }, 300);
   };
 
+  const passwordRequirements = [
+    {
+      label: "Al menos 8 caracteres",
+      test: (pw: string) => pw.length >= 8,
+    },
+    {
+      label: "Al menos 1 número",
+      test: (pw: string) => /\d/.test(pw),
+    },
+    {
+      label: "Al menos 1 letra mayúscula",
+      test: (pw: string) => /[A-Z]/.test(pw),
+    },
+    {
+      label: "Al menos 1 carácter especial",
+      test: (pw: string) => /[!@#$%^&*(),.?":{}|<>]/.test(pw),
+    }
+  ];
+
+  const [validatedRules, setValidatedRules] = useState<number[]>([]);
+  const [passwordValue, setPasswordValue] = useState('');
+
+  React.useEffect(() => {
+    passwordRequirements.forEach((req, index) => {
+      const isValid = req.test(passwordValue);
+      const alreadyValidated = validatedRules.includes(index);
+  
+      if (isValid && !alreadyValidated) {
+        // Si se valida ahora y aún no estaba en la lista, la añadimos tras breve delay
+        setTimeout(() => {
+          setValidatedRules((prev) => [...prev, index]);
+        }, 500); // espera antes de desaparecer (500ms)
+      }
+    });
+  }, [passwordValue]);
+  
+
   return (
     <Dialog open={open} onOpenChange={handleClose}>
       <DialogContent className="sm:max-w-xl">
@@ -211,7 +252,7 @@ const RegisterDialog = ({ open, onOpenChange, onSuccess }: RegisterDialogProps) 
                 onClick={handleResendCode}
                 isLoading={resendLoading}
               >
-                {resendLoading ? "Enviando..." : "Volver a enviar"}
+                {resendLoading ? "Enviando" : "Volver a enviar"}
               </Button>
               <Button 
                 variant="terciary"
@@ -228,12 +269,12 @@ const RegisterDialog = ({ open, onOpenChange, onSuccess }: RegisterDialogProps) 
 
         {currentStep === 'registration' && (
           <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4 px-12">
+            <form onSubmit={form.handleSubmit(onSubmit)} className="px-12">
               <FormField
                 control={form.control}
                 name="name"
                 render={({ field }) => (
-                  <FormItem>
+                  <FormItem className="mb-4">
                     <FormLabel>Nombre</FormLabel>
                     <FormControl>
                       <Input placeholder="Juan" {...field} className="focus:ring-0 focus-visible:ring-0 focus-visible:ring-offset-0 focus:ring-offset-0" />
@@ -247,7 +288,7 @@ const RegisterDialog = ({ open, onOpenChange, onSuccess }: RegisterDialogProps) 
                 control={form.control}
                 name="lastName"
                 render={({ field }) => (
-                  <FormItem>
+                  <FormItem className="mb-4">
                     <FormLabel>Apellido</FormLabel>
                     <FormControl>
                       <Input placeholder="Pérez" {...field} className="focus:ring-0 focus-visible:ring-0 focus-visible:ring-offset-0 focus:ring-offset-0" />
@@ -261,7 +302,7 @@ const RegisterDialog = ({ open, onOpenChange, onSuccess }: RegisterDialogProps) 
                 control={form.control}
                 name="birthDate"
                 render={({ field }) => (
-                  <FormItem>
+                  <FormItem className="mb-4">
                     <FormLabel>Fecha de nacimiento</FormLabel>
                     <FormControl>
                       <Input type="date" {...field} className="focus:ring-0 focus-visible:ring-0 focus-visible:ring-offset-0 focus:ring-offset-0" />
@@ -270,6 +311,57 @@ const RegisterDialog = ({ open, onOpenChange, onSuccess }: RegisterDialogProps) 
                   </FormItem>
                 )}
               />
+              <FormField
+                control={form.control}
+                name="password"
+                render={({ field }) => (
+                  <FormItem className="mb-4">
+                    <FormLabel>Contraseña</FormLabel>
+                    <FormControl>
+                      <Input
+                        type="password"
+                        {...field}
+                        value={passwordValue}
+                        onChange={(e) => {
+                          field.onChange(e); // Actualiza react-hook-form
+                          setPasswordValue(e.target.value); // Actualiza validaciones visuales
+                        }}
+                        className="focus:ring-0 focus-visible:ring-0 focus-visible:ring-offset-0 focus:ring-offset-0"
+                      />
+                    </FormControl>
+                    <FormMessage />
+
+                    {/* Requisitos de la contraseña */}
+                    <ul className="mt-2 text-xs space-y-1 transition-all duration-300">
+                      {passwordRequirements.map((req, index) => {
+                        const isValid = req.test(passwordValue);
+                        const isValidated = validatedRules.includes(index);
+
+                        return !isValidated ? (
+                          <li
+                            key={index}
+                            className={cn(
+                              "flex items-center gap-2 text-[#C13515] transition-opacity duration-300 ease-in-out",
+                              {
+                                "opacity-0 max-h-0 overflow-hidden": isValid, // transición para desaparecer
+                              }
+                            )}
+                          >
+                            {isValid ? (
+                              <CheckCircle className="w-4 h-4 text-green-500" />
+                            ) : (
+                              <XCircle className="w-4 h-4 text-red-500" />
+                            )}
+                            {req.label}
+                          </li>
+                        ) : null;
+                      })}
+                    </ul>
+
+                  </FormItem>
+                )}
+              />
+
               
               <div className="mt-8">
                 <Button 
@@ -279,7 +371,7 @@ const RegisterDialog = ({ open, onOpenChange, onSuccess }: RegisterDialogProps) 
                   disabled={isLoading}
                   isLoading={isLoading}
                 >
-                  {isLoading ? "Registrando..." : "Registrarse"}
+                  {isLoading ? "Registrando" : "Registrarse"}
                 </Button>
               </div>
             </form>
