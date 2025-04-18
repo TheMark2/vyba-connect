@@ -1,15 +1,18 @@
+
 import React, { useState } from 'react';
 import { Button } from "@/components/ui/button";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Mail } from "lucide-react";
 import Navbar from "@/components/Navbar";
-import WelcomeDialog from '@/components/WelcomeDialog';
-import AuthDialogRegister from '@/components/AuthDialogRegister'; // ← sin destructuring
+import RegisterDialog from '@/components/auth/RegisterDialog';
 
 const RegisterPage = () => {
-  const [showAuthDialog, setShowAuthDialog] = useState(false);
-  const [showWelcomeDialog, setShowWelcomeDialog] = useState(false);
-  const [registeredUserInfo, setRegisteredUserInfo] = useState<{ fullName: string; email: string } | null>(null);
+  const [showRegisterDialog, setShowRegisterDialog] = useState(false);
+  const navigate = useNavigate();
+
+  const handleRegistrationSuccess = () => {
+    navigate('/');
+  };
 
   return (
     <main className="min-h-screen bg-white dark:bg-vyba-dark-bg flex flex-col">
@@ -46,7 +49,7 @@ const RegisterPage = () => {
             <Button
               variant="secondary"
               className="w-full flex items-center justify-center gap-2 bg-[#F7F7F7] text-black"
-              onClick={() => setShowAuthDialog(true)}
+              onClick={() => setShowRegisterDialog(true)}
             >
               <Mail size={20} />
               Continuar con Mail
@@ -61,21 +64,10 @@ const RegisterPage = () => {
         </div>
       </div>
 
-      {registeredUserInfo && (
-        <WelcomeDialog
-          open={showWelcomeDialog}
-          onOpenChange={setShowWelcomeDialog}
-          userInfo={registeredUserInfo}
-        />
-      )}
-
-      <AuthDialogRegister
-        open={showAuthDialog}
-        onOpenChange={setShowAuthDialog}
-        onSuccess={(info) => {
-          setRegisteredUserInfo(info);
-          setShowWelcomeDialog(true);
-        }}
+      <RegisterDialog
+        open={showRegisterDialog}
+        onOpenChange={setShowRegisterDialog}
+        onSuccess={handleRegistrationSuccess}
       />
     </main>
   );

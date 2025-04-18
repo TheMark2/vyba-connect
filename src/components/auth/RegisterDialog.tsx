@@ -7,22 +7,39 @@ import { InputOTP, InputOTPGroup, InputOTPSlot } from "@/components/ui/input-otp
 import { Label } from "@/components/ui/label";
 import { ChevronLeft } from "lucide-react";
 import { toast } from "sonner";
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
 
 type Step = 'email' | 'verification' | 'registration';
 
 interface RegisterDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
-  onEmailSubmit?: (email: string) => void;
-  onVerificationComplete?: () => void;
-  onClose?: () => void;
+  onSuccess?: () => void;
 }
 
-const RegisterDialog = ({ open, onOpenChange, onEmailSubmit, onVerificationComplete, onClose }: RegisterDialogProps) => {
+const registrationSchema = z.object({
+  fullName: z.string().min(1, "Nombre completo es requerido"),
+  birthDate: z.string().min(1, "Fecha de nacimiento es requerida")
+});
+
+type RegistrationData = z.infer<typeof registrationSchema>;
+
+const RegisterDialog = ({ open, onOpenChange, onSuccess }: RegisterDialogProps) => {
   const [currentStep, setCurrentStep] = useState<Step>('email');
   const [email, setEmail] = useState('');
   const [code, setCode] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+
+  const form = useForm<RegistrationData>({
+    resolver: zodResolver(registrationSchema),
+    defaultValues: {
+      fullName: '',
+      birthDate: ''
+    }
+  });
 
   const handleEmailSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -34,9 +51,8 @@ const RegisterDialog = ({ open, onOpenChange, onEmailSubmit, onVerificationCompl
       setIsLoading(false);
       setCurrentStep('verification');
       toast.success("Código de verificación enviado", {
-        position: "bottom-center"
+        description: "Por favor, revisa tu correo electrónico"
       });
-      if (onEmailSubmit) onEmailSubmit(email);
     }, 1500);
   };
 
@@ -49,13 +65,27 @@ const RegisterDialog = ({ open, onOpenChange, onEmailSubmit, onVerificationCompl
     setTimeout(() => {
       setIsLoading(false);
       setCurrentStep('registration');
-      if (onVerificationComplete) onVerificationComplete();
+    }, 1500);
+  };
+
+  const onSubmit = async (data: RegistrationData) => {
+    setIsLoading(true);
+    // Simulamos registro
+    setTimeout(() => {
+      setIsLoading(false);
+      onOpenChange(false);
+      if (onSuccess) onSuccess();
+      toast.success("Registro completado", {
+        description: "¡Bienvenido a VYBA!"
+      });
     }, 1500);
   };
 
   const handleBack = () => {
     if (currentStep === 'verification') {
       setCurrentStep('email');
+    } else if (currentStep === 'registration') {
+      setCurrentStep('verification');
     }
   };
 
@@ -64,7 +94,7 @@ const RegisterDialog = ({ open, onOpenChange, onEmailSubmit, onVerificationCompl
     setCurrentStep('email');
     setEmail('');
     setCode('');
-    if (onClose) onClose();
+    form.reset();
   };
 
   return (
@@ -124,10 +154,11 @@ const RegisterDialog = ({ open, onOpenChange, onEmailSubmit, onVerificationCompl
                 maxLength={6}
                 render={({ slots }) => (
                   <InputOTPGroup className="gap-2">
-                    {slots.map((slot, index) => (
+                    {slots.map((slot, idx) => (
                       <InputOTPSlot
-                        key={index}
+                        key={idx}
                         {...slot}
+                        index={idx}
                         className={`rounded-md border-gray-200 bg-white w-10 h-12 text-center text-lg`}
                       />
                     ))}
@@ -141,18 +172,51 @@ const RegisterDialog = ({ open, onOpenChange, onEmailSubmit, onVerificationCompl
               isLoading={isLoading}
               disabled={code.length !== 6}
             >
-              Verificar
+              Verificar código
             </Button>
           </form>
         )}
 
         {currentStep === 'registration' && (
-          <div className="text-center py-4">
-            <p>Email verificado correctamente</p>
-            <p className="text-sm text-gray-500 mt-2">
-              Continúa con el registro
-            </p>
-          </div>
+          <Form {...form}>
+            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+              <FormField
+                control={form.control}
+                name="fullName"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Nombre completo</FormLabel>
+                    <FormControl>
+                      <Input placeholder="Juan Pérez" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name="birthDate"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Fecha de nacimiento</FormLabel>
+                    <FormControl>
+                      <Input type="date" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <Button 
+                type="submit" 
+                className="w-full"
+                isLoading={isLoading}
+              >
+                Completar registro
+              </Button>
+            </form>
+          </Form>
         )}
       </DialogContent>
     </Dialog>
