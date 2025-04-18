@@ -168,16 +168,16 @@ const Overview = () => {
         </div>
         <div>
           <Carousel className="w-full">
-            <CarouselItem className="w-64 h-64 bg-vyba-gray rounded-2xl">
-              <div className="flex flex-col justify-between p-6">
-                <Star className="h-12 w-12 text-vyba-navy mb-2" />
+            <CarouselItem className="w-64 h-64 bg-vyba-gray rounded-[32px] p-8">
+              <div className="flex flex-col justify-between h-full">
+                <Star className="h-12 w-12 text-vyba-navy mb-6" strokeWidth={1.5} />
                 <div className="flex flex-col">
-                  <div className="flex items-center">
-                    <CardTitle className="text-2xl font-medium">Experiencia</CardTitle>
-                  </div>
-                  <CardDescription className="text-sm font-light">
-                    Añade testimonios de clientes anteriores para aumentar tu reputación
-                  </CardDescription>
+                  <h2 className="text-[32px] font-bold text-[#222222] leading-tight mb-4">
+                    Experiéncia
+                  </h2>
+                  <p className="text-[#717171] text-base font-light leading-snug">
+                    Comparte los mejores sitios en los que has estado trabajando
+                  </p>
                 </div>
               </div>
             </CarouselItem>
