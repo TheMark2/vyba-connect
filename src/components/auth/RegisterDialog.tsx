@@ -97,6 +97,29 @@ const RegisterDialog = ({ open, onOpenChange, onSuccess }: RegisterDialogProps) 
     form.reset();
   };
 
+  // Renderizar el componente OTP de manera segura
+  const renderOTPInput = () => {
+    return (
+      <InputOTP
+        value={code}
+        onChange={(value) => setCode(value)}
+        maxLength={6}
+        render={({ slots }) => (
+          <InputOTPGroup className="gap-2">
+            {slots.map((slot, index) => (
+              <InputOTPSlot
+                key={index}
+                {...slot}
+                index={index}
+                className="rounded-md border-gray-200 bg-white w-10 h-12 text-center text-lg"
+              />
+            ))}
+          </InputOTPGroup>
+        )}
+      />
+    );
+  };
+
   return (
     <Dialog open={open} onOpenChange={handleClose}>
       <DialogContent className="sm:max-w-[400px]">
@@ -134,9 +157,9 @@ const RegisterDialog = ({ open, onOpenChange, onSuccess }: RegisterDialogProps) 
             <Button 
               type="submit" 
               className="w-full"
-              isLoading={isLoading}
+              disabled={isLoading}
             >
-              Continuar
+              {isLoading ? "Enviando..." : "Continuar"}
             </Button>
           </form>
         )}
@@ -148,31 +171,14 @@ const RegisterDialog = ({ open, onOpenChange, onSuccess }: RegisterDialogProps) 
               <p className="text-sm text-gray-500">
                 Te hemos enviado un código a {email}
               </p>
-              <InputOTP
-                value={code}
-                onChange={(value) => setCode(value)}
-                maxLength={6}
-                render={({ slots }) => (
-                  <InputOTPGroup className="gap-2">
-                    {slots.map((slot, idx) => (
-                      <InputOTPSlot
-                        key={idx}
-                        {...slot}
-                        index={idx}
-                        className={`rounded-md border-gray-200 bg-white w-10 h-12 text-center text-lg`}
-                      />
-                    ))}
-                  </InputOTPGroup>
-                )}
-              />
+              {renderOTPInput()}
             </div>
             <Button 
               type="submit" 
               className="w-full"
-              isLoading={isLoading}
-              disabled={code.length !== 6}
+              disabled={code.length !== 6 || isLoading}
             >
-              Verificar código
+              {isLoading ? "Verificando..." : "Verificar código"}
             </Button>
           </form>
         )}
@@ -211,9 +217,9 @@ const RegisterDialog = ({ open, onOpenChange, onSuccess }: RegisterDialogProps) 
               <Button 
                 type="submit" 
                 className="w-full"
-                isLoading={isLoading}
+                disabled={isLoading}
               >
-                Completar registro
+                {isLoading ? "Procesando..." : "Completar registro"}
               </Button>
             </form>
           </Form>

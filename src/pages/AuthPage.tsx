@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -30,7 +31,7 @@ const AuthPage = () => {
     }
   };
 
-  const handleCompleteVerification = () => {
+  const handleRegistrationSuccess = () => {
     setShowRegisterDialog(false);
     navigate('/register');
   };
@@ -172,7 +173,7 @@ const AuthPage = () => {
       <RegisterDialog
         open={showRegisterDialog}
         onOpenChange={setShowRegisterDialog}
-        onVerificationComplete={handleCompleteVerification}
+        onSuccess={handleRegistrationSuccess}
       />
     </main>
   );
