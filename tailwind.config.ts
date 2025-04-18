@@ -20,13 +20,14 @@ const config: Config = {
     extend: {
       colors: {
         vyba: {
-          cream: "#F7F7F7",
-          blue: "#D4E1FF",
+          gray: "#F7F7F7",
+          primary: "#D4E1FF",
           beige: "#EBEBEB",
           navy: "#222222",
+          tertiary: "#969696",
           dark: {
             bg: "#222222",
-            secondary: "#5E5E5E"
+            secondary: "#5E5E5E",
           }
         },
         border: "hsl(var(--border))",

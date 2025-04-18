@@ -116,24 +116,16 @@ const Navbar = ({
     >
       <div className="flex items-center space-x-12">
         <Link to="/" className="text-3xl font-bold dark:text-white">
-          VYBA
+          <img src="/lovable-uploads/logovyba.png" alt="VYBA" className="h-10" />
         </Link>
 
         <div className="hidden md:flex items-center space-x-2">
-          <Link to="/" className={cn("px-6 py-3 text-sm rounded-full text-black dark:text-white font-medium relative overflow-hidden transition-colors duration-300", isActive("/") ? "bg-[#F5F1EB] dark:bg-vyba-dark-secondary" : "hover:bg-[#F9F6F2] dark:hover:bg-vyba-dark-secondary")}>
+          <Link to="/" className={cn("px-6 py-3 text-base rounded-full text-vyba-tertiary dark:text-white font-regular relative overflow-hidden transition-colors duration-300", isActive("/") ? "text-black dark:text-white bg-vyba-gray/60" : "hover:bg-vyba-gray/60 hover:text-black")}>
             Inicio
           </Link>
 
-          <Link to="/artists" className={cn("px-6 py-3 text-sm rounded-full text-black dark:text-white font-medium relative overflow-hidden transition-colors duration-300", isActive("/artists") ? "bg-[#F5F1EB] dark:bg-vyba-dark-secondary" : "hover:bg-[#F9F6F2] dark:hover:bg-vyba-dark-secondary")}>
+          <Link to="/artists" className={cn("px-6 py-3 text-base rounded-full text-vyba-tertiary dark:text-white font-regular relative overflow-hidden transition-colors duration-300", isActive("/artists") ? "text-black dark:text-white bg-vyba-gray/60" : "hover:bg-vyba-gray/60 hover:text-black")}>
             Artistas
-          </Link>
-
-          <Link to="/todos-artistas" className={cn("px-6 py-3 text-sm rounded-full text-black dark:text-white font-medium relative overflow-hidden transition-colors duration-300", isActive("/todos-artistas") ? "bg-[#F5F1EB] dark:bg-vyba-dark-secondary" : "hover:bg-[#F9F6F2] dark:hover:bg-vyba-dark-secondary")}>
-            Todos los artistas
-          </Link>
-
-          <Link to="/todos-generos" className={cn("px-6 py-3 text-sm rounded-full text-black dark:text-white font-medium relative overflow-hidden transition-colors duration-300", isActive("/todos-generos") ? "bg-[#F5F1EB] dark:bg-vyba-dark-secondary" : "hover:bg-[#F9F6F2] dark:hover:bg-vyba-dark-secondary")}>
-            Todos los géneros
           </Link>
         </div>
       </div>
@@ -213,13 +205,6 @@ const Navbar = ({
           </>
         ) : (
           <>
-            <Button 
-              variant="secondary" 
-              className="text-sm hidden sm:flex bg-[#E7D3D3] dark:bg-vyba-dark-secondary dark:text-white"
-              onClick={handlePromoteClick}
-            >
-              Promocionarse como artista
-            </Button>
             <Button 
               className="text-sm"
               onClick={handleAuthClick}

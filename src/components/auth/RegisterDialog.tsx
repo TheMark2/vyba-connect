@@ -360,8 +360,8 @@ const RegisterDialog = ({ open, onOpenChange, onSuccess }: RegisterDialogProps) 
               )}
             />
 
-            <p className="text-xs text-gray-500 mb-4">
-              Al seleccionar registrarse se aceptan los términos y condiciones de VYBA.
+            <p className="text-xs text-black mb-4 font-light font-figtree">
+              Al seleccionar <span className="font-semibold text-black">registrarse</span> se aceptan los términos y condiciones, la política de privacidad y la política de cookies de VYBA.
             </p>
 
             <div className="mt-8">
