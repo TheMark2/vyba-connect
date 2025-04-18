@@ -269,7 +269,7 @@ const ArtistProfileCard = ({
           cursor: isHovered ? 'pointer' : 'default'
         }}
       >
-        <div className={cn("relative w-full overflow-hidden rounded-3xl", "aspect-[1.05/1]")}>
+        <div className={cn("relative w-full overflow-hidden rounded-2xl", "aspect-[1.05/1]")}>
           <div 
             className="relative w-full h-full overflow-hidden" 
             onTouchStart={handleTouchStart} 
@@ -384,21 +384,21 @@ const ArtistProfileCard = ({
         {isRecommended ? (
           <div className="pt-3 flex flex-col gap-1 bg-transparent">
             <div className="flex justify-between items-center">
-              <h3 className="text-base font-normal">{name}</h3>
-              <p className="text-base text-gray-500 font-normal">{priceRange}</p>
+              <h3 className="text-base font-normal text-vyba-navy">{name}</h3>
+              <p className="text-base text-vyba-tertiary font-normal">{priceRange}</p>
             </div>
           </div>
         ) : (
           <div className="pt-3 flex flex-col bg-transparent">
             <div className="flex justify-between items-center">
-              <h3 className="text-base font-medium">{name}</h3>
+              <h3 className="text-base font-medium text-vyba-navy">{name}</h3>
               <div className="flex items-center gap-1">
                 <Star className="h-3 w-3 fill-black stroke-black dark:fill-white dark:stroke-white" />
-                <span className="text-base font-medium">{rating.toFixed(1)}</span>
+                <span className="text-base font-medium text-vyba-navy">{rating.toFixed(1)}</span>
               </div>
             </div>
-            <p className="text-sm text-[#C0C0C0] dark:text-gray-400 line-clamp-1 font-light">{description}</p>
-            <p className="text-base font-medium mt-2">
+            <p className="text-sm font-vyba-tertiary dark:text-gray-400 line-clamp-1 font-light mb-2">{description}</p>
+            <p className="text-base font-medium text-vyba-navy">
               {priceRange}
             </p>
           </div>

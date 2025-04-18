@@ -57,7 +57,6 @@ const config: Config = {
       },
       fontFamily: {
         figtree: ["Figtree", "sans-serif"],
-        satoshi: ["Satoshi", "sans-serif"],
       },
       transitionProperty: {
         'max-height': 'max-height',

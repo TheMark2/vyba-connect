@@ -111,7 +111,7 @@ const LandingArtist = () => {
   
   return (
     <div className="min-h-screen bg-white dark:bg-black">
-      <nav className="fixed top-0 left-0 w-full bg-white/30 dark:bg-black z-50 backdrop-blur-xl">
+      <nav className="fixed top-0 left-0 w-full bg-white/30 dark:bg-black z-50 backdrop-blur-xl px-4">
         <div className="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between">
           <button onClick={() => navigate('/')} className="p-1">
             <img
@@ -124,48 +124,36 @@ const LandingArtist = () => {
         </div>
       </nav>
       
-      <div className="pt-48 flex flex-col items-center justify-center">
-        <h1 className="text-4xl md:text-8xl font-semibold text-center">
-          La plataforma <span className="bg-gradient-to-r from-[#9b87f5] to-[#6E59A5] text-transparent bg-clip-text">creada</span> para
+      <div className="pt-32 md:pt-48 flex flex-col items-center justify-center px-12">
+        <h1 className="text-5xl md:text-8xl font-semibold text-center">
+          La plataforma creada para
         </h1>
         
-        <div className="relative h-24 md:h-28 mt-4 md:mt-8">
-          <AnimatePresence mode="wait">
-            <motion.div 
-              key={`container-${currentIndex}`}
-              className="bg-gray-50 dark:bg-gray-900 rounded-full px-8 py-6 md:px-12 md:py-3 flex items-center gap-6 md:gap-8 absolute left-1/2 transform -translate-x-1/2"
-              initial={{ 
-                opacity: 0, 
-                y: 30, 
-                scale: 0.9 
-              }}
-              animate={{ 
-                opacity: 1, 
-                y: 0, 
-                scale: 1 
-              }}
-              exit={{ 
-                opacity: 0, 
-                y: -30, 
-                scale: 0.9 
-              }}
-              transition={{
-                type: "spring",
-                stiffness: 300,
-                damping: 25,
-                duration: 0.5
-              }}
-            >
-              <div className="w-10 h-10 md:w-16 md:h-16 relative flex items-center justify-center">
+        <div className="relative h-24 md:h-28 mt-4 md:mt-8 mx-auto">
+          <motion.div 
+            className="bg-vyba-gray dark:bg-gray-900 rounded-full px-6 py-4 md:px-8 md:py-6 flex items-center gap-6 md:gap-8"
+            layout
+            transition={{
+              type: "spring",
+              stiffness: 300,
+              damping: 30,
+              duration: 0.5
+            }}
+          >
+            <div className="w-10 h-10 md:w-16 md:h-16 relative flex items-center justify-center">
+              <AnimatePresence mode="wait">
                 {React.createElement(content[currentIndex].Icon, {
                   size: 62,
                   color: content[currentIndex].iconColor,
                   strokeWidth: 1.5,
                   className: "animate-scale-in"
                 })}
-              </div>
-              
+              </AnimatePresence>
+            </div>
+            
+            <AnimatePresence mode="wait">
               <motion.div
+                key={currentIndex}
                 variants={container}
                 initial="hidden"
                 animate="visible"
@@ -182,13 +170,13 @@ const LandingArtist = () => {
                   </motion.span>
                 ))}
               </motion.div>
-            </motion.div>
-          </AnimatePresence>
+            </AnimatePresence>
+          </motion.div>
         </div>
       </div>
       
-      <div className="relative flex items-center justify-center h-[700px] mt-32 w-full">
-        <div className="h-full w-[30%] overflow-hidden rounded-3xl relative z-10 translate-x-[-5%]">
+      <div className="relative flex items-center justify-center h-[450px] md:h-[550px] lg:h-[750px] mt-16 md:mt-32 w-full overflow-x-hidden">
+        <div className="h-[90%] w-[20%] md:w-[30%] rounded-l-none overflow-hidden rounded-3xl relative z-10 translate-x-[-10%] md:translate-x-[-5%]">
             <img
             src="/lovable-uploads/image.png"
             alt="Vyba Artists"
@@ -196,7 +184,7 @@ const LandingArtist = () => {
             />
         </div>
 
-        <div className="h-[110%] w-[40%] overflow-hidden rounded-3xl z-20">
+        <div className="h-[100%] w-[60%] md:w-[40%] overflow-hidden rounded-3xl z-20">
             <img
             src="/lovable-uploads/image1.png"
             alt="Vyba Artists"
@@ -204,7 +192,7 @@ const LandingArtist = () => {
             />
         </div>
 
-        <div className="h-full w-[30%] overflow-hidden rounded-3xl relative z-10 translate-x-[5%]">
+        <div className="h-[90%] w-[20%] md:w-[30%] rounded-r-none overflow-hidden rounded-3xl relative z-10 translate-x-[10%] md:translate-x-[5%]">
             <img
             src="/lovable-uploads/image2.png"
             alt="Vyba Artists"
@@ -213,36 +201,36 @@ const LandingArtist = () => {
         </div>
       </div>
       
-      <div className="flex flex-col items-center justify-center mt-24 max-w-2xl mx-auto">
+      <div className="flex flex-col items-center justify-center mt-24 max-w-2xl mx-auto px-12">
         <h4 className="text-3xl font-medium text-center">Tan sencillo como abrirse una cuenta en 2 minutos y empezar a recibir mensajes</h4>
-        <Button variant="secondary" className="mt-4 text-xl bg-[#222222] text-white font-light">Empezar ahora</Button>
+        <Button variant="terciary" className="mt-6 text-xl">Empezar ahora</Button>
       </div>
       
-      <div className="flex flex-col items-center justify-center mt-24 max-w-7xl mx-auto">
-        <h1 className="text-7xl font-bold text-center max-w-4xl">
+      <div className="flex flex-col items-center justify-center mt-24 max-w-7xl mx-auto px-12">
+        <h1 className="text-5xl md:text-7xl font-semibold text-center max-w-4xl">
             Promocionarte como artista es muy fácil
         </h1>
-        <div className="flex justify-between w-full items-center mt-12">
+        <div className="flex flex-col md:flex-row gap-4 justify-between w-full items-center mt-12">
             <div className="flex flex-col gap-4 items-center justify-center">
-                <div className="flex gap-4 items center justify-center rounded-full bg-[#F7F7F7] px-8 py-4 text-xl">
+                <div className="flex gap-4 items center justify-center rounded-full bg-[#F7F7F7] px-8 py-4 text-base">
                     <Infinity size={24} />
-                    Haz cambios cuando necesites
+                    Haz cambios 24/7
                 </div>
-                <p className="text-center text-base max-w-xs font-light">Haz actualizaciones en tu perfil <span className="font-medium text-black">a cualquier hora</span></p>
+                <p className="text-center text-sm lg:text-base max-w-xs font-light">Haz actualizaciones en tu perfil <span className="font-medium text-black">a cualquier hora</span></p>
             </div>
             <div className="flex flex-col gap-4 items-center justify-center">
-                <div className="flex gap-4 items center justify-center rounded-full bg-[#F7F7F7] px-8 py-4 text-xl">
+                <div className="flex gap-4 items center justify-center rounded-full bg-[#F7F7F7] px-8 py-4 text-base">
                     <Route size={24} />
                     Publica en pocos pasos
                 </div>
-                <p className="text-center text-base max-w-xs font-light">Publica tu perfil de artista <span className="font-medium text-black">totalmente gratis</span> en menos de 5 minutos</p>
+                <p className="text-center text-sm lg:text-base max-w-xs font-light">Publica tu perfil de artista <span className="font-medium text-black">totalmente gratis</span> en menos de 5 minutos</p>
             </div>
             <div className="flex flex-col gap-4 items-center justify-center">
-                <div className="flex gap-4 items center justify-center rounded-full bg-[#F7F7F7] px-8 py-4 text-xl">
+                <div className="flex gap-4 items center justify-center rounded-full bg-[#F7F7F7] px-8 py-4 text-base">
                     <HeartPulse size={24} />
-                    Recibe ayuda cuando lo necesites
+                    Recibe ayuda
                 </div>
-                <p className="text-center text-base max-w-xs font-light">Si necesitas ayuda o ves que algo no esta funcionando correctamente no dudes en contactarnos</p>
+                <p className="text-center text-sm lg:text-base max-w-xs font-light">Si necesitas ayuda o ves que algo no esta funcionando correctamente no dudes en contactarnos</p>
             </div>
         </div>
       </div>

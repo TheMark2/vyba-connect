@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Routes, Route, useLocation } from 'react-router-dom';
 import { AnimatePresence } from 'framer-motion';
@@ -13,6 +12,12 @@ import ArtistOnboardingPage from './pages/ArtistOnboardingPage';
 import NotFound from './pages/NotFound';
 import { Toaster } from "@/components/ui/toaster";
 import LandingArtist from './pages/LandingArtist';
+import DashboardLayout from './components/dashboard/DashboardLayout';
+import Overview from './pages/dashboard/Overview';
+import Profile from './pages/dashboard/Profile';
+import Messages from './pages/dashboard/Messages';
+import Analytics from './pages/dashboard/Analytics';
+import Settings from './pages/dashboard/Settings';
 
 function App() {
   const location = useLocation();
@@ -30,6 +35,14 @@ function App() {
           <Route path="/artist-benefits" element={<ArtistBenefitsPage />} />
           <Route path="/artist-onboarding" element={<ArtistOnboardingPage />} />
           <Route path="/landing-artist" element={<LandingArtist />} />
+          
+          {/* Dashboard Routes */}
+          <Route path="/dashboard" element={<DashboardLayout><Overview /></DashboardLayout>} />
+          <Route path="/dashboard/profile" element={<DashboardLayout><Profile /></DashboardLayout>} />
+          <Route path="/dashboard/messages" element={<DashboardLayout><Messages /></DashboardLayout>} />
+          <Route path="/dashboard/analytics" element={<DashboardLayout><Analytics /></DashboardLayout>} />
+          <Route path="/dashboard/settings" element={<DashboardLayout><Settings /></DashboardLayout>} />
+          
           <Route path="*" element={<NotFound />} />
         </Routes>
       </AnimatePresence>

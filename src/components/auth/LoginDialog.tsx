@@ -53,16 +53,16 @@ const LoginDialog = ({
           </div>
         </div>}
       
-      <div className={cn("flex flex-col space-y-2")}>
-        {!isMobile && <div className="text-3xl font-semibold">
+      <div className={cn("flex flex-col space-y-2 text-center mb-4")}>
+        {!isMobile && <div className="text-3xl text-vyba-navy font-semibold font-figtree">
             Inicia sesión para continuar
           </div>}
-        <p className="text-muted-foreground mb-6">
-          Para añadir artistas a favoritos, necesitas iniciar sesión
+        <p className="text-muted-foreground text-sm text-vyba-tertiary font-light max-w-xs mx-auto">
+          Para añadir artistas a favoritos es necesario iniciar sesión
         </p>
       </div>
 
-      <div className="space-y-4 py-4">
+      <div className="space-y-4 py-4 px-12">
         <div className="space-y-4">
           <Button variant="secondary" className="w-full flex items-center justify-center gap-2 bg-[#F7F7F7] text-black" onClick={() => handleSocialLogin("Google")} disabled={isLoading}>
             {isLoading ? <Loader2 className="h-4 w-4 animate-spin" /> : <img src="/logos/google-logo.svg" alt="Google" width={20} height={20} />}
