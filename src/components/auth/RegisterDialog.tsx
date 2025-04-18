@@ -87,16 +87,20 @@ const RegisterDialog = ({ open, onOpenChange, onSuccess }: RegisterDialogProps) 
     // Simulamos registro
     setTimeout(() => {
       setIsLoading(false);
-      // Cerramos el diálogo de registro y llamamos al callback de éxito
-      onOpenChange(false);
-      
       // Importante: Ejecutamos el callback de éxito con los datos del usuario
       if (onSuccess) {
+        console.log("Llamando a onSuccess con:", { 
+          fullName: `${data.name} ${data.lastName}`, 
+          email 
+        });
         onSuccess({ 
           fullName: `${data.name} ${data.lastName}`, 
           email 
         });
       }
+      
+      // Cerramos el diálogo de registro después de registrar al usuario
+      onOpenChange(false);
       
       toast.success("Registro completado", {
         description: "¡Bienvenido a VYBA!"
@@ -131,29 +135,6 @@ const RegisterDialog = ({ open, onOpenChange, onSuccess }: RegisterDialogProps) 
     }, 300);
   };
 
-  // Renderizar el componente OTP de manera segura
-  const renderOTPInput = () => {
-    return (
-      <InputOTP
-        value={code}
-        onChange={(value) => setCode(value)}
-        maxLength={6}
-        render={({ slots }) => (
-          <InputOTPGroup className="gap-2">
-            {slots.map((slot, index) => (
-              <InputOTPSlot
-                key={index}
-                {...slot}
-                index={index}
-                className="rounded-md bg-[#F7F7F7] w-10 h-12 text-center text-lg focus:ring-0 focus:outline-none"
-              />
-            ))}
-          </InputOTPGroup>
-        )}
-      />
-    );
-  };
-
   return (
     <Dialog open={open} onOpenChange={handleClose}>
       <DialogContent className="sm:max-w-xl">
@@ -186,6 +167,7 @@ const RegisterDialog = ({ open, onOpenChange, onSuccess }: RegisterDialogProps) 
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 required
+                className="focus:ring-0 focus-visible:ring-0 focus-visible:ring-offset-0 focus:ring-offset-0"
               />
             </div>
             <Button 
@@ -206,7 +188,21 @@ const RegisterDialog = ({ open, onOpenChange, onSuccess }: RegisterDialogProps) 
               <p className="text-sm font-light mb-4 text-black">
                 Inserta el código que te hemos enviado por correo a {email}
               </p>
-              {renderOTPInput()}
+              <InputOTP
+                value={code}
+                onChange={(value) => setCode(value)}
+                maxLength={6}
+              >
+                <InputOTPGroup className="gap-2">
+                  {[0, 1, 2, 3, 4, 5].map((i) => (
+                    <InputOTPSlot
+                      key={i}
+                      index={i}
+                      className="rounded-md bg-[#F7F7F7] w-10 h-12 text-center text-lg focus:ring-0 focus:outline-none"
+                    />
+                  ))}
+                </InputOTPGroup>
+              </InputOTP>
             </div>
             <div className="flex gap-2 justify-between">
               <Button 
@@ -215,7 +211,7 @@ const RegisterDialog = ({ open, onOpenChange, onSuccess }: RegisterDialogProps) 
                 onClick={handleResendCode}
                 isLoading={resendLoading}
               >
-                {resendLoading ? "Enviando..." : "Más opciones"}
+                {resendLoading ? "Enviando..." : "Volver a enviar"}
               </Button>
               <Button 
                 variant="terciary"
@@ -240,7 +236,7 @@ const RegisterDialog = ({ open, onOpenChange, onSuccess }: RegisterDialogProps) 
                   <FormItem>
                     <FormLabel>Nombre</FormLabel>
                     <FormControl>
-                      <Input placeholder="Juan" {...field} />
+                      <Input placeholder="Juan" {...field} className="focus:ring-0 focus-visible:ring-0 focus-visible:ring-offset-0 focus:ring-offset-0" />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -254,7 +250,7 @@ const RegisterDialog = ({ open, onOpenChange, onSuccess }: RegisterDialogProps) 
                   <FormItem>
                     <FormLabel>Apellido</FormLabel>
                     <FormControl>
-                      <Input placeholder="Pérez" {...field} />
+                      <Input placeholder="Pérez" {...field} className="focus:ring-0 focus-visible:ring-0 focus-visible:ring-offset-0 focus:ring-offset-0" />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -268,7 +264,7 @@ const RegisterDialog = ({ open, onOpenChange, onSuccess }: RegisterDialogProps) 
                   <FormItem>
                     <FormLabel>Fecha de nacimiento</FormLabel>
                     <FormControl>
-                      <Input type="date" {...field} />
+                      <Input type="date" {...field} className="focus:ring-0 focus-visible:ring-0 focus-visible:ring-offset-0 focus:ring-offset-0" />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
