@@ -1,13 +1,63 @@
 import React, { useState } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Bell, Mail, User, Settings, BarChart, CalendarClock, MessageSquare, Clock, Lightbulb, Star, CircleAlert } from "lucide-react";
+import { Bell, Mail, User, Settings, BarChart, CalendarClock, MessageSquare, Clock, Lightbulb, Star, CircleAlert, Music, Wrench, Timer, GraduationCap, Users } from "lucide-react";
 import { Progress } from "@/components/ui/progress";
 import { Carousel, CarouselItem } from "@/components/ui/carousel";
+import { type ArtistProfile, type OnboardingCard } from "@/types/artist";
 
 const Overview = () => {
   const [userName] = useState<string>("Usuario");
-  const [profileProgress] = useState<number>(45); // This would come from your state management or API
+  const [profileProgress] = useState<number>(45);
+
+  const [artistProfile] = useState<ArtistProfile>({
+    experience: [],
+    shows: [],
+    equipment: undefined,
+    timeRequirements: undefined,
+    education: undefined,
+    teamMembers: undefined
+  });
+
+  const onboardingCards: OnboardingCard[] = [
+    {
+      id: "experience",
+      title: "Experiéncia",
+      description: "Cuéntanos qué has hecho hasta ahora: shows, proyectos, trayectoria...",
+      icon: <Star className="h-12 w-12 text-vyba-navy self-start mb-auto" strokeWidth={1.5} />,
+      field: "experience"
+    },
+    {
+      id: "equipment",
+      title: "¿Tienes equipo propio?",
+      description: "¿Tienes tu propio sonido, luces o set para tocar? ¡Esto suma puntos!",
+      icon: <Wrench className="h-12 w-12 text-vyba-navy self-start mb-auto" strokeWidth={1.5} />,
+      field: "equipment"
+    },
+    {
+      id: "timeRequirements",
+      title: "¿Cuáles son tus tiempos?",
+      description: "Dinos cuánto tardas en montar y en realizar la prueba de sonido.",
+      icon: <Timer className="h-12 w-12 text-vyba-navy self-start mb-auto" strokeWidth={1.5} />,
+      field: "timeRequirements"
+    },
+    {
+      id: "education",
+      title: "¿Tienes formación?",
+      description: "Si has estudiado música o algo relacionado, ¡este es tu espacio!",
+      icon: <GraduationCap className="h-12 w-12 text-vyba-navy self-start mb-auto" strokeWidth={1.5} />,
+      field: "education"
+    },
+    {
+      id: "teamMembers",
+      title: "¿Quiénes son los integrantes?",
+      description: "Presenta a tu crew o banda. ¡Queremos saber quiénes están detrás del show!",
+      icon: <Users className="h-12 w-12 text-vyba-navy self-start mb-auto" strokeWidth={1.5} />,
+      field: "teamMembers"
+    }
+  ];
+
+  const incompleteCards = onboardingCards.filter(card => !artistProfile[card.field] || artistProfile[card.field]?.length === 0);
 
   return (
     <div className="mt-32">
@@ -155,35 +205,40 @@ const Overview = () => {
           <Star className="absolute top-1/2 right-6 -translate-y-1/2 h-9 w-9 text-vyba-navy" />
         </div>
       </div>
-      <section className="px-32 mt-24 relative overflow-hidden">
-        <div 
-          className="absolute inset-0 bg-cover bg-center" 
-          style={{ backgroundImage: "url('/lovable-uploads/dashboardbannersteps.jpg')" }}
-        ></div>
-        <div className="absolute inset-0 bg-black bg-opacity-50"></div>
-        <div className="relative z-10 p-8 text-white h-full flex flex-col justify-center mt-32">
-          <h2 className="text-5xl font-semibold text-white mb-4">Pasos esenciales</h2>
-          <p className="text-lg mb-6 text-white/80 font-light">Completa tu perfil para aumentar tus oportunidades de recibir más solicitudes</p>
-          <Button className="w-max bg-vyba-navy hover:bg-vyba-navy/90">Completar perfil</Button>
-        </div>
-        <div>
-          <Carousel className="w-full">
-            <CarouselItem className="w-64 h-64 bg-vyba-gray rounded-[32px] p-8">
-              <div className="flex flex-col h-full">
-                <Star className="h-12 w-12 text-vyba-navy self-start mb-auto" strokeWidth={1.5} />
-                <div className="flex flex-col mt-auto">
-                  <h2 className="text-[32px] font-bold text-[#222222] leading-tight mb-2">
-                    Experiéncia
-                  </h2>
-                  <p className="text-[#717171] text-base font-light leading-snug">
-                    Comparte los mejores sitios en los que has estado trabajando
-                  </p>
-                </div>
-              </div>
-            </CarouselItem>
-          </Carousel>
-        </div>
-      </section>
+
+      {incompleteCards.length > 0 && (
+        <section className="px-32 mt-24 relative overflow-hidden">
+          <div 
+            className="absolute inset-0 bg-cover bg-center" 
+            style={{ backgroundImage: "url('/lovable-uploads/dashboardbannersteps.jpg')" }}
+          ></div>
+          <div className="absolute inset-0 bg-black bg-opacity-50"></div>
+          <div className="relative z-10 p-8 text-white h-full flex flex-col justify-center mt-32">
+            <h2 className="text-5xl font-semibold text-white mb-4">Pasos esenciales</h2>
+            <p className="text-lg mb-6 text-white/80 font-light">Completa tu perfil para aumentar tus oportunidades de recibir más solicitudes</p>
+            <Button className="w-max bg-vyba-navy hover:bg-vyba-navy/90">Completar perfil</Button>
+          </div>
+          <div>
+            <Carousel className="w-full">
+              {incompleteCards.map((card) => (
+                <CarouselItem key={card.id} className="w-64 h-64 bg-vyba-gray rounded-[32px] p-8">
+                  <div className="flex flex-col h-full">
+                    {card.icon}
+                    <div className="flex flex-col mt-auto">
+                      <h2 className="text-[32px] font-bold text-[#222222] leading-tight mb-2">
+                        {card.title}
+                      </h2>
+                      <p className="text-[#717171] text-base font-light leading-snug">
+                        {card.description}
+                      </p>
+                    </div>
+                  </div>
+                </CarouselItem>
+              ))}
+            </Carousel>
+          </div>
+        </section>
+      )}
     </div>
   );
 };
