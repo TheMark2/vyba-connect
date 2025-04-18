@@ -10,7 +10,7 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { CheckCircle, XCircle } from "lucide-react";
+import { Check, XCircle } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 type Step = 'email' | 'verification' | 'registration';
@@ -335,25 +335,25 @@ const RegisterDialog = ({ open, onOpenChange, onSuccess }: RegisterDialogProps) 
                         const isValid = req.test(passwordValue);
                         const isValidated = validatedRules.includes(index);
 
-                        return !isValidated ? (
+                        return (
                           <li
                             key={index}
                             className={cn(
-                              "flex items-center gap-2 text-[#C13515] transition-all duration-700 ease-in-out",
+                              "flex items-center gap-2 transition-all duration-300 ease-in-out",
                               {
-                                "opacity-0 h-0 my-0 overflow-hidden pointer-events-none transform translate-y-[-10px]": isValid,
-                                "opacity-100 h-auto transform translate-y-0": !isValid
+                                "text-green-500": isValid,
+                                "text-[#C13515]": !isValid
                               }
                             )}
                           >
                             {isValid ? (
-                              <CheckCircle className="w-4 h-4 text-green-500" />
+                              <Check className="w-4 h-4" />
                             ) : (
-                              <XCircle className="w-4 h-4 text-red-500" />
+                              <XCircle className="w-4 h-4" />
                             )}
                             {req.label}
                           </li>
-                        ) : null;
+                        );
                       })}
                     </ul>
 
