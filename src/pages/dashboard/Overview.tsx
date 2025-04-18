@@ -1,9 +1,10 @@
+
 import React, { useState } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Bell, Mail, User, Settings, BarChart, CalendarClock, MessageSquare, Clock, Lightbulb, Star, CircleAlert, Music, Wrench, Timer, GraduationCap, Users } from "lucide-react";
 import { Progress } from "@/components/ui/progress";
-import { Carousel, CarouselItem } from "@/components/ui/carousel";
+import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/carousel";
 import { type ArtistProfile, type OnboardingCard } from "@/types/artist";
 
 const Overview = () => {
@@ -213,28 +214,39 @@ const Overview = () => {
             style={{ backgroundImage: "url('/lovable-uploads/dashboardbannersteps.jpg')" }}
           ></div>
           <div className="absolute inset-0 bg-black bg-opacity-50"></div>
-          <div className="relative z-10 p-8 text-white h-full flex flex-col justify-center mt-32">
+          <div className="relative z-10 p-8 text-white h-full flex flex-col justify-center">
             <h2 className="text-5xl font-semibold text-white mb-4">Pasos esenciales</h2>
             <p className="text-lg mb-6 text-white/80 font-light">Completa tu perfil para aumentar tus oportunidades de recibir más solicitudes</p>
             <Button className="w-max bg-vyba-navy hover:bg-vyba-navy/90">Completar perfil</Button>
           </div>
-          <div>
-            <Carousel className="w-full">
-              {incompleteCards.map((card) => (
-                <CarouselItem key={card.id} className="w-64 h-64 bg-vyba-gray rounded-[32px] p-8">
-                  <div className="flex flex-col h-full">
-                    {card.icon}
-                    <div className="flex flex-col mt-auto">
-                      <h2 className="text-[32px] font-bold text-[#222222] leading-tight mb-2">
-                        {card.title}
-                      </h2>
-                      <p className="text-[#717171] text-base font-light leading-snug">
-                        {card.description}
-                      </p>
+          
+          <div className="relative z-10 px-12 py-8">
+            <Carousel
+              opts={{
+                align: "start",
+                loop: false,
+              }}
+              className="w-full"
+            >
+              <CarouselContent className="-ml-4">
+                {incompleteCards.map((card) => (
+                  <CarouselItem key={card.id} className="pl-4 basis-80">
+                    <div className="h-64 bg-vyba-gray rounded-[32px] p-8 flex flex-col">
+                      {card.icon}
+                      <div className="mt-auto">
+                        <h2 className="text-[32px] font-bold text-[#222222] leading-tight mb-2">
+                          {card.title}
+                        </h2>
+                        <p className="text-[#717171] text-base font-light leading-snug">
+                          {card.description}
+                        </p>
+                      </div>
                     </div>
-                  </div>
-                </CarouselItem>
-              ))}
+                  </CarouselItem>
+                ))}
+              </CarouselContent>
+              <CarouselPrevious className="absolute left-0 top-1/2 -translate-y-1/2" />
+              <CarouselNext className="absolute right-0 top-1/2 -translate-y-1/2" />
             </Carousel>
           </div>
         </section>
