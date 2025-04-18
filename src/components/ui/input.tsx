@@ -1,3 +1,4 @@
+
 import * as React from "react"
 import { cn } from "@/lib/utils"
 
@@ -26,10 +27,9 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
             "border-[#C13515] border-2": error,
             "focus:bg-[#F1F1F1] hover:bg-[#EAEAEA] transition-all duration-500 ease-in-out": variant === "default",
           },
-          "focus:outline-none focus:ring-0 focus:ring-transparent", // <-- siempre quita el ring
+          "focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 focus:outline-none focus:ring-0 focus:ring-offset-0",
           className
         )}
-
         ref={ref}
         {...props}
       />

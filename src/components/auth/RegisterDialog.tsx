@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
@@ -32,6 +33,7 @@ const RegisterDialog = ({ open, onOpenChange, onSuccess }: RegisterDialogProps) 
   const [email, setEmail] = useState('');
   const [code, setCode] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const [resendLoading, setResendLoading] = useState(false);
 
   const form = useForm<RegistrationData>({
     resolver: zodResolver(registrationSchema),
@@ -57,6 +59,17 @@ const RegisterDialog = ({ open, onOpenChange, onSuccess }: RegisterDialogProps) 
     }, 1500);
   };
 
+  const handleResendCode = () => {
+    setResendLoading(true);
+    // Simulamos envío de código nuevamente
+    setTimeout(() => {
+      setResendLoading(false);
+      toast.success("Código de verificación reenviado", {
+        description: "Por favor, revisa tu correo electrónico"
+      });
+    }, 1500);
+  };
+
   const handleVerificationSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (code.length !== 6) return;
@@ -74,14 +87,28 @@ const RegisterDialog = ({ open, onOpenChange, onSuccess }: RegisterDialogProps) 
     // Simulamos registro
     setTimeout(() => {
       setIsLoading(false);
+      // Cerramos el diálogo de registro y llamamos al callback de éxito
       onOpenChange(false);
-      if (onSuccess) onSuccess({ 
-        fullName: `${data.name} ${data.lastName}`, 
-        email 
-      });
+      
+      // Importante: Ejecutamos el callback de éxito con los datos del usuario
+      if (onSuccess) {
+        onSuccess({ 
+          fullName: `${data.name} ${data.lastName}`, 
+          email 
+        });
+      }
+      
       toast.success("Registro completado", {
         description: "¡Bienvenido a VYBA!"
       });
+      
+      // Reseteamos el estado después del registro exitoso
+      setTimeout(() => {
+        setCurrentStep('email');
+        setEmail('');
+        setCode('');
+        form.reset();
+      }, 300);
     }, 1500);
   };
 
@@ -95,10 +122,13 @@ const RegisterDialog = ({ open, onOpenChange, onSuccess }: RegisterDialogProps) 
 
   const handleClose = () => {
     onOpenChange(false);
-    setCurrentStep('email');
-    setEmail('');
-    setCode('');
-    form.reset();
+    // Reseteamos el estado con un pequeño retraso para evitar problemas de UI
+    setTimeout(() => {
+      setCurrentStep('email');
+      setEmail('');
+      setCode('');
+      form.reset();
+    }, 300);
   };
 
   // Renderizar el componente OTP de manera segura
@@ -115,7 +145,7 @@ const RegisterDialog = ({ open, onOpenChange, onSuccess }: RegisterDialogProps) 
                 key={index}
                 {...slot}
                 index={index}
-                className="rounded-md bg-[#F7F7F7] w-10 h-12 text-center text-lg"
+                className="rounded-md bg-[#F7F7F7] w-10 h-12 text-center text-lg focus:ring-0 focus:outline-none"
               />
             ))}
           </InputOTPGroup>
@@ -179,18 +209,20 @@ const RegisterDialog = ({ open, onOpenChange, onSuccess }: RegisterDialogProps) 
               {renderOTPInput()}
             </div>
             <div className="flex gap-2 justify-between">
-            <Button 
+              <Button 
                 variant="secondary"
-                type="submit" 
+                type="button"
+                onClick={handleResendCode}
+                isLoading={resendLoading}
               >
-                Mas opciones
+                {resendLoading ? "Enviando..." : "Más opciones"}
               </Button>
               <Button 
-                  variant="terciary"
-                  type="submit" 
-                  disabled={code.length !== 6 || isLoading}
-                  isLoading={isLoading}
-                  className="px-12"
+                variant="terciary"
+                type="submit" 
+                disabled={code.length !== 6 || isLoading}
+                isLoading={isLoading}
+                className="px-12"
               >
                 {isLoading ? "Verificando" : "Verificar código"}
               </Button>
@@ -242,18 +274,19 @@ const RegisterDialog = ({ open, onOpenChange, onSuccess }: RegisterDialogProps) 
                   </FormItem>
                 )}
               />
+              
+              <div className="mt-8">
+                <Button 
+                  variant="terciary"
+                  type="submit" 
+                  className="w-full"
+                  disabled={isLoading}
+                  isLoading={isLoading}
+                >
+                  {isLoading ? "Registrando..." : "Registrarse"}
+                </Button>
+              </div>
             </form>
-            <div className="px-12 mt-8">
-              <Button 
-                variant="terciary"
-                type="submit" 
-                className="w-full"
-                disabled={isLoading}
-                isLoading={isLoading}
-              >
-                {isLoading ? "Registrando..." : "Registrarse"}
-              </Button>
-            </div>
           </Form>
         )}
       </DialogContent>

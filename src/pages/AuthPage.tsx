@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -34,9 +35,14 @@ const AuthPage = () => {
   };
 
   const handleRegistrationSuccess = (userInfo: { fullName: string; email?: string }) => {
-    setShowRegisterDialog(false);
+    console.log("Registration success, showing welcome dialog with user info:", userInfo);
     setRegisteredUserInfo(userInfo);
-    setShowWelcomeDialog(true);
+    setShowRegisterDialog(false);
+    
+    // Pequeño retraso para que se cierre primero el de registro
+    setTimeout(() => {
+      setShowWelcomeDialog(true);
+    }, 300);
   };
 
   const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
