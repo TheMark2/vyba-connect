@@ -330,11 +330,10 @@ const RegisterDialog = ({ open, onOpenChange, onSuccess }: RegisterDialogProps) 
                     </FormControl>
                     <FormMessage />
 
+                  {!areAllRequirementsMet && (
                     <ul className="mt-2 text-xs space-y-1">
                       {passwordRequirements.map((req, index) => {
                         const isValid = req.test(passwordValue);
-                        const isValidated = validatedRules.includes(index);
-
                         return (
                           <li
                             key={index}
@@ -356,25 +355,29 @@ const RegisterDialog = ({ open, onOpenChange, onSuccess }: RegisterDialogProps) 
                         );
                       })}
                     </ul>
+                  )}
+                </FormItem>
+              )}
+            />
 
-                  </FormItem>
-                )}
-              />
+            <p className="text-xs text-gray-500 mb-4">
+              Al seleccionar registrarse se aceptan los términos y condiciones de VYBA.
+            </p>
 
-              <div className="mt-8">
-                <Button 
-                  variant="terciary"
-                  type="submit" 
-                  className="w-full"
-                  disabled={isLoading || !areAllRequirementsMet}
-                  isLoading={isLoading}
-                >
-                  {isLoading ? "Registrando" : "Registrarse"}
-                </Button>
-              </div>
-            </form>
-          </Form>
-        )}
+            <div className="mt-8">
+              <Button 
+                variant="terciary"
+                type="submit" 
+                className="w-full"
+                disabled={isLoading || !areAllRequirementsMet}
+                isLoading={isLoading}
+              >
+                {isLoading ? "Registrando" : "Registrarse"}
+              </Button>
+            </div>
+          </form>
+        </Form>
+      )}
       </DialogContent>
     </Dialog>
   );
