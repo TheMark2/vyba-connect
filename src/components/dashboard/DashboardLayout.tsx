@@ -8,6 +8,7 @@ import {
   Settings,
   BarChart,
   LogOut,
+  Calendar,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import {
@@ -31,10 +32,10 @@ const DashboardLayout = ({ children }: DashboardLayoutProps) => {
 
   const navItems = [
     { path: '/dashboard', icon: LayoutDashboard, label: 'Al día' },
-    { path: '/dashboard/profile', label: 'Perfil' },
-    { path: '/dashboard/messages', label: 'Mensajes' },
-    { path: '/dashboard/analytics', label: 'Analíticas' },
-    { path: '/dashboard/calendar', label: 'Calendario' },
+    { path: '/dashboard/profile', icon: User, label: 'Perfil' },
+    { path: '/dashboard/messages', icon: MessageSquare, label: 'Mensajes' },
+    { path: '/dashboard/analytics', icon: BarChart, label: 'Analíticas' },
+    { path: '/dashboard/calendar', icon: Calendar, label: 'Calendario' },
   ];
 
   const handleLogout = () => {
@@ -44,8 +45,8 @@ const DashboardLayout = ({ children }: DashboardLayoutProps) => {
 
   return (
     <div className="flex flex-col h-screen">
-      {/* Top Navigation */}
-      <nav className="relative top-0 left-0 w-full bg-white/30 dark:bg-black z-50 backdrop-blur-xl px-4">
+      {/* Top Navigation - Solo visible en desktop */}
+      <nav className="hidden lg:block relative top-0 left-0 w-full bg-white/30 dark:bg-black z-50 backdrop-blur-xl px-4">
         <div className="grid grid-cols-3 items-center py-4 px-8 md:px-32">
           {/* Logo */}
           <div className="flex items-center gap-2">
@@ -111,7 +112,6 @@ const DashboardLayout = ({ children }: DashboardLayoutProps) => {
               </DropdownMenuContent>
             </DropdownMenu>
           </div>
-
         </div>
       </nav>
 
@@ -119,6 +119,29 @@ const DashboardLayout = ({ children }: DashboardLayoutProps) => {
       <div className="flex-1 overflow-auto">
         {children}
       </div>
+
+      {/* Bottom Navigation - Solo visible en móvil */}
+      <nav className="lg:hidden fixed bottom-0 left-0 w-full bg-white border-t border-vyba-gray z-50">
+        <div className="grid grid-cols-5 h-16">
+          {navItems.map((item) => {
+            const isActive = location.pathname === item.path;
+            const Icon = item.icon;
+            return (
+              <button
+                key={item.path}
+                onClick={() => navigate(item.path)}
+                className={cn(
+                  "flex flex-col items-center justify-center gap-1 text-xs transition-colors",
+                  isActive ? "text-vyba-navy" : "text-vyba-tertiary"
+                )}
+              >
+                <Icon className="h-5 w-5" />
+                <span>{item.label}</span>
+              </button>
+            );
+          })}
+        </div>
+      </nav>
     </div>
   );
 };
