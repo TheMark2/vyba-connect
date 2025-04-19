@@ -1,14 +1,40 @@
 import React, { useState } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Bell, UserSearch, Hourglass, Speaker, Theater, CalendarClock, MessageSquare, Clock, Lightbulb, Star, CircleAlert, FileUser, Wrench, Timer, GraduationCap, Users } from "lucide-react";
+import { Bell, UserSearch, Hourglass, Speaker, Theater, CalendarClock, MessageSquare, Clock, Lightbulb, Star, CircleAlert, FileUser, Wrench, Timer, GraduationCap, Users, CalendarIcon, MapPin } from "lucide-react";
 import { Progress } from "@/components/ui/progress";
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/carousel";
 import { type ArtistProfile, type OnboardingCard } from "@/types/artist";
+import { format } from 'date-fns';
+import { es } from 'date-fns/locale';
+import { useNavigate } from 'react-router-dom';
 
 const Overview = () => {
+  const navigate = useNavigate();
   const [userName] = useState<string>("Usuario");
   const [profileProgress] = useState<number>(45);
+  const [upcomingEvents] = useState([
+    {
+      id: '1',
+      title: 'Ensayo general',
+      startTime: '14:00',
+      endTime: '16:00',
+      location: 'Sala de ensayos A',
+      startDate: new Date(2024, 2, 15),
+      endDate: new Date(2024, 2, 15),
+      type: 'ensayo'
+    },
+    {
+      id: '2',
+      title: 'Concierto en Sala B',
+      startTime: '20:00',
+      endTime: '22:00',
+      location: 'Sala B, Calle Principal 123',
+      startDate: new Date(2024, 2, 16),
+      endDate: new Date(2024, 2, 16),
+      type: 'concierto'
+    }
+  ]);
 
   const [artistProfile] = useState<ArtistProfile>({
     experience: [],
@@ -73,6 +99,27 @@ const Overview = () => {
   ];
 
   const incompleteCards = onboardingCards.filter(card => !artistProfile[card.field] || artistProfile[card.field]?.length === 0);
+
+  const getEventColor = (type: string) => {
+    switch (type) {
+      case 'ensayo':
+        return 'bg-blue-100 text-blue-800';
+      case 'concierto':
+        return 'bg-purple-100 text-purple-800';
+      case 'reunion':
+        return 'bg-green-100 text-green-800';
+      default:
+        return 'bg-gray-100 text-gray-800';
+    }
+  };
+
+  const formatDate = (date: Date) => {
+    return format(date, 'EEEE d MMMM', { locale: es });
+  };
+
+  const formatTime = (time: string) => {
+    return time;
+  };
 
   return (
     <div className="mt-48">
@@ -140,20 +187,51 @@ const Overview = () => {
           </div>
         </div>
 
-        <div className="bg-vyba-gray rounded-2xl p-6 relative">
-          <div className="flex-1 pr-12">
+        <div 
+          className="bg-vyba-gray rounded-2xl p-6 relative cursor-pointer hover:bg-vyba-gray/80 transition-colors"
+          onClick={() => navigate('/dashboard/calendar')}
+        >
+          <div className="flex-1">
             <h2 className="text-xl font-medium mb-1">Eventos próximos</h2>
-            <p className="text-muted-foreground text-sm text-vyba-tertiary pr-12 font-light">
-              Tienes 3 eventos programados para este mes
+            <p className="text-muted-foreground text-sm text-vyba-tertiary font-light mb-4">
+              Tienes {upcomingEvents.length} eventos programados
             </p>
             
-            <div className="flex items-center w-full mt-4">
-              <Button variant="link" className="p-0 text-vyba-tertiary text-sm text-vyba-navy underline rounded-none">
-                Ver calendario
-              </Button>
-            </div>
+            <Carousel className="w-full">
+              <CarouselContent>
+                {upcomingEvents.map(event => (
+                  <CarouselItem key={event.id}>
+                    <div className="p-4 bg-white rounded-lg">
+                      <div className="flex justify-between items-start">
+                        <div>
+                          <h3 className="font-medium">{event.title}</h3>
+                          <div className="flex items-center gap-2 text-sm text-vyba-tertiary mt-1">
+                            <CalendarIcon className="h-4 w-4" />
+                            <span>{formatDate(new Date(event.startDate))}</span>
+                          </div>
+                          <div className="flex items-center gap-2 text-sm text-vyba-tertiary mt-1">
+                            <Clock className="h-4 w-4" />
+                            <span>{formatTime(event.startTime)} - {formatTime(event.endTime)}</span>
+                          </div>
+                          <div className="flex items-center gap-2 text-sm text-vyba-tertiary mt-1">
+                            <MapPin className="h-4 w-4" />
+                            <span>{event.location}</span>
+                          </div>
+                        </div>
+                        <div className={`px-2 py-1 rounded-md text-xs font-medium ${getEventColor(event.type)}`}>
+                          {event.type}
+                        </div>
+                      </div>
+                    </div>
+                  </CarouselItem>
+                ))}
+              </CarouselContent>
+              <div className="flex justify-center gap-2 mt-4">
+                <CarouselPrevious className="static translate-y-0" />
+                <CarouselNext className="static translate-y-0" />
+              </div>
+            </Carousel>
           </div>
-          <CalendarClock className="absolute top-1/2 right-6 -translate-y-1/2 h-10 w-10 text-vyba-navy stroke-[1.5]" />
         </div>
 
         <div className="bg-vyba-gray rounded-2xl p-6 relative">

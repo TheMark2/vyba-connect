@@ -17,6 +17,7 @@ import Overview from './pages/dashboard/Overview';
 import Profile from './pages/dashboard/Profile';
 import Messages from './pages/dashboard/Messages';
 import Analytics from './pages/dashboard/Analytics';
+import CalendarPage from './pages/dashboard/Calendar';
 import Settings from './pages/dashboard/Settings';
 
 function App() {
@@ -41,7 +42,7 @@ function App() {
           <Route path="/dashboard/profile" element={<DashboardLayout><Profile /></DashboardLayout>} />
           <Route path="/dashboard/messages" element={<DashboardLayout><Messages /></DashboardLayout>} />
           <Route path="/dashboard/analytics" element={<DashboardLayout><Analytics /></DashboardLayout>} />
-          <Route path="/dashboard/settings" element={<DashboardLayout><Settings /></DashboardLayout>} />
+          <Route path="/dashboard/calendar" element={<DashboardLayout><CalendarPage /></DashboardLayout>} />
           
           <Route path="*" element={<NotFound />} />
         </Routes>

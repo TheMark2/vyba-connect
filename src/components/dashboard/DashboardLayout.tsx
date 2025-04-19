@@ -34,7 +34,7 @@ const DashboardLayout = ({ children }: DashboardLayoutProps) => {
     { path: '/dashboard/profile', label: 'Perfil' },
     { path: '/dashboard/messages', label: 'Mensajes' },
     { path: '/dashboard/analytics', label: 'Analíticas' },
-    { path: '/dashboard/settings', label: 'Configuración' },
+    { path: '/dashboard/calendar', label: 'Calendario' },
   ];
 
   const handleLogout = () => {
@@ -45,7 +45,7 @@ const DashboardLayout = ({ children }: DashboardLayoutProps) => {
   return (
     <div className="flex flex-col h-screen">
       {/* Top Navigation */}
-      <nav className="fixed top-0 left-0 w-full bg-white/30 dark:bg-black z-50 backdrop-blur-xl px-4">
+      <nav className="relative top-0 left-0 w-full bg-white/30 dark:bg-black z-50 backdrop-blur-xl px-4">
         <div className="grid grid-cols-3 items-center py-4 px-8 md:px-32">
           {/* Logo */}
           <div className="flex items-center gap-2">
