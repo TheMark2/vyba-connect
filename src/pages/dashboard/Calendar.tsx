@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Button } from "@/components/ui/button";
 import { Calendar as CalendarIcon, Plus, ChevronLeft, ChevronRight, Clock, MapPin, X, Flame, Settings, Bell, Filter, Download, CalendarClock } from "lucide-react";
 import {
@@ -38,7 +38,6 @@ import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/carousel";
-import { cn } from "@/lib/utils";
 
 type CalendarView = 'month' | 'week' | 'day';
 
@@ -119,10 +118,6 @@ const CalendarPage = () => {
     sunday: true
   });
   const [selectedEventType, setSelectedEventType] = useState<string | null>(null);
-  const [showConfigDialog, setShowConfigDialog] = useState(false);
-  const [isConfigOpen, setIsConfigOpen] = useState(false);
-  const [multiDayEvents, setMultiDayEvents] = useState<Event[]>([]);
-  const [singleDayEvents, setSingleDayEvents] = useState<Event[]>([]);
 
   const getEventColor = (type: Event['type'], isMultiDay: boolean = false) => {
     if (isMultiDay) {
@@ -211,39 +206,6 @@ const CalendarPage = () => {
   const filteredEvents = selectedEventType 
     ? events.filter(event => event.type === selectedEventType)
     : events;
-
-  const getDayIntensity = (date: Date) => {
-    const dayOfMonth = date.getDate();
-    const lastDayOfMonth = new Date(date.getFullYear(), date.getMonth() + 1, 0).getDate();
-    
-    // Si es el último jueves del mes
-    if (dayOfMonth > lastDayOfMonth - 7 && date.getDay() === 4) return 'medium';
-    // Si es el último viernes del mes
-    if (dayOfMonth > lastDayOfMonth - 7 && date.getDay() === 5) return 'high';
-    // Si es el último sábado del mes
-    if (dayOfMonth > lastDayOfMonth - 7 && date.getDay() === 6) return 'high';
-    // Si es el último domingo del mes
-    if (dayOfMonth > lastDayOfMonth - 7 && date.getDay() === 0) return 'low';
-    
-    return null;
-  };
-
-  useEffect(() => {
-    // Separar eventos en multi-día y de un solo día
-    const multiDay = events.filter(event => {
-      const start = new Date(event.startDate);
-      const end = new Date(event.endDate);
-      return !isSameDay(start, end);
-    });
-    const singleDay = events.filter(event => {
-      const start = new Date(event.startDate);
-      const end = new Date(event.endDate);
-      return isSameDay(start, end);
-    });
-    
-    setMultiDayEvents(multiDay);
-    setSingleDayEvents(singleDay);
-  }, [events]);
 
   const renderDayView = () => {
     const dayEvents = getEventsForDate(currentDate);
@@ -407,8 +369,13 @@ const CalendarPage = () => {
 
     return (
       <div className="grid grid-cols-7">
-        {['Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb', 'Dom'].map((day) => (
-          <div key={day} className="text-center font-medium text-vyba-tertiary py-2 border-b">
+        <div className="sticky top-0 bg-white z-10">
+          <h2 className="text-2xl font-medium text-center py-2">
+            {format(currentDate, 'MMMM yyyy', { locale: es })}
+          </h2>
+        </div>
+        {['L', 'M', 'X', 'J', 'V', 'S', 'D'].map((day) => (
+          <div key={day} className="text-center font-medium text-vyba-tertiary py-2 border-b sticky top-10 bg-white z-10">
             {day}
           </div>
         ))}
@@ -424,9 +391,10 @@ const CalendarPage = () => {
           return (
             <div
               key={date.toString()}
-              className={`aspect-square p-1 flex flex-col border border-vyba-gray
-                ${isSameMonth(date, currentDate) ? 'bg-white' : 'bg-vyba-gray/50'}
+              className={`min-h-[120px] p-2 border-b border-r cursor-pointer transition-colors
+                ${isSameMonth(date, currentDate) ? 'hover:bg-vyba-gray' : 'bg-gray-50 text-gray-400'}
                 ${selectedDate && isSameDay(date, selectedDate) ? 'bg-vyba-gray' : ''}
+                ${date < new Date() ? 'bg-vyba-gray' : ''}
               `}
               onClick={() => handleDateClick(date)}
             >
@@ -443,7 +411,7 @@ const CalendarPage = () => {
                   />
                 )}
               </div>
-              <div className="space-y-1 overflow-y-auto max-h-[calc(100%-2rem)]">
+              <div className="space-y-1">
                 {/* Eventos de varios días */}
                 {dayMultiDayEvents.map(event => {
                   const isFirstDay = isSameDay(date, new Date(event.startDate));
@@ -503,173 +471,95 @@ const CalendarPage = () => {
   };
 
   const renderWeekView = () => {
-    const weekStart = startOfWeek(currentDate, { weekStartsOn: 0 });
-    const weekEnd = endOfWeek(currentDate, { weekStartsOn: 0 });
-    const days = eachDayOfInterval({ start: weekStart, end: weekEnd });
+    const weekStart = startOfWeek(currentDate, { weekStartsOn: 1 });
+    const weekEnd = endOfWeek(currentDate, { weekStartsOn: 1 });
+    const daysInWeek = eachDayOfInterval({ start: weekStart, end: weekEnd });
+
+    // Agrupar eventos por ID para mantener la misma altura
+    const multiDayEvents = events.filter(event => {
+      const start = new Date(event.startDate);
+      const end = new Date(event.endDate);
+      return !isSameDay(start, end);
+    });
+    const singleDayEvents = events.filter(event => {
+      const start = new Date(event.startDate);
+      const end = new Date(event.endDate);
+      return isSameDay(start, end);
+    });
 
     return (
-      <div className="flex flex-col h-full">
-        <div className="grid grid-cols-7 border border-vyba-gray">
-          {days.map((day) => {
-            const dayEvents = getEventsForDate(day);
-            const isToday = isSameDay(day, new Date());
-            
-            return (
-              <div
-                key={day.toISOString()}
-                className={cn(
-                  "border-r border-vyba-gray last:border-r-0",
-                  isToday && "bg-vyba-gray"
-                )}
-              >
-                <div className="p-2 border-b border-vyba-gray">
-                  <div className="text-xs font-medium text-vyba-tertiary">
-                    {format(day, 'EEE', { locale: es })}
-                  </div>
-                  <div className="text-sm font-medium">
-                    {format(day, 'd')}
-                  </div>
-                </div>
-                <div className="h-[calc(100%-3.5rem)] overflow-y-auto">
-                  {dayEvents.map((event) => {
-                    const startTime = new Date(event.startDate);
-                    const endTime = new Date(event.endDate);
-                    const isMultiDay = !isSameDay(startTime, endTime);
-                    
-                    return (
-                      <div
-                        key={event.id}
-                        className={cn(
-                          "p-1 text-[8px] truncate",
-                          getEventColor(event.type, isMultiDay)
-                        )}
-                      >
-                        <div className="font-medium truncate">{event.title}</div>
-                        <div className="text-vyba-tertiary truncate">
-                          {format(startTime, 'HH:mm')} - {format(endTime, 'HH:mm')}
-                        </div>
-                      </div>
-                    );
-                  })}
-                </div>
+      <div className="grid grid-cols-7">
+        {daysInWeek.map((date) => {
+          const dayEvents = getEventsForDate(date);
+          return (
+            <div
+              key={date.toString()}
+              className={`min-h-[120px] p-2 border-b border-r cursor-pointer transition-colors
+                ${isSameWeek(date, currentDate) ? 'hover:bg-vyba-gray' : 'bg-gray-50 text-gray-400'}
+                ${selectedDate && isSameDay(date, selectedDate) ? 'bg-vyba-gray' : ''}
+              `}
+              onClick={() => handleDateClick(date)}
+            >
+              <div className="text-sm font-medium mb-1 flex items-center gap-1">
+                {format(date, 'EEE d', { locale: es })}
+                {isToday(date) && <div className="w-2 h-2 rounded-full bg-primary"></div>}
               </div>
-            );
-          })}
-        </div>
+              <div className="space-y-1">
+                {dayEvents.map(event => (
+                  <div
+                    key={event.id}
+                    className={`text-xs px-2 py-1 rounded-md truncate ${getEventColor(event.type)}`}
+                  >
+                    {event.title} {event.startTime}
+                  </div>
+                ))}
+              </div>
+            </div>
+          );
+        })}
       </div>
     );
   };
 
-  const renderAllMonths = () => {
-    const months = Array.from({ length: 12 }, (_, i) => {
-      const monthDate = new Date(currentDate.getFullYear(), i, 1);
-      return monthDate;
-    });
+  const handleScroll = (e: React.UIEvent<HTMLDivElement>) => {
+    const scrollTop = e.currentTarget.scrollTop;
+    const monthHeight = e.currentTarget.scrollHeight / 12;
+    const newMonthIndex = Math.floor(scrollTop / monthHeight);
+    const newDate = new Date(currentDate.getFullYear(), newMonthIndex, 1);
+    if (newDate.getMonth() !== currentDate.getMonth()) {
+      setCurrentDate(newDate);
+    }
+  };
 
+  const renderAllMonthsView = () => {
+    const months = Array.from({ length: 12 }, (_, i) => new Date(currentDate.getFullYear(), i, 1));
     return (
-      <div className="space-y-8">
-        {months.map((monthDate) => (
-          <div key={monthDate.toString()} className="space-y-4">
-            <h3 className="text-xl font-medium text-center">
-              {format(monthDate, 'MMMM yyyy', { locale: es })}
-            </h3>
-            {renderMonthViewForDate(monthDate)}
+      <div className="flex flex-col">
+        {months.map((month) => (
+          <div key={month.toString()} className="mb-6">
+            <h2 className="text-2xl font-medium text-center py-2">
+              {format(month, 'MMMM yyyy', { locale: es })}
+            </h2>
+            <div className="grid grid-cols-7">
+              {eachDayOfInterval({ start: startOfMonth(month), end: endOfMonth(month) }).map((date) => (
+                <div
+                  key={date.toString()}
+                  className={`min-h-[120px] p-2 border-b border-r cursor-pointer transition-colors
+                    ${isSameMonth(date, month) ? 'hover:bg-vyba-gray' : 'bg-gray-50 text-gray-400'}
+                    ${selectedDate && isSameDay(date, selectedDate) ? 'bg-vyba-gray' : ''}
+                    ${date < new Date() && !isToday(date) ? 'bg-vyba-gray' : ''}
+                  `}
+                  onClick={() => handleDateClick(date)}
+                >
+                  <div className="text-sm font-medium mb-1 flex items-center gap-1">
+                    {format(date, 'd')}
+                    {isToday(date) && <div className="w-2 h-2 rounded-full bg-primary"></div>}
+                  </div>
+                </div>
+              ))}
+            </div>
           </div>
         ))}
-      </div>
-    );
-  };
-
-  const renderMonthViewForDate = (date: Date) => {
-    const daysInMonth = eachDayOfInterval({
-      start: startOfMonth(date),
-      end: endOfMonth(date)
-    });
-
-    const firstDayOfMonth = startOfMonth(date);
-    const lastDayOfMonth = endOfMonth(date);
-    const startPadding = Array(firstDayOfMonth.getDay()).fill(null);
-    const endPadding = Array(6 - lastDayOfMonth.getDay()).fill(null);
-
-    return (
-      <div className="flex flex-col h-full">
-        <div className="grid grid-cols-7 border-t border-vyba-gray">
-          {/* Días de la semana - Solo visible en desktop */}
-          <div className="hidden lg:flex col-span-7">
-            {['Dom', 'Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb'].map(day => (
-              <div key={day} className="flex-1 text-center text-xs font-medium text-vyba-tertiary py-1 border-b border-vyba-gray">
-                {day}
-              </div>
-            ))}
-          </div>
-          {startPadding.map((_, index) => (
-            <div key={`start-${index}`} className="aspect-square lg:border-b lg:border-r border-vyba-gray" />
-          ))}
-          {daysInMonth.map((dayDate, index) => {
-            const isCurrentMonth = isSameMonth(dayDate, date);
-            const isToday = isSameDay(dayDate, currentDate);
-            const dayEvents = getEventsForDate(dayDate);
-            const dayMultiDayEvents = dayEvents.filter(event => {
-              const start = new Date(event.startDate);
-              const end = new Date(event.endDate);
-              return isSameDay(start, end);
-            });
-            const daySingleDayEvents = dayEvents.filter(event => !isSameDay(new Date(event.startDate), new Date(event.endDate)));
-
-            return (
-              <div
-                key={dayDate.toISOString()}
-                className={cn(
-                  "aspect-square p-1 flex flex-col",
-                  "border-b border-r border-vyba-gray",
-                  index === 0 && "border-l",
-                  isCurrentMonth ? "bg-white" : "bg-vyba-gray/50",
-                  isToday && "bg-vyba-primary/20"
-                )}
-              >
-                <div className="flex flex-col h-full">
-                  <div className="flex-1 flex items-center justify-center">
-                    <span className={cn(
-                      "text-xs font-medium lg:text-xs lg:font-medium",
-                      getDayIntensity(dayDate) === 'high' && "text-red-500",
-                      getDayIntensity(dayDate) === 'medium' && "text-orange-500",
-                      getDayIntensity(dayDate) === 'low' && "text-green-500"
-                    )}>
-                      {dayDate.getDate()}
-                    </span>
-                  </div>
-                  {(dayMultiDayEvents.length > 0 || daySingleDayEvents.length > 0) && (
-                    <div className="flex items-center justify-center gap-1">
-                      {dayMultiDayEvents.length > 0 && (
-                        <div className="flex gap-1">
-                          {dayMultiDayEvents.map(event => (
-                            <div
-                              key={event.id}
-                              className={cn(
-                                "w-2 h-2 rounded-full lg:w-1.5 lg:h-1.5",
-                                getEventColor(event.type, true)
-                              )}
-                            />
-                          ))}
-                        </div>
-                      )}
-                      {daySingleDayEvents.length > 0 && (
-                        <div className="bg-vyba-navy/10 rounded-full px-2 py-0.5">
-                          <span className="text-xs font-medium text-vyba-navy lg:text-[10px]">
-                            {daySingleDayEvents.length}
-                          </span>
-                        </div>
-                      )}
-                    </div>
-                  )}
-                </div>
-              </div>
-            );
-          })}
-          {endPadding.map((_, index) => (
-            <div key={`end-${index}`} className="aspect-square lg:border-b lg:border-r border-vyba-gray" />
-          ))}
-        </div>
       </div>
     );
   };
@@ -677,303 +567,22 @@ const CalendarPage = () => {
   return (
     <div className="h-full">
       <div className="grid grid-cols-1 lg:grid-cols-4 h-full">
-        <div className="lg:col-span-3 bg-white overflow-auto">
-          {/* Contenedor sticky para el botón de configuración en móvil */}
-          <div className="sticky top-0 z-10 bg-white border-b border-vyba-gray lg:hidden">
-            <div className="flex items-center justify-between p-4">
-              <span className="text-sm font-medium text-vyba-navy">Usuario</span>
-              <Button 
-                variant="ghost" 
-                size="icon"
-                onClick={() => setIsConfigOpen(true)}
-              >
-                <Settings className="h-5 w-5" />
-              </Button>
-            </div>
-            <div className="flex items-center justify-between px-6 pb-2">
-              {['L', 'M', 'X', 'J', 'V', 'S', 'D'].map(day => (
-                <div key={day} className="text-xs font-medium text-vyba-tertiary">
+        <div className="lg:col-span-3 bg-white overflow-y-auto h-full" onScroll={handleScroll}>
+          <div className="sticky top-0 bg-white z-10">
+            <h2 className="text-2xl font-medium text-center py-2">
+              {format(currentDate, 'MMMM yyyy', { locale: es })}
+            </h2>
+            <div className="grid grid-cols-7">
+              {['L', 'M', 'X', 'J', 'V', 'S', 'D'].map((day) => (
+                <div key={day} className="text-center text-sm font-light text-vyba-tertiary py-2 border-b">
                   {day}
                 </div>
               ))}
             </div>
           </div>
-
-          {/* Swipable Configuration Panel */}
-          <div className={`fixed inset-y-0 right-0 w-full max-w-md bg-white shadow-lg transform transition-transform duration-300 ease-in-out lg:hidden z-50
-            ${isConfigOpen ? 'translate-x-0' : 'translate-x-full'}`}
-          >
-            <div className="h-full flex flex-col">
-              <div className="p-4 border-b flex items-center justify-between">
-                <h2 className="text-xl font-medium">Configuración</h2>
-                <Button variant="ghost" size="icon" onClick={() => setIsConfigOpen(false)}>
-                  <X className="h-4 w-4" />
-                </Button>
-              </div>
-              <div className="flex-1 overflow-auto">
-                <Tabs defaultValue="general" className="mt-6" onValueChange={setActiveTab}>
-                  <TabsList className="w-full shadow-none">
-                    <TabsTrigger value="general" className="flex-1 shadow-none">General</TabsTrigger>
-                    <TabsTrigger value="availability" className="flex-1 shadow-none">Disponibilidad</TabsTrigger>
-                    <TabsTrigger value="events" className="flex-1 shadow-none">Eventos</TabsTrigger>
-                  </TabsList>
-                </Tabs>
-                <div className="mt-6 space-y-6 px-4">
-                  {activeTab === 'general' && (
-                    <div className="space-y-8">
-                      <div className="space-y-2">
-                        <h3 className="text-2xl font-medium">
-                          Configuración general
-                        </h3>
-                        <p className="text-sm text-vyba-tertiary font-light">Personaliza tu calendario según tus necesidades y preferencias</p>
-                      </div>
-                      <div>
-                        <div className="flex gap-2">
-                          <Select value={view} onValueChange={(value) => setView(value as CalendarView)}>
-                            <SelectTrigger className="w-full">
-                              <SelectValue placeholder="Selecciona una vista" />
-                            </SelectTrigger>
-                            <SelectContent>
-                              <SelectItem value="month">Vista mensual</SelectItem>
-                              <SelectItem value="week">Vista semanal</SelectItem>
-                              <SelectItem value="day">Vista diaria</SelectItem>
-                            </SelectContent>
-                          </Select>
-                          <Button 
-                            variant="secondary" 
-                            className="w-full"
-                            onClick={() => setShowEventDialog(true)}
-                          >
-                            <Plus className="mr-2 h-4 w-4" />
-                            Añadir evento
-                          </Button>
-                        </div>
-                      </div>
-                    </div>
-                  )}
-
-                  {activeTab === 'availability' && (
-                    <div className="space-y-6">
-                      <div className="space-y-2">
-                        <h3 className="text-2xl font-medium">
-                          ¿Tienes disponibilidad para la semana del {format(startOfWeek(currentDate, { weekStartsOn: 1 }), 'd MMMM', { locale: es })}?
-                        </h3>
-                        <p className="text-sm text-vyba-tertiary font-light">Selecciona una opción para indicar tu disponibilidad, mediante la disponibilidad, puedes atraer a clientes de última hora</p>
-                      </div>
-                      <div>
-                        <div className="flex flex-col gap-2">
-                          {[
-                            { value: 'yes', label: 'Sí, estoy disponible' },
-                            { value: 'no', label: 'No, no estoy disponible' },
-                            { value: 'depends', label: 'Depende de la fecha' }
-                          ].map((option) => (
-                            <button
-                              key={option.value}
-                              onClick={() => setImmediateAvailability(option.value)}
-                              className={`w-full py-4 px-4 rounded-md transition-all duration-300 ease-in-out
-                                ${immediateAvailability === option.value 
-                                  ? 'bg-vyba-beige text-black font-medium text-sm' 
-                                  : 'bg-vyba-gray text-vyba-tertiary text-sm'}`}
-                            >
-                              {option.label}
-                            </button>
-                          ))}
-                        </div>
-                        {immediateAvailability === 'yes' && (
-                          <div className="mt-8 flex flex-col items-center justify-center space-y-4">
-                            <div className="relative">
-                              <div className="absolute w-3 h-3 bg-green-500 rounded-full animate-ping"></div>
-                              <div className="w-3 h-3 bg-green-500 rounded-full"></div>
-                            </div>
-                            <div className="flex flex-col items-center justify-center space-y-2">
-                              <p className="text-base text-vyba-navy font-medium text-center mb-0">
-                                Marcando en el compás
-                              </p>
-                              <p className="text-sm text-vyba-tertiary font-light text-center">
-                                Los clientes podrán ver tu disponibilidad en tu perfil
-                              </p>
-                            </div>
-                          </div>
-                        )}
-                        {immediateAvailability === 'no' && (
-                          <div className="mt-8 flex flex-col items-center justify-center space-y-4">
-                            <div className="relative">
-                              <div className="absolute w-3 h-3 bg-red-500 rounded-full animate-ping"></div>
-                              <div className="w-3 h-3 bg-red-500 rounded-full"></div>
-                            </div>
-                            <div className="flex flex-col items-center justify-center space-y-2">
-                              <p className="text-base text-vyba-navy font-medium text-center mb-0">
-                                No disponible
-                              </p>
-                              <p className="text-sm text-vyba-tertiary font-light text-center">
-                                Los clientes no podrán ver tu perfil en las búsquedas
-                              </p>
-                            </div>
-                          </div>
-                        )}
-                        {immediateAvailability === 'depends' && (
-                          <div className="mt-8">
-                            <Carousel className="w-full">
-                              <CarouselContent>
-                                {[
-                                  { id: 'monday', label: 'Lunes', value: availableDays.monday },
-                                  { id: 'tuesday', label: 'Martes', value: availableDays.tuesday },
-                                  { id: 'wednesday', label: 'Miércoles', value: availableDays.wednesday },
-                                  { id: 'thursday', label: 'Jueves', value: availableDays.thursday },
-                                  { id: 'friday', label: 'Viernes', value: availableDays.friday },
-                                  { id: 'saturday', label: 'Sábado', value: availableDays.saturday },
-                                  { id: 'sunday', label: 'Domingo', value: availableDays.sunday }
-                                ].map((day) => (
-                                  <CarouselItem key={day.id} className="md:basis-1/2 lg:basis-1/3">
-                                    <div 
-                                      className={`p-4 rounded-lg cursor-pointer transition-all duration-300 ease-in-out
-                                        ${day.value ? 'bg-vyba-beige' : 'bg-vyba-gray'}
-                                        hover:bg-vyba-beige
-                                      `}
-                                      onClick={() => setAvailableDays({...availableDays, [day.id]: !day.value})}
-                                    >
-                                      <div className="flex flex-col items-left h-[100px] justify-between">
-                                        <CalendarClock className="h-9 w-9 text-vyba-navy stroke-[1.5]" />
-                                        <div className="flex items-center justify-between gap-4">
-                                            <span className="text-sm font-medium">{day.label}</span>
-                                            <Checkbox 
-                                            id={day.id}
-                                            checked={day.value}
-                                            onCheckedChange={(checked) => setAvailableDays({...availableDays, [day.id]: checked as boolean})}
-                                            className="border-vyba-navy"
-                                            />
-                                        </div>
-                                      </div>
-                                    </div>
-                                  </CarouselItem>
-                                ))}
-                              </CarouselContent>
-                              <div className="flex justify-center gap-2 mt-4">
-                                <CarouselPrevious className="static translate-y-0" />
-                                <CarouselNext className="static translate-y-0" />
-                              </div>
-                            </Carousel>
-                            <div className="mt-8 flex flex-col items-center justify-center space-y-4">
-                              <div className="relative">
-                                <div className="absolute w-3 h-3 bg-green-500 rounded-full animate-ping"></div>
-                                <div className="w-3 h-3 bg-green-500 rounded-full"></div>
-                              </div>
-                              <div className="flex flex-col items-center justify-center space-y-2">
-                                <p className="text-base text-vyba-navy font-medium text-center mb-0">
-                                  Días disponibles
-                                </p>
-                                <p className="text-sm text-vyba-tertiary font-light text-center">
-                                  {Object.entries(availableDays)
-                                    .filter(([_, value]) => value)
-                                    .map(([key]) => {
-                                      const days = {
-                                        monday: 'Lunes',
-                                        tuesday: 'Martes',
-                                        wednesday: 'Miércoles',
-                                        thursday: 'Jueves',
-                                        friday: 'Viernes',
-                                        saturday: 'Sábado',
-                                        sunday: 'Domingo'
-                                      };
-                                      return days[key as keyof typeof days];
-                                    })
-                                    .join(', ')}
-                                </p>
-                              </div>
-                            </div>
-                          </div>
-                        )}
-                      </div>
-                    </div>
-                  )}
-
-                  {activeTab === 'events' && (
-                    <div className="space-y-6">
-                      <div className="space-y-2">
-                        <h3 className="text-2xl font-medium">
-                          {selectedEventType === null ? 'Todos los eventos' : 
-                           selectedEventType === 'ensayo' ? 'Ensayos' :
-                           selectedEventType === 'bolo' ? 'Bolos' :
-                           selectedEventType === 'reunion' ? 'Reuniones' : 'Otros eventos'}
-                        </h3>
-                      </div>
-                      <div className="space-y-4">
-                        {filteredEvents.length === 0 ? (
-                          <div className="text-center py-8 text-vyba-tertiary">
-                            No hay eventos en esta categoría
-                          </div>
-                        ) : (
-                          filteredEvents.map(event => (
-                            <div key={event.id} className="p-4 bg-vyba-gray rounded-lg">
-                              <div className="flex justify-between items-start">
-                                <div>
-                                  <h3 className="font-medium">{event.title}</h3>
-                                  <div className="flex items-center gap-2 text-sm text-vyba-tertiary mt-1">
-                                    <CalendarIcon className="h-4 w-4" />
-                                    <span>{format(new Date(event.startDate), 'EEEE d MMMM', { locale: es })}</span>
-                                  </div>
-                                  <div className="flex items-center gap-2 text-sm text-vyba-tertiary mt-1">
-                                    <Clock className="h-4 w-4" />
-                                    <span>{event.startTime} - {event.endTime}</span>
-                                  </div>
-                                  <div className="flex items-center gap-2 text-sm text-vyba-tertiary mt-1">
-                                    <MapPin className="h-4 w-4" />
-                                    <span>{event.location}</span>
-                                  </div>
-                                </div>
-                                <div className={`px-2 py-1 rounded-md text-xs font-medium ${getEventColor(event.type)}`}>
-                                  {event.type}
-                                </div>
-                              </div>
-                            </div>
-                          ))
-                        )}
-                      </div>
-                    </div>
-                  )}
-                </div>
-              </div>
-            </div>
-          </div>
-
-          {/* Overlay for swipable panel */}
-          {isConfigOpen && (
-            <div 
-              className="fixed inset-0 bg-black/20 z-40 lg:hidden"
-              onClick={() => setIsConfigOpen(false)}
-            />
-          )}
-
-          <div className="hidden lg:flex items-center justify-between mb-4">
-            <div className="flex items-center gap-4">
-              <Button variant="ghost" size="icon" onClick={prevPeriod} className="lg:block hidden">
-                <ChevronLeft className="h-4 w-4" />
-              </Button>
-              <h2 className="text-2xl font-medium">
-                {view === 'month' && format(currentDate, 'MMMM yyyy', { locale: es })}
-                {view === 'week' && `${format(startOfWeek(currentDate, { weekStartsOn: 1 }), 'd MMM', { locale: es })} - ${format(endOfWeek(currentDate, { weekStartsOn: 1 }), 'd MMM yyyy', { locale: es })}`}
-                {view === 'day' && format(currentDate, 'EEEE d MMMM yyyy', { locale: es })}
-              </h2>
-              <Button variant="ghost" size="icon" onClick={nextPeriod} className="lg:block hidden">
-                <ChevronRight className="h-4 w-4" />
-              </Button>
-            </div>
-          </div>
-          {view === 'month' && (
-            <>
-              <div className="lg:hidden">
-                {renderAllMonths()}
-              </div>
-              <div className="hidden lg:block">
-                {renderMonthView()}
-              </div>
-            </>
-          )}
-          {view === 'week' && renderWeekView()}
-          {view === 'day' && renderDayView()}
+          {renderAllMonthsView()}
         </div>
-
-        <div className="hidden lg:block lg:col-span-1 bg-white overflow-auto">
+        <div className="lg:col-span-1 bg-white overflow-auto">
           {selectedEvent ? (
             <div className="h-full">
               <div className="p-6 border-b border-vyba-tertiary">
@@ -1192,7 +801,7 @@ const CalendarPage = () => {
                       <p className="text-sm text-vyba-tertiary font-light">Selecciona una opción para indicar tu disponibilidad, mediante la disponibilidad, puedes atraer a clientes de última hora</p>
                     </div>
                     <div>
-                      <div className="flex flex-col gap-2">
+                      <div className="flex gap-2">
                         {[
                           { value: 'yes', label: 'Sí, estoy disponible' },
                           { value: 'no', label: 'No, no estoy disponible' },
@@ -1201,7 +810,7 @@ const CalendarPage = () => {
                           <button
                             key={option.value}
                             onClick={() => setImmediateAvailability(option.value)}
-                            className={`w-full py-4 px-4 rounded-md transition-all duration-300 ease-in-out
+                            className={`flex-1 py-4 px-4 rounded-md transition-all duration-300 ease-in-out
                               ${immediateAvailability === option.value 
                                 ? 'bg-vyba-beige text-black font-medium text-sm' 
                                 : 'bg-vyba-gray text-vyba-tertiary text-sm'}`}
@@ -1242,79 +851,76 @@ const CalendarPage = () => {
                           </div>
                         </div>
                       )}
-                      {immediateAvailability === 'depends' && (
-                        <div className="mt-8">
-                          <Carousel className="w-full">
-                            <CarouselContent>
-                              {[
-                                { id: 'monday', label: 'Lunes', value: availableDays.monday },
-                                { id: 'tuesday', label: 'Martes', value: availableDays.tuesday },
-                                { id: 'wednesday', label: 'Miércoles', value: availableDays.wednesday },
-                                { id: 'thursday', label: 'Jueves', value: availableDays.thursday },
-                                { id: 'friday', label: 'Viernes', value: availableDays.friday },
-                                { id: 'saturday', label: 'Sábado', value: availableDays.saturday },
-                                { id: 'sunday', label: 'Domingo', value: availableDays.sunday }
-                              ].map((day) => (
-                                <CarouselItem key={day.id} className="md:basis-1/2 lg:basis-1/3">
-                                  <div 
-                                    className={`p-4 rounded-lg cursor-pointer transition-all duration-300 ease-in-out
-                                      ${day.value ? 'bg-vyba-beige' : 'bg-vyba-gray'}
-                                      hover:bg-vyba-beige
-                                    `}
-                                    onClick={() => setAvailableDays({...availableDays, [day.id]: !day.value})}
-                                  >
-                                    <div className="flex flex-col items-left h-[100px] justify-between">
-                                      <CalendarClock className="h-9 w-9 text-vyba-navy stroke-[1.5]" />
-                                      <div className="flex items-center justify-between gap-4">
-                                          <span className="text-sm font-medium">{day.label}</span>
-                                          <Checkbox 
-                                          id={day.id}
-                                          checked={day.value}
-                                          onCheckedChange={(checked) => setAvailableDays({...availableDays, [day.id]: checked as boolean})}
-                                          className="border-vyba-navy"
-                                          />
-                                      </div>
+                    </div>
+
+                    {immediateAvailability === 'depends' && (
+                      <div>
+                        <h3 className="text-xl font-medium text-vyba-navy mb-3">Días disponibles</h3>
+                        <Carousel className="w-full">
+                          <CarouselContent>
+                            {[
+                              { id: 'monday', label: 'Lunes', value: availableDays.monday },
+                              { id: 'tuesday', label: 'Martes', value: availableDays.tuesday },
+                              { id: 'wednesday', label: 'Miércoles', value: availableDays.wednesday },
+                              { id: 'thursday', label: 'Jueves', value: availableDays.thursday },
+                              { id: 'friday', label: 'Viernes', value: availableDays.friday },
+                              { id: 'saturday', label: 'Sábado', value: availableDays.saturday },
+                              { id: 'sunday', label: 'Domingo', value: availableDays.sunday }
+                            ].map((day) => (
+                              <CarouselItem key={day.id} className="md:basis-1/2 lg:basis-1/3">
+                                <div 
+                                  className={`p-4 rounded-lg cursor-pointer transition-all duration-300 ease-in-out
+                                    ${day.value ? 'bg-vyba-beige' : 'bg-vyba-gray'}
+                                    hover:bg-vyba-beige
+                                  `}
+                                  onClick={() => setAvailableDays({...availableDays, [day.id]: !day.value})}
+                                >
+                                  <div className="flex flex-col items-left h-[100px] justify-between">
+                                    <CalendarClock className="h-9 w-9 text-vyba-navy stroke-[1.5]" />
+                                    <div className="flex items-center justify-between gap-4">
+                                        <span className="text-sm font-medium">{day.label}</span>
+                                        <Checkbox 
+                                        id={day.id}
+                                        checked={day.value}
+                                        onCheckedChange={(checked) => setAvailableDays({...availableDays, [day.id]: checked as boolean})}
+                                        className="border-vyba-navy"
+                                        />
                                     </div>
                                   </div>
-                                </CarouselItem>
-                              ))}
-                            </CarouselContent>
-                            <div className="flex justify-center gap-2 mt-4">
-                              <CarouselPrevious className="static translate-y-0" />
-                              <CarouselNext className="static translate-y-0" />
-                            </div>
-                          </Carousel>
-                          <div className="mt-8 flex flex-col items-center justify-center space-y-4">
-                            <div className="relative">
-                              <div className="absolute w-3 h-3 bg-green-500 rounded-full animate-ping"></div>
-                              <div className="w-3 h-3 bg-green-500 rounded-full"></div>
-                            </div>
-                            <div className="flex flex-col items-center justify-center space-y-2">
-                              <p className="text-base text-vyba-navy font-medium text-center mb-0">
-                                Días disponibles
-                              </p>
-                              <p className="text-sm text-vyba-tertiary font-light text-center">
-                                {Object.entries(availableDays)
-                                  .filter(([_, value]) => value)
-                                  .map(([key]) => {
-                                    const days = {
-                                      monday: 'Lunes',
-                                      tuesday: 'Martes',
-                                      wednesday: 'Miércoles',
-                                      thursday: 'Jueves',
-                                      friday: 'Viernes',
-                                      saturday: 'Sábado',
-                                      sunday: 'Domingo'
-                                    };
-                                    return days[key as keyof typeof days];
-                                  })
-                                  .join(', ')}
-                              </p>
-                            </div>
+                                </div>
+                              </CarouselItem>
+                            ))}
+                          </CarouselContent>
+                          <div className="flex justify-center gap-2 mt-4">
+                            <CarouselPrevious className="static translate-y-0" />
+                            <CarouselNext className="static translate-y-0" />
                           </div>
+                        </Carousel>
+                        <div className="flex items-center gap-2 mt-8">
+                          <div className="relative">
+                            <div className="absolute w-3 h-3 bg-green-500 rounded-full animate-ping"></div>
+                            <div className="w-3 h-3 bg-green-500 rounded-full"></div>
+                          </div>
+                          <p className="text-sm text-vyba-tertiary font-light">
+                            {Object.entries(availableDays)
+                              .filter(([_, value]) => value)
+                              .map(([key]) => {
+                                const days = {
+                                  monday: 'Lunes',
+                                  tuesday: 'Martes',
+                                  wednesday: 'Miércoles',
+                                  thursday: 'Jueves',
+                                  friday: 'Viernes',
+                                  saturday: 'Sábado',
+                                  sunday: 'Domingo'
+                                };
+                                return days[key as keyof typeof days];
+                              })
+                              .join(', ')}
+                          </p>
                         </div>
-                      )}
-                    </div>
+                      </div>
+                    )}
                   </div>
                 )}
               </div>
@@ -1324,12 +930,12 @@ const CalendarPage = () => {
       </div>
 
       <Dialog open={showEventDialog} onOpenChange={setShowEventDialog}>
-        <DialogContent className="max-w-[700px]">
+        <DialogContent>
           <DialogHeader>
-            <DialogTitle className="text-center">Nuevo evento</DialogTitle>
+            <DialogTitle>Nuevo evento</DialogTitle>
           </DialogHeader>
-          <div className="space-y-4 px-12">
-            <div className="space-y-2">
+          <div className="space-y-4">
+            <div>
               <Label htmlFor="title">Título</Label>
               <Input
                 id="title"
@@ -1338,8 +944,8 @@ const CalendarPage = () => {
               />
             </div>
             <div className="grid grid-cols-2 gap-4">
-              <div className="space-y-2">
-                <Label htmlFor="startDate">Fecha inicio (opcional)</Label>
+              <div>
+                <Label htmlFor="startDate">Fecha inicio</Label>
                 <Input
                   id="startDate"
                   type="date"
@@ -1347,8 +953,8 @@ const CalendarPage = () => {
                   onChange={(e) => setSelectedDate(new Date(e.target.value))}
                 />
               </div>
-              <div className="space-y-2">
-                <Label htmlFor="endDate">Fecha fin (opcional)</Label>
+              <div>
+                <Label htmlFor="endDate">Fecha fin</Label>
                 <Input
                   id="endDate"
                   type="date"
@@ -1358,7 +964,7 @@ const CalendarPage = () => {
               </div>
             </div>
             <div className="grid grid-cols-2 gap-4">
-              <div className="space-y-2">
+              <div>
                 <Label htmlFor="startTime">Hora inicio</Label>
                 <Input
                   id="startTime"
@@ -1367,7 +973,7 @@ const CalendarPage = () => {
                   onChange={(e) => setNewEvent({ ...newEvent, startTime: e.target.value })}
                 />
               </div>
-              <div className="space-y-2">
+              <div>
                 <Label htmlFor="endTime">Hora fin</Label>
                 <Input
                   id="endTime"
@@ -1377,7 +983,7 @@ const CalendarPage = () => {
                 />
               </div>
             </div>
-            <div className="space-y-2">
+            <div>
               <Label htmlFor="location">Ubicación</Label>
               <Input
                 id="location"
@@ -1385,7 +991,7 @@ const CalendarPage = () => {
                 onChange={(e) => setNewEvent({ ...newEvent, location: e.target.value })}
               />
             </div>
-            <div className="space-y-2">
+            <div>
               <Label htmlFor="type">Tipo de evento</Label>
               <Select
                 value={newEvent.type}
@@ -1403,11 +1009,11 @@ const CalendarPage = () => {
               </Select>
             </div>
           </div>
-          <DialogFooter className="px-12 justify-between mt-8">
-            <Button variant="secondary" onClick={() => setShowEventDialog(false)}>
+          <DialogFooter>
+            <Button variant="ghost" onClick={() => setShowEventDialog(false)}>
               Cancelar
             </Button>
-            <Button variant="terciary" onClick={handleAddEvent}>
+            <Button onClick={handleAddEvent}>
               Añadir evento
             </Button>
           </DialogFooter>
