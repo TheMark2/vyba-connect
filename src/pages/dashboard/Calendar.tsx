@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Button } from "@/components/ui/button";
-import { Calendar as CalendarIcon, Plus, ChevronLeft, ChevronRight, Clock, MapPin, X, Flame, Settings, Bell, Filter, Download } from "lucide-react";
+import { Calendar as CalendarIcon, Plus, ChevronLeft, ChevronRight, Clock, MapPin, X, Flame, Settings, Bell, Filter, Download, CalendarClock } from "lucide-react";
 import {
   Select,
   SelectContent,
@@ -38,6 +38,7 @@ import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/carousel";
+import { cn } from "@/lib/utils";
 
 type CalendarView = 'month' | 'week' | 'day';
 
@@ -49,7 +50,7 @@ interface Event {
   location: string;
   startDate: Date;
   endDate: Date;
-  type: 'ensayo' | 'concierto' | 'reunion' | 'otro';
+  type: 'ensayo' | 'bolo' | 'reunion' | 'otro';
 }
 
 const CalendarPage = () => {
@@ -88,13 +89,13 @@ const CalendarPage = () => {
     },
     {
       id: '2',
-      title: 'Concierto en Sala B',
+      title: 'Bolo en Sala B',
       startTime: '20:00',
       endTime: '22:00',
       location: 'Sala B, Calle Principal 123',
       startDate: new Date(2024, 2, 15),
       endDate: new Date(2024, 2, 15),
-      type: 'concierto'
+      type: 'bolo'
     }
   ]);
   const [selectedEvent, setSelectedEvent] = useState<Event | null>(null);
@@ -117,6 +118,11 @@ const CalendarPage = () => {
     saturday: true,
     sunday: true
   });
+  const [selectedEventType, setSelectedEventType] = useState<string | null>(null);
+  const [showConfigDialog, setShowConfigDialog] = useState(false);
+  const [isConfigOpen, setIsConfigOpen] = useState(false);
+  const [multiDayEvents, setMultiDayEvents] = useState<Event[]>([]);
+  const [singleDayEvents, setSingleDayEvents] = useState<Event[]>([]);
 
   const getEventColor = (type: Event['type'], isMultiDay: boolean = false) => {
     if (isMultiDay) {
@@ -125,7 +131,7 @@ const CalendarPage = () => {
     switch (type) {
       case 'ensayo':
         return 'bg-blue-100 text-blue-800';
-      case 'concierto':
+      case 'bolo':
         return 'bg-purple-100 text-purple-800';
       case 'reunion':
         return 'bg-green-100 text-green-800';
@@ -196,6 +202,48 @@ const CalendarPage = () => {
       setShowEventDialog(false);
     }
   };
+
+  const handleEventTypeClick = (type: string) => {
+    setSelectedEventType(type === 'all' ? null : type);
+    setActiveTab('events');
+  };
+
+  const filteredEvents = selectedEventType 
+    ? events.filter(event => event.type === selectedEventType)
+    : events;
+
+  const getDayIntensity = (date: Date) => {
+    const dayOfMonth = date.getDate();
+    const lastDayOfMonth = new Date(date.getFullYear(), date.getMonth() + 1, 0).getDate();
+    
+    // Si es el último jueves del mes
+    if (dayOfMonth > lastDayOfMonth - 7 && date.getDay() === 4) return 'medium';
+    // Si es el último viernes del mes
+    if (dayOfMonth > lastDayOfMonth - 7 && date.getDay() === 5) return 'high';
+    // Si es el último sábado del mes
+    if (dayOfMonth > lastDayOfMonth - 7 && date.getDay() === 6) return 'high';
+    // Si es el último domingo del mes
+    if (dayOfMonth > lastDayOfMonth - 7 && date.getDay() === 0) return 'low';
+    
+    return null;
+  };
+
+  useEffect(() => {
+    // Separar eventos en multi-día y de un solo día
+    const multiDay = events.filter(event => {
+      const start = new Date(event.startDate);
+      const end = new Date(event.endDate);
+      return !isSameDay(start, end);
+    });
+    const singleDay = events.filter(event => {
+      const start = new Date(event.startDate);
+      const end = new Date(event.endDate);
+      return isSameDay(start, end);
+    });
+    
+    setMultiDayEvents(multiDay);
+    setSingleDayEvents(singleDay);
+  }, [events]);
 
   const renderDayView = () => {
     const dayEvents = getEventsForDate(currentDate);
@@ -376,7 +424,7 @@ const CalendarPage = () => {
           return (
             <div
               key={date.toString()}
-              className={`min-h-[120px] p-2 border-b border-r cursor-pointer transition-colors
+              className={`aspect-square p-1 border-b border-r cursor-pointer transition-colors
                 ${isSameMonth(date, currentDate) ? 'hover:bg-vyba-gray' : 'bg-gray-50 text-gray-400'}
                 ${selectedDate && isSameDay(date, selectedDate) ? 'bg-vyba-gray' : ''}
               `}
@@ -395,7 +443,7 @@ const CalendarPage = () => {
                   />
                 )}
               </div>
-              <div className="space-y-1">
+              <div className="space-y-1 overflow-y-auto max-h-[calc(100%-2rem)]">
                 {/* Eventos de varios días */}
                 {dayMultiDayEvents.map(event => {
                   const isFirstDay = isSameDay(date, new Date(event.startDate));
@@ -455,81 +503,211 @@ const CalendarPage = () => {
   };
 
   const renderWeekView = () => {
-    const weekStart = startOfWeek(currentDate, { weekStartsOn: 1 });
-    const weekEnd = endOfWeek(currentDate, { weekStartsOn: 1 });
-    const daysInWeek = eachDayOfInterval({ start: weekStart, end: weekEnd });
+    const weekStart = startOfWeek(currentDate, { weekStartsOn: 0 });
+    const weekEnd = endOfWeek(currentDate, { weekStartsOn: 0 });
+    const days = eachDayOfInterval({ start: weekStart, end: weekEnd });
 
-    // Agrupar eventos por ID para mantener la misma altura
-    const multiDayEvents = events.filter(event => {
-      const start = new Date(event.startDate);
-      const end = new Date(event.endDate);
-      return !isSameDay(start, end);
-    });
-    const singleDayEvents = events.filter(event => {
-      const start = new Date(event.startDate);
-      const end = new Date(event.endDate);
-      return isSameDay(start, end);
+    return (
+      <div className="flex flex-col h-full">
+        <div className="grid grid-cols-7 border border-vyba-gray">
+          {days.map((day) => {
+            const dayEvents = getEventsForDate(day);
+            const isToday = isSameDay(day, new Date());
+            
+            return (
+              <div
+                key={day.toISOString()}
+                className={cn(
+                  "border-r border-vyba-gray last:border-r-0",
+                  isToday && "bg-vyba-gray"
+                )}
+              >
+                <div className="p-2 border-b border-vyba-gray">
+                  <div className="text-xs font-medium text-vyba-tertiary">
+                    {format(day, 'EEE', { locale: es })}
+                  </div>
+                  <div className="text-sm font-medium">
+                    {format(day, 'd')}
+                  </div>
+                </div>
+                <div className="h-[calc(100%-3.5rem)] overflow-y-auto">
+                  {dayEvents.map((event) => {
+                    const startTime = new Date(event.startDate);
+                    const endTime = new Date(event.endDate);
+                    const isMultiDay = !isSameDay(startTime, endTime);
+                    
+                    return (
+                      <div
+                        key={event.id}
+                        className={cn(
+                          "p-1 text-[8px] truncate",
+                          getEventColor(event.type, isMultiDay)
+                        )}
+                      >
+                        <div className="font-medium truncate">{event.title}</div>
+                        <div className="text-vyba-tertiary truncate">
+                          {format(startTime, 'HH:mm')} - {format(endTime, 'HH:mm')}
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      </div>
+    );
+  };
+
+  const renderAllMonths = () => {
+    const months = Array.from({ length: 12 }, (_, i) => {
+      const monthDate = new Date(currentDate.getFullYear(), i, 1);
+      return monthDate;
     });
 
     return (
-      <div className="grid grid-cols-7">
-        {daysInWeek.map((date) => {
-          const dayEvents = getEventsForDate(date);
+      <div className="space-y-8">
+        {months.map((monthDate) => (
+          <div key={monthDate.toString()} className="space-y-4">
+            <h3 className="text-xl font-medium text-center">
+              {format(monthDate, 'MMMM yyyy', { locale: es })}
+            </h3>
+            {renderMonthViewForDate(monthDate)}
+          </div>
+        ))}
+      </div>
+    );
+  };
+
+  const renderMonthViewForDate = (date: Date) => {
+    const daysInMonth = eachDayOfInterval({
+      start: startOfMonth(date),
+      end: endOfMonth(date)
+    });
+
+    const firstDayOfMonth = startOfMonth(date);
+    const lastDayOfMonth = endOfMonth(date);
+    const startPadding = Array(firstDayOfMonth.getDay()).fill(null);
+    const endPadding = Array(6 - lastDayOfMonth.getDay()).fill(null);
+
+    return (
+      <div className="grid grid-cols-7 border-x border-vyba-gray">
+        {['Dom', 'Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb'].map(day => (
+          <div key={day} className="text-center text-xs font-medium text-vyba-tertiary py-1 border-b border-vyba-gray">
+            {day}
+          </div>
+        ))}
+        {startPadding.map((_, index) => (
+          <div key={`start-${index}`} className="aspect-square border-b border-r border-vyba-gray" />
+        ))}
+        {daysInMonth.map((dayDate) => {
+          const intensity = getDayIntensity(dayDate);
+          const dayMultiDayEvents = multiDayEvents.filter(event => {
+            const eventStart = new Date(event.startDate);
+            const eventEnd = new Date(event.endDate);
+            return dayDate >= eventStart && dayDate <= eventEnd;
+          });
+          const daySingleDayEvents = singleDayEvents.filter(event => isSameDay(dayDate, new Date(event.startDate)));
+
           return (
             <div
-              key={date.toString()}
-              className={`min-h-[120px] p-2 border-b border-r cursor-pointer transition-colors
-                ${isSameWeek(date, currentDate) ? 'hover:bg-vyba-gray' : 'bg-gray-50 text-gray-400'}
-                ${selectedDate && isSameDay(date, selectedDate) ? 'bg-vyba-gray' : ''}
-              `}
-              onClick={() => handleDateClick(date)}
+              key={dayDate.toISOString()}
+              className={cn(
+                "aspect-square p-1 relative cursor-pointer hover:bg-vyba-gray/50 transition-colors border-b border-r border-vyba-gray",
+                isSameDay(dayDate, currentDate) && "bg-vyba-gray",
+                !isSameMonth(dayDate, date) && "text-vyba-tertiary/50"
+              )}
+              onClick={() => handleDateClick(dayDate)}
             >
-              <div className="text-sm font-medium mb-1 flex items-center gap-1">
-                {format(date, 'EEE d', { locale: es })}
-                {isToday(date) && <div className="w-2 h-2 rounded-full bg-primary"></div>}
-              </div>
-              <div className="space-y-1">
-                {dayEvents.map(event => (
-                  <div
-                    key={event.id}
-                    className={`text-xs px-2 py-1 rounded-md truncate ${getEventColor(event.type)}`}
-                  >
-                    {event.title} {event.startTime}
-                  </div>
-                ))}
+              <div className="flex flex-col h-full">
+                <div className="flex justify-between items-start">
+                  <span className={cn(
+                    "text-xs font-medium",
+                    intensity === 'high' && "text-red-500",
+                    intensity === 'medium' && "text-orange-500",
+                    intensity === 'low' && "text-green-500"
+                  )}>
+                    {dayDate.getDate()}
+                  </span>
+                  {(dayMultiDayEvents.length > 0 || daySingleDayEvents.length > 0) && (
+                    <div className="flex items-center gap-1">
+                      {dayMultiDayEvents.length > 0 && (
+                        <div className="flex gap-1">
+                          {dayMultiDayEvents.map(event => (
+                            <div
+                              key={event.id}
+                              className={cn(
+                                "w-1.5 h-1.5 rounded-full",
+                                getEventColor(event.type, true)
+                              )}
+                            />
+                          ))}
+                        </div>
+                      )}
+                      {daySingleDayEvents.length > 0 && (
+                        <span className="text-[10px] text-vyba-tertiary font-medium">
+                          {daySingleDayEvents.length}
+                        </span>
+                      )}
+                    </div>
+                  )}
+                </div>
               </div>
             </div>
           );
         })}
+        {endPadding.map((_, index) => (
+          <div key={`end-${index}`} className="aspect-square border-b border-r border-vyba-gray" />
+        ))}
       </div>
     );
   };
 
   return (
     <div className="h-full">
-      <div className="grid grid-cols-1 lg:grid-cols-4 h-[calc(100vh-12rem)]">
+      <div className="grid grid-cols-1 lg:grid-cols-4 h-full">
         <div className="lg:col-span-3 bg-white overflow-auto">
-          <div className="flex justify-center items-center gap-4 mb-6">
-            <Button variant="ghost" size="icon" onClick={prevPeriod}>
-              <ChevronLeft className="h-4 w-4" />
-            </Button>
-            <h2 className="text-2xl font-medium">
-              {view === 'month' && format(currentDate, 'MMMM yyyy', { locale: es })}
-              {view === 'week' && `${format(startOfWeek(currentDate, { weekStartsOn: 1 }), 'd MMM', { locale: es })} - ${format(endOfWeek(currentDate, { weekStartsOn: 1 }), 'd MMM yyyy', { locale: es })}`}
-              {view === 'day' && format(currentDate, 'EEEE d MMMM yyyy', { locale: es })}
-            </h2>
-            <Button variant="ghost" size="icon" onClick={nextPeriod}>
-              <ChevronRight className="h-4 w-4" />
+          <div className="flex justify-between items-center gap-4 mb-6 px-4 lg:px-0">
+            <div className="flex items-center gap-4">
+              <Button variant="ghost" size="icon" onClick={prevPeriod} className="lg:block hidden">
+                <ChevronLeft className="h-4 w-4" />
+              </Button>
+              <h2 className="text-2xl font-medium">
+                {view === 'month' && format(currentDate, 'MMMM yyyy', { locale: es })}
+                {view === 'week' && `${format(startOfWeek(currentDate, { weekStartsOn: 1 }), 'd MMM', { locale: es })} - ${format(endOfWeek(currentDate, { weekStartsOn: 1 }), 'd MMM yyyy', { locale: es })}`}
+                {view === 'day' && format(currentDate, 'EEEE d MMMM yyyy', { locale: es })}
+              </h2>
+              <Button variant="ghost" size="icon" onClick={nextPeriod} className="lg:block hidden">
+                <ChevronRight className="h-4 w-4" />
+              </Button>
+            </div>
+            <Button 
+              variant="secondary" 
+              className="lg:hidden"
+              onClick={() => setIsConfigOpen(true)}
+            >
+              <Settings className="h-4 w-4 mr-2" />
+              Configuración
             </Button>
           </div>
-          {view === 'month' && renderMonthView()}
+          {view === 'month' && (
+            <>
+              <div className="lg:hidden">
+                {renderAllMonths()}
+              </div>
+              <div className="hidden lg:block">
+                {renderMonthView()}
+              </div>
+            </>
+          )}
           {view === 'week' && renderWeekView()}
           {view === 'day' && renderDayView()}
         </div>
 
-        <div className="lg:col-span-1 bg-white border-l border-vyba-tertiary overflow-auto">
+        <div className="hidden lg:block lg:col-span-1 bg-white overflow-auto">
           {selectedEvent ? (
-            <div>
+            <div className="h-full">
               <div className="p-6 border-b border-vyba-tertiary">
                 <div className="flex items-center justify-between">
                   <h2 className="text-3xl font-medium">Detalles del evento</h2>
@@ -599,21 +777,314 @@ const CalendarPage = () => {
               </div>
             </div>
           ) : (
-            <div>
+            <div className="h-auto">
               <div className="p-6">
                 <h2 className="text-3xl font-medium">Configuración</h2>
                 <Tabs defaultValue="general" className="mt-6" onValueChange={setActiveTab}>
-                  <TabsList className="w-full">
-                    <TabsTrigger value="general" className="flex-1">General</TabsTrigger>
-                    <TabsTrigger value="availability" className="flex-1">Disponibilidad</TabsTrigger>
+                  <TabsList className="w-full shadow-none">
+                    <TabsTrigger value="general" className="flex-1 shadow-none">General</TabsTrigger>
+                    <TabsTrigger value="events" className="flex-1 shadow-none">Eventos</TabsTrigger>
+                    <TabsTrigger value="availability" className="flex-1 shadow-none">Disponibilidad</TabsTrigger>
                   </TabsList>
                 </Tabs>
               </div>
-              <div className="p-6 space-y-6">
+              <div className="p-6 space-y-6 h-[calc(100%-8rem)] overflow-auto">
                 {activeTab === 'general' && (
-                  <div className="space-y-6">
+                  <div className="space-y-8">
+                    <div className="space-y-2">
+                      <h3 className="text-2xl font-medium">
+                        Configuración general
+                      </h3>
+                      <p className="text-sm text-vyba-tertiary font-light">Personaliza tu calendario según tus necesidades y preferencias</p>
+                    </div>
                     <div>
-                      <h3 className="text-sm font-medium text-vyba-tertiary mb-3">Vista del calendario</h3>
+                      <div className="flex gap-2">
+                        <Select value={view} onValueChange={(value) => setView(value as CalendarView)}>
+                          <SelectTrigger className="w-full">
+                            <SelectValue placeholder="Selecciona una vista" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectItem value="month">Vista mensual</SelectItem>
+                            <SelectItem value="week">Vista semanal</SelectItem>
+                            <SelectItem value="day">Vista diaria</SelectItem>
+                          </SelectContent>
+                        </Select>
+                        <Button 
+                          variant="secondary" 
+                          className="w-full"
+                          onClick={() => setShowEventDialog(true)}
+                        >
+                          <Plus className="mr-2 h-4 w-4" />
+                          Añadir evento
+                        </Button>
+                      </div>
+                    </div>
+
+                    <div>
+                      <div className="space-y-1">
+                        <h3 className="text-xl font-medium text-vyba-navy">Eventos disponibles</h3>
+                        <p className="text-sm text-vyba-tertiary font-light">Aquí puedes ver todos tus eventos</p>
+                      </div>
+                      <div className="mt-4 bg-vyba-gray rounded-lg p-6 space-y-4">
+                        <p className="text-sm text-vyba-navy font-light mb-0">Actualmente tienes</p>
+                        <div 
+                          className="flex items-end justify-between cursor-pointer hover:bg-vyba-gray/80 transition-colors p-2 rounded-lg"
+                          onClick={() => handleEventTypeClick('all')}
+                        >
+                          <p className="text-5xl font-bold text-vyba-navy mb-0">
+                            {events.length}
+                          </p>
+                          <p className="text-sm text-vyba-tertiary font-light mb-0">eventos disponibles</p>
+                        </div>
+                      </div>
+                      <div className="mt-4 grid grid-cols-2 gap-4">
+                        {[
+                          { type: 'ensayo', label: 'Ensayos' },
+                          { type: 'bolo', label: 'Bolos' },
+                          { type: 'reunion', label: 'Reuniones' },
+                          { type: 'otro', label: 'Otros' }
+                        ].map((category) => (
+                          <div 
+                            key={category.type} 
+                            className="bg-vyba-gray rounded-lg p-4 space-y-2 cursor-pointer hover:bg-vyba-gray/80 transition-colors"
+                            onClick={() => handleEventTypeClick(category.type)}
+                          >
+                            <p className="text-sm text-vyba-navy font-light mb-0">{category.label}</p>
+                            <div className="flex items-end justify-between">
+                              <p className="text-3xl font-bold text-vyba-navy mb-0">
+                                {events.filter(event => event.type === category.type).length}
+                              </p>
+                              <p className="text-xs text-vyba-tertiary font-light mb-0">eventos</p>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+                )}
+
+                {activeTab === 'events' && (
+                  <div className="space-y-6">
+                    <div className="flex items-center justify-between">
+                      <h3 className="text-2xl font-medium">
+                        {selectedEventType === null ? 'Todos los eventos' : 
+                         selectedEventType === 'ensayo' ? 'Ensayos' :
+                         selectedEventType === 'bolo' ? 'Bolos' :
+                         selectedEventType === 'reunion' ? 'Reuniones' : 'Otros eventos'}
+                      </h3>
+                      <Button 
+                        variant="ghost" 
+                        size="icon"
+                        onClick={() => setActiveTab('general')}
+                      >
+                        <X className="h-4 w-4" />
+                      </Button>
+                    </div>
+                    <div className="space-y-4">
+                      {filteredEvents.length === 0 ? (
+                        <div className="text-center py-8 text-vyba-tertiary">
+                          No hay eventos en esta categoría
+                        </div>
+                      ) : (
+                        filteredEvents.map(event => (
+                          <div key={event.id} className="p-4 bg-vyba-gray rounded-lg">
+                            <div className="flex justify-between items-start">
+                              <div>
+                                <h3 className="font-medium">{event.title}</h3>
+                                <div className="flex items-center gap-2 text-sm text-vyba-tertiary mt-1">
+                                  <CalendarIcon className="h-4 w-4" />
+                                  <span>{format(new Date(event.startDate), 'EEEE d MMMM', { locale: es })}</span>
+                                </div>
+                                <div className="flex items-center gap-2 text-sm text-vyba-tertiary mt-1">
+                                  <Clock className="h-4 w-4" />
+                                  <span>{event.startTime} - {event.endTime}</span>
+                                </div>
+                                <div className="flex items-center gap-2 text-sm text-vyba-tertiary mt-1">
+                                  <MapPin className="h-4 w-4" />
+                                  <span>{event.location}</span>
+                                </div>
+                              </div>
+                              <div className={`px-2 py-1 rounded-md text-xs font-medium ${getEventColor(event.type)}`}>
+                                {event.type}
+                              </div>
+                            </div>
+                          </div>
+                        ))
+                      )}
+                    </div>
+                  </div>
+                )}
+
+                {activeTab === 'availability' && (
+                  <div className="space-y-6">
+                    <div className="space-y-2">
+                      <h3 className="text-2xl font-medium">
+                        ¿Tienes disponibilidad para la semana del {format(startOfWeek(currentDate, { weekStartsOn: 1 }), 'd MMMM', { locale: es })}?
+                      </h3>
+                      <p className="text-sm text-vyba-tertiary font-light">Selecciona una opción para indicar tu disponibilidad, mediante la disponibilidad, puedes atraer a clientes de última hora</p>
+                    </div>
+                    <div>
+                      <div className="flex flex-col gap-2">
+                        {[
+                          { value: 'yes', label: 'Sí, estoy disponible' },
+                          { value: 'no', label: 'No, no estoy disponible' },
+                          { value: 'depends', label: 'Depende de la fecha' }
+                        ].map((option) => (
+                          <button
+                            key={option.value}
+                            onClick={() => setImmediateAvailability(option.value)}
+                            className={`w-full py-4 px-4 rounded-md transition-all duration-300 ease-in-out
+                              ${immediateAvailability === option.value 
+                                ? 'bg-vyba-beige text-black font-medium text-sm' 
+                                : 'bg-vyba-gray text-vyba-tertiary text-sm'}`}
+                          >
+                            {option.label}
+                          </button>
+                        ))}
+                      </div>
+                      {immediateAvailability === 'yes' && (
+                        <div className="mt-8 flex flex-col items-center justify-center space-y-4">
+                          <div className="relative">
+                            <div className="absolute w-3 h-3 bg-green-500 rounded-full animate-ping"></div>
+                            <div className="w-3 h-3 bg-green-500 rounded-full"></div>
+                          </div>
+                          <div className="flex flex-col items-center justify-center space-y-2">
+                            <p className="text-base text-vyba-navy font-medium text-center mb-0">
+                              Marcando en el compás
+                            </p>
+                            <p className="text-sm text-vyba-tertiary font-light text-center">
+                              Los clientes podrán ver tu disponibilidad en tu perfil
+                            </p>
+                          </div>
+                        </div>
+                      )}
+                      {immediateAvailability === 'no' && (
+                        <div className="mt-8 flex flex-col items-center justify-center space-y-4">
+                          <div className="relative">
+                            <div className="absolute w-3 h-3 bg-red-500 rounded-full animate-ping"></div>
+                            <div className="w-3 h-3 bg-red-500 rounded-full"></div>
+                          </div>
+                          <div className="flex flex-col items-center justify-center space-y-2">
+                            <p className="text-base text-vyba-navy font-medium text-center mb-0">
+                              No disponible
+                            </p>
+                            <p className="text-sm text-vyba-tertiary font-light text-center">
+                              Los clientes no podrán ver tu perfil en las búsquedas
+                            </p>
+                          </div>
+                        </div>
+                      )}
+                      {immediateAvailability === 'depends' && (
+                        <div className="mt-8">
+                          <Carousel className="w-full">
+                            <CarouselContent>
+                              {[
+                                { id: 'monday', label: 'Lunes', value: availableDays.monday },
+                                { id: 'tuesday', label: 'Martes', value: availableDays.tuesday },
+                                { id: 'wednesday', label: 'Miércoles', value: availableDays.wednesday },
+                                { id: 'thursday', label: 'Jueves', value: availableDays.thursday },
+                                { id: 'friday', label: 'Viernes', value: availableDays.friday },
+                                { id: 'saturday', label: 'Sábado', value: availableDays.saturday },
+                                { id: 'sunday', label: 'Domingo', value: availableDays.sunday }
+                              ].map((day) => (
+                                <CarouselItem key={day.id} className="md:basis-1/2 lg:basis-1/3">
+                                  <div 
+                                    className={`p-4 rounded-lg cursor-pointer transition-all duration-300 ease-in-out
+                                      ${day.value ? 'bg-vyba-beige' : 'bg-vyba-gray'}
+                                      hover:bg-vyba-beige
+                                    `}
+                                    onClick={() => setAvailableDays({...availableDays, [day.id]: !day.value})}
+                                  >
+                                    <div className="flex flex-col items-left h-[100px] justify-between">
+                                      <CalendarClock className="h-9 w-9 text-vyba-navy stroke-[1.5]" />
+                                      <div className="flex items-center justify-between gap-4">
+                                          <span className="text-sm font-medium">{day.label}</span>
+                                          <Checkbox 
+                                          id={day.id}
+                                          checked={day.value}
+                                          onCheckedChange={(checked) => setAvailableDays({...availableDays, [day.id]: checked as boolean})}
+                                          className="border-vyba-navy"
+                                          />
+                                      </div>
+                                    </div>
+                                  </div>
+                                </CarouselItem>
+                              ))}
+                            </CarouselContent>
+                            <div className="flex justify-center gap-2 mt-4">
+                              <CarouselPrevious className="static translate-y-0" />
+                              <CarouselNext className="static translate-y-0" />
+                            </div>
+                          </Carousel>
+                          <div className="mt-8 flex flex-col items-center justify-center space-y-4">
+                            <div className="relative">
+                              <div className="absolute w-3 h-3 bg-green-500 rounded-full animate-ping"></div>
+                              <div className="w-3 h-3 bg-green-500 rounded-full"></div>
+                            </div>
+                            <div className="flex flex-col items-center justify-center space-y-2">
+                              <p className="text-base text-vyba-navy font-medium text-center mb-0">
+                                Días disponibles
+                              </p>
+                              <p className="text-sm text-vyba-tertiary font-light text-center">
+                                {Object.entries(availableDays)
+                                  .filter(([_, value]) => value)
+                                  .map(([key]) => {
+                                    const days = {
+                                      monday: 'Lunes',
+                                      tuesday: 'Martes',
+                                      wednesday: 'Miércoles',
+                                      thursday: 'Jueves',
+                                      friday: 'Viernes',
+                                      saturday: 'Sábado',
+                                      sunday: 'Domingo'
+                                    };
+                                    return days[key as keyof typeof days];
+                                  })
+                                  .join(', ')}
+                              </p>
+                            </div>
+                          </div>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                )}
+              </div>
+            </div>
+          )}
+        </div>
+      </div>
+
+      {/* Swipable Configuration Panel */}
+      <div className={`fixed inset-y-0 right-0 w-full max-w-md bg-white shadow-lg transform transition-transform duration-300 ease-in-out lg:hidden z-50
+        ${isConfigOpen ? 'translate-x-0' : 'translate-x-full'}`}
+      >
+        <div className="h-full flex flex-col">
+          <div className="p-4 border-b flex items-center justify-between">
+            <h2 className="text-xl font-medium">Configuración</h2>
+            <Button variant="ghost" size="icon" onClick={() => setIsConfigOpen(false)}>
+              <X className="h-4 w-4" />
+            </Button>
+          </div>
+          <div className="flex-1 overflow-auto">
+            <Tabs defaultValue="general" className="mt-6" onValueChange={setActiveTab}>
+              <TabsList className="w-full shadow-none">
+                <TabsTrigger value="general" className="flex-1 shadow-none">General</TabsTrigger>
+                <TabsTrigger value="availability" className="flex-1 shadow-none">Disponibilidad</TabsTrigger>
+                <TabsTrigger value="events" className="flex-1 shadow-none">Eventos</TabsTrigger>
+              </TabsList>
+            </Tabs>
+            <div className="mt-6 space-y-6 px-4">
+              {activeTab === 'general' && (
+                <div className="space-y-8">
+                  <div className="space-y-2">
+                    <h3 className="text-2xl font-medium">
+                      Configuración general
+                    </h3>
+                    <p className="text-sm text-vyba-tertiary font-light">Personaliza tu calendario según tus necesidades y preferencias</p>
+                  </div>
+                  <div>
+                    <div className="flex gap-2">
                       <Select value={view} onValueChange={(value) => setView(value as CalendarView)}>
                         <SelectTrigger className="w-full">
                           <SelectValue placeholder="Selecciona una vista" />
@@ -624,9 +1095,6 @@ const CalendarPage = () => {
                           <SelectItem value="day">Vista diaria</SelectItem>
                         </SelectContent>
                       </Select>
-                    </div>
-
-                    <div>
                       <Button 
                         variant="secondary" 
                         className="w-full"
@@ -636,132 +1104,209 @@ const CalendarPage = () => {
                         Añadir evento
                       </Button>
                     </div>
+                  </div>
+                </div>
+              )}
 
-                    <div>
-                      <h3 className="text-sm font-medium text-vyba-tertiary mb-3">Eventos del día</h3>
-                      {selectedDate ? (
-                        <div className="space-y-4">
-                          {getEventsForDate(selectedDate).length > 0 ? (
-                            getEventsForDate(selectedDate).map(event => (
-                              <div key={event.id} className="p-4 bg-vyba-gray rounded-lg">
-                                <div className="flex justify-between items-start">
-                                  <div>
-                                    <h3 className="font-medium">{event.title}</h3>
-                                    <div className="flex items-center gap-2 text-sm text-vyba-tertiary mt-1">
-                                      <Clock className="h-4 w-4" />
-                                      <span>{event.startTime} - {event.endTime}</span>
-                                    </div>
-                                    <div className="flex items-center gap-2 text-sm text-vyba-tertiary mt-1">
-                                      <MapPin className="h-4 w-4" />
-                                      <span>{event.location}</span>
+              {activeTab === 'availability' && (
+                <div className="space-y-6">
+                  <div className="space-y-2">
+                    <h3 className="text-2xl font-medium">
+                      ¿Tienes disponibilidad para la semana del {format(startOfWeek(currentDate, { weekStartsOn: 1 }), 'd MMMM', { locale: es })}?
+                    </h3>
+                    <p className="text-sm text-vyba-tertiary font-light">Selecciona una opción para indicar tu disponibilidad, mediante la disponibilidad, puedes atraer a clientes de última hora</p>
+                  </div>
+                  <div>
+                    <div className="flex flex-col gap-2">
+                      {[
+                        { value: 'yes', label: 'Sí, estoy disponible' },
+                        { value: 'no', label: 'No, no estoy disponible' },
+                        { value: 'depends', label: 'Depende de la fecha' }
+                      ].map((option) => (
+                        <button
+                          key={option.value}
+                          onClick={() => setImmediateAvailability(option.value)}
+                          className={`w-full py-4 px-4 rounded-md transition-all duration-300 ease-in-out
+                            ${immediateAvailability === option.value 
+                              ? 'bg-vyba-beige text-black font-medium text-sm' 
+                              : 'bg-vyba-gray text-vyba-tertiary text-sm'}`}
+                        >
+                          {option.label}
+                        </button>
+                      ))}
+                    </div>
+                    {immediateAvailability === 'yes' && (
+                      <div className="mt-8 flex flex-col items-center justify-center space-y-4">
+                        <div className="relative">
+                          <div className="absolute w-3 h-3 bg-green-500 rounded-full animate-ping"></div>
+                          <div className="w-3 h-3 bg-green-500 rounded-full"></div>
+                        </div>
+                        <div className="flex flex-col items-center justify-center space-y-2">
+                          <p className="text-base text-vyba-navy font-medium text-center mb-0">
+                            Marcando en el compás
+                          </p>
+                          <p className="text-sm text-vyba-tertiary font-light text-center">
+                            Los clientes podrán ver tu disponibilidad en tu perfil
+                          </p>
+                        </div>
+                      </div>
+                    )}
+                    {immediateAvailability === 'no' && (
+                      <div className="mt-8 flex flex-col items-center justify-center space-y-4">
+                        <div className="relative">
+                          <div className="absolute w-3 h-3 bg-red-500 rounded-full animate-ping"></div>
+                          <div className="w-3 h-3 bg-red-500 rounded-full"></div>
+                        </div>
+                        <div className="flex flex-col items-center justify-center space-y-2">
+                          <p className="text-base text-vyba-navy font-medium text-center mb-0">
+                            No disponible
+                          </p>
+                          <p className="text-sm text-vyba-tertiary font-light text-center">
+                            Los clientes no podrán ver tu perfil en las búsquedas
+                          </p>
+                        </div>
+                      </div>
+                    )}
+                    {immediateAvailability === 'depends' && (
+                      <div className="mt-8">
+                        <Carousel className="w-full">
+                          <CarouselContent>
+                            {[
+                              { id: 'monday', label: 'Lunes', value: availableDays.monday },
+                              { id: 'tuesday', label: 'Martes', value: availableDays.tuesday },
+                              { id: 'wednesday', label: 'Miércoles', value: availableDays.wednesday },
+                              { id: 'thursday', label: 'Jueves', value: availableDays.thursday },
+                              { id: 'friday', label: 'Viernes', value: availableDays.friday },
+                              { id: 'saturday', label: 'Sábado', value: availableDays.saturday },
+                              { id: 'sunday', label: 'Domingo', value: availableDays.sunday }
+                            ].map((day) => (
+                              <CarouselItem key={day.id} className="md:basis-1/2 lg:basis-1/3">
+                                <div 
+                                  className={`p-4 rounded-lg cursor-pointer transition-all duration-300 ease-in-out
+                                    ${day.value ? 'bg-vyba-beige' : 'bg-vyba-gray'}
+                                    hover:bg-vyba-beige
+                                  `}
+                                  onClick={() => setAvailableDays({...availableDays, [day.id]: !day.value})}
+                                >
+                                  <div className="flex flex-col items-left h-[100px] justify-between">
+                                    <CalendarClock className="h-9 w-9 text-vyba-navy stroke-[1.5]" />
+                                    <div className="flex items-center justify-between gap-4">
+                                        <span className="text-sm font-medium">{day.label}</span>
+                                        <Checkbox 
+                                        id={day.id}
+                                        checked={day.value}
+                                        onCheckedChange={(checked) => setAvailableDays({...availableDays, [day.id]: checked as boolean})}
+                                        className="border-vyba-navy"
+                                        />
                                     </div>
                                   </div>
-                                  <Button
-                                    variant="ghost"
-                                    size="icon"
-                                    onClick={() => handleDeleteEvent(event.id)}
-                                    className="text-red-500 hover:text-red-700"
-                                  >
-                                    <X className="h-4 w-4" />
-                                  </Button>
                                 </div>
+                              </CarouselItem>
+                            ))}
+                          </CarouselContent>
+                          <div className="flex justify-center gap-2 mt-4">
+                            <CarouselPrevious className="static translate-y-0" />
+                            <CarouselNext className="static translate-y-0" />
+                          </div>
+                        </Carousel>
+                        <div className="mt-8 flex flex-col items-center justify-center space-y-4">
+                          <div className="relative">
+                            <div className="absolute w-3 h-3 bg-green-500 rounded-full animate-ping"></div>
+                            <div className="w-3 h-3 bg-green-500 rounded-full"></div>
+                          </div>
+                          <div className="flex flex-col items-center justify-center space-y-2">
+                            <p className="text-base text-vyba-navy font-medium text-center mb-0">
+                              Días disponibles
+                            </p>
+                            <p className="text-sm text-vyba-tertiary font-light text-center">
+                              {Object.entries(availableDays)
+                                .filter(([_, value]) => value)
+                                .map(([key]) => {
+                                  const days = {
+                                    monday: 'Lunes',
+                                    tuesday: 'Martes',
+                                    wednesday: 'Miércoles',
+                                    thursday: 'Jueves',
+                                    friday: 'Viernes',
+                                    saturday: 'Sábado',
+                                    sunday: 'Domingo'
+                                  };
+                                  return days[key as keyof typeof days];
+                                })
+                                .join(', ')}
+                            </p>
+                          </div>
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                </div>
+              )}
+
+              {activeTab === 'events' && (
+                <div className="space-y-6">
+                  <div className="space-y-2">
+                    <h3 className="text-2xl font-medium">
+                      {selectedEventType === null ? 'Todos los eventos' : 
+                       selectedEventType === 'ensayo' ? 'Ensayos' :
+                       selectedEventType === 'bolo' ? 'Bolos' :
+                       selectedEventType === 'reunion' ? 'Reuniones' : 'Otros eventos'}
+                    </h3>
+                  </div>
+                  <div className="space-y-4">
+                    {filteredEvents.length === 0 ? (
+                      <div className="text-center py-8 text-vyba-tertiary">
+                        No hay eventos en esta categoría
+                      </div>
+                    ) : (
+                      filteredEvents.map(event => (
+                        <div key={event.id} className="p-4 bg-vyba-gray rounded-lg">
+                          <div className="flex justify-between items-start">
+                            <div>
+                              <h3 className="font-medium">{event.title}</h3>
+                              <div className="flex items-center gap-2 text-sm text-vyba-tertiary mt-1">
+                                <CalendarIcon className="h-4 w-4" />
+                                <span>{format(new Date(event.startDate), 'EEEE d MMMM', { locale: es })}</span>
                               </div>
-                            ))
-                          ) : (
-                            <div className="p-4 bg-vyba-gray rounded-lg w-max">
-                              <p className="text-sm text-vyba-tertiary">De momento no hay eventos disponibles</p>
+                              <div className="flex items-center gap-2 text-sm text-vyba-tertiary mt-1">
+                                <Clock className="h-4 w-4" />
+                                <span>{event.startTime} - {event.endTime}</span>
+                              </div>
+                              <div className="flex items-center gap-2 text-sm text-vyba-tertiary mt-1">
+                                <MapPin className="h-4 w-4" />
+                                <span>{event.location}</span>
+                              </div>
                             </div>
-                          )}
+                            <div className={`px-2 py-1 rounded-md text-xs font-medium ${getEventColor(event.type)}`}>
+                              {event.type}
+                            </div>
+                          </div>
                         </div>
-                      ) : (
-                        <div className="p-4 bg-vyba-gray rounded-lg w-max">
-                          <p className="text-sm text-vyba-tertiary">Selecciona un día para ver sus eventos</p>
-                        </div>
-                      )}
-                    </div>
+                      ))
+                    )}
                   </div>
-                )}
-
-                {activeTab === 'availability' && (
-                  <div className="space-y-6">
-                    <div>
-                      <h3 className="text-sm font-medium text-vyba-tertiary mb-3">Disponibilidad inmediata</h3>
-                      <RadioGroup 
-                        value={immediateAvailability} 
-                        onValueChange={setImmediateAvailability}
-                        className="space-y-2"
-                      >
-                        <div className="flex items-center space-x-2">
-                          <RadioGroupItem value="yes" id="yes" />
-                          <Label htmlFor="yes" className="text-sm">Sí, estoy disponible</Label>
-                        </div>
-                        <div className="flex items-center space-x-2">
-                          <RadioGroupItem value="no" id="no" />
-                          <Label htmlFor="no" className="text-sm">No, no estoy disponible</Label>
-                        </div>
-                        <div className="flex items-center space-x-2">
-                          <RadioGroupItem value="depends" id="depends" />
-                          <Label htmlFor="depends" className="text-sm">Depende de la fecha</Label>
-                        </div>
-                      </RadioGroup>
-                    </div>
-
-                    <div>
-                      <h3 className="text-sm font-medium text-vyba-tertiary mb-3">Días disponibles</h3>
-                      <Carousel className="w-full">
-                        <CarouselContent>
-                          {[
-                            { id: 'monday', label: 'Lunes', value: availableDays.monday },
-                            { id: 'tuesday', label: 'Martes', value: availableDays.tuesday },
-                            { id: 'wednesday', label: 'Miércoles', value: availableDays.wednesday },
-                            { id: 'thursday', label: 'Jueves', value: availableDays.thursday },
-                            { id: 'friday', label: 'Viernes', value: availableDays.friday },
-                            { id: 'saturday', label: 'Sábado', value: availableDays.saturday },
-                            { id: 'sunday', label: 'Domingo', value: availableDays.sunday }
-                          ].map((day) => (
-                            <CarouselItem key={day.id} className="md:basis-1/2 lg:basis-1/3">
-                              <div 
-                                className={`p-4 rounded-lg cursor-pointer transition-colors
-                                  ${day.value ? 'bg-primary/10' : 'bg-vyba-gray'}
-                                  hover:bg-primary/20
-                                `}
-                                onClick={() => setAvailableDays({...availableDays, [day.id]: !day.value})}
-                              >
-                                <div className="flex flex-col items-center gap-2">
-                                  <CalendarIcon className="h-5 w-5 text-vyba-tertiary" />
-                                  <span className="text-sm font-medium">{day.label}</span>
-                                  <Checkbox 
-                                    id={day.id}
-                                    checked={day.value}
-                                    onCheckedChange={(checked) => setAvailableDays({...availableDays, [day.id]: checked as boolean})}
-                                    className="border-primary"
-                                  />
-                                </div>
-                              </div>
-                            </CarouselItem>
-                          ))}
-                        </CarouselContent>
-                        <div className="flex justify-center gap-2 mt-4">
-                          <CarouselPrevious className="static translate-y-0" />
-                          <CarouselNext className="static translate-y-0" />
-                        </div>
-                      </Carousel>
-                    </div>
-                  </div>
-                )}
-              </div>
+                </div>
+              )}
             </div>
-          )}
+          </div>
         </div>
       </div>
 
+      {/* Overlay for swipable panel */}
+      {isConfigOpen && (
+        <div 
+          className="fixed inset-0 bg-black/20 z-40 lg:hidden"
+          onClick={() => setIsConfigOpen(false)}
+        />
+      )}
+
       <Dialog open={showEventDialog} onOpenChange={setShowEventDialog}>
-        <DialogContent>
+        <DialogContent className="max-w-[700px]">
           <DialogHeader>
-            <DialogTitle>Nuevo evento</DialogTitle>
+            <DialogTitle className="text-center">Nuevo evento</DialogTitle>
           </DialogHeader>
-          <div className="space-y-4">
-            <div>
+          <div className="space-y-4 px-12">
+            <div className="space-y-2">
               <Label htmlFor="title">Título</Label>
               <Input
                 id="title"
@@ -770,8 +1315,8 @@ const CalendarPage = () => {
               />
             </div>
             <div className="grid grid-cols-2 gap-4">
-              <div>
-                <Label htmlFor="startDate">Fecha inicio</Label>
+              <div className="space-y-2">
+                <Label htmlFor="startDate">Fecha inicio (opcional)</Label>
                 <Input
                   id="startDate"
                   type="date"
@@ -779,8 +1324,8 @@ const CalendarPage = () => {
                   onChange={(e) => setSelectedDate(new Date(e.target.value))}
                 />
               </div>
-              <div>
-                <Label htmlFor="endDate">Fecha fin</Label>
+              <div className="space-y-2">
+                <Label htmlFor="endDate">Fecha fin (opcional)</Label>
                 <Input
                   id="endDate"
                   type="date"
@@ -790,7 +1335,7 @@ const CalendarPage = () => {
               </div>
             </div>
             <div className="grid grid-cols-2 gap-4">
-              <div>
+              <div className="space-y-2">
                 <Label htmlFor="startTime">Hora inicio</Label>
                 <Input
                   id="startTime"
@@ -799,7 +1344,7 @@ const CalendarPage = () => {
                   onChange={(e) => setNewEvent({ ...newEvent, startTime: e.target.value })}
                 />
               </div>
-              <div>
+              <div className="space-y-2">
                 <Label htmlFor="endTime">Hora fin</Label>
                 <Input
                   id="endTime"
@@ -809,7 +1354,7 @@ const CalendarPage = () => {
                 />
               </div>
             </div>
-            <div>
+            <div className="space-y-2">
               <Label htmlFor="location">Ubicación</Label>
               <Input
                 id="location"
@@ -817,7 +1362,7 @@ const CalendarPage = () => {
                 onChange={(e) => setNewEvent({ ...newEvent, location: e.target.value })}
               />
             </div>
-            <div>
+            <div className="space-y-2">
               <Label htmlFor="type">Tipo de evento</Label>
               <Select
                 value={newEvent.type}
@@ -828,18 +1373,18 @@ const CalendarPage = () => {
                 </SelectTrigger>
                 <SelectContent>
                   <SelectItem value="ensayo">Ensayo</SelectItem>
-                  <SelectItem value="concierto">Concierto</SelectItem>
+                  <SelectItem value="bolo">Bolo</SelectItem>
                   <SelectItem value="reunion">Reunión</SelectItem>
                   <SelectItem value="otro">Otro</SelectItem>
                 </SelectContent>
               </Select>
             </div>
           </div>
-          <DialogFooter>
-            <Button variant="ghost" onClick={() => setShowEventDialog(false)}>
+          <DialogFooter className="px-12 justify-between mt-8">
+            <Button variant="secondary" onClick={() => setShowEventDialog(false)}>
               Cancelar
             </Button>
-            <Button onClick={handleAddEvent}>
+            <Button variant="terciary" onClick={handleAddEvent}>
               Añadir evento
             </Button>
           </DialogFooter>
