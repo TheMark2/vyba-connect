@@ -424,8 +424,8 @@ const CalendarPage = () => {
           return (
             <div
               key={date.toString()}
-              className={`aspect-square p-1 border-b border-r cursor-pointer transition-colors
-                ${isSameMonth(date, currentDate) ? 'hover:bg-vyba-gray' : 'bg-gray-50 text-gray-400'}
+              className={`aspect-square p-1 flex flex-col border border-vyba-gray
+                ${isSameMonth(date, currentDate) ? 'bg-white' : 'bg-vyba-gray/50'}
                 ${selectedDate && isSameDay(date, selectedDate) ? 'bg-vyba-gray' : ''}
               `}
               onClick={() => handleDateClick(date)}
@@ -593,7 +593,7 @@ const CalendarPage = () => {
 
     return (
       <div className="flex flex-col h-full">
-        <div className="grid grid-cols-7 border-x border-vyba-gray">
+        <div className="grid grid-cols-7 border-t border-vyba-gray">
           {/* Días de la semana - Solo visible en desktop */}
           <div className="hidden lg:flex col-span-7">
             {['Dom', 'Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb'].map(day => (
@@ -603,47 +603,50 @@ const CalendarPage = () => {
             ))}
           </div>
           {startPadding.map((_, index) => (
-            <div key={`start-${index}`} className="aspect-square border-b border-r border-vyba-gray" />
+            <div key={`start-${index}`} className="aspect-square lg:border-b lg:border-r border-vyba-gray" />
           ))}
-          {daysInMonth.map((dayDate) => {
-            const intensity = getDayIntensity(dayDate);
-            const dayMultiDayEvents = multiDayEvents.filter(event => {
-              const eventStart = new Date(event.startDate);
-              const eventEnd = new Date(event.endDate);
-              return dayDate >= eventStart && dayDate <= eventEnd;
+          {daysInMonth.map((dayDate, index) => {
+            const isCurrentMonth = isSameMonth(dayDate, date);
+            const isToday = isSameDay(dayDate, currentDate);
+            const dayEvents = getEventsForDate(dayDate);
+            const dayMultiDayEvents = dayEvents.filter(event => {
+              const start = new Date(event.startDate);
+              const end = new Date(event.endDate);
+              return isSameDay(start, end);
             });
-            const daySingleDayEvents = singleDayEvents.filter(event => isSameDay(dayDate, new Date(event.startDate)));
+            const daySingleDayEvents = dayEvents.filter(event => !isSameDay(new Date(event.startDate), new Date(event.endDate)));
 
             return (
               <div
                 key={dayDate.toISOString()}
                 className={cn(
-                  "aspect-square p-1 relative cursor-pointer hover:bg-vyba-gray/50 transition-colors border-b border-r border-vyba-gray",
-                  isSameDay(dayDate, currentDate) && "bg-vyba-gray",
-                  !isSameMonth(dayDate, date) && "text-vyba-tertiary/50"
+                  "aspect-square p-1 flex flex-col",
+                  "border-b border-r border-vyba-gray",
+                  index === 0 && "border-l",
+                  isCurrentMonth ? "bg-white" : "bg-vyba-gray/50",
+                  isToday && "bg-vyba-primary/20"
                 )}
-                onClick={() => handleDateClick(dayDate)}
               >
                 <div className="flex flex-col h-full">
                   <div className="flex-1 flex items-center justify-center">
                     <span className={cn(
                       "text-xs font-medium lg:text-xs lg:font-medium",
-                      intensity === 'high' && "text-red-500",
-                      intensity === 'medium' && "text-orange-500",
-                      intensity === 'low' && "text-green-500"
+                      getDayIntensity(dayDate) === 'high' && "text-red-500",
+                      getDayIntensity(dayDate) === 'medium' && "text-orange-500",
+                      getDayIntensity(dayDate) === 'low' && "text-green-500"
                     )}>
                       {dayDate.getDate()}
                     </span>
                   </div>
                   {(dayMultiDayEvents.length > 0 || daySingleDayEvents.length > 0) && (
-                    <div className="flex items-center justify-end gap-1">
+                    <div className="flex items-center justify-center gap-1">
                       {dayMultiDayEvents.length > 0 && (
                         <div className="flex gap-1">
                           {dayMultiDayEvents.map(event => (
                             <div
                               key={event.id}
                               className={cn(
-                                "w-1.5 h-1.5 rounded-full",
+                                "w-2 h-2 rounded-full lg:w-1.5 lg:h-1.5",
                                 getEventColor(event.type, true)
                               )}
                             />
@@ -651,9 +654,11 @@ const CalendarPage = () => {
                         </div>
                       )}
                       {daySingleDayEvents.length > 0 && (
-                        <span className="text-[10px] text-vyba-tertiary font-medium">
-                          {daySingleDayEvents.length}
-                        </span>
+                        <div className="bg-vyba-navy/10 rounded-full px-2 py-0.5">
+                          <span className="text-xs font-medium text-vyba-navy lg:text-[10px]">
+                            {daySingleDayEvents.length}
+                          </span>
+                        </div>
                       )}
                     </div>
                   )}
@@ -662,7 +667,7 @@ const CalendarPage = () => {
             );
           })}
           {endPadding.map((_, index) => (
-            <div key={`end-${index}`} className="aspect-square border-b border-r border-vyba-gray" />
+            <div key={`end-${index}`} className="aspect-square lg:border-b lg:border-r border-vyba-gray" />
           ))}
         </div>
       </div>
@@ -675,7 +680,8 @@ const CalendarPage = () => {
         <div className="lg:col-span-3 bg-white overflow-auto">
           {/* Contenedor sticky para el botón de configuración en móvil */}
           <div className="sticky top-0 z-10 bg-white border-b border-vyba-gray lg:hidden">
-            <div className="flex items-center justify-end p-4">
+            <div className="flex items-center justify-between p-4">
+              <span className="text-sm font-medium text-vyba-navy">Usuario</span>
               <Button 
                 variant="ghost" 
                 size="icon"
@@ -938,7 +944,7 @@ const CalendarPage = () => {
             />
           )}
 
-          <div className="flex justify-between items-center gap-4 mb-6 px-4 lg:px-0">
+          <div className="hidden lg:flex items-center justify-between mb-4">
             <div className="flex items-center gap-4">
               <Button variant="ghost" size="icon" onClick={prevPeriod} className="lg:block hidden">
                 <ChevronLeft className="h-4 w-4" />
