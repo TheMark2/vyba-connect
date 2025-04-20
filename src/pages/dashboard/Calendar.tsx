@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Button } from "@/components/ui/button";
-import { Calendar as CalendarIcon, Plus, ChevronLeft, ChevronRight, Clock, MapPin, X, Flame, Settings, Bell, Filter, Download, CalendarClock, CalendarDays, Calendar, CalendarFold, EyeOff, ChartSpline, Menu, LayoutDashboard, User, MessageSquare, BarChart } from "lucide-react";
+import { Calendar as CalendarIcon, Plus, ChevronLeft, ChevronRight, Clock, MapPin, X, Flame, Settings, Bell, Filter, Download, CalendarClock, CalendarDays, Calendar, CalendarFold, EyeOff, ChartSpline, Menu, LayoutDashboard, User, MessageSquare, BarChart, ArrowLeft } from "lucide-react";
 import {
   Select,
   SelectContent,
@@ -123,11 +123,11 @@ const CalendarPage = () => {
   const [showEditDialog, setShowEditDialog] = useState(false);
   const [eventToEdit, setEventToEdit] = useState<Event | null>(null);
   const [sortBy, setSortBy] = useState<'recent' | 'closest'>('closest');
-  const [isSwiped, setIsSwiped] = useState(false);
+  const [isDrawerOpen, setIsDrawerOpen] = useState(false);
 
   const handlers = useSwipeable({
-    onSwipedLeft: () => setIsSwiped(true),
-    onSwipedRight: () => setIsSwiped(false),
+    onSwipedLeft: () => setIsDrawerOpen(true),
+    onSwipedRight: () => setIsDrawerOpen(false),
     trackMouse: true
   });
 
@@ -618,7 +618,7 @@ const CalendarPage = () => {
   return (
     <div className="h-full">
       <div className="grid grid-cols-1 lg:grid-cols-4 h-full">
-        <div className="lg:col-span-3 bg-white overflow-y-auto h-full" onScroll={handleScroll} {...handlers}>
+        <div className="h-full lg:col-span-3 bg-white/20 backdrop-blur-sm overflow-y-auto" onScroll={handleScroll}>
           <div className="sticky top-0 bg-white z-10 flex justify-between items-center py-2 px-4">
             <select
               value={currentDate.getFullYear()}
@@ -631,22 +631,33 @@ const CalendarPage = () => {
                 </option>
               ))}
             </select>
-            <button className="p-2 bg-blue-500 text-white rounded-full md:hidden" onClick={() => setIsSwiped(!isSwiped)}>
-              <Menu className="w-6 h-6" />
-            </button>
+            <div className="flex items-center gap-2">
+              <button className="p-3 bg-vyba-gray rounded-full md:hidden" onClick={() => setIsDrawerOpen(true)}>
+                <Settings className="w-5 h-5" />
+              </button>
             <Select value={view} onValueChange={(value) => setView(value as CalendarView)}>
-              <SelectTrigger className="w-auto gap-8">
-                <SelectValue placeholder="Selecciona una vista" />
+              <SelectTrigger className="w-auto gap-2 px-4">
+                {view === "month" ? (
+                  <CalendarDays className="w-5 h-5" />
+                ) : (
+                  <CalendarFold className="w-5 h-5" />
+                )}
               </SelectTrigger>
               <SelectContent>
                 <SelectItem value="month">Vista mensual</SelectItem>
                 <SelectItem value="year">Vista anual</SelectItem>
-              </SelectContent>
-            </Select>
+                </SelectContent>
+              </Select>
+            </div>
           </div>
           {view === 'year' ? renderYearView() : renderAllMonthsView()}
         </div>
-        <div className={`lg:col-span-1 bg-white overflow-auto fixed inset-0 z-20 ${isSwiped ? 'block' : 'hidden'} md:relative md:block`}>
+        <div className={`fixed inset-0 bg-white z-20 transition-transform transform ${isDrawerOpen ? 'translate-y-0' : 'translate-y-full'} md:relative md:translate-y-0 md:block`}>
+          <div className="flex flex-col px-4 pt-4 items-start md:hidden">
+            <button className="p-2 hover:bg-vyba-gray rounded-full" onClick={() => setIsDrawerOpen(false)}>
+              <ChevronLeft className="w-6 h-6" />
+            </button>
+          </div>
           <Tabs defaultValue={activeTab} className="mt-6" onValueChange={setActiveTab}>
             <TabsList className="w-full shadow-none">
               <TabsTrigger value="general" className="flex-1 shadow-none">General</TabsTrigger>

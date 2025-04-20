@@ -115,18 +115,18 @@ const Navbar = ({
       )}
     >
       <div className="flex items-center space-x-12">
-        <Link to="/" className="text-3xl font-bold dark:text-white">
+        <Button variant="link" onClick={() => navigate("/")} className="text-3xl font-bold dark:text-white">
           <img src="/lovable-uploads/logovyba.png" alt="VYBA" className="h-10" />
-        </Link>
+        </Button>
 
         <div className="hidden md:flex items-center space-x-2">
-          <Link to="/" className={cn("px-6 py-3 text-base rounded-full text-vyba-tertiary dark:text-white font-regular relative overflow-hidden transition-colors duration-300", isActive("/") ? "text-black dark:text-white bg-vyba-gray/60" : "hover:bg-vyba-gray/60 hover:text-black")}>
+          <Button variant="link" onClick={() => navigate("/")} className={cn("text-sm font-medium text-vyba-tertiary hover:text-vyba-navy rounded-full px-6 py-3 transition-all duration-300 ease-in-out hover:bg-vyba-gray hover:no-underline", isActive("/") && "relative text-vyba-navy after:content-[''] after:absolute after:left-1/2 after:-translate-x-1/2 after:bottom-0 after:w-6 after:h-[2px] after:bg-vyba-navy after:rounded-full")}>
             Inicio
-          </Link>
+          </Button>
 
-          <Link to="/artists" className={cn("px-6 py-3 text-base rounded-full text-vyba-tertiary dark:text-white font-regular relative overflow-hidden transition-colors duration-300", isActive("/artists") ? "text-black dark:text-white bg-vyba-gray/60" : "hover:bg-vyba-gray/60 hover:text-black")}>
+          <Button variant="link" onClick={() => navigate("/artists")} className={cn("text-sm font-medium text-vyba-tertiary hover:text-vyba-navy rounded-full px-6 py-3 transition-all duration-300 ease-in-out hover:bg-vyba-gray hover:no-underline", isActive("/artists") && "relative text-vyba-navy after:content-[''] after:absolute after:left-1/2 after:-translate-x-1/2 after:bottom-0 after:w-6 after:h-[2px] after:bg-vyba-navy after:rounded-full")}>
             Artistas
-          </Link>
+          </Button>
         </div>
       </div>
 

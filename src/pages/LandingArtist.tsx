@@ -203,7 +203,7 @@ const LandingArtist = () => {
       
       <div className="flex flex-col items-center justify-center mt-24 max-w-2xl mx-auto px-12">
         <h4 className="text-3xl font-medium text-center">Tan sencillo como abrirse una cuenta en 2 minutos y empezar a recibir mensajes</h4>
-        <Button variant="terciary" className="mt-6 text-xl">Empezar ahora</Button>
+        <Button variant="terciary" onClick={handleGetStarted} className="mt-6 text-xl">Empezar ahora</Button>
       </div>
       
       <div className="flex flex-col items-center justify-center mt-24 max-w-7xl mx-auto px-12">

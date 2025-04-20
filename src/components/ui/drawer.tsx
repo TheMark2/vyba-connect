@@ -1,6 +1,7 @@
 import * as React from "react";
 import { Drawer as DrawerPrimitive } from "vaul";
 import { cn } from "@/lib/utils";
+import { ChevronLeft } from "lucide-react";
 
 const Drawer = ({
   shouldScaleBackground = true,
@@ -31,10 +32,20 @@ const DrawerContent = React.forwardRef<
     {...props}
   >
     <div className="absolute top-3 left-0 right-0 mx-auto w-12 h-1.5 rounded-full bg-muted/80" />
+
+    {/* Mobile-only close button at the top */}
+    <div className="flex flex-col px-4 pt-4 items-start md:hidden">
+      <DrawerClose asChild>
+        <button className="p-2 hover:bg-vyba-gray rounded-full">
+          <ChevronLeft className="w-6 h-6" />
+        </button>
+      </DrawerClose>
+    </div>
+
     {children}
   </DrawerPrimitive.Content>
 ));
-DrawerContent.displayName = "DrawerContent";
+
 
 const DrawerHeader = ({
   className,
