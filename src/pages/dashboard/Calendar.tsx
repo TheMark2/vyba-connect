@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Button } from "@/components/ui/button";
-import { Calendar as CalendarIcon, Plus, ChevronLeft, ChevronRight, Clock, MapPin, X, Flame, Settings, Bell, Filter, Download, CalendarClock, CalendarDays, Calendar, CalendarFold, EyeOff, ChartSpline } from "lucide-react";
+import { Calendar as CalendarIcon, Plus, ChevronLeft, ChevronRight, Clock, MapPin, X, Flame, Settings, Bell, Filter, Download, CalendarClock, CalendarDays, Calendar, CalendarFold, EyeOff, ChartSpline, Menu, LayoutDashboard, User, MessageSquare, BarChart } from "lucide-react";
 import {
   Select,
   SelectContent,
@@ -39,6 +39,8 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/carousel";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { useSwipeable } from 'react-swipeable';
+import { useNavigate } from 'react-router-dom';
 
 type CalendarView = 'month' | 'year';
 
@@ -121,6 +123,15 @@ const CalendarPage = () => {
   const [showEditDialog, setShowEditDialog] = useState(false);
   const [eventToEdit, setEventToEdit] = useState<Event | null>(null);
   const [sortBy, setSortBy] = useState<'recent' | 'closest'>('closest');
+  const [isSwiped, setIsSwiped] = useState(false);
+
+  const handlers = useSwipeable({
+    onSwipedLeft: () => setIsSwiped(true),
+    onSwipedRight: () => setIsSwiped(false),
+    trackMouse: true
+  });
+
+  const navigate = useNavigate();
 
   const getEventColor = (type: Event['type'], isMultiDay: boolean = false) => {
     if (isMultiDay) {
@@ -259,7 +270,7 @@ const CalendarPage = () => {
           </h2>
         </div>
         {['L', 'M', 'X', 'J', 'V', 'S', 'D'].map((day) => (
-          <div key={day} className="text-center font-medium text-vyba-tertiary py-2 border-b sticky top-10 bg-white z-10">
+          <div key={day} className="text-center font-medium text-vyba-tertiary py-2 sticky top-10 bg-white z-10">
             {day}
           </div>
         ))}
@@ -269,6 +280,7 @@ const CalendarPage = () => {
         {daysInMonth.map((date, index) => {
           const dayEvents = getEventsForDate(date);
           const isMondayColumn = (index + startDayOfWeek) % 7 === 0;
+          const hasEvents = dayEvents.length > 0;
           return (
             <div
               key={date.toString()}
@@ -278,17 +290,15 @@ const CalendarPage = () => {
                 ${date < new Date() && !isToday(date) ? 'bg-vyba-gray' : ''}
                 ${isMondayColumn ? 'border-l' : ''}
                 ${index < 7 ? 'border-t' : ''}
-                sm:min-h-[80px] sm:min-w-[80px]
-                sm:h-[80px] sm:w-[80px]
+                sm:min-h-[60px] sm:min-w-[60px]
+                sm:h-[60px] sm:w-[60px]
               `}
               onClick={() => handleDateClick(date)}
             >
               <div className="text-sm font-medium mb-1 flex items-center gap-1 justify-center">
                 {format(date, 'd')}
                 {isToday(date) && <div className="w-2 h-2 rounded-full bg-primary"></div>}
-                {dayEvents.length > 0 && (
-                  <div className="w-2 h-2 rounded-full bg-black"></div>
-                )}
+                {hasEvents && <div className="w-2 h-2 rounded-full bg-black"></div>}
               </div>
               <div className="space-y-1">
                 {dayEvents.map(event => (
@@ -338,7 +348,7 @@ const CalendarPage = () => {
   const renderAllMonthsView = () => {
     const months = Array.from({ length: 12 }, (_, i) => new Date(currentDate.getFullYear(), i, 1));
     return (
-      <div className="flex flex-col px-6 gap-12">
+      <div className="flex flex-col gap-6 md:gap-12">
         {months.map((month) => {
           const monthStart = startOfMonth(month);
           const monthEnd = endOfMonth(month);
@@ -357,13 +367,11 @@ const CalendarPage = () => {
                 ))}
                 {daysInMonth.map((date, index) => {
                   const dayEvents = getEventsForDate(date);
-                  const maxVisibleEvents = 3;
-                  const visibleEvents = dayEvents.slice(0, maxVisibleEvents);
-                  const overflowCount = dayEvents.length - visibleEvents.length;
+                  const hasEvents = dayEvents.length > 0;
                   return (
                     <div
                       key={date.toString()}
-                      className={`min-h-[120px] p-2 border-b border-r cursor-pointer transition-colors
+                      className={`h-[70px] md:min-h-[120px] p-2 border-b border-r cursor-pointer transition-colors
                         ${isSameMonth(date, month) ? 'hover:bg-vyba-gray' : 'bg-gray-50 text-gray-400'}
                         ${selectedDate && isSameDay(date, selectedDate) ? 'bg-vyba-gray' : ''}
                         ${date < new Date() && !isToday(date) ? 'bg-vyba-gray' : ''}
@@ -372,29 +380,23 @@ const CalendarPage = () => {
                       `}
                       onClick={() => handleDateClick(date)}
                     >
-                      <div className="text-sm font-medium mb-1 flex items-center gap-1">
+                      <div className="text-xs md:text-sm font-medium mb-1 flex flex-col items-center justify-center md:justify-start gap-1">
                         {format(date, 'd')}
                         {isToday(date) && <div className="w-2 h-2 rounded-full bg-primary"></div>}
-                      </div>
-                      <div className="space-y-1">
-                        {visibleEvents.map(event => {
-                          const eventEndTime = new Date(date);
-                          const [endHour, endMinute] = event.endTime.split(':').map(Number);
-                          eventEndTime.setHours(endHour, endMinute);
-                          return (
-                            <div
-                              key={event.id}
-                              className={`text-xs px-2 py-1 rounded-md truncate ${getEventColor(event.type)}
-                                ${new Date() > eventEndTime ? 'line-through' : ''}`}
-                            >
-                              {event.title} {event.startTime}
+                        {hasEvents && (
+                          <>
+                            <div className="w-2 h-2 rounded-full bg-black mt-1 md:hidden"></div>
+                            <div className="hidden md:block space-y-1">
+                              {dayEvents.map(event => (
+                                <div
+                                  key={event.id}
+                                  className={`text-xs px-2 py-1 rounded-md truncate ${getEventColor(event.type)}`}
+                                >
+                                  {event.title} {event.startTime}
+                                </div>
+                              ))}
                             </div>
-                          );
-                        })}
-                        {overflowCount > 0 && (
-                          <div className="text-xs text-gray-500">
-                            {`+${overflowCount} más`}
-                          </div>
+                          </>
                         )}
                       </div>
                     </div>
@@ -435,6 +437,7 @@ const CalendarPage = () => {
                   const dayEvents = getEventsForDate(date);
                   const isMondayColumn = (index + startDayOfWeek) % 7 === 0;
                   const isFirstDayOfMonth = date.getDate() === 1;
+                  const hasEvents = dayEvents.length > 0;
                   return (
                     <div
                       key={date.toString()}
@@ -453,7 +456,7 @@ const CalendarPage = () => {
                       <div className="text-xs font-medium mb-2 flex justify-center">
                         {format(date, 'd')}
                       </div>
-                      {dayEvents.length > 0 && <div className="w-2 h-2 rounded-full bg-black mx-auto"></div>}
+                      {hasEvents && <div className="w-2 h-2 rounded-full bg-black mx-auto"></div>}
                     </div>
                   );
                 })}
@@ -615,7 +618,7 @@ const CalendarPage = () => {
   return (
     <div className="h-full">
       <div className="grid grid-cols-1 lg:grid-cols-4 h-full">
-        <div className="lg:col-span-3 bg-white overflow-y-auto h-full" onScroll={handleScroll}>
+        <div className="lg:col-span-3 bg-white overflow-y-auto h-full" onScroll={handleScroll} {...handlers}>
           <div className="sticky top-0 bg-white z-10 flex justify-between items-center py-2 px-4">
             <select
               value={currentDate.getFullYear()}
@@ -628,6 +631,9 @@ const CalendarPage = () => {
                 </option>
               ))}
             </select>
+            <button className="p-2 bg-blue-500 text-white rounded-full md:hidden" onClick={() => setIsSwiped(!isSwiped)}>
+              <Menu className="w-6 h-6" />
+            </button>
             <Select value={view} onValueChange={(value) => setView(value as CalendarView)}>
               <SelectTrigger className="w-auto gap-8">
                 <SelectValue placeholder="Selecciona una vista" />
@@ -637,13 +643,10 @@ const CalendarPage = () => {
                 <SelectItem value="year">Vista anual</SelectItem>
               </SelectContent>
             </Select>
-            <button className="lg:hidden p-2 bg-vyba-gray rounded-md" onClick={() => setActiveTab('general')}>
-              Abrir Tabs
-            </button>
           </div>
           {view === 'year' ? renderYearView() : renderAllMonthsView()}
         </div>
-        <div className="lg:col-span-1 bg-white overflow-auto relative hidden lg:block">
+        <div className={`lg:col-span-1 bg-white overflow-auto fixed inset-0 z-20 ${isSwiped ? 'block' : 'hidden'} md:relative md:block`}>
           <Tabs defaultValue={activeTab} className="mt-6" onValueChange={setActiveTab}>
             <TabsList className="w-full shadow-none">
               <TabsTrigger value="general" className="flex-1 shadow-none">General</TabsTrigger>
@@ -964,6 +967,13 @@ const CalendarPage = () => {
           </DialogFooter>
         </DialogContent>
       </Dialog>
+      <nav className="fixed bottom-0 left-0 w-full bg-white z-50 flex justify-around items-center py-2 md:hidden">
+        <button onClick={() => navigate('/dashboard')}><LayoutDashboard className="w-6 h-6" /></button>
+        <button onClick={() => navigate('/dashboard/profile')}><User className="w-6 h-6" /></button>
+        <button onClick={() => navigate('/dashboard/messages')}><MessageSquare className="w-6 h-6" /></button>
+        <button onClick={() => navigate('/dashboard/analytics')}><BarChart className="w-6 h-6" /></button>
+        <button onClick={() => navigate('/dashboard/calendar')}><CalendarIcon className="w-6 h-6" /></button>
+      </nav>
     </div>
   );
 };
