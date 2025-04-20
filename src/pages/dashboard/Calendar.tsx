@@ -264,19 +264,6 @@ const CalendarPage = () => {
 
     return (
       <div className="grid grid-cols-7">
-        <div className="sticky top-0 bg-white z-10 flex justify-center items-center py-2">
-          <h2 className="text-2xl font-medium text-center">
-            {format(currentDate, 'MMMM yyyy', { locale: es })}
-          </h2>
-        </div>
-        {['L', 'M', 'X', 'J', 'V', 'S', 'D'].map((day) => (
-          <div key={day} className="text-center font-medium text-vyba-tertiary py-2 sticky top-10 bg-white z-10">
-            {day}
-          </div>
-        ))}
-        {Array.from({ length: startDayOfWeek }).map((_, index) => (
-          <div key={`empty-${index}`} className="p-2"></div>
-        ))}
         {daysInMonth.map((date, index) => {
           const dayEvents = getEventsForDate(date);
           const isMondayColumn = (index + startDayOfWeek) % 7 === 0;
@@ -355,7 +342,7 @@ const CalendarPage = () => {
           const daysInMonth = eachDayOfInterval({ start: monthStart, end: monthEnd });
           const startDayOfWeek = (monthStart.getDay() + 6) % 7;
           return (
-            <div key={month.toString()} className="mb-6">
+            <div key={month.toString()} className="mb-12">
               {month.getMonth() !== 0 && (
                 <h2 className="text-2xl font-medium text-center py-2">
                   {format(month, 'MMMM yyyy', { locale: es })}
@@ -618,46 +605,59 @@ const CalendarPage = () => {
   return (
     <div className="h-full">
       <div className="grid grid-cols-1 lg:grid-cols-4 h-full">
-        <div className="h-full lg:col-span-3 bg-white/20 backdrop-blur-sm overflow-y-auto" onScroll={handleScroll}>
-          <div className="sticky top-0 bg-white z-10 flex justify-between items-center py-2 px-4">
-            <select
-              value={currentDate.getFullYear()}
-              onChange={handleYearChange}
-              className="text-2xl font-medium text-center bg-transparent appearance-none"
-            >
-              {Array.from({ length: 10 }, (_, i) => currentDate.getFullYear() - 5 + i).map(year => (
-                <option key={year} value={year}>
-                  {year}
-                </option>
-              ))}
-            </select>
-            <div className="flex items-center gap-2">
-              <button className="p-3 bg-vyba-gray rounded-full md:hidden" onClick={() => setIsDrawerOpen(true)}>
-                <Settings className="w-5 h-5" />
-              </button>
-            <Select value={view} onValueChange={(value) => setView(value as CalendarView)}>
-              <SelectTrigger className="w-auto gap-2 px-4">
-                {view === "month" ? (
-                  <CalendarDays className="w-5 h-5" />
-                ) : (
-                  <CalendarFold className="w-5 h-5" />
-                )}
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="month">Vista mensual</SelectItem>
-                <SelectItem value="year">Vista anual</SelectItem>
-                </SelectContent>
-              </Select>
+        <div className="h-full lg:col-span-3 overflow-y-auto" onScroll={handleScroll}>
+          <div className="sticky top-0 bg-white/50 backdrop-blur-sm md:backdrop-blur-none md:bg-white z-10 flex flex-col py-2 px-4">
+            <div className="flex justify-between items-center">
+              <select
+                value={currentDate.getFullYear()}
+                onChange={handleYearChange}
+                className="text-2xl font-medium text-center bg-transparent appearance-none"
+              >
+                {Array.from({ length: 10 }, (_, i) => currentDate.getFullYear() - 5 + i).map(year => (
+                  <option key={year} value={year}>
+                    {year}
+                  </option>
+                ))}
+              </select>
+              {view === 'month' && (
+                <div className="text-center text-xl font-semibold text-vyba-navy hidden md:block">
+                  {format(currentDate, 'MMMM yyyy', { locale: es })}
+                </div>
+              )}
+              <div className="flex items-center gap-2">
+                <button className="p-3 bg-vyba-gray rounded-full md:hidden" onClick={() => setIsDrawerOpen(true)}>
+                  <Settings className="w-5 h-5" />
+                </button>
+                <Select value={view} onValueChange={(value) => setView(value as CalendarView)}>
+                  <SelectTrigger className="w-auto gap-2 px-4">
+                    {view === "month" ? (
+                      <CalendarDays className="w-5 h-5" />
+                    ) : (
+                      <CalendarFold className="w-5 h-5" />
+                    )}
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="month">Vista mensual</SelectItem>
+                    <SelectItem value="year">Vista anual</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
             </div>
+            {view === 'month' && (
+              <div className="grid grid-cols-7 gap-1 mt-4 text-sm font-light text-vyba-tertiary text-xs items-center justify-center">
+                <div className="text-center">L</div>
+                <div className="text-center">M</div>
+                <div className="text-center">X</div>
+                <div className="text-center">J</div>
+                <div className="text-center">V</div>
+                <div className="text-center">S</div>
+                <div className="text-center">D</div>
+              </div>
+            )}
           </div>
           {view === 'year' ? renderYearView() : renderAllMonthsView()}
         </div>
         <div className={`fixed inset-0 bg-white z-20 transition-transform transform ${isDrawerOpen ? 'translate-y-0' : 'translate-y-full'} md:relative md:translate-y-0 md:block`}>
-          <div className="flex flex-col px-4 pt-4 items-start md:hidden">
-            <button className="p-2 hover:bg-vyba-gray rounded-full" onClick={() => setIsDrawerOpen(false)}>
-              <ChevronLeft className="w-6 h-6" />
-            </button>
-          </div>
           <Tabs defaultValue={activeTab} className="mt-6" onValueChange={setActiveTab}>
             <TabsList className="w-full shadow-none">
               <TabsTrigger value="general" className="flex-1 shadow-none">General</TabsTrigger>
