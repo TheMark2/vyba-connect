@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import ArtistProfileCard from "@/components/ArtistProfileCard";
 import { Button } from "@/components/ui/button";
@@ -9,10 +8,10 @@ import { ChevronLeft, ChevronRight } from "lucide-react";
 const DjsSlider = () => {
   const selectedArtists = artistsDataFromArtistsPage
     .filter(artist => artist.type === 'DJ')
-    .slice(0, 8);  // Aumentamos a 8 para tener 2 páginas completas
+    .slice(0, 8);
 
   const [page, setPage] = useState(0);
-  const cardsPerPage = 4;  // Cambiamos a 4 tarjetas por página
+  const cardsPerPage = 4;
   const totalPages = Math.ceil(selectedArtists.length / cardsPerPage);
 
   const handlePrev = () => {
@@ -58,17 +57,16 @@ const DjsSlider = () => {
         </div>
 
         <div className="overflow-hidden">
-          <AnimatePresence mode="wait">
+          <AnimatePresence initial={false} mode="wait">
             <motion.div
               key={page}
               className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6"
-              initial={{ x: page > 0 ? 1000 : -1000 }}
-              animate={{ x: 0 }}
-              exit={{ x: page > 0 ? -1000 : 1000 }}
+              initial={{ opacity: 0, x: page > 0 ? 100 : -100 }}
+              animate={{ opacity: 1, x: 0 }}
+              exit={{ opacity: 0, x: page > 0 ? -100 : 100 }}
               transition={{ 
-                type: "spring",
-                stiffness: 260,
-                damping: 20
+                duration: 0.3,
+                ease: "easeInOut"
               }}
             >
               {currentCards.map((artist) => (
