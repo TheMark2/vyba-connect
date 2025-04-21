@@ -1,3 +1,4 @@
+
 import React, { useState } from "react";
 import ArtistProfileCard from "@/components/ArtistProfileCard";
 import { Button } from "@/components/ui/button";
@@ -61,9 +62,9 @@ const DjsSlider = () => {
             <motion.div
               key={page}
               className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6"
-              initial={{ opacity: 0, x: page > 0 ? 100 : -100 }}
+              initial={{ opacity: 0, x: page > 0 ? -100 : 100 }}
               animate={{ opacity: 1, x: 0 }}
-              exit={{ opacity: 0, x: page > 0 ? -100 : 100 }}
+              exit={{ opacity: 0, x: page > 0 ? 100 : -100 }}
               transition={{ 
                 duration: 0.3,
                 ease: "easeInOut"
