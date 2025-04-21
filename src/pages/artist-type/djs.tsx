@@ -2,10 +2,9 @@ import React from "react";
 import { Carousel, CarouselContent, CarouselItem, CarouselPrevious, CarouselNext } from "@/components/ui/carousel";
 import ArtistProfileCard from "@/components/ArtistProfileCard";
 import { artistsData as artistsDataFromArtistsPage } from "../ArtistsPage";
-import { Slider } from "react-slick";
+import { ChevronLeft, ChevronRight } from "lucide-react";
 
 const DjsSlider = () => {
-  // Filtra solo los artistas de tipo 'DJ' y selecciona hasta 6
   const selectedArtists = artistsDataFromArtistsPage
     .filter(artist => artist.type === 'DJ')
     .slice(0, 6);
@@ -15,18 +14,18 @@ const DjsSlider = () => {
       <h1 className="text-5xl font-semibold mb-14">Descubre a los mejores DJs</h1>
       
       <Carousel 
-        opts={{ 
-          loop: true,
+        opts={{
           align: "start",
-          containScroll: "trimSnaps",
-          slidesToScroll: 1
+          containScroll: false,
+          dragFree: true
         }}
+        className="w-full"
       >
-        <CarouselContent className="-ml-4">
+        <CarouselContent className="-ml-6">
           {selectedArtists.map((artist) => (
             <CarouselItem 
               key={artist.id} 
-              className="pl-4 md:basis-1/2 lg:basis-1/3 xl:basis-1/4"
+              className="pl-6 basis-full sm:basis-1/2 lg:basis-1/3 xl:basis-1/4"
             >
               <div className="h-full">
                 <ArtistProfileCard
@@ -41,8 +40,14 @@ const DjsSlider = () => {
             </CarouselItem>
           ))}
         </CarouselContent>
-        <CarouselPrevious className="left-0 lg:-left-12" />
-        <CarouselNext className="right-0 lg:-right-12" />
+        <div className="flex items-center justify-end gap-2 mt-8">
+          <CarouselPrevious 
+            className="position-static translate-y-0 h-8 w-8 rounded-full border-0 bg-white dark:bg-gray-800 hover:bg-gray-100 dark:hover:bg-gray-700"
+          />
+          <CarouselNext 
+            className="position-static translate-y-0 h-8 w-8 rounded-full border-0 bg-white dark:bg-gray-800 hover:bg-gray-100 dark:hover:bg-gray-700"
+          />
+        </div>
       </Carousel>
     </div>
   );
