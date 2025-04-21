@@ -10,15 +10,15 @@
   }
   
   h1 {
-    @apply font-bold text-4xl md:text-6xl mb-4 md:mb-6;
+    @apply font-bold text-4xl md:text-6xl font-figtree mb-4 md:mb-6;
   }
   
   h2 {
-    @apply text-3xl md:text-5xl mb-4;
+    @apply text-3xl md:text-5xl font-figtree mb-4;
   }
   
   p {
-    @apply text-base md:text-lg mb-6 text-[#717171] dark:text-gray-400;
+    @apply text-base md:text-lg font-light font-figtree mb-6 text-[#717171] dark:text-gray-400;
   }
 }
 

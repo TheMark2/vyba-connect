@@ -1,6 +1,6 @@
 
 import React, { useState, useRef, useEffect, TouchEvent } from "react";
-import { Heart, ChevronLeft, ChevronRight, Star } from "lucide-react";
+import { Heart, ChevronLeft, ChevronRight, Star, Banknote } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
 import { toast } from "sonner";
@@ -269,7 +269,7 @@ const ArtistProfileCard = ({
           cursor: isHovered ? 'pointer' : 'default'
         }}
       >
-        <div className={cn("relative w-full overflow-hidden rounded-2xl", "aspect-[1.05/1]")}>
+        <div className={cn("relative w-full overflow-hidden rounded-3xl", "aspect-[1.05/1]")}>
           <div 
             className="relative w-full h-full overflow-hidden" 
             onTouchStart={handleTouchStart} 
@@ -279,7 +279,7 @@ const ArtistProfileCard = ({
             {images.map((image, index) => (
               <div 
                 key={index} 
-                className="absolute inset-0 w-full h-full transition-transform duration-300 ease-out" 
+                className="absolute inset-0 w-full h-full transition-transform duration-500 ease-in-out" 
                 style={{
                   transform: `translateX(${(index - currentImageIndex) * 100}%)`,
                   zIndex: index === currentImageIndex ? 1 : 0
@@ -312,7 +312,7 @@ const ArtistProfileCard = ({
             >
               <ChevronLeft 
                 className={cn(
-                  "h-4 w-4", 
+                  "h-5 w-5", 
                   isDarkImage ? "text-white" : "text-white"
                 )} 
               />
@@ -372,7 +372,7 @@ const ArtistProfileCard = ({
           <Badge 
             variant="secondary" 
             className={cn(
-              "absolute top-2 left-2 text-sm backdrop-blur-xl text-white z-10 px-4 py-1.5 dark:text-white rounded-full transition-colors duration-300", 
+              "absolute top-2 left-2 text-sm backdrop-blur-xl text-white z-10 px-4 py-1.5 dark:text-white rounded-full transition-colors duration-300 font-figtree", 
               regularBadge || isRecommended ? "font-medium" : "font-medium",
               isDarkImage ? "bg-white/30" : "bg-black/30"
             )}
@@ -384,22 +384,23 @@ const ArtistProfileCard = ({
         {isRecommended ? (
           <div className="pt-3 flex flex-col gap-1 bg-transparent">
             <div className="flex justify-between items-center">
-              <h3 className="text-base font-normal text-vyba-navy">{name}</h3>
-              <p className="text-base text-vyba-tertiary font-normal">{priceRange}</p>
+              <h3 className="text-base font-normal text-vyba-navy font-figtree">{name}</h3>
+              <p className="text-base text-vyba-tertiary font-normal font-figtree">{priceRange}</p>
             </div>
           </div>
         ) : (
           <div className="pt-3 flex flex-col bg-transparent">
             <div className="flex justify-between items-center">
-              <h3 className="text-base font-medium text-vyba-navy">{name}</h3>
+              <h3 className="text-base font-medium text-vyba-navy font-figtree">{name}</h3>
               <div className="flex items-center gap-1">
                 <Star className="h-3 w-3 fill-black stroke-black dark:fill-white dark:stroke-white" />
                 <span className="text-base font-medium text-vyba-navy">{rating.toFixed(1)}</span>
               </div>
             </div>
-            <p className="text-sm font-vyba-tertiary dark:text-gray-400 line-clamp-1 font-light mb-2">{description}</p>
-            <p className="text-base font-medium text-vyba-navy">
-              {priceRange}
+            <p className="text-base font-vyba-tertiary dark:text-gray-400 line-clamp-1 font-light mb-2 font-figtree">{description}</p>
+            <p className="text-base font-medium text-vyba-navy font-figtree flex items-center gap-2">
+              <Banknote className="h-5 w-5" />
+              Desde {priceRange}
             </p>
           </div>
         )}

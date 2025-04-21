@@ -644,7 +644,7 @@ const CalendarPage = () => {
               </div>
             </div>
             {view === 'month' && (
-              <div className="grid grid-cols-7 gap-1 mt-4 text-sm font-light text-vyba-tertiary text-xs items-center justify-center">
+              <div className="grid grid-cols-7 gap-2 mt-4 text-sm font-light text-vyba-tertiary text-xs items-center justify-center">
                 <div className="text-center">L</div>
                 <div className="text-center">M</div>
                 <div className="text-center">X</div>

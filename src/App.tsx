@@ -19,6 +19,7 @@ import Messages from './pages/dashboard/Messages';
 import Analytics from './pages/dashboard/Analytics';
 import CalendarPage from './pages/dashboard/Calendar';
 import Settings from './pages/dashboard/Settings';
+import Djs from './pages/artist-type/djs';
 
 function App() {
   const location = useLocation();
@@ -43,6 +44,9 @@ function App() {
           <Route path="/dashboard/messages" element={<DashboardLayout><Messages /></DashboardLayout>} />
           <Route path="/dashboard/analytics" element={<DashboardLayout><Analytics /></DashboardLayout>} />
           <Route path="/dashboard/calendar" element={<DashboardLayout><CalendarPage /></DashboardLayout>} />
+
+          {/* Artist Type Routes */}
+          <Route path="/artist-type/djs" element={<Djs />} />
           
           <Route path="*" element={<NotFound />} />
         </Routes>

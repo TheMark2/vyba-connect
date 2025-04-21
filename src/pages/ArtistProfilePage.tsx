@@ -18,7 +18,7 @@ import DesktopArtistNavbar from "@/components/artist-profile/DesktopArtistNavbar
 import MobileArtistNavbar from "@/components/artist-profile/MobileArtistNavbar";
 import LoginDialog from "@/components/auth/LoginDialog";
 
-const artistsData = [{
+export const artistsData = [{
   id: "1",
   name: "Antonia Pedragosa",
   type: "DJ",

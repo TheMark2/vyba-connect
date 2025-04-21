@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import { Sparkles, Blend } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -9,7 +8,47 @@ import { useIsMobile, useIsSmallMobile } from "@/hooks/use-mobile";
 import { useNavigate } from "react-router-dom";
 
 // Datos de ejemplo para los artistas
-const artistsData = [
+export const artistsData = [
+  {
+    id: "1",
+    name: "Antonia Pedragosa",
+    type: "DJ",
+    description: "DJ para todo tipo de eventos",
+    images: ["/lovable-uploads/77591a97-10cd-4c8b-b768-5b17483c3d9f.png", "/lovable-uploads/64cabbe3-ce62-4190-830d-0e5defd31a1b.png", "/lovable-uploads/c89ee394-3c08-48f6-b69b-bddd81dffa8b.png"],
+    rating: 4.9,
+    priceRange: "400-500€",
+    isFavorite: false
+  },
+  {
+    id: "1",
+    name: "Antonia Pedragosa",
+    type: "DJ",
+    description: "DJ para todo tipo de eventos",
+    images: ["/lovable-uploads/77591a97-10cd-4c8b-b768-5b17483c3d9f.png", "/lovable-uploads/64cabbe3-ce62-4190-830d-0e5defd31a1b.png", "/lovable-uploads/c89ee394-3c08-48f6-b69b-bddd81dffa8b.png"],
+    rating: 4.9,
+    priceRange: "400-500€",
+    isFavorite: false
+  },
+  {
+    id: "1",
+    name: "Antonia Pedragosa",
+    type: "DJ",
+    description: "DJ para todo tipo de eventos",
+    images: ["/lovable-uploads/77591a97-10cd-4c8b-b768-5b17483c3d9f.png", "/lovable-uploads/64cabbe3-ce62-4190-830d-0e5defd31a1b.png", "/lovable-uploads/c89ee394-3c08-48f6-b69b-bddd81dffa8b.png"],
+    rating: 4.9,
+    priceRange: "400-500€",
+    isFavorite: false
+  },
+  {
+    id: "1",
+    name: "Antonia Pedragosa",
+    type: "DJ",
+    description: "DJ para todo tipo de eventos",
+    images: ["/lovable-uploads/77591a97-10cd-4c8b-b768-5b17483c3d9f.png", "/lovable-uploads/64cabbe3-ce62-4190-830d-0e5defd31a1b.png", "/lovable-uploads/c89ee394-3c08-48f6-b69b-bddd81dffa8b.png"],
+    rating: 4.9,
+    priceRange: "400-500€",
+    isFavorite: false
+  },
   {
     id: "1",
     name: "Antonia Pedragosa",
@@ -117,7 +156,7 @@ const ArtistsPage = () => {
   return (
     <>
       <Navbar />
-      <div className="px-6 md:px-14 lg:px-16 mx-auto mt-6 mb-8">
+      <div className="px-6 md:px-6 lg:px-16 mx-auto mt-6 mb-8">
         <div className={`
           ${isMobile 
             ? "bg-[#F7F7F7] dark:bg-vyba-dark-secondary/40 rounded-3xl py-6 mb-6 px-6"
@@ -175,7 +214,7 @@ const ArtistsPage = () => {
             ? "grid grid-cols-1 gap-6" // Increased vertical gap from 4 to 6
             : isMobile
               ? "grid grid-cols-2 gap-8" // Increased vertical gap from 4 to 6
-              : "grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-6" // Increased vertical gap from 4 to 6
+              : "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 3xl:grid-cols-6 gap-6" // Increased vertical gap from 4 to 6
           }
         `}>
           {artists.map(artist => (
