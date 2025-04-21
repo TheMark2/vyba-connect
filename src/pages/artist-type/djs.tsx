@@ -1,3 +1,4 @@
+
 import React from "react";
 import { Carousel, CarouselContent, CarouselItem, CarouselPrevious, CarouselNext } from "@/components/ui/carousel";
 import ArtistProfileCard from "@/components/ArtistProfileCard";
@@ -16,8 +17,8 @@ const DjsSlider = () => {
       <Carousel 
         opts={{
           align: "start",
-          containScroll: false,
-          dragFree: true
+          slidesToScroll: "page", // Hace que el scroll sea por páginas completas
+          skipSnaps: false, // Impide que el scroll pueda quedar entre dos snaps
         }}
         className="w-full"
       >
@@ -25,7 +26,7 @@ const DjsSlider = () => {
           {selectedArtists.map((artist) => (
             <CarouselItem 
               key={artist.id} 
-              className="pl-6 basis-full sm:basis-1/2 lg:basis-1/3 xl:basis-1/4"
+              className="pl-6 basis-full sm:basis-1/2 lg:basis-1/3 xl:basis-1/3"
             >
               <div className="h-full">
                 <ArtistProfileCard
@@ -40,12 +41,12 @@ const DjsSlider = () => {
             </CarouselItem>
           ))}
         </CarouselContent>
-        <div className="flex items-center justify-end gap-2 mt-8">
+        <div className="flex items-center justify-center gap-4 mt-8">
           <CarouselPrevious 
-            className="position-static translate-y-0 h-8 w-8 rounded-full border-0 bg-white dark:bg-gray-800 hover:bg-gray-100 dark:hover:bg-gray-700"
+            className="position-static translate-y-0 h-10 w-10 rounded-full border-none bg-white dark:bg-gray-800 hover:bg-gray-100 dark:hover:bg-gray-700 shadow-md"
           />
           <CarouselNext 
-            className="position-static translate-y-0 h-8 w-8 rounded-full border-0 bg-white dark:bg-gray-800 hover:bg-gray-100 dark:hover:bg-gray-700"
+            className="position-static translate-y-0 h-10 w-10 rounded-full border-none bg-white dark:bg-gray-800 hover:bg-gray-100 dark:hover:bg-gray-700 shadow-md"
           />
         </div>
       </Carousel>
