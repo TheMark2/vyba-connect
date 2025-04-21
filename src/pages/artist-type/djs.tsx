@@ -17,7 +17,7 @@ const DjsSlider = () => {
       <Carousel 
         opts={{
           align: "start",
-          slidesToScroll: "page", // Hace que el scroll sea por páginas completas
+          slidesToScroll: 1, // Cambiado de "page" a 1 para evitar el error de tipo
           skipSnaps: false, // Impide que el scroll pueda quedar entre dos snaps
         }}
         className="w-full"
