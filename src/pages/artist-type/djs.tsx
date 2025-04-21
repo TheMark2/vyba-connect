@@ -3,16 +3,16 @@ import React, { useState } from "react";
 import ArtistProfileCard from "@/components/ArtistProfileCard";
 import { Button } from "@/components/ui/button";
 import { artistsData as artistsDataFromArtistsPage } from "../ArtistsPage";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 
 const DjsSlider = () => {
   const selectedArtists = artistsDataFromArtistsPage
     .filter(artist => artist.type === 'DJ')
-    .slice(0, 6);
+    .slice(0, 8);  // Aumentamos a 8 para tener 2 páginas completas
 
   const [page, setPage] = useState(0);
-  const cardsPerPage = 3;
+  const cardsPerPage = 4;  // Cambiamos a 4 tarjetas por página
   const totalPages = Math.ceil(selectedArtists.length / cardsPerPage);
 
   const handlePrev = () => {
@@ -57,26 +57,35 @@ const DjsSlider = () => {
           </Button>
         </div>
 
-        <motion.div
-          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
-          initial={{ opacity: 0, x: 50 }}
-          animate={{ opacity: 1, x: 0 }}
-          transition={{ duration: 0.5 }}
-          key={page}
-        >
-          {currentCards.map((artist) => (
-            <div key={artist.id} className="h-full">
-              <ArtistProfileCard
-                name={artist.name}
-                type={artist.type}
-                description={artist.description}
-                images={artist.images}
-                rating={artist.rating}
-                priceRange={artist.priceRange}
-              />
-            </div>
-          ))}
-        </motion.div>
+        <div className="overflow-hidden">
+          <AnimatePresence mode="wait">
+            <motion.div
+              key={page}
+              className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6"
+              initial={{ x: page > 0 ? 1000 : -1000 }}
+              animate={{ x: 0 }}
+              exit={{ x: page > 0 ? -1000 : 1000 }}
+              transition={{ 
+                type: "spring",
+                stiffness: 260,
+                damping: 20
+              }}
+            >
+              {currentCards.map((artist) => (
+                <div key={artist.id} className="h-full">
+                  <ArtistProfileCard
+                    name={artist.name}
+                    type={artist.type}
+                    description={artist.description}
+                    images={artist.images}
+                    rating={artist.rating}
+                    priceRange={artist.priceRange}
+                  />
+                </div>
+              ))}
+            </motion.div>
+          </AnimatePresence>
+        </div>
       </div>
     </div>
   );
