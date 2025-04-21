@@ -1,8 +1,9 @@
 
-import React from "react";
-import { Carousel, CarouselContent, CarouselItem, CarouselPrevious, CarouselNext } from "@/components/ui/carousel";
+import React, { useState } from "react";
 import ArtistProfileCard from "@/components/ArtistProfileCard";
+import { Button } from "@/components/ui/button";
 import { artistsData as artistsDataFromArtistsPage } from "../ArtistsPage";
+import { motion } from "framer-motion";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 
 const DjsSlider = () => {
@@ -10,46 +11,73 @@ const DjsSlider = () => {
     .filter(artist => artist.type === 'DJ')
     .slice(0, 6);
 
+  const [page, setPage] = useState(0);
+  const cardsPerPage = 3;
+  const totalPages = Math.ceil(selectedArtists.length / cardsPerPage);
+
+  const handlePrev = () => {
+    setPage((prev) => (prev > 0 ? prev - 1 : prev));
+  };
+
+  const handleNext = () => {
+    setPage((prev) => (prev < totalPages - 1 ? prev + 1 : prev));
+  };
+
+  const currentCards = selectedArtists.slice(
+    page * cardsPerPage,
+    page * cardsPerPage + cardsPerPage
+  );
+
   return (
-    <div className="relative w-full">
+    <div className="w-full">
       <h1 className="text-5xl font-semibold mb-14">Descubre a los mejores DJs</h1>
       
-      <Carousel 
-        opts={{
-          align: "start",
-          slidesToScroll: 1, // Cambiado de "page" a 1 para evitar el error de tipo
-          skipSnaps: false, // Impide que el scroll pueda quedar entre dos snaps
-        }}
-        className="w-full"
-      >
-        <CarouselContent className="-ml-6">
-          {selectedArtists.map((artist) => (
-            <CarouselItem 
-              key={artist.id} 
-              className="pl-6 basis-full sm:basis-1/2 lg:basis-1/3 xl:basis-1/3"
-            >
-              <div className="h-full">
-                <ArtistProfileCard
-                  name={artist.name}
-                  type={artist.type}
-                  description={artist.description}
-                  images={artist.images}
-                  rating={artist.rating}
-                  priceRange={artist.priceRange}
-                />
-              </div>
-            </CarouselItem>
-          ))}
-        </CarouselContent>
-        <div className="flex items-center justify-center gap-4 mt-8">
-          <CarouselPrevious 
-            className="position-static translate-y-0 h-10 w-10 rounded-full border-none bg-white dark:bg-gray-800 hover:bg-gray-100 dark:hover:bg-gray-700 shadow-md"
-          />
-          <CarouselNext 
-            className="position-static translate-y-0 h-10 w-10 rounded-full border-none bg-white dark:bg-gray-800 hover:bg-gray-100 dark:hover:bg-gray-700 shadow-md"
-          />
+      <div className="relative">
+        <div className="flex justify-between items-center mb-8">
+          <Button 
+            onClick={handlePrev} 
+            disabled={page === 0}
+            variant="outline"
+            size="icon"
+            className="h-12 w-12 rounded-full"
+          >
+            <ChevronLeft className="h-6 w-6" />
+          </Button>
+          <span className="text-lg font-medium">
+            Página {page + 1} de {totalPages}
+          </span>
+          <Button 
+            onClick={handleNext} 
+            disabled={page === totalPages - 1}
+            variant="outline"
+            size="icon"
+            className="h-12 w-12 rounded-full"
+          >
+            <ChevronRight className="h-6 w-6" />
+          </Button>
         </div>
-      </Carousel>
+
+        <motion.div
+          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
+          initial={{ opacity: 0, x: 50 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ duration: 0.5 }}
+          key={page}
+        >
+          {currentCards.map((artist) => (
+            <div key={artist.id} className="h-full">
+              <ArtistProfileCard
+                name={artist.name}
+                type={artist.type}
+                description={artist.description}
+                images={artist.images}
+                rating={artist.rating}
+                priceRange={artist.priceRange}
+              />
+            </div>
+          ))}
+        </motion.div>
+      </div>
     </div>
   );
 };
