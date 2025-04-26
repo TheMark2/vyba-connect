@@ -6,6 +6,7 @@ import { motion } from "framer-motion";
 import { ChevronLeft, ChevronRight, CheckCircle, Diamond, Camera, ClipboardList } from "lucide-react";
 import { useNavigate } from 'react-router-dom';
 import gsap from "gsap";
+import { useIsMobile } from "@/hooks/useIsMobile";
 
 interface Badge {
   id: number;
@@ -183,27 +184,77 @@ const DjsSlider: React.FC = () => {
   );
 };
 
+const FeatureCards = () => {
+  const isMobile = useIsMobile();
+
+  return (
+    <section className="dark:bg-vyba-dark-bg py-16 md:py-14">
+      <div className="container mx-auto px-6 md:px-10">
+        {isMobile ? (
+          <Carousel className="w-full">
+            <CarouselContent>
+              {badges.map((badge, index) => (
+                <CarouselItem key={badge.id}>
+                  <div className="bg-vyba-navy/5 dark:bg-vyba-navy/10 backdrop-blur-xl rounded-2xl p-8">
+                    <div className="flex flex-col items-start gap-6">
+                      <div className="text-vyba-navy dark:text-white">{badge.icon}</div>
+                      <div>
+                        <h4 className="text-xl font-medium text-vyba-navy dark:text-white mb-2">{badge.label}</h4>
+                        <p className="text-sm text-vyba-tertiary dark:text-vyba-tertiary/80">{badge.info}</p>
+                      </div>
+                    </div>
+                  </div>
+                </CarouselItem>
+              ))}
+            </CarouselContent>
+            <CarouselPrevious />
+            <CarouselNext />
+          </Carousel>
+        ) : (
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+            {badges.map((badge) => (
+              <div 
+                key={badge.id} 
+                className="bg-vyba-navy/5 dark:bg-vyba-navy/10 backdrop-blur-xl rounded-2xl p-8 transition-all duration-300 hover:bg-vyba-navy/10 dark:hover:bg-vyba-navy/20"
+              >
+                <div className="flex flex-col items-start gap-6">
+                  <div className="text-vyba-navy dark:text-white">{badge.icon}</div>
+                  <div>
+                    <h4 className="text-xl font-medium text-vyba-navy dark:text-white mb-2">{badge.label}</h4>
+                    <p className="text-sm text-vyba-tertiary dark:text-vyba-tertiary/80">{badge.info}</p>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
+    </section>
+  );
+};
+
 const DjsPage: React.FC = () => {
   const [currentCard, setCurrentCard] = useState(0);
   const navigate = useNavigate();
 
-  // Filtrar solo los DJs y tomar los primeros 8 para las dos filas
   const otherDjs = artistsDataFromArtistsPage
     .filter(artist => artist.type === 'DJ')
     .slice(0, 8);
 
   return (
     <>
-      <nav className="fixed top-0 left-0 w-full bg-white/30 dark:bg-black z-50 backdrop-blur-xl px-4">
-        <div className="container mx-auto px-4 py-3 flex items-center justify-between">
-          <button onClick={() => navigate('/')} className="p-1">
-            <img
-              src="/lovable-uploads/logovyba.png"
-              alt="Logo Vyba Artists"
-              className="h-10 w-auto"
-            />
-          </button>
-          <Button onClick={() => navigate('/auth')}>Iniciar sesión</Button>
+      <nav>
+        <div className="fixed top-0 left-0 w-full bg-white/30 dark:bg-black z-50 backdrop-blur-xl px-4">
+          <div className="container mx-auto px-4 py-3 flex items-center justify-between">
+            <button onClick={() => navigate('/')} className="p-1">
+              <img
+                src="/lovable-uploads/logovyba.png"
+                alt="Logo Vyba Artists"
+                className="h-10 w-auto"
+              />
+            </button>
+            <Button onClick={() => navigate('/auth')}>Iniciar sesión</Button>
+          </div>
         </div>
       </nav>
       <div className="pt-24">
@@ -213,6 +264,7 @@ const DjsPage: React.FC = () => {
             <DjsSlider />
           </div>
         </section>
+        <FeatureCards />
         <section className="dark:bg-vyba-dark-bg py-16 md:py-14">
           <div className="container mx-auto px-6 md:px-10">
             <div className="sm:grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
@@ -256,7 +308,6 @@ const DjsPage: React.FC = () => {
           </div>
         </section>
 
-        {/* Nueva sección de Otros DJs */}
         <section className="dark:bg-vyba-dark-bg py-16 md:py-14">
           <div className="container mx-auto px-6 md:px-10">
             <h2 className="text-4xl font-semibold mb-12">Otros DJs</h2>
