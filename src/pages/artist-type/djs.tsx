@@ -6,7 +6,14 @@ import { motion } from "framer-motion";
 import { ChevronLeft, ChevronRight, CheckCircle, Diamond, Camera, ClipboardList } from "lucide-react";
 import { useNavigate } from 'react-router-dom';
 import gsap from "gsap";
-import { useIsMobile } from "@/hooks/useIsMobile";
+import { useIsMobile } from "@/hooks/use-mobile";
+import {
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+  CarouselNext,
+  CarouselPrevious,
+} from "@/components/ui/carousel";
 
 interface Badge {
   id: number;
@@ -193,7 +200,7 @@ const FeatureCards = () => {
         {isMobile ? (
           <Carousel className="w-full">
             <CarouselContent>
-              {badges.map((badge, index) => (
+              {badges.map((badge) => (
                 <CarouselItem key={badge.id}>
                   <div className="bg-vyba-navy/5 dark:bg-vyba-navy/10 backdrop-blur-xl rounded-2xl p-8">
                     <div className="flex flex-col items-start gap-6">
