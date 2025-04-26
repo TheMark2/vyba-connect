@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { artistsData as artistsDataFromArtistsPage } from "../ArtistsPage";
 import { motion } from "framer-motion";
 import { ChevronLeft, ChevronRight, CheckCircle, Diamond, Camera, ClipboardList } from "lucide-react";
-import Navbar from "@/components/Navbar";
+import { useNavigate } from 'react-router-dom';
 import gsap from "gsap";
 
 interface Badge {
@@ -185,12 +185,27 @@ const DjsSlider: React.FC = () => {
 
 const DjsPage: React.FC = () => {
   const [currentCard, setCurrentCard] = useState(0);
+  const navigate = useNavigate();
+
+  // Filtrar solo los DJs y tomar los primeros 8 para las dos filas
+  const otherDjs = artistsDataFromArtistsPage
+    .filter(artist => artist.type === 'DJ')
+    .slice(0, 8);
 
   return (
     <>
-      <div className="fixed top-0 left-0 right-0 z-50 bg-white/30 backdrop-blur-xl">
-        <Navbar />
-      </div>
+      <nav className="fixed top-0 left-0 w-full bg-white/30 dark:bg-black z-50 backdrop-blur-xl px-4">
+        <div className="container mx-auto px-4 py-3 flex items-center justify-between">
+          <button onClick={() => navigate('/')} className="p-1">
+            <img
+              src="/lovable-uploads/logovyba.png"
+              alt="Logo Vyba Artists"
+              className="h-10 w-auto"
+            />
+          </button>
+          <Button onClick={() => navigate('/auth')}>Iniciar sesión</Button>
+        </div>
+      </nav>
       <div className="pt-24">
         <HeroSection />
         <section className="dark:bg-vyba-dark-bg py-16 md:py-14">
@@ -199,8 +214,8 @@ const DjsPage: React.FC = () => {
           </div>
         </section>
         <section className="dark:bg-vyba-dark-bg py-16 md:py-14">
-          <div className="max-w-[1600px] mx-auto px-6 md:px-10">
-            <div className="hidden sm:grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-12">
+          <div className="container mx-auto px-6 md:px-10">
+            <div className="sm:grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
               <div className="bg-vyba-navy rounded-2xl flex flex-col items-center p-12 justify-center gap-12">
                 <div className="flex flex-col items-left justify-center gap-4">
                   <h4 className="text-2xl font-medium text-white">Te Protegemos</h4>
@@ -238,71 +253,30 @@ const DjsPage: React.FC = () => {
                 </div>
               </div>
             </div>
+          </div>
+        </section>
 
-            {/* Mobile Carousel */}
-            <div className="sm:hidden relative">
-              <div className="overflow-hidden">
+        {/* Nueva sección de Otros DJs */}
+        <section className="dark:bg-vyba-dark-bg py-16 md:py-14">
+          <div className="container mx-auto px-6 md:px-10">
+            <h2 className="text-4xl font-semibold mb-12">Otros DJs</h2>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+              {otherDjs.map((dj) => (
                 <div 
-                  className="flex transition-transform duration-500 ease-in-out"
-                  style={{ transform: `translateX(-${currentCard * 100}%)` }}
+                  key={dj.id}
+                  className="opacity-0 scale-95"
+                  style={{
+                    animation: `fadeIn 0.5s ease-out forwards`
+                  }}
                 >
-                  <div className="w-full flex-shrink-0">
-                    <div className="bg-vyba-navy rounded-2xl flex flex-col items-center p-12 justify-center gap-12">
-                      <div className="flex flex-col items-left justify-center gap-4">
-                        <h4 className="text-2xl font-medium text-white">Te Protegemos</h4>
-                        <p className="text-base text-[#BEBEBE]">Nos aseguramos de que todos los perfiles creados sean seguros mediante autentificación</p>
-                      </div>
-                      <div className="flex items-center justify-center">
-                        <Diamond className="text-white rounded-full w-44 h-44 p-12 backdrop-blur-lg from-white/10 to-black/10 bg-gradient-to-b" />
-                      </div>
-                    </div>
-                  </div>
-                  <div className="w-full flex-shrink-0">
-                    <div className="bg-vyba-navy rounded-2xl flex flex-col items-center p-12 justify-center gap-12">
-                      <div className="flex flex-col items-left justify-center gap-4">
-                        <h4 className="text-2xl font-medium text-white">Calidad Garantizada</h4>
-                        <p className="text-base text-[#BEBEBE]">Todos nuestros artistas pasan por un riguroso proceso de selección para garantizar la mejor calidad</p>
-                      </div>
-                      <div className="flex items-center justify-center">
-                        <CheckCircle className="text-white rounded-full w-44 h-44 p-12 backdrop-blur-lg from-white/10 to-black/10 bg-gradient-to-b" />
-                      </div>
-                    </div>
-                  </div>
-                  <div className="w-full flex-shrink-0">
-                    <div className="bg-vyba-navy rounded-2xl flex flex-col items-center p-12 justify-center gap-12">
-                      <div className="flex flex-col items-left justify-center gap-4">
-                        <h4 className="text-2xl font-medium text-white">Experiencia Única</h4>
-                        <p className="text-base text-[#BEBEBE]">Cada evento es único y nos adaptamos a tus necesidades específicas</p>
-                      </div>
-                      <div className="flex items-center justify-center">
-                        <Camera className="text-white rounded-full w-44 h-44 p-12 backdrop-blur-lg from-white/10 to-black/10 bg-gradient-to-b" />
-                      </div>
-                    </div>
-                  </div>
-                  <div className="w-full flex-shrink-0">
-                    <div className="bg-vyba-navy rounded-2xl flex flex-col items-center p-12 justify-center gap-12">
-                      <div className="flex flex-col items-left justify-center gap-4">
-                        <h4 className="text-2xl font-medium text-white">Variedad de Eventos</h4>
-                        <p className="text-base text-[#BEBEBE]">Ofrecemos artistas para una amplia gama de eventos y celebraciones</p>
-                      </div>
-                      <div className="flex items-center justify-center">
-                        <ClipboardList className="text-white rounded-full w-44 h-44 p-12 backdrop-blur-lg from-white/10 to-black/10 bg-gradient-to-b" />
-                      </div>
-                    </div>
-                  </div>
+                  <ArtistProfileCard {...dj} />
                 </div>
-              </div>
-              <div className="absolute bottom-4 left-0 right-0 flex justify-center gap-2">
-                {[0, 1, 2, 3].map((index) => (
-                  <button
-                    key={index}
-                    className={`w-2 h-2 rounded-full transition-all ${
-                      currentCard === index ? 'bg-white w-4' : 'bg-white/50'
-                    }`}
-                    onClick={() => setCurrentCard(index)}
-                  />
-                ))}
-              </div>
+              ))}
+            </div>
+            <div className="flex justify-left mt-6">
+              <Button variant="secondary" className="px-10">
+                Mostrar más
+              </Button>
             </div>
           </div>
         </section>
