@@ -219,10 +219,13 @@ const FeatureCards = () => {
           </Carousel>
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-            {badges.map((badge) => (
+            {badges.map((badge, index) => (
               <div 
                 key={badge.id} 
-                className="bg-vyba-navy/5 dark:bg-vyba-navy/10 backdrop-blur-xl rounded-2xl p-8 transition-all duration-300 hover:bg-vyba-navy/10 dark:hover:bg-vyba-navy/20"
+                className={cn(
+                  "bg-vyba-navy/5 dark:bg-vyba-navy/10 backdrop-blur-xl rounded-2xl p-8 transition-all duration-300 hover:bg-vyba-navy/10 dark:hover:bg-vyba-navy/20",
+                  index === 1 || index === 2 ? "lg:row-span-2" : ""
+                )}
               >
                 <div className="flex flex-col items-start gap-6">
                   <div className="text-vyba-navy dark:text-white">{badge.icon}</div>
