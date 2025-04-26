@@ -7,6 +7,7 @@ import { ChevronLeft, ChevronRight, CheckCircle, Diamond, Camera, ClipboardList 
 import { useNavigate } from 'react-router-dom';
 import gsap from "gsap";
 import { useIsMobile } from "@/hooks/use-mobile";
+import { cn } from "@/lib/utils";
 import {
   Carousel,
   CarouselContent,
