@@ -2,7 +2,7 @@
 import React, { useState, useRef } from 'react';
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Plus } from 'lucide-react';
+import { Plus, ScanSearch } from 'lucide-react';
 import { useIsMobile } from '@/hooks/use-mobile';
 
 interface ProfilePhotoStepProps {
@@ -40,12 +40,6 @@ const ProfilePhotoStep: React.FC<ProfilePhotoStepProps> = ({
   return (
     <div className="content-container w-full max-w-6xl mx-auto">
       <div className="form-container text-center">
-        <h1 className="form-title text-gray-900 dark:text-white">
-          Elige tu foto de perfil
-        </h1>
-        <p className="font-light mb-10 max-w-lg mx-auto">
-          Las imágenes con buena calidad y profesionales aumentan la probabilidad de contratación un 75%
-        </p>
         
         <div className="flex flex-col items-center justify-center">
           <div 
@@ -95,8 +89,9 @@ const ProfilePhotoStep: React.FC<ProfilePhotoStepProps> = ({
           <Button 
             onClick={handleButtonClick} 
             variant="secondary" 
-            className="mt-10"
+            className="mt-10 flex items-center gap-2"
           >
+            <ScanSearch className="w-5 h-5" />
             Subir foto de perfil
           </Button>
         </div>

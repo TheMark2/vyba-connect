@@ -397,10 +397,9 @@ const ArtistProfileCard = ({
                 <span className="text-base font-medium text-vyba-navy">{rating.toFixed(1)}</span>
               </div>
             </div>
-            <p className="text-base font-vyba-tertiary dark:text-gray-400 line-clamp-1 font-light mb-2 font-figtree">{description}</p>
+            <p className="text-base text-vyba-tertiary dark:text-gray-400 line-clamp-1 font-light mb-0 font-figtree mb-1">{description}</p>
             <p className="text-base font-medium text-vyba-navy font-figtree flex items-center gap-2">
-              <Banknote className="h-5 w-5" />
-              Desde {priceRange}
+              <span className="font-vyba-tertiary font-light">desde</span> {priceRange}
             </p>
           </div>
         )}

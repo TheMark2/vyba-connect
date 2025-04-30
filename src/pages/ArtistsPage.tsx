@@ -6,6 +6,7 @@ import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { useIsMobile, useIsSmallMobile } from "@/hooks/use-mobile";
 import { useNavigate } from "react-router-dom";
+import Navbar2 from "@/components/navbar/navbar2";
 
 // Datos de ejemplo para los artistas
 export const artistsData = [
@@ -155,66 +156,15 @@ const ArtistsPage = () => {
 
   return (
     <>
-      <Navbar />
+      <Navbar2 />
       <div className="px-6 md:px-6 lg:px-16 mx-auto mt-6 mb-8">
-        <div className={`
-          ${isMobile 
-            ? "bg-[#F7F7F7] dark:bg-vyba-dark-secondary/40 rounded-3xl py-6 mb-6 px-6"
-            : "bg-[#F7F7F7] dark:bg-vyba-dark-secondary/40 rounded-3xl py-8 mb-12 px-16"
-          }
-          flex flex-col md:flex-row md:justify-between items-center justify-center h-[200px] overflow-hidden group
-        `}>
-          <div className={`${isMobile ? "text-center" : ""}`}>
-            <h1 className={`
-              ${isMobile 
-                ? "text-3xl font-semibold mb-1" 
-                : "text-5xl font-semibold mb-2"
-              }
-            `}>
-              Todos los artistas
-            </h1>
-            <p className={`
-              ${isMobile 
-                ? "text-2xl font-light text-vyba-tertiary mb-0" 
-                : "text-4xl font-light text-vyba-tertiary mb-0"
-              }
-            `}>
-              {artists.length} artistas
-            </p>
-          </div>
-          
-          <div className="min-h-screen flex items-center justify-center p-10 translate-y-[7%] grup-ho">
-            <div className="relative w-[250px] h-[250px]">
-              {/* Imagen 1 (atrás, rotada a la izquierda) */}
-              <img
-                src="/lovable-uploads/image.png"
-                alt="Imagen 1"
-                className="absolute top-0 left-0 w-full h-full object-cover rounded-3xl transform -rotate-12 z-0 shadow-xl group-hover:-rotate-[18deg] transition-transform duration-300 ease-in-out z-0"
-              />
-              
-              {/* Imagen 2 (medio, recta pero desplazada un poco) */}
-              <img
-                src="/lovable-uploads/image1.png"
-                alt="Imagen 2"
-                className="absolute top-2 left-6 w-full h-full object-cover rounded-3xl transform rotate-1 z-10 shadow-2xl group-hover:top-[-10px] transition-all duration-300 ease-in-out z-10"
-              />
-              
-              {/* Imagen 3 (frontal, rotada a la derecha) */}
-              <img
-                src="/lovable-uploads/image2.png"
-                alt="Imagen 3"
-                className="absolute top-5 left-12 w-full h-full object-cover rounded-3xl transform rotate-12 z-20 shadow-2xl group-hover:-rotate-[-18deg] transition-transform duration-300 ease-in-out z-20"
-              />
-            </div>
-          </div>
-        </div>
 
         <div className={`
           ${isSmallMobile
             ? "grid grid-cols-1 gap-6" // Increased vertical gap from 4 to 6
             : isMobile
               ? "grid grid-cols-2 gap-8" // Increased vertical gap from 4 to 6
-              : "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 3xl:grid-cols-6 gap-6" // Increased vertical gap from 4 to 6
+              : "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 3xl:grid-cols-6 gap-6 mt-32" // Increased vertical gap from 4 to 6
           }
         `}>
           {artists.map(artist => (

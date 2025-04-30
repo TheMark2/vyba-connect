@@ -125,7 +125,7 @@ const LandingArtist = () => {
       </nav>
       
       <div className="pt-32 md:pt-48 flex flex-col items-center justify-center px-12">
-        <h1 className="text-5xl md:text-8xl font-semibold text-center">
+        <h1 className="text-5xl md:text-7xl font-semibold text-center">
           La plataforma creada para
         </h1>
         

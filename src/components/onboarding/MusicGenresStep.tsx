@@ -1,187 +1,166 @@
-
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Badge } from "@/components/ui/badge";
-import { Headphones, Music, Plus, X } from 'lucide-react';
-import { useIsMobile } from '@/hooks/use-mobile';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { motion, AnimatePresence } from 'framer-motion';
-import { MUSIC_GENRES } from '@/constants/music';
+import { cn } from "@/lib/utils";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Music, Plus, X } from 'lucide-react';
 
 interface MusicGenresStepProps {
   onSelect: (genres: string[]) => void;
   initialValues?: string[];
-  maxSelections?: number;
 }
 
-const MusicGenresStep: React.FC<MusicGenresStepProps> = ({
-  onSelect,
-  initialValues = [],
-  maxSelections = 5
-}) => {
-  const [selectedGenres, setSelectedGenres] = useState<string[]>(initialValues || []);
+const defaultGenres = [
+  { id: 'techno', name: 'Techno', icon: <Music className="w-6 h-6" /> },
+  { id: 'house', name: 'House', icon: <Music className="w-6 h-6" /> },
+  { id: 'pop', name: 'Pop', icon: <Music className="w-6 h-6" /> },
+  { id: 'rock', name: 'Rock', icon: <Music className="w-6 h-6" /> },
+  { id: 'latin', name: 'Latin', icon: <Music className="w-6 h-6" /> },
+  { id: 'jazz', name: 'Jazz', icon: <Music className="w-6 h-6" /> },
+  { id: 'reggaeton', name: 'Reggaeton', icon: <Music className="w-6 h-6" /> },
+  { id: 'hip-hop', name: 'Hip Hop', icon: <Music className="w-6 h-6" /> },
+];
+
+const MusicGenresStep: React.FC<MusicGenresStepProps> = ({ onSelect, initialValues = [] }) => {
+  const [selectedGenres, setSelectedGenres] = useState<string[]>(initialValues);
   const [activePress, setActivePress] = useState<string | null>(null);
-  const isMobile = useIsMobile();
+  const [showAddDialog, setShowAddDialog] = useState(false);
+  const [newGenre, setNewGenre] = useState('');
+  const [customGenres, setCustomGenres] = useState<Array<{ id: string; name: string; icon: JSX.Element }>>([]);
 
-  // Lista reducida de géneros musicales populares
-  const musicGenres = MUSIC_GENRES.slice(0, 15);
-
-  // Estado para manejar géneros personalizados
-  const [customGenres, setCustomGenres] = useState<string[]>([]);
-  const [showCustomInput, setShowCustomInput] = useState(false);
-  const [customGenre, setCustomGenre] = useState('');
-
-  useEffect(() => {
-    // Si hay valores iniciales, notificamos al componente padre
-    if (initialValues && initialValues.length > 0) {
-      setSelectedGenres(initialValues);
-      // Separar los géneros predefinidos de los personalizados
-      const customOnes = initialValues.filter(genre => !MUSIC_GENRES.includes(genre));
-      if (customOnes.length > 0) {
-        setCustomGenres(customOnes);
-      }
-      onSelect(initialValues);
-    }
-  }, [initialValues, onSelect]);
-
-  const handleSelect = (genre: string) => {
-    let newSelectedGenres;
-    if (selectedGenres.includes(genre)) {
-      // Si ya está seleccionado, lo quitamos
-      newSelectedGenres = selectedGenres.filter(g => g !== genre);
-      
-      // Si es un género personalizado, también lo eliminamos de la lista de personalizados
-      if (customGenres.includes(genre)) {
-        setCustomGenres(prev => prev.filter(g => g !== genre));
-      }
-    } else {
-      // Si no está seleccionado y no hemos llegado al máximo, lo añadimos
-      if (selectedGenres.length < maxSelections) {
-        newSelectedGenres = [...selectedGenres, genre];
-      } else {
-        // Si llegamos al máximo, no hacemos nada
-        return;
-      }
-    }
-    setSelectedGenres(newSelectedGenres);
-    onSelect(newSelectedGenres);
+  const handleSelect = (genreId: string) => {
+    const updatedGenres = selectedGenres.includes(genreId)
+      ? selectedGenres.filter(id => id !== genreId)
+      : [...selectedGenres, genreId];
+    
+    setSelectedGenres(updatedGenres);
+    onSelect(updatedGenres);
   };
 
-  const handleMouseDown = (genre: string) => {
-    setActivePress(genre);
+  const handleMouseDown = (genreId: string) => {
+    setActivePress(genreId);
   };
 
   const handleMouseUp = () => {
     setActivePress(null);
   };
 
-  // Generar un icono para cada género
-  const getGenreIcon = (genre: string) => {
-    // Simplemente alternamos entre dos iconos
-    if (['Electrónica', 'House', 'Techno', 'Trap'].includes(genre)) {
-      return <Headphones className="w-4 h-4" />;
+  const handleAddGenre = () => {
+    if (newGenre.trim()) {
+      const genreId = newGenre.toLowerCase().replace(/\s+/g, '-');
+      const newGenreObj = {
+        id: genreId,
+        name: newGenre.trim(),
+        icon: <Music className="w-6 h-6" />
+      };
+      
+      setCustomGenres(prev => [...prev, newGenreObj]);
+      setSelectedGenres(prev => [...prev, genreId]);
+      onSelect([...selectedGenres, genreId]);
+      setNewGenre('');
+      setShowAddDialog(false);
     }
-    return <Music className="w-4 h-4" />;
   };
 
-  const handleAddCustomGenre = () => {
-    const trimmed = customGenre.trim();
-    if (!trimmed || selectedGenres.includes(trimmed) || selectedGenres.length >= maxSelections) return;
-  
-    // Añadir a los géneros personalizados
-    setCustomGenres(prev => [...prev, trimmed]);
-    
-    // Añadir a los géneros seleccionados
-    const newGenres = [...selectedGenres, trimmed];
-    setSelectedGenres(newGenres);
-    onSelect(newGenres);
-    
-    setCustomGenre('');
-    setShowCustomInput(false);
+  const handleDeleteGenre = (genreId: string) => {
+    setCustomGenres(prev => prev.filter(genre => genre.id !== genreId));
+    setSelectedGenres(prev => prev.filter(id => id !== genreId));
+    onSelect(selectedGenres.filter(id => id !== genreId));
   };
 
-  // Todos los géneros que se mostrarán (predefinidos + personalizados)
-  const allDisplayedGenres = [...musicGenres, ...customGenres];
+  const allGenres = [...defaultGenres, ...customGenres];
 
   return (
-    <div className="content-container">
-      <div className="form-container text-center">
-        <h1 className="form-title">
-          Tus géneros musicales
-        </h1>
-        <p className="font-light mb-8 max-w-md mx-auto">
-          Selecciona los estilos musicales en los que te especializas o que ofreces.
-        </p>
-        
-        {/* Contador de selecciones */}
-        <p className="text-sm text-gray-500 mb-4">
-          {selectedGenres.length} de {maxSelections} seleccionados
-        </p>
-        
-        {/* Grid de géneros musicales */}
-        <div className={`flex flex-wrap justify-center gap-3 ${isMobile ? 'max-w-[90vw]' : 'max-w-xl'} mx-auto`}>
-          {allDisplayedGenres.map(genre => (
-            <Badge 
-              key={genre} 
-              variant="outline" 
-              className={`
-                py-3 px-6 cursor-pointer transition-all duration-150
-                flex items-center gap-2 text-sm font-medium rounded-full border-none
-                ${selectedGenres.includes(genre) ? 'bg-[#D9D9D9] dark:bg-[#444444]' : 'bg-[#F7F7F7] dark:bg-vyba-dark-secondary hover:bg-[#E9E9E9] dark:hover:bg-vyba-dark-secondary/80'}
-                ${activePress === genre ? 'transform scale-95' : ''}
-              `} 
-              onClick={() => handleSelect(genre)} 
-              onMouseDown={() => handleMouseDown(genre)} 
-              onMouseUp={handleMouseUp} 
+    <>
+      <div className="w-full max-w-6xl mx-auto">
+        <div className="max-w-6xl mx-auto">
+          <h6 className="text-lg font-medium mb-4 text-vyba-navy">Escoge tus géneros musicales</h6>
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2 mx-auto" role="group" aria-label="Géneros musicales">
+            {allGenres.map(genre => (
+              <Badge
+                key={genre.id}
+                variant="default"
+                className={cn(
+                  "flex flex-col items-start justify-center cursor-pointer transition-all duration-150 relative",
+                  "text-base font-medium px-8 py-6 rounded-xl gap-2",
+                  selectedGenres.includes(genre.id)
+                    ? "bg-vyba-gray text-vyba-navy font-medium bg-vyba-tertiary/20"
+                    : "bg-vyba-gray text-vyba-tertiary hover:text-vyba-navy",
+                  activePress === genre.id ? "transform scale-95" : ""
+                )}
+                onClick={() => handleSelect(genre.id)}
+                onMouseDown={() => handleMouseDown(genre.id)}
+                onMouseUp={handleMouseUp}
+                onMouseLeave={handleMouseUp}
+              >
+                {genre.icon}
+                <span>{genre.name}</span>
+                {!defaultGenres.find(g => g.id === genre.id) && (
+                  <button
+                    className="absolute top-2 right-2 p-1 rounded-full hover:bg-vyba-tertiary/10"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleDeleteGenre(genre.id);
+                    }}
+                  >
+                    <X className="w-4 h-4" />
+                  </button>
+                )}
+              </Badge>
+            ))}
+            
+            <Badge
+              variant="default"
+              className={cn(
+                "flex flex-col items-start justify-center cursor-pointer transition-all duration-150",
+                "text-base font-medium px-8 py-6 rounded-xl gap-2",
+                "bg-vyba-gray text-vyba-tertiary hover:text-vyba-navy",
+                activePress === 'add' ? "transform scale-95" : ""
+              )}
+              onClick={() => setShowAddDialog(true)}
+              onMouseDown={() => handleMouseDown('add')}
+              onMouseUp={handleMouseUp}
               onMouseLeave={handleMouseUp}
             >
-              {getGenreIcon(genre)}
-              {genre}
+              <Plus className="w-6 h-6" />
+              <span>Añadir otro</span>
             </Badge>
-          ))}
-
-          {!showCustomInput && selectedGenres.length < maxSelections && (
-            <Badge
-              variant="outline"
-              className="py-3 px-6 cursor-pointer transition-all duration-150 flex items-center gap-2 text-sm font-medium rounded-full border-none bg-[#F7F7F7] dark:bg-vyba-dark-secondary hover:bg-[#E9E9E9] dark:hover:bg-vyba-dark-secondary/80"
-              onClick={() => setShowCustomInput(true)}
-            >
-              <Plus className="h-4 w-4 text-black dark:text-white" />
-              Otro
-            </Badge>
-          )}
-
-          <AnimatePresence>
-            {showCustomInput && (
-              <motion.div
-                initial={{ opacity: 0, scale: 0.95 }}
-                animate={{ opacity: 1, scale: 1 }}
-                exit={{ opacity: 0, scale: 0.95 }}
-                transition={{ duration: 0.2 }}
-                className="flex gap-2 items-center"
-              >
-                <Input
-                  type="text"
-                  value={customGenre}
-                  onChange={(e) => setCustomGenre(e.target.value)}
-                  placeholder="Escribe un género"
-                  className="min-w-[160px]"
-                  autoFocus
-                />
-                <Button
-                  variant="secondary"
-                  onClick={handleAddCustomGenre}
-                  className="px-6"
-                >
-                  Añadir
-                </Button>
-              </motion.div>
-            )}
-          </AnimatePresence>
+          </div>
         </div>
-
       </div>
-    </div>
+
+      <Dialog open={showAddDialog} onOpenChange={setShowAddDialog}>
+        <DialogContent className="sm:max-w-lg">
+          <DialogHeader>
+            <DialogTitle className="text-center">Añadir género musical</DialogTitle>
+          </DialogHeader>
+          <div className="space-y-8 px-8">
+            <div className="space-y-2">
+              <Label htmlFor="genre-name">Nombre del género</Label>
+              <Input
+                id="genre-name"
+                type="text"
+                placeholder="Ej: Electronic"
+                value={newGenre}
+                onChange={(e) => setNewGenre(e.target.value)}
+                className="focus:ring-0 focus-visible:ring-0 focus-visible:ring-offset-0 focus:ring-offset-0"
+              />
+            </div>
+            <Button 
+              variant="terciary"
+              type="button" 
+              className="w-full"
+              onClick={handleAddGenre}
+              disabled={!newGenre.trim()}
+            >
+              Añadir género
+            </Button>
+          </div>
+        </DialogContent>
+      </Dialog>
+    </>
   );
 };
 

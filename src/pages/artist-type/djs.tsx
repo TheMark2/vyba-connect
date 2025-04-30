@@ -1,183 +1,173 @@
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import ArtistProfileCard from "@/components/ArtistProfileCard";
 import { Button } from "@/components/ui/button";
 import { artistsData as artistsDataFromArtistsPage } from "../ArtistsPage";
-import { motion } from "framer-motion";
-import { ChevronLeft, ChevronRight, CheckCircle, Diamond, Camera, ClipboardList } from "lucide-react";
+import { ChevronLeft, ChevronRight, LandPlot, ScanFace, SquareMousePointer, KeyboardMusic, Guitar, Piano, MicVocal, AudioWaveform, Drum, CassetteTape, Disc3 } from "lucide-react";
 import { useNavigate } from 'react-router-dom';
-import gsap from "gsap";
-import { useIsMobile } from "@/hooks/use-mobile";
 import { cn } from "@/lib/utils";
-import {
-  Carousel,
-  CarouselContent,
-  CarouselItem,
-  CarouselNext,
-  CarouselPrevious,
-} from "@/components/ui/carousel";
+import Navbar1 from "@/components/navbar/navbar1";
 
-interface Badge {
-  id: number;
-  icon: React.ReactNode;
-  label: string;
-  info: string;
-}
+const AutoPlayCarousel = () => {
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const images = [
+    "/images/dj1.webp",
+    "/images/dj2.webp",
+    "/images/dj3.webp",
+    "/images/dj4.webp",
+    "/images/dj5.webp",
+    "/images/dj6.webp"
+  ];
 
-const badges: Badge[] = [
-  { id: 1, icon: <CheckCircle />, label: "Todos los perfiles verificados", info: "Nuestros artistas han sido verificados para garantizar calidad y confianza." },
-  { id: 2, icon: <Diamond />, label: "Profesionales", info: "Contamos con artistas de alto nivel profesional para cualquier evento." },
-  { id: 3, icon: <Camera />, label: "Equipo propio", info: "Nuestros artistas disponen de su propio equipo para asegurar el mejor sonido." },
-  { id: 4, icon: <ClipboardList />, label: "Variedad de tipo de eventos", info: "Ofrecemos artistas para una amplia gama de eventos y celebraciones." }
-];
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setCurrentIndex((prevIndex) => (prevIndex + 1) % images.length);
+    }, 3000);
 
-interface CarouselNavigationProps {
-  page: number;
-  onPrevPage: () => void;
-  onNextPage: () => void;
-}
+    return () => clearInterval(timer);
+  }, []);
 
-const CarouselNavigation: React.FC<CarouselNavigationProps> = ({ page, onPrevPage, onNextPage }) => (
-  <div className="flex gap-2">
-    <Button 
-      onClick={onPrevPage} 
-      disabled={page === 0}
-      variant="ghost"
-      size="icon"
-      className="h-10 w-10 rounded-full"
-    >
-      <ChevronLeft className="h-6 w-6" />
-    </Button>
-    <Button 
-      onClick={onNextPage} 
-      disabled={page === 1}
-      variant="ghost"
-      size="icon"
-      className="h-10 w-10 rounded-full"
-    >
-      <ChevronRight className="h-6 w-6" />
-    </Button>
-  </div>
-);
-
-const HeroSection: React.FC = () => (
-  <section className="dark:bg-vyba-dark-bg py-16 md:py-14">
-    <div className="container mx-auto px-6 md:px-10">
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
-        <div className="space-y-8">
-          <div className="mb-12">
-            <Button variant="secondary" className="text-center text-vyba-navy text-base px-10">TIPOS DE ARTISTAS</Button>
-          </div>
-          <h1 className="text-7xl font-bold">Los mejores DJs para tu evento</h1>
-          <Button variant="terciary" className="px-10">Empezar a buscar</Button>
+  return (
+    <div className="relative w-full h-full">
+      {images.map((image, index) => (
+        <div
+          key={index}
+          className={cn(
+            "absolute inset-0 w-full h-full transition-opacity duration-1000",
+            currentIndex === index ? "opacity-100" : "opacity-0"
+          )}
+        >
+          <img
+            src={image}
+            alt={`DJ image ${index + 1}`}
+            className="w-full h-full object-cover"
+          />
+          <div className="absolute inset-0 bg-black/20" />
         </div>
-        <div className="relative grid grid-cols-2 gap-4 h-[700px] overflow-hidden">
-          {/* Degradado superior */}
-          <div className="absolute top-0 left-0 right-0 h-32 bg-gradient-to-b from-white to-transparent z-10" />
-          
-          {/* Degradado inferior */}
-          <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-white to-transparent z-10" />
-          
-          <div className="space-y-4 -mt-52">
-            {/* Primera imagen */}
-            <div className="relative rounded-2xl overflow-hidden h-[350px]">
-              <img
-                src="/images/djcielo1.webp"
-                alt="DJ en el cielo 1"
-                className="absolute w-full h-full object-cover"
-              />
+      ))}
+      <div className="absolute bottom-4 left-0 right-0 flex justify-center gap-2 z-10">
+        {images.map((_, index) => (
+          <button
+            key={index}
+            className={cn(
+              "w-2 h-2 rounded-full transition-all",
+              currentIndex === index ? "bg-white scale-125" : "bg-white/50"
+            )}
+            onClick={() => setCurrentIndex(index)}
+          />
+        ))}
+      </div>
+    </div>
+  );
+};
+
+const HeroSection = () => {
+  const navigate = useNavigate();
+
+  return (
+    <section className="dark:bg-vyba-dark-bg">
+      <div className="container mx-auto px-6 md:px-10 h-[100svh] flex items-center">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-center h-full">
+          <div className="space-y-8">
+            <div className="flex items-center gap-1 text-base">
+              <Button 
+                variant="secondary" 
+                className="text-vyba-tertiary bg-vyba-gray hover:text-vyba-navy py-2 px-4"
+                onClick={() => navigate('/')}
+              >
+                Inicio
+              </Button>
+              <ChevronRight className="w-4 h-4 text-vyba-tertiary" />
+              <Button 
+                variant="secondary" 
+                className="text-vyba-tertiary bg-vyba-gray hover:text-vyba-navy py-2 px-4"
+                onClick={() => navigate('/artist-type')}
+              >
+                Tipos de artistas
+              </Button>
+              <ChevronRight className="w-4 h-4 text-vyba-tertiary" />
+              <span className="text-vyba-navy font-medium bg-vyba-gray py-2 px-4 rounded-full">DJs</span>
             </div>
-            
-            {/* Tercera imagen */}
-            <div className="relative rounded-2xl overflow-hidden h-[350px]">
-              <img
-                src="/images/djefectoantiguo.webp"
-                alt="DJ en el cielo 2"
-                className="absolute w-full h-full object-cover"
-              />
-            </div>
-            
-            {/* Quinta imagen */}
-            <div className="relative rounded-2xl overflow-hidden h-[350px]">
-              <img
-                src="/images/djescenario1.webp"
-                alt="DJ en el cielo 3"
-                className="absolute w-full h-full object-cover"
-              />
-            </div>
+            <h1 className="text-7xl font-semibold">Los mejores DJs para tu evento</h1>
+            <Button variant="terciary" className="px-10">Empezar a buscar</Button>
           </div>
-          
-          <div className="space-y-4 -mt-32">
-            {/* Segunda imagen */}
-            <div className="relative rounded-2xl overflow-hidden h-[350px]">
-              <img
-                src="/images/djfotoantigua.webp"
-                alt="DJ en el cielo 4"
-                className="absolute w-full h-full object-cover"
-              />
+          <div className="relative grid grid-cols-2 gap-4 h-[700px] overflow-hidden">
+            <div className="absolute top-0 left-0 right-0 h-32 bg-gradient-to-b from-white to-transparent z-10" />
+            <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-white to-transparent z-10" />
+            <div className="space-y-4 -mt-52">
+              {[1, 2, 4].map((num) => (
+                <div key={num} className="relative rounded-2xl overflow-hidden h-[350px]">
+                  <img
+                    src={`/images/dj${num}.webp`}
+                    alt={`DJ ${num}`}
+                    className="absolute w-full h-full object-cover"
+                  />
+                </div>
+              ))}
             </div>
-            
-            {/* Cuarta imagen */}
-            <div className="relative rounded-2xl overflow-hidden h-[350px]">
-              <img
-                src="/images/djiluminado.webp"
-                alt="DJ en el cielo 5"
-                className="absolute w-full h-full object-cover"
-              />
-            </div>
-            
-            {/* Sexta imagen */}
-            <div className="relative rounded-2xl overflow-hidden h-[350px]">
-              <img
-                src="/images/djpequeño.webp"
-                alt="DJ en el cielo 6"
-                className="absolute w-full h-full object-cover"
-              />
+            <div className="space-y-4 -mt-32">
+              {[3, 5, 6].map((num) => (
+                <div key={num} className="relative rounded-2xl overflow-hidden h-[350px]">
+                  <img
+                    src={`/images/dj${num}.webp`}
+                    alt={`DJ ${num}`}
+                    className="absolute w-full h-full object-cover"
+                  />
+                </div>
+              ))}
             </div>
           </div>
         </div>
       </div>
-    </div>
-  </section>
-);
+    </section>
+  );
+};
 
-const DjsSlider: React.FC = () => {
-  const [page, setPage] = useState(0);
-  const sliderRef = useRef<HTMLDivElement>(null);
+const DjsSlider = () => {
   const selectedArtists = artistsDataFromArtistsPage
     .filter(artist => artist.type === 'DJ')
     .slice(0, 8);
 
-  useEffect(() => {
-    if (sliderRef.current) {
-      gsap.to(sliderRef.current, {
-        x: `${page * -100}%`,
-        duration: 0.5,
-        ease: "power2.inOut"
-      });
-    }
-  }, [page]);
+  const [page, setPage] = useState(0);
 
   return (
     <div className="w-full">
       <div className="flex items-center justify-between mb-8">
         <h2 className="text-4xl font-semibold">Descubre a los mejores DJs</h2>
-        <CarouselNavigation 
-          page={page}
-          onPrevPage={() => setPage(0)}
-          onNextPage={() => setPage(1)}
-        />
+        <div className="flex gap-2">
+          <Button 
+            onClick={() => setPage(0)} 
+            disabled={page === 0}
+            variant="ghost"
+            size="icon"
+            className="h-10 w-10 rounded-full"
+          >
+            <ChevronLeft className="h-6 w-6" />
+          </Button>
+          <Button 
+            onClick={() => setPage(1)} 
+            disabled={page === 1}
+            variant="ghost"
+            size="icon"
+            className="h-10 w-10 rounded-full"
+          >
+            <ChevronRight className="h-6 w-6" />
+          </Button>
+        </div>
       </div>
 
       <div className="relative overflow-hidden">
-        <div ref={sliderRef} className="flex">
+        <div 
+          className="flex transition-transform duration-500"
+          style={{ transform: `translateX(-${page * 100}%)` }}
+        >
           {[0, 1].map((pageIndex) => (
-            <div key={pageIndex} className="flex-none w-full grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-              {selectedArtists.slice(pageIndex * 4, (pageIndex + 1) * 4).map((artist, index) => (
+            <div key={pageIndex} className="flex-none w-full grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-2">
+              {selectedArtists.slice(pageIndex * 4, (pageIndex + 1) * 4).map((artist) => (
                 <div 
                   key={artist.id}
-                  className="h-full opacity-0 scale-95"
+                  className="opacity-0 scale-95 animate-[fadeIn_0.5s_ease-out_forwards]"
                   style={{
-                    animation: `fadeIn 0.5s ease-out ${index * 0.1}s forwards`
+                    animationDelay: `${artist.id * 0.1}s`
                   }}
                 >
                   <ArtistProfileCard {...artist} />
@@ -193,82 +183,81 @@ const DjsSlider: React.FC = () => {
 };
 
 const FeatureCards = () => {
-  const isMobile = useIsMobile();
-
   return (
-    <section className="dark:bg-vyba-dark-bg py-16 md:py-14">
-      <div className="container mx-auto px-6 md:px-10">
-        {isMobile ? (
-          <Carousel className="w-full">
-            <CarouselContent>
-              {badges.map((badge) => (
-                <CarouselItem key={badge.id}>
-                  <div className="bg-vyba-navy/5 dark:bg-vyba-navy/10 backdrop-blur-xl rounded-2xl p-8">
-                    <div className="flex flex-col items-start gap-6">
-                      <div className="text-vyba-navy dark:text-white">{badge.icon}</div>
-                      <div>
-                        <h4 className="text-xl font-medium text-vyba-navy dark:text-white mb-2">{badge.label}</h4>
-                        <p className="text-sm text-vyba-tertiary dark:text-vyba-tertiary/80">{badge.info}</p>
-                      </div>
-                    </div>
-                  </div>
-                </CarouselItem>
+    <section className="bg-white dark:bg-vyba-dark-bg py-16 md:py-14">
+      <div className="max-w-[1700px] mx-auto px-6 md:px-10">
+        <h2 className="text-4xl font-semibold mb-12">¿Por qué nosotros?</h2>
+        <div className="grid grid-cols-3 md:grid-cols-6 grid-rows-3 md:grid-rows-2 gap-2 md:gap-4">
+          <div className="hidden md:block md:col-start-1 md:row-start-1 md:col-span-4 md:row-span-1 bg-vyba-gray rounded-3xl p-10">
+            <div className="flex flex-col items-left justify-center space-y-2">
+              <h3 className="text-2xl font-semibold">Dj con experiencia real en eventos</h3>
+              <p className="text-base text-vyba-tertiary">Mezclas en vivo adaptadas al público, gestión del ritmo, transiciones perfectas y repertorio a medida.</p>
+            </div>
+            <div className="flex -space-x-8 mt-8">
+              {Array.from({ length: 8 }).map((_, i) => (
+                <img 
+                  key={i}
+                  className="w-20 h-20 rounded-full border-4 border-vyba-gray" 
+                  src={`/images/user-image/avatar${i + 1}.webp`}
+                  alt={`Avatar ${i + 1}`}
+                />
               ))}
-            </CarouselContent>
-            <CarouselPrevious />
-            <CarouselNext />
-          </Carousel>
-        ) : (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-            {badges.map((badge, index) => (
-              <div 
-                key={badge.id} 
-                className={cn(
-                  "bg-vyba-navy/5 dark:bg-vyba-navy/10 backdrop-blur-xl rounded-2xl p-8 transition-all duration-300 hover:bg-vyba-navy/10 dark:hover:bg-vyba-navy/20",
-                  index === 1 || index === 2 ? "lg:row-span-2" : ""
-                )}
-              >
-                <div className="flex flex-col items-start gap-6">
-                  <div className="text-vyba-navy dark:text-white">{badge.icon}</div>
-                  <div>
-                    <h4 className="text-xl font-medium text-vyba-navy dark:text-white mb-2">{badge.label}</h4>
-                    <p className="text-sm text-vyba-tertiary dark:text-vyba-tertiary/80">{badge.info}</p>
-                  </div>
-                </div>
-              </div>
-            ))}
+            </div>
           </div>
-        )}
+          <div className="hidden md:block md:col-start-5 md:row-start-1 md:col-span-2 md:row-span-2 bg-vyba-gray rounded-3xl overflow-hidden">
+            <AutoPlayCarousel />
+          </div>
+          <div className="hidden md:block md:col-start-1 md:row-start-2 md:col-span-1 md:row-span-1 bg-vyba-gray rounded-3xl p-10 h-full">
+            <div className="flex flex-col items-start justify-between h-full">
+              <LandPlot className="w-9 h-9" />
+              <h3 className="text-2xl font-semibold mb-0">Equipo profesional</h3>
+            </div>
+          </div>
+          <div className="hidden md:block md:col-start-2 md:row-start-2 md:col-span-1 md:row-span-1 bg-vyba-gray rounded-3xl p-10">
+            <div className="flex flex-col items-start justify-between h-full">
+              <ScanFace className="w-9 h-9" />
+              <h3 className="text-2xl font-semibold mb-0">Artistas verificados</h3>
+            </div>
+          </div>
+          <div className="hidden md:block md:col-start-3 md:row-start-2 md:col-span-1 md:row-span-1 bg-vyba-gray rounded-3xl p-10">
+            <div className="flex flex-col items-start justify-between h-full">
+              <SquareMousePointer className="w-9 h-9" />
+              <h3 className="text-2xl font-semibold mb-0">Sets para todo tipo de fiestas</h3>
+            </div>
+          </div>
+          <div className="hidden md:block md:col-start-4 md:row-start-2 md:col-span-1 md:row-span-1 bg-vyba-navy rounded-3xl px-6 py-6">
+            <div className="flex flex-col items-start justify-between h-full">
+              <p className="text-base font-light text-white mb-0">Ver todas las ventajas de vyba</p>
+              <Button variant="secondary" className="bg-white text-vyba-navy w-full">Ver todas</Button>
+            </div>
+          </div>
+        </div>
       </div>
     </section>
   );
 };
 
-const DjsPage: React.FC = () => {
-  const [currentCard, setCurrentCard] = useState(0);
+const DjsPage = () => {
   const navigate = useNavigate();
-
   const otherDjs = artistsDataFromArtistsPage
     .filter(artist => artist.type === 'DJ')
     .slice(0, 8);
 
+  const otherCategories = [
+    { id: 1, icon: <KeyboardMusic className="w-6 h-6" />, label: "Saxofonistas", href: "/artist-type/saxofonistas" },
+    { id: 2, icon: <MicVocal className="w-6 h-6" />, label: "Cantantes", href: "/artist-type/cantantes" },
+    { id: 3, icon: <Guitar className="w-6 h-6" />, label: "Guitarristas", href: "/artist-type/guitarristas" },
+    { id: 4, icon: <Piano className="w-6 h-6" />, label: "Pianistas", href: "/artist-type/pianistas" },
+    { id: 5, icon: <AudioWaveform className="w-6 h-6" />, label: "Violinistas", href: "/artist-type/violinistas" },
+    { id: 6, icon: <Drum className="w-6 h-6" />, label: "Trompetistas", href: "/artist-type/trompetistas" },
+    { id: 7, icon: <CassetteTape className="w-6 h-6" />, label: "Bateristas", href: "/artist-type/bateristas" },
+    { id: 8, icon: <Disc3 className="w-6 h-6" />, label: "Bajistas", href: "/artist-type/bajistas" }
+  ];
+
   return (
     <>
-      <nav>
-        <div className="fixed top-0 left-0 w-full bg-white/30 dark:bg-black z-50 backdrop-blur-xl px-4">
-          <div className="container mx-auto px-4 py-3 flex items-center justify-between">
-            <button onClick={() => navigate('/')} className="p-1">
-              <img
-                src="/lovable-uploads/logovyba.png"
-                alt="Logo Vyba Artists"
-                className="h-10 w-auto"
-              />
-            </button>
-            <Button onClick={() => navigate('/auth')}>Iniciar sesión</Button>
-          </div>
-        </div>
-      </nav>
-      <div className="pt-24">
+      <Navbar1 />
+      <div>
         <HeroSection />
         <section className="dark:bg-vyba-dark-bg py-16 md:py-14">
           <div className="container mx-auto px-6 md:px-10">
@@ -276,59 +265,16 @@ const DjsPage: React.FC = () => {
           </div>
         </section>
         <FeatureCards />
-        <section className="dark:bg-vyba-dark-bg py-16 md:py-14">
-          <div className="container mx-auto px-6 md:px-10">
-            <div className="sm:grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-              <div className="bg-vyba-navy rounded-2xl flex flex-col items-center p-12 justify-center gap-12">
-                <div className="flex flex-col items-left justify-center gap-4">
-                  <h4 className="text-2xl font-medium text-white">Te Protegemos</h4>
-                  <p className="text-base text-[#BEBEBE]">Nos aseguramos de que todos los perfiles creados sean seguros mediante autentificación</p>
-                </div>
-                <div className="flex items-center justify-center">
-                  <Diamond className="text-white rounded-full w-44 h-44 p-12 backdrop-blur-lg from-white/10 to-black/10 bg-gradient-to-b" />
-                </div>
-              </div>
-              <div className="bg-vyba-navy rounded-2xl flex flex-col items-center p-12 justify-center gap-12">
-                <div className="flex flex-col items-left justify-center gap-4">
-                  <h4 className="text-2xl font-medium text-white">Calidad Garantizada</h4>
-                  <p className="text-base text-[#BEBEBE]">Todos nuestros artistas pasan por un riguroso proceso de selección para garantizar la mejor calidad</p>
-                </div>
-                <div className="flex items-center justify-center">
-                  <CheckCircle className="text-white rounded-full w-44 h-44 p-12 backdrop-blur-lg from-white/10 to-black/10 bg-gradient-to-b" />
-                </div>
-              </div>
-              <div className="bg-vyba-navy rounded-2xl flex flex-col items-center p-12 justify-center gap-12">
-                <div className="flex flex-col items-left justify-center gap-4">
-                  <h4 className="text-2xl font-medium text-white">Experiencia Única</h4>
-                  <p className="text-base text-[#BEBEBE]">Cada evento es único y nos adaptamos a tus necesidades específicas</p>
-                </div>
-                <div className="flex items-center justify-center">
-                  <Camera className="text-white rounded-full w-44 h-44 p-12 backdrop-blur-lg from-white/10 to-black/10 bg-gradient-to-b" />
-                </div>
-              </div>
-              <div className="bg-vyba-navy rounded-2xl flex flex-col items-center p-12 justify-center gap-12">
-                <div className="flex flex-col items-left justify-center gap-4">
-                  <h4 className="text-2xl font-medium text-white">Variedad de Eventos</h4>
-                  <p className="text-base text-[#BEBEBE]">Ofrecemos artistas para una amplia gama de eventos y celebraciones</p>
-                </div>
-                <div className="flex items-center justify-center">
-                  <ClipboardList className="text-white rounded-full w-44 h-44 p-12 backdrop-blur-lg from-white/10 to-black/10 bg-gradient-to-b" />
-                </div>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        <section className="dark:bg-vyba-dark-bg py-16 md:py-14">
+        <section className="py-16 md:py-14">
           <div className="container mx-auto px-6 md:px-10">
             <h2 className="text-4xl font-semibold mb-12">Otros DJs</h2>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-2">
               {otherDjs.map((dj) => (
                 <div 
                   key={dj.id}
-                  className="opacity-0 scale-95"
+                  className="opacity-0 scale-95 animate-[fadeIn_0.5s_ease-out_forwards]"
                   style={{
-                    animation: `fadeIn 0.5s ease-out forwards`
+                    animationDelay: `${dj.id * 0.1}s`
                   }}
                 >
                   <ArtistProfileCard {...dj} />
@@ -342,24 +288,27 @@ const DjsPage: React.FC = () => {
             </div>
           </div>
         </section>
+
+        <section className="bg-vyba-gray dark:bg-vyba-dark-bg py-16 md:py-14">
+          <div className="container mx-auto px-6 md:px-10">
+            <h2 className="text-4xl font-semibold mb-12">Otras categorías que te pueden interesar</h2>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+              {otherCategories.map((category) => (
+                <div
+                  key={category.id}
+                  className="h-20 flex items-center justify-start px-8 text-base font-medium bg-white hover:bg-white/80 rounded-md cursor-pointer transition-all duration-300 gap-4"
+                  onClick={() => navigate(category.href)}
+                >
+                  {category.icon}
+                  {category.label}
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
       </div>
     </>
   );
 };
 
 export default DjsPage;
-
-const style = document.createElement('style');
-style.textContent = `
-  @keyframes fadeIn {
-    from {
-      opacity: 0;
-      transform: scale(0.95);
-    }
-    to {
-      opacity: 1;
-      transform: scale(1);
-    }
-  }
-`;
-document.head.appendChild(style);

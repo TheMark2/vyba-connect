@@ -1,7 +1,7 @@
 import React, { useState, useRef } from 'react';
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import { Upload, ImagePlus, X, Trash2, Loader2 } from 'lucide-react';
+import { Images, ImagePlus, X, Trash2, Loader2 } from 'lucide-react';
 import { Badge } from "@/components/ui/badge";
 import { toast } from "@/hooks/use-toast";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -244,21 +244,15 @@ const GalleryImagesStep: React.FC<GalleryImagesStepProps> = ({
       targetElem.classList.remove('scale-105');
     }, 300);
   };
-  return <div className="flex flex-col items-center justify-center w-full pt-8 px-4 md:px-8">
-      <div className="max-w-3xl w-full text-center">
-        <h2 className="text-4xl md:text-6xl font-bold mb-6 dark:text-white">
-          Elige 5 fotos
-        </h2>
-        <p className="font-light mb-10 max-w-lg mx-auto">
-          Las imágenes con buena calidad y profesionales aumentan la probabilidad de contratación un 75%
-        </p>
+  return <div className="flex flex-col items-center justify-center w-full pt-8">
+      <div className="w-full text-center">
         
         {/* Upload area */}
         <div className="mb-8 relative">
-          {images.length === 0 && <div className="border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-lg p-12 flex flex-col items-center justify-center cursor-pointer hover:bg-gray-50 dark:hover:bg-vyba-dark-secondary/10 transition-all" onClick={handleAddImages}>
-              <Upload className="w-12 h-12 text-gray-400 mb-4" />
-              <p className="text-gray-500 mb-2">Arrastra tus imágenes aquí o haz clic para explorar</p>
-              <p className="text-gray-400 text-sm">JPG, PNG o GIF (max. 5MB)</p>
+          {images.length === 0 && <div className="border-2 border-dashed border-gray-300 bg-vyba-gray dark:border-gray-600 rounded-lg p-12 flex flex-col items-center justify-center cursor-pointer hover:border-black hover:border-solid dark:hover:bg-vyba-dark-secondary/10 transition-all duration-300" onClick={handleAddImages}>
+              <Images className="w-10 h-10 text-vyba-tertiary mb-4 stroke-[1.5px]" />
+              <p className="text-vyba-tertiary mb-2">Arrastra tus imágenes aquí o haz clic para explorar</p>
+              <p className="text-vyba-tertiary font-medium text-xs">JPG, PNG o GIF (max. 5MB)</p>
             </div>}
           
           <input type="file" ref={fileInputRef} onChange={handleFileChange} accept="image/*" multiple className="hidden" />
