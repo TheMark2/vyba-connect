@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
@@ -439,52 +440,53 @@ const RegisterDialog = ({ open, onOpenChange, onSuccess }: RegisterDialogProps) 
                     </FormControl>
                     <FormMessage />
 
-                  {!areAllRequirementsMet && (
-                    <ul className="mt-2 text-xs space-y-1">
-                      {passwordRequirements.map((req, index) => {
-                        const isValid = req.test(passwordValue);
-                        return (
-                          <li
-                            key={index}
-                            className={cn(
-                              "flex items-center gap-2 transition-all duration-300 ease-in-out",
-                              {
-                                "text-green-500": isValid,
-                                "text-[#C13515]": !isValid
-                              }
-                            )}
-                          >
-                            {isValid ? (
-                              <Check className="w-4 h-4" />
-                            ) : (
-                              <XCircle className="w-4 h-4" />
-                            )}
-                            {req.label}
-                          </li>
-                        );
-                      })}
-                    </ul>
-                  )}
-                </FormItem>
-              )}
-            />
+                    {!areAllRequirementsMet && (
+                      <ul className="mt-2 text-xs space-y-1">
+                        {passwordRequirements.map((req, index) => {
+                          const isValid = req.test(passwordValue);
+                          return (
+                            <li
+                              key={index}
+                              className={cn(
+                                "flex items-center gap-2 transition-all duration-300 ease-in-out",
+                                {
+                                  "text-green-500": isValid,
+                                  "text-[#C13515]": !isValid
+                                }
+                              )}
+                            >
+                              {isValid ? (
+                                <Check className="w-4 h-4" />
+                              ) : (
+                                <XCircle className="w-4 h-4" />
+                              )}
+                              {req.label}
+                            </li>
+                          );
+                        })}
+                      </ul>
+                    )}
+                  </FormItem>
+                )}
+              />
 
-            <p className="text-xs text-black mb-4 font-light font-figtree">
-              Al seleccionar <span className="font-semibold text-black">registrarse</span> se aceptan los términos y condiciones, la política de privacidad y la política de cookies de VYBA.
-            </p>
+              <p className="text-xs text-black mb-4 font-light font-figtree">
+                Al seleccionar <span className="font-semibold text-black">registrarse</span> se aceptan los términos y condiciones, la política de privacidad y la política de cookies de VYBA.
+              </p>
 
-            <div className="mt-8">
-              <Button 
-                variant="terciary"
-                type="submit" 
-                className="w-full"
-                disabled={isLoading || !areAllRequirementsMet}
-                isLoading={isLoading}
-              >
-                {isLoading ? "Registrando" : "Registrarse"}
-              </Button>
-            </div>
-          </form>
+              <div className="mt-8">
+                <Button 
+                  variant="terciary"
+                  type="submit" 
+                  className="w-full"
+                  disabled={isLoading || !areAllRequirementsMet}
+                  isLoading={isLoading}
+                >
+                  {isLoading ? "Registrando" : "Registrarse"}
+                </Button>
+              </div>
+            </form>
+          </Form>
         )}
       </DialogContent>
     </Dialog>
