@@ -1,9 +1,11 @@
+
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Camera, CheckCircle, ArrowRight, ChevronLeft, ChevronRight } from 'lucide-react';
 import { cn } from "@/lib/utils";
+import Image from "@/components/ui/image";
 
 interface OnboardingData {
   artistType?: string;
@@ -24,6 +26,20 @@ const ConfirmationScreen: React.FC<ConfirmationScreenProps> = ({ onboardingData 
   const navigate = useNavigate();
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [imageUrls, setImageUrls] = useState<string[]>([]);
+  const [profilePhotoUrl, setProfilePhotoUrl] = useState<string | null>(null);
+
+  useEffect(() => {
+    // Crear URL para la foto de perfil
+    if (onboardingData?.profilePhoto instanceof File) {
+      const profileUrl = URL.createObjectURL(onboardingData.profilePhoto);
+      setProfilePhotoUrl(profileUrl);
+
+      // Cleanup
+      return () => {
+        URL.revokeObjectURL(profileUrl);
+      };
+    }
+  }, [onboardingData?.profilePhoto]);
 
   useEffect(() => {
     // Crear URLs para las imágenes de la galería
@@ -68,11 +84,11 @@ const ConfirmationScreen: React.FC<ConfirmationScreenProps> = ({ onboardingData 
         <div className="grid grid-cols-2 gap-32 items-center">
           {/* Preview de la tarjeta */}
           <div className="bg-white rounded-3xl p-6 shadow-[0_4px_30px_rgba(0,0,0,0.11)]">
-            {/* Carrusel de imágenes */}
+            {/* Carrusel de imágenes o foto de perfil si no hay imágenes */}
             <div className="aspect-[5/4] relative rounded-3xl overflow-hidden mb-6">
               {imageUrls.length > 0 ? (
                 <>
-                  <img 
+                  <Image 
                     src={imageUrls[currentImageIndex]} 
                     alt={`Gallery ${currentImageIndex + 1}`}
                     className="w-full h-full object-cover"
@@ -110,6 +126,12 @@ const ConfirmationScreen: React.FC<ConfirmationScreenProps> = ({ onboardingData 
                     ))}
                   </div>
                 </>
+              ) : profilePhotoUrl ? (
+                <Image 
+                  src={profilePhotoUrl}
+                  alt="Profile Photo" 
+                  className="w-full h-full object-cover"
+                />
               ) : (
                 <div className="w-full h-full bg-vyba-gray flex items-center justify-center">
                   <Camera className="w-12 h-12 text-vyba-tertiary" />

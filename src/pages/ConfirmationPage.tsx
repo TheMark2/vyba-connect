@@ -1,3 +1,4 @@
+
 import React, { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import ConfirmationScreen from '@/components/onboarding/ConfirmationScreen';
@@ -14,6 +15,7 @@ const ConfirmationPage = () => {
     }
   }, [navigate]);
 
+  // Obtener los datos de onboarding desde localStorage
   const onboardingData = JSON.parse(localStorage.getItem('onboardingData') || '{}');
 
   return (
