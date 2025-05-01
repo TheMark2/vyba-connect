@@ -130,11 +130,14 @@ const LoginDialog = ({ open, onOpenChange, onSuccess }: LoginDialogProps) => {
 
     setIsLoading(true);
     try {
+      console.log("Intentando iniciar sesión con:", { email, password });
       // Iniciar sesión con Supabase
       const { data, error } = await supabase.auth.signInWithPassword({
         email,
         password
       });
+
+      console.log("Respuesta de signInWithPassword:", { data, error });
 
       if (error) {
         // Mostrar mensaje específico para correo no confirmado
@@ -146,9 +149,17 @@ const LoginDialog = ({ open, onOpenChange, onSuccess }: LoginDialogProps) => {
           return;
         }
         
+        // Mostrar mensaje específico para contraseña incorrecta
+        if (error.message.includes("Invalid login")) {
+          toast.error("Contraseña incorrecta");
+          setIsLoading(false);
+          return;
+        }
+        
         throw error;
       }
 
+      console.log("Inicio de sesión exitoso, llamando a onSuccess");
       if (onSuccess) {
         onSuccess();
       }
