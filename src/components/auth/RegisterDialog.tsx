@@ -217,6 +217,7 @@ const RegisterDialog = ({ open, onOpenChange, onSuccess }: RegisterDialogProps) 
         });
       }
       
+      // Cerrar este diálogo automáticamente
       onOpenChange(false);
       
       toast.success("Registro completado", {

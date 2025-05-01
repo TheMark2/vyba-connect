@@ -47,7 +47,7 @@ const RegisterPage = () => {
     setRegisteredUserInfo(userInfo);
     setShowRegisterDialog(false);
     
-    // Pequeño retraso para que se cierre primero el de registro
+    // Mostrar el diálogo de bienvenida automáticamente
     setTimeout(() => {
       setShowWelcomeDialog(true);
     }, 300);
