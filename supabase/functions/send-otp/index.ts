@@ -121,7 +121,7 @@ serve(async (req) => {
     try {
       // Usar onboarding@resend.dev como remitente temporal hasta que el dominio esté verificado
       const emailResponse = await resend.emails.send({
-        from: "VYBA <onboarding@resend.dev>", // Usar el dominio onboarding de Resend
+        from: "VYBA <noreply@vyba.app>", // Usar el dominio onboarding de Resend
         to: [email],
         subject: "Tu código de verificación para Vyba",
         html: `
