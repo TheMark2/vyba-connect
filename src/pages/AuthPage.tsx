@@ -23,15 +23,34 @@ const AuthPage = () => {
   // Verificar si el usuario ya está autenticado
   useEffect(() => {
     const checkSession = async () => {
-      const { data, error } = await supabase.auth.getSession();
-      if (data.session) {
-        // Usuario ya autenticado, redirigir a dashboard
-        navigate('/dashboard');
+      try {
+        const { data, error } = await supabase.auth.getSession();
+        
+        if (data.session) {
+          // Usuario ya autenticado, redirigir a dashboard
+          navigate('/dashboard');
+        }
+      } catch (err) {
+        console.error("Error al verificar sesión:", err);
+        toast.error("Error al verificar sesión");
+      } finally {
+        setCheckingSession(false);
       }
-      setCheckingSession(false);
     };
     
     checkSession();
+    
+    // Escuchar cambios en la autenticación
+    const { data: authListener } = supabase.auth.onAuthStateChange((event, session) => {
+      if (event === 'SIGNED_IN' && session) {
+        navigate('/dashboard');
+      }
+    });
+    
+    return () => {
+      // Limpiar el listener cuando el componente se desmonte
+      authListener.subscription.unsubscribe();
+    };
   }, [navigate]);
 
   const handleShowEmailForm = () => {

@@ -116,9 +116,9 @@ const LoginDialog = ({ open, onOpenChange, onSuccess }: LoginDialogProps) => {
     } catch (error: any) {
       console.error("Error al verificar email:", error);
       toast.error("Error al verificar el correo");
+    } finally {
+      setIsLoading(false);
     }
-    
-    setIsLoading(false);
   };
 
   const handlePasswordSubmit = async (e: React.FormEvent) => {
@@ -131,7 +131,8 @@ const LoginDialog = ({ open, onOpenChange, onSuccess }: LoginDialogProps) => {
     setIsLoading(true);
     try {
       console.log("Intentando iniciar sesión con:", { email, password });
-      // Iniciar sesión con Supabase
+      
+      // Iniciar sesión con Supabase - usamos try/catch para capturar errores de red también
       const { data, error } = await supabase.auth.signInWithPassword({
         email,
         password
@@ -139,50 +140,50 @@ const LoginDialog = ({ open, onOpenChange, onSuccess }: LoginDialogProps) => {
 
       console.log("Respuesta de signInWithPassword:", { data, error });
 
+      // Manejar errores específicos
       if (error) {
-        // Mostrar mensaje específico para correo no confirmado
         if (error.message.includes("Email not confirmed")) {
           toast.error("Correo no confirmado", {
             description: "Por favor, confirma tu correo electrónico antes de iniciar sesión"
           });
-          setIsLoading(false);
-          return;
-        }
-        
-        // Mostrar mensaje específico para contraseña incorrecta
-        if (error.message.includes("Invalid login")) {
+        } else if (error.message.includes("Invalid login")) {
           toast.error("Contraseña incorrecta");
-          setIsLoading(false);
-          return;
+        } else {
+          toast.error(`Error de inicio de sesión: ${error.message}`);
         }
-        
-        throw error;
+        console.error("Error de autenticación:", error);
+        setIsLoading(false);
+        return;
       }
 
-      console.log("Inicio de sesión exitoso, llamando a onSuccess");
+      // Si llegamos aquí, significa que el inicio de sesión fue exitoso
+      console.log("Inicio de sesión exitoso, usuario:", data?.user);
+      
+      // Llamar al callback de éxito si existe
       if (onSuccess) {
         onSuccess();
       }
       
+      // Cerrar el diálogo
       onOpenChange(false);
       
+      // Mostrar mensaje de éxito
       toast.success("Inicio de sesión exitoso", {
         description: "¡Bienvenido de nuevo a VYBA!"
       });
       
+      // Reiniciar el formulario después de un pequeño retraso
       setTimeout(() => {
         setCurrentStep('email');
         setEmail('');
         setPassword('');
       }, 300);
     } catch (error: any) {
+      // Capturar errores generales (como problemas de red)
       console.error("Error al iniciar sesión:", error);
-      
-      if (error.message.includes("Invalid login")) {
-        toast.error("Contraseña incorrecta");
-      } else {
-        toast.error(error.message || "Error al iniciar sesión");
-      }
+      toast.error("Error de conexión", {
+        description: "No se pudo conectar con el servidor. Por favor, inténtalo más tarde."
+      });
     } finally {
       setIsLoading(false);
     }
