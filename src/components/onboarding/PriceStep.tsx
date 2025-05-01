@@ -1,5 +1,6 @@
+
 import React from 'react';
-import EditablePrice from '@/components/editableprice';
+import EditablePrice from '@/components/EditablePrice';
 import { Badge } from "@/components/ui/badge";
 import { Gem } from 'lucide-react';
 interface PriceStepProps {

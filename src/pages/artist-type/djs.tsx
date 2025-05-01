@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from "react";
 import ArtistProfileCard from "@/components/ArtistProfileCard";
 import { Button } from "@/components/ui/button";
@@ -167,7 +168,7 @@ const DjsSlider = () => {
                   key={artist.id}
                   className="opacity-0 scale-95 animate-[fadeIn_0.5s_ease-out_forwards]"
                   style={{
-                    animationDelay: `${artist.id * 0.1}s`
+                    animationDelay: `${Number(artist.id) * 0.1}s`
                   }}
                 >
                   <ArtistProfileCard {...artist} />
@@ -274,7 +275,7 @@ const DjsPage = () => {
                   key={dj.id}
                   className="opacity-0 scale-95 animate-[fadeIn_0.5s_ease-out_forwards]"
                   style={{
-                    animationDelay: `${dj.id * 0.1}s`
+                    animationDelay: `${Number(dj.id) * 0.1}s`
                   }}
                 >
                   <ArtistProfileCard {...dj} />

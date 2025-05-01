@@ -1,10 +1,11 @@
+
 import React from 'react';
-import { Navbar, NavbarContent, NavbarItem, NavbarBrand, NavbarMenu, NavbarMenuItem, NavbarMenuButton, NavbarMenuToggle } from "@nextui-org/react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import MiniSearchBar from "@/components/search/MiniSearchBar";
 import { useNavigate } from "react-router-dom";
 import { MessageCircleDashed } from "lucide-react";
+
 const Navbar1 = () => {
     const navigate = useNavigate();
     
@@ -38,4 +39,3 @@ const Navbar1 = () => {
 };
 
 export default Navbar1;
-

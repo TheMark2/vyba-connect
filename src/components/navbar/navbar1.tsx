@@ -1,5 +1,5 @@
+
 import React from 'react';
-import { Navbar, NavbarContent, NavbarItem, NavbarBrand, NavbarMenu, NavbarMenuItem, NavbarMenuButton, NavbarMenuToggle } from "@nextui-org/react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import MiniSearchBar from "@/components/search/MiniSearchBar";
@@ -30,4 +30,3 @@ const Navbar1 = () => {
 };
 
 export default Navbar1;
-
