@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
@@ -6,6 +7,7 @@ import { toast } from "sonner";
 import { useNavigate } from 'react-router-dom';
 import RegisterDialog from './RegisterDialog';
 import LoginDialog from './LoginDialog';
+import { supabase } from '@/integrations/supabase/client';
 
 interface AuthDialogProps {
   open: boolean;
@@ -18,20 +20,28 @@ const AuthDialog = ({ open, onOpenChange }: AuthDialogProps) => {
   const [showRegisterDialog, setShowRegisterDialog] = useState(false);
   const [showLoginDialog, setShowLoginDialog] = useState(false);
 
-  const handleSocialLogin = (provider: string) => {
+  const handleSocialLogin = async (provider: 'google' | 'facebook' | 'apple') => {
     setIsLoading(true);
 
-    // Simulación de inicio de sesión
-    setTimeout(() => {
-      setIsLoading(false);
-      onOpenChange(false);
-      toast.success(`Sesión iniciada con ${provider}`, {
-        description: "¡Bienvenido de nuevo a VYBA!"
+    try {
+      let { data, error } = await supabase.auth.signInWithOAuth({
+        provider: provider,
+        options: {
+          redirectTo: window.location.origin + '/dashboard'
+        }
       });
+
+      if (error) throw error;
+
+      // La redirección es manejada por el proveedor de OAuth
       
-      // Lógica para recordar la acción que el usuario quería hacer antes de iniciar sesión
-      // Por ejemplo, si quería dar like a un artista, realizarlo aquí
-    }, 1500);
+    } catch (error: any) {
+      console.error(`Error con inicio de sesión ${provider}:`, error);
+      toast.error(`Error con ${provider}`, {
+        description: error.message || `No se pudo iniciar sesión con ${provider}`
+      });
+      setIsLoading(false);
+    }
   };
 
   const handleEmailLogin = () => {
@@ -45,18 +55,14 @@ const AuthDialog = ({ open, onOpenChange }: AuthDialogProps) => {
   };
 
   const handleLoginSuccess = () => {
-    // Redirigir al usuario después del inicio de sesión exitoso
-    // o realizar la acción que quería hacer (por ejemplo, dar like)
-    toast.success("Inicio de sesión exitoso", {
-      description: "¡Bienvenido de nuevo a VYBA!"
-    });
+    navigate('/dashboard');
   };
 
   const handleRegistrationSuccess = (userInfo: { fullName: string; email?: string }) => {
     toast.success("Registro completado", {
       description: `¡Bienvenido a VYBA, ${userInfo.fullName}!`
     });
-    // Aquí también se podría realizar la acción que el usuario quería hacer
+    navigate('/dashboard');
   };
 
   return (
@@ -76,7 +82,7 @@ const AuthDialog = ({ open, onOpenChange }: AuthDialogProps) => {
               <Button 
                 variant="secondary" 
                 className="w-full flex items-center justify-center gap-2 bg-[#F7F7F7] text-black" 
-                onClick={() => handleSocialLogin("Google")} 
+                onClick={() => handleSocialLogin("google")} 
                 disabled={isLoading}
               >
                 <img src="/logos/google-logo.svg" alt="Google" width={20} height={20} />
@@ -86,7 +92,7 @@ const AuthDialog = ({ open, onOpenChange }: AuthDialogProps) => {
               <Button 
                 variant="secondary" 
                 className="w-full flex items-center justify-center gap-2 bg-[#F7F7F7] text-black" 
-                onClick={() => handleSocialLogin("Facebook")} 
+                onClick={() => handleSocialLogin("facebook")} 
                 disabled={isLoading}
               >
                 <img src="/logos/facebook-logo.svg" alt="Facebook" width={20} height={20} />
@@ -96,7 +102,7 @@ const AuthDialog = ({ open, onOpenChange }: AuthDialogProps) => {
               <Button 
                 variant="secondary" 
                 className="w-full flex items-center justify-center gap-2 bg-[#F7F7F7] text-black" 
-                onClick={() => handleSocialLogin("Apple")} 
+                onClick={() => handleSocialLogin("apple")} 
                 disabled={isLoading}
               >
                 <img src="/logos/apple-logo.svg" alt="Apple" width={20} height={20} />

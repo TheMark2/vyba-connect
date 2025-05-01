@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
@@ -12,6 +13,7 @@ import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Check, XCircle } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { supabase } from "@/integrations/supabase/client";
 
 type Step = 'email' | 'verification' | 'registration';
 
@@ -40,6 +42,7 @@ const RegisterDialog = ({ open, onOpenChange, onSuccess }: RegisterDialogProps) 
   const [code, setCode] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [resendLoading, setResendLoading] = useState(false);
+  const [isVerified, setIsVerified] = useState(false);
 
   const form = useForm<RegistrationData>({
     resolver: zodResolver(registrationSchema),
@@ -56,23 +59,71 @@ const RegisterDialog = ({ open, onOpenChange, onSuccess }: RegisterDialogProps) 
     if (!email) return;
     
     setIsLoading(true);
-    setTimeout(() => {
-      setIsLoading(false);
+    try {
+      // Enviar el correo con el código OTP
+      const response = await fetch('https://zkucuolpubthcnsgjtso.supabase.co/functions/v1/send-otp', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          email,
+          action: 'send'
+        })
+      });
+
+      const data = await response.json();
+      
+      if (!response.ok) {
+        throw new Error(data.error || 'Error al enviar el código');
+      }
+
       setCurrentStep('verification');
       toast.success("Código de verificación enviado", {
         description: "Por favor, revisa tu correo electrónico"
       });
-    }, 1500);
+    } catch (error: any) {
+      console.error("Error:", error);
+      toast.error("Error", {
+        description: error.message || "No se pudo enviar el código de verificación"
+      });
+    } finally {
+      setIsLoading(false);
+    }
   };
 
-  const handleResendCode = () => {
+  const handleResendCode = async () => {
     setResendLoading(true);
-    setTimeout(() => {
-      setResendLoading(false);
+    try {
+      // Re-enviar el correo con el código OTP
+      const response = await fetch('https://zkucuolpubthcnsgjtso.supabase.co/functions/v1/send-otp', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          email,
+          action: 'send'
+        })
+      });
+
+      const data = await response.json();
+      
+      if (!response.ok) {
+        throw new Error(data.error || 'Error al reenviar el código');
+      }
+
       toast.success("Código de verificación reenviado", {
         description: "Por favor, revisa tu correo electrónico"
       });
-    }, 1500);
+    } catch (error: any) {
+      console.error("Error:", error);
+      toast.error("Error", {
+        description: error.message || "No se pudo reenviar el código de verificación"
+      });
+    } finally {
+      setResendLoading(false);
+    }
   };
 
   const handleVerificationSubmit = async (e: React.FormEvent) => {
@@ -80,21 +131,66 @@ const RegisterDialog = ({ open, onOpenChange, onSuccess }: RegisterDialogProps) 
     if (code.length !== 6) return;
 
     setIsLoading(true);
-    setTimeout(() => {
-      setIsLoading(false);
+    try {
+      // Verificar el código OTP
+      const response = await fetch('https://zkucuolpubthcnsgjtso.supabase.co/functions/v1/send-otp', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          email,
+          code,
+          action: 'verify'
+        })
+      });
+
+      const data = await response.json();
+      
+      if (!response.ok) {
+        throw new Error(data.error || 'Código no válido');
+      }
+
+      setIsVerified(true);
       setCurrentStep('registration');
-    }, 1500);
+    } catch (error: any) {
+      console.error("Error de verificación:", error);
+      toast.error("Error", {
+        description: error.message || "Código no válido o expirado"
+      });
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   const onSubmit = async (data: RegistrationData) => {
+    if (!isVerified) {
+      toast.error("Error", {
+        description: "Debes verificar tu correo electrónico"
+      });
+      return;
+    }
+
     setIsLoading(true);
-    setTimeout(() => {
-      setIsLoading(false);
+    try {
+      // Registrar el usuario en Supabase
+      const { data: authData, error } = await supabase.auth.signUp({
+        email,
+        password: data.password,
+        options: {
+          data: {
+            name: data.name,
+            lastName: data.lastName,
+            birthDate: data.birthDate
+          }
+        }
+      });
+
+      if (error) {
+        throw error;
+      }
+
       if (onSuccess) {
-        console.log("Llamando a onSuccess con:", { 
-          fullName: `${data.name} ${data.lastName}`, 
-          email 
-        });
         onSuccess({ 
           fullName: `${data.name} ${data.lastName}`, 
           email 
@@ -111,9 +207,17 @@ const RegisterDialog = ({ open, onOpenChange, onSuccess }: RegisterDialogProps) 
         setCurrentStep('email');
         setEmail('');
         setCode('');
+        setIsVerified(false);
         form.reset();
       }, 300);
-    }, 1500);
+    } catch (error: any) {
+      console.error("Error de registro:", error);
+      toast.error("Error", {
+        description: error.message || "No se pudo completar el registro"
+      });
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   const handleBack = () => {
@@ -130,6 +234,7 @@ const RegisterDialog = ({ open, onOpenChange, onSuccess }: RegisterDialogProps) 
       setCurrentStep('email');
       setEmail('');
       setCode('');
+      setIsVerified(false);
       form.reset();
     }, 300);
   };

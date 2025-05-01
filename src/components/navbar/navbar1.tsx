@@ -1,12 +1,44 @@
 
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import MiniSearchBar from "@/components/search/MiniSearchBar";
 import { useNavigate } from "react-router-dom";
+import { supabase } from "@/integrations/supabase/client";
+import { User } from '@supabase/supabase-js';
 
 const Navbar1 = () => {
     const navigate = useNavigate();
+    const [user, setUser] = useState<User | null>(null);
+    
+    useEffect(() => {
+      // Comprobar sesión actual
+      const checkUser = async () => {
+        const { data } = await supabase.auth.getSession();
+        setUser(data.session?.user || null);
+      };
+      
+      checkUser();
+      
+      // Escuchar cambios en la autenticación
+      const { data: authListener } = supabase.auth.onAuthStateChange(
+        (event, session) => {
+          setUser(session?.user || null);
+        }
+      );
+      
+      return () => {
+        authListener?.subscription.unsubscribe();
+      };
+    }, []);
+    
+    const handleAuth = () => {
+      if (user) {
+        navigate('/dashboard');
+      } else {
+        navigate('/auth');
+      }
+    };
     
     return (
         <nav>
@@ -22,7 +54,9 @@ const Navbar1 = () => {
               </button>
             </div>
             <MiniSearchBar />
-            <Button onClick={() => navigate('/auth')}>Iniciar sesión</Button>
+            <Button onClick={handleAuth}>
+              {user ? 'Mi cuenta' : 'Iniciar sesión'}
+            </Button>
           </div>
         </div>
       </nav>

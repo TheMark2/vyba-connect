@@ -1,22 +1,65 @@
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Button } from "@/components/ui/button";
 import { Link, useNavigate } from "react-router-dom";
 import { Mail } from "lucide-react";
 import Navbar from "@/components/Navbar";
 import RegisterDialog from '@/components/auth/RegisterDialog';
 import WelcomeDialog from '@/components/WelcomeDialog';
+import { supabase } from "@/integrations/supabase/client";
+import { toast } from "sonner";
 
 const RegisterPage = () => {
   const [showRegisterDialog, setShowRegisterDialog] = useState(false);
   const [showWelcomeDialog, setShowWelcomeDialog] = useState(false);
   const [registeredUserInfo, setRegisteredUserInfo] = useState<{ fullName: string; email?: string }>({ fullName: '' });
+  const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
 
+  // Verificar si el usuario ya está autenticado
+  useEffect(() => {
+    const checkSession = async () => {
+      const { data, error } = await supabase.auth.getSession();
+      if (data.session) {
+        // Usuario ya autenticado, redirigir a dashboard
+        navigate('/dashboard');
+      }
+    };
+    
+    checkSession();
+  }, [navigate]);
+
   const handleRegistrationSuccess = (userInfo: { fullName: string; email?: string }) => {
-    setShowRegisterDialog(false);
     setRegisteredUserInfo(userInfo);
-    setShowWelcomeDialog(true);
+    setShowRegisterDialog(false);
+    
+    // Pequeño retraso para que se cierre primero el de registro
+    setTimeout(() => {
+      setShowWelcomeDialog(true);
+    }, 300);
+  };
+
+  const handleSocialLogin = async (provider: 'google' | 'facebook' | 'apple') => {
+    setIsLoading(true);
+
+    try {
+      let { data, error } = await supabase.auth.signInWithOAuth({
+        provider: provider,
+        options: {
+          redirectTo: window.location.origin + '/dashboard'
+        }
+      });
+
+      if (error) throw error;
+
+    } catch (error: any) {
+      console.error(`Error con inicio de sesión ${provider}:`, error);
+      toast.error(`Error con ${provider}`, {
+        description: error.message || `No se pudo iniciar sesión con ${provider}`
+      });
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -30,17 +73,32 @@ const RegisterPage = () => {
           </div>
 
           <div className="space-y-4 mt-16 max-w-sm mx-auto">
-            <Button variant="secondary" className="w-full flex items-center justify-center gap-2 bg-[#F7F7F7] text-black">
+            <Button 
+              variant="secondary" 
+              className="w-full flex items-center justify-center gap-2 bg-[#F7F7F7] text-black"
+              onClick={() => handleSocialLogin('google')}
+              disabled={isLoading}
+            >
               <img src="/logos/google-logo.svg" alt="Google" width={20} height={20} />
               Continuar con Google
             </Button>
 
-            <Button variant="secondary" className="w-full flex items-center justify-center gap-2 bg-[#F7F7F7] text-black">
+            <Button 
+              variant="secondary" 
+              className="w-full flex items-center justify-center gap-2 bg-[#F7F7F7] text-black"
+              onClick={() => handleSocialLogin('facebook')}
+              disabled={isLoading}
+            >
               <img src="/logos/facebook-logo.svg" alt="Facebook" width={20} height={20} />
               Continuar con Facebook
             </Button>
 
-            <Button variant="secondary" className="w-full flex items-center justify-center gap-2 bg-[#F7F7F7] text-black">
+            <Button 
+              variant="secondary" 
+              className="w-full flex items-center justify-center gap-2 bg-[#F7F7F7] text-black"
+              onClick={() => handleSocialLogin('apple')}
+              disabled={isLoading}
+            >
               <img src="/logos/apple-logo.svg" alt="Apple" width={20} height={20} />
               Continuar con Apple
             </Button>
@@ -55,6 +113,7 @@ const RegisterPage = () => {
               variant="secondary"
               className="w-full flex items-center justify-center gap-2 bg-[#F7F7F7] text-black"
               onClick={() => setShowRegisterDialog(true)}
+              disabled={isLoading}
             >
               <Mail size={20} />
               Continuar con Mail

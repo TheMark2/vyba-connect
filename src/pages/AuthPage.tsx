@@ -1,6 +1,6 @@
+
 import React, { useState, useEffect } from 'react';
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import { Link } from "react-router-dom";
 import { Mail } from "lucide-react";
 import Navbar from "@/components/Navbar";
@@ -8,31 +8,32 @@ import RegisterDialog from '@/components/auth/RegisterDialog';
 import LoginDialog from '@/components/auth/LoginDialog';
 import WelcomeDialog from '@/components/WelcomeDialog';
 import { useNavigate } from 'react-router-dom';
-
-const mockEmailDatabase = {
-  "usuario@vybapp.com": "verified",
-  "google@vybapp.com": "google"
-};
+import { supabase } from "@/integrations/supabase/client";
+import { toast } from "sonner";
 
 const AuthPage = () => {
-  const [showEmailForm, setShowEmailForm] = useState(false);
   const [showLoginDialog, setShowLoginDialog] = useState(false);
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [showVerified, setShowVerified] = useState<'verified' | 'not-registered' | 'google' | false>(false);
-  const [emailVerificationTimeout, setEmailVerificationTimeout] = useState<NodeJS.Timeout | null>(null);
-  const [emailError, setEmailError] = useState(false);
-  const [passwordError, setPasswordError] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
   const [showRegisterDialog, setShowRegisterDialog] = useState(false);
   const [showWelcomeDialog, setShowWelcomeDialog] = useState(false);
   const [registeredUserInfo, setRegisteredUserInfo] = useState<{ fullName: string; email?: string }>({ fullName: '' });
+  const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
 
+  // Verificar si el usuario ya está autenticado
+  useEffect(() => {
+    const checkSession = async () => {
+      const { data, error } = await supabase.auth.getSession();
+      if (data.session) {
+        // Usuario ya autenticado, redirigir a dashboard
+        navigate('/dashboard');
+      }
+    };
+    
+    checkSession();
+  }, [navigate]);
+
   const handleShowEmailForm = () => {
-    if (!showEmailForm) {
-      setShowLoginDialog(true);
-    }
+    setShowLoginDialog(true);
   };
 
   const handleRegistrationSuccess = (userInfo: { fullName: string; email?: string }) => {
@@ -46,64 +47,31 @@ const AuthPage = () => {
     }, 300);
   };
 
-  const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value;
-    setEmail(value);
-    setEmailError(false);
-
-    if (emailVerificationTimeout) {
-      clearTimeout(emailVerificationTimeout);
-    }
-    if (value) {
-      const timeout = setTimeout(() => {
-        if (value in mockEmailDatabase) {
-          setShowVerified(mockEmailDatabase[value as keyof typeof mockEmailDatabase] as 'verified' | 'google');
-        } else {
-          setShowVerified('not-registered');
-        }
-      }, 300);
-      setEmailVerificationTimeout(timeout);
-    } else {
-      setShowVerified(false);
-    }
-  };
-
-  const handlePasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setPassword(e.target.value);
-    setPasswordError(false);
-  };
-
-  const handleLogin = (e: React.FormEvent) => {
-    e.preventDefault();
-    let hasError = false;
-    if (!email) {
-      setEmailError(true);
-      hasError = true;
-    }
-    if (!password) {
-      setPasswordError(true);
-      hasError = true;
-    }
-    if (!hasError) {
-      setIsLoading(true);
-      console.log("Intentando iniciar sesión con:", email, password);
-
-      setTimeout(() => {
-        setIsLoading(false);
-      }, 2000);
-    }
-  };
-
-  useEffect(() => {
-    return () => {
-      if (emailVerificationTimeout) {
-        clearTimeout(emailVerificationTimeout);
-      }
-    };
-  }, [emailVerificationTimeout]);
-
   const handleLoginSuccess = () => {
     navigate('/dashboard');
+  };
+
+  const handleSocialLogin = async (provider: 'google' | 'facebook' | 'apple') => {
+    setIsLoading(true);
+
+    try {
+      let { data, error } = await supabase.auth.signInWithOAuth({
+        provider: provider,
+        options: {
+          redirectTo: window.location.origin + '/dashboard'
+        }
+      });
+
+      if (error) throw error;
+
+    } catch (error: any) {
+      console.error(`Error con inicio de sesión ${provider}:`, error);
+      toast.error(`Error con ${provider}`, {
+        description: error.message || `No se pudo iniciar sesión con ${provider}`
+      });
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -117,17 +85,32 @@ const AuthPage = () => {
           </div>
 
           <div className="space-y-4 mt-16 max-w-sm mx-auto">
-            <Button variant="secondary" className="w-full flex items-center justify-center gap-2 bg-[#F7F7F7] text-black">
+            <Button 
+              variant="secondary" 
+              className="w-full flex items-center justify-center gap-2 bg-[#F7F7F7] text-black"
+              onClick={() => handleSocialLogin('google')}
+              disabled={isLoading}
+            >
               <img src="/logos/google-logo.svg" alt="Google" width={20} height={20} />
               Continuar con Google
             </Button>
             
-            <Button variant="secondary" className="w-full flex items-center justify-center gap-2 bg-[#F7F7F7] text-black">
+            <Button 
+              variant="secondary" 
+              className="w-full flex items-center justify-center gap-2 bg-[#F7F7F7] text-black"
+              onClick={() => handleSocialLogin('facebook')}
+              disabled={isLoading}
+            >
               <img src="/logos/facebook-logo.svg" alt="Facebook" width={20} height={20} />
               Continuar con Facebook
             </Button>
             
-            <Button variant="secondary" className="w-full flex items-center justify-center gap-2 bg-[#F7F7F7] text-black">
+            <Button 
+              variant="secondary" 
+              className="w-full flex items-center justify-center gap-2 bg-[#F7F7F7] text-black"
+              onClick={() => handleSocialLogin('apple')}
+              disabled={isLoading}
+            >
               <img src="/logos/apple-logo.svg" alt="Apple" width={20} height={20} />
               Continuar con Apple
             </Button>
@@ -141,15 +124,18 @@ const AuthPage = () => {
             <Button 
               variant="secondary" 
               className="w-full flex items-center justify-center gap-2 bg-[#F7F7F7] text-black" 
-              onClick={() => setShowRegisterDialog(true)}
+              onClick={handleShowEmailForm}
+              disabled={isLoading}
             >
               <Mail size={20} />
-              Registrarse con Mail
+              Iniciar sesión con Mail
             </Button>
           </div>
 
           <div className="text-center text-sm mt-6">
-            <p className="text-center text-sm mt-6 font-light">Ya tienes cuenta. <Button variant="link" onClick={handleShowEmailForm} className="font-medium text-black p-0">Iniciar Sesión</Button></p>
+            <p className="text-center text-sm font-light">
+              ¿No tienes cuenta? <Link to="/register" className="font-medium text-black">Regístrate</Link>
+            </p>
           </div>
         </div>
       </div>

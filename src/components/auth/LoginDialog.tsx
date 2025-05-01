@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
@@ -6,14 +7,9 @@ import { Label } from "@/components/ui/label";
 import { ChevronLeft } from "lucide-react";
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
+import { supabase } from "@/integrations/supabase/client";
 
 type Step = 'email' | 'password';
-
-// Mock de base de datos para pruebas
-const mockEmailDatabase = {
-  "usuario@vybapp.com": "verified",
-  "google@vybapp.com": "google"
-};
 
 interface LoginDialogProps {
   open: boolean;
@@ -41,13 +37,28 @@ const LoginDialog = ({ open, onOpenChange, onSuccess }: LoginDialogProps) => {
     }
     
     if (value) {
-      const timeout = setTimeout(() => {
-        if (value in mockEmailDatabase) {
-          setShowVerified(mockEmailDatabase[value as keyof typeof mockEmailDatabase] as 'verified' | 'google');
-        } else {
-          setShowVerified('not-registered');
+      // Verificar si el correo existe en Supabase
+      const timeout = setTimeout(async () => {
+        try {
+          const { data, error } = await supabase.auth.signInWithOtp({
+            email: value,
+            options: {
+              shouldCreateUser: false
+            }
+          });
+
+          // Si no hay error, significa que el usuario existe
+          if (!error) {
+            setShowVerified('verified');
+          } else if (error.message.includes("not found")) {
+            setShowVerified('not-registered');
+          }
+        } catch (err) {
+          console.error("Error al verificar email:", err);
+          setShowVerified(false);
         }
-      }, 300);
+      }, 600);
+      
       setEmailVerificationTimeout(timeout);
     } else {
       setShowVerified(false);
@@ -72,10 +83,28 @@ const LoginDialog = ({ open, onOpenChange, onSuccess }: LoginDialogProps) => {
     }
     
     setIsLoading(true);
-    setTimeout(() => {
-      setIsLoading(false);
+    // Verificar si el email existe
+    try {
+      const { data, error } = await supabase.auth.signInWithOtp({
+        email: email,
+        options: {
+          shouldCreateUser: false
+        }
+      });
+
+      if (error && error.message.includes("not found")) {
+        toast.error("Este correo no está registrado");
+        setIsLoading(false);
+        return;
+      }
+      
       setCurrentStep('password');
-    }, 1000);
+    } catch (error) {
+      console.error("Error al verificar email:", error);
+      toast.error("Error al verificar el correo");
+    }
+    
+    setIsLoading(false);
   };
 
   const handlePasswordSubmit = async (e: React.FormEvent) => {
@@ -86,8 +115,17 @@ const LoginDialog = ({ open, onOpenChange, onSuccess }: LoginDialogProps) => {
     }
 
     setIsLoading(true);
-    setTimeout(() => {
-      setIsLoading(false);
+    try {
+      // Iniciar sesión con Supabase
+      const { data, error } = await supabase.auth.signInWithPassword({
+        email,
+        password
+      });
+
+      if (error) {
+        throw error;
+      }
+
       if (onSuccess) {
         onSuccess();
       }
@@ -103,7 +141,17 @@ const LoginDialog = ({ open, onOpenChange, onSuccess }: LoginDialogProps) => {
         setEmail('');
         setPassword('');
       }, 300);
-    }, 1500);
+    } catch (error: any) {
+      console.error("Error al iniciar sesión:", error);
+      
+      if (error.message.includes("Invalid login")) {
+        toast.error("Contraseña incorrecta");
+      } else {
+        toast.error(error.message || "Error al iniciar sesión");
+      }
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   const handleBack = () => {
@@ -168,9 +216,6 @@ const LoginDialog = ({ open, onOpenChange, onSuccess }: LoginDialogProps) => {
                 )}
               />
               {emailError && <p className="text-sm text-[#C13515]">Por favor, introduce tu email</p>}
-              <p className="text-xs text-gray-500">
-                Prueba con: usuario@vybapp.com o google@vybapp.com
-              </p>
             </div>
             <Button 
               variant="terciary"
