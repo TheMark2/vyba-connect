@@ -6,6 +6,7 @@ import { Badge } from "@/components/ui/badge";
 import { Camera, CheckCircle, ArrowRight, ChevronLeft, ChevronRight } from 'lucide-react';
 import { cn } from "@/lib/utils";
 import Image from "@/components/ui/image";
+import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/carousel";
 
 interface OnboardingData {
   artistType?: string;
@@ -44,13 +45,17 @@ const ConfirmationScreen: React.FC<ConfirmationScreenProps> = ({ onboardingData 
   useEffect(() => {
     // Crear URLs para las imágenes de la galería
     if (onboardingData?.galleryImages && Array.isArray(onboardingData.galleryImages)) {
+      console.log("Gallery images found:", onboardingData.galleryImages.length);
+      
       const urls = onboardingData.galleryImages.map(file => {
         if (file instanceof File) {
+          console.log("Creating URL for file:", file.name);
           return URL.createObjectURL(file);
         }
         return null;
       }).filter((url): url is string => url !== null);
       
+      console.log("Created image URLs:", urls);
       setImageUrls(urls);
 
       // Cleanup
@@ -59,6 +64,8 @@ const ConfirmationScreen: React.FC<ConfirmationScreenProps> = ({ onboardingData 
           URL.revokeObjectURL(url);
         });
       };
+    } else {
+      console.log("No gallery images found or not in expected format");
     }
   }, [onboardingData?.galleryImages]);
 
@@ -87,49 +94,27 @@ const ConfirmationScreen: React.FC<ConfirmationScreenProps> = ({ onboardingData 
             {/* Carrusel de imágenes o foto de perfil si no hay imágenes */}
             <div className="aspect-[5/4] relative rounded-3xl overflow-hidden mb-6">
               {imageUrls.length > 0 ? (
-                <>
-                  <Image 
-                    src={imageUrls[currentImageIndex]} 
-                    alt={`Gallery ${currentImageIndex + 1}`}
-                    className="w-full h-full object-cover"
-                  />
-                  {/* Controles del carrusel */}
-                  <div className="absolute inset-0 flex items-center justify-between p-4">
-                    <Button
-                      variant="secondary"
-                      size="icon"
-                      className="rounded-full bg-white/70 hover:bg-white"
-                      onClick={handlePrevImage}
-                    >
-                      <ChevronLeft className="h-4 w-4" />
-                    </Button>
-                    <Button
-                      variant="secondary"
-                      size="icon"
-                      className="rounded-full bg-white/70 hover:bg-white"
-                      onClick={handleNextImage}
-                    >
-                      <ChevronRight className="h-4 w-4" />
-                    </Button>
-                  </div>
-                  {/* Indicadores del carrusel */}
-                  <div className="absolute bottom-4 left-0 right-0 flex justify-center gap-2">
-                    {imageUrls.map((_, index) => (
-                      <button
-                        key={index}
-                        className={cn(
-                          "w-2 h-2 rounded-full transition-all",
-                          currentImageIndex === index ? "bg-white scale-125" : "bg-white/50"
-                        )}
-                        onClick={() => setCurrentImageIndex(index)}
-                      />
+                <Carousel className="w-full h-full">
+                  <CarouselContent className="h-full">
+                    {imageUrls.map((url, index) => (
+                      <CarouselItem key={index} className="h-full">
+                        <div className="h-full w-full flex items-center justify-center">
+                          <Image 
+                            src={url} 
+                            alt={`Galería ${index + 1}`}
+                            className="w-full h-full object-cover"
+                          />
+                        </div>
+                      </CarouselItem>
                     ))}
-                  </div>
-                </>
+                  </CarouselContent>
+                  <CarouselPrevious className="left-2" />
+                  <CarouselNext className="right-2" />
+                </Carousel>
               ) : profilePhotoUrl ? (
                 <Image 
                   src={profilePhotoUrl}
-                  alt="Profile Photo" 
+                  alt="Foto de perfil" 
                   className="w-full h-full object-cover"
                 />
               ) : (
@@ -174,4 +159,4 @@ const ConfirmationScreen: React.FC<ConfirmationScreenProps> = ({ onboardingData 
   );
 };
 
-export default ConfirmationScreen; 
+export default ConfirmationScreen;
