@@ -44,6 +44,7 @@ interface OnboardingData {
   province?: string;
   favoriteGenres?: string[];
   preferredArtistTypes?: string[];
+  coordinates?: { lat: number, lng: number };
 }
 
 interface StepGroup {
@@ -324,6 +325,10 @@ const UserOnboardingPage = () => {
           location: onboardingData.location,
           city: onboardingData.city,
           province: onboardingData.province,
+          coordinates: onboardingData.coordinates ? {
+            lat: onboardingData.coordinates.lat,
+            lng: onboardingData.coordinates.lng
+          } : null,
           favorite_genres: onboardingData.favoriteGenres,
           preferred_artist_types: onboardingData.preferredArtistTypes,
           onboarding_completed: true
@@ -660,4 +665,4 @@ const UserOnboardingPage = () => {
   );
 };
 
-export default UserOnboardingPage; 
+export default UserOnboardingPage;
