@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
@@ -178,6 +177,8 @@ const RegisterDialog = ({ open, onOpenChange, onSuccess }: RegisterDialogProps) 
 
     setIsLoading(true);
     try {
+      console.log("Intentando registrar usuario con estos datos:", { email, ...data });
+      
       // Registrar el usuario en Supabase
       const { data: authData, error } = await supabase.auth.signUp({
         email,
@@ -194,6 +195,8 @@ const RegisterDialog = ({ open, onOpenChange, onSuccess }: RegisterDialogProps) 
       if (error) {
         throw error;
       }
+
+      console.log("Usuario registrado exitosamente:", authData);
 
       if (onSuccess) {
         onSuccess({ 
@@ -283,7 +286,7 @@ const RegisterDialog = ({ open, onOpenChange, onSuccess }: RegisterDialogProps) 
         setValidatedRules((prev) => prev.filter(i => i !== index));
       }
     });
-  }, [passwordValue]);
+  }, [passwordValue, validatedRules]);
 
   return (
     <Dialog open={open} onOpenChange={handleClose}>
