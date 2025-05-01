@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
@@ -28,7 +27,10 @@ const AuthPage = () => {
         
         if (data.session) {
           // Usuario ya autenticado, redirigir a dashboard
+          console.log("Sesión existente detectada, redirigiendo a dashboard");
           navigate('/dashboard');
+        } else {
+          console.log("No hay sesión activa");
         }
       } catch (err) {
         console.error("Error al verificar sesión:", err);
@@ -42,13 +44,15 @@ const AuthPage = () => {
     
     // Escuchar cambios en la autenticación
     const { data: authListener } = supabase.auth.onAuthStateChange((event, session) => {
+      console.log("Evento de autenticación:", event, session ? "Con sesión" : "Sin sesión");
       if (event === 'SIGNED_IN' && session) {
+        console.log("Usuario ha iniciado sesión, redirigiendo a dashboard");
         navigate('/dashboard');
       }
     });
     
     return () => {
-      // Limpiar el listener cuando el componente se desmonte
+      console.log("Limpiando listener de autenticación");
       authListener.subscription.unsubscribe();
     };
   }, [navigate]);
@@ -69,6 +73,7 @@ const AuthPage = () => {
   };
 
   const handleLoginSuccess = () => {
+    console.log("Login success callback ejecutado, redirigiendo a dashboard");
     navigate('/dashboard');
   };
 

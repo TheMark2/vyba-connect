@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
@@ -55,6 +54,7 @@ const AuthDialog = ({ open, onOpenChange }: AuthDialogProps) => {
   };
 
   const handleLoginSuccess = () => {
+    console.log("Login exitoso desde AuthDialog, redirigiendo");
     navigate('/dashboard');
   };
 
@@ -62,6 +62,7 @@ const AuthDialog = ({ open, onOpenChange }: AuthDialogProps) => {
     toast.success("Registro completado", {
       description: `¡Bienvenido a VYBA, ${userInfo.fullName}!`
     });
+    console.log("Registro exitoso, redirigiendo al dashboard");
     navigate('/dashboard');
   };
 

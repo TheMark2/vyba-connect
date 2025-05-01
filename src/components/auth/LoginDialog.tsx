@@ -8,6 +8,7 @@ import { ChevronLeft } from "lucide-react";
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
 import { supabase } from "@/integrations/supabase/client";
+import { useNavigate } from 'react-router-dom';
 
 type Step = 'email' | 'password';
 
@@ -18,6 +19,7 @@ interface LoginDialogProps {
 }
 
 const LoginDialog = ({ open, onOpenChange, onSuccess }: LoginDialogProps) => {
+  const navigate = useNavigate();
   const [currentStep, setCurrentStep] = useState<Step>('email');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -159,18 +161,21 @@ const LoginDialog = ({ open, onOpenChange, onSuccess }: LoginDialogProps) => {
       // Si llegamos aquí, significa que el inicio de sesión fue exitoso
       console.log("Inicio de sesión exitoso, usuario:", data?.user);
       
-      // Llamar al callback de éxito si existe
-      if (onSuccess) {
-        onSuccess();
-      }
-      
-      // Cerrar el diálogo
-      onOpenChange(false);
-      
       // Mostrar mensaje de éxito
       toast.success("Inicio de sesión exitoso", {
         description: "¡Bienvenido de nuevo a VYBA!"
       });
+      
+      // Cerrar el diálogo
+      onOpenChange(false);
+      
+      // Redirigir directamente al dashboard - este es el cambio clave
+      navigate('/dashboard');
+      
+      // Si existe una función onSuccess adicional, llamarla también
+      if (onSuccess) {
+        onSuccess();
+      }
       
       // Reiniciar el formulario después de un pequeño retraso
       setTimeout(() => {
