@@ -11,7 +11,7 @@ const Navbar1 = () => {
     return (
         <nav>
         <div className="fixed top-0 left-0 w-full bg-white/30 dark:bg-black z-50 backdrop-blur-xl px-4">
-          <div className="max-w-9xl mx-auto px-6 py-3 flex items-center justify-between">
+          <div className="container mx-auto px-6 py-3 flex items-center justify-between">
             <div className="flex items-center gap-8">
               <button onClick={() => navigate('/')} className="p-1">
                 <img

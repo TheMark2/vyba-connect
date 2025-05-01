@@ -16,7 +16,7 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
       <input
         type={type}
         className={cn(
-          "flex w-full font-figtree placeholder:font-figtree rounded-xl bg-[#F7F7F7] px-6 py-3 text-base md:text-sm placeholder:text-[#969494] disabled:cursor-not-allowed disabled:opacity-50 text-black font-regular placeholder:font-regular",
+          "flex w-full font-figtree placeholder:font-figtree rounded-xl bg-vyba-gray px-6 py-3 text-base md:text-sm placeholder:text-[#969494] disabled:cursor-not-allowed disabled:opacity-50 text-black font-regular placeholder:font-regular",
           {
             "h-10": inputSize === "sm",
             "h-14": inputSize === "md",

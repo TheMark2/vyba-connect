@@ -1,173 +1,257 @@
-import React, { useState, useEffect } from 'react';
-import { Phone, Check, Loader2 } from 'lucide-react';
-import { Input } from "@/components/ui/input";
-import { InputOTP, InputOTPGroup, InputOTPSlot } from "@/components/ui/input-otp";
+import React, { useState } from 'react';
 import { Button } from "@/components/ui/button";
-import { useToast } from "@/hooks/use-toast";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { InputOTP, InputOTPGroup, InputOTPSlot } from "@/components/ui/input-otp";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { ChevronLeft, Check, X } from 'lucide-react';
+import { toast } from "sonner";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+
 interface PhoneVerificationStepProps {
   onPhoneChange: (phone: string) => void;
   initialValue?: string;
+  onComplete?: () => void;
 }
-const PhoneVerificationStep: React.FC<PhoneVerificationStepProps> = ({
-  onPhoneChange,
-  initialValue = ''
+
+const countries = [
+  { code: 'ES', prefix: '+34', name: 'España' },
+  { code: 'PT', prefix: '+351', name: 'Portugal' },
+  { code: 'FR', prefix: '+33', name: 'Francia' },
+  { code: 'IT', prefix: '+39', name: 'Italia' },
+  { code: 'DE', prefix: '+49', name: 'Alemania' },
+  { code: 'GB', prefix: '+44', name: 'Reino Unido' },
+];
+
+const PhoneVerificationStep: React.FC<PhoneVerificationStepProps> = ({ 
+  onPhoneChange, 
+  initialValue = '',
+  onComplete 
 }) => {
   const [phone, setPhone] = useState(initialValue);
-  const [formattedPhone, setFormattedPhone] = useState('');
-  const [showOTP, setShowOTP] = useState(false);
-  const [otp, setOtp] = useState('');
-  const [verified, setVerified] = useState(false);
-  const [isSendingCode, setIsSendingCode] = useState(false);
-  const [isVerifyingCode, setIsVerifyingCode] = useState(false);
-  const {
-    toast
-  } = useToast();
+  const [selectedCountry, setSelectedCountry] = useState(countries[0]);
+  const [showVerificationDialog, setShowVerificationDialog] = useState(false);
+  const [showConfirmationDialog, setShowConfirmationDialog] = useState(false);
+  const [isCodeCorrect, setIsCodeCorrect] = useState(false);
+  const [code, setCode] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
+  const [resendLoading, setResendLoading] = useState(false);
 
-  // Formatear número de teléfono automáticamente
-  const formatPhoneNumber = (value: string) => {
-    // Eliminar todos los caracteres no numéricos
-    const numbersOnly = value.replace(/\D/g, '');
-
-    // Aplicar formato XXX XXX XXX
-    let formatted = '';
-    for (let i = 0; i < numbersOnly.length && i < 9; i++) {
-      if (i === 3 || i === 6) {
-        formatted += ' ';
-      }
-      formatted += numbersOnly[i];
-    }
-    return formatted;
-  };
   const handlePhoneChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const inputValue = e.target.value;
-    const formatted = formatPhoneNumber(inputValue);
-    setFormattedPhone(formatted);
-    // Guardar solo los números para el estado real
-    const numbersOnly = formatted.replace(/\D/g, '');
-    setPhone(numbersOnly);
-    onPhoneChange(numbersOnly);
+    const value = e.target.value.replace(/\D/g, '');
+    setPhone(value);
+    onPhoneChange(`${selectedCountry.prefix}${value}`);
   };
-  const handleSendCode = () => {
-    // Simular envío de código con loading
-    setIsSendingCode(true);
 
-    // En un caso real, enviarías un código por SMS
-    console.log('Enviando código al número:', phone);
-
-    // Simular tiempo de carga
-    setTimeout(() => {
-      setIsSendingCode(false);
-      setShowOTP(true);
-      toast({
-        title: "Código enviado",
-        description: "Hemos enviado un código a tu teléfono móvil"
-      });
-    }, 1500);
-  };
-  const handleOTPComplete = (value: string) => {
-    setOtp(value);
-    if (value.length === 6) {
-      // En un caso real, verificarías el código
-      setIsVerifyingCode(true);
-      console.log('Verificando código:', value);
-
-      // Simular tiempo de verificación
-      setTimeout(() => {
-        setIsVerifyingCode(false);
-        setVerified(true);
-      }, 1500);
+  const handleCountryChange = (value: string) => {
+    const country = countries.find(c => c.code === value);
+    if (country) {
+      setSelectedCountry(country);
+      onPhoneChange(`${country.prefix}${phone}`);
     }
   };
-  const handleResendCode = () => {
-    setIsSendingCode(true);
-    console.log('Reenviando código al número:', phone);
-    // Simular tiempo de carga
+
+  const handleSendCode = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!phone) return;
+    
+    setIsLoading(true);
     setTimeout(() => {
-      setIsSendingCode(false);
-      toast({
-        title: "Código reenviado",
-        description: "Hemos enviado un nuevo código a tu teléfono móvil"
+      setIsLoading(false);
+      setShowVerificationDialog(true);
+      toast.success("Código de verificación enviado", {
+        description: "Por favor, revisa tu teléfono"
       });
     }, 1500);
   };
-  return <div className="flex flex-col items-center justify-center h-full w-full px-4">
-      <div className="max-w-md w-full text-center">
-        {!verified ? <>
-            {!showOTP ? <>
-                <h2 className="text-4xl md:text-6xl font-bold mb-6">
-                  Escribe tu móvil
-                </h2>
-                <p className="font-light mb-8">
-                  Es imprescindible que al crear un proyecto nuevo pongas tu móvil para poder verificar y proteger tu cuenta
-                </p>
-                
-                <div className="w-full max-w-md mx-auto space-y-4 flex flex-col items-center">
-                  <div className="flex gap-2 w-full justify-center">
-                    <div className="bg-[#F7F7F7] dark:bg-vyba-dark-secondary/30 rounded-lg px-4 flex items-center justify-center w-20">
-                      <span className="text-sm font-medium">+34</span>
-                    </div>
-                    <Input type="tel" placeholder="684 *** *** ***" className="flex-1" value={formattedPhone} onChange={handlePhoneChange} maxLength={11} // 9 dígitos + 2 espacios
-              />
-                  </div>
-                  
-                  {phone.length === 9 && <Button onClick={handleSendCode} variant="default" isLoading={isSendingCode} disabled={isSendingCode}>
-                      Enviar código
-                    </Button>}
-                </div>
-              </> : <>
-                <h2 className="text-4xl md:text-6xl font-bold mb-6">
-                  Escribe el código
-                </h2>
-                <p className="font-light mb-8">
-                  Hemos enviado un código a tu móvil. Introdúcelo a continuación.
-                  {" "}
-                  <span className="text-gray-500">
-                    Si no te ha llegado,{" "}
-                    <button onClick={handleResendCode} className="font-medium text-black dark:text-white underline" disabled={isSendingCode}>
-                      {isSendingCode ? <>
-                          <Loader2 className="inline-block w-4 h-4 mr-1 animate-spin" />
-                          Enviando...
-                        </> : "Volver a enviar"}
-                    </button>
-                  </span>
-                </p>
-                
-                <div className="flex justify-center mt-6 mb-8 relative">
-                  <InputOTP maxLength={6} value={otp} onChange={handleOTPComplete} disabled={isVerifyingCode}>
-                    <InputOTPGroup className="gap-4">
-                      <InputOTPSlot index={0} className="w-14 h-14 rounded-lg border-0 bg-[#F7F7F7] dark:bg-vyba-dark-secondary/30" />
-                      <InputOTPSlot index={1} className="w-14 h-14 rounded-lg border-0 bg-[#F7F7F7] dark:bg-vyba-dark-secondary/30" />
-                      <InputOTPSlot index={2} className="w-14 h-14 rounded-lg border-0 bg-[#F7F7F7] dark:bg-vyba-dark-secondary/30" />
-                      <InputOTPSlot index={3} className="w-14 h-14 rounded-lg border-0 bg-[#F7F7F7] dark:bg-vyba-dark-secondary/30" />
-                      <InputOTPSlot index={4} className="w-14 h-14 rounded-lg border-0 bg-[#F7F7F7] dark:bg-vyba-dark-secondary/30" />
-                      <InputOTPSlot index={5} className="w-14 h-14 rounded-lg border-0 bg-[#F7F7F7] dark:bg-vyba-dark-secondary/30" />
-                    </InputOTPGroup>
-                  </InputOTP>
-                  {isVerifyingCode && <div className="absolute inset-0 flex items-center justify-center bg-white/50 dark:bg-black/10 backdrop-blur-[1px] rounded-lg">
-                      <Loader2 className="w-8 h-8 animate-spin text-primary" />
-                    </div>}
-                </div>
-              </>}
-          </> : <>
-            <div className="flex flex-col items-center">
-              <h2 className="text-4xl md:text-6xl font-bold mb-6">
-                Código correcto
-              </h2>
-              <p className="mb-8">
-                Puedes continuar
-              </p>
-              
-              <div className="flex justify-center">
-                <div className="bg-[#F7F7F7] rounded-full py-3 px-5 flex items-center gap-2.5">
-                  <div className="bg-[#E4F9E4] rounded-full p-1.5">
-                    <Check className="h-4 w-4 text-green-500" />
-                  </div>
-                  <span className="text-black font-medium">Código correcto</span>
-                </div>
+
+  const handleResendCode = () => {
+    setResendLoading(true);
+    setTimeout(() => {
+      setResendLoading(false);
+      toast.success("Código de verificación reenviado", {
+        description: "Por favor, revisa tu teléfono"
+      });
+    }, 1500);
+  };
+
+  const handleVerificationSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (code.length !== 6) return;
+
+    setIsLoading(true);
+    setTimeout(() => {
+      setIsLoading(false);
+      setShowVerificationDialog(false);
+      setShowConfirmationDialog(true);
+      // Simulamos una verificación aleatoria para demostración
+      const isCorrect = Math.random() > 0.5;
+      setIsCodeCorrect(isCorrect);
+      if (isCorrect) {
+        toast.success("Teléfono verificado correctamente");
+      } else {
+        toast.error("Código incorrecto");
+      }
+    }, 1500);
+  };
+
+  const handleBack = () => {
+    setShowVerificationDialog(false);
+    setCode('');
+  };
+
+  const handleCloseConfirmation = () => {
+    setShowConfirmationDialog(false);
+    if (isCodeCorrect) {
+      // Si el código es correcto, avanzamos al siguiente paso
+      if (onComplete) {
+        onComplete();
+      }
+      // Limpiamos el estado
+      setPhone('');
+      setCode('');
+    } else {
+      // Si el código es incorrecto, volvemos al diálogo de verificación
+      setShowVerificationDialog(true);
+    }
+  };
+
+  return (
+    <>
+      <div className="w-full max-w-6xl mx-auto">
+        <div className="max-w-6xl mx-auto">
+          <form onSubmit={handleSendCode} className="space-y-8">
+            <div className="space-y-2">
+              <Label htmlFor="phone">Teléfono</Label>
+              <div className="flex gap-2">
+                <Select value={selectedCountry.code} onValueChange={handleCountryChange}>
+                  <SelectTrigger className="w-[180px] rounded-lg">
+                    <SelectValue placeholder="Selecciona país" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {countries.map((country) => (
+                      <SelectItem key={country.code} value={country.code}>
+                        {country.prefix} {country.name}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+                <Input
+                  id="phone"
+                  type="tel"
+                  placeholder="6XX XXX XXX"
+                  value={phone}
+                  onChange={handlePhoneChange}
+                  className="flex-1 focus:ring-0 focus-visible:ring-0 focus-visible:ring-offset-0 focus:ring-offset-0"
+                />
               </div>
             </div>
-          </>}
+            {phone.length >= 9 && (
+              <Button 
+                variant="terciary"
+                type="submit" 
+                className="px-12"
+                disabled={isLoading}
+                isLoading={isLoading}
+              >
+                {isLoading ? "Enviando" : "Enviar código"}
+              </Button>
+            )}
+          </form>
+        </div>
       </div>
-    </div>;
+
+      <Dialog open={showVerificationDialog} onOpenChange={setShowVerificationDialog}>
+        <DialogContent className="sm:max-w-xl">
+          <DialogHeader>
+            <Button 
+              variant="ghost" 
+              size="icon" 
+              className="absolute left-4 top-4"
+              onClick={handleBack}
+            >
+              <ChevronLeft className="h-4 w-4" />
+            </Button>
+            <DialogTitle className="text-center">Verifica tu teléfono</DialogTitle>
+          </DialogHeader>
+
+          <form onSubmit={handleVerificationSubmit} className="space-y-8 px-12">
+            <div className="space-y-2 flex flex-col items-center justify-center">
+              <p className="text-sm font-light mb-4 text-black">
+                Inserta el código que te hemos enviado por SMS a {selectedCountry.prefix}{phone}
+              </p>
+              <InputOTP
+                value={code}
+                onChange={(value) => setCode(value)}
+                maxLength={6}
+              >
+                <InputOTPGroup className="gap-2">
+                  {[0, 1, 2, 3, 4, 5].map((i) => (
+                    <InputOTPSlot
+                      key={i}
+                      index={i}
+                      className="rounded-md bg-[#F7F7F7] w-10 h-12 text-center text-lg focus:ring-0 focus:outline-none"
+                    />
+                  ))}
+                </InputOTPGroup>
+              </InputOTP>
+            </div>
+            <div className="flex gap-2 justify-between">
+              <Button 
+                variant="secondary"
+                type="button"
+                onClick={handleResendCode}
+                isLoading={resendLoading}
+              >
+                {resendLoading ? "Enviando" : "Volver a enviar"}
+              </Button>
+              <Button 
+                variant="terciary"
+                type="submit" 
+                disabled={code.length !== 6 || isLoading}
+                isLoading={isLoading}
+                className="px-12"
+              >
+                {isLoading ? "Verificando" : "Verificar código"}
+              </Button>
+            </div>
+          </form>
+        </DialogContent>
+      </Dialog>
+
+      <Dialog open={showConfirmationDialog} onOpenChange={handleCloseConfirmation}>
+        <DialogContent className="sm:max-w-xl">
+          <DialogHeader>
+            <DialogTitle className="text-center">
+              {isCodeCorrect ? "¡Código correcto!" : "Código incorrecto"}
+            </DialogTitle>
+          </DialogHeader>
+
+          <div className="flex flex-col items-center justify-center space-y-6 px-12 py-4">
+            <div className={`rounded-full p-4 ${isCodeCorrect ? 'bg-[#E4F9E4]' : 'bg-red-100'}`}>
+              {isCodeCorrect ? (
+                <Check className="h-8 w-8 text-green-500" />
+              ) : (
+                <X className="h-8 w-8 text-red-500" />
+              )}
+            </div>
+            <p className="text-center text-sm font-light">
+              {isCodeCorrect 
+                ? "Tu teléfono ha sido verificado correctamente"
+                : "El código introducido no es correcto. Por favor, inténtalo de nuevo."}
+            </p>
+            <Button 
+              variant="terciary"
+              onClick={handleCloseConfirmation}
+              className="w-full"
+            >
+              {isCodeCorrect ? "Continuar" : "Volver a intentar"}
+            </Button>
+          </div>
+        </DialogContent>
+      </Dialog>
+    </>
+  );
 };
+
 export default PhoneVerificationStep;

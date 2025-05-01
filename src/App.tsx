@@ -9,6 +9,7 @@ import ArtistsPage from './pages/ArtistsPage';
 import ArtistProfilePage from './pages/ArtistProfilePage';
 import ArtistBenefitsPage from './pages/ArtistBenefitsPage';
 import ArtistOnboardingPage from './pages/ArtistOnboardingPage';
+import ConfirmationPage from './pages/ConfirmationPage';
 import NotFound from './pages/NotFound';
 import { Toaster } from "@/components/ui/toaster";
 import LandingArtist from './pages/LandingArtist';
@@ -36,6 +37,7 @@ function App() {
           <Route path="/artista/:id" element={<ArtistProfilePage />} />
           <Route path="/artist-benefits" element={<ArtistBenefitsPage />} />
           <Route path="/artist-onboarding" element={<ArtistOnboardingPage />} />
+          <Route path="/confirmation" element={<ConfirmationPage />} />
           <Route path="/landing-artist" element={<LandingArtist />} />
           
           {/* Dashboard Routes */}
