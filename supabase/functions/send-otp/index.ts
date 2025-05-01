@@ -119,8 +119,9 @@ serve(async (req) => {
 
     // Enviar el correo con el código OTP
     try {
+      // Usar onboarding@resend.dev como remitente temporal hasta que el dominio esté verificado
       const emailResponse = await resend.emails.send({
-        from: "Vyba <noreply@vyba.app>",
+        from: "VYBA <onboarding@resend.dev>", // Usar el dominio onboarding de Resend
         to: [email],
         subject: "Tu código de verificación para Vyba",
         html: `
