@@ -28,11 +28,13 @@ const LoginDialog = ({ open, onOpenChange, onSuccess }: LoginDialogProps) => {
   const [showVerified, setShowVerified] = useState<'verified' | 'not-registered' | 'google' | false>(false);
   const [emailError, setEmailError] = useState(false);
   const [passwordError, setPasswordError] = useState(false);
+  const [errorMessage, setErrorMessage] = useState('');
 
   const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
     setEmail(value);
     setEmailError(false);
+    setErrorMessage('');
 
     if (emailVerificationTimeout) {
       clearTimeout(emailVerificationTimeout);
@@ -54,6 +56,7 @@ const LoginDialog = ({ open, onOpenChange, onSuccess }: LoginDialogProps) => {
             setShowVerified('verified');
           } else if (error.message.includes("not found")) {
             setShowVerified('not-registered');
+            setErrorMessage('Este correo no está registrado');
           }
         } catch (err) {
           console.error("Error al verificar email:", err);
@@ -70,16 +73,20 @@ const LoginDialog = ({ open, onOpenChange, onSuccess }: LoginDialogProps) => {
   const handlePasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setPassword(e.target.value);
     setPasswordError(false);
+    setErrorMessage('');
   };
 
   const handleEmailSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!email) {
       setEmailError(true);
+      setErrorMessage('Por favor, introduce tu email');
       return;
     }
     
     if (showVerified === 'not-registered') {
+      setEmailError(true);
+      setErrorMessage('Este correo no está registrado');
       toast.error("Este correo no está registrado");
       return;
     }
@@ -97,6 +104,8 @@ const LoginDialog = ({ open, onOpenChange, onSuccess }: LoginDialogProps) => {
       if (error) {
         // Si el error es que el correo no está registrado
         if (error.message.includes("not found")) {
+          setEmailError(true);
+          setErrorMessage('Este correo no está registrado');
           toast.error("Este correo no está registrado");
           setIsLoading(false);
           return;
@@ -104,6 +113,8 @@ const LoginDialog = ({ open, onOpenChange, onSuccess }: LoginDialogProps) => {
         
         // Si el error es que el correo no está confirmado
         if (error.message.includes("Email not confirmed")) {
+          setEmailError(true);
+          setErrorMessage('Correo no confirmado. Por favor, confirma tu correo antes de iniciar sesión');
           toast.error("Correo no confirmado", {
             description: "Por favor, confirma tu correo electrónico antes de iniciar sesión"
           });
@@ -117,6 +128,8 @@ const LoginDialog = ({ open, onOpenChange, onSuccess }: LoginDialogProps) => {
       setCurrentStep('password');
     } catch (error: any) {
       console.error("Error al verificar email:", error);
+      setEmailError(true);
+      setErrorMessage('Error al verificar el correo');
       toast.error("Error al verificar el correo");
     } finally {
       setIsLoading(false);
@@ -127,6 +140,7 @@ const LoginDialog = ({ open, onOpenChange, onSuccess }: LoginDialogProps) => {
     e.preventDefault();
     if (!password) {
       setPasswordError(true);
+      setErrorMessage('Por favor, introduce tu contraseña');
       return;
     }
 
@@ -145,12 +159,16 @@ const LoginDialog = ({ open, onOpenChange, onSuccess }: LoginDialogProps) => {
       // Manejar errores específicos
       if (error) {
         if (error.message.includes("Email not confirmed")) {
+          setErrorMessage('Correo no confirmado. Por favor, confirma tu correo antes de iniciar sesión');
           toast.error("Correo no confirmado", {
             description: "Por favor, confirma tu correo electrónico antes de iniciar sesión"
           });
         } else if (error.message.includes("Invalid login")) {
+          setPasswordError(true);
+          setErrorMessage('Contraseña incorrecta. Por favor, verifica tus credenciales');
           toast.error("Contraseña incorrecta");
         } else {
+          setErrorMessage(`Error de inicio de sesión: ${error.message}`);
           toast.error(`Error de inicio de sesión: ${error.message}`);
         }
         console.error("Error de autenticación:", error);
@@ -182,10 +200,12 @@ const LoginDialog = ({ open, onOpenChange, onSuccess }: LoginDialogProps) => {
         setCurrentStep('email');
         setEmail('');
         setPassword('');
+        setErrorMessage('');
       }, 300);
     } catch (error: any) {
       // Capturar errores generales (como problemas de red)
       console.error("Error al iniciar sesión:", error);
+      setErrorMessage('Error de conexión. No se pudo conectar con el servidor');
       toast.error("Error de conexión", {
         description: "No se pudo conectar con el servidor. Por favor, inténtalo más tarde."
       });
@@ -197,6 +217,7 @@ const LoginDialog = ({ open, onOpenChange, onSuccess }: LoginDialogProps) => {
   const handleBack = () => {
     if (currentStep === 'password') {
       setCurrentStep('email');
+      setErrorMessage('');
     }
   };
 
@@ -206,6 +227,7 @@ const LoginDialog = ({ open, onOpenChange, onSuccess }: LoginDialogProps) => {
       setCurrentStep('email');
       setEmail('');
       setPassword('');
+      setErrorMessage('');
     }, 300);
   };
 
@@ -255,7 +277,7 @@ const LoginDialog = ({ open, onOpenChange, onSuccess }: LoginDialogProps) => {
                   emailError && "border-[#C13515]"
                 )}
               />
-              {emailError && <p className="text-sm text-[#C13515]">Por favor, introduce tu email</p>}
+              {emailError && <p className="text-sm text-[#C13515]">{errorMessage || 'Por favor, introduce tu email'}</p>}
             </div>
             <Button 
               variant="terciary"
@@ -290,7 +312,8 @@ const LoginDialog = ({ open, onOpenChange, onSuccess }: LoginDialogProps) => {
                   passwordError && "border-[#C13515]"
                 )}
               />
-              {passwordError && <p className="text-sm text-[#C13515]">Por favor, introduce tu contraseña</p>}
+              {passwordError && <p className="text-sm text-[#C13515]">{errorMessage || 'Por favor, introduce tu contraseña'}</p>}
+              {errorMessage && !passwordError && <p className="text-sm text-[#C13515]">{errorMessage}</p>}
               <p className="text-xs text-gray-500">
                 ¿Has olvidado tu contraseña? <span className="font-medium cursor-pointer">Recupérala aquí</span>
               </p>
