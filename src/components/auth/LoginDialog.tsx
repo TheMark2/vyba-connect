@@ -56,6 +56,7 @@ const LoginDialog = ({ open, onOpenChange, onSuccess }: LoginDialogProps) => {
             setShowVerified('verified');
           } else if (error.message.includes("not found")) {
             setShowVerified('not-registered');
+            setEmailError(true);
             setErrorMessage('Este correo no está registrado');
           }
         } catch (err) {
@@ -102,7 +103,7 @@ const LoginDialog = ({ open, onOpenChange, onSuccess }: LoginDialogProps) => {
       });
 
       if (error) {
-        // Si el error es que el correo no está registrado
+        // Si el error es que el correo no está registrado, mostrar mensaje claro
         if (error.message.includes("not found")) {
           setEmailError(true);
           setErrorMessage('Este correo no está registrado');
@@ -187,8 +188,8 @@ const LoginDialog = ({ open, onOpenChange, onSuccess }: LoginDialogProps) => {
       // Cerrar el diálogo
       onOpenChange(false);
       
-      // Redirigir directamente al dashboard - este es el cambio clave
-      navigate('/dashboard');
+      // Redirigir al dashboard y asegurarnos que navegamos explícitamente
+      navigate('/dashboard', { replace: true });
       
       // Si existe una función onSuccess adicional, llamarla también
       if (onSuccess) {
@@ -276,6 +277,7 @@ const LoginDialog = ({ open, onOpenChange, onSuccess }: LoginDialogProps) => {
                   "focus:ring-0 focus-visible:ring-0 focus-visible:ring-offset-0 focus:ring-offset-0",
                   emailError && "border-[#C13515]"
                 )}
+                error={emailError}
               />
               {emailError && <p className="text-sm text-[#C13515]">{errorMessage || 'Por favor, introduce tu email'}</p>}
             </div>
@@ -311,6 +313,7 @@ const LoginDialog = ({ open, onOpenChange, onSuccess }: LoginDialogProps) => {
                   "focus:ring-0 focus-visible:ring-0 focus-visible:ring-offset-0 focus:ring-offset-0",
                   passwordError && "border-[#C13515]"
                 )}
+                error={passwordError}
               />
               {passwordError && <p className="text-sm text-[#C13515]">{errorMessage || 'Por favor, introduce tu contraseña'}</p>}
               {errorMessage && !passwordError && <p className="text-sm text-[#C13515]">{errorMessage}</p>}
