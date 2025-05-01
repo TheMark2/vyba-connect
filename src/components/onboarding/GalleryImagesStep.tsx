@@ -1,10 +1,11 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Images, ImagePlus, X, Trash2, Loader2 } from 'lucide-react';
 import { Badge } from "@/components/ui/badge";
 import { toast } from "@/hooks/use-toast";
 import { Skeleton } from "@/components/ui/skeleton";
+
 interface GalleryImage {
   id: string;
   file: File;
@@ -13,13 +14,17 @@ interface GalleryImage {
   isSelected?: boolean;
   isLoading?: boolean;
 }
+
 interface GalleryImagesStepProps {
   onImagesChange: (images: File[]) => void;
   initialImages?: File[];
+  initialPreviews?: string[];
 }
+
 const GalleryImagesStep: React.FC<GalleryImagesStepProps> = ({
   onImagesChange,
-  initialImages = []
+  initialImages = [],
+  initialPreviews = []
 }) => {
   const [images, setImages] = useState<GalleryImage[]>([]);
   const [selectedImages, setSelectedImages] = useState<string[]>([]);
@@ -27,6 +32,21 @@ const GalleryImagesStep: React.FC<GalleryImagesStepProps> = ({
   const [draggedImage, setDraggedImage] = useState<string | null>(null);
   const [dragOverImage, setDragOverImage] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(false);
+
+  // Inicializar las imágenes con las previamente guardadas
+  useEffect(() => {
+    if (initialImages.length > 0 && initialPreviews.length > 0) {
+      const initialGalleryImages = initialImages.map((file, index) => ({
+        id: Math.random().toString(36).substring(2, 9),
+        file,
+        preview: initialPreviews[index],
+        isMain: index === 0,
+        isLoading: false
+      }));
+      setImages(initialGalleryImages);
+    }
+  }, []);
+
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const selectedFiles = e.target.files;
     if (!selectedFiles || selectedFiles.length === 0) return;
@@ -47,7 +67,6 @@ const GalleryImagesStep: React.FC<GalleryImagesStepProps> = ({
         id: Math.random().toString(36).substring(2, 9),
         file,
         preview: URL.createObjectURL(file),
-        // Solo la primera imagen del lote es main si no hay imágenes previas
         isMain: images.length === 0 && index === 0,
         isLoading: true
       };
@@ -67,8 +86,10 @@ const GalleryImagesStep: React.FC<GalleryImagesStepProps> = ({
       fileInputRef.current.value = '';
     }
 
-    // Simulate image processing delay (you can remove this in production if not needed)
-    // Process each image individually with different timing to make it more realistic
+    // Notificar cambios inmediatamente
+    onImagesChange(updatedImages.map(img => img.file));
+
+    // Simular carga y actualizar estado de loading
     newImageFiles.forEach((img, index) => {
       setTimeout(() => {
         setImages(prevImages => {
@@ -82,17 +103,10 @@ const GalleryImagesStep: React.FC<GalleryImagesStepProps> = ({
           }
           return newImages;
         });
-
-        // Only update onImagesChange after all images are loaded
-        if (index === newImageFiles.length - 1) {
-          setTimeout(() => {
-            // Call the onImagesChange prop with all files
-            onImagesChange(updatedImages.map(img => img.file));
-          }, 100);
-        }
-      }, 1000 + index * 500); // Stagger the loading times a bit
+      }, 1000 + index * 500);
     });
   };
+
   const handleRemoveImage = (id: string) => {
     const removedImage = images.find(img => img.id === id);
     const updatedImages = images.filter(img => img.id !== id);
@@ -107,6 +121,7 @@ const GalleryImagesStep: React.FC<GalleryImagesStepProps> = ({
     // Remove from selected images if present
     setSelectedImages(prevSelected => prevSelected.filter(imgId => imgId !== id));
   };
+
   const handleSetMainImage = (id: string) => {
     const updatedImages = images.map(img => ({
       ...img,
@@ -115,6 +130,7 @@ const GalleryImagesStep: React.FC<GalleryImagesStepProps> = ({
     setImages(updatedImages);
     onImagesChange(updatedImages.map(img => img.file));
   };
+
   const handleAddImages = () => {
     if (images.length >= 5) {
       toast({
@@ -126,6 +142,7 @@ const GalleryImagesStep: React.FC<GalleryImagesStepProps> = ({
     }
     fileInputRef.current?.click();
   };
+
   const toggleImageSelection = (id: string, e: React.MouseEvent<HTMLDivElement>) => {
     // Crear el efecto radial como en los botones
     const card = e.currentTarget;
@@ -152,6 +169,7 @@ const GalleryImagesStep: React.FC<GalleryImagesStepProps> = ({
       }
     });
   };
+
   const handleDeleteSelected = () => {
     // First check if we're removing the main image
     const isRemovingMainImage = selectedImages.some(id => images.find(img => img.id === id)?.isMain);
@@ -189,20 +207,24 @@ const GalleryImagesStep: React.FC<GalleryImagesStepProps> = ({
     img.src = images.find(img => img.id === id)?.preview || '';
     e.dataTransfer.setDragImage(img, 50, 50);
   };
+
   const handleDragEnd = (e: React.DragEvent<HTMLDivElement>) => {
     setDraggedImage(null);
     setDragOverImage(null);
     // Remove drag styling
     e.currentTarget.classList.remove('opacity-50', 'scale-95');
   };
+
   const handleDragOver = (e: React.DragEvent<HTMLDivElement>, id: string) => {
     e.preventDefault();
     if (draggedImage === id) return; // Don't highlight if dragging over self
     setDragOverImage(id);
   };
+
   const handleDragLeave = () => {
     setDragOverImage(null);
   };
+
   const handleDrop = (e: React.DragEvent<HTMLDivElement>, targetId: string) => {
     e.preventDefault();
     if (!draggedImage || draggedImage === targetId) {
@@ -244,6 +266,7 @@ const GalleryImagesStep: React.FC<GalleryImagesStepProps> = ({
       targetElem.classList.remove('scale-105');
     }, 300);
   };
+
   return <div className="flex flex-col items-center justify-center w-full pt-8">
       <div className="w-full text-center">
         
@@ -329,4 +352,5 @@ const GalleryImagesStep: React.FC<GalleryImagesStepProps> = ({
       </div>
     </div>;
 };
+
 export default GalleryImagesStep;

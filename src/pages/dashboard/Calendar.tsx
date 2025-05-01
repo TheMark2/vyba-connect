@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Button } from "@/components/ui/button";
-import { Calendar as CalendarIcon, Plus, ChevronLeft, ChevronRight, Clock, MapPin, X, Flame, Settings, Bell, Filter, Download, CalendarClock, CalendarDays, Calendar, CalendarFold, EyeOff, ChartSpline, Menu, LayoutDashboard, User, MessageSquare, BarChart, ArrowLeft } from "lucide-react";
+import { Calendar as CalendarIcon, Plus, ChevronLeft, ChevronRight, Clock, MapPin, X, Flame, Settings, Bell, Filter, Download, CalendarClock, CalendarDays, Calendar, CalendarFold, EyeOff, ChartSpline, Menu, LayoutDashboard, User, MessageSquare, BarChart, ArrowLeft, CopyPlus, CircleOff } from "lucide-react";
 import {
   Select,
   SelectContent,
@@ -40,7 +40,8 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/carousel";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { useSwipeable } from 'react-swipeable';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation, useParams } from 'react-router-dom';
+import { cn } from "@/lib/utils";
 
 type CalendarView = 'month' | 'year';
 
@@ -132,6 +133,27 @@ const CalendarPage = () => {
   });
 
   const navigate = useNavigate();
+  const location = useLocation();
+  const { tab } = useParams<{ tab?: string }>();
+  const currentTab = tab || 'general';
+
+  // Efecto para forzar vista mensual en móviles
+  React.useEffect(() => {
+    const handleResize = () => {
+      if (window.innerWidth < 768 && view === 'year') {
+        setView('month');
+      }
+    };
+    
+    // Verificar al cargar
+    handleResize();
+    
+    // Agregar listener para cambios de tamaño
+    window.addEventListener('resize', handleResize);
+    
+    // Limpiar listener
+    return () => window.removeEventListener('resize', handleResize);
+  }, [view]);
 
   const getEventColor = (type: Event['type'], isMultiDay: boolean = false) => {
     if (isMultiDay) {
@@ -463,7 +485,7 @@ const CalendarPage = () => {
     return (
       <div className="space-y-6">
         <div className="space-y-2">
-          <h3 className="text-2xl font-medium">
+          <h3 className="text-xl font-medium">
             ¿Tienes disponibilidad para la semana del {format(startOfNextWeek, 'd MMMM', { locale: es })}?
           </h3>
           <p className="text-sm text-vyba-tertiary font-light">Selecciona una opción para indicar tu disponibilidad, mediante la disponibilidad, puedes atraer a clientes de última hora</p>
@@ -603,7 +625,7 @@ const CalendarPage = () => {
   };
 
   return (
-    <div className="h-full">
+    <div className="h-full border-t border-gray-200">
       <div className="grid grid-cols-1 lg:grid-cols-4 h-full">
         <div className="h-full lg:col-span-3 overflow-y-auto" onScroll={handleScroll}>
           <div className="sticky top-0 bg-white/50 backdrop-blur-sm md:backdrop-blur-none md:bg-white z-10 flex flex-col py-2 px-4">
@@ -638,7 +660,7 @@ const CalendarPage = () => {
                   </SelectTrigger>
                   <SelectContent>
                     <SelectItem value="month">Vista mensual</SelectItem>
-                    <SelectItem value="year">Vista anual</SelectItem>
+                    <SelectItem value="year" className="hidden md:flex">Vista anual</SelectItem>
                   </SelectContent>
                 </Select>
               </div>
@@ -657,29 +679,53 @@ const CalendarPage = () => {
           </div>
           {view === 'year' ? renderYearView() : renderAllMonthsView()}
         </div>
-        <div className={`fixed inset-0 bg-white z-20 transition-transform transform ${isDrawerOpen ? 'translate-y-0' : 'translate-y-full'} md:relative md:translate-y-0 md:block`}>
-          <Tabs defaultValue={activeTab} className="mt-6" onValueChange={setActiveTab}>
-            <TabsList className="w-full shadow-none">
-              <TabsTrigger value="general" className="flex-1 shadow-none">General</TabsTrigger>
-              <TabsTrigger value="events" className="flex-1 shadow-none">Eventos</TabsTrigger>
-              <TabsTrigger value="availability" className="flex-1 shadow-none">Disponibilidad</TabsTrigger>
-            </TabsList>
-            <div className="p-6 space-y-6 h-[calc(100%-8rem)] overflow-auto">
-              {activeTab === 'general' && (
+        <div className={`fixed inset-0 bg-white z-20 transition-transform transform ${isDrawerOpen ? 'translate-y-0' : 'translate-y-full'} md:relative md:translate-y-0 md:block md:border-l md:border-gray-200 md:px-6`}>
+          <div className="mt-6">
+            <div className="flex items-center gap-2 justify-start border-b border-gray-200 w-full">
+              <button
+                onClick={() => navigate('/dashboard/calendar/general')}
+                className={cn(
+                  "text-sm font-medium text-vyba-tertiary hover:text-vyba-navy rounded-full px-6 py-3 transition-all duration-300 ease-in-out hover:bg-vyba-gray",
+                  currentTab === 'general' && "relative text-vyba-navy after:content-[''] after:absolute after:left-1/2 after:-translate-x-1/2 after:bottom-0 after:w-6 after:h-[2px] after:bg-vyba-navy after:rounded-full"
+                )}
+              >
+                General
+              </button>
+              <button
+                onClick={() => navigate('/dashboard/calendar/events')}
+                className={cn(
+                  "text-sm font-medium text-vyba-tertiary hover:text-vyba-navy rounded-full px-6 py-3 transition-all duration-300 ease-in-out hover:bg-vyba-gray",
+                  currentTab === 'events' && "relative text-vyba-navy after:content-[''] after:absolute after:left-1/2 after:-translate-x-1/2 after:bottom-0 after:w-6 after:h-[2px] after:bg-vyba-navy after:rounded-full"
+                )}
+              >
+                Eventos
+              </button>
+              <button
+                onClick={() => navigate('/dashboard/calendar/availability')}
+                className={cn(
+                  "text-sm font-medium text-vyba-tertiary hover:text-vyba-navy rounded-full px-6 py-3 transition-all duration-300 ease-in-out hover:bg-vyba-gray",
+                  currentTab === 'availability' && "relative text-vyba-navy after:content-[''] after:absolute after:left-1/2 after:-translate-x-1/2 after:bottom-0 after:w-6 after:h-[2px] after:bg-vyba-navy after:rounded-full"
+                )}
+              >
+                Disponibilidad
+              </button>
+            </div>
+            <div className="py-6 space-y-6 h-[calc(100%-8rem)] overflow-auto">
+              {currentTab === 'general' && (
                 <div className="space-y-8">
                   <div className="space-y-2">
-                    <h3 className="text-2xl font-medium">
+                    <h3 className="text-xl font-medium">
                       ¿Tienes un evento en el calendario?
                     </h3>
                   </div>
                   <div>
                     <div className="flex gap-2">
                       <Button 
-                        variant="secondary" 
+                        variant="terciary" 
                         className="w-full"
                         onClick={() => setShowEventDialog(true)}
                       >
-                        <Plus className="mr-2 h-4 w-4" />
+                        <CopyPlus className="mr-2 h-4 w-4" />
                         Añadir evento
                       </Button>
                     </div>
@@ -687,7 +733,7 @@ const CalendarPage = () => {
 
                   <div>
                     <div className="space-y-1">
-                      <h3 className="text-2xl font-medium text-vyba-navy">Eventos disponibles</h3>
+                      <h3 className="text-xl font-medium text-vyba-navy">Eventos disponibles</h3>
                       <p className="text-sm text-vyba-tertiary font-light">Aquí puedes ver todos tus eventos</p>
                     </div>
                     <div className="mt-4 bg-vyba-gray rounded-lg p-6 space-y-4">
@@ -728,22 +774,15 @@ const CalendarPage = () => {
                 </div>
               )}
 
-              {activeTab === 'events' && (
+              {currentTab === 'events' && (
                 <div className="space-y-6">
                   <div className="flex items-center justify-between">
-                    <h3 className="text-2xl font-medium">
+                    <h3 className="text-xl font-medium">
                       {selectedEventType === null ? 'Todos los eventos' : 
                        selectedEventType === 'ensayo' ? 'Ensayos' :
                        selectedEventType === 'bolo' ? 'Bolos' :
                        selectedEventType === 'reunion' ? 'Reuniones' : 'Otros eventos'}
                     </h3>
-                    <Button 
-                      variant="ghost" 
-                      size="icon"
-                      onClick={() => setActiveTab('general')}
-                    >
-                      <X className="h-4 w-4" />
-                    </Button>
                   </div>
                   <div className="flex justify-start mb-4">
                     <Button 
@@ -755,8 +794,12 @@ const CalendarPage = () => {
                   </div>
                   <div className="space-y-4">
                     {sortedEvents.length === 0 ? (
-                      <div className="text-center py-8 text-vyba-tertiary">
-                        No hay eventos en esta categoría
+                      <div className="flex flex-col items-center justify-center gap-4 pt-8">
+                        <CircleOff className="w-8 h-8 text-vyba-tertiary" />
+                        <p className="text-center text-vyba-tertiary mb-0 text-base font-regular">
+                          No hay eventos todavía
+                        </p>
+                        <Button variant="terciary" onClick={() => setShowEventDialog(true)}>Añadir evento</Button>
                       </div>
                     ) : (
                       sortedEvents.map(event => (
@@ -791,9 +834,9 @@ const CalendarPage = () => {
                 </div>
               )}
 
-              {activeTab === 'availability' && renderAvailabilityTab()}
+              {currentTab === 'availability' && renderAvailabilityTab()}
             </div>
-          </Tabs>
+          </div>
         </div>
       </div>
 
@@ -898,79 +941,79 @@ const CalendarPage = () => {
               <div className="space-y-4">
                 <div className="space-y-2">
                   <Label htmlFor="editTitle">Título</Label>
-                <Input
-                  id="editTitle"
-                  value={eventToEdit.title}
-                  onChange={(e) => setEventToEdit({ ...eventToEdit, title: e.target.value })}
-                />
-              </div>
-              <div className="grid grid-cols-2 gap-4">
-                <div className="space-y-2">
-                  <Label htmlFor="editStartDate">Fecha inicio</Label>
                   <Input
-                    id="editStartDate"
-                    type="date"
-                    value={format(eventToEdit.startDate, 'yyyy-MM-dd')}
-                    onChange={(e) => setEventToEdit({ ...eventToEdit, startDate: new Date(e.target.value) })}
+                    id="editTitle"
+                    value={eventToEdit.title}
+                    onChange={(e) => setEventToEdit({ ...eventToEdit, title: e.target.value })}
+                  />
+                </div>
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="space-y-2">
+                    <Label htmlFor="editStartDate">Fecha inicio</Label>
+                    <Input
+                      id="editStartDate"
+                      type="date"
+                      value={format(eventToEdit.startDate, 'yyyy-MM-dd')}
+                      onChange={(e) => setEventToEdit({ ...eventToEdit, startDate: new Date(e.target.value) })}
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="editEndDate">Fecha fin</Label>
+                    <Input
+                      id="editEndDate"
+                      type="date"
+                      value={format(eventToEdit.endDate, 'yyyy-MM-dd')}
+                      onChange={(e) => setEventToEdit({ ...eventToEdit, endDate: new Date(e.target.value) })}
+                    />
+                  </div>
+                </div>
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="space-y-2">
+                    <Label htmlFor="editStartTime">Hora inicio</Label>
+                    <Input
+                      id="editStartTime"
+                      type="time"
+                      value={eventToEdit.startTime}
+                      onChange={(e) => setEventToEdit({ ...eventToEdit, startTime: e.target.value })}
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="editEndTime">Hora fin</Label>
+                    <Input
+                      id="editEndTime"
+                      type="time"
+                      value={eventToEdit.endTime}
+                      onChange={(e) => setEventToEdit({ ...eventToEdit, endTime: e.target.value })}
+                    />
+                  </div>
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="editLocation">Ubicación</Label>
+                  <Input
+                    id="editLocation"
+                    value={eventToEdit.location}
+                    onChange={(e) => setEventToEdit({ ...eventToEdit, location: e.target.value })}
                   />
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="editEndDate">Fecha fin</Label>
-                  <Input
-                    id="editEndDate"
-                    type="date"
-                    value={format(eventToEdit.endDate, 'yyyy-MM-dd')}
-                    onChange={(e) => setEventToEdit({ ...eventToEdit, endDate: new Date(e.target.value) })}
-                  />
+                  <Label htmlFor="editType">Tipo de evento</Label>
+                  <Select
+                    value={eventToEdit.type}
+                    onValueChange={(value) => setEventToEdit({ ...eventToEdit, type: value as Event['type'] })}
+                  >
+                    <SelectTrigger>
+                      <SelectValue placeholder="Selecciona un tipo" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="ensayo">Ensayo</SelectItem>
+                      <SelectItem value="bolo">Bolo</SelectItem>
+                      <SelectItem value="reunion">Reunión</SelectItem>
+                      <SelectItem value="otro">Otro</SelectItem>
+                    </SelectContent>
+                  </Select>
                 </div>
               </div>
-              <div className="grid grid-cols-2 gap-4">
-                <div className="space-y-2">
-                  <Label htmlFor="editStartTime">Hora inicio</Label>
-                  <Input
-                    id="editStartTime"
-                    type="time"
-                    value={eventToEdit.startTime}
-                    onChange={(e) => setEventToEdit({ ...eventToEdit, startTime: e.target.value })}
-                  />
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="editEndTime">Hora fin</Label>
-                  <Input
-                    id="editEndTime"
-                    type="time"
-                    value={eventToEdit.endTime}
-                    onChange={(e) => setEventToEdit({ ...eventToEdit, endTime: e.target.value })}
-                  />
-                </div>
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="editLocation">Ubicación</Label>
-                <Input
-                  id="editLocation"
-                  value={eventToEdit.location}
-                  onChange={(e) => setEventToEdit({ ...eventToEdit, location: e.target.value })}
-                />
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="editType">Tipo de evento</Label>
-                <Select
-                  value={eventToEdit.type}
-                  onValueChange={(value) => setEventToEdit({ ...eventToEdit, type: value as Event['type'] })}
-                >
-                  <SelectTrigger>
-                    <SelectValue placeholder="Selecciona un tipo" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="ensayo">Ensayo</SelectItem>
-                    <SelectItem value="bolo">Bolo</SelectItem>
-                    <SelectItem value="reunion">Reunión</SelectItem>
-                    <SelectItem value="otro">Otro</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-            </div>
-          )}
+            )}
           </div>
           <DialogFooter className="px-12 justify-between mt-4" >
             <Button variant="secondary" onClick={() => setShowEditDialog(false)}>Cerrar</Button>

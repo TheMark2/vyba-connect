@@ -46,6 +46,7 @@ function App() {
           <Route path="/dashboard/messages" element={<DashboardLayout><Messages /></DashboardLayout>} />
           <Route path="/dashboard/analytics" element={<DashboardLayout><Analytics /></DashboardLayout>} />
           <Route path="/dashboard/calendar" element={<DashboardLayout><CalendarPage /></DashboardLayout>} />
+          <Route path="/dashboard/calendar/:tab" element={<DashboardLayout><CalendarPage /></DashboardLayout>} />
 
           {/* Artist Type Routes */}
           <Route path="/artist-type/djs" element={<Djs />} />

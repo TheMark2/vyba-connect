@@ -5,7 +5,7 @@ import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
 import { toast } from "sonner";
 import { useIsMobile } from "@/hooks/use-mobile";
-import LoginDialog from "@/components/auth/LoginDialog";
+import AuthDialog from "@/components/auth/authdialog";
 
 interface ArtistProfileCardProps {
   name: string;
@@ -405,7 +405,7 @@ const ArtistProfileCard = ({
         )}
       </div>
       
-      <LoginDialog open={showLoginDialog} onOpenChange={setShowLoginDialog} />
+      <AuthDialog open={showLoginDialog} onOpenChange={setShowLoginDialog} />
     </>;
 };
 

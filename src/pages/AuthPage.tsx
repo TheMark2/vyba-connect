@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -6,6 +5,7 @@ import { Link } from "react-router-dom";
 import { Mail } from "lucide-react";
 import Navbar from "@/components/Navbar";
 import RegisterDialog from '@/components/auth/RegisterDialog';
+import LoginDialog from '@/components/auth/LoginDialog';
 import WelcomeDialog from '@/components/WelcomeDialog';
 import { useNavigate } from 'react-router-dom';
 
@@ -16,6 +16,7 @@ const mockEmailDatabase = {
 
 const AuthPage = () => {
   const [showEmailForm, setShowEmailForm] = useState(false);
+  const [showLoginDialog, setShowLoginDialog] = useState(false);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [showVerified, setShowVerified] = useState<'verified' | 'not-registered' | 'google' | false>(false);
@@ -30,7 +31,7 @@ const AuthPage = () => {
 
   const handleShowEmailForm = () => {
     if (!showEmailForm) {
-      setShowEmailForm(true);
+      setShowLoginDialog(true);
     }
   };
 
@@ -101,6 +102,10 @@ const AuthPage = () => {
     };
   }, [emailVerificationTimeout]);
 
+  const handleLoginSuccess = () => {
+    navigate('/dashboard');
+  };
+
   return (
     <main className="min-h-screen bg-white dark:bg-vyba-dark-bg flex flex-col">
       <Navbar />
@@ -149,35 +154,11 @@ const AuthPage = () => {
         </div>
       </div>
 
-      {showEmailForm && (
-        <form onSubmit={handleLogin} className="space-y-6 mt-16 max-w-sm mx-auto">
-          <div className="space-y-2">
-            <label htmlFor="email" className={`block font-bold ${emailError ? 'text-[#C13515]' : ''}`}>Email</label>
-            <Input id="email" type="email" placeholder="ramón.prado@vybapp.com" className="w-full bg-[#F7F7F7]" value={email} onChange={handleEmailChange} showVerified={showVerified} error={emailError} />
-            {emailError && <p className="text-sm text-[#C13515]">Por favor, introduce tu email</p>}
-            <p className="text-xs text-gray-500">
-              Prueba con: usuario@vybapp.com o google@vybapp.com
-            </p>
-          </div>
-
-          <div className="space-y-2">
-            <label htmlFor="password" className={`block font-bold ${passwordError ? 'text-[#C13515]' : ''}`}>Contraseña</label>
-            <Input id="password" type="password" placeholder="••••••••" className="w-full bg-[#F7F7F7]" value={password} onChange={handlePasswordChange} error={passwordError} />
-            {passwordError && <p className="text-sm text-[#C13515]">Por favor, introduce tu contraseña</p>}
-            <p className="text-xs text-gray-500">
-              ¿Has olvidado tu contraseña? <Link to="/reset-password" className="font-medium">Recupérala aquí</Link>
-            </p>
-          </div>
-          <div className="w-full flex justify-center">
-            <Button type="submit" className="px-16" isLoading={isLoading}>
-              Iniciar sesión
-            </Button>
-          </div>
-          <div className="text-center text-sm">
-            <p>No tienes cuenta. <Link to="/register" className="font-bold">Regístrate</Link></p>
-          </div>
-        </form>
-      )}
+      <LoginDialog
+        open={showLoginDialog}
+        onOpenChange={setShowLoginDialog}
+        onSuccess={handleLoginSuccess}
+      />
 
       <RegisterDialog
         open={showRegisterDialog}

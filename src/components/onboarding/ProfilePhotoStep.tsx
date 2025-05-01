@@ -1,5 +1,4 @@
-
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Plus, ScanSearch } from 'lucide-react';
@@ -8,23 +7,36 @@ import { useIsMobile } from '@/hooks/use-mobile';
 interface ProfilePhotoStepProps {
   onPhotoChange: (photo: File | null) => void;
   initialPhoto?: string;
+  initialPhotoFile?: File;
 }
 
 const ProfilePhotoStep: React.FC<ProfilePhotoStepProps> = ({
   onPhotoChange,
-  initialPhoto
+  initialPhoto,
+  initialPhotoFile
 }) => {
-  const [photoPreview, setPhotoPreview] = useState<string | null>(initialPhoto || null);
+  const [photoPreview, setPhotoPreview] = useState<string | null>(null);
   const [isHovering, setIsHovering] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const isMobile = useIsMobile();
+
+  // Inicializar con la foto previa si existe
+  useEffect(() => {
+    if (initialPhoto) {
+      setPhotoPreview(initialPhoto);
+      if (initialPhotoFile) {
+        onPhotoChange(initialPhotoFile);
+      }
+    }
+  }, [initialPhoto, initialPhotoFile]);
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
       const reader = new FileReader();
       reader.onloadend = () => {
-        setPhotoPreview(reader.result as string);
+        const preview = reader.result as string;
+        setPhotoPreview(preview);
         onPhotoChange(file);
       };
       reader.readAsDataURL(file);
@@ -40,7 +52,6 @@ const ProfilePhotoStep: React.FC<ProfilePhotoStepProps> = ({
   return (
     <div className="content-container w-full max-w-6xl mx-auto">
       <div className="form-container text-center">
-        
         <div className="flex flex-col items-center justify-center">
           <div 
             className="relative group" 
@@ -92,7 +103,7 @@ const ProfilePhotoStep: React.FC<ProfilePhotoStepProps> = ({
             className="mt-10 flex items-center gap-2"
           >
             <ScanSearch className="w-5 h-5" />
-            Subir foto de perfil
+            {photoPreview ? 'Cambiar foto de perfil' : 'Subir foto de perfil'}
           </Button>
         </div>
       </div>

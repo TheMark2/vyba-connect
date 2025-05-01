@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { OnboardingLayout } from '@/components/layouts/OnboardingLayout';
@@ -11,11 +10,18 @@ import CachePriceStep from '@/components/onboarding/CachePriceStep';
 import PriceStep from '@/components/onboarding/PriceStep';
 import ArtistInfoStep from '@/components/onboarding/ArtistInfoStep';
 import ConfirmationScreen from '@/components/onboarding/ConfirmationScreen';
-import { Target, Camera, Phone, CheckCircle, ArrowRight } from 'lucide-react';
+import { Target, Camera, Phone, CheckCircle, ArrowRight, Save, Check } from 'lucide-react';
 import { useToast } from "@/hooks/use-toast";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { Badge } from "@/components/ui/badge";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 
 interface StepGroup {
   id: number;
@@ -35,6 +41,7 @@ interface OnboardingData {
   galleryImages?: File[];
   galleryImageUrls?: string[];
   phone?: string;
+  isPhoneVerified?: boolean;
   price?: string;
 }
 
@@ -109,6 +116,7 @@ const WelcomeScreen = () => {
 const ArtistOnboardingPage = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
+  const [showExitDialog, setShowExitDialog] = useState(false);
   
   const [onboardingData, setOnboardingData] = useState<OnboardingData>({});
   const [currentGroup, setCurrentGroup] = useState(-1);
@@ -177,22 +185,25 @@ const ArtistOnboardingPage = () => {
   };
 
   const handleGalleryImagesChange = async (images: File[]) => {
+    // Mantener las imágenes anteriores si no hay nuevas imágenes
+    if (!images || images.length === 0) {
+      return;
+    }
+
+    // Actualizar las imágenes en el estado
     updateOnboardingData('galleryImages', images);
-    if (images && images.length > 0) {
-      try {
-        const imageUrls = await Promise.all(images.map(image => {
-          if (image instanceof File) {
-            return fileToBase64(image);
-          }
-          return null;
-        }));
-        // Filter out null values
-        const validImageUrls = imageUrls.filter((url): url is string => url !== null);
-        console.log("Converted image URLs:", validImageUrls.length);
-        updateOnboardingData('galleryImageUrls', validImageUrls);
-      } catch (error) {
-        console.error("Error converting gallery images to base64:", error);
-      }
+
+    try {
+      // Convertir las nuevas imágenes a base64
+      const imageUrls = await Promise.all(
+        images.map(image => fileToBase64(image))
+      );
+
+      // Actualizar las URLs en el estado
+      updateOnboardingData('galleryImageUrls', imageUrls);
+      console.log("Imágenes guardadas:", images.length, "URLs generadas:", imageUrls.length);
+    } catch (error) {
+      console.error("Error al convertir imágenes:", error);
     }
   };
 
@@ -210,12 +221,18 @@ const ArtistOnboardingPage = () => {
       setCurrentGroup(currentGroup + 1);
       setCurrentStepInGroup(0);
     } else {
+      // Asegurarse de que tenemos las últimas URLs de las imágenes
       const dataToStore = {
         ...onboardingData,
-        // Excluir las propiedades File que no se pueden serializar
+        // Mantener las URLs pero eliminar los objetos File
         profilePhoto: undefined,
         galleryImages: undefined,
+        // Asegurarse de que las URLs están presentes
+        profilePhotoUrl: onboardingData.profilePhotoUrl,
+        galleryImageUrls: onboardingData.galleryImageUrls
       };
+      
+      console.log("Guardando datos en localStorage:", dataToStore);
       localStorage.setItem('onboardingData', JSON.stringify(dataToStore));
       navigate('/confirmation');
     }
@@ -231,7 +248,46 @@ const ArtistOnboardingPage = () => {
   };
   
   const handleCancel = () => {
-    navigate('/artist-benefits');
+    setShowExitDialog(true);
+  };
+  
+  const handleConfirmExit = async () => {
+    try {
+      // Convertir las imágenes a base64 si existen
+      let profilePhotoUrl = onboardingData.profilePhotoUrl;
+      let galleryImageUrls = onboardingData.galleryImageUrls;
+
+      // Si hay una foto de perfil nueva que no está en base64
+      if (onboardingData.profilePhoto && !profilePhotoUrl) {
+        profilePhotoUrl = await fileToBase64(onboardingData.profilePhoto);
+      }
+
+      // Si hay imágenes de galería nuevas que no están en base64
+      if (onboardingData.galleryImages && onboardingData.galleryImages.length > 0) {
+        galleryImageUrls = await Promise.all(
+          onboardingData.galleryImages.map(image => fileToBase64(image))
+        );
+      }
+
+      // Guardar los datos en localStorage
+      const dataToStore = {
+        ...onboardingData,
+        profilePhoto: undefined, // No guardamos el archivo File
+        galleryImages: undefined, // No guardamos los archivos File
+        profilePhotoUrl,
+        galleryImageUrls
+      };
+      
+      localStorage.setItem('onboardingData', JSON.stringify(dataToStore));
+      navigate('/artist-benefits');
+    } catch (error) {
+      console.error("Error al guardar las imágenes:", error);
+      toast({
+        title: "Error",
+        description: "Hubo un problema al guardar las imágenes. Por favor, inténtalo de nuevo.",
+        variant: "destructive"
+      });
+    }
   };
   
   const canGoNext = () => {
@@ -336,6 +392,8 @@ const ArtistOnboardingPage = () => {
                 </div>
                 <ProfilePhotoStep 
                   onPhotoChange={handleProfilePhotoChange}
+                  initialPhoto={onboardingData.profilePhotoUrl}
+                  initialPhotoFile={onboardingData.profilePhoto}
                 />
               </div>
             );
@@ -351,6 +409,7 @@ const ArtistOnboardingPage = () => {
                 <GalleryImagesStep
                   onImagesChange={handleGalleryImagesChange}
                   initialImages={onboardingData.galleryImages}
+                  initialPreviews={onboardingData.galleryImageUrls}
                 />
               </div>
             );
@@ -402,6 +461,21 @@ const ArtistOnboardingPage = () => {
   
   return (
     <div className="min-h-screen bg-white flex flex-col">
+      <div className="fixed top-0 left-0 w-full bg-white/30 backdrop-blur-xl z-50 border-b border-vyba-gray">
+        <div className="px-6 md:px-12 py-3">
+          <div className="flex justify-end">
+            <Button
+              variant="secondary"
+              onClick={handleCancel}
+              className="text-vyba-tertiary hover:text-vyba-navy flex items-center gap-2"
+            >
+              <Save className="w-4 h-4" />
+              Guardar y salir
+            </Button>
+          </div>
+        </div>
+      </div>
+
       <main className="flex-1 container mx-auto px-6 pt-32 pb-32">
         <div className={cn(
           "mx-auto",
@@ -462,6 +536,76 @@ const ArtistOnboardingPage = () => {
           </div>
         </footer>
       )}
+
+      <Dialog open={showExitDialog} onOpenChange={setShowExitDialog}>
+        <DialogContent className="sm:max-w-xl">
+          <DialogHeader className="text-center px-12">
+            <DialogTitle>¿Estás seguro de que quieres salir?</DialogTitle>
+            <DialogDescription>
+              Tu progreso se guardará y podrás continuar más tarde.
+            </DialogDescription>
+          </DialogHeader>
+
+          <div className="space-y-6 py-4 px-12">
+            <div className="space-y-4">
+              <h3 className="font-medium text-lg">Información guardada:</h3>
+              <div className="grid grid-cols-2 gap-4">
+                <div className="space-y-3">
+                  <div>
+                    <p className="text-sm text-vyba-tertiary">Tipo de artista</p>
+                    <p className="font-medium">{onboardingData.artistType || 'No especificado'}</p>
+                  </div>
+                  <div>
+                    <p className="text-sm text-vyba-tertiary">Nombre</p>
+                    <p className="font-medium">{onboardingData.artistName || 'No especificado'}</p>
+                  </div>
+                  <div>
+                    <p className="text-sm text-vyba-tertiary">Descripción</p>
+                    <p className="font-medium line-clamp-2">{onboardingData.artistDescription || 'No especificada'}</p>
+                  </div>
+                </div>
+                <div className="space-y-3">
+                  <div>
+                    <p className="text-sm text-vyba-tertiary">Géneros musicales</p>
+                    <p className="font-medium line-clamp-2">{onboardingData.musicGenres?.join(', ') || 'No especificados'}</p>
+                  </div>
+                  <div>
+                    <p className="text-sm text-vyba-tertiary">Teléfono</p>
+                    <div className="flex items-center gap-2">
+                      <p className="font-medium">{onboardingData.phone || 'No especificado'}</p>
+                      {onboardingData.isPhoneVerified && (
+                        <Badge variant="secondary" className="bg-green-100 text-green-700 px-2 py-0.5 text-xs flex items-center gap-1">
+                          <Check className="w-3 h-3" />
+                          Verificado
+                        </Badge>
+                      )}
+                    </div>
+                  </div>
+                  <div>
+                    <p className="text-sm text-vyba-tertiary">Precio</p>
+                    <p className="font-medium">{onboardingData.price ? `${onboardingData.price}€` : 'No especificado'}</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div className="flex justify-between gap-2 pt-4">
+              <Button
+                variant="terciary"
+                onClick={() => setShowExitDialog(false)}
+              >
+                Continuar editando
+              </Button>
+              <Button
+                variant="secondary"
+                onClick={handleConfirmExit}
+              >
+                Guardar y salir
+              </Button>
+            </div>
+          </div>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };
