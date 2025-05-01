@@ -27,6 +27,20 @@ const RegisterPage = () => {
     };
     
     checkSession();
+
+    // Configurar listener para cambios de autenticación
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(
+      (event, session) => {
+        console.log("Auth state changed:", event, session);
+        if (session) {
+          navigate('/dashboard');
+        }
+      }
+    );
+
+    return () => {
+      subscription.unsubscribe();
+    };
   }, [navigate]);
 
   const handleRegistrationSuccess = (userInfo: { fullName: string; email?: string }) => {

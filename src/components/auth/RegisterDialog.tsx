@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
@@ -179,7 +180,7 @@ const RegisterDialog = ({ open, onOpenChange, onSuccess }: RegisterDialogProps) 
     try {
       console.log("Intentando registrar usuario con estos datos:", { email, ...data });
       
-      // Registrar el usuario en Supabase
+      // Registrar el usuario en Supabase con autoconfirm true para crear la cuenta inmediatamente
       const { data: authData, error } = await supabase.auth.signUp({
         email,
         password: data.password,
@@ -188,7 +189,8 @@ const RegisterDialog = ({ open, onOpenChange, onSuccess }: RegisterDialogProps) 
             name: data.name,
             lastName: data.lastName,
             birthDate: data.birthDate
-          }
+          },
+          emailRedirectTo: window.location.origin + '/dashboard'
         }
       });
 
@@ -197,6 +199,16 @@ const RegisterDialog = ({ open, onOpenChange, onSuccess }: RegisterDialogProps) 
       }
 
       console.log("Usuario registrado exitosamente:", authData);
+
+      // Iniciar sesión inmediatamente después del registro
+      const { error: signInError } = await supabase.auth.signInWithPassword({
+        email: email,
+        password: data.password,
+      });
+
+      if (signInError) {
+        console.error("Error al iniciar sesión automáticamente:", signInError);
+      }
 
       if (onSuccess) {
         onSuccess({ 
@@ -273,7 +285,7 @@ const RegisterDialog = ({ open, onOpenChange, onSuccess }: RegisterDialogProps) 
     (req) => req.test(passwordValue)
   );
 
-  React.useEffect(() => {
+  useEffect(() => {
     passwordRequirements.forEach((req, index) => {
       const isValid = req.test(passwordValue);
       const alreadyValidated = validatedRules.includes(index);
