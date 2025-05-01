@@ -5,7 +5,8 @@ import 'mapbox-gl/dist/mapbox-gl.css';
 import { supabase } from '@/integrations/supabase/client';
 import { Label } from '@/components/ui/label';
 import { Button } from '@/components/ui/button';
-import { Loader2, Check, MapPin } from 'lucide-react';
+import { Input } from '@/components/ui/input';
+import { Loader2, Check, MapPin, Search } from 'lucide-react';
 
 interface LocationMapSelectorProps {
   onLocationSelect: (data: {
@@ -31,6 +32,10 @@ const LocationMapSelector = ({
   const [loading, setLoading] = useState(true);
   const [mapLoaded, setMapLoaded] = useState(false);
   const [geocoding, setGeocoding] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [searchResults, setSearchResults] = useState<any[]>([]);
+  const [searching, setSearching] = useState(false);
+  const [showResults, setShowResults] = useState(false);
   const [selectedLocation, setSelectedLocation] = useState<{
     lat: number;
     lng: number;
@@ -43,8 +48,15 @@ const LocationMapSelector = ({
   useEffect(() => {
     const getMapboxToken = async () => {
       try {
-        const { data } = await supabase.functions.invoke('get-mapbox-token');
+        setLoading(true);
+        const { data, error } = await supabase.functions.invoke('get-mapbox-token');
+        
+        if (error) {
+          throw error;
+        }
+        
         if (data && data.token) {
+          console.log("Token de Mapbox obtenido correctamente");
           setMapboxToken(data.token);
         } else {
           console.error('No se pudo obtener el token de Mapbox');
@@ -63,6 +75,7 @@ const LocationMapSelector = ({
   useEffect(() => {
     if (!mapboxToken || !mapContainer.current || map.current) return;
 
+    console.log("Inicializando mapa con token:", mapboxToken);
     mapboxgl.accessToken = mapboxToken;
 
     // Coordenadas iniciales (España)
@@ -93,46 +106,54 @@ const LocationMapSelector = ({
     };
 
     (async () => {
-      const centerCoords = await geocodeInitialLocation();
+      try {
+        const centerCoords = await geocodeInitialLocation();
 
-      map.current = new mapboxgl.Map({
-        container: mapContainer.current,
-        style: 'mapbox://styles/mapbox/streets-v11',
-        center: [centerCoords.lng, centerCoords.lat],
-        zoom: 13,
-      });
+        map.current = new mapboxgl.Map({
+          container: mapContainer.current,
+          style: 'mapbox://styles/mapbox/streets-v11',
+          center: [centerCoords.lng, centerCoords.lat],
+          zoom: 13,
+        });
 
-      // Agregar controles de navegación
-      map.current.addControl(new mapboxgl.NavigationControl(), 'top-right');
+        // Agregar controles de navegación
+        map.current.addControl(new mapboxgl.NavigationControl(), 'top-right');
 
-      marker.current = new mapboxgl.Marker({
-        color: '#152361', // Color VYBA
-        draggable: true,
-      })
-        .setLngLat([centerCoords.lng, centerCoords.lat])
-        .addTo(map.current);
+        marker.current = new mapboxgl.Marker({
+          color: '#152361', // Color VYBA
+          draggable: true,
+        })
+          .setLngLat([centerCoords.lng, centerCoords.lat])
+          .addTo(map.current);
 
-      // Manejar el evento de arrastrar el marcador
-      marker.current.on('dragend', async () => {
-        if (!marker.current) return;
-        const lngLat = marker.current.getLngLat();
-        await reverseGeocode(lngLat.lng, lngLat.lat);
-      });
+        // Manejar el evento de arrastrar el marcador
+        marker.current.on('dragend', async () => {
+          if (!marker.current) return;
+          const lngLat = marker.current.getLngLat();
+          await reverseGeocode(lngLat.lng, lngLat.lat);
+        });
 
-      // Manejar clic en el mapa
-      map.current.on('click', async (e) => {
-        if (!marker.current) return;
-        marker.current.setLngLat(e.lngLat);
-        await reverseGeocode(e.lngLat.lng, e.lngLat.lat);
-      });
+        // Manejar clic en el mapa
+        map.current.on('click', async (e) => {
+          if (!marker.current) return;
+          marker.current.setLngLat(e.lngLat);
+          await reverseGeocode(e.lngLat.lng, e.lngLat.lat);
+        });
 
-      map.current.on('load', () => {
-        setMapLoaded(true);
-      });
+        map.current.on('load', () => {
+          setMapLoaded(true);
+          console.log("Mapa cargado correctamente");
+        });
+      } catch (error) {
+        console.error("Error al inicializar el mapa:", error);
+      }
     })();
 
     return () => {
-      map.current?.remove();
+      if (map.current) {
+        map.current.remove();
+        map.current = null;
+      }
     };
   }, [mapboxToken, initialCity, initialProvince]);
 
@@ -173,7 +194,8 @@ const LocationMapSelector = ({
 
         // Crear dirección formateada
         formattedAddress = data.features[0].place_name || `${city}, ${province}`;
-
+        
+        setSearchQuery(formattedAddress);
         const locationData = {
           lat,
           lng,
@@ -189,6 +211,65 @@ const LocationMapSelector = ({
       console.error('Error al realizar la geocodificación inversa:', error);
     } finally {
       setGeocoding(false);
+    }
+  };
+
+  // Función para buscar lugares
+  const searchPlaces = async (query: string) => {
+    if (!mapboxToken || query.length < 3) {
+      setSearchResults([]);
+      return;
+    }
+    
+    setSearching(true);
+    try {
+      const response = await fetch(
+        `https://api.mapbox.com/geocoding/v5/mapbox.places/${encodeURIComponent(
+          query
+        )}.json?access_token=${mapboxToken}&country=es&language=es&limit=5`
+      );
+      
+      const data = await response.json();
+      
+      if (data.features) {
+        setSearchResults(data.features);
+      }
+    } catch (error) {
+      console.error('Error al buscar lugares:', error);
+    } finally {
+      setSearching(false);
+    }
+  };
+
+  // Manejar cambios en el input de búsqueda
+  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    setSearchQuery(value);
+    setShowResults(true);
+    
+    // Debounce para evitar demasiadas peticiones
+    const handler = setTimeout(() => {
+      searchPlaces(value);
+    }, 300);
+    
+    return () => clearTimeout(handler);
+  };
+
+  // Seleccionar un lugar de los resultados
+  const selectPlace = async (place: any) => {
+    setSearchQuery(place.place_name);
+    setShowResults(false);
+    
+    if (place.center && map.current && marker.current) {
+      const [lng, lat] = place.center;
+      
+      map.current.flyTo({
+        center: [lng, lat],
+        zoom: 14
+      });
+      
+      marker.current.setLngLat([lng, lat]);
+      await reverseGeocode(lng, lat);
     }
   };
 
@@ -218,16 +299,54 @@ const LocationMapSelector = ({
   return (
     <div className="space-y-4">
       <div className="space-y-2">
+        <Label htmlFor="location-search">Busca tu ubicación</Label>
+        <div className="relative">
+          <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+            <Search className="h-4 w-4 text-vyba-tertiary" />
+          </div>
+          <Input
+            id="location-search"
+            placeholder="Busca tu ciudad o dirección..."
+            value={searchQuery}
+            onChange={handleSearchChange}
+            onFocus={() => setShowResults(true)}
+            onBlur={() => setTimeout(() => setShowResults(false), 200)}
+            className="pl-10"
+          />
+          {showResults && searchResults.length > 0 && (
+            <div className="absolute z-10 w-full bg-white mt-1 rounded-md shadow-lg max-h-60 overflow-auto">
+              {searchResults.map((result) => (
+                <div
+                  key={result.id}
+                  className="px-4 py-2 hover:bg-vyba-gray/20 cursor-pointer"
+                  onMouseDown={() => selectPlace(result)}
+                >
+                  <p className="font-medium">{result.text}</p>
+                  <p className="text-sm text-vyba-tertiary">{result.place_name}</p>
+                </div>
+              ))}
+            </div>
+          )}
+          {searching && (
+            <div className="absolute right-3 top-3">
+              <Loader2 className="h-4 w-4 animate-spin text-vyba-tertiary" />
+            </div>
+          )}
+        </div>
+      </div>
+
+      <div className="space-y-2">
         <Label>Selecciona tu ubicación en el mapa</Label>
         <div 
           ref={mapContainer} 
-          className="h-[400px] w-full rounded-lg border border-vyba-gray overflow-hidden"
-        />
-        {!mapLoaded && (
-          <div className="absolute inset-0 flex items-center justify-center bg-white/80">
-            <Loader2 className="h-8 w-8 animate-spin text-vyba-navy" />
-          </div>
-        )}
+          className="h-[400px] w-full rounded-lg border border-vyba-gray overflow-hidden relative"
+        >
+          {!mapLoaded && (
+            <div className="absolute inset-0 flex items-center justify-center bg-white/80 z-10">
+              <Loader2 className="h-8 w-8 animate-spin text-vyba-navy" />
+            </div>
+          )}
+        </div>
       </div>
 
       {selectedLocation && (

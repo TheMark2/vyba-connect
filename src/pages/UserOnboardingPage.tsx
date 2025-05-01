@@ -25,6 +25,7 @@ import {
   DialogFooter,
 } from "@/components/ui/dialog";
 import ProfilePhotoStep from '@/components/onboarding/ProfilePhotoStep';
+import LocationMapSelector from '@/components/onboarding/LocationMapSelector';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -186,9 +187,23 @@ const UserOnboardingPage = () => {
     }
   };
 
-  const handleLocationChange = (location: string) => updateOnboardingData('location', location);
-  const handleCityChange = (city: string) => updateOnboardingData('city', city);
-  const handleProvinceChange = (province: string) => updateOnboardingData('province', province);
+  const handleLocationSelect = (locationData: {
+    lat: number;
+    lng: number;
+    city: string;
+    province: string;
+    formattedAddress: string;
+  }) => {
+    updateOnboardingData('city', locationData.city);
+    updateOnboardingData('province', locationData.province);
+    updateOnboardingData('location', locationData.formattedAddress);
+    updateOnboardingData('coordinates', {
+      lat: locationData.lat,
+      lng: locationData.lng
+    });
+    
+    console.log("Ubicación seleccionada:", locationData);
+  };
 
   const handleGenreToggle = (genre: string) => {
     setOnboardingData(prev => {
@@ -416,39 +431,11 @@ const UserOnboardingPage = () => {
               </p>
             </div>
             <div className="space-y-6">
-              <div className="grid grid-cols-1 gap-4">
-                <div className="space-y-2">
-                  <Label htmlFor="city">Ciudad</Label>
-                  <Input
-                    id="city"
-                    placeholder="Tu ciudad"
-                    value={onboardingData.city || ''}
-                    onChange={(e) => handleCityChange(e.target.value)}
-                  />
-                </div>
-                
-                <div className="space-y-2">
-                  <Label htmlFor="province">Provincia</Label>
-                  <Input
-                    id="province"
-                    placeholder="Tu provincia"
-                    value={onboardingData.province || ''}
-                    onChange={(e) => handleProvinceChange(e.target.value)}
-                  />
-                </div>
-                
-                <div className="space-y-2">
-                  <Label htmlFor="location">Dirección (opcional)</Label>
-                  <Textarea
-                    id="location"
-                    placeholder="Tu dirección completa"
-                    value={onboardingData.location || ''}
-                    onChange={(e) => handleLocationChange(e.target.value)}
-                    rows={3}
-                  />
-                  <p className="text-xs text-vyba-tertiary">Esta información solo será compartida con artistas cuando confirmes una reserva</p>
-                </div>
-              </div>
+              <LocationMapSelector 
+                onLocationSelect={handleLocationSelect}
+                initialCity={onboardingData.city}
+                initialProvince={onboardingData.province}
+              />
             </div>
           </div>
         );

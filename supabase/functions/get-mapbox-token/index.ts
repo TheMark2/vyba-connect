@@ -20,6 +20,8 @@ serve(async (req) => {
       throw new Error("MAPBOX_PUBLIC_TOKEN no está configurado");
     }
 
+    console.log("Enviando token de Mapbox:", MAPBOX_PUBLIC_TOKEN);
+
     return new Response(
       JSON.stringify({ 
         token: MAPBOX_PUBLIC_TOKEN 
@@ -32,6 +34,8 @@ serve(async (req) => {
       },
     );
   } catch (error) {
+    console.error("Error al obtener el token de Mapbox:", error);
+    
     return new Response(
       JSON.stringify({ error: error.message }),
       { 
