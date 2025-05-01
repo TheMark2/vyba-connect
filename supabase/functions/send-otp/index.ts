@@ -32,7 +32,8 @@ serve(async (req) => {
 
   // Verificar la solicitud
   try {
-    const { email, action } = await req.json();
+    const body = await req.json();
+    const { email, action } = body;
 
     if (!email) {
       return new Response(
@@ -46,7 +47,7 @@ serve(async (req) => {
 
     // Si la acción es verificar OTP
     if (action === "verify") {
-      const { code } = await req.json();
+      const { code } = body;
       
       if (!code) {
         return new Response(
@@ -57,6 +58,8 @@ serve(async (req) => {
           }
         );
       }
+
+      console.log(`Verificando código OTP: ${code} para email: ${email}`);
 
       // Consultar la base de datos para verificar el código
       const { data, error } = await supabase
@@ -71,6 +74,7 @@ serve(async (req) => {
         .single();
 
       if (error || !data) {
+        console.error("Error al verificar código OTP:", error);
         return new Response(
           JSON.stringify({ success: false, error: "Código OTP inválido o expirado" }),
           {
@@ -80,11 +84,24 @@ serve(async (req) => {
         );
       }
 
+      console.log("Código OTP válido, actualizando estado...");
+
       // Marcar el código como verificado
-      await supabase
+      const { error: updateError } = await supabase
         .from("otp_codes")
         .update({ verified: true })
         .eq("id", data.id);
+
+      if (updateError) {
+        console.error("Error al actualizar el estado del código OTP:", updateError);
+        return new Response(
+          JSON.stringify({ success: false, error: "Error al verificar el código" }),
+          {
+            headers: { ...corsHeaders, "Content-Type": "application/json" },
+            status: 500,
+          }
+        );
+      }
 
       return new Response(
         JSON.stringify({ success: true }),
@@ -97,6 +114,7 @@ serve(async (req) => {
     
     // Si la acción es enviar OTP (o no se especifica acción)
     const otp = generateOTP();
+    console.log(`Generado código OTP: ${otp} para email: ${email}`);
 
     // Guardar el OTP en la base de datos
     const { error: dbError } = await supabase
@@ -121,7 +139,7 @@ serve(async (req) => {
     try {
       // Usar onboarding@resend.dev como remitente temporal hasta que el dominio esté verificado
       const emailResponse = await resend.emails.send({
-        from: "VYBA <noreply@vyba.app>", // Usar el dominio onboarding de Resend
+        from: "VYBA <onboarding@resend.dev>", // Mientras no esté verificado el dominio vyba.app
         to: [email],
         subject: "Tu código de verificación para Vyba",
         html: `
