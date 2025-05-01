@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { Button } from "@/components/ui/button";
 import { Link, useNavigate } from "react-router-dom";
@@ -21,8 +20,25 @@ const RegisterPage = () => {
     const checkSession = async () => {
       const { data, error } = await supabase.auth.getSession();
       if (data.session) {
-        // Usuario ya autenticado, redirigir a dashboard
-        navigate('/dashboard');
+        // Obtener el rol del usuario y verificar el estado del onboarding
+        const { data: userData } = await supabase.auth.getUser();
+        const userRole = userData.user?.user_metadata?.role || 'user';
+        const isOnboardingCompleted = userData.user?.user_metadata?.onboarding_completed === true;
+        
+        if (userRole === 'artist') {
+          const isArtistOnboardingCompleted = userData.user?.user_metadata?.artist_onboarding_completed === true;
+          if (!isArtistOnboardingCompleted) {
+            navigate('/register/artist');
+          } else {
+            navigate('/dashboard');
+          }
+        } else {
+          if (!isOnboardingCompleted) {
+            navigate('/user-onboarding');
+          } else {
+            navigate('/user-dashboard');
+          }
+        }
       }
     };
     
@@ -30,10 +46,28 @@ const RegisterPage = () => {
 
     // Configurar listener para cambios de autenticación
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
-      (event, session) => {
+      async (event, session) => {
         console.log("Auth state changed:", event, session);
         if (session) {
-          navigate('/dashboard');
+          // Verificar el estado del onboarding
+          const { data: userData } = await supabase.auth.getUser();
+          const userRole = userData.user?.user_metadata?.role || 'user';
+          const isOnboardingCompleted = userData.user?.user_metadata?.onboarding_completed === true;
+          
+          if (userRole === 'artist') {
+            const isArtistOnboardingCompleted = userData.user?.user_metadata?.artist_onboarding_completed === true;
+            if (!isArtistOnboardingCompleted) {
+              navigate('/register/artist');
+            } else {
+              navigate('/dashboard');
+            }
+          } else {
+            if (!isOnboardingCompleted) {
+              navigate('/user-onboarding');
+            } else {
+              navigate('/user-dashboard');
+            }
+          }
         }
       }
     );
@@ -43,14 +77,25 @@ const RegisterPage = () => {
     };
   }, [navigate]);
 
-  const handleRegistrationSuccess = (userInfo: { fullName: string; email?: string }) => {
-    setRegisteredUserInfo(userInfo);
-    setShowRegisterDialog(false);
-    
-    // Mostrar el diálogo de bienvenida automáticamente
-    setTimeout(() => {
-      setShowWelcomeDialog(true);
-    }, 300);
+  const handleRegistrationSuccess = () => {
+    try {
+      // Si el registro es exitoso, mostrar mensaje y opciones
+      toast.success('¡Registro exitoso!');
+      
+      // Preguntar después de un breve retraso para que el toast se muestre primero
+      setTimeout(() => {
+        const shouldSkip = window.confirm('¿Quieres completar tu perfil ahora o prefieres acceder directamente?');
+        
+        if (shouldSkip) {
+          navigate('/check-dashboard?skipOnboarding=true');
+        } else {
+          navigate('/user-onboarding');
+        }
+      }, 1000);
+    } catch (error) {
+      console.error('Error post-registro:', error);
+      toast.error('Error al procesar el registro');
+    }
   };
 
   const handleSocialLogin = async (provider: 'google' | 'facebook' | 'apple') => {

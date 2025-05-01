@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
@@ -14,6 +13,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Check, XCircle } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { supabase } from "@/integrations/supabase/client";
+import { useNavigate } from "react-router-dom";
 
 type Step = 'email' | 'verification' | 'registration';
 
@@ -43,6 +43,7 @@ const RegisterDialog = ({ open, onOpenChange, onSuccess }: RegisterDialogProps) 
   const [isLoading, setIsLoading] = useState(false);
   const [resendLoading, setResendLoading] = useState(false);
   const [isVerified, setIsVerified] = useState(false);
+  const navigate = useNavigate();
 
   const form = useForm<RegistrationData>({
     resolver: zodResolver(registrationSchema),
@@ -188,9 +189,11 @@ const RegisterDialog = ({ open, onOpenChange, onSuccess }: RegisterDialogProps) 
           data: {
             name: data.name,
             lastName: data.lastName,
-            birthDate: data.birthDate
+            birthDate: data.birthDate,
+            role: 'user', // Por defecto, el usuario es tipo 'user' (no artista)
+            onboarding_completed: false // Marcar que necesita completar el onboarding
           },
-          emailRedirectTo: window.location.origin + '/dashboard'
+          emailRedirectTo: window.location.origin + '/user-onboarding'
         }
       });
 
@@ -231,6 +234,8 @@ const RegisterDialog = ({ open, onOpenChange, onSuccess }: RegisterDialogProps) 
         setIsVerified(false);
         form.reset();
       }, 300);
+
+      handleRegistrationSuccess(authData);
     } catch (error: any) {
       console.error("Error de registro:", error);
       toast.error("Error", {
@@ -300,6 +305,22 @@ const RegisterDialog = ({ open, onOpenChange, onSuccess }: RegisterDialogProps) 
       }
     });
   }, [passwordValue, validatedRules]);
+
+  const handleRegistrationSuccess = async (userData: any) => {
+    try {
+      // Si el registro es exitoso, navegar directamente al onboarding
+      toast.success('¡Registro exitoso!');
+      
+      // Pequeño retraso para permitir que se muestre el toast
+      setTimeout(() => {
+        navigate('/user-onboarding');
+        onOpenChange(false);
+      }, 1000);
+    } catch (error) {
+      console.error('Error post-registro:', error);
+      toast.error('Error al procesar el registro');
+    }
+  };
 
   return (
     <Dialog open={open} onOpenChange={handleClose}>

@@ -1,22 +1,32 @@
-
 import React, { useState, useEffect } from 'react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { ChevronLeft } from "lucide-react";
+import { ChevronLeft, CheckCircle, ArrowRight } from "lucide-react";
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
 import { supabase } from "@/integrations/supabase/client";
 import { useNavigate } from 'react-router-dom';
+import { z } from 'zod';
 
 type Step = 'email' | 'password';
 
 interface LoginDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
-  onSuccess?: () => void;
+  onSuccess?: (userData?: any) => void;
 }
+
+// Validación para el email
+const emailSchema = z.object({
+  email: z.string().email('Correo electrónico inválido'),
+});
+
+// Validación para la contraseña
+const passwordSchema = z.object({
+  password: z.string().min(6, 'La contraseña debe tener al menos 6 caracteres'),
+});
 
 const LoginDialog = ({ open, onOpenChange, onSuccess }: LoginDialogProps) => {
   const navigate = useNavigate();
@@ -29,6 +39,8 @@ const LoginDialog = ({ open, onOpenChange, onSuccess }: LoginDialogProps) => {
   const [emailError, setEmailError] = useState(false);
   const [passwordError, setPasswordError] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
+  const [isLoggingIn, setIsLoggingIn] = useState(false);
+  const [loginError, setLoginError] = useState<string | null>(null);
 
   const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
@@ -145,73 +157,46 @@ const LoginDialog = ({ open, onOpenChange, onSuccess }: LoginDialogProps) => {
       return;
     }
 
-    setIsLoading(true);
+    setIsLoggingIn(true);
+    setLoginError(null);
+    
     try {
       console.log("Intentando iniciar sesión con:", { email, password });
       
-      // Iniciar sesión con Supabase - usamos try/catch para capturar errores de red también
       const { data, error } = await supabase.auth.signInWithPassword({
         email,
-        password
+        password,
       });
-
-      console.log("Respuesta de signInWithPassword:", { data, error });
-
-      // Manejar errores específicos
+      
       if (error) {
-        if (error.message.includes("Email not confirmed")) {
-          setErrorMessage('Correo no confirmado. Por favor, confirma tu correo antes de iniciar sesión');
-          toast.error("Correo no confirmado", {
-            description: "Por favor, confirma tu correo electrónico antes de iniciar sesión"
-          });
-        } else if (error.message.includes("Invalid login")) {
-          setPasswordError(true);
-          setErrorMessage('Contraseña incorrecta. Por favor, verifica tus credenciales');
-          toast.error("Contraseña incorrecta");
-        } else {
-          setErrorMessage(`Error de inicio de sesión: ${error.message}`);
-          toast.error(`Error de inicio de sesión: ${error.message}`);
-        }
-        console.error("Error de autenticación:", error);
-        setIsLoading(false);
+        console.error("Error de inicio de sesión:", error);
+        setPasswordError(true);
+        setErrorMessage(
+          error.message === "Invalid login credentials" 
+            ? "Contraseña incorrecta" 
+            : error.message
+        );
+        setIsLoggingIn(false);
         return;
       }
-
-      // Si llegamos aquí, significa que el inicio de sesión fue exitoso
-      console.log("Inicio de sesión exitoso, usuario:", data?.user);
       
-      // Mostrar mensaje de éxito
-      toast.success("Inicio de sesión exitoso", {
-        description: "¡Bienvenido de nuevo a VYBA!"
-      });
+      toast.success("Inicio de sesión exitoso");
       
-      // Cerrar el diálogo
-      onOpenChange(false);
-      
-      // Redirigir al dashboard y asegurarnos que navegamos explícitamente
-      navigate('/dashboard', { replace: true });
-      
-      // Si existe una función onSuccess adicional, llamarla también
-      if (onSuccess) {
-        onSuccess();
+      // Navegar directamente al dashboard según el rol del usuario
+      if (data.user.user_metadata?.role === 'artist') {
+        navigate('/dashboard');
+      } else {
+        navigate('/user-dashboard');
       }
       
-      // Reiniciar el formulario después de un pequeño retraso
-      setTimeout(() => {
-        setCurrentStep('email');
-        setEmail('');
-        setPassword('');
-        setErrorMessage('');
-      }, 300);
+      if (onSuccess) {
+        onSuccess(data.user);
+      }
     } catch (error: any) {
-      // Capturar errores generales (como problemas de red)
+      toast.error("Error al iniciar sesión");
       console.error("Error al iniciar sesión:", error);
-      setErrorMessage('Error de conexión. No se pudo conectar con el servidor');
-      toast.error("Error de conexión", {
-        description: "No se pudo conectar con el servidor. Por favor, inténtalo más tarde."
-      });
     } finally {
-      setIsLoading(false);
+      setIsLoggingIn(false);
     }
   };
 
@@ -325,10 +310,10 @@ const LoginDialog = ({ open, onOpenChange, onSuccess }: LoginDialogProps) => {
               variant="terciary"
               type="submit" 
               className="w-full"
-              disabled={isLoading}
-              isLoading={isLoading}
+              disabled={isLoggingIn}
+              isLoading={isLoggingIn}
             >
-              {isLoading ? "Iniciando sesión" : "Iniciar sesión"}
+              {isLoggingIn ? "Iniciando sesión" : "Iniciar sesión"}
             </Button>
           </form>
         )}

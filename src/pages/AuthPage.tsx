@@ -26,9 +26,32 @@ const AuthPage = () => {
         const { data, error } = await supabase.auth.getSession();
         
         if (data.session) {
-          // Usuario ya autenticado, redirigir a dashboard
-          console.log("Sesión existente detectada, redirigiendo a dashboard");
-          navigate('/dashboard');
+          // Obtener el rol del usuario desde los metadatos
+          const { data: { user } } = await supabase.auth.getUser();
+          const userRole = user?.user_metadata?.role || 'user'; // Por defecto es usuario normal
+          
+          // Verificar si necesita completar el onboarding
+          const isOnboardingCompleted = user?.user_metadata?.onboarding_completed === true;
+          
+          // Redirigir según el rol
+          if (userRole === 'artist') {
+            const isArtistOnboardingCompleted = user?.user_metadata?.artist_onboarding_completed === true;
+            if (!isArtistOnboardingCompleted) {
+              console.log("Artista necesita completar onboarding, redirigiendo...");
+              navigate('/register/artist');
+            } else {
+              console.log("Artista autenticado, redirigiendo a dashboard de artistas");
+              navigate('/dashboard');
+            }
+          } else {
+            if (!isOnboardingCompleted) {
+              console.log("Usuario normal necesita completar onboarding, redirigiendo...");
+              navigate('/user-onboarding');
+            } else {
+              console.log("Usuario normal autenticado, redirigiendo a dashboard de usuarios");
+              navigate('/user-dashboard');
+            }
+          }
         } else {
           console.log("No hay sesión activa");
         }
@@ -43,11 +66,34 @@ const AuthPage = () => {
     checkSession();
     
     // Escuchar cambios en la autenticación
-    const { data: authListener } = supabase.auth.onAuthStateChange((event, session) => {
+    const { data: authListener } = supabase.auth.onAuthStateChange(async (event, session) => {
       console.log("Evento de autenticación:", event, session ? "Con sesión" : "Sin sesión");
       if (event === 'SIGNED_IN' && session) {
-        console.log("Usuario ha iniciado sesión, redirigiendo a dashboard");
-        navigate('/dashboard');
+        // Obtener el rol del usuario
+        const { data: { user } } = await supabase.auth.getUser();
+        const userRole = user?.user_metadata?.role || 'user'; // Por defecto es usuario normal
+        
+        // Verificar si necesita completar el onboarding
+        const isOnboardingCompleted = user?.user_metadata?.onboarding_completed === true;
+        
+        if (userRole === 'artist') {
+          const isArtistOnboardingCompleted = user?.user_metadata?.artist_onboarding_completed === true;
+          if (!isArtistOnboardingCompleted) {
+            console.log("Artista nuevo necesita completar onboarding, redirigiendo...");
+            navigate('/register/artist');
+          } else {
+            console.log("Artista ha iniciado sesión, redirigiendo a dashboard de artistas");
+            navigate('/dashboard');
+          }
+        } else {
+          if (!isOnboardingCompleted) {
+            console.log("Usuario normal necesita completar onboarding, redirigiendo...");
+            navigate('/user-onboarding');
+          } else {
+            console.log("Usuario normal ha iniciado sesión, redirigiendo a dashboard de usuarios");
+            navigate('/user-dashboard');
+          }
+        }
       }
     });
     
@@ -72,9 +118,33 @@ const AuthPage = () => {
     }, 300);
   };
 
-  const handleLoginSuccess = () => {
-    console.log("Login success callback ejecutado, redirigiendo a dashboard");
-    navigate('/dashboard');
+  const handleLoginSuccess = async (userData: any) => {
+    console.log("Login success callback ejecutado");
+    
+    // Verificar el rol del usuario y redirigir al dashboard correspondiente
+    const userRole = userData?.user_metadata?.role || 'user'; // Por defecto es usuario normal
+    
+    // Verificar si necesita completar el onboarding
+    const isOnboardingCompleted = userData?.user_metadata?.onboarding_completed === true;
+    
+    if (userRole === 'artist') {
+      const isArtistOnboardingCompleted = userData?.user_metadata?.artist_onboarding_completed === true;
+      if (!isArtistOnboardingCompleted) {
+        console.log("Redirigiendo a onboarding de artistas");
+        navigate('/register/artist');
+      } else {
+        console.log("Redirigiendo a dashboard de artistas");
+        navigate('/dashboard');
+      }
+    } else {
+      if (!isOnboardingCompleted) {
+        console.log("Redirigiendo a onboarding de usuarios");
+        navigate('/user-onboarding');
+      } else {
+        console.log("Redirigiendo a dashboard de usuarios");
+        navigate('/user-dashboard');
+      }
+    }
   };
 
   const handleSocialLogin = async (provider: 'google' | 'facebook' | 'apple') => {
@@ -84,7 +154,7 @@ const AuthPage = () => {
       let { data, error } = await supabase.auth.signInWithOAuth({
         provider: provider,
         options: {
-          redirectTo: window.location.origin + '/dashboard'
+          // No establecemos redirectTo para manejar la redirección según el rol en el listener onAuthStateChange
         }
       });
 
