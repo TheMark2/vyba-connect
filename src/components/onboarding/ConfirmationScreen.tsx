@@ -1,10 +1,9 @@
 
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Camera, CheckCircle, ArrowRight, ChevronLeft, ChevronRight } from 'lucide-react';
-import { cn } from "@/lib/utils";
+import { Camera, CheckCircle } from 'lucide-react';
 import Image from "@/components/ui/image";
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/carousel";
 
@@ -14,7 +13,9 @@ interface OnboardingData {
   artistDescription?: string;
   musicGenres?: string[];
   profilePhoto?: File | null;
+  profilePhotoUrl?: string;
   galleryImages?: File[];
+  galleryImageUrls?: string[];
   phone?: string;
   price?: string;
 }
@@ -25,65 +26,12 @@ interface ConfirmationScreenProps {
 
 const ConfirmationScreen: React.FC<ConfirmationScreenProps> = ({ onboardingData }) => {
   const navigate = useNavigate();
-  const [currentImageIndex, setCurrentImageIndex] = useState(0);
-  const [imageUrls, setImageUrls] = useState<string[]>([]);
-  const [profilePhotoUrl, setProfilePhotoUrl] = useState<string | null>(null);
+  
+  console.log("Onboarding data in confirmation:", onboardingData);
 
-  useEffect(() => {
-    // Crear URL para la foto de perfil
-    if (onboardingData?.profilePhoto instanceof File) {
-      const profileUrl = URL.createObjectURL(onboardingData.profilePhoto);
-      setProfilePhotoUrl(profileUrl);
-
-      // Cleanup
-      return () => {
-        URL.revokeObjectURL(profileUrl);
-      };
-    }
-  }, [onboardingData?.profilePhoto]);
-
-  useEffect(() => {
-    // Crear URLs para las imágenes de la galería
-    if (onboardingData?.galleryImages && Array.isArray(onboardingData.galleryImages)) {
-      console.log("Gallery images found:", onboardingData.galleryImages.length);
-      
-      const urls = onboardingData.galleryImages.map(file => {
-        if (file instanceof File) {
-          console.log("Creating URL for file:", file.name);
-          return URL.createObjectURL(file);
-        }
-        return null;
-      }).filter((url): url is string => url !== null);
-      
-      console.log("Created image URLs:", urls);
-      setImageUrls(urls);
-
-      // Cleanup
-      return () => {
-        urls.forEach(url => {
-          URL.revokeObjectURL(url);
-        });
-      };
-    } else {
-      console.log("No gallery images found or not in expected format");
-    }
-  }, [onboardingData?.galleryImages]);
-
-  const handlePrevImage = () => {
-    if (imageUrls.length > 0) {
-      setCurrentImageIndex((prev) => 
-        prev === 0 ? imageUrls.length - 1 : prev - 1
-      );
-    }
-  };
-
-  const handleNextImage = () => {
-    if (imageUrls.length > 0) {
-      setCurrentImageIndex((prev) => 
-        prev === imageUrls.length - 1 ? 0 : prev + 1
-      );
-    }
-  };
+  // Comprueba si hay imágenes de galería
+  const hasGalleryImages = onboardingData.galleryImageUrls && onboardingData.galleryImageUrls.length > 0;
+  console.log("Has gallery images:", hasGalleryImages, onboardingData.galleryImageUrls?.length);
 
   return (
     <div className="flex items-center justify-center bg-[#C3DFF4] h-screen">
@@ -93,10 +41,10 @@ const ConfirmationScreen: React.FC<ConfirmationScreenProps> = ({ onboardingData 
           <div className="bg-white rounded-3xl p-6 shadow-[0_4px_30px_rgba(0,0,0,0.11)]">
             {/* Carrusel de imágenes o foto de perfil si no hay imágenes */}
             <div className="aspect-[5/4] relative rounded-3xl overflow-hidden mb-6">
-              {imageUrls.length > 0 ? (
+              {hasGalleryImages ? (
                 <Carousel className="w-full h-full">
                   <CarouselContent className="h-full">
-                    {imageUrls.map((url, index) => (
+                    {onboardingData.galleryImageUrls!.map((url, index) => (
                       <CarouselItem key={index} className="h-full">
                         <div className="h-full w-full flex items-center justify-center">
                           <Image 
@@ -111,9 +59,9 @@ const ConfirmationScreen: React.FC<ConfirmationScreenProps> = ({ onboardingData 
                   <CarouselPrevious className="left-2" />
                   <CarouselNext className="right-2" />
                 </Carousel>
-              ) : profilePhotoUrl ? (
+              ) : onboardingData.profilePhotoUrl ? (
                 <Image 
-                  src={profilePhotoUrl}
+                  src={onboardingData.profilePhotoUrl}
                   alt="Foto de perfil" 
                   className="w-full h-full object-cover"
                 />

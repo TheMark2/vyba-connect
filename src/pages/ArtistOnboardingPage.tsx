@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { OnboardingLayout } from '@/components/layouts/OnboardingLayout';
@@ -30,10 +31,22 @@ interface OnboardingData {
   artistDescription?: string;
   musicGenres?: string[];
   profilePhoto?: File | null;
+  profilePhotoUrl?: string;
   galleryImages?: File[];
+  galleryImageUrls?: string[];
   phone?: string;
   price?: string;
 }
+
+// Función para convertir File a base64
+const fileToBase64 = (file: File): Promise<string> => {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.onload = () => resolve(reader.result as string);
+    reader.onerror = error => reject(error);
+  });
+};
 
 const WelcomeScreen = () => {
   return (
@@ -148,12 +161,43 @@ const ArtistOnboardingPage = () => {
   
   const handleArtistTypeSelect = (type: string) => updateOnboardingData('artistType', type);
   const handleMusicGenresSelect = (genres: string[]) => updateOnboardingData('musicGenres', genres);
-  const handleProfilePhotoChange = (photo: File | null) => updateOnboardingData('profilePhoto', photo);
-  const handleGalleryImagesChange = (images: File[]) => updateOnboardingData('galleryImages', images);
-  const handlePhoneChange = (phone: string) => updateOnboardingData('phone', phone);
-  const handlePriceChange = (price: string) => {
-    updateOnboardingData('price', price);
+  
+  const handleProfilePhotoChange = async (photo: File | null) => {
+    updateOnboardingData('profilePhoto', photo);
+    if (photo) {
+      try {
+        const photoUrl = await fileToBase64(photo);
+        updateOnboardingData('profilePhotoUrl', photoUrl);
+      } catch (error) {
+        console.error("Error converting profile photo to base64:", error);
+      }
+    } else {
+      updateOnboardingData('profilePhotoUrl', null);
+    }
   };
+
+  const handleGalleryImagesChange = async (images: File[]) => {
+    updateOnboardingData('galleryImages', images);
+    if (images && images.length > 0) {
+      try {
+        const imageUrls = await Promise.all(images.map(image => {
+          if (image instanceof File) {
+            return fileToBase64(image);
+          }
+          return null;
+        }));
+        // Filter out null values
+        const validImageUrls = imageUrls.filter((url): url is string => url !== null);
+        console.log("Converted image URLs:", validImageUrls.length);
+        updateOnboardingData('galleryImageUrls', validImageUrls);
+      } catch (error) {
+        console.error("Error converting gallery images to base64:", error);
+      }
+    }
+  };
+
+  const handlePhoneChange = (phone: string) => updateOnboardingData('phone', phone);
+  const handlePriceChange = (price: string) => updateOnboardingData('price', price);
   const handleArtistNameChange = (name: string) => updateOnboardingData('artistName', name);
   const handleArtistDescriptionChange = (description: string) => updateOnboardingData('artistDescription', description);
   
@@ -166,7 +210,13 @@ const ArtistOnboardingPage = () => {
       setCurrentGroup(currentGroup + 1);
       setCurrentStepInGroup(0);
     } else {
-      localStorage.setItem('onboardingData', JSON.stringify(onboardingData));
+      const dataToStore = {
+        ...onboardingData,
+        // Excluir las propiedades File que no se pueden serializar
+        profilePhoto: undefined,
+        galleryImages: undefined,
+      };
+      localStorage.setItem('onboardingData', JSON.stringify(dataToStore));
       navigate('/confirmation');
     }
   };
