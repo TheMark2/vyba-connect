@@ -83,8 +83,8 @@ const LoginDialog = ({ open, onOpenChange, onSuccess }: LoginDialogProps) => {
     }
     
     setIsLoading(true);
-    // Verificar si el email existe
     try {
+      // Verificar si el email existe
       const { data, error } = await supabase.auth.signInWithOtp({
         email: email,
         options: {
@@ -92,14 +92,28 @@ const LoginDialog = ({ open, onOpenChange, onSuccess }: LoginDialogProps) => {
         }
       });
 
-      if (error && error.message.includes("not found")) {
-        toast.error("Este correo no está registrado");
-        setIsLoading(false);
-        return;
+      if (error) {
+        // Si el error es que el correo no está registrado
+        if (error.message.includes("not found")) {
+          toast.error("Este correo no está registrado");
+          setIsLoading(false);
+          return;
+        }
+        
+        // Si el error es que el correo no está confirmado
+        if (error.message.includes("Email not confirmed")) {
+          toast.error("Correo no confirmado", {
+            description: "Por favor, confirma tu correo electrónico antes de iniciar sesión"
+          });
+          setIsLoading(false);
+          return;
+        }
+        
+        throw error;
       }
       
       setCurrentStep('password');
-    } catch (error) {
+    } catch (error: any) {
       console.error("Error al verificar email:", error);
       toast.error("Error al verificar el correo");
     }
@@ -123,6 +137,15 @@ const LoginDialog = ({ open, onOpenChange, onSuccess }: LoginDialogProps) => {
       });
 
       if (error) {
+        // Mostrar mensaje específico para correo no confirmado
+        if (error.message.includes("Email not confirmed")) {
+          toast.error("Correo no confirmado", {
+            description: "Por favor, confirma tu correo electrónico antes de iniciar sesión"
+          });
+          setIsLoading(false);
+          return;
+        }
+        
         throw error;
       }
 

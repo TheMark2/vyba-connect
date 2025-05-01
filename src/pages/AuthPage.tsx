@@ -17,6 +17,7 @@ const AuthPage = () => {
   const [showWelcomeDialog, setShowWelcomeDialog] = useState(false);
   const [registeredUserInfo, setRegisteredUserInfo] = useState<{ fullName: string; email?: string }>({ fullName: '' });
   const [isLoading, setIsLoading] = useState(false);
+  const [checkingSession, setCheckingSession] = useState(true);
   const navigate = useNavigate();
 
   // Verificar si el usuario ya está autenticado
@@ -27,6 +28,7 @@ const AuthPage = () => {
         // Usuario ya autenticado, redirigir a dashboard
         navigate('/dashboard');
       }
+      setCheckingSession(false);
     };
     
     checkSession();
@@ -73,6 +75,16 @@ const AuthPage = () => {
       setIsLoading(false);
     }
   };
+
+  if (checkingSession) {
+    return (
+      <main className="min-h-screen bg-white flex flex-col items-center justify-center">
+        <div className="animate-pulse text-center">
+          <p>Cargando...</p>
+        </div>
+      </main>
+    );
+  }
 
   return (
     <main className="min-h-screen bg-white dark:bg-vyba-dark-bg flex flex-col">
