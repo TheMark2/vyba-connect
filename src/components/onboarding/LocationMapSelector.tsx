@@ -109,16 +109,36 @@ const LocationMapSelector = ({
       try {
         const centerCoords = await geocodeInitialLocation();
 
+        // Usar un estilo minimalista similar al de Uber
         map.current = new mapboxgl.Map({
           container: mapContainer.current,
-          style: 'mapbox://styles/mapbox/streets-v11',
+          style: 'mapbox://styles/mapbox/light-v11', // Estilo claro y minimalista
           center: [centerCoords.lng, centerCoords.lat],
           zoom: 13,
+          attributionControl: false, // Ocultar atribución
+          logoPosition: 'bottom-left', // Colocar logo en una posición específica para ocultarlo luego
         });
 
-        // Agregar controles de navegación
-        map.current.addControl(new mapboxgl.NavigationControl(), 'top-right');
+        // Ocultar el logo de Mapbox con CSS
+        const mapboxCanvas = mapContainer.current.querySelector('.mapboxgl-canvas-container');
+        if (mapboxCanvas) {
+          const style = document.createElement('style');
+          style.textContent = `
+            .mapboxgl-ctrl-logo { display: none !important; }
+            .mapboxgl-ctrl-attrib { display: none !important; }
+          `;
+          mapboxCanvas.appendChild(style);
+        }
 
+        // Agregar controles de navegación pero minimalistas
+        const navControl = new mapboxgl.NavigationControl({
+          showCompass: false,
+          showZoom: true,
+          visualizePitch: false
+        });
+        map.current.addControl(navControl, 'top-right');
+
+        // Marcador con color personalizado
         marker.current = new mapboxgl.Marker({
           color: '#152361', // Color VYBA
           draggable: true,
@@ -299,48 +319,60 @@ const LocationMapSelector = ({
   return (
     <div className="space-y-4">
       <div className="space-y-2">
-        <Label htmlFor="location-search">Busca tu ubicación</Label>
-        <div className="relative">
-          <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-            <Search className="h-4 w-4 text-vyba-tertiary" />
-          </div>
-          <Input
-            id="location-search"
-            placeholder="Busca tu ciudad o dirección..."
-            value={searchQuery}
-            onChange={handleSearchChange}
-            onFocus={() => setShowResults(true)}
-            onBlur={() => setTimeout(() => setShowResults(false), 200)}
-            className="pl-10"
-          />
-          {showResults && searchResults.length > 0 && (
-            <div className="absolute z-10 w-full bg-white mt-1 rounded-md shadow-lg max-h-60 overflow-auto">
-              {searchResults.map((result) => (
-                <div
-                  key={result.id}
-                  className="px-4 py-2 hover:bg-vyba-gray/20 cursor-pointer"
-                  onMouseDown={() => selectPlace(result)}
-                >
-                  <p className="font-medium">{result.text}</p>
-                  <p className="text-sm text-vyba-tertiary">{result.place_name}</p>
+        <Label htmlFor="location-search">Selecciona tu ubicación</Label>
+        
+        {/* Contenedor principal del mapa con el input encima */}
+        <div className="relative h-[450px] rounded-lg overflow-hidden border border-vyba-gray">
+          {/* Input de búsqueda encima del mapa */}
+          <div className="absolute top-4 left-0 right-0 z-10 px-4">
+            <div className="relative w-full max-w-md mx-auto">
+              <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                <Search className="h-4 w-4 text-vyba-tertiary" />
+              </div>
+              <Input
+                id="location-search"
+                placeholder="Busca tu ciudad o dirección..."
+                value={searchQuery}
+                onChange={handleSearchChange}
+                onFocus={() => setShowResults(true)}
+                onBlur={() => setTimeout(() => setShowResults(false), 200)}
+                className="pl-10 bg-white shadow-md border-transparent focus:border-vyba-navy"
+              />
+              {showResults && searchResults.length > 0 && (
+                <div className="absolute z-20 w-full bg-white mt-1 rounded-md shadow-lg max-h-60 overflow-auto">
+                  {searchResults.map((result) => (
+                    <div
+                      key={result.id}
+                      className="px-4 py-2 hover:bg-vyba-gray/20 cursor-pointer"
+                      onMouseDown={() => selectPlace(result)}
+                    >
+                      <p className="font-medium">{result.text}</p>
+                      <p className="text-sm text-vyba-tertiary">{result.place_name}</p>
+                    </div>
+                  ))}
                 </div>
-              ))}
+              )}
+              {searching && (
+                <div className="absolute right-3 top-3">
+                  <Loader2 className="h-4 w-4 animate-spin text-vyba-tertiary" />
+                </div>
+              )}
             </div>
-          )}
-          {searching && (
-            <div className="absolute right-3 top-3">
-              <Loader2 className="h-4 w-4 animate-spin text-vyba-tertiary" />
-            </div>
-          )}
-        </div>
-      </div>
+          </div>
 
-      <div className="space-y-2">
-        <Label>Selecciona tu ubicación en el mapa</Label>
-        <div 
-          ref={mapContainer} 
-          className="h-[400px] w-full rounded-lg border border-vyba-gray overflow-hidden relative"
-        >
+          {/* Contenedor del mapa */}
+          <div 
+            ref={mapContainer} 
+            className="h-full w-full"
+            style={{
+              position: 'absolute',
+              top: 0,
+              left: 0,
+              right: 0,
+              bottom: 0
+            }}
+          />
+
           {!mapLoaded && (
             <div className="absolute inset-0 flex items-center justify-center bg-white/80 z-10">
               <Loader2 className="h-8 w-8 animate-spin text-vyba-navy" />
