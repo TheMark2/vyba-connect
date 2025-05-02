@@ -109,17 +109,17 @@ const LocationMapSelector = ({
       try {
         const centerCoords = await geocodeInitialLocation();
 
-        // Usar un estilo minimalista similar al de Uber
+        // Usar un estilo minimalista similar al de Uber con solo ciudades importantes
         map.current = new mapboxgl.Map({
           container: mapContainer.current,
-          style: 'mapbox://styles/mapbox/streets-v12', // Estilo claro y minimalista
+          style: 'mapbox://styles/mapbox/light-v11', // Estilo claro y minimalista
           center: [centerCoords.lng, centerCoords.lat],
           zoom: 13,
           attributionControl: false, // Ocultar atribución
           logoPosition: 'bottom-left', // Colocar logo en una posición específica para ocultarlo luego
         });
 
-        // Ocultar el logo de Mapbox con CSS
+        // Ocultar el logo de Mapbox y la atribución con CSS
         const mapboxCanvas = mapContainer.current.querySelector('.mapboxgl-canvas-container');
         if (mapboxCanvas) {
           const style = document.createElement('style');
@@ -137,6 +137,24 @@ const LocationMapSelector = ({
           visualizePitch: false
         });
         map.current.addControl(navControl, 'top-right');
+
+        // Filtrar puntos en el mapa para mostrar solo ciudades importantes
+        map.current.on('load', () => {
+          // Aplicar filtros al mapa para mostrar solo ciudades importantes
+          if (map.current) {
+            map.current.setFilter('settlement-label', ['==', ['get', 'class'], 'city']);
+            map.current.setFilter('settlement-minor-label', ['==', ['get', 'class'], 'city']);
+            
+            // Cambiar la fuente del texto a Figtree
+            map.current.setLayoutProperty('settlement-label', 'text-font', ['Figtree Regular', 'Arial Unicode MS Regular']);
+            map.current.setLayoutProperty('settlement-minor-label', 'text-font', ['Figtree Regular', 'Arial Unicode MS Regular']);
+            map.current.setLayoutProperty('country-label', 'text-font', ['Figtree Medium', 'Arial Unicode MS Regular']);
+            map.current.setLayoutProperty('state-label', 'text-font', ['Figtree Regular', 'Arial Unicode MS Regular']);
+            
+            setMapLoaded(true);
+            console.log("Mapa cargado correctamente");
+          }
+        });
 
         // Marcador con color personalizado
         marker.current = new mapboxgl.Marker({
@@ -158,11 +176,6 @@ const LocationMapSelector = ({
           if (!marker.current) return;
           marker.current.setLngLat(e.lngLat);
           await reverseGeocode(e.lngLat.lng, e.lngLat.lat);
-        });
-
-        map.current.on('load', () => {
-          setMapLoaded(true);
-          console.log("Mapa cargado correctamente");
         });
       } catch (error) {
         console.error("Error al inicializar el mapa:", error);
@@ -243,10 +256,11 @@ const LocationMapSelector = ({
     
     setSearching(true);
     try {
+      // Modificar la búsqueda para filtrar por ciudades importantes (types=place)
       const response = await fetch(
         `https://api.mapbox.com/geocoding/v5/mapbox.places/${encodeURIComponent(
           query
-        )}.json?access_token=${mapboxToken}&country=es&language=es&limit=5`
+        )}.json?access_token=${mapboxToken}&country=es&language=es&limit=5&types=place`
       );
       
       const data = await response.json();
@@ -301,7 +315,7 @@ const LocationMapSelector = ({
 
   if (loading) {
     return (
-      <div className="flex flex-col items-center justify-center p-8 bg-vyba-gray/10 rounded-lg h-96">
+      <div className="flex flex-col items-center justify-center p-8 bg-vyba-gray/10 rounded-lg h-96 font-figtree">
         <Loader2 className="h-8 w-8 animate-spin text-vyba-navy" />
         <p className="mt-2 text-vyba-tertiary">Cargando mapa...</p>
       </div>
@@ -310,14 +324,14 @@ const LocationMapSelector = ({
 
   if (!mapboxToken) {
     return (
-      <div className="flex flex-col items-center justify-center p-8 bg-red-50 rounded-lg h-96">
+      <div className="flex flex-col items-center justify-center p-8 bg-red-50 rounded-lg h-96 font-figtree">
         <p className="text-red-500">No se pudo cargar el mapa. Por favor, intenta más tarde.</p>
       </div>
     );
   }
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-4 font-figtree">
       <div className="space-y-2">
         <Label htmlFor="location-search">Selecciona tu ubicación</Label>
         
@@ -331,12 +345,12 @@ const LocationMapSelector = ({
               </div>
               <Input
                 id="location-search"
-                placeholder="Busca tu ciudad o dirección..."
+                placeholder="Busca tu ciudad..."
                 value={searchQuery}
                 onChange={handleSearchChange}
                 onFocus={() => setShowResults(true)}
                 onBlur={() => setTimeout(() => setShowResults(false), 200)}
-                className="pl-10 bg-white shadow-md border-transparent focus:border-vyba-navy"
+                className="pl-10 bg-white shadow-md border-transparent focus:border-vyba-navy font-figtree"
               />
               {showResults && searchResults.length > 0 && (
                 <div className="absolute z-20 w-full bg-white mt-1 rounded-md shadow-lg max-h-60 overflow-auto">
@@ -346,8 +360,8 @@ const LocationMapSelector = ({
                       className="px-4 py-2 hover:bg-vyba-gray/20 cursor-pointer"
                       onMouseDown={() => selectPlace(result)}
                     >
-                      <p className="font-medium">{result.text}</p>
-                      <p className="text-sm text-vyba-tertiary">{result.place_name}</p>
+                      <p className="font-medium font-figtree">{result.text}</p>
+                      <p className="text-sm text-vyba-tertiary font-figtree">{result.place_name}</p>
                     </div>
                   ))}
                 </div>
@@ -386,15 +400,15 @@ const LocationMapSelector = ({
           <div className="flex items-start gap-3">
             <MapPin className="w-5 h-5 text-vyba-navy mt-0.5" />
             <div className="space-y-1 flex-1">
-              <h4 className="font-medium">{selectedLocation.city}, {selectedLocation.province}</h4>
-              <p className="text-sm text-vyba-tertiary">{selectedLocation.formattedAddress}</p>
+              <h4 className="font-medium font-figtree">{selectedLocation.city}, {selectedLocation.province}</h4>
+              <p className="text-sm text-vyba-tertiary font-figtree">{selectedLocation.formattedAddress}</p>
             </div>
             <Button
               size="sm"
               variant="terciary"
               onClick={handleConfirmLocation}
               disabled={geocoding}
-              className="flex items-center gap-1"
+              className="flex items-center gap-1 font-figtree"
             >
               {geocoding ? <Loader2 className="h-3 w-3 animate-spin" /> : <Check className="h-3 w-3" />}
               <span>Confirmar</span>
