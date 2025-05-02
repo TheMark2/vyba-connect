@@ -6,7 +6,7 @@ import { supabase } from '@/integrations/supabase/client';
 import { Label } from '@/components/ui/label';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Loader2, Check, MapPin, Search } from 'lucide-react';
+import { Loader2, Check, MapPin, Search, ZoomIn, ZoomOut } from 'lucide-react';
 
 interface LocationMapSelectorProps {
   onLocationSelect: (data: {
@@ -28,6 +28,7 @@ const LocationMapSelector = ({
   const mapContainer = useRef<HTMLDivElement>(null);
   const map = useRef<mapboxgl.Map | null>(null);
   const marker = useRef<mapboxgl.Marker | null>(null);
+  const locationCircle = useRef<mapboxgl.CircleLayer | null>(null);
   const [mapboxToken, setMapboxToken] = useState<string>('');
   const [loading, setLoading] = useState(true);
   const [mapLoaded, setMapLoaded] = useState(false);
@@ -112,7 +113,7 @@ const LocationMapSelector = ({
         // Usar el estilo streets-v12 sin labels
         map.current = new mapboxgl.Map({
           container: mapContainer.current,
-          style: 'mapbox://styles/mapbox/streets-v12', // Cambio a streets-v12
+          style: 'mapbox://styles/mapbox/streets-v12', 
           center: [centerCoords.lng, centerCoords.lat],
           zoom: 13,
           attributionControl: false, // Ocultar atribución
@@ -126,19 +127,33 @@ const LocationMapSelector = ({
           style.textContent = `
             .mapboxgl-ctrl-logo { display: none !important; }
             .mapboxgl-ctrl-attrib { display: none !important; }
+            .mapboxgl-ctrl-bottom-right { bottom: 16px !important; right: 16px !important; }
+            .mapboxgl-ctrl-group { background-color: rgba(255, 255, 255, 0.9) !important; border-radius: 20px !important; box-shadow: 0 2px 10px rgba(0,0,0,0.15) !important; }
+            .mapboxgl-ctrl-group button { width: 36px !important; height: 36px !important; }
           `;
           mapboxCanvas.appendChild(style);
         }
 
-        // Agregar controles de navegación pero minimalistas
-        const navControl = new mapboxgl.NavigationControl({
-          showCompass: false,
-          showZoom: true,
-          visualizePitch: false
-        });
-        map.current.addControl(navControl, 'top-right');
+        // Eliminar los controles de navegación predeterminados y crear controles personalizados en la parte inferior derecha
+        const zoomContainer = document.createElement('div');
+        zoomContainer.className = 'absolute bottom-4 right-4 flex flex-col bg-white/90 backdrop-blur-md rounded-full shadow-md p-1';
+        
+        const zoomInButton = document.createElement('button');
+        zoomInButton.className = 'w-10 h-10 flex items-center justify-center hover:bg-gray-100 rounded-full';
+        zoomInButton.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#152361" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M8 12h8"/><path d="M12 8v8"/></svg>';
+        zoomInButton.onclick = () => map.current?.zoomIn();
+        
+        const zoomOutButton = document.createElement('button');
+        zoomOutButton.className = 'w-10 h-10 flex items-center justify-center hover:bg-gray-100 rounded-full';
+        zoomOutButton.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#152361" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M8 12h8"/></svg>';
+        zoomOutButton.onclick = () => map.current?.zoomOut();
 
-        // Eliminar todos los labels del mapa cuando se cargue
+        zoomContainer.appendChild(zoomInButton);
+        zoomContainer.appendChild(zoomOutButton);
+        
+        mapContainer.current.appendChild(zoomContainer);
+
+        // Modificar el estilo del mapa cuando se cargue
         map.current.on('load', () => {
           if (map.current) {
             // Eliminar todos los tipos de labels del mapa
@@ -148,6 +163,15 @@ const LocationMapSelector = ({
                 map.current.setLayoutProperty(layer.id, 'visibility', 'none');
               }
             }
+
+            // Cambiar colores para parecerse a Apple Maps
+            map.current.setPaintProperty('land', 'background-color', '#F8F8F8');
+            map.current.setPaintProperty('water', 'fill-color', '#C8D7E5');
+            map.current.setPaintProperty('road-primary', 'line-color', '#FFFFFF');
+            map.current.setPaintProperty('road-secondary', 'line-color', '#FFFFFF');
+            map.current.setPaintProperty('road-street', 'line-color', '#FFFFFF');
+            map.current.setPaintProperty('building', 'fill-color', '#E1E1E1');
+            map.current.setPaintProperty('park', 'fill-color', '#E6F2D2');
             
             // Cambiar la fuente del texto a Figtree para cualquier texto que pudiera quedar visible
             map.current.setLayoutProperty('settlement-label', 'text-font', ['Figtree Regular', 'Arial Unicode MS Regular']);
@@ -155,14 +179,50 @@ const LocationMapSelector = ({
             map.current.setLayoutProperty('country-label', 'text-font', ['Figtree Medium', 'Arial Unicode MS Regular']);
             map.current.setLayoutProperty('state-label', 'text-font', ['Figtree Regular', 'Arial Unicode MS Regular']);
             
+            // Crear fuente para el círculo de rango
+            map.current.addSource('location-source', {
+              type: 'geojson',
+              data: {
+                type: 'Feature',
+                geometry: {
+                  type: 'Point',
+                  coordinates: [centerCoords.lng, centerCoords.lat],
+                },
+                properties: {},
+              },
+            });
+            
+            // Agregar el círculo de rango (área de cobertura)
+            map.current.addLayer({
+              id: 'location-circle',
+              type: 'circle',
+              source: 'location-source',
+              paint: {
+                'circle-radius': 100,
+                'circle-color': '#152361',
+                'circle-opacity': 0.15,
+                'circle-stroke-width': 1,
+                'circle-stroke-color': '#152361',
+                'circle-stroke-opacity': 0.3,
+              },
+            });
+            
             setMapLoaded(true);
             console.log("Mapa cargado correctamente");
           }
         });
 
-        // Marcador con color personalizado
+        // Crear un marcador minimalista personalizado (sin usar el marcador estándar de Mapbox)
+        const markerElement = document.createElement('div');
+        markerElement.className = 'custom-marker';
+        markerElement.innerHTML = `
+          <div style="width: 20px; height: 20px; border-radius: 50%; background-color: white; display: flex; align-items: center; justify-content: center; box-shadow: 0 0 0 2px #152361, 0 0 10px rgba(0,0,0,0.3);">
+            <div style="width: 10px; height: 10px; border-radius: 50%; background-color: #152361;"></div>
+          </div>
+        `;
+        
         marker.current = new mapboxgl.Marker({
-          color: '#152361', // Color VYBA
+          element: markerElement,
           draggable: true,
         })
           .setLngLat([centerCoords.lng, centerCoords.lat])
@@ -170,15 +230,41 @@ const LocationMapSelector = ({
 
         // Manejar el evento de arrastrar el marcador
         marker.current.on('dragend', async () => {
-          if (!marker.current) return;
+          if (!marker.current || !map.current) return;
           const lngLat = marker.current.getLngLat();
+          
+          // Actualizar el círculo de rango cuando se mueve el marcador
+          if (map.current.getSource('location-source')) {
+            map.current.getSource('location-source').setData({
+              type: 'Feature',
+              geometry: {
+                type: 'Point',
+                coordinates: [lngLat.lng, lngLat.lat],
+              },
+              properties: {},
+            });
+          }
+          
           await reverseGeocode(lngLat.lng, lngLat.lat);
         });
 
         // Manejar clic en el mapa
         map.current.on('click', async (e) => {
-          if (!marker.current) return;
+          if (!marker.current || !map.current) return;
           marker.current.setLngLat(e.lngLat);
+          
+          // Actualizar el círculo de rango cuando se hace clic en el mapa
+          if (map.current.getSource('location-source')) {
+            map.current.getSource('location-source').setData({
+              type: 'Feature',
+              geometry: {
+                type: 'Point',
+                coordinates: [e.lngLat.lng, e.lngLat.lat],
+              },
+              properties: {},
+            });
+          }
+          
           await reverseGeocode(e.lngLat.lng, e.lngLat.lat);
         });
       } catch (error) {
@@ -307,6 +393,19 @@ const LocationMapSelector = ({
       });
       
       marker.current.setLngLat([lng, lat]);
+      
+      // Actualizar el círculo de rango
+      if (map.current.getSource('location-source')) {
+        map.current.getSource('location-source').setData({
+          type: 'Feature',
+          geometry: {
+            type: 'Point',
+            coordinates: [lng, lat],
+          },
+          properties: {},
+        });
+      }
+      
       await reverseGeocode(lng, lat);
     }
   };
