@@ -109,14 +109,14 @@ const LocationMapSelector = ({
       try {
         const centerCoords = await geocodeInitialLocation();
 
-        // Usar el estilo streets-v12 sin labels
+        // Crear un estilo personalizado similar a Apple Maps
         map.current = new mapboxgl.Map({
           container: mapContainer.current,
-          style: 'mapbox://styles/mapbox/streets-v12', // Cambio a streets-v12
+          style: 'mapbox://styles/mapbox/streets-v12', 
           center: [centerCoords.lng, centerCoords.lat],
           zoom: 13,
-          attributionControl: false, // Ocultar atribución
-          logoPosition: 'bottom-left', // Colocar logo en una posición específica para ocultarlo luego
+          attributionControl: false,
+          logoPosition: 'bottom-left',
         });
 
         // Ocultar el logo de Mapbox y la atribución con CSS
@@ -126,11 +126,14 @@ const LocationMapSelector = ({
           style.textContent = `
             .mapboxgl-ctrl-logo { display: none !important; }
             .mapboxgl-ctrl-attrib { display: none !important; }
+            .mapboxgl-canvas {
+              filter: saturate(0.9) hue-rotate(10deg) brightness(1.05);
+            }
           `;
           mapboxCanvas.appendChild(style);
         }
 
-        // Agregar controles de navegación pero minimalistas
+        // Agregar controles de navegación con estilo minimalista
         const navControl = new mapboxgl.NavigationControl({
           showCompass: false,
           showZoom: true,
@@ -138,14 +141,65 @@ const LocationMapSelector = ({
         });
         map.current.addControl(navControl, 'top-right');
 
-        // Eliminar todos los labels del mapa cuando se cargue
+        // Modificar el estilo del mapa cuando se cargue para parecerse a Apple Maps
         map.current.on('load', () => {
           if (map.current) {
-            // Eliminar todos los tipos de labels del mapa
+            // Eliminar todos los labels del mapa
             const layers = map.current.getStyle().layers;
+            
             for (const layer of layers) {
               if (layer.type === 'symbol') {
                 map.current.setLayoutProperty(layer.id, 'visibility', 'none');
+              }
+              
+              // Modificar los colores de las carreteras para imitar Apple Maps
+              if (layer.id.includes('road')) {
+                // Carreteras principales en blanco con borde gris claro
+                if (layer.id.includes('primary') || layer.id.includes('motorway') || layer.id.includes('trunk')) {
+                  if (layer.id.includes('line')) {
+                    map.current.setPaintProperty(layer.id, 'line-color', '#ffffff');
+                    map.current.setPaintProperty(layer.id, 'line-width', ['get', 'width']);
+                  }
+                  if (layer.id.includes('case')) {
+                    map.current.setPaintProperty(layer.id, 'line-color', '#e6e6e6');
+                  }
+                }
+                // Carreteras secundarias en un tono más gris claro
+                else if (layer.id.includes('secondary') || layer.id.includes('tertiary')) {
+                  if (layer.id.includes('line')) {
+                    map.current.setPaintProperty(layer.id, 'line-color', '#f8f8f8');
+                  }
+                  if (layer.id.includes('case')) {
+                    map.current.setPaintProperty(layer.id, 'line-color', '#e9e9e9');
+                  }
+                }
+                // Calles pequeñas
+                else {
+                  if (layer.id.includes('line')) {
+                    map.current.setPaintProperty(layer.id, 'line-color', '#f0f0f0');
+                  }
+                }
+              }
+              
+              // Cambiar el color del agua a un azul muy claro como Apple Maps
+              if (layer.id.includes('water')) {
+                map.current.setPaintProperty(layer.id, 'fill-color', '#d6e8f0');
+              }
+              
+              // Cambiar el color de los parques y áreas verdes
+              if (layer.id.includes('park') || layer.id.includes('landuse')) {
+                map.current.setPaintProperty(layer.id, 'fill-color', '#e8f0e0');
+              }
+              
+              // Cambiar el fondo del mapa a un tono blanco roto
+              if (layer.id === 'background') {
+                map.current.setPaintProperty(layer.id, 'background-color', '#f9f9f7');
+              }
+              
+              // Suavizar los bordes de las construcciones
+              if (layer.id.includes('building')) {
+                map.current.setPaintProperty(layer.id, 'fill-color', '#f4f4f4');
+                map.current.setPaintProperty(layer.id, 'fill-outline-color', '#eeeeee');
               }
             }
             
@@ -156,13 +210,13 @@ const LocationMapSelector = ({
             map.current.setLayoutProperty('state-label', 'text-font', ['Figtree Regular', 'Arial Unicode MS Regular']);
             
             setMapLoaded(true);
-            console.log("Mapa cargado correctamente");
+            console.log("Mapa con estilo Apple Maps cargado correctamente");
           }
         });
 
-        // Marcador con color personalizado
+        // Marcador con color personalizado que coincide con la paleta de Apple Maps
         marker.current = new mapboxgl.Marker({
-          color: '#152361', // Color VYBA
+          color: '#0071E3', // Color azul de Apple
           draggable: true,
         })
           .setLngLat([centerCoords.lng, centerCoords.lat])
