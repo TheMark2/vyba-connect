@@ -1,5 +1,5 @@
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Mail, AlertCircle } from "lucide-react";
@@ -22,6 +22,44 @@ const AuthDialog = ({ open, onOpenChange }: AuthDialogProps) => {
   const [showLoginDialog, setShowLoginDialog] = useState(false);
   const [emailError, setEmailError] = useState<{message: string, provider?: string} | null>(null);
   const [email, setEmail] = useState("");
+  const [isCheckingAuth, setIsCheckingAuth] = useState(true);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+
+  // Verificar si el usuario ya está autenticado al cargar el diálogo
+  useEffect(() => {
+    if (open) {
+      const checkAuth = async () => {
+        setIsCheckingAuth(true);
+        try {
+          const { data } = await supabase.auth.getSession();
+          if (data.session) {
+            console.log("Usuario ya autenticado en AuthDialog, cerrando diálogo");
+            setIsAuthenticated(true);
+            // Cerrar el diálogo después de un breve momento para evitar flash
+            setTimeout(() => {
+              onOpenChange(false);
+              // Redirigir al usuario según su rol
+              const userRole = data.session.user.user_metadata?.role || 'user';
+              if (userRole === 'artist') {
+                navigate('/dashboard');
+              } else {
+                navigate('/user-dashboard');
+              }
+            }, 100);
+          } else {
+            setIsAuthenticated(false);
+            setIsCheckingAuth(false);
+          }
+        } catch (error) {
+          console.error("Error verificando autenticación:", error);
+          setIsAuthenticated(false);
+          setIsCheckingAuth(false);
+        }
+      };
+      
+      checkAuth();
+    }
+  }, [open, navigate, onOpenChange]);
 
   const checkEmailExists = async (email: string) => {
     try {
@@ -73,6 +111,7 @@ const AuthDialog = ({ open, onOpenChange }: AuthDialogProps) => {
       toast.error(`Error con ${provider}`, {
         description: error.message || `No se pudo iniciar sesión con ${provider}`
       });
+    } finally {
       setIsLoading(false);
     }
   };
@@ -99,6 +138,24 @@ const AuthDialog = ({ open, onOpenChange }: AuthDialogProps) => {
     console.log("Registro exitoso, redirigiendo al dashboard");
     navigate('/dashboard');
   };
+
+  // Si estamos verificando la autenticación, mostramos nada o un cargador mínimo
+  if (isCheckingAuth && open) {
+    return (
+      <Dialog open={open} onOpenChange={onOpenChange}>
+        <DialogContent className="sm:max-w-lg">
+          <div className="flex justify-center items-center py-8">
+            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-black"></div>
+          </div>
+        </DialogContent>
+      </Dialog>
+    );
+  }
+
+  // Si el usuario ya está autenticado, no mostramos el diálogo
+  if (isAuthenticated) {
+    return null;
+  }
 
   return (
     <>

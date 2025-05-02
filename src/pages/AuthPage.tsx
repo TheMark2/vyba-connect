@@ -17,15 +17,20 @@ const AuthPage = () => {
   const [registeredUserInfo, setRegisteredUserInfo] = useState<{ fullName: string; email?: string }>({ fullName: '' });
   const [isLoading, setIsLoading] = useState(false);
   const [checkingSession, setCheckingSession] = useState(true);
+  const [redirecting, setRedirecting] = useState(false);
   const navigate = useNavigate();
 
   // Verificar si el usuario ya está autenticado
   useEffect(() => {
     const checkSession = async () => {
       try {
+        console.log("Verificando sesión de usuario...");
         const { data, error } = await supabase.auth.getSession();
         
         if (data.session) {
+          console.log("Sesión activa encontrada, preparando redirección...");
+          setRedirecting(true);
+          
           // Obtener el rol del usuario desde los metadatos
           const { data: { user } } = await supabase.auth.getUser();
           const userRole = user?.user_metadata?.role || 'user'; // Por defecto es usuario normal
@@ -53,12 +58,14 @@ const AuthPage = () => {
             }
           }
         } else {
-          console.log("No hay sesión activa");
+          console.log("No hay sesión activa, mostrando página de autenticación");
+          setRedirecting(false);
+          setCheckingSession(false);
         }
       } catch (err) {
         console.error("Error al verificar sesión:", err);
         toast.error("Error al verificar sesión");
-      } finally {
+        setRedirecting(false);
         setCheckingSession(false);
       }
     };
@@ -68,7 +75,11 @@ const AuthPage = () => {
     // Escuchar cambios en la autenticación
     const { data: authListener } = supabase.auth.onAuthStateChange(async (event, session) => {
       console.log("Evento de autenticación:", event, session ? "Con sesión" : "Sin sesión");
+      
       if (event === 'SIGNED_IN' && session) {
+        console.log("Usuario ha iniciado sesión, preparando redirección...");
+        setRedirecting(true);
+        
         // Obtener el rol del usuario
         const { data: { user } } = await supabase.auth.getUser();
         const userRole = user?.user_metadata?.role || 'user'; // Por defecto es usuario normal
@@ -94,6 +105,10 @@ const AuthPage = () => {
             navigate('/user-dashboard');
           }
         }
+      } else if (event === 'SIGNED_OUT') {
+        console.log("Usuario ha cerrado sesión");
+        setCheckingSession(false);
+        setRedirecting(false);
       }
     });
     
@@ -170,11 +185,29 @@ const AuthPage = () => {
     }
   };
 
+  // Pantalla de carga mejorada con información de estado
   if (checkingSession) {
     return (
       <main className="min-h-screen bg-white flex flex-col items-center justify-center">
-        <div className="animate-pulse text-center">
-          <p>Cargando...</p>
+        <div className="text-center space-y-4">
+          <div className="animate-pulse flex flex-col items-center">
+            <div className="rounded-full bg-gray-200 h-16 w-16 mb-4"></div>
+            <div className="h-4 bg-gray-200 rounded w-48"></div>
+          </div>
+          <p className="text-gray-600">Verificando sesión...</p>
+        </div>
+      </main>
+    );
+  }
+
+  // Pantalla de redirección con mensaje más informativo
+  if (redirecting) {
+    return (
+      <main className="min-h-screen bg-white flex flex-col items-center justify-center">
+        <div className="text-center space-y-4">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-black mx-auto"></div>
+          <p className="font-medium">Sesión iniciada</p>
+          <p className="text-gray-600">Redirigiendo al dashboard...</p>
         </div>
       </main>
     );
