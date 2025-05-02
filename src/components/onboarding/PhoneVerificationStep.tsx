@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -7,6 +8,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/u
 import { ChevronLeft, Check, X } from 'lucide-react';
 import { toast } from "sonner";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Alert, AlertTitle, AlertDescription } from "@/components/ui/alert";
 
 interface PhoneVerificationStepProps {
   onPhoneChange: (phone: string) => void;
@@ -36,6 +38,7 @@ const PhoneVerificationStep: React.FC<PhoneVerificationStepProps> = ({
   const [code, setCode] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [resendLoading, setResendLoading] = useState(false);
+  const [verificationError, setVerificationError] = useState('');
 
   const handlePhoneChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value.replace(/\D/g, '');
@@ -67,6 +70,7 @@ const PhoneVerificationStep: React.FC<PhoneVerificationStepProps> = ({
 
   const handleResendCode = () => {
     setResendLoading(true);
+    setVerificationError(''); // Limpiar errores previos
     setTimeout(() => {
       setResendLoading(false);
       toast.success("Código de verificación reenviado", {
@@ -80,16 +84,22 @@ const PhoneVerificationStep: React.FC<PhoneVerificationStepProps> = ({
     if (code.length !== 6) return;
 
     setIsLoading(true);
+    setVerificationError(''); // Limpiar errores previos
+    
     setTimeout(() => {
       setIsLoading(false);
-      setShowVerificationDialog(false);
-      setShowConfirmationDialog(true);
+      
       // Simulamos una verificación aleatoria para demostración
       const isCorrect = Math.random() > 0.5;
       setIsCodeCorrect(isCorrect);
+      
       if (isCorrect) {
+        setShowVerificationDialog(false);
+        setShowConfirmationDialog(true);
         toast.success("Teléfono verificado correctamente");
       } else {
+        // Mostrar mensaje de error cuando el código es incorrecto
+        setVerificationError("El código introducido es incorrecto. Por favor, inténtalo de nuevo.");
         toast.error("Código incorrecto");
       }
     }, 1500);
@@ -98,6 +108,7 @@ const PhoneVerificationStep: React.FC<PhoneVerificationStepProps> = ({
   const handleBack = () => {
     setShowVerificationDialog(false);
     setCode('');
+    setVerificationError('');
   };
 
   const handleCloseConfirmation = () => {
@@ -182,7 +193,10 @@ const PhoneVerificationStep: React.FC<PhoneVerificationStepProps> = ({
               </p>
               <InputOTP
                 value={code}
-                onChange={(value) => setCode(value)}
+                onChange={(value) => {
+                  setCode(value);
+                  setVerificationError(''); // Limpiar error al modificar el código
+                }}
                 maxLength={6}
               >
                 <InputOTPGroup className="gap-2">
@@ -195,6 +209,17 @@ const PhoneVerificationStep: React.FC<PhoneVerificationStepProps> = ({
                   ))}
                 </InputOTPGroup>
               </InputOTP>
+              
+              {verificationError && (
+                <Alert variant="destructive" className="mt-4 bg-red-50 text-red-800 border-red-200">
+                  <AlertTitle className="text-red-800 flex items-center gap-2">
+                    <X className="h-4 w-4" /> Código incorrecto
+                  </AlertTitle>
+                  <AlertDescription className="text-red-700">
+                    {verificationError}
+                  </AlertDescription>
+                </Alert>
+              )}
             </div>
             <div className="flex gap-2 justify-between">
               <Button 

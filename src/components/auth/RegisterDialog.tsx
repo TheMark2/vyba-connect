@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
@@ -14,6 +15,7 @@ import { Check, XCircle } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { supabase } from "@/integrations/supabase/client";
 import { useNavigate } from "react-router-dom";
+import { Alert, AlertTitle, AlertDescription } from "@/components/ui/alert";
 
 type Step = 'email' | 'verification' | 'registration';
 
@@ -43,6 +45,7 @@ const RegisterDialog = ({ open, onOpenChange, onSuccess }: RegisterDialogProps) 
   const [isLoading, setIsLoading] = useState(false);
   const [resendLoading, setResendLoading] = useState(false);
   const [isVerified, setIsVerified] = useState(false);
+  const [verificationError, setVerificationError] = useState('');
   const navigate = useNavigate();
 
   const form = useForm<RegistrationData>({
@@ -95,6 +98,7 @@ const RegisterDialog = ({ open, onOpenChange, onSuccess }: RegisterDialogProps) 
 
   const handleResendCode = async () => {
     setResendLoading(true);
+    setVerificationError(''); // Limpiar errores previos
     try {
       // Re-enviar el correo con el código OTP
       const response = await fetch('https://zkucuolpubthcnsgjtso.supabase.co/functions/v1/send-otp', {
@@ -132,6 +136,7 @@ const RegisterDialog = ({ open, onOpenChange, onSuccess }: RegisterDialogProps) 
     if (code.length !== 6) return;
 
     setIsLoading(true);
+    setVerificationError(''); // Limpiar errores previos
     try {
       // Verificar el código OTP
       const response = await fetch('https://zkucuolpubthcnsgjtso.supabase.co/functions/v1/send-otp', {
@@ -149,6 +154,11 @@ const RegisterDialog = ({ open, onOpenChange, onSuccess }: RegisterDialogProps) 
       const data = await response.json();
       
       if (!response.ok) {
+        console.error("Error de verificación:", {
+          status: response.status,
+          data
+        });
+        
         throw new Error(data.error || 'Código no válido');
       }
 
@@ -161,6 +171,10 @@ const RegisterDialog = ({ open, onOpenChange, onSuccess }: RegisterDialogProps) 
       });
     } catch (error: any) {
       console.error("Error de verificación:", error);
+      
+      // Mostrar un mensaje de error específico cuando el código es incorrecto
+      setVerificationError("El código introducido no es correcto o ha expirado. Por favor, inténtalo de nuevo o solicita un nuevo código.");
+      
       toast.error("Error", {
         description: error.message || "Código no válido o expirado"
       });
@@ -249,6 +263,7 @@ const RegisterDialog = ({ open, onOpenChange, onSuccess }: RegisterDialogProps) 
   const handleBack = () => {
     if (currentStep === 'verification') {
       setCurrentStep('email');
+      setVerificationError('');
     } else if (currentStep === 'registration') {
       setCurrentStep('verification');
     }
@@ -261,6 +276,7 @@ const RegisterDialog = ({ open, onOpenChange, onSuccess }: RegisterDialogProps) 
       setEmail('');
       setCode('');
       setIsVerified(false);
+      setVerificationError('');
       form.reset();
     }, 300);
   };
@@ -377,7 +393,10 @@ const RegisterDialog = ({ open, onOpenChange, onSuccess }: RegisterDialogProps) 
               </p>
               <InputOTP
                 value={code}
-                onChange={(value) => setCode(value)}
+                onChange={(value) => {
+                  setCode(value);
+                  if (verificationError) setVerificationError(''); // Limpiar error al cambiar el código
+                }}
                 maxLength={6}
               >
                 <InputOTPGroup className="gap-2">
@@ -390,6 +409,17 @@ const RegisterDialog = ({ open, onOpenChange, onSuccess }: RegisterDialogProps) 
                   ))}
                 </InputOTPGroup>
               </InputOTP>
+              
+              {verificationError && (
+                <Alert variant="destructive" className="mt-4 bg-red-50 text-red-800 border-red-200">
+                  <AlertTitle className="text-red-800 flex items-center gap-2">
+                    <XCircle className="h-4 w-4" /> Código incorrecto
+                  </AlertTitle>
+                  <AlertDescription className="text-red-700">
+                    {verificationError}
+                  </AlertDescription>
+                </Alert>
+              )}
             </div>
             <div className="flex gap-2 justify-between">
               <Button 
