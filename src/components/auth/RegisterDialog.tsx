@@ -249,7 +249,8 @@ const RegisterDialog = ({ open, onOpenChange, onSuccess }: RegisterDialogProps) 
         form.reset();
       }, 300);
 
-      handleRegistrationSuccess(authData);
+      // Redirigir al usuario directamente al onboarding
+      navigate('/user-onboarding');
     } catch (error: any) {
       console.error("Error de registro:", error);
       toast.error("Error", {

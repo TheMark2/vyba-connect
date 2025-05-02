@@ -265,7 +265,7 @@ const UserOnboardingPage = () => {
       }
       
       setShowExitDialog(false);
-      navigate('/user-dashboard');
+      navigate('/onboarding-complete');
     } catch (error) {
       console.error('Error al guardar datos temporales:', error);
       toast.error('Error al guardar los datos');
@@ -292,7 +292,7 @@ const UserOnboardingPage = () => {
       
       toast.success('¡Bienvenido a Vyba!');
       setShowExitDialog(false);
-      navigate('/user-dashboard');
+      navigate('/onboarding-complete');
     } catch (error) {
       console.error('Error al omitir onboarding:', error);
       toast.error('Error al procesar tu solicitud');
@@ -352,7 +352,7 @@ const UserOnboardingPage = () => {
 
       // 3. Redirigir al dashboard
       toast.success('¡Perfil configurado correctamente!');
-      navigate('/user-dashboard');
+      navigate('/onboarding-complete');
     } catch (error) {
       console.error('Error al completar el onboarding:', error);
       toast.error('Error al guardar tus datos');

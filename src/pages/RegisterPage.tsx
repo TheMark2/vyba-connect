@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { Button } from "@/components/ui/button";
 import { Link, useNavigate } from "react-router-dom";
@@ -77,25 +78,10 @@ const RegisterPage = () => {
     };
   }, [navigate]);
 
-  const handleRegistrationSuccess = () => {
-    try {
-      // Si el registro es exitoso, mostrar mensaje y opciones
-      toast.success('¡Registro exitoso!');
-      
-      // Preguntar después de un breve retraso para que el toast se muestre primero
-      setTimeout(() => {
-        const shouldSkip = window.confirm('¿Quieres completar tu perfil ahora o prefieres acceder directamente?');
-        
-        if (shouldSkip) {
-          navigate('/check-dashboard?skipOnboarding=true');
-        } else {
-          navigate('/user-onboarding');
-        }
-      }, 1000);
-    } catch (error) {
-      console.error('Error post-registro:', error);
-      toast.error('Error al procesar el registro');
-    }
+  const handleRegistrationSuccess = (userInfo: { fullName: string; email?: string }) => {
+    setRegisteredUserInfo(userInfo);
+    // Redirigimos directamente al onboarding sin preguntar
+    navigate('/user-onboarding');
   };
 
   const handleSocialLogin = async (provider: 'google' | 'facebook' | 'apple') => {
