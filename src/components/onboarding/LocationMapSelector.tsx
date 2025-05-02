@@ -112,7 +112,7 @@ const LocationMapSelector = ({
         // Usar un estilo minimalista similar al de Uber
         map.current = new mapboxgl.Map({
           container: mapContainer.current,
-          style: 'mapbox://styles/mapbox/light-v11', // Estilo claro y minimalista
+          style: 'mapbox://styles/mapbox/streets-v12', // Estilo claro y minimalista
           center: [centerCoords.lng, centerCoords.lat],
           zoom: 13,
           attributionControl: false, // Ocultar atribución
