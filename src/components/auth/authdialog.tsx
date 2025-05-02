@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
-import { Mail, AlertCircle } from "lucide-react";
+import { Mail, AlertCircle, Info } from "lucide-react";
 import { toast } from "sonner";
 import { useNavigate } from 'react-router-dom';
 import RegisterDialog from './RegisterDialog';
@@ -22,38 +22,30 @@ const AuthDialog = ({ open, onOpenChange }: AuthDialogProps) => {
   const [showLoginDialog, setShowLoginDialog] = useState(false);
   const [emailError, setEmailError] = useState<{message: string, provider?: string} | null>(null);
   const [email, setEmail] = useState("");
-  const [isCheckingAuth, setIsCheckingAuth] = useState(true);
+  const [checkingAuth, setCheckingAuth] = useState(true);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [userRole, setUserRole] = useState<string | null>(null);
 
   // Verificar si el usuario ya está autenticado al cargar el diálogo
   useEffect(() => {
     if (open) {
       const checkAuth = async () => {
-        setIsCheckingAuth(true);
         try {
           const { data } = await supabase.auth.getSession();
           if (data.session) {
-            console.log("Usuario ya autenticado en AuthDialog, cerrando diálogo");
+            console.log("Usuario ya autenticado en AuthDialog");
             setIsAuthenticated(true);
-            // Cerrar el diálogo después de un breve momento para evitar flash
-            setTimeout(() => {
-              onOpenChange(false);
-              // Redirigir al usuario según su rol
-              const userRole = data.session.user.user_metadata?.role || 'user';
-              if (userRole === 'artist') {
-                navigate('/dashboard');
-              } else {
-                navigate('/user-dashboard');
-              }
-            }, 100);
+            // Guardar el rol del usuario
+            const role = data.session.user.user_metadata?.role || 'user';
+            setUserRole(role);
           } else {
             setIsAuthenticated(false);
-            setIsCheckingAuth(false);
           }
         } catch (error) {
           console.error("Error verificando autenticación:", error);
           setIsAuthenticated(false);
-          setIsCheckingAuth(false);
+        } finally {
+          setCheckingAuth(false);
         }
       };
       
@@ -139,8 +131,17 @@ const AuthDialog = ({ open, onOpenChange }: AuthDialogProps) => {
     navigate('/dashboard');
   };
 
-  // Si estamos verificando la autenticación, mostramos nada o un cargador mínimo
-  if (isCheckingAuth && open) {
+  const handleRedirectToDashboard = () => {
+    onOpenChange(false);
+    if (userRole === 'artist') {
+      navigate('/dashboard');
+    } else {
+      navigate('/user-dashboard');
+    }
+  };
+
+  // Si estamos verificando la autenticación, mostramos un loader mínimo
+  if (checkingAuth && open) {
     return (
       <Dialog open={open} onOpenChange={onOpenChange}>
         <DialogContent className="sm:max-w-lg">
@@ -152,9 +153,35 @@ const AuthDialog = ({ open, onOpenChange }: AuthDialogProps) => {
     );
   }
 
-  // Si el usuario ya está autenticado, no mostramos el diálogo
-  if (isAuthenticated) {
-    return null;
+  // Si el usuario ya está autenticado, mostrar un mensaje de alerta
+  if (isAuthenticated && open) {
+    return (
+      <Dialog open={open} onOpenChange={onOpenChange}>
+        <DialogContent className="sm:max-w-lg">
+          <DialogHeader>
+            <DialogTitle className="text-center">
+              Sesión activa
+            </DialogTitle>
+          </DialogHeader>
+          
+          <div className="py-4 px-6">
+            <Alert className="mb-4 bg-blue-50 border-blue-200">
+              <Info className="h-5 w-5 text-blue-600" />
+              <AlertTitle className="ml-2 text-blue-800">Ya has iniciado sesión</AlertTitle>
+              <AlertDescription className="text-blue-700 mt-2">
+                Ya tienes una sesión activa en VYBA. No es necesario volver a iniciar sesión.
+              </AlertDescription>
+            </Alert>
+            
+            <div className="flex justify-center mt-6">
+              <Button onClick={handleRedirectToDashboard} className="w-full">
+                Ir a mi dashboard
+              </Button>
+            </div>
+          </div>
+        </DialogContent>
+      </Dialog>
+    );
   }
 
   return (

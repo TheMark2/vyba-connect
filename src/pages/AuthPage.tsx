@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
@@ -9,6 +10,7 @@ import WelcomeDialog from '@/components/WelcomeDialog';
 import { useNavigate } from 'react-router-dom';
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
+import { Alert, AlertTitle, AlertDescription } from "@/components/ui/alert";
 
 const AuthPage = () => {
   const [showLoginDialog, setShowLoginDialog] = useState(false);
@@ -17,7 +19,8 @@ const AuthPage = () => {
   const [registeredUserInfo, setRegisteredUserInfo] = useState<{ fullName: string; email?: string }>({ fullName: '' });
   const [isLoading, setIsLoading] = useState(false);
   const [checkingSession, setCheckingSession] = useState(true);
-  const [redirecting, setRedirecting] = useState(false);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [userRole, setUserRole] = useState<string | null>(null);
   const navigate = useNavigate();
 
   // Verificar si el usuario ya está autenticado
@@ -28,44 +31,20 @@ const AuthPage = () => {
         const { data, error } = await supabase.auth.getSession();
         
         if (data.session) {
-          console.log("Sesión activa encontrada, preparando redirección...");
-          setRedirecting(true);
+          console.log("Sesión activa encontrada");
+          setIsAuthenticated(true);
           
           // Obtener el rol del usuario desde los metadatos
-          const { data: { user } } = await supabase.auth.getUser();
-          const userRole = user?.user_metadata?.role || 'user'; // Por defecto es usuario normal
-          
-          // Verificar si necesita completar el onboarding
-          const isOnboardingCompleted = user?.user_metadata?.onboarding_completed === true;
-          
-          // Redirigir según el rol
-          if (userRole === 'artist') {
-            const isArtistOnboardingCompleted = user?.user_metadata?.artist_onboarding_completed === true;
-            if (!isArtistOnboardingCompleted) {
-              console.log("Artista necesita completar onboarding, redirigiendo...");
-              navigate('/register/artist');
-            } else {
-              console.log("Artista autenticado, redirigiendo a dashboard de artistas");
-              navigate('/dashboard');
-            }
-          } else {
-            if (!isOnboardingCompleted) {
-              console.log("Usuario normal necesita completar onboarding, redirigiendo...");
-              navigate('/user-onboarding');
-            } else {
-              console.log("Usuario normal autenticado, redirigiendo a dashboard de usuarios");
-              navigate('/user-dashboard');
-            }
-          }
+          const userRole = data.session.user?.user_metadata?.role || 'user';
+          setUserRole(userRole);
         } else {
           console.log("No hay sesión activa, mostrando página de autenticación");
-          setRedirecting(false);
-          setCheckingSession(false);
+          setIsAuthenticated(false);
         }
       } catch (err) {
         console.error("Error al verificar sesión:", err);
         toast.error("Error al verificar sesión");
-        setRedirecting(false);
+      } finally {
         setCheckingSession(false);
       }
     };
@@ -77,38 +56,16 @@ const AuthPage = () => {
       console.log("Evento de autenticación:", event, session ? "Con sesión" : "Sin sesión");
       
       if (event === 'SIGNED_IN' && session) {
-        console.log("Usuario ha iniciado sesión, preparando redirección...");
-        setRedirecting(true);
+        console.log("Usuario ha iniciado sesión");
+        setIsAuthenticated(true);
         
         // Obtener el rol del usuario
-        const { data: { user } } = await supabase.auth.getUser();
-        const userRole = user?.user_metadata?.role || 'user'; // Por defecto es usuario normal
-        
-        // Verificar si necesita completar el onboarding
-        const isOnboardingCompleted = user?.user_metadata?.onboarding_completed === true;
-        
-        if (userRole === 'artist') {
-          const isArtistOnboardingCompleted = user?.user_metadata?.artist_onboarding_completed === true;
-          if (!isArtistOnboardingCompleted) {
-            console.log("Artista nuevo necesita completar onboarding, redirigiendo...");
-            navigate('/register/artist');
-          } else {
-            console.log("Artista ha iniciado sesión, redirigiendo a dashboard de artistas");
-            navigate('/dashboard');
-          }
-        } else {
-          if (!isOnboardingCompleted) {
-            console.log("Usuario normal necesita completar onboarding, redirigiendo...");
-            navigate('/user-onboarding');
-          } else {
-            console.log("Usuario normal ha iniciado sesión, redirigiendo a dashboard de usuarios");
-            navigate('/user-dashboard');
-          }
-        }
+        const userRole = session.user?.user_metadata?.role || 'user';
+        setUserRole(userRole);
       } else if (event === 'SIGNED_OUT') {
         console.log("Usuario ha cerrado sesión");
-        setCheckingSession(false);
-        setRedirecting(false);
+        setIsAuthenticated(false);
+        setUserRole(null);
       }
     });
     
@@ -185,7 +142,41 @@ const AuthPage = () => {
     }
   };
 
-  // Pantalla de carga mejorada con información de estado
+  const handleRedirectToDashboard = () => {
+    if (userRole === 'artist') {
+      navigate('/dashboard');
+    } else {
+      navigate('/user-dashboard');
+    }
+  };
+
+  // Mostrar un mensaje de alerta si el usuario ya está autenticado
+  if (isAuthenticated && !checkingSession) {
+    return (
+      <main className="min-h-screen bg-white dark:bg-vyba-dark-bg flex flex-col">
+        <Navbar />
+        
+        <div className="container mx-auto flex flex-col items-center px-6 pt-24 pb-20 flex-1">
+          <div className="w-full max-w-md mx-auto mt-8 p-6 bg-white border border-gray-100 rounded-lg shadow-sm">
+            <Alert className="mb-6">
+              <AlertTitle className="text-lg font-medium">Ya has iniciado sesión</AlertTitle>
+              <AlertDescription className="mt-2">
+                Ya tienes una sesión activa en VYBA. No es necesario volver a iniciar sesión.
+              </AlertDescription>
+            </Alert>
+            
+            <div className="flex justify-center mt-4">
+              <Button onClick={handleRedirectToDashboard} className="w-full">
+                Ir a mi dashboard
+              </Button>
+            </div>
+          </div>
+        </div>
+      </main>
+    );
+  }
+
+  // Pantalla de carga si todavía se está verificando la sesión
   if (checkingSession) {
     return (
       <main className="min-h-screen bg-white flex flex-col items-center justify-center">
@@ -200,19 +191,7 @@ const AuthPage = () => {
     );
   }
 
-  // Pantalla de redirección con mensaje más informativo
-  if (redirecting) {
-    return (
-      <main className="min-h-screen bg-white flex flex-col items-center justify-center">
-        <div className="text-center space-y-4">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-black mx-auto"></div>
-          <p className="font-medium">Sesión iniciada</p>
-          <p className="text-gray-600">Redirigiendo al dashboard...</p>
-        </div>
-      </main>
-    );
-  }
-
+  // Mostrar la página de autenticación normal si el usuario no está autenticado
   return (
     <main className="min-h-screen bg-white dark:bg-vyba-dark-bg flex flex-col">
       <Navbar />
