@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
-import { Sun, Moon, Monitor, Home, Users, Music, Palette, X, Search, SlidersHorizontal } from "lucide-react";
+import { Sun, Moon, Monitor, Home, Users, Music, Palette, X, Search, SlidersHorizontal, LogOut, User } from "lucide-react";
 import { createPortal } from "react-dom";
 import { cn } from "@/lib/utils";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
@@ -10,10 +10,27 @@ import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 interface MobileMenuProps {
   isOpen: boolean;
   onClose: () => void;
+  isAuthenticated?: boolean;
+  userDisplayName?: string;
+  onAuthClick?: () => void;
+  onDashboardClick?: () => Promise<void>;
+  onLogoutClick?: () => Promise<void>;
+  currentTheme?: 'light' | 'dark' | 'system';
+  setTheme?: (theme: 'light' | 'dark' | 'system') => void;
 }
 
-const MobileMenu = ({ isOpen, onClose }: MobileMenuProps) => {
-  const [theme, setTheme] = useState("system");
+const MobileMenu = ({ 
+  isOpen, 
+  onClose, 
+  isAuthenticated = false,
+  userDisplayName = 'Usuario',
+  onAuthClick,
+  onDashboardClick,
+  onLogoutClick,
+  currentTheme: propTheme,
+  setTheme: propSetTheme
+}: MobileMenuProps) => {
+  const [theme, setTheme] = useState(propTheme || "system");
   const [isAnimating, setIsAnimating] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
   const location = useLocation();
@@ -23,54 +40,62 @@ const MobileMenu = ({ isOpen, onClose }: MobileMenuProps) => {
 
   // Manejador de cambio de tema
   const handleThemeChange = (value: string) => {
-    if (value) {
-      setTheme(value);
-      
-      // Aplicar la clase dark al documento con animación
-      if (value === 'dark') {
-        document.documentElement.classList.add('theme-transition');
-        document.documentElement.classList.add('dark');
-        setTimeout(() => {
-          document.documentElement.classList.remove('theme-transition');
-        }, 500);
-      } else if (value === 'light') {
-        document.documentElement.classList.add('theme-transition');
-        document.documentElement.classList.remove('dark');
-        setTimeout(() => {
-          document.documentElement.classList.remove('theme-transition');
-        }, 500);
-      } else if (value === 'system') {
-        document.documentElement.classList.add('theme-transition');
-        const isDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches;
-        if (isDarkMode) {
+    if (value && (value === 'light' || value === 'dark' || value === 'system')) {
+      if (propSetTheme) {
+        propSetTheme(value as 'light' | 'dark' | 'system');
+      } else {
+        setTheme(value as 'light' | 'dark' | 'system');
+        
+        // Aplicar la clase dark al documento con animación
+        if (value === 'dark') {
+          document.documentElement.classList.add('theme-transition');
           document.documentElement.classList.add('dark');
-        } else {
+          setTimeout(() => {
+            document.documentElement.classList.remove('theme-transition');
+          }, 500);
+        } else if (value === 'light') {
+          document.documentElement.classList.add('theme-transition');
           document.documentElement.classList.remove('dark');
+          setTimeout(() => {
+            document.documentElement.classList.remove('theme-transition');
+          }, 500);
+        } else if (value === 'system') {
+          document.documentElement.classList.add('theme-transition');
+          const isDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches;
+          if (isDarkMode) {
+            document.documentElement.classList.add('dark');
+          } else {
+            document.documentElement.classList.remove('dark');
+          }
+          setTimeout(() => {
+            document.documentElement.classList.remove('theme-transition');
+          }, 500);
         }
-        setTimeout(() => {
-          document.documentElement.classList.remove('theme-transition');
-        }, 500);
       }
     }
   };
 
   // Configurar el tema inicial
   useEffect(() => {
-    // Verificar si existe preferencia guardada, sino usar el tema del sistema
-    const savedTheme = localStorage.getItem('theme');
-    
-    if (savedTheme) {
-      setTheme(savedTheme);
+    if (propTheme) {
+      setTheme(propTheme);
     } else {
-      setTheme('system');
-      const isDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches;
-      if (isDarkMode) {
-        document.documentElement.classList.add('dark');
+      // Verificar si existe preferencia guardada, sino usar el tema del sistema
+      const savedTheme = localStorage.getItem('theme');
+      
+      if (savedTheme && (savedTheme === 'light' || savedTheme === 'dark' || savedTheme === 'system')) {
+        setTheme(savedTheme as 'light' | 'dark' | 'system');
       } else {
-        document.documentElement.classList.remove('dark');
+        setTheme('system');
+        const isDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches;
+        if (isDarkMode) {
+          document.documentElement.classList.add('dark');
+        } else {
+          document.documentElement.classList.remove('dark');
+        }
       }
     }
-  }, []);
+  }, [propTheme]);
 
   // Escuchar cambios en la preferencia del sistema
   useEffect(() => {
@@ -92,8 +117,10 @@ const MobileMenu = ({ isOpen, onClose }: MobileMenuProps) => {
 
   // Guardar el tema cuando cambia
   useEffect(() => {
-    localStorage.setItem('theme', theme);
-  }, [theme]);
+    if (!propSetTheme) {
+      localStorage.setItem('theme', theme);
+    }
+  }, [theme, propSetTheme]);
 
   // Gestionar la animación al abrir/cerrar y el scrolling del body
   useEffect(() => {
@@ -166,7 +193,15 @@ const MobileMenu = ({ isOpen, onClose }: MobileMenuProps) => {
         onTransitionEnd={handleTransitionEnd}
       >
         {/* Encabezado con botón de cierre */}
-        <div className="flex justify-end p-6">
+        <div className="flex justify-between items-center p-6">
+          {isAuthenticated && (
+            <div className="flex items-center gap-2">
+              <div className="w-10 h-10 bg-vyba-gray rounded-full flex items-center justify-center">
+                <User className="h-5 w-5" />
+              </div>
+              <span className="font-medium">{userDisplayName}</span>
+            </div>
+          )}
           <Button 
             variant="ghost" 
             size="icon" 
@@ -242,70 +277,66 @@ const MobileMenu = ({ isOpen, onClose }: MobileMenuProps) => {
           {/* Separador que va de extremo a extremo */}
           <Separator className="animate-menu-item w-full dark:bg-vyba-dark-secondary" style={{ animationDelay: "250ms", margin: "0.5rem 0" }} />
           
-          {/* Nuevos botones: Buscar con IA y Filtrar */}
+          {/* Botones de autenticación */}
           <div className="px-6 my-4 flex flex-col space-y-2 animate-menu-item" style={{ animationDelay: "300ms" }}>
-            <Button 
-              variant="ghost" 
-              className="justify-start px-4 py-3 h-auto text-black dark:text-white hover:bg-[#F8F8F8] dark:hover:bg-vyba-dark-secondary rounded-lg w-full font-medium"
-            >
-              <div className="flex items-center space-x-3">
-                <Search className="h-5 w-5 stroke-2" />
-                <span>Buscar con IA</span>
-              </div>
-            </Button>
-            
-            <Button 
-              variant="ghost" 
-              className="justify-start px-4 py-3 h-auto text-black dark:text-white hover:bg-[#F8F8F8] dark:hover:bg-vyba-dark-secondary rounded-lg w-full font-medium"
-            >
-              <div className="flex items-center space-x-3">
-                <SlidersHorizontal className="h-5 w-5 stroke-2" />
-                <span>Filtrar</span>
-              </div>
-            </Button>
+            {isAuthenticated ? (
+              <>
+                <Button 
+                  variant="ghost" 
+                  className="justify-start px-4 py-3 h-auto text-black dark:text-white hover:bg-[#F8F8F8] dark:hover:bg-vyba-dark-secondary rounded-lg w-full font-medium"
+                  onClick={() => {
+                    onDashboardClick?.();
+                    onClose();
+                  }}
+                >
+                  <User className="mr-3 h-5 w-5" />
+                  Mi cuenta
+                </Button>
+                <Button 
+                  variant="ghost" 
+                  className="justify-start px-4 py-3 h-auto text-red-500 hover:text-red-600 hover:bg-[#F8F8F8] dark:hover:bg-vyba-dark-secondary rounded-lg w-full font-medium"
+                  onClick={() => {
+                    onLogoutClick?.();
+                    onClose();
+                  }}
+                >
+                  <LogOut className="mr-3 h-5 w-5" />
+                  Cerrar sesión
+                </Button>
+              </>
+            ) : (
+              <Button 
+                variant="default" 
+                className="px-4 py-3 h-auto rounded-full w-full font-medium"
+                onClick={() => {
+                  onAuthClick?.();
+                  onClose();
+                }}
+              >
+                Iniciar sesión
+              </Button>
+            )}
           </div>
           
-          {/* Otro separador que va de extremo a extremo */}
           <Separator className="animate-menu-item w-full dark:bg-vyba-dark-secondary" style={{ animationDelay: "350ms", margin: "0.5rem 0" }} />
           
-          {/* Selector de tema solo con iconos usando ToggleGroup */}
-          <div className="px-6 my-4 animate-menu-item" style={{ animationDelay: "400ms" }}>
-            <ToggleGroup 
-              type="single" 
-              value={theme} 
-              onValueChange={handleThemeChange}
-              className="w-full"
-            >
-              <ToggleGroupItem value="light" className="flex-1 flex items-center justify-center py-6">
-                <Sun className="h-5 w-5" />
+          {/* Selector de tema */}
+          <div className="px-6 pt-2 pb-6 animate-menu-item" style={{ animationDelay: "400ms" }}>
+            <h3 className="text-sm font-medium text-gray-500 dark:text-gray-400 mb-3">Tema</h3>
+            <ToggleGroup type="single" value={propTheme || theme} onValueChange={handleThemeChange} className="flex justify-between">
+              <ToggleGroupItem value="light" className="flex-1 p-2 data-[state=on]:bg-[#F8F8F8] dark:data-[state=on]:bg-vyba-dark-secondary">
+                <Sun className="mx-auto h-5 w-5" />
+                <span className="block text-xs mt-1">Claro</span>
               </ToggleGroupItem>
-              
-              <ToggleGroupItem value="dark" className="flex-1 flex items-center justify-center py-6">
-                <Moon className="h-5 w-5" />
+              <ToggleGroupItem value="system" className="flex-1 p-2 data-[state=on]:bg-[#F8F8F8] dark:data-[state=on]:bg-vyba-dark-secondary">
+                <Monitor className="mx-auto h-5 w-5" />
+                <span className="block text-xs mt-1">Sistema</span>
               </ToggleGroupItem>
-              
-              <ToggleGroupItem value="system" className="flex-1 flex items-center justify-center py-6">
-                <Monitor className="h-5 w-5" />
+              <ToggleGroupItem value="dark" className="flex-1 p-2 data-[state=on]:bg-[#F8F8F8] dark:data-[state=on]:bg-vyba-dark-secondary">
+                <Moon className="mx-auto h-5 w-5" />
+                <span className="block text-xs mt-1">Oscuro</span>
               </ToggleGroupItem>
             </ToggleGroup>
-          </div>
-          
-          {/* Separador final */}
-          <Separator className="animate-menu-item w-full dark:bg-vyba-dark-secondary" style={{ animationDelay: "450ms", margin: "0.5rem 0" }} />
-          
-          <div className="flex flex-col space-y-3 p-6 mt-auto">
-            <Button 
-              className="w-full rounded-full bg-[#D4DDFF] text-[#222845] hover:bg-[#C4D1FF] animate-menu-item"
-              style={{ animationDelay: "500ms" }}
-            >
-              Iniciar sesión/Registrarse
-            </Button>
-            <Button 
-              className="w-full rounded-full bg-[#E7D3D3] dark:bg-vyba-dark-secondary dark:text-white text-black hover:bg-[#DDCACA] dark:hover:bg-opacity-80 animate-menu-item"
-              style={{ animationDelay: "550ms" }}
-            >
-              Promocionarse como artista
-            </Button>
           </div>
         </div>
       </div>

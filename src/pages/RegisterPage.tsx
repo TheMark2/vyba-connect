@@ -1,14 +1,14 @@
-
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Button } from "@/components/ui/button";
 import { Link, useNavigate } from "react-router-dom";
-import { Mail, AlertCircle } from "lucide-react";
+import { Mail, AlertCircle, Info } from "lucide-react";
 import Navbar from "@/components/Navbar";
 import RegisterDialog from '@/components/auth/RegisterDialog';
 import WelcomeDialog from '@/components/WelcomeDialog';
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { Alert, AlertTitle, AlertDescription } from "@/components/ui/alert";
+import { useAuth } from '@/contexts/AuthContext';
 
 const RegisterPage = () => {
   const [showRegisterDialog, setShowRegisterDialog] = useState(false);
@@ -17,68 +17,9 @@ const RegisterPage = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [emailError, setEmailError] = useState<{message: string, provider?: string} | null>(null);
   const navigate = useNavigate();
-
-  // Verificar si el usuario ya está autenticado
-  useEffect(() => {
-    const checkSession = async () => {
-      const { data, error } = await supabase.auth.getSession();
-      if (data.session) {
-        // Obtener el rol del usuario y verificar el estado del onboarding
-        const { data: userData } = await supabase.auth.getUser();
-        const userRole = userData.user?.user_metadata?.role || 'user';
-        const isOnboardingCompleted = userData.user?.user_metadata?.onboarding_completed === true;
-        
-        if (userRole === 'artist') {
-          const isArtistOnboardingCompleted = userData.user?.user_metadata?.artist_onboarding_completed === true;
-          if (!isArtistOnboardingCompleted) {
-            navigate('/register/artist');
-          } else {
-            navigate('/dashboard');
-          }
-        } else {
-          if (!isOnboardingCompleted) {
-            navigate('/user-onboarding');
-          } else {
-            navigate('/user-dashboard');
-          }
-        }
-      }
-    };
-    
-    checkSession();
-
-    // Configurar listener para cambios de autenticación
-    const { data: { subscription } } = supabase.auth.onAuthStateChange(
-      async (event, session) => {
-        console.log("Auth state changed:", event, session);
-        if (session) {
-          // Verificar el estado del onboarding
-          const { data: userData } = await supabase.auth.getUser();
-          const userRole = userData.user?.user_metadata?.role || 'user';
-          const isOnboardingCompleted = userData.user?.user_metadata?.onboarding_completed === true;
-          
-          if (userRole === 'artist') {
-            const isArtistOnboardingCompleted = userData.user?.user_metadata?.artist_onboarding_completed === true;
-            if (!isArtistOnboardingCompleted) {
-              navigate('/register/artist');
-            } else {
-              navigate('/dashboard');
-            }
-          } else {
-            if (!isOnboardingCompleted) {
-              navigate('/user-onboarding');
-            } else {
-              navigate('/user-dashboard');
-            }
-          }
-        }
-      }
-    );
-
-    return () => {
-      subscription.unsubscribe();
-    };
-  }, [navigate]);
+  
+  // Usar el contexto de autenticación
+  const { isAuthenticated, getRedirectUrl } = useAuth();
 
   const handleRegistrationSuccess = (userInfo: { fullName: string; email?: string }) => {
     setRegisteredUserInfo(userInfo);
@@ -148,6 +89,16 @@ const RegisterPage = () => {
           <div className="text-center mb-12">
             <h1 className="text-4xl md:text-5xl font-bold mb-2">Te damos la bienvenida a VYBA</h1>
           </div>
+
+          {isAuthenticated && (
+            <Alert className="mb-6 bg-blue-50 border-blue-100">
+              <Info className="h-4 w-4 text-blue-600" />
+              <AlertTitle className="text-blue-800">Ya has iniciado sesión</AlertTitle>
+              <AlertDescription className="text-blue-700">
+                Ya tienes una sesión activa. Puedes ir a tu <Button variant="link" className="p-0 text-blue-700 font-medium underline" onClick={() => navigate(getRedirectUrl())}>panel de control</Button> o continuar con el registro si deseas crear una cuenta nueva.
+              </AlertDescription>
+            </Alert>
+          )}
 
           <div className="space-y-4 mt-16 max-w-sm mx-auto">
             {emailError && (
