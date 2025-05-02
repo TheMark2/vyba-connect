@@ -109,10 +109,10 @@ const LocationMapSelector = ({
       try {
         const centerCoords = await geocodeInitialLocation();
 
-        // Usar un estilo minimalista similar al de Uber con solo ciudades importantes
+        // Usar el estilo streets-v12 sin labels
         map.current = new mapboxgl.Map({
           container: mapContainer.current,
-          style: 'mapbox://styles/mapbox/light-v11', // Estilo claro y minimalista
+          style: 'mapbox://styles/mapbox/streets-v12', // Cambio a streets-v12
           center: [centerCoords.lng, centerCoords.lat],
           zoom: 13,
           attributionControl: false, // Ocultar atribución
@@ -138,14 +138,18 @@ const LocationMapSelector = ({
         });
         map.current.addControl(navControl, 'top-right');
 
-        // Filtrar puntos en el mapa para mostrar solo ciudades importantes
+        // Eliminar todos los labels del mapa cuando se cargue
         map.current.on('load', () => {
-          // Aplicar filtros al mapa para mostrar solo ciudades importantes
           if (map.current) {
-            map.current.setFilter('settlement-label', ['==', ['get', 'class'], 'city']);
-            map.current.setFilter('settlement-minor-label', ['==', ['get', 'class'], 'city']);
+            // Eliminar todos los tipos de labels del mapa
+            const layers = map.current.getStyle().layers;
+            for (const layer of layers) {
+              if (layer.type === 'symbol') {
+                map.current.setLayoutProperty(layer.id, 'visibility', 'none');
+              }
+            }
             
-            // Cambiar la fuente del texto a Figtree
+            // Cambiar la fuente del texto a Figtree para cualquier texto que pudiera quedar visible
             map.current.setLayoutProperty('settlement-label', 'text-font', ['Figtree Regular', 'Arial Unicode MS Regular']);
             map.current.setLayoutProperty('settlement-minor-label', 'text-font', ['Figtree Regular', 'Arial Unicode MS Regular']);
             map.current.setLayoutProperty('country-label', 'text-font', ['Figtree Medium', 'Arial Unicode MS Regular']);
