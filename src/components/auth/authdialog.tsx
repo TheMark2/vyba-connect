@@ -1,12 +1,14 @@
+
 import React, { useState } from 'react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
-import { Mail } from "lucide-react";
+import { Mail, AlertCircle } from "lucide-react";
 import { toast } from "sonner";
 import { useNavigate } from 'react-router-dom';
 import RegisterDialog from './RegisterDialog';
 import LoginDialog from './LoginDialog';
 import { supabase } from '@/integrations/supabase/client';
+import { Alert, AlertTitle, AlertDescription } from "@/components/ui/alert";
 
 interface AuthDialogProps {
   open: boolean;
@@ -18,9 +20,41 @@ const AuthDialog = ({ open, onOpenChange }: AuthDialogProps) => {
   const [isLoading, setIsLoading] = useState(false);
   const [showRegisterDialog, setShowRegisterDialog] = useState(false);
   const [showLoginDialog, setShowLoginDialog] = useState(false);
+  const [emailError, setEmailError] = useState<{message: string, provider?: string} | null>(null);
+  const [email, setEmail] = useState("");
+
+  const checkEmailExists = async (email: string) => {
+    try {
+      // Intentamos iniciar sesión con un correo y una contraseña falsa
+      // para comprobar si el correo existe
+      const { data, error } = await supabase.auth.signInWithPassword({
+        email: email,
+        password: 'check_if_email_exists_only'
+      });
+      
+      // Si hay un error específico sobre credenciales inválidas, el email existe
+      if (error && error.message.includes("Invalid login credentials")) {
+        // Intentamos determinar con qué proveedores se registró
+        // Este método es básico y puede requerir mejoras
+        
+        // Para una implementación completa, necesitaríamos un endpoint en el servidor
+        // que verifique los métodos de autenticación de un usuario
+        
+        // Por ahora, solo podemos decir que existe
+        return { exists: true, provider: 'desconocido' };
+      }
+      
+      // Si no hay error o es otro tipo de error, asumimos que el email no existe
+      return { exists: false };
+    } catch (error) {
+      console.error("Error al verificar email:", error);
+      return { exists: false };
+    }
+  };
 
   const handleSocialLogin = async (provider: 'google' | 'facebook' | 'apple') => {
     setIsLoading(true);
+    setEmailError(null);
 
     try {
       let { data, error } = await supabase.auth.signInWithOAuth({
@@ -79,6 +113,17 @@ const AuthDialog = ({ open, onOpenChange }: AuthDialogProps) => {
           </DialogHeader>
 
           <div className="space-y-4 py-4 px-12">
+            {emailError && (
+              <Alert variant="destructive" className="mb-4 bg-red-50 text-red-800 border-none">
+                <AlertTitle className="text-red-800 flex items-center gap-2">
+                  <AlertCircle className="h-4 w-4" /> Email ya registrado
+                </AlertTitle>
+                <AlertDescription className="text-red-700">
+                  {emailError.message}
+                </AlertDescription>
+              </Alert>
+            )}
+
             <div className="space-y-4">
               <Button 
                 variant="secondary" 

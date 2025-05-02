@@ -11,7 +11,7 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Check, XCircle } from "lucide-react";
+import { Check, XCircle, AlertCircle } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { supabase } from "@/integrations/supabase/client";
 import { useNavigate } from "react-router-dom";
@@ -46,6 +46,7 @@ const RegisterDialog = ({ open, onOpenChange, onSuccess }: RegisterDialogProps) 
   const [resendLoading, setResendLoading] = useState(false);
   const [isVerified, setIsVerified] = useState(false);
   const [verificationError, setVerificationError] = useState('');
+  const [emailError, setEmailError] = useState<{message: string, provider?: string} | null>(null);
   const navigate = useNavigate();
 
   const form = useForm<RegistrationData>({
@@ -58,13 +59,69 @@ const RegisterDialog = ({ open, onOpenChange, onSuccess }: RegisterDialogProps) 
     }
   });
 
+  const checkEmailExists = async (email: string) => {
+    try {
+      // Intentamos iniciar sesión con un correo y una contraseña falsa
+      // para comprobar si el correo existe
+      const { data, error } = await supabase.auth.signInWithPassword({
+        email: email,
+        password: 'check_if_email_exists_only'
+      });
+      
+      // Si hay un error específico sobre credenciales inválidas, el email existe
+      if (error && error.message.includes("Invalid login credentials")) {
+        // Verificamos con qué proveedor está asociado este email
+        const { data: authData, error: authError } = await supabase.auth.signInWithOtp({
+          email: email,
+          options: {
+            shouldCreateUser: false,
+          }
+        });
+        
+        // Si se puede enviar un OTP, significa que está registrado con email
+        if (!authError) {
+          return { exists: true, provider: 'email' };
+        }
+        
+        // Si no se puede, comprobamos los proveedores de OAuth
+        // Este es un enfoque básico - para una implementación completa, necesitarías 
+        // un endpoint en el servidor para verificar esto
+        
+        // Por ahora, solo podemos decir que existe
+        return { exists: true, provider: 'desconocido' };
+      }
+      
+      // Si no hay error o es otro tipo de error, asumimos que el email no existe
+      return { exists: false };
+    } catch (error) {
+      console.error("Error al verificar email:", error);
+      return { exists: false };
+    }
+  };
+
   const handleEmailSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!email) return;
     
     setIsLoading(true);
+    setEmailError(null);
+    
     try {
-      // Enviar el correo con el código OTP
+      // Verificar si el email ya está registrado
+      const emailCheck = await checkEmailExists(email);
+      
+      if (emailCheck.exists) {
+        // Si el email ya existe, establecer el error y detener el proceso
+        let message = "Este email ya está registrado";
+        if (emailCheck.provider) {
+          message += ` con ${emailCheck.provider === 'email' ? 'correo y contraseña' : emailCheck.provider}`;
+        }
+        setEmailError({ message, provider: emailCheck.provider });
+        setIsLoading(false);
+        return;
+      }
+      
+      // Continuar con el envío del código OTP si el email no existe
       const response = await fetch('https://zkucuolpubthcnsgjtso.supabase.co/functions/v1/send-otp', {
         method: 'POST',
         headers: {
@@ -369,16 +426,33 @@ const RegisterDialog = ({ open, onOpenChange, onSuccess }: RegisterDialogProps) 
                 type="email"
                 placeholder="ejemplo@email.com"
                 value={email}
-                onChange={(e) => setEmail(e.target.value)}
+                onChange={(e) => {
+                  setEmail(e.target.value);
+                  setEmailError(null); // Limpiar error al cambiar el email
+                }}
                 required
-                className="focus:ring-0 focus-visible:ring-0 focus-visible:ring-offset-0 focus:ring-offset-0"
+                className={cn(
+                  "focus:ring-0 focus-visible:ring-0 focus-visible:ring-offset-0 focus:ring-offset-0",
+                  emailError ? "border-red-500" : ""
+                )}
               />
+              
+              {emailError && (
+                <Alert variant="destructive" className="mt-4 bg-red-50 text-red-800 border-none">
+                  <AlertTitle className="text-red-800 flex items-center gap-2">
+                    <AlertCircle className="h-4 w-4" /> Email ya registrado
+                  </AlertTitle>
+                  <AlertDescription className="text-red-700">
+                    {emailError.message}. Por favor, inicia sesión en lugar de registrarte.
+                  </AlertDescription>
+                </Alert>
+              )}
             </div>
             <Button 
               variant="terciary"
               type="submit" 
               className="w-full"
-              disabled={isLoading}
+              disabled={isLoading || !!emailError}
               isLoading={isLoading}
             >
               {isLoading ? "Enviando" : "Enviar código"}
@@ -562,3 +636,4 @@ const RegisterDialog = ({ open, onOpenChange, onSuccess }: RegisterDialogProps) 
 };
 
 export default RegisterDialog;
+
