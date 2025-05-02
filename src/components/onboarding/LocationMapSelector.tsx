@@ -1,4 +1,3 @@
-
 import React, { useEffect, useRef, useState } from 'react';
 import mapboxgl from 'mapbox-gl';
 import 'mapbox-gl/dist/mapbox-gl.css';
@@ -192,18 +191,25 @@ const LocationMapSelector = ({
             });
             
             // Agregar el círculo de rango (área de cobertura de 1km)
-            // El radio se define en metros, 1000 metros = 1km
+            // Utilizamos una expresión para mantener un radio constante en metros
+            // independientemente del nivel de zoom
             map.current.addLayer({
               id: 'location-circle',
               type: 'circle',
               source: 'location-source',
               paint: {
-                'circle-radius': ['interpolate', ['linear'], ['zoom'], 
-                  // Ajustamos el radio según el nivel de zoom para mantener 1km visual
-                  10, 500,   // A zoom 10, el radio es pequeño
-                  12, 250,   // A zoom 12, tamaño moderado
-                  14, 125,   // A zoom 14, tamaño adecuado
-                  16, 60,    // A zoom 16, mantiene la proporción visual
+                // Utilizamos la función 'interpolate' con 'exponential' para mejor ajuste
+                'circle-radius': [
+                  'interpolate',
+                  ['exponential', 2], // Usamos exponencial para mejor ajuste
+                  ['zoom'],
+                  // zoom level : pixeles de radio (ajustados para representar ~1km)
+                  10, 15,   // A zoom 10 (muy alejado)
+                  12, 30,   // A zoom 12
+                  13, 50,   // A zoom 13
+                  14, 80,   // A zoom 14
+                  15, 160,  // A zoom 15
+                  16, 320,  // A zoom 16 (muy cercano)
                 ],
                 'circle-color': '#152361',
                 'circle-opacity': 0.15,
