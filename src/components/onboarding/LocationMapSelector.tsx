@@ -5,7 +5,7 @@ import { supabase } from '@/integrations/supabase/client';
 import { Label } from '@/components/ui/label';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Loader2, Check, MapPin, Search, ZoomIn, ZoomOut } from 'lucide-react';
+import { Loader2, Check, MapPin, Search, ZoomIn, ZoomOut, Locate } from 'lucide-react';
 
 interface LocationMapSelectorProps {
   onLocationSelect: (data: {
@@ -136,6 +136,14 @@ const LocationMapSelector = ({
         const zoomContainer = document.createElement('div');
         zoomContainer.className = 'absolute bottom-4 right-4 flex flex-col bg-white/90 backdrop-blur-md rounded-full shadow-md p-1';
         
+        // Añadir botón de ubicación actual
+        const locateButton = document.createElement('button');
+        locateButton.className = 'w-10 h-10 flex items-center justify-center hover:bg-gray-100 rounded-full';
+        locateButton.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#152361" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="1"/><line x1="12" y1="2" x2="12" y2="4"/><line x1="12" y1="20" x2="12" y2="22"/><line x1="20" y1="12" x2="22" y2="12"/><line x1="2" y1="12" x2="4" y2="12"/></svg>';
+        
+        locateButton.onclick = () => getUserLocation();
+        
+        // Botones de zoom existentes
         const zoomInButton = document.createElement('button');
         zoomInButton.className = 'w-10 h-10 flex items-center justify-center hover:bg-gray-100 rounded-full';
         zoomInButton.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#152361" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M8 12h8"/><path d="M12 8v8"/></svg>';
@@ -146,6 +154,8 @@ const LocationMapSelector = ({
         zoomOutButton.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#152361" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M8 12h8"/></svg>';
         zoomOutButton.onclick = () => map.current?.zoomOut();
 
+        // Agregar los botones al contenedor
+        zoomContainer.appendChild(locateButton);
         zoomContainer.appendChild(zoomInButton);
         zoomContainer.appendChild(zoomOutButton);
         
@@ -293,6 +303,72 @@ const LocationMapSelector = ({
       }
     };
   }, [mapboxToken, initialCity, initialProvince]);
+
+  // Función para obtener la ubicación actual del usuario
+  const getUserLocation = () => {
+    if (!map.current || !marker.current) return;
+    
+    if ("geolocation" in navigator) {
+      navigator.geolocation.getCurrentPosition(
+        async (position) => {
+          const { latitude, longitude } = position.coords;
+          
+          // Actualizar la posición del mapa y el marcador
+          map.current?.flyTo({
+            center: [longitude, latitude],
+            zoom: 14,
+            essential: true
+          });
+          
+          marker.current?.setLngLat([longitude, latitude]);
+          
+          // Actualizar el círculo de rango
+          const source = map.current?.getSource('location-source');
+          if (source && 'setData' in source) {
+            source.setData({
+              type: 'Feature',
+              geometry: {
+                type: 'Point',
+                coordinates: [longitude, latitude],
+              },
+              properties: {},
+            });
+          }
+          
+          // Realizar geocodificación inversa para obtener la dirección
+          await reverseGeocode(longitude, latitude);
+        },
+        (error) => {
+          console.error("Error obteniendo la ubicación:", error);
+          
+          // Mostrar mensaje al usuario dependiendo del error
+          let errorMessage = "No se pudo acceder a tu ubicación";
+          
+          switch (error.code) {
+            case error.PERMISSION_DENIED:
+              errorMessage = "Necesitas permitir el acceso a tu ubicación";
+              break;
+            case error.POSITION_UNAVAILABLE:
+              errorMessage = "La información de tu ubicación no está disponible";
+              break;
+            case error.TIMEOUT:
+              errorMessage = "Se agotó el tiempo para obtener tu ubicación";
+              break;
+          }
+          
+          // Aquí podrías mostrar un toast o alguna notificación visual
+          console.log(errorMessage);
+        },
+        {
+          enableHighAccuracy: true,
+          timeout: 5000,
+          maximumAge: 0
+        }
+      );
+    } else {
+      console.log("La geolocalización no está disponible en este navegador");
+    }
+  };
 
   // Función para geocodificación inversa
   const reverseGeocode = async (lng: number, lat: number) => {
