@@ -387,7 +387,7 @@ const RegisterDialog = ({ open, onOpenChange, onSuccess }: RegisterDialogProps) 
 
         {currentStep === 'verification' && (
           <form onSubmit={handleVerificationSubmit} className="space-y-8 px-12">
-            <div className="space-y-2 flex flex-col items-center justify-center">
+            <div className="flex flex-col items-center justify-center">
               <p className="text-sm font-light mb-4 text-black">
                 Inserta el código que te hemos enviado por correo a {email}
               </p>
@@ -411,8 +411,8 @@ const RegisterDialog = ({ open, onOpenChange, onSuccess }: RegisterDialogProps) 
               </InputOTP>
               
               {verificationError && (
-                <Alert variant="destructive" className="mt-4 bg-red-50 text-red-800 border-red-200">
-                  <AlertTitle className="text-red-800 flex items-center gap-2">
+                <Alert variant="destructive" className="mt-8 bg-red-50 text-red-800 border-none">
+                  <AlertTitle className="text-red-800 flex items-center gap-2 mb-4">
                     <XCircle className="h-4 w-4" /> Código incorrecto
                   </AlertTitle>
                   <AlertDescription className="text-red-700">
