@@ -28,7 +28,6 @@ const LocationMapSelector = ({
   const mapContainer = useRef<HTMLDivElement>(null);
   const map = useRef<mapboxgl.Map | null>(null);
   const marker = useRef<mapboxgl.Marker | null>(null);
-  const locationCircle = useRef<mapboxgl.CircleLayer | null>(null);
   const [mapboxToken, setMapboxToken] = useState<string>('');
   const [loading, setLoading] = useState(true);
   const [mapLoaded, setMapLoaded] = useState(false);
@@ -192,13 +191,20 @@ const LocationMapSelector = ({
               },
             });
             
-            // Agregar el círculo de rango (área de cobertura)
+            // Agregar el círculo de rango (área de cobertura de 1km)
+            // El radio se define en metros, 1000 metros = 1km
             map.current.addLayer({
               id: 'location-circle',
               type: 'circle',
               source: 'location-source',
               paint: {
-                'circle-radius': 100,
+                'circle-radius': ['interpolate', ['linear'], ['zoom'], 
+                  // Ajustamos el radio según el nivel de zoom para mantener 1km visual
+                  10, 500,   // A zoom 10, el radio es pequeño
+                  12, 250,   // A zoom 12, tamaño moderado
+                  14, 125,   // A zoom 14, tamaño adecuado
+                  16, 60,    // A zoom 16, mantiene la proporción visual
+                ],
                 'circle-color': '#152361',
                 'circle-opacity': 0.15,
                 'circle-stroke-width': 1,
@@ -234,8 +240,9 @@ const LocationMapSelector = ({
           const lngLat = marker.current.getLngLat();
           
           // Actualizar el círculo de rango cuando se mueve el marcador
-          if (map.current.getSource('location-source')) {
-            map.current.getSource('location-source').setData({
+          const source = map.current.getSource('location-source');
+          if (source && 'setData' in source) {
+            source.setData({
               type: 'Feature',
               geometry: {
                 type: 'Point',
@@ -254,8 +261,9 @@ const LocationMapSelector = ({
           marker.current.setLngLat(e.lngLat);
           
           // Actualizar el círculo de rango cuando se hace clic en el mapa
-          if (map.current.getSource('location-source')) {
-            map.current.getSource('location-source').setData({
+          const source = map.current.getSource('location-source');
+          if (source && 'setData' in source) {
+            source.setData({
               type: 'Feature',
               geometry: {
                 type: 'Point',
@@ -395,8 +403,9 @@ const LocationMapSelector = ({
       marker.current.setLngLat([lng, lat]);
       
       // Actualizar el círculo de rango
-      if (map.current.getSource('location-source')) {
-        map.current.getSource('location-source').setData({
+      const source = map.current.getSource('location-source');
+      if (source && 'setData' in source) {
+        source.setData({
           type: 'Feature',
           geometry: {
             type: 'Point',
