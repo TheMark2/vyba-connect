@@ -30,7 +30,6 @@ serve(async (req) => {
     });
   }
 
-  // Verificar la solicitud
   try {
     const body = await req.json();
     const { email, action } = body;
@@ -59,8 +58,6 @@ serve(async (req) => {
         );
       }
 
-      console.log(`Verificando código OTP: ${code} para email: ${email}`);
-
       // Consultar la base de datos para verificar el código
       const { data, error } = await supabase
         .from("otp_codes")
@@ -74,7 +71,6 @@ serve(async (req) => {
         .single();
 
       if (error || !data) {
-        console.error("Error al verificar código OTP:", error);
         return new Response(
           JSON.stringify({ success: false, error: "Código OTP inválido o expirado" }),
           {
@@ -84,8 +80,6 @@ serve(async (req) => {
         );
       }
 
-      console.log("Código OTP válido, actualizando estado...");
-
       // Marcar el código como verificado
       const { error: updateError } = await supabase
         .from("otp_codes")
@@ -93,7 +87,6 @@ serve(async (req) => {
         .eq("id", data.id);
 
       if (updateError) {
-        console.error("Error al actualizar el estado del código OTP:", updateError);
         return new Response(
           JSON.stringify({ success: false, error: "Error al verificar el código" }),
           {
@@ -112,9 +105,37 @@ serve(async (req) => {
       );
     }
     
-    // Si la acción es enviar OTP (o no se especifica acción)
+    // Si la acción es enviar OTP
     const otp = generateOTP();
-    console.log(`Generado código OTP: ${otp} para email: ${email}`);
+    
+    // Verificar si el usuario ya está registrado
+    const { data: existingUser, count } = await supabase
+      .from("profiles")
+      .select("*", { count: 'exact' })
+      .eq("email", email)
+      .limit(1);
+    
+    // Si estamos en el flujo de registro y el usuario ya existe
+    if (action !== "login" && count && count > 0) {
+      return new Response(
+        JSON.stringify({ error: "Este email ya está registrado", code: "EMAIL_EXISTS" }),
+        {
+          headers: { ...corsHeaders, "Content-Type": "application/json" },
+          status: 400,
+        }
+      );
+    }
+    
+    // Si estamos en el flujo de login y el usuario no existe
+    if (action === "login" && (!count || count === 0)) {
+      return new Response(
+        JSON.stringify({ error: "Este email no está registrado", code: "EMAIL_NOT_FOUND" }),
+        {
+          headers: { ...corsHeaders, "Content-Type": "application/json" },
+          status: 400,
+        }
+      );
+    }
 
     // Guardar el OTP en la base de datos
     const { error: dbError } = await supabase
@@ -125,7 +146,6 @@ serve(async (req) => {
       });
 
     if (dbError) {
-      console.error("Error al guardar el código OTP:", dbError);
       return new Response(
         JSON.stringify({ error: "Error al generar el código de verificación" }),
         {
@@ -139,7 +159,7 @@ serve(async (req) => {
     try {
       // Usar el dominio verificado vyba.app como remitente en lugar del dominio por defecto
       const emailResponse = await resend.emails.send({
-        from: "VYBA <noreply@vyba.app>", // Cambiado para usar el dominio vyba.app que ya está verificado
+        from: "VYBA <noreply@vyba.app>",
         to: [email],
         subject: "Tu código de verificación para Vyba",
         html: `
@@ -162,8 +182,6 @@ serve(async (req) => {
         `,
       });
 
-      console.log("Email enviado:", emailResponse);
-
       return new Response(
         JSON.stringify({ success: true, message: "Código enviado correctamente" }),
         {
@@ -171,20 +189,20 @@ serve(async (req) => {
           status: 200,
         }
       );
-    } catch (emailError) {
+    } catch (emailError: any) {
       console.error("Error al enviar el correo:", emailError);
       return new Response(
-        JSON.stringify({ error: "Error al enviar el correo de verificación" }),
+        JSON.stringify({ error: "Error al enviar el correo de verificación", details: emailError.message }),
         {
           headers: { ...corsHeaders, "Content-Type": "application/json" },
           status: 500,
         }
       );
     }
-  } catch (error) {
+  } catch (error: any) {
     console.error("Error en la función Edge:", error);
     return new Response(
-      JSON.stringify({ error: "Error en el servidor" }),
+      JSON.stringify({ error: "Error en el servidor", details: error.message }),
       {
         headers: { ...corsHeaders, "Content-Type": "application/json" },
         status: 500,
