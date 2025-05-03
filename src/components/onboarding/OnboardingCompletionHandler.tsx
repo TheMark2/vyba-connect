@@ -9,7 +9,7 @@ import { useAuth } from '@/contexts/AuthContext';
 const OnboardingCompletionHandler = () => {
   const navigate = useNavigate();
   const location = useLocation();
-  const { user } = useAuth();
+  const { user, reloadUserData } = useAuth();
   const [showWelcomeDialog, setShowWelcomeDialog] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   
@@ -24,6 +24,10 @@ const OnboardingCompletionHandler = () => {
   useEffect(() => {
     if (location.pathname === '/onboarding-complete') {
       const isFromRegistration = localStorage.getItem('is_from_registration') === 'true';
+      
+      // Recargar datos del usuario para asegurarnos de tener la información más reciente
+      // incluyendo la imagen de perfil actualizada
+      reloadUserData();
       
       // Solo mostrar el diálogo si venimos del registro
       if (isFromRegistration) {
@@ -42,7 +46,7 @@ const OnboardingCompletionHandler = () => {
     } else {
       setIsLoading(false);
     }
-  }, [location.pathname, navigate]);
+  }, [location.pathname, navigate, reloadUserData]);
 
   // Manejar el cierre del WelcomeDialog
   const handleWelcomeDialogClose = () => {

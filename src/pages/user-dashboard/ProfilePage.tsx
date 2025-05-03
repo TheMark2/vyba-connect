@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import UserDashboardLayout from '@/components/dashboard/UserDashboardLayout';
 import { Button } from '@/components/ui/button';
@@ -10,8 +11,11 @@ import { Camera, Check, Loader2, PenLine, X } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
 import { Badge } from "@/components/ui/badge";
+import { useAuth } from '@/contexts/AuthContext';
+import Image from '@/components/ui/image';
 
 const ProfilePage = () => {
+  const { reloadUserData } = useAuth();
   const [isLoading, setIsLoading] = useState(true);
   const [isSaving, setIsSaving] = useState(false);
   const [userData, setUserData] = useState({
@@ -39,6 +43,8 @@ const ProfilePage = () => {
         const { data: { user } } = await supabase.auth.getUser();
         
         if (user) {
+          console.log('User metadata:', user.user_metadata);
+          
           // Obtener datos del perfil desde user_metadata
           setUserData({
             id: user.id,
@@ -68,6 +74,7 @@ const ProfilePage = () => {
           
           // Obtener avatar si existe
           if (user.user_metadata?.avatar_url) {
+            console.log('Avatar URL from metadata:', user.user_metadata.avatar_url);
             setAvatarUrl(user.user_metadata.avatar_url);
           }
         }
@@ -125,10 +132,23 @@ const ProfilePage = () => {
         const fileExt = avatarFile.name.split('.').pop();
         const fileName = `${userData.id}-${Date.now()}.${fileExt}`;
         
+        // Crear el bucket si no existe
+        const { data: bucketExists } = await supabase
+          .storage
+          .getBucket('avatars');
+          
+        if (!bucketExists) {
+          await supabase.storage.createBucket('avatars', {
+            public: true
+          });
+        }
+        
         // Subir a storage
-        const { error: uploadError } = await supabase.storage
+        const { error: uploadError, data } = await supabase.storage
           .from('avatars')
-          .upload(fileName, avatarFile);
+          .upload(fileName, avatarFile, {
+            upsert: true
+          });
           
         if (uploadError) throw uploadError;
         
@@ -155,6 +175,10 @@ const ProfilePage = () => {
       setUserData(editedData);
       setIsEditing(false);
       setAvatarPreview('');
+      
+      // 4. Recargar datos del usuario para actualizar el contexto
+      await reloadUserData();
+      
       toast.success('Perfil actualizado correctamente');
       
     } catch (error) {
@@ -225,7 +249,10 @@ const ProfilePage = () => {
               <CardContent className="p-6 flex flex-col items-center">
                 <div className="relative">
                   <Avatar className="h-32 w-32 mb-4">
-                    <AvatarImage src={avatarPreview || avatarUrl} alt={userData.name} />
+                    <AvatarImage 
+                      src={avatarPreview || avatarUrl} 
+                      alt={userData.name} 
+                    />
                     <AvatarFallback className="text-3xl bg-black text-white">
                       {getUserInitial()}
                     </AvatarFallback>

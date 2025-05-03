@@ -19,6 +19,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { supabase } from "@/integrations/supabase/client";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { useAuth } from "@/contexts/AuthContext";
 
 interface UserDashboardLayoutProps {
   children: React.ReactNode;
@@ -27,22 +28,31 @@ interface UserDashboardLayoutProps {
 const UserDashboardLayout = ({ children }: UserDashboardLayoutProps) => {
   const location = useLocation();
   const navigate = useNavigate();
+  const { user, reloadUserData } = useAuth();
   const [userImage, setUserImage] = useState<string | null>(null);
   const [userName, setUserName] = useState<string>("Usuario");
 
   // Obtener información del usuario desde Supabase
   useEffect(() => {
     const getUserInfo = async () => {
-      const { data: { user } } = await supabase.auth.getUser();
-      if (user) {
-        const avatarUrl = user.user_metadata.avatar_url || null;
-        setUserImage(avatarUrl);
-        setUserName(user.user_metadata.name || user.email?.split('@')[0] || "Usuario");
+      try {
+        // Recargar los datos del usuario para asegurarnos de tener la información más reciente
+        await reloadUserData();
+        
+        const { data: { user } } = await supabase.auth.getUser();
+        if (user) {
+          const avatarUrl = user.user_metadata?.avatar_url || null;
+          console.log("Avatar URL en Layout:", avatarUrl);
+          setUserImage(avatarUrl);
+          setUserName(user.user_metadata?.name || user.email?.split('@')[0] || "Usuario");
+        }
+      } catch (error) {
+        console.error("Error al obtener información del usuario:", error);
       }
     };
     
     getUserInfo();
-  }, []);
+  }, [reloadUserData]);
 
   const navItems = [
     { path: '/user-dashboard', icon: LayoutDashboard, label: 'Al día' },
@@ -97,11 +107,16 @@ const UserDashboardLayout = ({ children }: UserDashboardLayoutProps) => {
               <DropdownMenuTrigger asChild>
                 <div className="h-12 w-12 rounded-full cursor-pointer overflow-hidden transition-colors duration-300">
                   {userImage ? (
-                    <img 
-                      src={userImage}
-                      alt={userName}
-                      className="h-full w-full object-cover"
-                    />
+                    <Avatar className="h-full w-full">
+                      <AvatarImage 
+                        src={userImage}
+                        alt={userName}
+                        className="h-full w-full object-cover"
+                      />
+                      <AvatarFallback className="bg-vyba-navy text-white">
+                        {getUserInitial()}
+                      </AvatarFallback>
+                    </Avatar>
                   ) : (
                     <Avatar className="h-full w-full">
                       <AvatarFallback className="bg-vyba-navy text-white">

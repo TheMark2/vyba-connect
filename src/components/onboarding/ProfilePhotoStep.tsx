@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Plus, ScanSearch } from 'lucide-react';
 import { useIsMobile } from '@/hooks/use-mobile';
+import { supabase } from '@/integrations/supabase/client';
 
 interface ProfilePhotoStepProps {
   onPhotoChange: (photo: File | null, photoPreview?: string) => void;
@@ -20,6 +21,30 @@ const ProfilePhotoStep: React.FC<ProfilePhotoStepProps> = ({
   const [isHovering, setIsHovering] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const isMobile = useIsMobile();
+
+  // Asegurar que el bucket de avatares existe
+  useEffect(() => {
+    const createAvatarsBucketIfNeeded = async () => {
+      try {
+        // Verificar si el bucket ya existe
+        const { data: bucketExists } = await supabase
+          .storage
+          .getBucket('avatars');
+          
+        // Si el bucket no existe, crearlo
+        if (!bucketExists) {
+          await supabase.storage.createBucket('avatars', {
+            public: true
+          });
+          console.log('Bucket "avatars" creado');
+        }
+      } catch (error) {
+        console.error('Error al verificar/crear el bucket de avatares:', error);
+      }
+    };
+    
+    createAvatarsBucketIfNeeded();
+  }, []);
 
   // Inicializar con la foto previa si existe
   useEffect(() => {
