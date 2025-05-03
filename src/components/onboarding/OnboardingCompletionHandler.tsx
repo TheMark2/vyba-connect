@@ -2,22 +2,34 @@
 import React, { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
+import { toast } from 'sonner';
+import { useAuth } from '@/contexts/AuthContext';
 
 // Este componente se puede importar en el UserOnboardingPage para manejar
 // la redirección después de completar el onboarding
 const OnboardingCompletionHandler = () => {
   const navigate = useNavigate();
+  const { isAuthenticated, user } = useAuth();
 
   // Este efecto se ejecutará cuando los metadatos de usuario cambien para indicar
   // que el onboarding se ha completado
   useEffect(() => {
     const handleOnboardingCompletion = async () => {
-      const { data } = await supabase.auth.getUser();
+      if (!isAuthenticated || !user) {
+        return;
+      }
       
-      // Si el usuario existe y ha completado el onboarding
-      if (data?.user?.user_metadata?.onboarding_completed) {
-        // Redirigir a la ruta que muestra el WelcomeDialog
-        navigate('/onboarding-complete');
+      try {
+        const { data } = await supabase.auth.getUser();
+        
+        // Si el usuario existe y ha completado el onboarding
+        if (data?.user?.user_metadata?.onboarding_completed) {
+          // Redirigir a la ruta que muestra el WelcomeDialog
+          navigate('/onboarding-complete');
+        }
+      } catch (error) {
+        console.error('Error al verificar estado de onboarding:', error);
+        toast.error('Error al verificar tu perfil');
       }
     };
 
@@ -34,7 +46,7 @@ const OnboardingCompletionHandler = () => {
     return () => {
       subscription.unsubscribe();
     };
-  }, [navigate]);
+  }, [navigate, isAuthenticated, user]);
 
   // Este componente no renderiza nada visible
   return null;

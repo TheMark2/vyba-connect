@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { 
   UploadCloud, 
@@ -35,6 +36,7 @@ import { Label } from "@/components/ui/label";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
+import { useAuth } from '@/contexts/AuthContext';
 
 // Tipos de datos
 interface OnboardingData {
@@ -127,6 +129,7 @@ const WelcomeScreen = () => {
 // Componente principal
 const UserOnboardingPage = () => {
   const navigate = useNavigate();
+  const { isAuthenticated, user } = useAuth();
   const [currentGroup, setCurrentGroup] = useState(0);
   const [currentStepInGroup, setCurrentStepInGroup] = useState(0);
   const [isLoading, setIsLoading] = useState(false);
@@ -141,6 +144,48 @@ const UserOnboardingPage = () => {
     preferredArtistTypes: []
   });
   const [isSaving, setIsSaving] = useState(false);
+
+  // Verificar si el usuario está autenticado
+  useEffect(() => {
+    const checkAuth = async () => {
+      if (!isAuthenticated) {
+        toast.error('Debes iniciar sesión para acceder a esta página');
+        navigate('/auth');
+      } else {
+        // Cargar datos existentes del usuario si hay
+        await loadUserData();
+      }
+    };
+    
+    checkAuth();
+  }, [isAuthenticated, navigate]);
+
+  // Cargar datos existentes del usuario
+  const loadUserData = async () => {
+    if (!user) return;
+    
+    try {
+      setIsLoading(true);
+      const { data: { user: userData } } = await supabase.auth.getUser();
+      
+      if (userData) {
+        setOnboardingData(prev => ({
+          ...prev,
+          profilePhotoUrl: userData.user_metadata?.avatar_url || '',
+          location: userData.user_metadata?.location || '',
+          city: userData.user_metadata?.city || '',
+          province: userData.user_metadata?.province || '',
+          favoriteGenres: userData.user_metadata?.favorite_genres || [],
+          preferredArtistTypes: userData.user_metadata?.preferred_artist_types || [],
+          coordinates: userData.user_metadata?.coordinates || undefined
+        }));
+      }
+    } catch (error) {
+      console.error('Error al cargar datos de usuario:', error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   const stepGroups: StepGroup[] = [
     {
@@ -256,18 +301,13 @@ const UserOnboardingPage = () => {
 
   const handleConfirmExit = async () => {
     try {
-      // Guardar los datos actuales en localStorage para poder retomarlos
-      if (onboardingData.profilePhotoUrl) {
-        localStorage.setItem('userOnboardingData', JSON.stringify({
-          ...onboardingData,
-          profilePhoto: null // No guardar el File object
-        }));
-      }
+      // Guardar los datos actuales en Supabase
+      await saveUserData(false);
       
       setShowExitDialog(false);
       navigate('/onboarding-complete');
     } catch (error) {
-      console.error('Error al guardar datos temporales:', error);
+      console.error('Error al guardar datos:', error);
       toast.error('Error al guardar los datos');
       setShowExitDialog(false);
     }
@@ -277,18 +317,13 @@ const UserOnboardingPage = () => {
     try {
       setIsLoading(true);
       // Actualizar el estado del usuario para marcar que ha completado el onboarding
-      const { data: { user } } = await supabase.auth.getUser();
-      
-      if (!user) {
-        throw new Error('Usuario no autenticado');
-      }
-      
-      // Actualizar metadatos para marcar el onboarding como completado
-      await supabase.auth.updateUser({
+      const { error } = await supabase.auth.updateUser({
         data: {
           onboarding_completed: true
         }
       });
+      
+      if (error) throw error;
       
       toast.success('¡Bienvenido a Vyba!');
       setShowExitDialog(false);
@@ -301,29 +336,44 @@ const UserOnboardingPage = () => {
     }
   };
 
-  const handleFinish = async () => {
+  // Guardar datos del usuario en Supabase
+  const saveUserData = async (completeOnboarding: boolean = true) => {
+    if (!user) {
+      toast.error('No hay usuario autenticado');
+      return;
+    }
+    
     setIsSaving(true);
     
     try {
-      const { data: { user } } = await supabase.auth.getUser();
-      
-      if (!user) {
-        throw new Error('Usuario no autenticado');
-      }
-
       // 1. Si hay foto de perfil, subirla a storage
-      let avatarUrl = null;
+      let avatarUrl = onboardingData.profilePhotoUrl;
       
-      if (onboardingData.profilePhoto) {
+      // Si es una URL que comienza con data:, es una nueva imagen para subir
+      if (onboardingData.profilePhoto && onboardingData.profilePhotoUrl?.startsWith('data:')) {
         const fileExt = onboardingData.profilePhoto.name.split('.').pop();
         const fileName = `${user.id}-${Date.now()}.${fileExt}`;
         
+        // Verificar si existe el bucket 'avatars', si no, lo creamos
+        const { data: buckets } = await supabase.storage.listBuckets();
+        if (!buckets?.some(bucket => bucket.name === 'avatars')) {
+          await supabase.storage.createBucket('avatars', {
+            public: true,
+            fileSizeLimit: 5242880 // 5MB
+          });
+        }
+        
+        // Subir a storage
         const { error: uploadError } = await supabase.storage
           .from('avatars')
           .upload(fileName, onboardingData.profilePhoto);
           
-        if (uploadError) throw uploadError;
+        if (uploadError) {
+          console.error('Error al subir avatar:', uploadError);
+          throw uploadError;
+        }
         
+        // Obtener URL pública
         const { data: urlData } = supabase.storage
           .from('avatars')
           .getPublicUrl(fileName);
@@ -334,7 +384,7 @@ const UserOnboardingPage = () => {
       }
 
       // 2. Actualizar metadatos del usuario
-      await supabase.auth.updateUser({
+      const { error: updateError } = await supabase.auth.updateUser({
         data: {
           avatar_url: avatarUrl,
           location: onboardingData.location,
@@ -346,18 +396,33 @@ const UserOnboardingPage = () => {
           } : null,
           favorite_genres: onboardingData.favoriteGenres,
           preferred_artist_types: onboardingData.preferredArtistTypes,
-          onboarding_completed: true
+          onboarding_completed: completeOnboarding
         }
       });
 
-      // 3. Redirigir al dashboard
-      toast.success('¡Perfil configurado correctamente!');
-      navigate('/onboarding-complete');
+      if (updateError) throw updateError;
+      
+      if (completeOnboarding) {
+        toast.success('¡Perfil configurado correctamente!');
+      } else {
+        toast.success('Datos guardados correctamente');
+      }
     } catch (error) {
-      console.error('Error al completar el onboarding:', error);
+      console.error('Error al guardar datos:', error);
       toast.error('Error al guardar tus datos');
+      throw error;
     } finally {
       setIsSaving(false);
+    }
+  };
+
+  const handleFinish = async () => {
+    try {
+      await saveUserData(true);
+      // 3. Redirigir al dashboard
+      navigate('/onboarding-complete');
+    } catch (error) {
+      // Error ya manejado en saveUserData
     }
   };
 
@@ -529,55 +594,71 @@ const UserOnboardingPage = () => {
         </div>
       </div>
 
-      <main className="flex-1 container mx-auto px-6 pt-20 pb-32 md:pt-32 md:pb-32">
-        <div className="mx-auto max-w-4xl">
-          <div className="space-y-12 justify-center">
-            <div className="text-start space-y-2">
-              <h1 className="text-5xl font-semibold">{stepGroups[currentGroup].title}</h1>
-              <p className="text-lg text-vyba-tertiary">{stepGroups[currentGroup].description}</p>
-            </div>
-            <div className="md:py-8">
-              {renderCurrentStep()}
-            </div>
+      {isLoading ? (
+        <div className="flex-1 flex items-center justify-center">
+          <div className="text-center">
+            <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-vyba-navy mx-auto"></div>
+            <p className="mt-4 text-vyba-tertiary">Cargando tus datos...</p>
           </div>
         </div>
-      </main>
+      ) : (
+        <>
+          <main className="flex-1 container mx-auto px-6 pt-20 pb-32 md:pt-32 md:pb-32">
+            <div className="mx-auto max-w-4xl">
+              <div className="space-y-12 justify-center">
+                <div className="text-start space-y-2">
+                  <h1 className="text-5xl font-semibold">{stepGroups[currentGroup].title}</h1>
+                  <p className="text-lg text-vyba-tertiary">{stepGroups[currentGroup].description}</p>
+                </div>
+                <div className="md:py-8">
+                  {renderCurrentStep()}
+                </div>
+              </div>
+            </div>
+          </main>
 
-      <footer className="fixed bottom-0 left-0 w-full bg-white/50 backdrop-blur-sm">
-        <div className="w-full h-1 bg-vyba-gray">
-          <div 
-            className="h-1 bg-vyba-navy transition-all duration-300 ease-out"
-            style={{ width: `${((currentGroup + 1) / (stepGroups.length)) * 100}%` }}
-          />
-        </div>
-        <div className="border-t">
-          <div className="container mx-auto px-6 py-4">
-            <div className="max-w-4xl mx-auto flex justify-between items-center">
-              <Button
-                variant="ghost"
-                onClick={handleBack}
-                disabled={currentGroup === 0 && currentStepInGroup === 0}
-                className="text-vyba-navy hover:text-vyba-navy/80"
-              >
-                Anterior
-              </Button>
-              <Badge
-                variant="secondary"
-                className="px-4 py-2 text-sm bg-vyba-gray"
-              >
-                Paso {currentGroup + 1} de {stepGroups.length}
-              </Badge>
-              <Button
-                variant="terciary"
-                onClick={handleNext}
-                disabled={!canGoNext()}
-              >
-                {currentGroup === stepGroups.length - 1 ? 'Finalizar' : 'Siguiente'}
-              </Button>
+          <footer className="fixed bottom-0 left-0 w-full bg-white/50 backdrop-blur-sm">
+            <div className="w-full h-1 bg-vyba-gray">
+              <div 
+                className="h-1 bg-vyba-navy transition-all duration-300 ease-out"
+                style={{ width: `${((currentGroup + 1) / (stepGroups.length)) * 100}%` }}
+              />
             </div>
-          </div>
-        </div>
-      </footer>
+            <div className="border-t">
+              <div className="container mx-auto px-6 py-4">
+                <div className="max-w-4xl mx-auto flex justify-between items-center">
+                  <Button
+                    variant="ghost"
+                    onClick={handleBack}
+                    disabled={currentGroup === 0 && currentStepInGroup === 0}
+                    className="text-vyba-navy hover:text-vyba-navy/80"
+                  >
+                    Anterior
+                  </Button>
+                  <Badge
+                    variant="secondary"
+                    className="px-4 py-2 text-sm bg-vyba-gray"
+                  >
+                    Paso {currentGroup + 1} de {stepGroups.length}
+                  </Badge>
+                  <Button
+                    variant="terciary"
+                    onClick={handleNext}
+                    disabled={!canGoNext() || isSaving}
+                  >
+                    {isSaving ? (
+                      <>
+                        <span className="animate-spin inline-block mr-2 h-4 w-4 border-2 border-t-transparent border-vyba-tertiary rounded-full"></span>
+                        Guardando...
+                      </>
+                    ) : currentGroup === stepGroups.length - 1 ? 'Finalizar' : 'Siguiente'}
+                  </Button>
+                </div>
+              </div>
+            </div>
+          </footer>
+        </>
+      )}
 
       <Dialog open={showExitDialog} onOpenChange={setShowExitDialog}>
         <DialogContent className="sm:max-w-xl">
@@ -637,11 +718,21 @@ const UserOnboardingPage = () => {
                 Continuar editando
               </Button>
               <div className="flex flex-col space-y-2 sm:flex-row sm:space-y-0 sm:space-x-2">
-                <Button variant="outline" onClick={handleSkipOnboarding} disabled={isLoading}>
-                  Omitir y entrar
+                <Button variant="outline" onClick={handleSkipOnboarding} disabled={isLoading || isSaving}>
+                  {isLoading ? (
+                    <>
+                      <span className="animate-spin inline-block mr-2 h-4 w-4 border-2 border-t-transparent border-vyba-navy rounded-full"></span>
+                      Procesando...
+                    </>
+                  ) : "Omitir y entrar"}
                 </Button>
-                <Button onClick={handleConfirmExit} disabled={isLoading}>
-                  Guardar y salir
+                <Button onClick={handleConfirmExit} disabled={isLoading || isSaving}>
+                  {isSaving ? (
+                    <>
+                      <span className="animate-spin inline-block mr-2 h-4 w-4 border-2 border-t-transparent border-white rounded-full"></span>
+                      Guardando...
+                    </>
+                  ) : "Guardar y salir"}
                 </Button>
               </div>
             </div>
