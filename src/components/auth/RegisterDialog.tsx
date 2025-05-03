@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
@@ -60,21 +61,22 @@ const RegisterDialog = ({ open, onOpenChange, onSuccess }: RegisterDialogProps) 
 
   const checkEmailExists = async (email: string) => {
     try {
-      // Verificar si existe el email consultando directamente a la tabla de profiles
-      const { data, error } = await supabase
+      // Verificamos si existe un usuario con ese email consultando la tabla de perfiles
+      const { data, error, count } = await supabase
         .from('profiles')
-        .select('email')
+        .select('id', { count: 'exact' })
         .eq('email', email)
         .limit(1);
 
       if (error) {
         console.error("Error al verificar email:", error);
-        throw error;
+        return false; // En caso de error, permitimos continuar para no bloquear al usuario
       }
 
-      return data && data.length > 0;
+      // Si encontramos algún perfil con ese email, significa que ya está registrado
+      return count !== null && count > 0;
     } catch (error) {
-      console.error("Error al verificar email:", error);
+      console.error("Error inesperado al verificar email:", error);
       return false;
     }
   };
@@ -115,6 +117,10 @@ const RegisterDialog = ({ open, onOpenChange, onSuccess }: RegisterDialogProps) 
       const data = await response.json();
       
       if (!response.ok) {
+        if (data.error && data.error.includes("already in use")) {
+          setEmailError("Este email ya está registrado. Por favor, utiliza otro o inicia sesión.");
+          return;
+        }
         throw new Error(data.error || 'Error al enviar el código');
       }
 
@@ -258,6 +264,14 @@ const RegisterDialog = ({ open, onOpenChange, onSuccess }: RegisterDialogProps) 
       });
 
       if (error) {
+        // Comprobar si el error es porque el usuario ya existe
+        if (error.message.includes("already registered")) {
+          toast.error("Error", {
+            description: "Este email ya está registrado. Por favor, utiliza otro o inicia sesión."
+          });
+          setIsLoading(false);
+          return;
+        }
         throw error;
       }
 

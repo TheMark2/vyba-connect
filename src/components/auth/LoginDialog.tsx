@@ -56,17 +56,23 @@ const LoginDialog = ({ open, onOpenChange, onSuccess }: LoginDialogProps) => {
       // Verificar si el correo existe en Supabase
       const timeout = setTimeout(async () => {
         try {
-          const { data, error } = await supabase.auth.signInWithOtp({
-            email: value,
-            options: {
-              shouldCreateUser: false
-            }
-          });
-
-          // Si no hay error, significa que el usuario existe
-          if (!error) {
+          // Verificar si existe un perfil con ese email
+          const { data, error, count } = await supabase
+            .from('profiles')
+            .select('id', { count: 'exact' })
+            .eq('email', value)
+            .limit(1);
+          
+          if (error) {
+            console.error("Error al verificar email:", error);
+            setShowVerified(false);
+            return;
+          }
+          
+          // Si encontramos algún perfil, el email está registrado
+          if (count !== null && count > 0) {
             setShowVerified('verified');
-          } else if (error.message.includes("not found")) {
+          } else {
             setShowVerified('not-registered');
             setEmailError(true);
             setErrorMessage('Este correo no está registrado');
@@ -106,36 +112,25 @@ const LoginDialog = ({ open, onOpenChange, onSuccess }: LoginDialogProps) => {
     
     setIsLoading(true);
     try {
-      // Verificar si el email existe
-      const { data, error } = await supabase.auth.signInWithOtp({
-        email: email,
-        options: {
-          shouldCreateUser: false
-        }
-      });
-
+      // Verificar si el email existe consultando la tabla de perfiles
+      const { data, error, count } = await supabase
+        .from('profiles')
+        .select('id', { count: 'exact' })
+        .eq('email', email)
+        .limit(1);
+      
       if (error) {
-        // Si el error es que el correo no está registrado, mostrar mensaje claro
-        if (error.message.includes("not found")) {
-          setEmailError(true);
-          setErrorMessage('Este correo no está registrado');
-          toast.error("Este correo no está registrado");
-          setIsLoading(false);
-          return;
-        }
-        
-        // Si el error es que el correo no está confirmado
-        if (error.message.includes("Email not confirmed")) {
-          setEmailError(true);
-          setErrorMessage('Correo no confirmado. Por favor, confirma tu correo antes de iniciar sesión');
-          toast.error("Correo no confirmado", {
-            description: "Por favor, confirma tu correo electrónico antes de iniciar sesión"
-          });
-          setIsLoading(false);
-          return;
-        }
-        
+        console.error("Error al verificar email:", error);
         throw error;
+      }
+      
+      // Si no encontramos ningún perfil, el email no está registrado
+      if (count === null || count === 0) {
+        setEmailError(true);
+        setErrorMessage('Este correo no está registrado');
+        toast.error("Este correo no está registrado");
+        setIsLoading(false);
+        return;
       }
       
       setCurrentStep('password');
@@ -192,6 +187,9 @@ const LoginDialog = ({ open, onOpenChange, onSuccess }: LoginDialogProps) => {
       if (onSuccess) {
         onSuccess(data.user);
       }
+      
+      // Cerrar el diálogo después de iniciar sesión exitosamente
+      onOpenChange(false);
     } catch (error: any) {
       toast.error("Error al iniciar sesión");
       console.error("Error al iniciar sesión:", error);
