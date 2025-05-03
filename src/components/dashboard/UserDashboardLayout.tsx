@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { Button } from "@/components/ui/button";
@@ -34,7 +35,8 @@ const UserDashboardLayout = ({ children }: UserDashboardLayoutProps) => {
     const getUserInfo = async () => {
       const { data: { user } } = await supabase.auth.getUser();
       if (user) {
-        setUserImage(user.user_metadata.avatar_url || null);
+        const avatarUrl = user.user_metadata.avatar_url || null;
+        setUserImage(avatarUrl);
         setUserName(user.user_metadata.name || user.email?.split('@')[0] || "Usuario");
       }
     };
@@ -155,4 +157,4 @@ const UserDashboardLayout = ({ children }: UserDashboardLayoutProps) => {
   );
 };
 
-export default UserDashboardLayout; 
+export default UserDashboardLayout;

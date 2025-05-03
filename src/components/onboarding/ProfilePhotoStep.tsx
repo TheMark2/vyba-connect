@@ -1,3 +1,4 @@
+
 import React, { useState, useRef, useEffect } from 'react';
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -5,7 +6,7 @@ import { Plus, ScanSearch } from 'lucide-react';
 import { useIsMobile } from '@/hooks/use-mobile';
 
 interface ProfilePhotoStepProps {
-  onPhotoChange: (photo: File | null) => void;
+  onPhotoChange: (photo: File | null, photoPreview?: string) => void;
   initialPhoto?: string;
   initialPhotoFile?: File;
 }
@@ -25,7 +26,7 @@ const ProfilePhotoStep: React.FC<ProfilePhotoStepProps> = ({
     if (initialPhoto) {
       setPhotoPreview(initialPhoto);
       if (initialPhotoFile) {
-        onPhotoChange(initialPhotoFile);
+        onPhotoChange(initialPhotoFile, initialPhoto);
       }
     }
   }, [initialPhoto, initialPhotoFile]);
@@ -37,7 +38,7 @@ const ProfilePhotoStep: React.FC<ProfilePhotoStepProps> = ({
       reader.onloadend = () => {
         const preview = reader.result as string;
         setPhotoPreview(preview);
-        onPhotoChange(file);
+        onPhotoChange(file, preview);
       };
       reader.readAsDataURL(file);
     }

@@ -14,12 +14,20 @@ const Navbar2 = () => {
     const navigate = useNavigate();
     const [openFilterDialog, setOpenFilterDialog] = useState(false);
     const [user, setUser] = useState<User | null>(null);
+    const [userAvatarUrl, setUserAvatarUrl] = useState<string | null>(null);
+    const [userName, setUserName] = useState<string | null>(null);
     
     useEffect(() => {
       // Comprobar sesión actual
       const checkUser = async () => {
         const { data } = await supabase.auth.getSession();
-        setUser(data.session?.user || null);
+        if (data.session?.user) {
+          setUser(data.session.user);
+          setUserAvatarUrl(data.session.user.user_metadata?.avatar_url || null);
+          setUserName(data.session.user.user_metadata?.name || data.session.user.email?.split('@')[0] || "Usuario");
+        } else {
+          setUser(null);
+        }
       };
       
       checkUser();
@@ -27,7 +35,15 @@ const Navbar2 = () => {
       // Escuchar cambios en la autenticación
       const { data: authListener } = supabase.auth.onAuthStateChange(
         (event, session) => {
-          setUser(session?.user || null);
+          if (session?.user) {
+            setUser(session.user);
+            setUserAvatarUrl(session.user.user_metadata?.avatar_url || null);
+            setUserName(session.user.user_metadata?.name || session.user.email?.split('@')[0] || "Usuario");
+          } else {
+            setUser(null);
+            setUserAvatarUrl(null);
+            setUserName(null);
+          }
         }
       );
       
@@ -54,11 +70,8 @@ const Navbar2 = () => {
     };
     
     const getUserInitial = () => {
-      if (user?.user_metadata?.name) {
-        return user.user_metadata.name.charAt(0).toUpperCase();
-      }
-      if (user?.email) {
-        return user.email.charAt(0).toUpperCase();
+      if (userName) {
+        return userName.charAt(0).toUpperCase();
       }
       return "U";
     };
@@ -101,7 +114,7 @@ const Navbar2 = () => {
                             <DropdownMenuTrigger asChild>
                               <button className="focus:outline-none">
                                 <Avatar className="h-10 w-10 cursor-pointer">
-                                  <AvatarImage src={user.user_metadata.avatar_url} />
+                                  <AvatarImage src={userAvatarUrl || ""} />
                                   <AvatarFallback className="bg-black text-white">
                                     {getUserInitial()}
                                   </AvatarFallback>
