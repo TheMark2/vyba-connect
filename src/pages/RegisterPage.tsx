@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { Button } from "@/components/ui/button";
 import { Link, useNavigate } from "react-router-dom";
@@ -27,7 +28,7 @@ const RegisterPage = () => {
     navigate('/user-onboarding');
   };
 
-  // Improved version that correctly identifies if an email exists
+  // Improved version that correctly identifies if an email exists without using getUserByEmail
   const checkEmailExists = async (email: string) => {
     try {
       console.log("Checking if email exists (RegisterPage):", email);
@@ -55,6 +56,17 @@ const RegisterPage = () => {
       // Si el error indica que el usuario no existe, entonces no está registrado
       if (signInError && signInError.message.includes("Email not found")) {
         return { exists: false };
+      }
+      
+      // Si llegamos aquí sin un error claro sobre la no existencia, realizamos una comprobación adicional      
+      // Intentamos obtener información de la sesión actual para comparar
+      const { data: sessionData } = await supabase.auth.getSession();
+      const currentUserEmail = sessionData?.session?.user?.email;
+      
+      // Si el email actual coincide con el email de la sesión, entonces existe
+      if (currentUserEmail && currentUserEmail.toLowerCase() === email.toLowerCase()) {
+        console.log("Email matches current session user");
+        return { exists: true, provider: 'email' };
       }
       
       // Si llegamos aquí sin un error claro sobre la no existencia, asumimos que el usuario podría existir

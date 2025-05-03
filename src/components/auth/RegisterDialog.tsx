@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
@@ -60,6 +59,7 @@ const RegisterDialog = ({ open, onOpenChange, onSuccess }: RegisterDialogProps) 
   });
 
   // Improved email existence check that accurately determines if an email exists
+  // Fixed version that doesn't rely on getUserByEmail which doesn't exist
   const checkEmailExists = async (email: string) => {
     try {
       console.log("Checking if email exists:", email);
@@ -90,18 +90,25 @@ const RegisterDialog = ({ open, onOpenChange, onSuccess }: RegisterDialogProps) 
         return { exists: false };
       }
       
-      // Verificar directamente con la API de autenticación si el usuario existe
-      // Esta es una verificación más precisa que las anteriores
-      const { data: userData, error: userError } = await supabase.auth.admin.getUserByEmail(email);
+      // Si llegamos aquí sin un error claro sobre la no existencia, realizamos una comprobación adicional
+      // usando otra estrategia, ya que no podemos usar getUserByEmail que no existe
       
-      if (userData?.user) {
-        console.log("Email exists based on auth API check");
+      // Intentamos obtener información de la sesión actual para comparar
+      const { data: sessionData } = await supabase.auth.getSession();
+      const currentUserEmail = sessionData?.session?.user?.email;
+      
+      // Si el email actual coincide con el email de la sesión, entonces existe
+      if (currentUserEmail && currentUserEmail.toLowerCase() === email.toLowerCase()) {
+        console.log("Email matches current session user");
         return { exists: true, provider: 'email' };
       }
       
-      // Si ninguno de los métodos anteriores confirma que el usuario existe, asumimos que no existe
-      console.log("Email does not exist after all checks");
+      // Como último recurso, si nada confirma que el usuario existe o no existe
+      // devolvemos que no existe para permitir el intento de registro
+      // Supabase manejará el error si realmente está duplicado
+      console.log("Email existence could not be definitively determined, allowing registration attempt");
       return { exists: false };
+      
     } catch (error) {
       console.error("Error checking if email exists:", error);
       // En caso de errores inesperados, permitir el intento de registro
