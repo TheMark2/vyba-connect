@@ -129,7 +129,7 @@ const WelcomeScreen = () => {
 // Componente principal
 const UserOnboardingPage = () => {
   const navigate = useNavigate();
-  const { refreshUser } = useAuth();
+  const { reloadUserData } = useAuth();
   const [currentGroup, setCurrentGroup] = useState(0);
   const [currentStepInGroup, setCurrentStepInGroup] = useState(0);
   const [isLoading, setIsLoading] = useState(false);
@@ -447,7 +447,7 @@ const UserOnboardingPage = () => {
       }
 
       // Actualizar el contexto de autenticación para reflejar los cambios
-      await refreshUser();
+      await reloadUserData();
 
       // 5. Mostrar mensaje de éxito y redireccionar
       toast.success('¡Perfil configurado correctamente!');
