@@ -1,16 +1,14 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
-import { Mail, Info } from "lucide-react";
+import { Mail } from "lucide-react";
 import Navbar from "@/components/Navbar";
 import RegisterDialog from '@/components/auth/RegisterDialog';
 import LoginDialog from '@/components/auth/LoginDialog';
 import WelcomeDialog from '@/components/WelcomeDialog';
 import { useNavigate } from 'react-router-dom';
-import { toast } from "sonner";
-import { Alert, AlertTitle, AlertDescription } from "@/components/ui/alert";
-import { useAuth } from '@/contexts/AuthContext';
 import { supabase } from "@/integrations/supabase/client";
+import { toast } from "sonner";
 
 const AuthPage = () => {
   const [showLoginDialog, setShowLoginDialog] = useState(false);
@@ -18,9 +16,92 @@ const AuthPage = () => {
   const [showWelcomeDialog, setShowWelcomeDialog] = useState(false);
   const [registeredUserInfo, setRegisteredUserInfo] = useState<{ fullName: string; email?: string }>({ fullName: '' });
   const [isLoading, setIsLoading] = useState(false);
-  
+  const [checkingSession, setCheckingSession] = useState(true);
   const navigate = useNavigate();
-  const { isLoading: authLoading, isAuthenticated, getRedirectUrl } = useAuth();
+
+  // Verificar si el usuario ya está autenticado
+  useEffect(() => {
+    const checkSession = async () => {
+      try {
+        const { data, error } = await supabase.auth.getSession();
+        
+        if (data.session) {
+          // Obtener el rol del usuario desde los metadatos
+          const { data: { user } } = await supabase.auth.getUser();
+          const userRole = user?.user_metadata?.role || 'user'; // Por defecto es usuario normal
+          
+          // Verificar si necesita completar el onboarding
+          const isOnboardingCompleted = user?.user_metadata?.onboarding_completed === true;
+          
+          // Redirigir según el rol
+          if (userRole === 'artist') {
+            const isArtistOnboardingCompleted = user?.user_metadata?.artist_onboarding_completed === true;
+            if (!isArtistOnboardingCompleted) {
+              console.log("Artista necesita completar onboarding, redirigiendo...");
+              navigate('/register/artist');
+            } else {
+              console.log("Artista autenticado, redirigiendo a dashboard de artistas");
+              navigate('/dashboard');
+            }
+          } else {
+            if (!isOnboardingCompleted) {
+              console.log("Usuario normal necesita completar onboarding, redirigiendo...");
+              navigate('/user-onboarding');
+            } else {
+              console.log("Usuario normal autenticado, redirigiendo a dashboard de usuarios");
+              navigate('/user-dashboard');
+            }
+          }
+        } else {
+          console.log("No hay sesión activa");
+        }
+      } catch (err) {
+        console.error("Error al verificar sesión:", err);
+        toast.error("Error al verificar sesión");
+      } finally {
+        setCheckingSession(false);
+      }
+    };
+    
+    checkSession();
+    
+    // Escuchar cambios en la autenticación
+    const { data: authListener } = supabase.auth.onAuthStateChange(async (event, session) => {
+      console.log("Evento de autenticación:", event, session ? "Con sesión" : "Sin sesión");
+      if (event === 'SIGNED_IN' && session) {
+        // Obtener el rol del usuario
+        const { data: { user } } = await supabase.auth.getUser();
+        const userRole = user?.user_metadata?.role || 'user'; // Por defecto es usuario normal
+        
+        // Verificar si necesita completar el onboarding
+        const isOnboardingCompleted = user?.user_metadata?.onboarding_completed === true;
+        
+        if (userRole === 'artist') {
+          const isArtistOnboardingCompleted = user?.user_metadata?.artist_onboarding_completed === true;
+          if (!isArtistOnboardingCompleted) {
+            console.log("Artista nuevo necesita completar onboarding, redirigiendo...");
+            navigate('/register/artist');
+          } else {
+            console.log("Artista ha iniciado sesión, redirigiendo a dashboard de artistas");
+            navigate('/dashboard');
+          }
+        } else {
+          if (!isOnboardingCompleted) {
+            console.log("Usuario normal necesita completar onboarding, redirigiendo...");
+            navigate('/user-onboarding');
+          } else {
+            console.log("Usuario normal ha iniciado sesión, redirigiendo a dashboard de usuarios");
+            navigate('/user-dashboard');
+          }
+        }
+      }
+    });
+    
+    return () => {
+      console.log("Limpiando listener de autenticación");
+      authListener.subscription.unsubscribe();
+    };
+  }, [navigate]);
 
   const handleShowEmailForm = () => {
     setShowLoginDialog(true);
@@ -40,15 +121,37 @@ const AuthPage = () => {
   const handleLoginSuccess = async (userData: any) => {
     console.log("Login success callback ejecutado");
     
-    // Usando la función del contexto de autenticación para redireccionar
-    navigate(getRedirectUrl());
+    // Verificar el rol del usuario y redirigir al dashboard correspondiente
+    const userRole = userData?.user_metadata?.role || 'user'; // Por defecto es usuario normal
+    
+    // Verificar si necesita completar el onboarding
+    const isOnboardingCompleted = userData?.user_metadata?.onboarding_completed === true;
+    
+    if (userRole === 'artist') {
+      const isArtistOnboardingCompleted = userData?.user_metadata?.artist_onboarding_completed === true;
+      if (!isArtistOnboardingCompleted) {
+        console.log("Redirigiendo a onboarding de artistas");
+        navigate('/register/artist');
+      } else {
+        console.log("Redirigiendo a dashboard de artistas");
+        navigate('/dashboard');
+      }
+    } else {
+      if (!isOnboardingCompleted) {
+        console.log("Redirigiendo a onboarding de usuarios");
+        navigate('/user-onboarding');
+      } else {
+        console.log("Redirigiendo a dashboard de usuarios");
+        navigate('/user-dashboard');
+      }
+    }
   };
 
   const handleSocialLogin = async (provider: 'google' | 'facebook' | 'apple') => {
     setIsLoading(true);
 
     try {
-      const { data, error } = await supabase.auth.signInWithOAuth({
+      let { data, error } = await supabase.auth.signInWithOAuth({
         provider: provider,
         options: {
           // No establecemos redirectTo para manejar la redirección según el rol en el listener onAuthStateChange
@@ -67,26 +170,16 @@ const AuthPage = () => {
     }
   };
 
-  const handleRedirectToDashboard = () => {
-    navigate(getRedirectUrl());
-  };
-
-  // Pantalla de carga si todavía se está verificando la sesión
-  if (authLoading) {
+  if (checkingSession) {
     return (
       <main className="min-h-screen bg-white flex flex-col items-center justify-center">
-        <div className="text-center space-y-4">
-          <div className="animate-pulse flex flex-col items-center">
-            <div className="rounded-full bg-gray-200 h-16 w-16 mb-4"></div>
-            <div className="h-4 bg-gray-200 rounded w-48"></div>
-          </div>
-          <p className="text-gray-600">Verificando sesión...</p>
+        <div className="animate-pulse text-center">
+          <p>Cargando...</p>
         </div>
       </main>
     );
   }
 
-  // Mostrar la página de autenticación, con alerta si el usuario ya está autenticado
   return (
     <main className="min-h-screen bg-white dark:bg-vyba-dark-bg flex flex-col">
       <Navbar />
@@ -96,16 +189,6 @@ const AuthPage = () => {
           <div className="text-center mb-12">
             <h1 className="text-4xl md:text-5xl font-bold mb-2">Te damos la bienvenida a VYBA</h1>
           </div>
-
-          {isAuthenticated && (
-            <Alert className="mb-6 bg-blue-50 border-none max-w-sm mx-auto">
-              <Info className="h-4 w-4 text-blue-600" />
-              <AlertTitle className="text-blue-800 mb-2">Ya has iniciado sesión</AlertTitle>
-              <AlertDescription className="text-blue-700">
-                Ya tienes una sesión activa. Puedes ir a tu <Button variant="link" className="p-0 text-blue-700 font-medium underline" onClick={handleRedirectToDashboard}>panel de control</Button> o continuar si deseas crear una cuenta nueva.
-              </AlertDescription>
-            </Alert>
-          )}
 
           <div className="space-y-4 mt-16 max-w-sm mx-auto">
             <Button 

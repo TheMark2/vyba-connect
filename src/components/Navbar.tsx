@@ -1,18 +1,18 @@
 import { Button } from "@/components/ui/button";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { cn } from "@/lib/utils";
-import { Menu, Moon, Sun, LaptopIcon, UserIcon } from "lucide-react";
+import { Menu, Moon, Sun, LaptopIcon, User as UserIcon } from "lucide-react";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { useState, useEffect } from "react";
 import MobileMenu from "@/components/MobileMenu";
+import { supabase } from "@/integrations/supabase/client";
+import { User } from '@supabase/supabase-js';
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { useAuth } from "@/contexts/AuthContext";
-import { Skeleton } from "@/components/ui/skeleton";
 
 interface NavbarProps {
   className?: string;
@@ -29,20 +29,12 @@ const Navbar = ({
   const [scrolled, setScrolled] = useState(false);
   const [currentTheme, setCurrentTheme] = useState<'light' | 'dark' | 'system'>('system');
   const isAuthPage = location.pathname === '/auth';
-  
-  // Usar el contexto de autenticación
-  const { 
-    isAuthenticated, 
-    userRole, 
-    avatarUrl, 
-    userDisplayName, 
-    user, 
-    signOut,
-    isOnboardingCompleted,
-    isArtistOnboardingCompleted,
-    isLoading
-  } = useAuth();
-  
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [userRole, setUserRole] = useState<string | null>(null);
+  const [userAvatarUrl, setUserAvatarUrl] = useState<string | null>(null);
+  const [userName, setUserName] = useState<string | null>(null);
+  const [user, setUser] = useState<User | null>(null);
+
   useEffect(() => {
     return () => {
       document.body.style.overflow = '';
@@ -58,6 +50,50 @@ const Navbar = ({
     } else {
       setCurrentTheme('system');
     }
+  }, []);
+
+  // Verificar si el usuario está autenticado
+  useEffect(() => {
+    const checkAuth = async () => {
+      const { data } = await supabase.auth.getSession();
+      if (data.session) {
+        setIsAuthenticated(true);
+        const { data: userData } = await supabase.auth.getUser();
+        if (userData.user) {
+          setUserRole(userData.user.user_metadata?.role || 'user');
+          setUserAvatarUrl(userData.user.user_metadata?.avatar_url || null);
+          setUserName(userData.user.user_metadata?.name || userData.user.email?.split('@')[0] || 'Usuario');
+          setUser(userData.user);
+        }
+      } else {
+        setIsAuthenticated(false);
+        setUserRole(null);
+      }
+    };
+    
+    checkAuth();
+    
+    const { data: authListener } = supabase.auth.onAuthStateChange(async (event, session) => {
+      if (event === 'SIGNED_IN' && session) {
+        setIsAuthenticated(true);
+        const { data: userData } = await supabase.auth.getUser();
+        if (userData.user) {
+          setUserRole(userData.user.user_metadata?.role || 'user');
+          setUserAvatarUrl(userData.user.user_metadata?.avatar_url || null);
+          setUserName(userData.user.user_metadata?.name || userData.user.email?.split('@')[0] || 'Usuario');
+          setUser(userData.user);
+        }
+      } else if (event === 'SIGNED_OUT') {
+        setIsAuthenticated(false);
+        setUserRole(null);
+        setUserAvatarUrl(null);
+        setUserName(null);
+      }
+    });
+    
+    return () => {
+      authListener.subscription.unsubscribe();
+    };
   }, []);
 
   useEffect(() => {
@@ -118,7 +154,11 @@ const Navbar = ({
 
   const handleDashboardClick = async () => {
     try {
-      if (!isAuthenticated) return;
+      if (!user) return;
+      
+      const userRole = user.user_metadata?.role || 'user';
+      const isOnboardingCompleted = user.user_metadata?.onboarding_completed === true;
+      const isArtistOnboardingCompleted = user.user_metadata?.artist_onboarding_completed === true;
       
       // Determinar la ruta adecuada según el rol y el estado del onboarding
       if (userRole === 'artist') {
@@ -128,8 +168,18 @@ const Navbar = ({
           navigate('/dashboard');
         }
       } else {
-        // Redirigir directamente al dashboard de usuario sin preguntar
-        navigate('/user-dashboard');
+        // Permitir al usuario elegir si quiere completar el onboarding
+        if (!isOnboardingCompleted) {
+          const shouldSkip = window.confirm('¿Quieres completar tu perfil ahora o prefieres acceder directamente?');
+          
+          if (shouldSkip) {
+            navigate('/check-dashboard?skipOnboarding=true');
+          } else {
+            navigate('/user-onboarding');
+          }
+        } else {
+          navigate('/user-dashboard');
+        }
       }
     } catch (error) {
       console.error('Error al navegar:', error);
@@ -137,7 +187,7 @@ const Navbar = ({
   };
 
   const handleLogout = async () => {
-    await signOut();
+    await supabase.auth.signOut();
     navigate('/');
   };
 
@@ -216,74 +266,98 @@ const Navbar = ({
           </DropdownMenu>
         )}
 
-        {isLoading ? (
-          <Skeleton className="h-10 w-10 rounded-full" />
-        ) : isAuthenticated ? (
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
+        {isMobile ? (
+          <>
+            {isAuthenticated ? (
               <Button 
-                variant="ghost" 
-                size="icon" 
-                className="w-10 h-10 rounded-full overflow-hidden bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700"
+                variant="ghost"
+                size="icon"
+                className="w-10 h-10 rounded-full border"
+                onClick={handleDashboardClick}
               >
-                {avatarUrl ? (
-                  <img src={avatarUrl} alt={userDisplayName || 'Usuario'} className="w-full h-full object-cover" />
+                {userAvatarUrl ? (
+                  <img src={userAvatarUrl} alt={userName || 'Usuario'} className="h-full w-full object-cover rounded-full" />
                 ) : (
                   <UserIcon className="h-5 w-5" />
                 )}
               </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent 
-              className="bg-white dark:bg-[#575654] border-none rounded-3xl p-3 shadow-none mr-3 min-w-[200px]" 
-              align="end"
+            ) : (
+              <Button 
+                variant="default" 
+                onClick={handleAuthClick}
+              >
+                Iniciar sesión
+              </Button>
+            )}
+            
+            <Button 
+              variant="ghost" 
+              size="icon" 
+              className="relative w-10 h-10 flex items-center justify-center dark:text-white"
+              onClick={handleOpenMenu}
             >
-              <DropdownMenuItem 
-                className="rounded-lg px-3 py-3 flex items-center gap-4 hover:bg-[#F8F8F8] dark:hover:bg-[#444341] cursor-pointer transition-colors duration-300"
-                onClick={handleDashboardClick}
-              >
-                <span className="text-sm font-medium">Mi cuenta</span>
-              </DropdownMenuItem>
-              <DropdownMenuItem 
-                className="rounded-lg px-3 py-3 flex items-center gap-4 text-red-500 hover:text-red-600 hover:bg-[#F8F8F8] dark:hover:bg-[#444341] cursor-pointer transition-colors duration-300"
-                onClick={handleLogout}
-              >
-                <span className="text-sm font-medium">Cerrar sesión</span>
-              </DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
-        ) : (
-          <Button 
-            onClick={handleAuthClick}
-            className="rounded-full hover:bg-blue-700"
-          >
-            Iniciar sesión
-          </Button>
-        )}
+              <Menu className="h-6 w-6" />
+            </Button>
 
-        {isMobile && !isAuthPage && (
-          <Button 
-            variant="ghost" 
-            size="icon" 
-            className="w-10 h-10 rounded-full" 
-            onClick={handleOpenMenu}
-          >
-            <Menu className="h-5 w-5" />
-          </Button>
+            <MobileMenu 
+              isOpen={isMenuOpen} 
+              onClose={handleCloseMenu} 
+            />
+          </>
+        ) : (
+          <>
+            {isAuthenticated ? (
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button 
+                    variant="ghost"
+                    size="icon"
+                    className="w-10 h-10 rounded-full border overflow-hidden"
+                  >
+                    {userAvatarUrl ? (
+                      <img src={userAvatarUrl} alt={userName || 'Usuario'} className="h-full w-full object-cover" />
+                    ) : (
+                      <UserIcon className="h-5 w-5" />
+                    )}
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent 
+                  className="bg-white dark:bg-[#575654] border-none rounded-3xl p-3 shadow-none mr-3 min-w-[200px]" 
+                  align="end"
+                >
+                  <div className="px-3 py-2 mb-2">
+                    <p className="font-medium">{userName}</p>
+                    <p className="text-sm text-vyba-tertiary">
+                      {userRole === 'artist' ? 'Artista' : 'Usuario'}
+                    </p>
+                  </div>
+                  
+                  <DropdownMenuItem 
+                    className="rounded-lg px-3 py-3 flex mb-1 items-center gap-4 hover:bg-[#F8F8F8] dark:hover:bg-[#444341] cursor-pointer transition-colors duration-300"
+                    onClick={handleDashboardClick}
+                  >
+                    <span className="text-sm font-medium">Mi dashboard</span>
+                  </DropdownMenuItem>
+                  
+                  <DropdownMenuItem 
+                    className="rounded-lg px-3 py-3 flex items-center gap-4 hover:bg-[#F8F8F8] dark:hover:bg-[#444341] cursor-pointer transition-colors duration-300"
+                    onClick={handleLogout}
+                  >
+                    <span className="text-sm font-medium">Cerrar sesión</span>
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            ) : (
+              <Button 
+                className="text-sm"
+                onClick={handleAuthClick}
+              >
+                Entrar/Registrarse
+              </Button>
+            )}
+          </>
         )}
       </div>
-
-      {/* Mobile menu */}
-      <MobileMenu 
-        isOpen={isMenuOpen} 
-        onClose={handleCloseMenu} 
-        isAuthenticated={isAuthenticated}
-        onAuthClick={handleAuthClick}
-        onDashboardClick={handleDashboardClick}
-        onLogoutClick={handleLogout}
-        userDisplayName={userDisplayName || 'Usuario'}
-        setTheme={setTheme}
-        currentTheme={currentTheme}
-      />
     </header>
   );
 };

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { OnboardingLayout } from '@/components/layouts/OnboardingLayout';
 import ArtistTypeStep from '@/components/onboarding/ArtistTypeStep';
@@ -22,8 +22,6 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { useAuth } from '@/contexts/AuthContext';
-import { supabase } from '@/integrations/supabase/client';
 
 interface StepGroup {
   id: number;
@@ -118,67 +116,11 @@ const WelcomeScreen = () => {
 const ArtistOnboardingPage = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
-  const { isAuthenticated, user } = useAuth();
   const [showExitDialog, setShowExitDialog] = useState(false);
-  const [isLoading, setIsLoading] = useState(true);
   
   const [onboardingData, setOnboardingData] = useState<OnboardingData>({});
   const [currentGroup, setCurrentGroup] = useState(-1);
   const [currentStepInGroup, setCurrentStepInGroup] = useState(0);
-
-  // Verificar si el usuario está autenticado
-  useEffect(() => {
-    const checkAuth = async () => {
-      if (!isAuthenticated) {
-        toast({
-          title: "Error",
-          description: 'Debes iniciar sesión para acceder a esta página',
-          variant: "destructive"
-        });
-        navigate('/auth');
-        return;
-      }
-      
-      // Cargar datos existentes si los hay
-      await loadUserData();
-      setIsLoading(false);
-    };
-    
-    checkAuth();
-  }, [isAuthenticated]);
-
-  // Cargar datos del usuario desde Supabase
-  const loadUserData = async () => {
-    if (!user) return;
-    
-    try {
-      const { data } = await supabase.auth.getUser();
-      
-      if (data?.user) {
-        // Recuperar datos guardados en los metadatos del usuario
-        const userMeta = data.user.user_metadata;
-        
-        setOnboardingData({
-          artistType: userMeta?.artist_type,
-          artistName: userMeta?.artist_name,
-          artistDescription: userMeta?.artist_description,
-          musicGenres: userMeta?.music_genres || [],
-          profilePhotoUrl: userMeta?.avatar_url,
-          galleryImageUrls: userMeta?.gallery_image_urls || [],
-          phone: userMeta?.phone,
-          isPhoneVerified: userMeta?.phone_verified,
-          price: userMeta?.price
-        });
-      }
-    } catch (error) {
-      console.error('Error al cargar datos del usuario:', error);
-      toast({
-        title: "Error",
-        description: 'No se pudieron cargar tus datos',
-        variant: "destructive"
-      });
-    }
-  };
 
   const stepGroups: StepGroup[] = [
     {
@@ -266,181 +208,33 @@ const ArtistOnboardingPage = () => {
   };
 
   const handlePhoneChange = (phone: string) => updateOnboardingData('phone', phone);
-  const handlePhoneVerification = (verified: boolean) => updateOnboardingData('isPhoneVerified', verified);
   const handlePriceChange = (price: string) => updateOnboardingData('price', price);
   const handleArtistNameChange = (name: string) => updateOnboardingData('artistName', name);
   const handleArtistDescriptionChange = (description: string) => updateOnboardingData('artistDescription', description);
   
-  // Guardar datos del usuario en Supabase
-  const saveUserData = async (completeOnboarding: boolean = false) => {
-    if (!user) {
-      toast({
-        title: "Error",
-        description: 'No hay usuario autenticado',
-        variant: "destructive"
-      });
-      return;
-    }
-    
-    try {
-      setIsLoading(true);
-      
-      // 1. Si hay foto de perfil nueva, subirla a storage
-      let avatarUrl = onboardingData.profilePhotoUrl;
-      
-      // Si es una URL que comienza con data:, es una nueva imagen para subir
-      if (onboardingData.profilePhoto && onboardingData.profilePhotoUrl?.startsWith('data:')) {
-        const fileExt = onboardingData.profilePhoto.name.split('.').pop();
-        const fileName = `${user.id}-${Date.now()}.${fileExt}`;
-        
-        // Verificar si existe el bucket 'avatars', si no, lo creamos
-        const { data: buckets } = await supabase.storage.listBuckets();
-        if (!buckets?.some(bucket => bucket.name === 'avatars')) {
-          await supabase.storage.createBucket('avatars', {
-            public: true,
-            fileSizeLimit: 5242880 // 5MB
-          });
-        }
-        
-        // Subir a storage
-        const { error: uploadError } = await supabase.storage
-          .from('avatars')
-          .upload(fileName, onboardingData.profilePhoto);
-          
-        if (uploadError) {
-          console.error('Error al subir avatar:', uploadError);
-          throw uploadError;
-        }
-        
-        // Obtener URL pública
-        const { data: urlData } = supabase.storage
-          .from('avatars')
-          .getPublicUrl(fileName);
-          
-        if (urlData) {
-          avatarUrl = urlData.publicUrl;
-        }
-      }
-      
-      // 2. Si hay imágenes de galería nuevas, subirlas a storage
-      let galleryUrls: string[] = onboardingData.galleryImageUrls || [];
-      
-      if (onboardingData.galleryImages && onboardingData.galleryImages.length > 0) {
-        // Verificar si existe el bucket 'gallery', si no, lo creamos
-        const { data: buckets } = await supabase.storage.listBuckets();
-        if (!buckets?.some(bucket => bucket.name === 'gallery')) {
-          await supabase.storage.createBucket('gallery', {
-            public: true,
-            fileSizeLimit: 10485760 // 10MB
-          });
-        }
-        
-        // Subir cada imagen
-        const newUrls = await Promise.all(
-          onboardingData.galleryImages.map(async (image, index) => {
-            const fileExt = image.name.split('.').pop();
-            const fileName = `${user.id}-gallery-${Date.now()}-${index}.${fileExt}`;
-            
-            // Solo subir imágenes que sean nuevas (representadas en base64)
-            if (onboardingData.galleryImageUrls && 
-                onboardingData.galleryImageUrls[index] && 
-                onboardingData.galleryImageUrls[index].startsWith('data:')) {
-              
-              const { error } = await supabase.storage
-                .from('gallery')
-                .upload(fileName, image);
-                
-              if (error) {
-                console.error(`Error al subir imagen ${index}:`, error);
-                return null;
-              }
-              
-              const { data } = supabase.storage
-                .from('gallery')
-                .getPublicUrl(fileName);
-                
-              return data?.publicUrl;
-            }
-            
-            // Si no es nueva, mantener la URL que ya tiene
-            return onboardingData.galleryImageUrls ? onboardingData.galleryImageUrls[index] : null;
-          })
-        );
-        
-        // Filtrar URLs nulas
-        galleryUrls = newUrls.filter(url => url !== null) as string[];
-      }
-      
-      // 3. Actualizar metadatos del usuario
-      const { error } = await supabase.auth.updateUser({
-        data: {
-          // Datos del artista
-          artist_type: onboardingData.artistType,
-          artist_name: onboardingData.artistName,
-          artist_description: onboardingData.artistDescription,
-          music_genres: onboardingData.musicGenres,
-          
-          // Imágenes
-          avatar_url: avatarUrl,
-          gallery_image_urls: galleryUrls,
-          
-          // Otros datos
-          phone: onboardingData.phone,
-          phone_verified: onboardingData.isPhoneVerified,
-          price: onboardingData.price,
-          
-          // Rol y estado
-          role: 'artist',
-          onboarding_completed: completeOnboarding
-        }
-      });
-      
-      if (error) throw error;
-      
-      toast({
-        title: completeOnboarding ? "¡Perfil completado!" : "Datos guardados",
-        description: completeOnboarding ? 
-          "Tu perfil de artista ha sido configurado correctamente" : 
-          "Tus datos han sido guardados y podrás continuar más tarde",
-      });
-      
-    } catch (error) {
-      console.error('Error al guardar datos del artista:', error);
-      toast({
-        title: "Error",
-        description: 'Hubo un problema al guardar tus datos',
-        variant: "destructive"
-      });
-      throw error;
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  const handleNext = async () => {
+  const handleNext = () => {
     const currentGroupObj = stepGroups[currentGroup + 1];
     
     if (currentStepInGroup < currentGroupObj.totalSteps - 1) {
       setCurrentStepInGroup(currentStepInGroup + 1);
     } else if (currentGroup < stepGroups.length - 2) {
-      // Guardar datos cada vez que se completa un grupo
-      try {
-        await saveUserData();
-      } catch (error) {
-        // Error ya manejado en saveUserData
-        return;
-      }
-      
       setCurrentGroup(currentGroup + 1);
       setCurrentStepInGroup(0);
     } else {
-      // Finalizar onboarding
-      try {
-        await saveUserData(true);
-        navigate('/confirmation');
-      } catch (error) {
-        // Error ya manejado en saveUserData
-      }
+      // Asegurarse de que tenemos las últimas URLs de las imágenes
+      const dataToStore = {
+        ...onboardingData,
+        // Mantener las URLs pero eliminar los objetos File
+        profilePhoto: undefined,
+        galleryImages: undefined,
+        // Asegurarse de que las URLs están presentes
+        profilePhotoUrl: onboardingData.profilePhotoUrl,
+        galleryImageUrls: onboardingData.galleryImageUrls
+      };
+      
+      console.log("Guardando datos en localStorage:", dataToStore);
+      localStorage.setItem('onboardingData', JSON.stringify(dataToStore));
+      navigate('/confirmation');
     }
   };
   
@@ -459,10 +253,40 @@ const ArtistOnboardingPage = () => {
   
   const handleConfirmExit = async () => {
     try {
-      await saveUserData();
+      // Convertir las imágenes a base64 si existen
+      let profilePhotoUrl = onboardingData.profilePhotoUrl;
+      let galleryImageUrls = onboardingData.galleryImageUrls;
+
+      // Si hay una foto de perfil nueva que no está en base64
+      if (onboardingData.profilePhoto && !profilePhotoUrl) {
+        profilePhotoUrl = await fileToBase64(onboardingData.profilePhoto);
+      }
+
+      // Si hay imágenes de galería nuevas que no están en base64
+      if (onboardingData.galleryImages && onboardingData.galleryImages.length > 0) {
+        galleryImageUrls = await Promise.all(
+          onboardingData.galleryImages.map(image => fileToBase64(image))
+        );
+      }
+
+      // Guardar los datos en localStorage
+      const dataToStore = {
+        ...onboardingData,
+        profilePhoto: undefined, // No guardamos el archivo File
+        galleryImages: undefined, // No guardamos los archivos File
+        profilePhotoUrl,
+        galleryImageUrls
+      };
+      
+      localStorage.setItem('onboardingData', JSON.stringify(dataToStore));
       navigate('/artist-benefits');
     } catch (error) {
-      // Error ya manejado en saveUserData
+      console.error("Error al guardar las imágenes:", error);
+      toast({
+        title: "Error",
+        description: "Hubo un problema al guardar las imágenes. Por favor, inténtalo de nuevo.",
+        variant: "destructive"
+      });
     }
   };
   
@@ -635,17 +459,6 @@ const ArtistOnboardingPage = () => {
     return null;
   };
   
-  if (isLoading) {
-    return (
-      <div className="min-h-screen bg-white flex flex-col items-center justify-center">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-vyba-navy mx-auto"></div>
-          <p className="mt-4 text-vyba-tertiary">Cargando tus datos...</p>
-        </div>
-      </div>
-    );
-  }
-  
   return (
     <div className="min-h-screen bg-white flex flex-col">
       <div className="fixed top-0 left-0 w-full bg-white/30 backdrop-blur-xl z-50 border-b border-vyba-gray">
@@ -700,7 +513,7 @@ const ArtistOnboardingPage = () => {
                 <Button
                   variant="ghost"
                   onClick={handleBack}
-                  disabled={currentGroup === -1 || isLoading}
+                  disabled={currentGroup === -1}
                   className="text-vyba-navy hover:text-vyba-navy/80"
                 >
                   Anterior
@@ -714,16 +527,9 @@ const ArtistOnboardingPage = () => {
                 <Button
                   variant="terciary"
                   onClick={handleNext}
-                  disabled={!canGoNext() || isLoading}
+                  disabled={!canGoNext()}
                 >
-                  {isLoading ? (
-                    <>
-                      <span className="animate-spin inline-block mr-2 h-4 w-4 border-2 border-t-transparent border-vyba-tertiary rounded-full"></span>
-                      Guardando...
-                    </>
-                  ) : (
-                    currentGroup === stepGroups.length - 2 ? 'Finalizar' : 'Siguiente'
-                  )}
+                  {currentGroup === stepGroups.length - 2 ? 'Finalizar' : 'Siguiente'}
                 </Button>
               </div>
             </div>

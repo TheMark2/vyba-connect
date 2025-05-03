@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
@@ -10,7 +11,7 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Check, XCircle, AlertCircle } from "lucide-react";
+import { Check, XCircle } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { supabase } from "@/integrations/supabase/client";
 import { useNavigate } from "react-router-dom";
@@ -45,7 +46,6 @@ const RegisterDialog = ({ open, onOpenChange, onSuccess }: RegisterDialogProps) 
   const [resendLoading, setResendLoading] = useState(false);
   const [isVerified, setIsVerified] = useState(false);
   const [verificationError, setVerificationError] = useState('');
-  const [emailError, setEmailError] = useState<{message: string, provider?: string} | null>(null);
   const navigate = useNavigate();
 
   const form = useForm<RegistrationData>({
@@ -58,87 +58,13 @@ const RegisterDialog = ({ open, onOpenChange, onSuccess }: RegisterDialogProps) 
     }
   });
 
-  // Improved email existence check that accurately determines if an email exists
-  // Fixed version that doesn't rely on getUserByEmail which doesn't exist
-  const checkEmailExists = async (email: string) => {
-    try {
-      console.log("Checking if email exists:", email);
-      
-      // Verificar si el correo ya existe en la tabla de perfiles
-      const { data, error } = await supabase
-        .from('profiles')
-        .select('email')
-        .eq('email', email)
-        .maybeSingle();
-      
-      if (data) {
-        console.log("Email exists in profiles table");
-        return { exists: true, provider: 'email' };
-      }
-      
-      // Intentar verificar si el usuario existe en auth sin intentar iniciar sesión
-      const { error: signInError } = await supabase.auth.signInWithOtp({
-        email,
-        options: {
-          shouldCreateUser: false, // No crear un usuario si no existe
-        }
-      });
-      
-      // Si el error indica que el usuario no existe, entonces el email no está registrado
-      if (signInError && signInError.message.includes("Email not found")) {
-        console.log("Email does not exist based on OTP check");
-        return { exists: false };
-      }
-      
-      // Si llegamos aquí sin un error claro sobre la no existencia, realizamos una comprobación adicional
-      // usando otra estrategia, ya que no podemos usar getUserByEmail que no existe
-      
-      // Intentamos obtener información de la sesión actual para comparar
-      const { data: sessionData } = await supabase.auth.getSession();
-      const currentUserEmail = sessionData?.session?.user?.email;
-      
-      // Si el email actual coincide con el email de la sesión, entonces existe
-      if (currentUserEmail && currentUserEmail.toLowerCase() === email.toLowerCase()) {
-        console.log("Email matches current session user");
-        return { exists: true, provider: 'email' };
-      }
-      
-      // Como último recurso, si nada confirma que el usuario existe o no existe
-      // devolvemos que no existe para permitir el intento de registro
-      // Supabase manejará el error si realmente está duplicado
-      console.log("Email existence could not be definitively determined, allowing registration attempt");
-      return { exists: false };
-      
-    } catch (error) {
-      console.error("Error checking if email exists:", error);
-      // En caso de errores inesperados, permitir el intento de registro
-      return { exists: false };
-    }
-  };
-
   const handleEmailSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!email) return;
     
     setIsLoading(true);
-    setEmailError(null);
-    
     try {
-      // Verify if the email already exists
-      const emailCheck = await checkEmailExists(email);
-      
-      if (emailCheck.exists) {
-        // If the email already exists, set error and stop the process
-        let message = "Este email ya está registrado";
-        if (emailCheck.provider) {
-          message += ` con ${emailCheck.provider === 'email' ? 'correo y contraseña' : emailCheck.provider}`;
-        }
-        setEmailError({ message, provider: emailCheck.provider });
-        setIsLoading(false);
-        return;
-      }
-      
-      // Continue with OTP code sending if the email doesn't exist
+      // Enviar el correo con el código OTP
       const response = await fetch('https://zkucuolpubthcnsgjtso.supabase.co/functions/v1/send-otp', {
         method: 'POST',
         headers: {
@@ -269,7 +195,7 @@ const RegisterDialog = ({ open, onOpenChange, onSuccess }: RegisterDialogProps) 
     try {
       console.log("Intentando registrar usuario con estos datos:", { email, ...data });
       
-      // Modificación clave: Agregamos autoconfirm true para crear la cuenta sin verificar correo
+      // Registrar el usuario en Supabase con autoconfirm true para crear la cuenta inmediatamente
       const { data: authData, error } = await supabase.auth.signUp({
         email,
         password: data.password,
@@ -443,33 +369,16 @@ const RegisterDialog = ({ open, onOpenChange, onSuccess }: RegisterDialogProps) 
                 type="email"
                 placeholder="ejemplo@email.com"
                 value={email}
-                onChange={(e) => {
-                  setEmail(e.target.value);
-                  setEmailError(null); // Limpiar error al cambiar el email
-                }}
+                onChange={(e) => setEmail(e.target.value)}
                 required
-                className={cn(
-                  "focus:ring-0 focus-visible:ring-0 focus-visible:ring-offset-0 focus:ring-offset-0",
-                  emailError ? "border-red-500" : ""
-                )}
+                className="focus:ring-0 focus-visible:ring-0 focus-visible:ring-offset-0 focus:ring-offset-0"
               />
-              
-              {emailError && (
-                <Alert variant="destructive" className="mt-4 bg-red-50 text-red-800 border-none">
-                  <AlertTitle className="text-red-800 flex items-center gap-2">
-                    <AlertCircle className="h-4 w-4" /> Email ya registrado
-                  </AlertTitle>
-                  <AlertDescription className="text-red-700">
-                    {emailError.message}. Por favor, inicia sesión en lugar de registrarte.
-                  </AlertDescription>
-                </Alert>
-              )}
             </div>
             <Button 
               variant="terciary"
               type="submit" 
               className="w-full"
-              disabled={isLoading || !!emailError}
+              disabled={isLoading}
               isLoading={isLoading}
             >
               {isLoading ? "Enviando" : "Enviar código"}

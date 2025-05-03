@@ -1,45 +1,60 @@
-import React, { useEffect } from 'react';
+
+import React, { useState, useEffect } from 'react';
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import MiniSearchBar from "@/components/search/MiniSearchBar";
 import { useNavigate } from "react-router-dom";
+import { supabase } from "@/integrations/supabase/client";
+import { User } from '@supabase/supabase-js';
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
-import { useAuth } from '@/contexts/AuthContext';
-import { Skeleton } from "@/components/ui/skeleton";
 
 const Navbar1 = () => {
     const navigate = useNavigate();
-    const { 
-      user, 
-      isAuthenticated, 
-      userRole, 
-      avatarUrl, 
-      userDisplayName, 
-      signOut,
-      isLoading
-    } = useAuth();
+    const [user, setUser] = useState<User | null>(null);
+    
+    useEffect(() => {
+      // Comprobar sesión actual
+      const checkUser = async () => {
+        const { data } = await supabase.auth.getSession();
+        setUser(data.session?.user || null);
+      };
+      
+      checkUser();
+      
+      // Escuchar cambios en la autenticación
+      const { data: authListener } = supabase.auth.onAuthStateChange(
+        (event, session) => {
+          setUser(session?.user || null);
+        }
+      );
+      
+      return () => {
+        authListener?.subscription.unsubscribe();
+      };
+    }, []);
     
     const handleAuth = () => {
-      if (isAuthenticated) {
-        if (userRole === 'artist') {
-          navigate('/dashboard');
-        } else {
-          navigate('/user-dashboard');
-        }
+      if (user) {
+        navigate('/dashboard');
       } else {
         navigate('/auth');
       }
     };
     
     const handleLogout = async () => {
-      await signOut();
+      await supabase.auth.signOut();
       navigate('/');
     };
     
     const getUserInitial = () => {
-      if (!userDisplayName) return "U";
-      return userDisplayName.charAt(0).toUpperCase();
+      if (user?.user_metadata?.name) {
+        return user.user_metadata.name.charAt(0).toUpperCase();
+      }
+      if (user?.email) {
+        return user.email.charAt(0).toUpperCase();
+      }
+      return "U";
     };
     
     return (
@@ -57,14 +72,12 @@ const Navbar1 = () => {
             </div>
             <MiniSearchBar />
             
-            {isLoading ? (
-              <Skeleton className="h-10 w-10 rounded-full" />
-            ) : isAuthenticated ? (
+            {user ? (
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
                   <button className="focus:outline-none">
                     <Avatar className="h-10 w-10 cursor-pointer">
-                      <AvatarImage src={avatarUrl || undefined} />
+                      <AvatarImage src={user.user_metadata.avatar_url} />
                       <AvatarFallback className="bg-black text-white">
                         {getUserInitial()}
                       </AvatarFallback>
@@ -72,7 +85,7 @@ const Navbar1 = () => {
                   </button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end">
-                  <DropdownMenuItem onClick={() => navigate(userRole === 'artist' ? '/dashboard' : '/user-dashboard')}>
+                  <DropdownMenuItem onClick={() => navigate('/dashboard')}>
                     Mi cuenta
                   </DropdownMenuItem>
                   <DropdownMenuSeparator />

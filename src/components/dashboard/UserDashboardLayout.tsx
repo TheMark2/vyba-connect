@@ -18,7 +18,6 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { supabase } from "@/integrations/supabase/client";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { useAuth } from '@/contexts/AuthContext';
 
 interface UserDashboardLayoutProps {
   children: React.ReactNode;
@@ -29,7 +28,6 @@ const UserDashboardLayout = ({ children }: UserDashboardLayoutProps) => {
   const navigate = useNavigate();
   const [userImage, setUserImage] = useState<string | null>(null);
   const [userName, setUserName] = useState<string>("Usuario");
-  const { avatarUrl, userDisplayName, signOut } = useAuth();
 
   // Obtener información del usuario desde Supabase
   useEffect(() => {
@@ -51,12 +49,12 @@ const UserDashboardLayout = ({ children }: UserDashboardLayoutProps) => {
   ];
 
   const handleLogout = async () => {
-    await signOut();
+    await supabase.auth.signOut();
     navigate('/');
   };
 
   const getUserInitial = () => {
-    return (userDisplayName || userName).charAt(0).toUpperCase();
+    return userName.charAt(0).toUpperCase();
   };
 
   return (
@@ -66,9 +64,7 @@ const UserDashboardLayout = ({ children }: UserDashboardLayoutProps) => {
         <div className="grid grid-cols-3 items-center py-4 px-8 md:px-32">
           {/* Logo */}
           <div className="flex items-center gap-2">
-            <Link to="/">
-              <img src="/lovable-uploads/logovyba.png" alt="Logo VYBA" className="h-10" />
-            </Link>
+            <img src="/lovable-uploads/logovyba.png" alt="Logo VYBA" className="h-10" />
           </div>
 
           {/* Navigation Links (centered) */}
@@ -77,16 +73,17 @@ const UserDashboardLayout = ({ children }: UserDashboardLayoutProps) => {
               {navItems.map((item) => {
                 const isActive = location.pathname === item.path;
                 return (
-                  <Link
+                  <Button
                     key={item.path}
-                    to={item.path}
+                    variant="link"
+                    onClick={() => navigate(item.path)}
                     className={cn(
                       "text-sm font-medium text-vyba-tertiary hover:text-vyba-navy rounded-full px-6 py-3 transition-all duration-300 ease-in-out hover:bg-vyba-gray hover:no-underline",
                       isActive && "relative text-vyba-navy after:content-[''] after:absolute after:left-1/2 after:-translate-x-1/2 after:bottom-0 after:w-6 after:h-[2px] after:bg-vyba-navy after:rounded-full"
                     )}
                   >
                     {item.label}
-                  </Link>
+                  </Button>
                 );
               })}
             </div>
@@ -97,10 +94,10 @@ const UserDashboardLayout = ({ children }: UserDashboardLayoutProps) => {
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <div className="h-12 w-12 rounded-full cursor-pointer overflow-hidden transition-colors duration-300">
-                  {(avatarUrl || userImage) ? (
+                  {userImage ? (
                     <img 
-                      src={avatarUrl || userImage || ''}
-                      alt={(userDisplayName || userName)}
+                      src={userImage}
+                      alt={userName}
                       className="h-full w-full object-cover"
                     />
                   ) : (
@@ -113,10 +110,8 @@ const UserDashboardLayout = ({ children }: UserDashboardLayoutProps) => {
                 </div>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end" className="w-56">
-                <DropdownMenuItem asChild>
-                  <Link to="/user-dashboard/profile">
-                    <span>Perfil</span>
-                  </Link>
+                <DropdownMenuItem onClick={() => navigate('/user-dashboard/profile')}>
+                  <span>Perfil</span>
                 </DropdownMenuItem>
                 <DropdownMenuSeparator />
                 <DropdownMenuItem onClick={handleLogout} className="text-red-600">
@@ -134,17 +129,19 @@ const UserDashboardLayout = ({ children }: UserDashboardLayoutProps) => {
           {navItems.map((item) => {
             const isActive = location.pathname === item.path;
             return (
-              <Link
+              <Button
                 key={item.path}
-                to={item.path}
+                variant="ghost"
+                size="sm"
+                onClick={() => navigate(item.path)}
                 className={cn(
-                  "flex flex-col items-center justify-center h-16 rounded-none px-4",
+                  "flex flex-col items-center justify-center h-16 rounded-none",
                   isActive ? "text-vyba-navy" : "text-vyba-tertiary"
                 )}
               >
                 <item.icon className={cn("h-5 w-5 mb-1", isActive ? "text-vyba-navy" : "text-vyba-tertiary")} />
                 <span className="text-xs">{item.label}</span>
-              </Link>
+              </Button>
             );
           })}
         </div>
