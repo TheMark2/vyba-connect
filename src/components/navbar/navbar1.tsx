@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
@@ -21,10 +20,17 @@ const Navbar1 = () => {
         const { data } = await supabase.auth.getSession();
         if (data.session?.user) {
           setUser(data.session.user);
-          setUserAvatarUrl(data.session.user.user_metadata?.avatar_url || null);
+          
+          // Intentar obtener el avatar de los metadatos del usuario
+          const avatarUrl = data.session.user.user_metadata?.avatar_url || null;
+          setUserAvatarUrl(avatarUrl);
+          
+          // Intentar obtener el nombre del usuario
           setUserName(data.session.user.user_metadata?.name || data.session.user.email?.split('@')[0] || "Usuario");
         } else {
           setUser(null);
+          setUserAvatarUrl(null);
+          setUserName(null);
         }
       };
       
@@ -32,10 +38,13 @@ const Navbar1 = () => {
       
       // Escuchar cambios en la autenticación
       const { data: authListener } = supabase.auth.onAuthStateChange(
-        (event, session) => {
+        async (event, session) => {
           if (session?.user) {
             setUser(session.user);
-            setUserAvatarUrl(session.user.user_metadata?.avatar_url || null);
+            
+            // Actualizar avatar y nombre cuando cambian los metadatos del usuario
+            const avatarUrl = session.user.user_metadata?.avatar_url || null;
+            setUserAvatarUrl(avatarUrl);
             setUserName(session.user.user_metadata?.name || session.user.email?.split('@')[0] || "Usuario");
           } else {
             setUser(null);

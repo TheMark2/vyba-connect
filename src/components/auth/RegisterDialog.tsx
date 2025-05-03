@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
@@ -292,13 +291,16 @@ const RegisterDialog = ({ open, onOpenChange, onSuccess }: RegisterDialogProps) 
           fullName: `${data.name} ${data.lastName}`, 
           email 
         });
+      } else {
+        // Si no hay callback de éxito, redirigir manualmente al onboarding
+        navigate('/user-onboarding');
       }
       
       // Cerrar este diálogo automáticamente
       onOpenChange(false);
       
       toast.success("Registro completado", {
-        description: "¡Bienvenido a VYBA!"
+        description: "¡Bienvenido a VYBA! Ahora configuraremos tu perfil."
       });
       
       setTimeout(() => {
@@ -308,9 +310,6 @@ const RegisterDialog = ({ open, onOpenChange, onSuccess }: RegisterDialogProps) 
         setIsVerified(false);
         form.reset();
       }, 300);
-
-      // Redirigir al usuario directamente al onboarding
-      navigate('/user-onboarding');
     } catch (error: any) {
       console.error("Error de registro:", error);
       toast.error("Error", {

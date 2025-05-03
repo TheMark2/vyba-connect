@@ -1,4 +1,3 @@
-
 import React, { useEffect, useState } from 'react';
 import { Routes, Route, useLocation, useNavigate } from 'react-router-dom';
 import { AnimatePresence } from 'framer-motion';
@@ -26,8 +25,8 @@ import UserDashboardPage from './pages/user-dashboard/UserDashboardPage';
 import ProfilePage from './pages/user-dashboard/ProfilePage';
 import MessagesPage from './pages/user-dashboard/MessagesPage';
 import UserOnboardingPage from './pages/UserOnboardingPage';
+import OnboardingCompletePage from './pages/OnboardingCompletePage';
 import { supabase } from './integrations/supabase/client';
-import WelcomeDialog from './components/WelcomeDialog';
 
 const RedirectToDashboard = () => {
   const navigate = useNavigate();
@@ -103,48 +102,6 @@ const RedirectToDashboard = () => {
   return null;
 };
 
-// Componente para manejar la finalización del onboarding
-const OnboardingComplete = () => {
-  const navigate = useNavigate();
-  const [showWelcomeDialog, setShowWelcomeDialog] = useState(true);
-  const [userInfo, setUserInfo] = useState<{ fullName: string; email?: string }>({ fullName: '' });
-  
-  useEffect(() => {
-    const getUserData = async () => {
-      try {
-        const { data } = await supabase.auth.getUser();
-        if (data.user) {
-          const name = data.user.user_metadata?.name || '';
-          const lastName = data.user.user_metadata?.lastName || '';
-          setUserInfo({
-            fullName: `${name} ${lastName}`.trim(),
-            email: data.user.email
-          });
-        }
-      } catch (error) {
-        console.error('Error al obtener datos del usuario:', error);
-      }
-    };
-    
-    getUserData();
-  }, []);
-  
-  const handleDialogClose = () => {
-    setShowWelcomeDialog(false);
-    navigate('/user-dashboard');
-  };
-  
-  return (
-    <>
-      <WelcomeDialog 
-        open={showWelcomeDialog} 
-        onOpenChange={handleDialogClose} 
-        userInfo={userInfo} 
-      />
-    </>
-  );
-};
-
 function App() {
   const location = useLocation();
 
@@ -182,7 +139,7 @@ function App() {
           
           <Route path="/register/artist" element={<ArtistOnboardingPage />} />
           <Route path="/user-onboarding" element={<UserOnboardingPage />} />
-          <Route path="/onboarding-complete" element={<OnboardingComplete />} />
+          <Route path="/onboarding-complete" element={<OnboardingCompletePage />} />
           
           <Route path="*" element={<NotFound />} />
         </Routes>
