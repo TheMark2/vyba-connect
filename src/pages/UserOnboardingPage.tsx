@@ -35,6 +35,7 @@ import { Label } from "@/components/ui/label";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
+import OnboardingCompletionHandler from '@/components/onboarding/OnboardingCompletionHandler';
 
 // Tipos de datos
 interface OnboardingData {
@@ -331,12 +332,16 @@ const UserOnboardingPage = () => {
         if (urlData) {
           avatarUrl = urlData.publicUrl;
         }
+      } else if (onboardingData.profilePhotoUrl && onboardingData.profilePhotoUrl.startsWith('/')) {
+        // Si es una ruta de avatar predefinido, usarla directamente
+        avatarUrl = onboardingData.profilePhotoUrl;
       }
 
-      // 2. Actualizar metadatos del usuario
+      // 2. Actualizar metadatos del usuario con toda la información relevante
       await supabase.auth.updateUser({
         data: {
           avatar_url: avatarUrl,
+          name: user.user_metadata?.name || user.email?.split('@')[0] || "Usuario",
           location: onboardingData.location,
           city: onboardingData.city,
           province: onboardingData.province,
@@ -525,141 +530,144 @@ const UserOnboardingPage = () => {
   };
 
   return (
-    <div className="min-h-screen bg-white flex flex-col">
-      <div className="fixed top-0 left-0 w-full bg-white/30 backdrop-blur-xl z-50 border-b border-vyba-gray">
-        <div className="px-6 md:px-12 py-3">
-          <div className="flex justify-end">
-            <Button
-              variant="secondary"
-              onClick={handleCancel}
-              className="text-vyba-tertiary hover:text-vyba-navy flex items-center gap-2"
-            >
-              Saltar y entrar
-            </Button>
-          </div>
-        </div>
-      </div>
-
-      <main className="flex-1 container mx-auto px-6 pt-20 pb-32 md:pt-32 md:pb-32">
-        <div className="mx-auto max-w-4xl">
-          <div className="space-y-12 justify-center">
-            <div className="text-start space-y-2">
-              <h1 className="text-5xl font-semibold">{stepGroups[currentGroup].title}</h1>
-              <p className="text-lg text-vyba-tertiary">{stepGroups[currentGroup].description}</p>
-            </div>
-            <div className="md:py-8">
-              {renderCurrentStep()}
-            </div>
-          </div>
-        </div>
-      </main>
-
-      <footer className="fixed bottom-0 left-0 w-full bg-white/50 backdrop-blur-sm">
-        <div className="w-full h-1 bg-vyba-gray">
-          <div 
-            className="h-1 bg-vyba-navy transition-all duration-300 ease-out"
-            style={{ width: `${((currentGroup + 1) / (stepGroups.length)) * 100}%` }}
-          />
-        </div>
-        <div className="border-t">
-          <div className="container mx-auto px-6 py-4">
-            <div className="max-w-4xl mx-auto flex justify-between items-center">
+    <>
+      <div className="min-h-screen bg-white flex flex-col">
+        <div className="fixed top-0 left-0 w-full bg-white/30 backdrop-blur-xl z-50 border-b border-vyba-gray">
+          <div className="px-6 md:px-12 py-3">
+            <div className="flex justify-end">
               <Button
-                variant="ghost"
-                onClick={handleBack}
-                disabled={currentGroup === 0 && currentStepInGroup === 0}
-                className="text-vyba-navy hover:text-vyba-navy/80"
-              >
-                Anterior
-              </Button>
-              <Badge
                 variant="secondary"
-                className="px-4 py-2 text-sm bg-vyba-gray"
+                onClick={handleCancel}
+                className="text-vyba-tertiary hover:text-vyba-navy flex items-center gap-2"
               >
-                Paso {currentGroup + 1} de {stepGroups.length}
-              </Badge>
-              <Button
-                variant="terciary"
-                onClick={handleNext}
-                disabled={!canGoNext()}
-              >
-                {currentGroup === stepGroups.length - 1 ? 'Finalizar' : 'Siguiente'}
+                Saltar y entrar
               </Button>
             </div>
           </div>
         </div>
-      </footer>
 
-      <Dialog open={showExitDialog} onOpenChange={setShowExitDialog}>
-        <DialogContent className="sm:max-w-xl">
-          <DialogHeader className="text-center px-12">
-            <DialogTitle>¿Estás seguro de que quieres salir?</DialogTitle>
-            <DialogDescription>
-              Tu progreso se guardará y podrás continuar más tarde.
-            </DialogDescription>
-          </DialogHeader>
-
-          <div className="space-y-6 py-4 px-12">
-            <div className="space-y-4">
-              <h3 className="font-medium text-lg">Información guardada:</h3>
-              <div className="grid grid-cols-2 gap-4">
-                <div className="space-y-3">
-                  {onboardingData.profilePhotoUrl && (
-                    <div>
-                      <p className="text-sm text-vyba-tertiary">Foto de perfil</p>
-                      <p className="font-medium">✓ Configurada</p>
-                    </div>
-                  )}
-                  {onboardingData.city && onboardingData.province && (
-                    <div>
-                      <p className="text-sm text-vyba-tertiary">Ubicación</p>
-                      <p className="font-medium">{onboardingData.city}, {onboardingData.province}</p>
-                    </div>
-                  )}
-                </div>
-                <div className="space-y-3">
-                  {onboardingData.favoriteGenres && onboardingData.favoriteGenres.length > 0 && (
-                    <div>
-                      <p className="text-sm text-vyba-tertiary">Géneros musicales</p>
-                      <p className="font-medium line-clamp-2">
-                        {onboardingData.favoriteGenres.slice(0, 3).join(', ')}
-                        {onboardingData.favoriteGenres.length > 3 && '...'}
-                      </p>
-                    </div>
-                  )}
-                  {onboardingData.preferredArtistTypes && onboardingData.preferredArtistTypes.length > 0 && (
-                    <div>
-                      <p className="text-sm text-vyba-tertiary">Tipos de artistas</p>
-                      <p className="font-medium line-clamp-2">
-                        {onboardingData.preferredArtistTypes.slice(0, 3).join(', ')}
-                        {onboardingData.preferredArtistTypes.length > 3 && '...'}
-                      </p>
-                    </div>
-                  )}
-                </div>
+        <main className="flex-1 container mx-auto px-6 pt-20 pb-32 md:pt-32 md:pb-32">
+          <div className="mx-auto max-w-4xl">
+            <div className="space-y-12 justify-center">
+              <div className="text-start space-y-2">
+                <h1 className="text-5xl font-semibold">{stepGroups[currentGroup].title}</h1>
+                <p className="text-lg text-vyba-tertiary">{stepGroups[currentGroup].description}</p>
+              </div>
+              <div className="md:py-8">
+                {renderCurrentStep()}
               </div>
             </div>
+          </div>
+        </main>
 
-            <div className="flex flex-col space-y-2 sm:flex-row sm:justify-between sm:space-y-0">
-              <Button 
-                variant="outline" 
-                onClick={() => setShowExitDialog(false)}
-              >
-                Continuar editando
-              </Button>
-              <div className="flex flex-col space-y-2 sm:flex-row sm:space-y-0 sm:space-x-2">
-                <Button variant="outline" onClick={handleSkipOnboarding} disabled={isLoading}>
-                  Omitir y entrar
+        <footer className="fixed bottom-0 left-0 w-full bg-white/50 backdrop-blur-sm">
+          <div className="w-full h-1 bg-vyba-gray">
+            <div 
+              className="h-1 bg-vyba-navy transition-all duration-300 ease-out"
+              style={{ width: `${((currentGroup + 1) / (stepGroups.length)) * 100}%` }}
+            />
+          </div>
+          <div className="border-t">
+            <div className="container mx-auto px-6 py-4">
+              <div className="max-w-4xl mx-auto flex justify-between items-center">
+                <Button
+                  variant="ghost"
+                  onClick={handleBack}
+                  disabled={currentGroup === 0 && currentStepInGroup === 0}
+                  className="text-vyba-navy hover:text-vyba-navy/80"
+                >
+                  Anterior
                 </Button>
-                <Button onClick={handleConfirmExit} disabled={isLoading}>
-                  Guardar y salir
+                <Badge
+                  variant="secondary"
+                  className="px-4 py-2 text-sm bg-vyba-gray"
+                >
+                  Paso {currentGroup + 1} de {stepGroups.length}
+                </Badge>
+                <Button
+                  variant="terciary"
+                  onClick={handleNext}
+                  disabled={!canGoNext()}
+                >
+                  {currentGroup === stepGroups.length - 1 ? 'Finalizar' : 'Siguiente'}
                 </Button>
               </div>
             </div>
           </div>
-        </DialogContent>
-      </Dialog>
-    </div>
+        </footer>
+
+        <Dialog open={showExitDialog} onOpenChange={setShowExitDialog}>
+          <DialogContent className="sm:max-w-xl">
+            <DialogHeader className="text-center px-12">
+              <DialogTitle>¿Estás seguro de que quieres salir?</DialogTitle>
+              <DialogDescription>
+                Tu progreso se guardará y podrás continuar más tarde.
+              </DialogDescription>
+            </DialogHeader>
+
+            <div className="space-y-6 py-4 px-12">
+              <div className="space-y-4">
+                <h3 className="font-medium text-lg">Información guardada:</h3>
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="space-y-3">
+                    {onboardingData.profilePhotoUrl && (
+                      <div>
+                        <p className="text-sm text-vyba-tertiary">Foto de perfil</p>
+                        <p className="font-medium">✓ Configurada</p>
+                      </div>
+                    )}
+                    {onboardingData.city && onboardingData.province && (
+                      <div>
+                        <p className="text-sm text-vyba-tertiary">Ubicación</p>
+                        <p className="font-medium">{onboardingData.city}, {onboardingData.province}</p>
+                      </div>
+                    )}
+                  </div>
+                  <div className="space-y-3">
+                    {onboardingData.favoriteGenres && onboardingData.favoriteGenres.length > 0 && (
+                      <div>
+                        <p className="text-sm text-vyba-tertiary">Géneros musicales</p>
+                        <p className="font-medium line-clamp-2">
+                          {onboardingData.favoriteGenres.slice(0, 3).join(', ')}
+                          {onboardingData.favoriteGenres.length > 3 && '...'}
+                        </p>
+                      </div>
+                    )}
+                    {onboardingData.preferredArtistTypes && onboardingData.preferredArtistTypes.length > 0 && (
+                      <div>
+                        <p className="text-sm text-vyba-tertiary">Tipos de artistas</p>
+                        <p className="font-medium line-clamp-2">
+                          {onboardingData.preferredArtistTypes.slice(0, 3).join(', ')}
+                          {onboardingData.preferredArtistTypes.length > 3 && '...'}
+                        </p>
+                      </div>
+                    )}
+                  </div>
+                </div>
+              </div>
+
+              <div className="flex flex-col space-y-2 sm:flex-row sm:justify-between sm:space-y-0">
+                <Button 
+                  variant="outline" 
+                  onClick={() => setShowExitDialog(false)}
+                >
+                  Continuar editando
+                </Button>
+                <div className="flex flex-col space-y-2 sm:flex-row sm:space-y-0 sm:space-x-2">
+                  <Button variant="outline" onClick={handleSkipOnboarding} disabled={isLoading}>
+                    Omitir y entrar
+                  </Button>
+                  <Button onClick={handleConfirmExit} disabled={isLoading}>
+                    Guardar y salir
+                  </Button>
+                </div>
+              </div>
+            </div>
+          </DialogContent>
+        </Dialog>
+      </div>
+      <OnboardingCompletionHandler />
+    </>
   );
 };
 

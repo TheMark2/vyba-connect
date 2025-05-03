@@ -27,9 +27,12 @@ const ProfilePhotoStep: React.FC<ProfilePhotoStepProps> = ({
       setPhotoPreview(initialPhoto);
       if (initialPhotoFile) {
         onPhotoChange(initialPhotoFile, initialPhoto);
+      } else {
+        // Si no hay archivo pero hay URL (avatar predefinido), también pasar esa info
+        onPhotoChange(null, initialPhoto);
       }
     }
-  }, [initialPhoto, initialPhotoFile]);
+  }, [initialPhoto, initialPhotoFile, onPhotoChange]);
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -73,7 +76,7 @@ const ProfilePhotoStep: React.FC<ProfilePhotoStepProps> = ({
               {photoPreview ? (
                 <Avatar className="w-full h-full">
                   <AvatarImage src={photoPreview} alt="Foto de perfil" className="object-cover" />
-                  <AvatarFallback className="text-4xl">
+                  <AvatarFallback className="text-4xl bg-black text-white">
                     <Plus className="w-10 h-10" />
                   </AvatarFallback>
                 </Avatar>

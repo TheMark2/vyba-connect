@@ -10,7 +10,7 @@ import { toast } from 'sonner';
 const OnboardingCompletionHandler = () => {
   const navigate = useNavigate();
   const [showWelcomeDialog, setShowWelcomeDialog] = useState(false);
-  const [userInfo, setUserInfo] = useState<{ fullName: string; email?: string }>({ fullName: '' });
+  const [userInfo, setUserInfo] = useState<{ fullName: string; email?: string; avatarUrl?: string }>({ fullName: '' });
 
   // Este efecto se ejecutará cuando los metadatos de usuario cambien para indicar
   // que el onboarding se ha completado
@@ -21,20 +21,15 @@ const OnboardingCompletionHandler = () => {
         
         // Si el usuario existe y ha completado el onboarding
         if (data?.user) {
-          // Actualizar el estado de onboarding_completed a true
-          await supabase.auth.updateUser({
-            data: {
-              onboarding_completed: true
-            }
-          });
-          
           // Obtener información del usuario para el WelcomeDialog
           const name = data.user.user_metadata?.name || '';
           const lastName = data.user.user_metadata?.lastName || '';
+          const avatarUrl = data.user.user_metadata?.avatar_url || '';
           
           setUserInfo({
             fullName: `${name} ${lastName}`.trim(),
-            email: data.user.email
+            email: data.user.email,
+            avatarUrl: avatarUrl
           });
           
           // Mostrar el WelcomeDialog

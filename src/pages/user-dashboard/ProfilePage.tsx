@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import UserDashboardLayout from '@/components/dashboard/UserDashboardLayout';
 import { Button } from '@/components/ui/button';
@@ -20,7 +21,10 @@ const ProfilePage = () => {
     phone: '',
     address: '',
     city: '',
-    bio: ''
+    province: '',
+    bio: '',
+    favoriteGenres: [] as string[],
+    preferredArtistTypes: [] as string[]
   });
   const [isEditing, setIsEditing] = useState(false);
   const [editedData, setEditedData] = useState({ ...userData });
@@ -35,7 +39,7 @@ const ProfilePage = () => {
         const { data: { user } } = await supabase.auth.getUser();
         
         if (user) {
-          // En una aplicación real, obtendrías más datos del perfil desde una tabla en Supabase
+          // Obtener datos del perfil desde user_metadata
           setUserData({
             id: user.id,
             email: user.email || '',
@@ -43,7 +47,10 @@ const ProfilePage = () => {
             phone: user.user_metadata?.phone || '',
             address: user.user_metadata?.address || '',
             city: user.user_metadata?.city || '',
+            province: user.user_metadata?.province || '',
             bio: user.user_metadata?.bio || '',
+            favoriteGenres: user.user_metadata?.favorite_genres || [],
+            preferredArtistTypes: user.user_metadata?.preferred_artist_types || []
           });
           
           setEditedData({
@@ -53,7 +60,10 @@ const ProfilePage = () => {
             phone: user.user_metadata?.phone || '',
             address: user.user_metadata?.address || '',
             city: user.user_metadata?.city || '',
+            province: user.user_metadata?.province || '',
             bio: user.user_metadata?.bio || '',
+            favoriteGenres: user.user_metadata?.favorite_genres || [],
+            preferredArtistTypes: user.user_metadata?.preferred_artist_types || []
           });
           
           // Obtener avatar si existe
@@ -99,19 +109,18 @@ const ProfilePage = () => {
       setIsSaving(true);
       
       // Actualizar datos del perfil
-      const { error: updateError } = await supabase.auth.updateUser({
-        data: {
-          name: editedData.name,
-          phone: editedData.phone,
-          address: editedData.address,
-          city: editedData.city,
-          bio: editedData.bio,
-        }
-      });
+      const updateData: Record<string, any> = {
+        name: editedData.name,
+        phone: editedData.phone,
+        address: editedData.address,
+        city: editedData.city,
+        province: editedData.province,
+        bio: editedData.bio,
+        favorite_genres: editedData.favoriteGenres,
+        preferred_artist_types: editedData.preferredArtistTypes
+      };
       
-      if (updateError) throw updateError;
-      
-      // Subir avatar si se seleccionó uno nuevo
+      // 1. Si hay avatar nuevo, subirlo
       if (avatarFile) {
         const fileExt = avatarFile.name.split('.').pop();
         const fileName = `${userData.id}-${Date.now()}.${fileExt}`;
@@ -129,18 +138,23 @@ const ProfilePage = () => {
           .getPublicUrl(fileName);
           
         if (urlData) {
-          // Actualizar URL en metadata
-          await supabase.auth.updateUser({
-            data: { avatar_url: urlData.publicUrl }
-          });
-          
+          // Agregar URL a los datos a actualizar
+          updateData.avatar_url = urlData.publicUrl;
           setAvatarUrl(urlData.publicUrl);
         }
       }
       
-      // Actualizar datos locales
+      // 2. Actualizar metadatos del usuario
+      const { error: updateError } = await supabase.auth.updateUser({
+        data: updateData
+      });
+      
+      if (updateError) throw updateError;
+      
+      // 3. Actualizar datos locales
       setUserData(editedData);
       setIsEditing(false);
+      setAvatarPreview('');
       toast.success('Perfil actualizado correctamente');
       
     } catch (error) {
@@ -156,6 +170,10 @@ const ProfilePage = () => {
     setEditedData({ ...userData });
     setAvatarPreview('');
     setAvatarFile(null);
+  };
+
+  const getUserInitial = () => {
+    return userData.name?.charAt(0) || userData.email?.charAt(0) || 'U';
   };
 
   if (isLoading) {
@@ -208,8 +226,8 @@ const ProfilePage = () => {
                 <div className="relative">
                   <Avatar className="h-32 w-32 mb-4">
                     <AvatarImage src={avatarPreview || avatarUrl} alt={userData.name} />
-                    <AvatarFallback className="text-3xl">
-                      {userData.name?.charAt(0) || userData.email?.charAt(0)}
+                    <AvatarFallback className="text-3xl bg-black text-white">
+                      {getUserInitial()}
                     </AvatarFallback>
                   </Avatar>
                   
@@ -306,6 +324,21 @@ const ProfilePage = () => {
                     )}
                   </div>
                   
+                  <div>
+                    <Label htmlFor="province">Provincia</Label>
+                    {isEditing ? (
+                      <Input 
+                        id="province"
+                        name="province"
+                        value={editedData.province}
+                        onChange={handleInputChange}
+                        className="mt-1"
+                      />
+                    ) : (
+                      <p className="mt-1">{userData.province || '-'}</p>
+                    )}
+                  </div>
+                  
                   <div className="col-span-1 md:col-span-2">
                     <Label htmlFor="address">Dirección</Label>
                     {isEditing ? (
@@ -340,12 +373,49 @@ const ProfilePage = () => {
               </CardContent>
             </Card>
             
+            {/* Mostrar información adicional del onboarding */}
             <Card className="mt-6">
               <CardHeader>
-                <CardTitle>Preferencias</CardTitle>
+                <CardTitle>Preferencias musicales</CardTitle>
               </CardHeader>
               <CardContent className="p-6">
-                <p className="text-vyba-tertiary">Próximamente: configuración de notificaciones, preferencias de música, etc.</p>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  {userData.favoriteGenres && userData.favoriteGenres.length > 0 ? (
+                    <div>
+                      <Label className="block mb-2">Géneros favoritos</Label>
+                      <div className="flex flex-wrap gap-2">
+                        {userData.favoriteGenres.map((genre, index) => (
+                          <Badge key={index} variant="secondary" className="bg-vyba-gray text-vyba-navy">
+                            {genre}
+                          </Badge>
+                        ))}
+                      </div>
+                    </div>
+                  ) : (
+                    <div>
+                      <Label className="block mb-2">Géneros favoritos</Label>
+                      <p className="text-vyba-tertiary">No especificado</p>
+                    </div>
+                  )}
+                  
+                  {userData.preferredArtistTypes && userData.preferredArtistTypes.length > 0 ? (
+                    <div>
+                      <Label className="block mb-2">Tipos de artista preferidos</Label>
+                      <div className="flex flex-wrap gap-2">
+                        {userData.preferredArtistTypes.map((type, index) => (
+                          <Badge key={index} variant="secondary" className="bg-vyba-gray text-vyba-navy">
+                            {type}
+                          </Badge>
+                        ))}
+                      </div>
+                    </div>
+                  ) : (
+                    <div>
+                      <Label className="block mb-2">Tipos de artista preferidos</Label>
+                      <p className="text-vyba-tertiary">No especificado</p>
+                    </div>
+                  )}
+                </div>
               </CardContent>
             </Card>
           </div>
@@ -355,4 +425,4 @@ const ProfilePage = () => {
   );
 };
 
-export default ProfilePage; 
+export default ProfilePage;
