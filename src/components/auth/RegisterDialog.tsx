@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
@@ -59,42 +58,47 @@ const RegisterDialog = ({ open, onOpenChange, onSuccess }: RegisterDialogProps) 
     }
   });
 
+  // Improved email existence check that doesn't rely on OTP
   const checkEmailExists = async (email: string) => {
     try {
-      // Intentamos iniciar sesión con un correo y una contraseña falsa
-      // para comprobar si el correo existe
-      const { data, error } = await supabase.auth.signInWithPassword({
-        email: email,
-        password: 'check_if_email_exists_only'
-      });
+      console.log("Checking if email exists:", email);
       
-      // Si hay un error específico sobre credenciales inválidas, el email existe
-      if (error && error.message.includes("Invalid login credentials")) {
-        // Verificamos con qué proveedor está asociado este email
-        const { data: authData, error: authError } = await supabase.auth.signInWithOtp({
-          email: email,
-          options: {
-            shouldCreateUser: false,
-          }
-        });
-        
-        // Si se puede enviar un OTP, significa que está registrado con email
-        if (!authError) {
-          return { exists: true, provider: 'email' };
-        }
-        
-        // Si no se puede, comprobamos los proveedores de OAuth
-        // Este es un enfoque básico - para una implementación completa, necesitarías 
-        // un endpoint en el servidor para verificar esto
-        
-        // Por ahora, solo podemos decir que existe
-        return { exists: true, provider: 'desconocido' };
+      // First, try to get the user by email through the admin API
+      // Note: This is a more reliable way to check if an email exists
+      const { data, error } = await supabase.auth.admin.getUserByEmail(email);
+      
+      // If we get data without error, the user exists
+      if (data?.user && !error) {
+        console.log("User found via admin API");
+        return { exists: true, provider: data.user.app_metadata?.provider || 'email' };
       }
       
-      // Si no hay error o es otro tipo de error, asumimos que el email no existe
+      // If there's an error but it's not because the user doesn't exist
+      // it might be due to permissions or other issues
+      if (error && !error.message.includes("User not found")) {
+        console.log("Error checking email via admin API:", error);
+        
+        // Fall back to our alternative method
+        // Try a passwordless sign-in attempt (will fail but helps determine if email exists)
+        const { error: signInError } = await supabase.auth.signInWithPassword({
+          email: email,
+          password: 'this_is_just_to_check_if_email_exists'
+        });
+        
+        // If we get an "Invalid login credentials" error, it suggests the email exists
+        // (because the auth system is saying "wrong password" rather than "no such user")
+        if (signInError && signInError.message.includes("Invalid login credentials")) {
+          console.log("Email exists based on login attempt");
+          return { exists: true, provider: 'unknown' };
+        }
+      }
+      
+      // If we reach here, the email doesn't seem to exist
+      console.log("Email does not exist");
       return { exists: false };
     } catch (error) {
-      console.error("Error al verificar email:", error);
+      console.error("Error checking if email exists:", error);
+      // In case of unexpected errors, return false to allow registration attempt
       return { exists: false };
     }
   };
@@ -107,11 +111,11 @@ const RegisterDialog = ({ open, onOpenChange, onSuccess }: RegisterDialogProps) 
     setEmailError(null);
     
     try {
-      // Verificar si el email ya está registrado
+      // Verify if the email already exists
       const emailCheck = await checkEmailExists(email);
       
       if (emailCheck.exists) {
-        // Si el email ya existe, establecer el error y detener el proceso
+        // If the email already exists, set error and stop the process
         let message = "Este email ya está registrado";
         if (emailCheck.provider) {
           message += ` con ${emailCheck.provider === 'email' ? 'correo y contraseña' : emailCheck.provider}`;
@@ -121,7 +125,7 @@ const RegisterDialog = ({ open, onOpenChange, onSuccess }: RegisterDialogProps) 
         return;
       }
       
-      // Continuar con el envío del código OTP si el email no existe
+      // Continue with OTP code sending if the email doesn't exist
       const response = await fetch('https://zkucuolpubthcnsgjtso.supabase.co/functions/v1/send-otp', {
         method: 'POST',
         headers: {
@@ -636,4 +640,3 @@ const RegisterDialog = ({ open, onOpenChange, onSuccess }: RegisterDialogProps) 
 };
 
 export default RegisterDialog;
-

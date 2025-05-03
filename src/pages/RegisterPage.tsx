@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { Button } from "@/components/ui/button";
 import { Link, useNavigate } from "react-router-dom";
@@ -27,32 +28,37 @@ const RegisterPage = () => {
     navigate('/user-onboarding');
   };
 
+  // Improved version that doesn't rely on OTP
   const checkEmailExists = async (email: string) => {
     try {
-      // Intentamos iniciar sesión con un correo y una contraseña falsa
-      // para comprobar si el correo existe
-      const { data, error } = await supabase.auth.signInWithPassword({
-        email: email,
-        password: 'check_if_email_exists_only'
-      });
+      console.log("Checking if email exists (RegisterPage):", email);
       
-      // Si hay un error específico sobre credenciales inválidas, el email existe
-      if (error && error.message.includes("Invalid login credentials")) {
-        // Verificamos con qué proveedor está asociado este email
-        const signInOAuthProviders = ['google', 'facebook', 'apple'];
-        let detectedProvider = 'email';
-        
-        // Este es un método impreciso y sirve solo como aproximación
-        // Una implementación completa requeriría un endpoint en el servidor
-        
-        return { exists: true, provider: detectedProvider };
+      // First, try the admin API if available
+      try {
+        const { data, error } = await supabase.auth.admin.getUserByEmail(email);
+        if (data?.user && !error) {
+          return { exists: true, provider: data.user.app_metadata?.provider || 'email' };
+        }
+      } catch (adminError) {
+        console.log("Admin API not available:", adminError);
+        // Continue with fallback method if admin API isn't available
       }
       
-      // Si no hay error o es otro tipo de error, asumimos que el email no existe
+      // Fallback: Try a sign-in attempt to see if credentials are invalid (which would indicate the email exists)
+      const { error } = await supabase.auth.signInWithPassword({
+        email: email,
+        password: 'this_is_just_to_check_if_email_exists'
+      });
+      
+      if (error && error.message.includes("Invalid login credentials")) {
+        // Error about invalid credentials suggests the email exists
+        return { exists: true, provider: 'email' };
+      }
+      
       return { exists: false };
     } catch (error) {
-      console.error("Error al verificar email:", error);
-      return { exists: false };
+      console.error("Error checking email:", error);
+      return { exists: false }; // Default to allowing registration attempt
     }
   };
 

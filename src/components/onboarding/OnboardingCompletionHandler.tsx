@@ -9,7 +9,7 @@ import { useAuth } from '@/contexts/AuthContext';
 // la redirección después de completar el onboarding
 const OnboardingCompletionHandler = () => {
   const navigate = useNavigate();
-  const { isAuthenticated, user } = useAuth();
+  const { isAuthenticated, user, refreshUser } = useAuth();
 
   // Este efecto se ejecutará cuando los metadatos de usuario cambien para indicar
   // que el onboarding se ha completado
@@ -24,6 +24,8 @@ const OnboardingCompletionHandler = () => {
         
         // Si el usuario existe y ha completado el onboarding
         if (data?.user?.user_metadata?.onboarding_completed) {
+          // Actualizar el contexto de autenticación para reflejar los cambios
+          await refreshUser();
           // Redirigir a la ruta que muestra el WelcomeDialog
           navigate('/onboarding-complete');
         }
@@ -46,7 +48,7 @@ const OnboardingCompletionHandler = () => {
     return () => {
       subscription.unsubscribe();
     };
-  }, [navigate, isAuthenticated, user]);
+  }, [navigate, isAuthenticated, user, refreshUser]);
 
   // Este componente no renderiza nada visible
   return null;
