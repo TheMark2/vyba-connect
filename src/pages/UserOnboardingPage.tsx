@@ -36,6 +36,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
 import OnboardingCompletionHandler from '@/components/onboarding/OnboardingCompletionHandler';
+import { useAuth } from '@/contexts/AuthContext';
 
 // Tipos de datos
 interface OnboardingData {
@@ -128,6 +129,7 @@ const WelcomeScreen = () => {
 // Componente principal
 const UserOnboardingPage = () => {
   const navigate = useNavigate();
+  const { refreshUser } = useAuth();
   const [currentGroup, setCurrentGroup] = useState(0);
   const [currentStepInGroup, setCurrentStepInGroup] = useState(0);
   const [isLoading, setIsLoading] = useState(false);
@@ -302,26 +304,26 @@ const UserOnboardingPage = () => {
     }
   };
 
+  // Función actualizada para finalizar el onboarding y guardar en Supabase
   const handleFinish = async () => {
     setIsSaving(true);
     
     try {
-      // 1. Preparar la URL de avatar sin verificar autenticación
+      // 1. Preparar la URL de avatar
       let avatarUrl = null;
-      let userId = "user-" + Date.now(); // Fallback ID en caso de que no tengamos usuario
+      let userId = null;
       let userEmail = null;
       let userName = "Usuario";
       
-      // Intentar obtener el ID de usuario actual, pero continuar incluso si falla
-      try {
-        const { data: userData } = await supabase.auth.getUser();
-        if (userData && userData.user) {
-          userId = userData.user.id;
-          userEmail = userData.user.email;
-          userName = userData.user.user_metadata?.name || userEmail?.split('@')[0] || "Usuario";
-        }
-      } catch (error) {
-        console.warn("No se pudo obtener el ID de usuario, usando ID temporal:", userId);
+      // Obtener el ID de usuario actual
+      const { data: userData } = await supabase.auth.getUser();
+      
+      if (userData && userData.user) {
+        userId = userData.user.id;
+        userEmail = userData.user.email;
+        userName = userData.user.user_metadata?.name || userEmail?.split('@')[0] || "Usuario";
+      } else {
+        throw new Error("No se pudo obtener la información del usuario");
       }
       
       // Subir la imagen si existe
@@ -330,9 +332,29 @@ const UserOnboardingPage = () => {
           const fileExt = onboardingData.profilePhoto.name.split('.').pop();
           const fileName = `${userId}-${Date.now()}.${fileExt}`;
           
-          const { data: uploadData } = await supabase.storage
+          // Crear bucket si no existe (lo crea automáticamente si no existe)
+          try {
+            const { data: existingBucket } = await supabase.storage.getBucket('avatars');
+            if (!existingBucket) {
+              await supabase.storage.createBucket('avatars', {
+                public: true,
+                fileSizeLimit: 5 * 1024 * 1024, // 5MB
+              });
+            }
+          } catch (error) {
+            // El bucket probablemente no existe, intentamos crearlo
+            await supabase.storage.createBucket('avatars', {
+              public: true,
+              fileSizeLimit: 5 * 1024 * 1024, // 5MB
+            });
+          }
+          
+          // Subir la imagen
+          const { data: uploadData, error: uploadError } = await supabase.storage
             .from('avatars')
             .upload(fileName, onboardingData.profilePhoto);
+            
+          if (uploadError) throw uploadError;
             
           // Obtener la URL pública de la imagen subida
           const { data: urlData } = supabase.storage
@@ -368,25 +390,45 @@ const UserOnboardingPage = () => {
       
       console.log("Datos del usuario que se guardarán:", userMetadata);
 
-      // 3. Intentar actualizar metadatos del usuario, pero no bloqueante
-      try {
-        const { error: updateError } = await supabase.auth.updateUser({
-          data: userMetadata
-        });
+      // 3. Actualizar metadatos del usuario
+      const { error: updateError } = await supabase.auth.updateUser({
+        data: userMetadata
+      });
 
-        if (updateError) {
-          console.error("No se pudieron actualizar los metadatos, continuando...");
-        }
-      } catch (updateError) {
-        console.error("Error excepcional al actualizar metadatos, continuando...");
+      if (updateError) {
+        console.error("Error al actualizar metadatos:", updateError);
+        throw updateError;
       }
 
-      // 4. Intentar actualizar el perfil en la tabla profiles, pero no bloqueante
-      if (userId) {
-        try {
+      // 4. Guardar en la tabla de perfiles
+      try {
+        // Verificar si ya existe el perfil
+        const { data: existingProfile } = await supabase
+          .from('profiles')
+          .select('*')
+          .eq('id', userId)
+          .single();
+          
+        if (existingProfile) {
+          // Actualizar perfil existente
           await supabase
             .from('profiles')
-            .upsert({
+            .update({
+              full_name: userName,
+              avatar_url: avatarUrl,
+              city: onboardingData.city || "",
+              province: onboardingData.province || "",
+              location: onboardingData.location || "",
+              favorite_genres: onboardingData.favoriteGenres || [],
+              preferred_artist_types: onboardingData.preferredArtistTypes || [],
+              updated_at: new Date().toISOString()
+            })
+            .eq('id', userId);
+        } else {
+          // Crear nuevo perfil
+          await supabase
+            .from('profiles')
+            .insert({
               id: userId,
               email: userEmail,
               full_name: userName,
@@ -398,12 +440,16 @@ const UserOnboardingPage = () => {
               preferred_artist_types: onboardingData.preferredArtistTypes || [],
               updated_at: new Date().toISOString()
             });
-        } catch (error) {
-          console.error("Error al actualizar perfil en la base de datos, continuando...");
         }
+      } catch (error) {
+        console.error("Error al actualizar perfil en la base de datos:", error);
+        // No detener el flujo por esto
       }
 
-      // 5. Siempre mostrar mensaje de éxito y redireccionar
+      // Actualizar el contexto de autenticación para reflejar los cambios
+      await refreshUser();
+
+      // 5. Mostrar mensaje de éxito y redireccionar
       toast.success('¡Perfil configurado correctamente!');
       
       // Redirigir a la página de finalización
@@ -413,9 +459,7 @@ const UserOnboardingPage = () => {
       
     } catch (error) {
       console.error('Error general:', error);
-      // Incluso con error general, redirigimos a la página de finalización
-      toast.success('¡Configuración completada!');
-      navigate('/onboarding-complete', { replace: true });
+      toast.error('Ha ocurrido un error. Por favor, inténtalo de nuevo.');
     } finally {
       setIsSaving(false);
     }

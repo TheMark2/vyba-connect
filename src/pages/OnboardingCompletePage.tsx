@@ -5,7 +5,7 @@ import OnboardingCompletionHandler from '@/components/onboarding/OnboardingCompl
 import { useAuth } from '@/contexts/AuthContext';
 
 // Esta página sirve como puente entre el onboarding y el dashboard
-// Muestra el diálogo de bienvenida y luego redirecciona al dashboard
+// Muestra el diálogo de bienvenida solo si viene del registro, y luego redirecciona al dashboard
 const OnboardingCompletePage = () => {
   const navigate = useNavigate();
   const { user, isLoading, isAuthenticated, isOnboardingCompleted } = useAuth();
@@ -17,18 +17,19 @@ const OnboardingCompletePage = () => {
       return;
     }
 
-    // Si está autenticado pero no hay confirmación de onboarding completado
-    if (!isLoading && isAuthenticated && !isOnboardingCompleted) {
-      // Opcional: podríamos redirigir de nuevo al onboarding si no está completo
-      // Sin embargo, si llegamos aquí desde UserOnboardingPage, asumimos que está completo
-      // navigate('/user-onboarding', { replace: true });
+    // Si venimos del login y no del registro, redirigir directamente al dashboard
+    const isFromRegistration = localStorage.getItem('is_from_registration') === 'true';
+    
+    // Si está autenticado pero no viene del registro, redirigir directamente al dashboard
+    if (!isLoading && isAuthenticated && !isFromRegistration) {
+      navigate('/user-dashboard', { replace: true });
     }
   }, [isLoading, isAuthenticated, isOnboardingCompleted, navigate]);
 
   return (
     <div className="min-h-screen bg-white flex items-center justify-center">
-      {/* El componente OnboardingCompletionHandler detectará que estamos en esta ruta
-          y mostrará automáticamente el WelcomeDialog */}
+      {/* El componente OnboardingCompletionHandler detectará si venimos del registro 
+          y mostrará automáticamente el WelcomeDialog solo en ese caso */}
       <OnboardingCompletionHandler />
     </div>
   );

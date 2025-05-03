@@ -1,150 +1,54 @@
 import React, { useState, useEffect } from 'react';
 import { Button } from "@/components/ui/button";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Mail } from "lucide-react";
 import Navbar from "@/components/Navbar";
-import RegisterDialog from '@/components/auth/RegisterDialog';
 import LoginDialog from '@/components/auth/LoginDialog';
-import WelcomeDialog from '@/components/WelcomeDialog';
-import { useNavigate } from 'react-router-dom';
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 
 const AuthPage = () => {
   const [showLoginDialog, setShowLoginDialog] = useState(false);
-  const [showRegisterDialog, setShowRegisterDialog] = useState(false);
-  const [showWelcomeDialog, setShowWelcomeDialog] = useState(false);
-  const [registeredUserInfo, setRegisteredUserInfo] = useState<{ fullName: string; email?: string }>({ fullName: '' });
   const [isLoading, setIsLoading] = useState(false);
-  const [checkingSession, setCheckingSession] = useState(true);
   const navigate = useNavigate();
 
   // Verificar si el usuario ya está autenticado
   useEffect(() => {
     const checkSession = async () => {
-      try {
-        const { data, error } = await supabase.auth.getSession();
+      const { data, error } = await supabase.auth.getSession();
+      if (data.session) {
+        // Usuario ya autenticado, redirigir al dashboard
+        const { data: userData } = await supabase.auth.getUser();
+        const userRole = userData.user?.user_metadata?.role || 'user';
+        const isOnboardingCompleted = userData.user?.user_metadata?.onboarding_completed === true;
         
-        if (data.session) {
-          // Obtener el rol del usuario desde los metadatos
-          const { data: { user } } = await supabase.auth.getUser();
-          const userRole = user?.user_metadata?.role || 'user'; // Por defecto es usuario normal
-          
-          // Verificar si necesita completar el onboarding
-          const isOnboardingCompleted = user?.user_metadata?.onboarding_completed === true;
-          
-          // Redirigir según el rol
-          if (userRole === 'artist') {
-            const isArtistOnboardingCompleted = user?.user_metadata?.artist_onboarding_completed === true;
-            if (!isArtistOnboardingCompleted) {
-              console.log("Artista necesita completar onboarding, redirigiendo...");
-              navigate('/register/artist');
-            } else {
-              console.log("Artista autenticado, redirigiendo a dashboard de artistas");
-              navigate('/dashboard');
-            }
+        if (userRole === 'artist') {
+          const isArtistOnboardingCompleted = userData.user?.user_metadata?.artist_onboarding_completed === true;
+          if (!isArtistOnboardingCompleted) {
+            navigate('/register/artist', { replace: true });
           } else {
-            if (!isOnboardingCompleted) {
-              console.log("Usuario normal necesita completar onboarding, redirigiendo...");
-              navigate('/user-onboarding');
-            } else {
-              console.log("Usuario normal autenticado, redirigiendo a dashboard de usuarios");
-              navigate('/user-dashboard');
-            }
+            navigate('/dashboard', { replace: true });
           }
         } else {
-          console.log("No hay sesión activa");
+          // Si el usuario ya tiene onboarding completado, ir directo al dashboard
+          if (isOnboardingCompleted) {
+            navigate('/user-dashboard', { replace: true });
+          } else {
+            // Si es un login y no ha completado onboarding, ir al dashboard también
+            // (el onboarding solo se muestra después del registro)
+            navigate('/user-dashboard', { replace: true });
+          }
         }
-      } catch (err) {
-        console.error("Error al verificar sesión:", err);
-        toast.error("Error al verificar sesión");
-      } finally {
-        setCheckingSession(false);
       }
     };
     
     checkSession();
-    
-    // Escuchar cambios en la autenticación
-    const { data: authListener } = supabase.auth.onAuthStateChange(async (event, session) => {
-      console.log("Evento de autenticación:", event, session ? "Con sesión" : "Sin sesión");
-      if (event === 'SIGNED_IN' && session) {
-        // Obtener el rol del usuario
-        const { data: { user } } = await supabase.auth.getUser();
-        const userRole = user?.user_metadata?.role || 'user'; // Por defecto es usuario normal
-        
-        // Verificar si necesita completar el onboarding
-        const isOnboardingCompleted = user?.user_metadata?.onboarding_completed === true;
-        
-        if (userRole === 'artist') {
-          const isArtistOnboardingCompleted = user?.user_metadata?.artist_onboarding_completed === true;
-          if (!isArtistOnboardingCompleted) {
-            console.log("Artista nuevo necesita completar onboarding, redirigiendo...");
-            navigate('/register/artist');
-          } else {
-            console.log("Artista ha iniciado sesión, redirigiendo a dashboard de artistas");
-            navigate('/dashboard');
-          }
-        } else {
-          if (!isOnboardingCompleted) {
-            console.log("Usuario normal necesita completar onboarding, redirigiendo...");
-            navigate('/user-onboarding');
-          } else {
-            console.log("Usuario normal ha iniciado sesión, redirigiendo a dashboard de usuarios");
-            navigate('/user-dashboard');
-          }
-        }
-      }
-    });
-    
-    return () => {
-      console.log("Limpiando listener de autenticación");
-      authListener.subscription.unsubscribe();
-    };
   }, [navigate]);
 
-  const handleShowEmailForm = () => {
-    setShowLoginDialog(true);
-  };
-
-  const handleRegistrationSuccess = (userInfo: { fullName: string; email?: string }) => {
-    console.log("Registration success, showing welcome dialog with user info:", userInfo);
-    setRegisteredUserInfo(userInfo);
-    setShowRegisterDialog(false);
-    
-    // Pequeño retraso para que se cierre primero el de registro
-    setTimeout(() => {
-      setShowWelcomeDialog(true);
-    }, 300);
-  };
-
-  const handleLoginSuccess = async (userData: any) => {
-    console.log("Login success callback ejecutado");
-    
-    // Verificar el rol del usuario y redirigir al dashboard correspondiente
-    const userRole = userData?.user_metadata?.role || 'user'; // Por defecto es usuario normal
-    
-    // Verificar si necesita completar el onboarding
-    const isOnboardingCompleted = userData?.user_metadata?.onboarding_completed === true;
-    
-    if (userRole === 'artist') {
-      const isArtistOnboardingCompleted = userData?.user_metadata?.artist_onboarding_completed === true;
-      if (!isArtistOnboardingCompleted) {
-        console.log("Redirigiendo a onboarding de artistas");
-        navigate('/register/artist');
-      } else {
-        console.log("Redirigiendo a dashboard de artistas");
-        navigate('/dashboard');
-      }
-    } else {
-      if (!isOnboardingCompleted) {
-        console.log("Redirigiendo a onboarding de usuarios");
-        navigate('/user-onboarding');
-      } else {
-        console.log("Redirigiendo a dashboard de usuarios");
-        navigate('/user-dashboard');
-      }
-    }
+  const handleLoginSuccess = () => {
+    // Al hacer login, no enviamos al onboarding ni establecemos bandera
+    // El usuario será redirigido directamente al dashboard
+    toast.success('Inicio de sesión exitoso');
   };
 
   const handleSocialLogin = async (provider: 'google' | 'facebook' | 'apple') => {
@@ -154,7 +58,8 @@ const AuthPage = () => {
       let { data, error } = await supabase.auth.signInWithOAuth({
         provider: provider,
         options: {
-          // No establecemos redirectTo para manejar la redirección según el rol en el listener onAuthStateChange
+          // Redirigir al dashboard después del login social
+          redirectTo: window.location.origin + '/user-dashboard'
         }
       });
 
@@ -170,24 +75,14 @@ const AuthPage = () => {
     }
   };
 
-  if (checkingSession) {
-    return (
-      <main className="min-h-screen bg-white flex flex-col items-center justify-center">
-        <div className="animate-pulse text-center">
-          <p>Cargando...</p>
-        </div>
-      </main>
-    );
-  }
-
   return (
     <main className="min-h-screen bg-white dark:bg-vyba-dark-bg flex flex-col">
       <Navbar />
-      
+
       <div className="container mx-auto flex flex-col items-center px-6 pt-24 md:pt-12 pb-20 flex-1 h-full justify-center">
         <div className="w-full space-y-6 md:mt-8">
           <div className="text-center mb-12">
-            <h1 className="text-4xl md:text-5xl font-bold mb-2">Te damos la bienvenida a VYBA</h1>
+            <h1 className="text-4xl md:text-5xl font-bold mb-2">Bienvenido de nuevo a VYBA</h1>
           </div>
 
           <div className="space-y-4 mt-16 max-w-sm mx-auto">
@@ -200,7 +95,7 @@ const AuthPage = () => {
               <img src="/logos/google-logo.svg" alt="Google" width={20} height={20} />
               Continuar con Google
             </Button>
-            
+
             <Button 
               variant="secondary" 
               className="w-full flex items-center justify-center gap-2 bg-[#F7F7F7] text-black"
@@ -210,7 +105,7 @@ const AuthPage = () => {
               <img src="/logos/facebook-logo.svg" alt="Facebook" width={20} height={20} />
               Continuar con Facebook
             </Button>
-            
+
             <Button 
               variant="secondary" 
               className="w-full flex items-center justify-center gap-2 bg-[#F7F7F7] text-black"
@@ -220,27 +115,27 @@ const AuthPage = () => {
               <img src="/logos/apple-logo.svg" alt="Apple" width={20} height={20} />
               Continuar con Apple
             </Button>
-            
+
             <div className="relative flex items-center py-2">
               <div className="flex-grow border-t border-gray-300"></div>
               <span className="flex-shrink mx-4 text-gray-600">o</span>
               <div className="flex-grow border-t border-gray-300"></div>
             </div>
-            
-            <Button 
-              variant="secondary" 
-              className="w-full flex items-center justify-center gap-2 bg-[#F7F7F7] text-black" 
-              onClick={handleShowEmailForm}
+
+            <Button
+              variant="secondary"
+              className="w-full flex items-center justify-center gap-2 bg-[#F7F7F7] text-black"
+              onClick={() => setShowLoginDialog(true)}
               disabled={isLoading}
             >
               <Mail size={20} />
-              Iniciar sesión con Mail
+              Continuar con Mail
             </Button>
           </div>
 
           <div className="text-center text-sm mt-6">
             <p className="text-center text-sm font-light">
-              ¿No tienes cuenta? <Link to="/register" className="font-medium text-black">Regístrate</Link>
+              No tienes cuenta. <Link to="/register" className="font-medium text-black">Regístrate</Link>
             </p>
           </div>
         </div>
@@ -250,18 +145,6 @@ const AuthPage = () => {
         open={showLoginDialog}
         onOpenChange={setShowLoginDialog}
         onSuccess={handleLoginSuccess}
-      />
-
-      <RegisterDialog
-        open={showRegisterDialog}
-        onOpenChange={setShowRegisterDialog}
-        onSuccess={handleRegistrationSuccess}
-      />
-
-      <WelcomeDialog 
-        open={showWelcomeDialog}
-        onOpenChange={setShowWelcomeDialog}
-        userInfo={registeredUserInfo}
       />
     </main>
   );

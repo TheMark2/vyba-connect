@@ -80,7 +80,9 @@ const RegisterPage = () => {
 
   const handleRegistrationSuccess = (userInfo: { fullName: string; email?: string }) => {
     setRegisteredUserInfo(userInfo);
-    // Redirigimos directamente al onboarding sin preguntar
+    // Establecer bandera para indicar que venimos del registro
+    localStorage.setItem('is_from_registration', 'true');
+    // Redirigimos al onboarding
     navigate('/user-onboarding');
   };
 
@@ -88,10 +90,13 @@ const RegisterPage = () => {
     setIsLoading(true);
 
     try {
+      // También establecer bandera para registro con redes sociales
+      localStorage.setItem('is_from_registration', 'true');
+      
       let { data, error } = await supabase.auth.signInWithOAuth({
         provider: provider,
         options: {
-          redirectTo: window.location.origin + '/dashboard'
+          redirectTo: window.location.origin + '/user-onboarding'
         }
       });
 
