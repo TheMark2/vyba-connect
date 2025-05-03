@@ -44,20 +44,37 @@ interface AuthProviderProps {
   children: ReactNode;
 }
 
+// Función para obtener datos del almacenamiento local
+const getFromLocalStorage = <T,>(key: string, defaultValue: T): T => {
+  if (typeof window === 'undefined') return defaultValue; // SSR check
+  
+  const stored = localStorage.getItem(key);
+  if (!stored) return defaultValue;
+  
+  try {
+    return JSON.parse(stored) as T;
+  } catch (e) {
+    console.error(`Error parsing stored data for key "${key}":`, e);
+    return defaultValue;
+  }
+};
+
 export const AuthProvider = ({ children }: AuthProviderProps) => {
-  const [user, setUser] = useState<User | null>(null);
-  const [session, setSession] = useState<Session | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
-  const [userRole, setUserRole] = useState<string | null>(null);
-  const [userMetadata, setUserMetadata] = useState<Record<string, any> | null>(null);
-  const [avatarUrl, setAvatarUrl] = useState<string | null>(null);
-  const [userDisplayName, setUserDisplayName] = useState<string | null>(null);
-  const [isOnboardingCompleted, setIsOnboardingCompleted] = useState(false);
-  const [isArtistOnboardingCompleted, setIsArtistOnboardingCompleted] = useState(false);
+  // Inicializar desde localStorage para evitar parpadeo
+  const [user, setUser] = useState<User | null>(getFromLocalStorage('auth_user', null));
+  const [session, setSession] = useState<Session | null>(getFromLocalStorage('auth_session', null));
+  const [isLoading, setIsLoading] = useState(!user); // Solo cargar si no hay usuario
+  const [userRole, setUserRole] = useState<string | null>(getFromLocalStorage('auth_role', null));
+  const [userMetadata, setUserMetadata] = useState<Record<string, any> | null>(getFromLocalStorage('auth_metadata', null));
+  const [avatarUrl, setAvatarUrl] = useState<string | null>(getFromLocalStorage('auth_avatar', null));
+  const [userDisplayName, setUserDisplayName] = useState<string | null>(getFromLocalStorage('auth_display_name', null));
+  const [isOnboardingCompleted, setIsOnboardingCompleted] = useState<boolean>(getFromLocalStorage('auth_onboarding_completed', false));
+  const [isArtistOnboardingCompleted, setIsArtistOnboardingCompleted] = useState<boolean>(getFromLocalStorage('auth_artist_onboarding_completed', false));
 
   // Función para actualizar toda la información del usuario
   const updateUserData = (user: User | null, session: Session | null) => {
     if (user) {
+      // Actualizar estados
       setUser(user);
       setUserRole(user.user_metadata?.role || 'user');
       setUserMetadata(user.user_metadata || {});
@@ -74,6 +91,16 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
       // Comprobar estado del onboarding
       setIsOnboardingCompleted(user.user_metadata?.onboarding_completed === true);
       setIsArtistOnboardingCompleted(user.user_metadata?.artist_onboarding_completed === true);
+      
+      // Guardar en localStorage para persistencia
+      localStorage.setItem('auth_user', JSON.stringify(user));
+      localStorage.setItem('auth_session', JSON.stringify(session));
+      localStorage.setItem('auth_role', user.user_metadata?.role || 'user');
+      localStorage.setItem('auth_metadata', JSON.stringify(user.user_metadata || {}));
+      localStorage.setItem('auth_avatar', user.user_metadata?.avatar_url || '');
+      localStorage.setItem('auth_display_name', displayName);
+      localStorage.setItem('auth_onboarding_completed', JSON.stringify(user.user_metadata?.onboarding_completed === true));
+      localStorage.setItem('auth_artist_onboarding_completed', JSON.stringify(user.user_metadata?.artist_onboarding_completed === true));
     } else {
       // Limpiar todos los datos si no hay usuario
       setUser(null);
@@ -83,6 +110,16 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
       setUserDisplayName(null);
       setIsOnboardingCompleted(false);
       setIsArtistOnboardingCompleted(false);
+      
+      // Limpiar localStorage
+      localStorage.removeItem('auth_user');
+      localStorage.removeItem('auth_session');
+      localStorage.removeItem('auth_role');
+      localStorage.removeItem('auth_metadata');
+      localStorage.removeItem('auth_avatar');
+      localStorage.removeItem('auth_display_name');
+      localStorage.removeItem('auth_onboarding_completed');
+      localStorage.removeItem('auth_artist_onboarding_completed');
     }
     
     setSession(session);
@@ -91,6 +128,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
   // Obtener datos del usuario actual
   const refreshUser = async () => {
     try {
+      setIsLoading(true);
       const { data: sessionData, error: sessionError } = await supabase.auth.getSession();
       
       if (sessionError) {
@@ -114,15 +152,20 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
       }
     } catch (error) {
       console.error('Error al refrescar usuario:', error);
-      toast.error('Error al cargar información de usuario');
+      // No mostrar toast en refreshUser para evitar mensajes de error innecesarios
       updateUserData(null, null);
+    } finally {
+      setIsLoading(false);
     }
   };
 
   // Inicializar y configurar escucha para cambios de autenticación
   useEffect(() => {
     const initializeAuth = async () => {
-      setIsLoading(true);
+      // Solo mostrar loading si no tenemos datos en localStorage
+      if (!user) {
+        setIsLoading(true);
+      }
       
       try {
         // Obtener sesión actual
@@ -158,6 +201,18 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     };
     
     initializeAuth();
+    
+    // Configurar un intervalo para refrescar el token automáticamente
+    const refreshInterval = setInterval(() => {
+      // Solo refrescar si hay una sesión activa
+      if (session) {
+        supabase.auth.refreshSession();
+      }
+    }, 3600000); // Refrescar cada hora
+    
+    return () => {
+      clearInterval(refreshInterval);
+    };
   }, []);
 
   // Cerrar sesión
@@ -178,7 +233,8 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     if (userRole === 'artist') {
       return isArtistOnboardingCompleted ? '/dashboard' : '/register/artist';
     } else {
-      return isOnboardingCompleted ? '/user-dashboard' : '/user-onboarding';
+      // Para usuarios regulares, siempre redirigir al dashboard de usuario
+      return '/user-dashboard';
     }
   };
 

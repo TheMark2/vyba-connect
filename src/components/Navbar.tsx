@@ -12,6 +12,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { useAuth } from "@/contexts/AuthContext";
+import { Skeleton } from "@/components/ui/skeleton";
 
 interface NavbarProps {
   className?: string;
@@ -38,7 +39,8 @@ const Navbar = ({
     user, 
     signOut,
     isOnboardingCompleted,
-    isArtistOnboardingCompleted 
+    isArtistOnboardingCompleted,
+    isLoading
   } = useAuth();
   
   useEffect(() => {
@@ -126,18 +128,8 @@ const Navbar = ({
           navigate('/dashboard');
         }
       } else {
-        // Permitir al usuario elegir si quiere completar el onboarding
-        if (!isOnboardingCompleted) {
-          const shouldSkip = window.confirm('¿Quieres completar tu perfil ahora o prefieres acceder directamente?');
-          
-          if (shouldSkip) {
-            navigate('/check-dashboard?skipOnboarding=true');
-          } else {
-            navigate('/user-onboarding');
-          }
-        } else {
-          navigate('/user-dashboard');
-        }
+        // Redirigir directamente al dashboard de usuario sin preguntar
+        navigate('/user-dashboard');
       }
     } catch (error) {
       console.error('Error al navegar:', error);
@@ -224,7 +216,9 @@ const Navbar = ({
           </DropdownMenu>
         )}
 
-        {isAuthenticated ? (
+        {isLoading ? (
+          <Skeleton className="h-10 w-10 rounded-full" />
+        ) : isAuthenticated ? (
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button 

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import MiniSearchBar from "@/components/search/MiniSearchBar";
@@ -6,6 +6,7 @@ import { useNavigate } from "react-router-dom";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { useAuth } from '@/contexts/AuthContext';
+import { Skeleton } from "@/components/ui/skeleton";
 
 const Navbar1 = () => {
     const navigate = useNavigate();
@@ -15,12 +16,17 @@ const Navbar1 = () => {
       userRole, 
       avatarUrl, 
       userDisplayName, 
-      signOut 
+      signOut,
+      isLoading
     } = useAuth();
     
     const handleAuth = () => {
       if (isAuthenticated) {
-        navigate('/dashboard');
+        if (userRole === 'artist') {
+          navigate('/dashboard');
+        } else {
+          navigate('/user-dashboard');
+        }
       } else {
         navigate('/auth');
       }
@@ -51,7 +57,9 @@ const Navbar1 = () => {
             </div>
             <MiniSearchBar />
             
-            {isAuthenticated ? (
+            {isLoading ? (
+              <Skeleton className="h-10 w-10 rounded-full" />
+            ) : isAuthenticated ? (
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
                   <button className="focus:outline-none">

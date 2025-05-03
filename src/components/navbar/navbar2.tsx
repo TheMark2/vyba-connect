@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
@@ -9,56 +8,47 @@ import { supabase } from "@/integrations/supabase/client";
 import { User } from '@supabase/supabase-js';
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
+import { useAuth } from '@/contexts/AuthContext';
+import { Skeleton } from "@/components/ui/skeleton";
 
 const Navbar2 = () => {
     const navigate = useNavigate();
     const [openFilterDialog, setOpenFilterDialog] = useState(false);
-    const [user, setUser] = useState<User | null>(null);
-    
-    useEffect(() => {
-      // Comprobar sesión actual
-      const checkUser = async () => {
-        const { data } = await supabase.auth.getSession();
-        setUser(data.session?.user || null);
-      };
-      
-      checkUser();
-      
-      // Escuchar cambios en la autenticación
-      const { data: authListener } = supabase.auth.onAuthStateChange(
-        (event, session) => {
-          setUser(session?.user || null);
-        }
-      );
-      
-      return () => {
-        authListener?.subscription.unsubscribe();
-      };
-    }, []);
+    const { 
+      user, 
+      isAuthenticated, 
+      userRole, 
+      avatarUrl, 
+      userDisplayName, 
+      signOut,
+      isLoading 
+    } = useAuth();
     
     const handleOpenFilterDialog = () => {
         setOpenFilterDialog(true);
     };
     
     const handleAuth = () => {
-      if (user) {
-        navigate('/dashboard');
+      if (isAuthenticated) {
+        // Dirigir según el rol del usuario
+        if (userRole === 'artist') {
+          navigate('/dashboard');
+        } else {
+          navigate('/user-dashboard');
+        }
       } else {
         navigate('/auth');
       }
     };
     
     const handleLogout = async () => {
-      await supabase.auth.signOut();
+      await signOut();
       navigate('/');
     };
     
     const getUserInitial = () => {
-      if (user?.user_metadata?.name) {
-        return user.user_metadata.name.charAt(0).toUpperCase();
-      }
-      if (user?.email) {
-        return user.email.charAt(0).toUpperCase();
+      if (userDisplayName) {
+        return userDisplayName.charAt(0).toUpperCase();
       }
       return "U";
     };
@@ -96,12 +86,14 @@ const Navbar2 = () => {
                             </Button>
                         </div>
                         
-                        {user ? (
+                        {isLoading ? (
+                          <Skeleton className="h-10 w-10 rounded-full" />
+                        ) : isAuthenticated ? (
                           <DropdownMenu>
                             <DropdownMenuTrigger asChild>
                               <button className="focus:outline-none">
                                 <Avatar className="h-10 w-10 cursor-pointer">
-                                  <AvatarImage src={user.user_metadata.avatar_url} />
+                                  <AvatarImage src={avatarUrl || undefined} />
                                   <AvatarFallback className="bg-black text-white">
                                     {getUserInitial()}
                                   </AvatarFallback>
@@ -109,7 +101,7 @@ const Navbar2 = () => {
                               </button>
                             </DropdownMenuTrigger>
                             <DropdownMenuContent align="end">
-                              <DropdownMenuItem onClick={() => navigate('/dashboard')}>
+                              <DropdownMenuItem onClick={() => navigate(userRole === 'artist' ? '/dashboard' : '/user-dashboard')}>
                                 Mi cuenta
                               </DropdownMenuItem>
                               <DropdownMenuSeparator />

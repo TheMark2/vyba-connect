@@ -98,9 +98,9 @@ const AuthPage = () => {
           </div>
 
           {isAuthenticated && (
-            <Alert className="mb-6 bg-blue-50 border-blue-100">
+            <Alert className="mb-6 bg-blue-50 border-none max-w-sm mx-auto">
               <Info className="h-4 w-4 text-blue-600" />
-              <AlertTitle className="text-blue-800">Ya has iniciado sesión</AlertTitle>
+              <AlertTitle className="text-blue-800 mb-2">Ya has iniciado sesión</AlertTitle>
               <AlertDescription className="text-blue-700">
                 Ya tienes una sesión activa. Puedes ir a tu <Button variant="link" className="p-0 text-blue-700 font-medium underline" onClick={handleRedirectToDashboard}>panel de control</Button> o continuar si deseas crear una cuenta nueva.
               </AlertDescription>

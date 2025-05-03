@@ -1,11 +1,13 @@
 import React, { useState, useEffect, useRef } from "react";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { Sun, Moon, Monitor, Home, Users, Music, Palette, X, Search, SlidersHorizontal, LogOut, User } from "lucide-react";
 import { createPortal } from "react-dom";
 import { cn } from "@/lib/utils";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
+import { useAuth } from "@/contexts/AuthContext";
+import { Skeleton } from "@/components/ui/skeleton";
 
 interface MobileMenuProps {
   isOpen: boolean;
@@ -34,6 +36,9 @@ const MobileMenu = ({
   const [isAnimating, setIsAnimating] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
   const location = useLocation();
+  const navigate = useNavigate();
+  // Obtener el rol de usuario y estado de carga del contexto
+  const { userRole, isLoading } = useAuth();
 
   // Función para verificar si un enlace está activo
   const isActive = (path: string) => location.pathname === path;
@@ -157,6 +162,17 @@ const MobileMenu = ({
     }
   };
 
+  // Manejar redirección según el rol
+  const handleMyAccountClick = () => {
+    if (userRole === 'artist') {
+      onDashboardClick?.();
+    } else {
+      // Ir directamente al dashboard de usuario
+      navigate('/user-dashboard');
+    }
+    onClose();
+  };
+
   // Evitar renderizar si está cerrado y no está animando
   if (!isOpen && !isAnimating) {
     return null;
@@ -194,14 +210,19 @@ const MobileMenu = ({
       >
         {/* Encabezado con botón de cierre */}
         <div className="flex justify-between items-center p-6">
-          {isAuthenticated && (
+          {isLoading ? (
+            <div className="flex items-center gap-2">
+              <Skeleton className="w-10 h-10 rounded-full" />
+              <Skeleton className="h-4 w-24" />
+            </div>
+          ) : isAuthenticated ? (
             <div className="flex items-center gap-2">
               <div className="w-10 h-10 bg-vyba-gray rounded-full flex items-center justify-center">
                 <User className="h-5 w-5" />
               </div>
               <span className="font-medium">{userDisplayName}</span>
             </div>
-          )}
+          ) : null}
           <Button 
             variant="ghost" 
             size="icon" 
@@ -279,15 +300,14 @@ const MobileMenu = ({
           
           {/* Botones de autenticación */}
           <div className="px-6 my-4 flex flex-col space-y-2 animate-menu-item" style={{ animationDelay: "300ms" }}>
-            {isAuthenticated ? (
+            {isLoading ? (
+              <Skeleton className="h-12 w-full" />
+            ) : isAuthenticated ? (
               <>
                 <Button 
                   variant="ghost" 
                   className="justify-start px-4 py-3 h-auto text-black dark:text-white hover:bg-[#F8F8F8] dark:hover:bg-vyba-dark-secondary rounded-lg w-full font-medium"
-                  onClick={() => {
-                    onDashboardClick?.();
-                    onClose();
-                  }}
+                  onClick={handleMyAccountClick}
                 >
                   <User className="mr-3 h-5 w-5" />
                   Mi cuenta

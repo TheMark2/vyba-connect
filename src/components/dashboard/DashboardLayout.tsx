@@ -18,6 +18,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { useAuth } from '@/contexts/AuthContext';
 
 interface DashboardLayoutProps {
   children: React.ReactNode;
@@ -26,8 +27,9 @@ interface DashboardLayoutProps {
 const DashboardLayout = ({ children }: DashboardLayoutProps) => {
   const location = useLocation();
   const navigate = useNavigate();
-  const [userImage, setUserImage] = useState<string | null>(null);
-  const [userName, setUserName] = useState<string>("Usuario");
+  const { avatarUrl, userDisplayName, signOut } = useAuth();
+  const [userImage, setUserImage] = useState<string | null>(avatarUrl || null);
+  const [userName, setUserName] = useState<string>(userDisplayName || "Usuario");
 
   const navItems = [
     { path: '/dashboard', icon: LayoutDashboard, label: 'Al día' },
@@ -37,9 +39,10 @@ const DashboardLayout = ({ children }: DashboardLayoutProps) => {
     { path: '/dashboard/calendar', label: 'Calendario' },
   ];
 
-  const handleLogout = () => {
-    // Aquí iría la lógica de logout
-    navigate('/login');
+  const handleLogout = async () => {
+    // Cerrar sesión con supabase
+    await signOut();
+    navigate('/');
   };
 
   return (
@@ -49,7 +52,9 @@ const DashboardLayout = ({ children }: DashboardLayoutProps) => {
         <div className="grid grid-cols-3 items-center py-4 px-8 md:px-32">
           {/* Logo */}
           <div className="flex items-center gap-2">
-            <img src="/lovable-uploads/logovybaartists.png" alt="Logo Artistas Vyba" className="h-10" />
+            <Link to="/">
+              <img src="/lovable-uploads/logovybaartists.png" alt="Logo Artistas Vyba" className="h-10" />
+            </Link>
           </div>
 
           {/* Navigation Links (centered) */}
@@ -58,17 +63,16 @@ const DashboardLayout = ({ children }: DashboardLayoutProps) => {
               {navItems.map((item) => {
                 const isActive = location.pathname === item.path;
                 return (
-                  <Button
+                  <Link
                     key={item.path}
-                    variant="link"
-                    onClick={() => navigate(item.path)}
+                    to={item.path}
                     className={cn(
                       "text-sm font-medium text-vyba-tertiary hover:text-vyba-navy rounded-full px-6 py-3 transition-all duration-300 ease-in-out hover:bg-vyba-gray hover:no-underline",
                       isActive && "relative text-vyba-navy after:content-[''] after:absolute after:left-1/2 after:-translate-x-1/2 after:bottom-0 after:w-6 after:h-[2px] after:bg-vyba-navy after:rounded-full"
                     )}
                   >
                     {item.label}
-                  </Button>
+                  </Link>
                 );
               })}
             </div>
@@ -79,10 +83,10 @@ const DashboardLayout = ({ children }: DashboardLayoutProps) => {
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <div className="h-12 w-12 rounded-full cursor-pointer overflow-hidden transition-colors duration-300">
-                  {userImage ? (
+                  {(avatarUrl || userImage) ? (
                     <img 
-                      src={userImage}
-                      alt={userName}
+                      src={avatarUrl || userImage || ''}
+                      alt={userDisplayName || userName}
                       className="h-full w-full object-cover"
                     />
                   ) : (
@@ -93,11 +97,15 @@ const DashboardLayout = ({ children }: DashboardLayoutProps) => {
                 </div>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end" className="w-56">
-                <DropdownMenuItem onClick={() => navigate('/dashboard/profile')}>
-                  <span>Perfil</span>
+                <DropdownMenuItem asChild>
+                  <Link to="/dashboard/profile">
+                    <span>Perfil</span>
+                  </Link>
                 </DropdownMenuItem>
-                <DropdownMenuItem onClick={() => navigate('/dashboard/settings')}>
-                  <span>Configuración</span>
+                <DropdownMenuItem asChild>
+                  <Link to="/dashboard/settings">
+                    <span>Configuración</span>
+                  </Link>
                 </DropdownMenuItem>
                 <DropdownMenuSeparator />
                 <DropdownMenuItem onClick={handleLogout} className="text-red-600">
@@ -106,7 +114,6 @@ const DashboardLayout = ({ children }: DashboardLayoutProps) => {
               </DropdownMenuContent>
             </DropdownMenu>
           </div>
-
         </div>
       </nav>
 
