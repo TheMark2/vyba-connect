@@ -63,34 +63,36 @@ const RegisterDialog = ({ open, onOpenChange, onSuccess }: RegisterDialogProps) 
     try {
       console.log("Checking if email exists:", email);
       
-      // First, try to get the user by email through the admin API
-      // Note: This is a more reliable way to check if an email exists
-      const { data, error } = await supabase.auth.admin.getUserByEmail(email);
+      // Try a sign-in attempt to see if credentials are invalid (which would indicate the email exists)
+      const { error } = await supabase.auth.signInWithPassword({
+        email: email,
+        password: 'this_is_just_to_check_if_email_exists'
+      });
       
-      // If we get data without error, the user exists
-      if (data?.user && !error) {
-        console.log("User found via admin API");
-        return { exists: true, provider: data.user.app_metadata?.provider || 'email' };
+      if (error) {
+        // If we get an "Invalid login credentials" error, it suggests the email exists
+        if (error.message.includes("Invalid login credentials")) {
+          console.log("Email exists based on login attempt");
+          return { exists: true, provider: 'email' };
+        }
+        
+        // If we get an "Email not confirmed" error, the email exists but hasn't been confirmed
+        if (error.message.includes("Email not confirmed")) {
+          console.log("Email exists but not confirmed");
+          return { exists: true, provider: 'email' };
+        }
       }
       
-      // If there's an error but it's not because the user doesn't exist
-      // it might be due to permissions or other issues
-      if (error && !error.message.includes("User not found")) {
-        console.log("Error checking email via admin API:", error);
-        
-        // Fall back to our alternative method
-        // Try a passwordless sign-in attempt (will fail but helps determine if email exists)
-        const { error: signInError } = await supabase.auth.signInWithPassword({
-          email: email,
-          password: 'this_is_just_to_check_if_email_exists'
-        });
-        
-        // If we get an "Invalid login credentials" error, it suggests the email exists
-        // (because the auth system is saying "wrong password" rather than "no such user")
-        if (signInError && signInError.message.includes("Invalid login credentials")) {
-          console.log("Email exists based on login attempt");
-          return { exists: true, provider: 'unknown' };
-        }
+      // Additional check - try to sign up with the email to see if it's taken
+      const { error: signUpError } = await supabase.auth.signUp({
+        email,
+        password: 'TemporaryPassword123!',
+        options: { emailRedirectTo: window.location.origin }
+      });
+      
+      if (signUpError && signUpError.message.includes("User already registered")) {
+        console.log("Email exists based on signup attempt");
+        return { exists: true, provider: 'email' };
       }
       
       // If we reach here, the email doesn't seem to exist

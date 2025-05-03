@@ -1,5 +1,5 @@
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Button } from "@/components/ui/button";
 import { Link, useNavigate } from "react-router-dom";
 import { Mail, AlertCircle, Info } from "lucide-react";
@@ -28,30 +28,37 @@ const RegisterPage = () => {
     navigate('/user-onboarding');
   };
 
-  // Improved version that doesn't rely on OTP
+  // Improved version that doesn't rely on admin API
   const checkEmailExists = async (email: string) => {
     try {
       console.log("Checking if email exists (RegisterPage):", email);
       
-      // First, try the admin API if available
-      try {
-        const { data, error } = await supabase.auth.admin.getUserByEmail(email);
-        if (data?.user && !error) {
-          return { exists: true, provider: data.user.app_metadata?.provider || 'email' };
-        }
-      } catch (adminError) {
-        console.log("Admin API not available:", adminError);
-        // Continue with fallback method if admin API isn't available
-      }
-      
-      // Fallback: Try a sign-in attempt to see if credentials are invalid (which would indicate the email exists)
+      // Primero, intentar iniciar sesión para ver si el correo existe
       const { error } = await supabase.auth.signInWithPassword({
         email: email,
         password: 'this_is_just_to_check_if_email_exists'
       });
       
-      if (error && error.message.includes("Invalid login credentials")) {
-        // Error about invalid credentials suggests the email exists
+      // Si hay un error específico sobre credenciales inválidas, el email existe
+      if (error) {
+        if (error.message.includes("Invalid login credentials")) {
+          return { exists: true, provider: 'email' };
+        }
+        
+        // Si hay un error sobre correo no confirmado, también existe
+        if (error.message.includes("Email not confirmed")) {
+          return { exists: true, provider: 'email' };
+        }
+      }
+      
+      // Intentar registrarse con el correo para ver si está tomado
+      const { error: signUpError } = await supabase.auth.signUp({
+        email,
+        password: 'TemporaryPassword123!',
+        options: { emailRedirectTo: window.location.origin }
+      });
+      
+      if (signUpError && signUpError.message.includes("User already registered")) {
         return { exists: true, provider: 'email' };
       }
       
