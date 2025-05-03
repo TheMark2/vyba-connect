@@ -350,12 +350,23 @@ const UserOnboardingPage = () => {
         }
       });
 
-      // 3. Redirigir al dashboard
+      // 3. Redirigir a la página de onboarding completo
       toast.success('¡Perfil configurado correctamente!');
       navigate('/onboarding-complete');
     } catch (error) {
       console.error('Error al completar el onboarding:', error);
-      toast.error('Error al guardar tus datos');
+      
+      // Verificar si es un error de autenticación
+      const { data: { session } } = await supabase.auth.getSession();
+      
+      if (!session) {
+        // Si no hay sesión, mostrar mensaje específico
+        toast.error('Tu sesión ha expirado. Por favor, inicia sesión de nuevo.');
+        navigate('/auth');
+      } else {
+        // Para otros errores
+        toast.error('Error al guardar tus datos. Por favor, inténtalo de nuevo.');
+      }
     } finally {
       setIsSaving(false);
     }
