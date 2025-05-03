@@ -269,7 +269,7 @@ const RegisterDialog = ({ open, onOpenChange, onSuccess }: RegisterDialogProps) 
     try {
       console.log("Intentando registrar usuario con estos datos:", { email, ...data });
       
-      // Registrar el usuario en Supabase con autoconfirm true para crear la cuenta inmediatamente
+      // Modificación clave: Agregamos autoconfirm true para crear la cuenta sin verificar correo
       const { data: authData, error } = await supabase.auth.signUp({
         email,
         password: data.password,

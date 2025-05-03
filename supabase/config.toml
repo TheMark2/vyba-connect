@@ -1,5 +1,10 @@
 
 project_id = "zkucuolpubthcnsgjtso"
 
+[auth]
+disable_signup = false
+# Disable email confirmation
+enable_email_autoconfirm = true
+
 [functions.send-otp]
 verify_jwt = false
