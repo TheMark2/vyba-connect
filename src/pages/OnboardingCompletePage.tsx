@@ -1,3 +1,4 @@
+
 import React, { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import OnboardingCompletionHandler from '@/components/onboarding/OnboardingCompletionHandler';
@@ -33,4 +34,4 @@ const OnboardingCompletePage = () => {
   );
 };
 
-export default OnboardingCompletePage; 
+export default OnboardingCompletePage;

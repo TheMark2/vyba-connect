@@ -1,5 +1,8 @@
 
 project_id = "zkucuolpubthcnsgjtso"
 
+[auth.email]
+enable_email_confirm = false
+
 [functions.send-otp]
 verify_jwt = false
