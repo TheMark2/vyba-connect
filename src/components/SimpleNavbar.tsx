@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { Button } from "@/components/ui/button";
 import { Link, useNavigate } from 'react-router-dom';
@@ -5,6 +6,7 @@ import { cn } from '@/lib/utils';
 import { ArrowLeft, Menu, Moon, Sun, LaptopIcon } from 'lucide-react';
 import { useIsMobile } from '@/hooks/use-mobile';
 import MobileMenu from '@/components/MobileMenu';
+import { supabase } from "@/integrations/supabase/client";
 import {
   DropdownMenu,
   DropdownMenuContent,
