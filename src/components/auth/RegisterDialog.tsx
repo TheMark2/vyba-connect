@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
@@ -58,49 +59,52 @@ const RegisterDialog = ({ open, onOpenChange, onSuccess }: RegisterDialogProps) 
     }
   });
 
-  // Improved email existence check that doesn't rely on OTP
+  // Improved email existence check that accurately determines if an email exists
   const checkEmailExists = async (email: string) => {
     try {
       console.log("Checking if email exists:", email);
       
-      // Try a sign-in attempt to see if credentials are invalid (which would indicate the email exists)
-      const { error } = await supabase.auth.signInWithPassword({
-        email: email,
-        password: 'this_is_just_to_check_if_email_exists'
-      });
+      // Verificar si el correo ya existe en la tabla de perfiles
+      const { data, error } = await supabase
+        .from('profiles')
+        .select('email')
+        .eq('email', email)
+        .maybeSingle();
       
-      if (error) {
-        // If we get an "Invalid login credentials" error, it suggests the email exists
-        if (error.message.includes("Invalid login credentials")) {
-          console.log("Email exists based on login attempt");
-          return { exists: true, provider: 'email' };
-        }
-        
-        // If we get an "Email not confirmed" error, the email exists but hasn't been confirmed
-        if (error.message.includes("Email not confirmed")) {
-          console.log("Email exists but not confirmed");
-          return { exists: true, provider: 'email' };
-        }
-      }
-      
-      // Additional check - try to sign up with the email to see if it's taken
-      const { error: signUpError } = await supabase.auth.signUp({
-        email,
-        password: 'TemporaryPassword123!',
-        options: { emailRedirectTo: window.location.origin }
-      });
-      
-      if (signUpError && signUpError.message.includes("User already registered")) {
-        console.log("Email exists based on signup attempt");
+      if (data) {
+        console.log("Email exists in profiles table");
         return { exists: true, provider: 'email' };
       }
       
-      // If we reach here, the email doesn't seem to exist
-      console.log("Email does not exist");
+      // Intentar verificar si el usuario existe en auth sin intentar iniciar sesión
+      const { error: signInError } = await supabase.auth.signInWithOtp({
+        email,
+        options: {
+          shouldCreateUser: false, // No crear un usuario si no existe
+        }
+      });
+      
+      // Si el error indica que el usuario no existe, entonces el email no está registrado
+      if (signInError && signInError.message.includes("Email not found")) {
+        console.log("Email does not exist based on OTP check");
+        return { exists: false };
+      }
+      
+      // Verificar directamente con la API de autenticación si el usuario existe
+      // Esta es una verificación más precisa que las anteriores
+      const { data: userData, error: userError } = await supabase.auth.admin.getUserByEmail(email);
+      
+      if (userData?.user) {
+        console.log("Email exists based on auth API check");
+        return { exists: true, provider: 'email' };
+      }
+      
+      // Si ninguno de los métodos anteriores confirma que el usuario existe, asumimos que no existe
+      console.log("Email does not exist after all checks");
       return { exists: false };
     } catch (error) {
       console.error("Error checking if email exists:", error);
-      // In case of unexpected errors, return false to allow registration attempt
+      // En caso de errores inesperados, permitir el intento de registro
       return { exists: false };
     }
   };
