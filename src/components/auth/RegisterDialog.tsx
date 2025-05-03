@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
@@ -46,6 +45,7 @@ const RegisterDialog = ({ open, onOpenChange, onSuccess }: RegisterDialogProps) 
   const [resendLoading, setResendLoading] = useState(false);
   const [isVerified, setIsVerified] = useState(false);
   const [verificationError, setVerificationError] = useState('');
+  const [emailError, setEmailError] = useState('');
   const navigate = useNavigate();
 
   const form = useForm<RegistrationData>({
@@ -58,12 +58,48 @@ const RegisterDialog = ({ open, onOpenChange, onSuccess }: RegisterDialogProps) 
     }
   });
 
+  const checkEmailExists = async (email: string) => {
+    try {
+      // Verificar si existe el email consultando directamente a la tabla de profiles
+      const { data, error } = await supabase
+        .from('profiles')
+        .select('email')
+        .eq('email', email)
+        .limit(1);
+
+      if (error) {
+        console.error("Error al verificar email:", error);
+        throw error;
+      }
+
+      return data && data.length > 0;
+    } catch (error) {
+      console.error("Error al verificar email:", error);
+      return false;
+    }
+  };
+
   const handleEmailSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!email) return;
     
+    if (!email) {
+      setEmailError("Por favor, ingresa un correo electrónico.");
+      return;
+    }
+    
+    setEmailError('');
     setIsLoading(true);
+    
     try {
+      // Verificar si el email ya está registrado
+      const emailExists = await checkEmailExists(email);
+      
+      if (emailExists) {
+        setEmailError("Este email ya está registrado. Por favor, utiliza otro o inicia sesión.");
+        setIsLoading(false);
+        return;
+      }
+      
       // Enviar el correo con el código OTP
       const response = await fetch('https://zkucuolpubthcnsgjtso.supabase.co/functions/v1/send-otp', {
         method: 'POST',
@@ -195,7 +231,18 @@ const RegisterDialog = ({ open, onOpenChange, onSuccess }: RegisterDialogProps) 
     try {
       console.log("Intentando registrar usuario con estos datos:", { email, ...data });
       
-      // Registrar el usuario en Supabase con autoconfirm true para crear la cuenta inmediatamente
+      // Verificar de nuevo si el email existe antes del registro final
+      const emailExists = await checkEmailExists(email);
+      
+      if (emailExists) {
+        toast.error("Error", {
+          description: "Este email ya está registrado. Por favor, utiliza otro."
+        });
+        setIsLoading(false);
+        return;
+      }
+      
+      // Registrar el usuario en Supabase
       const { data: authData, error } = await supabase.auth.signUp({
         email,
         password: data.password,
@@ -206,8 +253,7 @@ const RegisterDialog = ({ open, onOpenChange, onSuccess }: RegisterDialogProps) 
             birthDate: data.birthDate,
             role: 'user', // Por defecto, el usuario es tipo 'user' (no artista)
             onboarding_completed: false // Marcar que necesita completar el onboarding
-          },
-          emailRedirectTo: window.location.origin + '/user-onboarding'
+          }
         }
       });
 
@@ -278,6 +324,7 @@ const RegisterDialog = ({ open, onOpenChange, onSuccess }: RegisterDialogProps) 
       setCode('');
       setIsVerified(false);
       setVerificationError('');
+      setEmailError('');
       form.reset();
     }, 300);
   };
@@ -323,22 +370,6 @@ const RegisterDialog = ({ open, onOpenChange, onSuccess }: RegisterDialogProps) 
     });
   }, [passwordValue, validatedRules]);
 
-  const handleRegistrationSuccess = async (userData: any) => {
-    try {
-      // Si el registro es exitoso, navegar directamente al onboarding
-      toast.success('¡Registro exitoso!');
-      
-      // Pequeño retraso para permitir que se muestre el toast
-      setTimeout(() => {
-        navigate('/user-onboarding');
-        onOpenChange(false);
-      }, 1000);
-    } catch (error) {
-      console.error('Error post-registro:', error);
-      toast.error('Error al procesar el registro');
-    }
-  };
-
   return (
     <Dialog open={open} onOpenChange={handleClose}>
       <DialogContent className="sm:max-w-xl">
@@ -369,10 +400,19 @@ const RegisterDialog = ({ open, onOpenChange, onSuccess }: RegisterDialogProps) 
                 type="email"
                 placeholder="ejemplo@email.com"
                 value={email}
-                onChange={(e) => setEmail(e.target.value)}
+                onChange={(e) => {
+                  setEmail(e.target.value);
+                  if (emailError) setEmailError('');
+                }}
                 required
-                className="focus:ring-0 focus-visible:ring-0 focus-visible:ring-offset-0 focus:ring-offset-0"
+                className={cn(
+                  "focus:ring-0 focus-visible:ring-0 focus-visible:ring-offset-0 focus:ring-offset-0",
+                  emailError ? "border-red-500" : ""
+                )}
               />
+              {emailError && (
+                <p className="text-sm text-red-500 mt-1">{emailError}</p>
+              )}
             </div>
             <Button 
               variant="terciary"
@@ -381,7 +421,7 @@ const RegisterDialog = ({ open, onOpenChange, onSuccess }: RegisterDialogProps) 
               disabled={isLoading}
               isLoading={isLoading}
             >
-              {isLoading ? "Enviando" : "Enviar código"}
+              {isLoading ? "Verificando" : "Continuar"}
             </Button>
           </form>
         )}
