@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
@@ -56,26 +57,26 @@ const LoginDialog = ({ open, onOpenChange, onSuccess }: LoginDialogProps) => {
       // Verificar si el correo existe en Supabase
       const timeout = setTimeout(async () => {
         try {
-          // Verificar si existe un perfil con ese email
-          const { data, error, count } = await supabase
-            .from('profiles')
-            .select('id', { count: 'exact' })
-            .eq('email', value)
-            .limit(1);
+          // Primero verificamos si el correo está registrado usando auth.signInWithOtp
+          // que devolverá un error si el correo no existe
+          const { error } = await supabase.auth.signInWithOtp({
+            email: value,
+            options: {
+              shouldCreateUser: false // No crear un nuevo usuario
+            }
+          });
           
-          if (error) {
-            console.error("Error al verificar email:", error);
-            setShowVerified(false);
-            return;
-          }
-          
-          // Si encontramos algún perfil, el email está registrado
-          if (count !== null && count > 0) {
+          if (error && error.message.includes('Email not confirmed')) {
+            // El email existe pero no está confirmado
             setShowVerified('verified');
-          } else {
+          } else if (error && error.message.includes('Email not found')) {
+            // El email no existe
             setShowVerified('not-registered');
             setEmailError(true);
             setErrorMessage('Este correo no está registrado');
+          } else {
+            // El email existe
+            setShowVerified('verified');
           }
         } catch (err) {
           console.error("Error al verificar email:", err);
@@ -112,20 +113,15 @@ const LoginDialog = ({ open, onOpenChange, onSuccess }: LoginDialogProps) => {
     
     setIsLoading(true);
     try {
-      // Verificar si el email existe consultando la tabla de perfiles
-      const { data, error, count } = await supabase
-        .from('profiles')
-        .select('id', { count: 'exact' })
-        .eq('email', email)
-        .limit(1);
+      // Verificar si el email existe usando signInWithOtp
+      const { error } = await supabase.auth.signInWithOtp({
+        email,
+        options: {
+          shouldCreateUser: false // No crear un nuevo usuario
+        }
+      });
       
-      if (error) {
-        console.error("Error al verificar email:", error);
-        throw error;
-      }
-      
-      // Si no encontramos ningún perfil, el email no está registrado
-      if (count === null || count === 0) {
+      if (error && error.message.includes('Email not found')) {
         setEmailError(true);
         setErrorMessage('Este correo no está registrado');
         toast.error("Este correo no está registrado");
@@ -133,6 +129,7 @@ const LoginDialog = ({ open, onOpenChange, onSuccess }: LoginDialogProps) => {
         return;
       }
       
+      // Si llegamos aquí, el email existe
       setCurrentStep('password');
     } catch (error: any) {
       console.error("Error al verificar email:", error);
