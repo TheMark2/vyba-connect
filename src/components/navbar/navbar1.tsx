@@ -1,66 +1,22 @@
-import React, { useState, useEffect } from 'react';
+
+import React from 'react';
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import MiniSearchBar from "@/components/search/MiniSearchBar";
 import { useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
-import { User } from '@supabase/supabase-js';
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
+import { useAuth } from "@/contexts/AuthContext";
 
 const Navbar1 = () => {
     const navigate = useNavigate();
-    const [user, setUser] = useState<User | null>(null);
-    const [userAvatarUrl, setUserAvatarUrl] = useState<string | null>(null);
-    const [userName, setUserName] = useState<string | null>(null);
-    
-    useEffect(() => {
-      // Comprobar sesión actual
-      const checkUser = async () => {
-        const { data } = await supabase.auth.getSession();
-        if (data.session?.user) {
-          setUser(data.session.user);
-          
-          // Intentar obtener el avatar de los metadatos del usuario
-          const avatarUrl = data.session.user.user_metadata?.avatar_url || null;
-          setUserAvatarUrl(avatarUrl);
-          
-          // Intentar obtener el nombre del usuario
-          setUserName(data.session.user.user_metadata?.name || data.session.user.email?.split('@')[0] || "Usuario");
-        } else {
-          setUser(null);
-          setUserAvatarUrl(null);
-          setUserName(null);
-        }
-      };
-      
-      checkUser();
-      
-      // Escuchar cambios en la autenticación
-      const { data: authListener } = supabase.auth.onAuthStateChange(
-        async (event, session) => {
-          if (session?.user) {
-            setUser(session.user);
-            
-            // Actualizar avatar y nombre cuando cambian los metadatos del usuario
-            const avatarUrl = session.user.user_metadata?.avatar_url || null;
-            setUserAvatarUrl(avatarUrl);
-            setUserName(session.user.user_metadata?.name || session.user.email?.split('@')[0] || "Usuario");
-          } else {
-            setUser(null);
-            setUserAvatarUrl(null);
-            setUserName(null);
-          }
-        }
-      );
-      
-      return () => {
-        authListener?.subscription.unsubscribe();
-      };
-    }, []);
+    const { user, isAuthenticated } = useAuth();
+    const userAvatarUrl = user?.user_metadata?.avatar_url || null;
+    const userName = user?.user_metadata?.name || user?.email?.split('@')[0] || "Usuario";
     
     const handleAuth = () => {
-      if (user) {
+      if (isAuthenticated) {
         navigate('/dashboard');
       } else {
         navigate('/auth');
@@ -94,7 +50,7 @@ const Navbar1 = () => {
             </div>
             <MiniSearchBar />
             
-            {user ? (
+            {isAuthenticated ? (
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
                   <button className="focus:outline-none">

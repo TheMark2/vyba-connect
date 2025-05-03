@@ -1,63 +1,28 @@
 
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Link, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import MiniSearchBar from "@/components/search/MiniSearchBar";
 import { ListFilter } from "lucide-react";
 import FilterDialog from "@/components/filters/FilterDialog";
 import { supabase } from "@/integrations/supabase/client";
-import { User } from '@supabase/supabase-js';
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
+import { useAuth } from "@/contexts/AuthContext";
 
 const Navbar2 = () => {
     const navigate = useNavigate();
     const [openFilterDialog, setOpenFilterDialog] = useState(false);
-    const [user, setUser] = useState<User | null>(null);
-    const [userAvatarUrl, setUserAvatarUrl] = useState<string | null>(null);
-    const [userName, setUserName] = useState<string | null>(null);
-    
-    useEffect(() => {
-      // Comprobar sesión actual
-      const checkUser = async () => {
-        const { data } = await supabase.auth.getSession();
-        if (data.session?.user) {
-          setUser(data.session.user);
-          setUserAvatarUrl(data.session.user.user_metadata?.avatar_url || null);
-          setUserName(data.session.user.user_metadata?.name || data.session.user.email?.split('@')[0] || "Usuario");
-        } else {
-          setUser(null);
-        }
-      };
-      
-      checkUser();
-      
-      // Escuchar cambios en la autenticación
-      const { data: authListener } = supabase.auth.onAuthStateChange(
-        (event, session) => {
-          if (session?.user) {
-            setUser(session.user);
-            setUserAvatarUrl(session.user.user_metadata?.avatar_url || null);
-            setUserName(session.user.user_metadata?.name || session.user.email?.split('@')[0] || "Usuario");
-          } else {
-            setUser(null);
-            setUserAvatarUrl(null);
-            setUserName(null);
-          }
-        }
-      );
-      
-      return () => {
-        authListener?.subscription.unsubscribe();
-      };
-    }, []);
+    const { user, isAuthenticated } = useAuth();
+    const userAvatarUrl = user?.user_metadata?.avatar_url || null;
+    const userName = user?.user_metadata?.name || user?.email?.split('@')[0] || "Usuario";
     
     const handleOpenFilterDialog = () => {
         setOpenFilterDialog(true);
     };
     
     const handleAuth = () => {
-      if (user) {
+      if (isAuthenticated) {
         navigate('/dashboard');
       } else {
         navigate('/auth');
@@ -109,7 +74,7 @@ const Navbar2 = () => {
                             </Button>
                         </div>
                         
-                        {user ? (
+                        {isAuthenticated ? (
                           <DropdownMenu>
                             <DropdownMenuTrigger asChild>
                               <button className="focus:outline-none">

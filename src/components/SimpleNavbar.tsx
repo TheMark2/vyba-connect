@@ -7,6 +7,7 @@ import { ArrowLeft, Menu, Moon, Sun, LaptopIcon } from 'lucide-react';
 import { useIsMobile } from '@/hooks/use-mobile';
 import MobileMenu from '@/components/MobileMenu';
 import { supabase } from "@/integrations/supabase/client";
+import { useAuth } from "@/contexts/AuthContext";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -25,8 +26,9 @@ const SimpleNavbar = ({
   const isMobile = useIsMobile();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [currentTheme, setCurrentTheme] = useState<'light' | 'dark' | 'system'>('system');
-  const [userAvatarUrl, setUserAvatarUrl] = useState<string | null>(null);
-  const [userName, setUserName] = useState<string | null>(null);
+  const { user } = useAuth();
+  const userAvatarUrl = user?.user_metadata?.avatar_url || null;
+  const userName = user?.user_metadata?.name || user?.email?.split('@')[0] || "Usuario";
   
   React.useEffect(() => {
     const savedTheme = localStorage.getItem('theme');
@@ -37,16 +39,6 @@ const SimpleNavbar = ({
     } else {
       setCurrentTheme('system');
     }
-    
-    const checkUserInfo = async () => {
-      const { data: { user } } = await supabase.auth.getUser();
-      if (user) {
-        setUserAvatarUrl(user.user_metadata?.avatar_url || null);
-        setUserName(user.user_metadata?.name || user.email?.split('@')[0] || "Usuario");
-      }
-    };
-    
-    checkUserInfo();
   }, []);
   
   const handleGetStarted = () => {
