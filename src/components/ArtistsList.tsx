@@ -1,10 +1,18 @@
 
-import React from "react";
-import ArtistProfileCard from "@/components/ArtistProfileCard";
-import { ArtistProfileCardProps } from "@/types/artist-profile-card";
-import { useNavigate } from "react-router-dom";
+import React, { useRef, useState, useEffect } from "react";
+import ArtistProfileCard from "./ArtistProfileCard";
+import {
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+  CarouselPrevious,
+  CarouselNext
+} from "@/components/ui/carousel";
+import { useIsMobile } from "@/hooks/use-mobile";
+import { ArrowLeft, ArrowRight } from "lucide-react";
+import { cn } from "@/lib/utils";
+import { Button } from "@/components/ui/button";
 
-// Define la interfaz para los datos de artistas
 interface Artist {
   id: string;
   name: string;
@@ -13,72 +21,146 @@ interface Artist {
   images: string[];
   rating: number;
   priceRange: string;
-  isFavorite: boolean;
+  isFavorite?: boolean;
 }
 
-export interface ArtistsListProps {
+interface ArtistsListProps {
   artists: Artist[];
-  onFavoriteToggle?: (artistId: string) => void;
-  isMobile?: boolean;
-  filterType?: string;
   onArtistClick?: (artist: Artist) => void;
+  onFavoriteToggle?: (artist: Artist) => void;
 }
 
-// Componente ArtistsList
-const ArtistsList: React.FC<ArtistsListProps> = ({
+const ArtistsList = ({
   artists,
+  onArtistClick,
   onFavoriteToggle,
-  isMobile = false,
-  filterType,
-  onArtistClick
-}) => {
-  const navigate = useNavigate();
-
-  // Filtrar artistas si se proporciona un tipo de filtro
-  const filteredArtists = filterType
-    ? artists.filter((artist) => artist.type === filterType)
-    : artists;
-
-  // Manejador para hacer clic en un artista
-  const handleArtistClick = (artist: Artist) => {
-    if (onArtistClick) {
-      onArtistClick(artist);
-    } else {
-      navigate(`/artista/${artist.id}`);
+}: ArtistsListProps) => {
+  const carouselRef = useRef<HTMLDivElement>(null);
+  const [showGradient, setShowGradient] = useState(true);
+  const [api, setApi] = useState<any>(null);
+  const [current, setCurrent] = useState(0);
+  const [count, setCount] = useState(0);
+  const isMobile = useIsMobile();
+  const isDarkMode = typeof document !== 'undefined' && document.documentElement.classList.contains('dark');
+  
+  useEffect(() => {
+    if (!api) return;
+    
+    setCount(api.scrollSnapList().length);
+    setCurrent(api.selectedScrollSnap());
+    
+    api.on("select", () => {
+      setCurrent(api.selectedScrollSnap());
+      checkScrollable();
+    });
+  }, [api]);
+  
+  const checkScrollable = () => {
+    if (carouselRef.current) {
+      const container = carouselRef.current.querySelector('[data-carousel-content]');
+      if (container) {
+        const isScrollable = container.scrollWidth > container.clientWidth;
+        // Siempre mantenemos el gradiente visible para indicar que hay más contenido
+        setShowGradient(isScrollable);
+      }
     }
   };
 
-  // Manejador para alternar favoritos
-  const handleFavoriteToggle = (artistId: string) => {
-    if (onFavoriteToggle) {
-      onFavoriteToggle(artistId);
-    }
+  useEffect(() => {
+    checkScrollable();
+    const timer = setTimeout(checkScrollable, 100);
+    
+    const handleResize = () => {
+      checkScrollable();
+    };
+    
+    window.addEventListener('resize', handleResize);
+    return () => {
+      clearTimeout(timer);
+      window.removeEventListener('resize', handleResize);
+    };
+  }, [artists]);
+
+  // Tamaño consistente para las tarjetas en todos los formatos de pantalla
+  const getItemWidth = () => {
+    return "300px"; // Tamaño ajustado para todas las tarjetas
   };
 
   return (
-    <div
-      className={`grid ${
-        isMobile
-          ? "grid-cols-2 gap-4"
-          : "grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6"
-      }`}
-    >
-      {filteredArtists.map((artist) => (
-        <ArtistProfileCard
-          key={artist.id}
-          id={artist.id}
-          name={artist.name}
-          type={artist.type}
-          description={artist.description}
-          images={artist.images}
-          rating={artist.rating}
-          priceRange={artist.priceRange}
-          isFavorite={artist.isFavorite}
-          onClick={() => handleArtistClick(artist)}
-          onFavoriteToggle={() => handleFavoriteToggle(artist.id)}
-          className={isMobile ? "mb-2" : ""}
+    <div className={`relative w-full ${isMobile ? 'px-0' : ''}`} ref={carouselRef}>      
+      <Carousel
+        className="w-full"
+        setApi={setApi}
+        opts={{
+          align: "center", // Cambiado a "center" para centrar el ítem activo
+          loop: false,
+          skipSnaps: false,
+          dragFree: true,
+        }}
+        onScroll={checkScrollable}
+      >
+        <CarouselContent 
+          className={isMobile ? '-ml-4 pl-4' : '-ml-6'} // Ajustado para móvil
+          data-carousel-content
+        >
+          {artists.map((artist, index) => (
+            <CarouselItem
+              key={artist.id}
+              className={cn(
+                isMobile ? 'pl-4 pr-2' : 'pl-6 pr-3', // Ajustado para móvil
+                index === 0 && current === 0 ? (isMobile ? 'ml-0' : 'ml-6') : 'ml-0'
+              )}
+              style={{
+                width: getItemWidth(),
+                minWidth: getItemWidth(),
+                flex: `0 0 ${getItemWidth()}`
+              }}
+            >
+              <ArtistProfileCard
+                name={artist.name}
+                type={artist.type}
+                description={artist.description}
+                images={artist.images}
+                rating={artist.rating}
+                priceRange={artist.priceRange}
+                isFavorite={artist.isFavorite}
+                onClick={() => onArtistClick && onArtistClick(artist)}
+                onFavoriteToggle={() => onFavoriteToggle && onFavoriteToggle(artist)}
+                className="h-full"
+              />
+            </CarouselItem>
+          ))}
+        </CarouselContent>
+        <CarouselPrevious className="left-2 w-12 h-12" />
+        <CarouselNext className="right-2 w-12 h-12" />
+      </Carousel>
+      
+      {showGradient && (
+        <div
+          className="absolute right-0 top-0 h-full w-12 pointer-events-none"
+          style={{
+            background: document.documentElement.classList.contains('dark')
+              ? "linear-gradient(90deg, rgba(44,44,43,0) 0%, rgba(44,44,43,0.5) 40%, rgba(44,44,43,0.9) 80%, rgba(44,44,43,1) 100%)"
+              : "linear-gradient(90deg, rgba(250,248,246,0) 0%, rgba(250,248,246,0.5) 40%, rgba(250,248,246,0.9) 80%, rgba(250,248,246,1) 100%)"
+          }}
         />
-      ))}
+      )}
+      
+      {isMobile && count > 1 && (
+        <div className="flex justify-center gap-1 mt-6">
+          {Array.from({ length: count }).map((_, i) => (
+            <button
+              key={i}
+              className={cn(
+                "h-2 rounded-full transition-all backdrop-blur-md",
+                i === current ? "w-6 bg-black dark:bg-white" : "w-2 bg-white/30"
+              )}
+              onClick={() => api?.scrollTo(i)}
+              aria-label={`Ir a la página ${i + 1}`}
+            />
+          ))}
+        </div>
+      )}
     </div>
   );
 };

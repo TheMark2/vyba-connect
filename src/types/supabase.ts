@@ -1,11 +1,3 @@
-
-import { createClient } from '@supabase/supabase-js';
-import type { Database } from './database.types';
-
-const SUPABASE_URL = "https://zkucuolpubthcnsgjtso.supabase.co";
-const SUPABASE_PUBLISHABLE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InprdWN1b2xwdWJ0aGNuc2dqdHNvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDYxMjE1NzIsImV4cCI6MjA2MTY5NzU3Mn0.P4l7Dp6zY4kPp_wL54VEb_b9IfqUoygckmt0WkXpmgA";
-
-// Import the supabase client like this:
-// import { supabase } from "@/integrations/supabase/client";
-
-export const supabase = createClient<Database>(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY);
+Need to install the following packages:
+supabase@2.22.6
+Ok to proceed? (y) 

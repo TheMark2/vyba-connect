@@ -1,116 +1,166 @@
-import React from "react";
-import { useNavigate } from "react-router-dom";
-import { Button } from "@/components/ui/button";
-import { ChevronRight } from "lucide-react";
-import ArtistProfileCard from "@/components/ArtistProfileCard";
-import SimpleNavbar from "@/components/SimpleNavbar";
 
-const thankYouArtists = [
+import React, { useState, useEffect } from 'react';
+import { useNavigate, useLocation } from 'react-router-dom';
+import { Button } from "@/components/ui/button";
+import { Card } from "@/components/ui/card";
+import { ArrowLeft, Search, Music } from 'lucide-react';
+import Navbar from '@/components/Navbar';
+import { Link } from 'react-router-dom';
+import { Marquee } from "@/components/ui/marquee";
+import ArtistProfileCard from '@/components/ArtistProfileCard';
+import { PageTransition } from '@/components/ui/page-transition';
+
+const dummyArtists = [
   {
     id: "1",
-    name: "DJ Marcos",
+    name: "David Guetta",
     type: "DJ",
-    description: "DJ especializado en bodas y eventos corporativos",
-    images: [
-      "/lovable-uploads/77591a97-10cd-4c8b-b768-5b17483c3d9f.png",
-      "/lovable-uploads/64cabbe3-ce62-4190-830d-0e5defd31a1b.png",
-      "/lovable-uploads/c89ee394-3c08-48f6-b69b-bddd81dffa8b.png",
-    ],
-    rating: 4.8,
-    priceRange: "450-550€",
-    isFavorite: false,
+    description: "DJ y productor de música electrónica",
+    images: ["/lovable-uploads/c89ee394-3c08-48f6-b69b-bddd81dffa8b.png"],
+    rating: 4.9,
+    priceRange: "1500€ - 2000€",
+    isFavorite: false
   },
   {
     id: "2",
-    name: "Los Brillantes",
-    type: "Banda",
-    description: "Banda versátil para todo tipo de eventos",
-    images: [
-      "/lovable-uploads/b1d87308-8791-4bd4-bd43-e4f7cf7d9042.png",
-      "/lovable-uploads/d79d697f-5c21-443c-bc75-d988a2dbc770.png",
-      "/lovable-uploads/440a191c-d45b-4031-acbe-509e602e5d22.png",
-    ],
-    rating: 4.9,
-    priceRange: "600-800€",
-    isFavorite: false,
+    name: "Alicia Keys",
+    type: "Solista",
+    description: "Cantante, compositora y pianista",
+    images: ["/lovable-uploads/a3c6b43a-dd61-4889-ae77-cb1016e65371.png"],
+    rating: 4.8,
+    priceRange: "2500€ - 3000€",
+    isFavorite: true
   },
   {
     id: "3",
-    name: "Sara Soprano",
-    type: "Solista",
-    description: "Cantante lírica para ceremonias y eventos formales",
-    images: [
-      "/lovable-uploads/7e7c2282-785a-46fb-84b2-f7b14b762e64.png",
-      "/lovable-uploads/a3c6b43a-dd61-4889-ae77-cb1016e65371.png",
-      "/lovable-uploads/d79d697f-5c21-443c-bc75-d988a2dbc770.png",
-    ],
+    name: "Coldplay",
+    type: "Banda",
+    description: "Banda británica de pop rock",
+    images: ["/lovable-uploads/7e7c2282-785a-46fb-84b2-f7b14b762e64.png"],
     rating: 4.7,
-    priceRange: "350-450€",
-    isFavorite: false,
+    priceRange: "3000€ - 5000€",
+    isFavorite: false
   },
+  {
+    id: "4",
+    name: "Marc Vendrell",
+    type: "DJ",
+    description: "House, Reggaeton, Urbano...",
+    images: ["/lovable-uploads/64cabbe3-ce62-4190-830d-0e5defd31a1b.png"],
+    rating: 4.5,
+    priceRange: "800€ - 1200€",
+    isFavorite: false
+  },
+  {
+    id: "5",
+    name: "Laura Pausini",
+    type: "Solista",
+    description: "Cantante y compositora italiana",
+    images: ["/lovable-uploads/672e18fa-dfe5-48bb-b838-4f7f26998dc3.png"],
+    rating: 4.6,
+    priceRange: "2000€ - 2500€",
+    isFavorite: false
+  }
 ];
 
 const SeekerThankYouPage = () => {
   const navigate = useNavigate();
+  const location = useLocation();
+  const seekerInfo = location.state?.seekerInfo || {
+    fullName: "",
+    musicalTastes: ""
+  };
+  const [seekerNumber, setSeekerNumber] = useState(0);
 
-  const handleExploreClick = () => {
-    navigate("/artistas");
+  useEffect(() => {
+    const randomSeekerNumber = Math.floor(Math.random() * 100) + 1;
+    setSeekerNumber(randomSeekerNumber);
+  }, []);
+
+  const handleFinalize = () => {
+    navigate('/');
   };
 
-  const handleArtistClick = (artistId: string) => {
-    navigate(`/artista/${artistId}`);
-  };
-
-  // Handle favorite toggle - placeholder function
-  const handleFavoriteToggle = (artistId: string) => {
-    console.log(`Toggled favorite for artist: ${artistId}`);
+  const handleGoBack = () => {
+    navigate(-1);
   };
 
   return (
-    <div className="bg-white min-h-screen flex flex-col">
-      <SimpleNavbar />
-
-      <div className="flex-1 flex flex-col items-center px-6 py-12 md:py-16">
-        <div className="w-full max-w-3xl text-center mb-12">
-          <h1 className="text-3xl md:text-4xl font-bold mb-6">¡Gracias por registrarte!</h1>
-          <p className="text-lg mb-8">
-            Estamos emocionados de que te hayas unido a nuestra comunidad. 
-            Ahora puedes explorar y contactar con los mejores artistas para tu evento.
-          </p>
-
-          <div className="flex flex-col md:flex-row justify-center gap-4 mb-12">
-            <Button 
-              onClick={handleExploreClick}
-              className="flex items-center justify-center gap-2 px-8 py-6 rounded-full text-lg"
-            >
-              Explorar artistas 
-              <ChevronRight className="h-5 w-5" />
-            </Button>
+    <PageTransition>
+      <Navbar />
+      <div className="bg-vyba-cream dark:bg-vyba-dark-bg flex items-center justify-center min-h-[90vh] px-6 md:px-10 lg:px-14 xl:px-16">
+        <Card className="border-none shadow-none bg-secondary dark:bg-vyba-dark-bg dark:border-vyba-dark-secondary rounded-3xl overflow-hidden w-full py-16 mx-auto">
+          <div className="max-w-3xl mx-auto px-6 md:px-12 flex flex-col items-center">
+            <h1 className="text-6xl font-black mb-4 text-center dark:text-white">
+              Gracias por formar parte de VYBA
+            </h1>
+            <h2 className="text-2xl mb-8 text-center dark:text-gray-300">
+              Empieza a buscar ahora mismo
+            </h2>
+            
+            <div className="flex flex-wrap gap-4 mb-12 justify-center">
+              <div className="flex items-center gap-6 px-6 py-2 rounded-full bg-white dark:bg-vyba-dark-secondary">
+                <Search size={20} className="text-black dark:text-white" />
+                <div className="flex flex-col">                    
+                  <span className="text-xs dark:text-white">Registrado como</span>
+                  <span className="text-sm font-bold dark:text-white">Buscador</span>
+                </div>
+              </div>
+              
+              <div className="flex items-center gap-6 px-6 py-2 rounded-full bg-white dark:bg-vyba-dark-secondary">
+                <Music size={20} className="text-black dark:text-white" />
+                <div className="flex flex-col">                    
+                  <span className="text-xs dark:text-white">Gustos musicales</span>
+                  <span className="text-sm font-bold dark:text-white">
+                    {seekerInfo.musicalTastes || "House, Reggaeton, Urbano..."}
+                  </span>
+                </div>
+              </div>
+            </div>
           </div>
-        </div>
-
-        <div className="w-full max-w-5xl">
-          <h2 className="text-2xl font-semibold mb-6">Artistas destacados</h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {thankYouArtists.map((artist) => (
-              <ArtistProfileCard 
-                key={artist.id}
-                id={artist.id}
-                name={artist.name}
-                type={artist.type}
-                description={artist.description}
-                images={artist.images}
-                rating={artist.rating}
-                priceRange={artist.priceRange}
-                isFavorite={artist.isFavorite}
-                onClick={() => handleArtistClick(artist.id)}
-                onFavoriteToggle={() => handleFavoriteToggle(artist.id)}
-              />
-            ))}
+          <div className="w-full">
+            <div className="w-full mb-16">
+              <Marquee 
+                pauseOnHover 
+                className="py-4" 
+                gap="1rem"
+              >
+                {dummyArtists.map(artist => (
+                  <div key={artist.id} className="w-[280px] flex-shrink-0">
+                    <ArtistProfileCard 
+                      name={artist.name}
+                      type={artist.type}
+                      description={artist.description}
+                      images={artist.images}
+                      rating={artist.rating}
+                      priceRange={artist.priceRange}
+                      isFavorite={artist.isFavorite}
+                      onClick={() => navigate(`/artista/${artist.id}`)}
+                    />
+                  </div>
+                ))}
+              </Marquee>
+            </div>
           </div>
-        </div>
+          <div className="max-w-3xl mx-auto px-6 md:px-12 flex flex-col items-center"> 
+            <div className="flex flex-col sm:flex-row justify-center w-full gap-4 items-center">
+              <Button variant="outline" onClick={handleGoBack} className="w-full sm:w-auto order-2 sm:order-1 border-none bg-white dark:bg-vyba-dark-secondary">
+                <ArrowLeft className="mr-2" size={20} strokeWidth={3} />
+                Volver
+              </Button>
+              
+              <Button onClick={handleFinalize} className="w-full sm:w-auto order-1 sm:order-2">
+                Finalizar
+              </Button>
+            </div>
+            
+            <p className="mt-10 text-sm text-gray-600 dark:text-gray-400">
+              Ya tienes una cuenta? <Link to="/auth" className="font-medium text-primary-foreground">Iniciar Sesión</Link>
+            </p>
+          </div>
+        </Card>
       </div>
-    </div>
+    </PageTransition>
   );
 };
 

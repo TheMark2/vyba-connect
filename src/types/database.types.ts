@@ -1,6 +1,8 @@
 export interface Database {
   public: {
     Tables: {
+      // ... existing tables
+      
       favorite_lists: {
         Row: {
           id: string;
@@ -76,78 +78,8 @@ export interface Database {
           }
         ];
       };
-      otp_codes: {
-        Row: {
-          code: string
-          created_at: string
-          email: string
-          expires_at: string
-          id: string
-          verified: boolean
-        }
-        Insert: {
-          code: string
-          created_at?: string
-          email: string
-          expires_at?: string
-          id?: string
-          verified?: boolean
-        }
-        Update: {
-          code?: string
-          created_at?: string
-          email?: string
-          expires_at?: string
-          id?: string
-          verified?: boolean
-        }
-        Relationships: []
-      }
-      profiles: {
-        Row: {
-          birth_date: string | null
-          created_at: string | null
-          email: string
-          id: string
-          last_name: string | null
-          name: string | null
-          password_hash: string | null
-          updated_at: string | null
-        }
-        Insert: {
-          birth_date?: string | null
-          created_at?: string | null
-          email: string
-          id: string
-          last_name?: string | null
-          name?: string | null
-          password_hash?: string | null
-          updated_at?: string | null
-        }
-        Update: {
-          birth_date?: string | null
-          created_at?: string | null
-          email?: string
-          id?: string
-          last_name?: string | null
-          name?: string | null
-          password_hash?: string | null
-          updated_at?: string | null
-        }
-        Relationships: []
-      }
-    }
-    Views: {
-      [_ in never]: never
-    }
-    Functions: {
-      [_ in never]: never
-    }
-    Enums: {
-      [_ in never]: never
-    }
-    CompositeTypes: {
-      [_ in never]: never
-    }
-  }
-}
+    };
+    
+    // ... rest of the schema
+  };
+} 

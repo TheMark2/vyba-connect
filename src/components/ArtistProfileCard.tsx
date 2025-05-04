@@ -7,20 +7,19 @@ import { useIsMobile } from "@/hooks/use-mobile";
 import AuthDialog from "@/components/auth/authdialog";
 import FavoriteDialog from "@/components/FavoriteDialog";
 import { useAuth } from "@/contexts/AuthContext";
-import { ArtistProfileCardProps } from "@/types/artist-profile-card";
 
 interface ArtistProfileCardProps {
-  id: string; // Aseguramos que el ID es requerido para todos los artistas
+  id?: string;
   name: string;
   type: string;
   description: string;
   images: string[];
   rating: number;
   priceRange: string;
-  isFavorite: boolean;
-  onClick: () => void;
-  onFavoriteToggle: () => void;
+  onFavoriteToggle?: () => void;
+  isFavorite?: boolean;
   className?: string;
+  onClick?: () => void;
   isRecommended?: boolean;
   hideHeart?: boolean;
   regularBadge?: boolean;
@@ -35,10 +34,10 @@ const ArtistProfileCard = ({
   images,
   rating,
   priceRange,
-  isFavorite,
-  onClick,
   onFavoriteToggle,
+  isFavorite = false,
   className,
+  onClick,
   isRecommended = false,
   hideHeart = false,
   regularBadge = false,
@@ -420,7 +419,6 @@ const ArtistProfileCard = ({
         open={showFavoriteDialog} 
         onOpenChange={setShowFavoriteDialog} 
         artistName={name}
-        artistId={id}
         onConfirm={toggleFavorite}
         isFavorite={favorite}
       />

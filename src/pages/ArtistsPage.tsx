@@ -1,12 +1,12 @@
 import React, { useState } from "react";
+import { Sparkles, Blend } from "lucide-react";
+import { Button } from "@/components/ui/button";
 import ArtistProfileCard from "@/components/ArtistProfileCard";
+import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { useIsMobile, useIsSmallMobile } from "@/hooks/use-mobile";
 import { useNavigate } from "react-router-dom";
 import Navbar2 from "@/components/navbar/navbar2";
-import { useAuth } from "@/contexts/AuthContext";
-import { toast } from "sonner";
-import FavoriteDialog from "@/components/FavoriteDialog";
 
 // Datos de ejemplo para los artistas
 export const artistsData = [
@@ -138,9 +138,6 @@ const ArtistsPage = () => {
   const isMobile = useIsMobile();
   const isSmallMobile = useIsSmallMobile();
   const navigate = useNavigate();
-  const [favoriteDialogOpen, setFavoriteDialogOpen] = useState(false);
-  const [selectedArtist, setSelectedArtist] = useState<typeof artistsData[0] | null>(null);
-  const { user } = useAuth();
 
   const handleArtistClick = (artist: typeof artistsData[0]) => {
     console.log("Artista seleccionado:", artist);
@@ -148,21 +145,9 @@ const ArtistsPage = () => {
   };
 
   const handleFavoriteToggle = (artist: typeof artistsData[0]) => {
-    // Si el usuario no está autenticado, redirigir a login
-    if (!user) {
-      toast.error("Debes iniciar sesión para añadir favoritos");
-      navigate('/auth');
-      return;
-    }
-    
-    setSelectedArtist(artist);
-    setFavoriteDialogOpen(true);
-  };
-
-  const handleFavoriteConfirm = () => {
     setArtists(prevArtists => 
       prevArtists.map(a => 
-        a.id === selectedArtist?.id 
+        a.id === artist.id 
           ? { ...a, isFavorite: !a.isFavorite } 
           : a
       )
@@ -176,16 +161,15 @@ const ArtistsPage = () => {
 
         <div className={`
           ${isSmallMobile
-            ? "grid grid-cols-1 gap-6" 
+            ? "grid grid-cols-1 gap-6" // Increased vertical gap from 4 to 6
             : isMobile
-              ? "grid grid-cols-2 gap-8"
-              : "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 3xl:grid-cols-6 gap-6 mt-32"
+              ? "grid grid-cols-2 gap-8" // Increased vertical gap from 4 to 6
+              : "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 3xl:grid-cols-6 gap-6 mt-32" // Increased vertical gap from 4 to 6
           }
         `}>
           {artists.map(artist => (
             <ArtistProfileCard 
               key={artist.id} 
-              id={artist.id}
               name={artist.name} 
               type={artist.type} 
               description={artist.description} 
@@ -200,19 +184,6 @@ const ArtistsPage = () => {
           ))}
         </div>
       </div>
-      
-      {/* Diálogo para añadir a favoritos */}
-      {selectedArtist && (
-        <FavoriteDialog
-          open={favoriteDialogOpen}
-          onOpenChange={setFavoriteDialogOpen}
-          artistName={selectedArtist.name}
-          artistId={selectedArtist.id}
-          onConfirm={handleFavoriteConfirm}
-          isFavorite={selectedArtist.isFavorite}
-        />
-      )}
-      
       <Footer />
     </>
   );

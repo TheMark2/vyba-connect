@@ -24,7 +24,6 @@ interface FavoriteDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   artistName: string;
-  artistId?: string; // Añadido ID del artista
   onConfirm: () => void;
   isFavorite: boolean;
 }
@@ -33,7 +32,6 @@ const FavoriteDialog = ({
   open, 
   onOpenChange, 
   artistName, 
-  artistId, // Ahora usamos el ID del artista
   onConfirm, 
   isFavorite 
 }: FavoriteDialogProps) => {
@@ -65,29 +63,52 @@ const FavoriteDialog = ({
     try {
       setIsFetchingLists(true);
       
-      // Consulta a Supabase para obtener las listas del usuario actual
-      const { data: lists, error } = await supabase
+      // Para pruebas, simulamos que tenemos listas de favoritos
+      // En una implementación real, esta consulta debe hacerse a una tabla real de "favorite_lists"
+      const mockLists = [
+        {
+          id: '1',
+          name: 'Mis artistas favoritos',
+          user_id: user.id,
+          created_at: new Date().toISOString(),
+          image: '/images/dj1.webp',
+          count: 5
+        },
+        {
+          id: '2',
+          name: 'DJs para eventos',
+          user_id: user.id,
+          created_at: new Date().toISOString(),
+          image: '/images/dj2.webp',
+          count: 3
+        },
+        {
+          id: '3',
+          name: 'Guitarristas',
+          user_id: user.id,
+          created_at: new Date().toISOString(),
+          image: '/images/dj3.webp',
+          count: 2
+        }
+      ];
+      
+      // Carga casi instantánea para mejor experiencia de usuario
+      setTimeout(() => {
+        setFavoriteLists(mockLists);
+        setIsFetchingLists(false);
+      }, 100);
+      
+      // En una implementación real, el código sería así:
+      /*
+      const { data, error } = await supabase
         .from('favorite_lists')
         .select('*, favorite_artists:favorite_artists(count)')
         .eq('user_id', user.id)
         .order('created_at', { ascending: false });
       
       if (error) throw error;
-      
-      // Transformar los datos al formato esperado
-      const formattedLists = (lists || []).map((list: any) => {
-        return {
-          id: list.id,
-          name: list.name,
-          user_id: list.user_id,
-          created_at: list.created_at,
-          image: '/images/placeholder-favorite.webp', // Imagen predeterminada
-          count: list.favorite_artists?.length || 0
-        };
-      });
-      
-      setFavoriteLists(formattedLists);
-      setIsFetchingLists(false);
+      setFavoriteLists(data || []);
+      */
       
     } catch (error) {
       console.error('Error al cargar listas de favoritos:', error);
@@ -102,7 +123,18 @@ const FavoriteDialog = ({
     try {
       setIsLoading(true);
       
-      // Crear nueva lista en Supabase
+      // Para pruebas, simulamos la creación de una nueva lista
+      const newList: FavoriteList = {
+        id: Date.now().toString(),
+        name: newListName.trim(),
+        user_id: user.id,
+        created_at: new Date().toISOString(),
+        image: '/images/dj4.webp',
+        count: 1
+      };
+      
+      // En una implementación real, el código sería así:
+      /*
       const { data: newList, error } = await supabase
         .from('favorite_lists')
         .insert({
@@ -113,18 +145,10 @@ const FavoriteDialog = ({
         .single();
       
       if (error) throw error;
+      */
       
-      // Añadir la nueva lista al estado local
-      const formattedList = {
-        id: newList.id,
-        name: newList.name,
-        user_id: newList.user_id,
-        created_at: newList.created_at,
-        image: '/images/placeholder-favorite.webp',
-        count: 0
-      };
-      
-      setFavoriteLists(prev => [formattedList, ...prev]);
+      // Actualizar la lista local de favoritos
+      setFavoriteLists(prev => [newList, ...prev]);
       
       // Añadir el artista a la lista sin demora
       addToFavoriteList(newList.id);
@@ -145,63 +169,20 @@ const FavoriteDialog = ({
     if (!user || !listId) return;
     
     try {
-      setIsLoading(true);
-      
-      // Guardar en Supabase
+      // Para pruebas, simulamos la adición a favoritos
+      // En una implementación real, aquí guardaríamos en Supabase:
+      /*
       const { error } = await supabase
         .from('favorite_artists')
         .insert({
           list_id: listId,
-          artist_id: artistId, // Usar el ID del artista
+          artist_id: artistId, // Necesitaríamos el ID del artista
           user_id: user.id,
-          artist_name: artistName
-        });
-      
-      if (error) {
-        // Si es un error de duplicado (artista ya en la lista), mostrar mensaje amigable
-        if (error.code === '23505') {
-          toast.info(`${artistName} ya está en esta lista de favoritos`);
-        } else {
-          throw error;
-        }
-      } else {
-        // Llamar a la función de éxito proporcionada por el componente padre
-        onConfirm();
-        
-        // Mostrar mensaje de éxito
-        toast.success(`${artistName} añadido a favoritos`, {
-          icon: "❤️",
-          position: "bottom-center",
-        });
-      }
-      
-      // Cerrar el diálogo
-      onOpenChange(false);
-      
-    } catch (error) {
-      console.error('Error al añadir a favoritos:', error);
-      toast.error('No se pudo añadir a favoritos');
-    } finally {
-      setIsLoading(false);
-    }
-  };
-  
-  const handleRemoveFromFavorites = async () => {
-    if (!user) return;
-    
-    try {
-      setIsLoading(true);
-      
-      // Eliminar todas las instancias del artista de todas las listas del usuario
-      const { error } = await supabase
-        .from('favorite_artists')
-        .delete()
-        .match({ 
-          user_id: user.id,
-          artist_id: artistId
+          artist_name: artistName // Opcional, para facilitar consultas
         });
       
       if (error) throw error;
+      */
       
       // Llamar a la función de éxito proporcionada por el componente padre
       onConfirm();
@@ -209,16 +190,42 @@ const FavoriteDialog = ({
       // Cerrar el diálogo
       onOpenChange(false);
       
-      toast.success(`${artistName} eliminado de favoritos`, {
-        icon: "👋",
+      toast.success(`${artistName} añadido a favoritos`, {
+        icon: "❤️",
         position: "bottom-center",
       });
+      
     } catch (error) {
-      console.error('Error al eliminar de favoritos:', error);
-      toast.error('No se pudo eliminar de favoritos');
-    } finally {
-      setIsLoading(false);
+      console.error('Error al añadir a favoritos:', error);
+      toast.error('No se pudo añadir a favoritos');
     }
+  };
+  
+  const handleRemoveFromFavorites = () => {
+    // Para pruebas, simulamos la eliminación de favoritos
+    // En una implementación real, aquí eliminaríamos de Supabase:
+    /*
+    const { error } = await supabase
+      .from('favorite_artists')
+      .delete()
+      .match({ 
+        user_id: user.id,
+        artist_id: artistId // Necesitaríamos el ID del artista
+      });
+    
+    if (error) throw error;
+    */
+    
+    // Llamar a la función de éxito proporcionada por el componente padre
+    onConfirm();
+    
+    // Cerrar el diálogo
+    onOpenChange(false);
+    
+    toast.success(`${artistName} eliminado de favoritos`, {
+      icon: "👋",
+      position: "bottom-center",
+    });
   };
   
   // Renderizar skeletons para la carga
@@ -380,4 +387,4 @@ const FavoriteDialog = ({
   );
 };
 
-export default FavoriteDialog;
+export default FavoriteDialog; 
