@@ -1,9 +1,7 @@
-
 import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { ChevronDown, ListFilter, Search } from "lucide-react";
 import ArtistProfileCard from "@/components/ArtistProfileCard";
-import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { useNavigate } from "react-router-dom";
 import FilterDialog from "@/components/filters/FilterDialog";

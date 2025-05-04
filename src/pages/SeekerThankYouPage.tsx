@@ -1,10 +1,8 @@
-
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { ChevronRight } from "lucide-react";
 import ArtistProfileCard from "@/components/ArtistProfileCard";
-import Navbar from "@/components/Navbar";
 import SimpleNavbar from "@/components/SimpleNavbar";
 
 const thankYouArtists = [

@@ -24,7 +24,7 @@ interface FavoriteDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   artistName: string;
-  artistId: string; // Añadido ID del artista
+  artistId?: string; // Añadido ID del artista
   onConfirm: () => void;
   isFavorite: boolean;
 }

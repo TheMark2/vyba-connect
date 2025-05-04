@@ -1,5 +1,4 @@
 
-// Importa las dependencias necesarias
 import React from "react";
 import ArtistProfileCard from "@/components/ArtistProfileCard";
 import { ArtistProfileCardProps } from "@/types/artist-profile-card";
@@ -17,11 +16,12 @@ interface Artist {
   isFavorite: boolean;
 }
 
-interface ArtistsListProps {
+export interface ArtistsListProps {
   artists: Artist[];
   onFavoriteToggle?: (artistId: string) => void;
   isMobile?: boolean;
   filterType?: string;
+  onArtistClick?: (artist: Artist) => void;
 }
 
 // Componente ArtistsList
@@ -29,7 +29,8 @@ const ArtistsList: React.FC<ArtistsListProps> = ({
   artists,
   onFavoriteToggle,
   isMobile = false,
-  filterType
+  filterType,
+  onArtistClick
 }) => {
   const navigate = useNavigate();
 
@@ -40,7 +41,11 @@ const ArtistsList: React.FC<ArtistsListProps> = ({
 
   // Manejador para hacer clic en un artista
   const handleArtistClick = (artist: Artist) => {
-    navigate(`/artista/${artist.id}`);
+    if (onArtistClick) {
+      onArtistClick(artist);
+    } else {
+      navigate(`/artista/${artist.id}`);
+    }
   };
 
   // Manejador para alternar favoritos

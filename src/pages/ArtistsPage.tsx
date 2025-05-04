@@ -1,9 +1,5 @@
-
 import React, { useState } from "react";
-import { Sparkles, Blend } from "lucide-react";
-import { Button } from "@/components/ui/button";
 import ArtistProfileCard from "@/components/ArtistProfileCard";
-import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { useIsMobile, useIsSmallMobile } from "@/hooks/use-mobile";
 import { useNavigate } from "react-router-dom";
