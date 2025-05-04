@@ -1,3 +1,4 @@
+
 import React, { useState } from "react";
 import { Sparkles, Blend } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -7,8 +8,8 @@ import Footer from "@/components/Footer";
 import { useIsMobile, useIsSmallMobile } from "@/hooks/use-mobile";
 import { useNavigate } from "react-router-dom";
 import Navbar2 from "@/components/navbar/navbar2";
-import { useAuth } from "@/context/auth";
-import { toast } from "react-toastify";
+import { useAuth } from "@/contexts/AuthContext";
+import { toast } from "sonner";
 import FavoriteDialog from "@/components/FavoriteDialog";
 
 // Datos de ejemplo para los artistas

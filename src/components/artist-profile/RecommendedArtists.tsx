@@ -1,168 +1,189 @@
 
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { toast } from "sonner";
-import { Carousel, CarouselContent, CarouselItem } from "@/components/ui/carousel";
-import ArtistProfileCard from "../ArtistProfileCard";
-import { useIsMobile } from "@/hooks/use-mobile";
+import ArtistProfileCard from "@/components/ArtistProfileCard";
+import { Swiper, SwiperSlide } from "swiper/react";
+import { Navigation } from "swiper/modules";
+import "swiper/css";
+import "swiper/css/navigation";
 import { ChevronLeft, ChevronRight } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { useIsMobile } from "@/hooks/use-mobile";
 
-interface Artist {
-  id: string;
-  name: string;
-  type: string;
-  description: string;
-  images: string[];
-  rating: number;
-  priceRange: string;
-  isFavorite?: boolean;
-}
+// Datos de ejemplo para artistas recomendados
+const recommendedArtists = [
+  {
+    id: "9",
+    name: "Luis Gomez",
+    type: "DJ",
+    description: "DJ especializado en música electrónica",
+    images: [
+      "/lovable-uploads/77591a97-10cd-4c8b-b768-5b17483c3d9f.png",
+      "/lovable-uploads/64cabbe3-ce62-4190-830d-0e5defd31a1b.png",
+      "/lovable-uploads/c89ee394-3c08-48f6-b69b-bddd81dffa8b.png",
+    ],
+    rating: 4.8,
+    priceRange: "450-550€",
+    isFavorite: false,
+  },
+  {
+    id: "10",
+    name: "Ana Rodriguez",
+    type: "Banda",
+    description: "Banda de música versátil para eventos",
+    images: [
+      "/lovable-uploads/b1d87308-8791-4bd4-bd43-e4f7cf7d9042.png",
+      "/lovable-uploads/d79d697f-5c21-443c-bc75-d988a2dbc770.png",
+      "/lovable-uploads/440a191c-d45b-4031-acbe-509e602e5d22.png",
+    ],
+    rating: 4.9,
+    priceRange: "600-800€",
+    isFavorite: false,
+  },
+  {
+    id: "11",
+    name: "Javier Fernández",
+    type: "Solista",
+    description: "Cantante para eventos íntimos",
+    images: [
+      "/lovable-uploads/7e7c2282-785a-46fb-84b2-f7b14b762e64.png",
+      "/lovable-uploads/a3c6b43a-dd61-4889-ae77-cb1016e65371.png",
+      "/lovable-uploads/d79d697f-5c21-443c-bc75-d988a2dbc770.png",
+    ],
+    rating: 4.7,
+    priceRange: "350-450€",
+    isFavorite: false,
+  },
+  {
+    id: "12",
+    name: "Laura García",
+    type: "DJ",
+    description: "DJ para fiestas privadas",
+    images: [
+      "/lovable-uploads/a3c6b43a-dd61-4889-ae77-cb1016e65371.png",
+      "/lovable-uploads/b1d87308-8791-4bd4-bd43-e4f7cf7d9042.png",
+      "/lovable-uploads/c89ee394-3c08-48f6-b69b-bddd81dffa8b.png",
+    ],
+    rating: 4.8,
+    priceRange: "400-500€",
+    isFavorite: false,
+  },
+];
 
 interface RecommendedArtistsProps {
-  artists: Artist[];
+  currentArtistId?: string;
+  title?: string;
+  subtitle?: string;
+  regularBadge?: boolean;
+  regularText?: boolean;
 }
 
-const RecommendedArtists = ({ artists }: RecommendedArtistsProps) => {
-  const navigate = useNavigate();
+const RecommendedArtists: React.FC<RecommendedArtistsProps> = ({
+  currentArtistId,
+  title = "Artistas similares",
+  subtitle = "Basados en tus preferencias",
+  regularBadge = false,
+  regularText = false,
+}) => {
   const isMobile = useIsMobile();
-  const [api, setApi] = useState<any>(null);
+  const navigate = useNavigate();
+  const [swiper, setSwiper] = useState<any>(null);
 
-  if (!artists || artists.length === 0) return null;
+  // Filtrar el artista actual si se proporciona un ID
+  const filteredArtists = currentArtistId
+    ? recommendedArtists.filter((artist) => artist.id !== currentArtistId)
+    : recommendedArtists;
 
-  const scrollPrev = () => {
-    if (api) api.scrollPrev();
+  const handleArtistClick = (artistId: string) => {
+    navigate(`/artista/${artistId}`);
   };
 
-  const scrollNext = () => {
-    if (api) api.scrollNext();
+  // Esta función simula un toggle de favorito
+  const handleFavoriteToggle = (artistId: string) => {
+    return artistId; // Solo devolver el ID para simular la acción
   };
 
   return (
-    <div className="mb-16">
-      <div className="max-w-7xl mx-auto mb-6 flex justify-between items-center">
-        <div className="flex flex-col gap-1">
-          <h2 className="text-3xl font-semibold">Recomendados</h2>
-          <p className="text-sm font-light text-[#969494]">Sabemos que estos artistas te van a gustar</p>
+    <div className="py-8 px-4 md:px-0">
+      <div className="flex items-center justify-between mb-6">
+        <div>
+          <h3 className="text-xl font-medium">{title}</h3>
+          <p className="text-sm text-gray-500">{subtitle}</p>
         </div>
         
-        {!isMobile && (
-          <div className="flex items-center gap-2">
-            <Button 
-              onClick={scrollPrev} 
-              variant="secondary" 
-              size="icon"
-              className="w-10 h-10 rounded-full border-0 bg-transparent"
+        {!isMobile && filteredArtists.length > 3 && (
+          <div className="flex gap-2">
+            <button
+              onClick={() => swiper?.slidePrev()}
+              className="p-2 rounded-full border hover:bg-gray-100 transition-colors"
             >
               <ChevronLeft className="h-5 w-5" />
-            </Button>
-            <Button 
-              onClick={scrollNext} 
-              variant="secondary" 
-              size="icon"
-              className="w-10 h-10 rounded-full border-0 bg-transparent"
+            </button>
+            <button
+              onClick={() => swiper?.slideNext()}
+              className="p-2 rounded-full border hover:bg-gray-100 transition-colors"
             >
               <ChevronRight className="h-5 w-5" />
-            </Button>
+            </button>
           </div>
         )}
       </div>
 
-      {/* Carrusel Mobile */}
-      {isMobile && (
-        <div className="relative w-full">
-          <Carousel
-            className="w-full"
-            opts={{ align: "start", loop: false, skipSnaps: false }}
-          >
-            <CarouselContent className="px-4 gap-4">
-              {artists.map((artist) => (
-                <CarouselItem
-                  key={artist.id}
-                  className="basis-[85%] shrink-0"
-                >
-                  <ArtistProfileCard
-                    name={artist.name}
-                    type={artist.type}
-                    description={artist.description}
-                    images={artist.images}
-                    rating={artist.rating}
-                    priceRange={artist.priceRange}
-                    isFavorite={artist.isFavorite}
-                    onClick={() => navigate(`/artista/${artist.id}`)}
-                    onFavoriteToggle={() =>
-                      toast.success(
-                        artist.isFavorite
-                          ? "Eliminado de favoritos"
-                          : "Añadido a favoritos",
-                        {
-                          icon: artist.isFavorite ? "👋" : "❤️",
-                          position: "bottom-center",
-                        }
-                      )
-                    }
-                    isRecommended={true}
-                    hideHeart={true}
-                    regularBadge={true}
-                    regularText={true}
-                  />
-                </CarouselItem>
-              ))}
-            </CarouselContent>
-          </Carousel>
+      {isMobile ? (
+        <div className="grid grid-cols-1 gap-5">
+          {filteredArtists.slice(0, 2).map((artist) => (
+            <ArtistProfileCard
+              key={artist.id}
+              id={artist.id}
+              name={artist.name}
+              type={artist.type}
+              description={artist.description}
+              images={artist.images}
+              rating={artist.rating}
+              priceRange={artist.priceRange}
+              isFavorite={artist.isFavorite}
+              onClick={() => handleArtistClick(artist.id)}
+              onFavoriteToggle={() => handleFavoriteToggle(artist.id)}
+              isRecommended={true}
+              hideHeart={true}
+              regularBadge={regularBadge}
+              regularText={regularText}
+            />
+          ))}
         </div>
-      )}
-
-      {/* Carrusel Desktop */}
-      {!isMobile && (
-        <div className="relative w-full overflow-hidden">
-          <div className="max-w-7xl mx-auto">
-            <Carousel
-              className="w-full"
-              opts={{
-                align: "start",
-                loop: false,
-                skipSnaps: false
-              }}
-              setApi={setApi}
-            >
-              <CarouselContent className="gap-6 pl-0">
-                {artists.map((artist) => (
-                  <CarouselItem
-                    key={artist.id}
-                    className="w-[320px] shrink-0"
-                  >
-                    <ArtistProfileCard
-                      name={artist.name}
-                      type={artist.type}
-                      description={artist.description}
-                      images={artist.images}
-                      rating={artist.rating}
-                      priceRange={artist.priceRange}
-                      isFavorite={artist.isFavorite}
-                      onClick={() => navigate(`/artista/${artist.id}`)}
-                      onFavoriteToggle={() =>
-                        toast.success(
-                          artist.isFavorite
-                            ? "Eliminado de favoritos"
-                            : "Añadido a favoritos",
-                          {
-                            icon: artist.isFavorite ? "👋" : "❤️",
-                            position: "bottom-center"
-                          }
-                        )
-                      }
-                      isRecommended={true}
-                      hideHeart={true}
-                      regularBadge={true}
-                      regularText={true}
-                    />
-                  </CarouselItem>
-                ))}
-              </CarouselContent>
-            </Carousel>
-          </div>
-        </div>
+      ) : (
+        <Swiper
+          onSwiper={setSwiper}
+          modules={[Navigation]}
+          spaceBetween={24}
+          slidesPerView={1}
+          breakpoints={{
+            640: { slidesPerView: 2 },
+            1024: { slidesPerView: 3 },
+            1280: { slidesPerView: 4 },
+          }}
+          className="recommended-artists-swiper"
+        >
+          {filteredArtists.map((artist) => (
+            <SwiperSlide key={artist.id}>
+              <ArtistProfileCard
+                id={artist.id}
+                name={artist.name}
+                type={artist.type}
+                description={artist.description}
+                images={artist.images}
+                rating={artist.rating}
+                priceRange={artist.priceRange}
+                isFavorite={artist.isFavorite}
+                onClick={() => handleArtistClick(artist.id)}
+                onFavoriteToggle={() => handleFavoriteToggle(artist.id)}
+                isRecommended={true}
+                hideHeart={true}
+                regularBadge={regularBadge}
+                regularText={regularText}
+              />
+            </SwiperSlide>
+          ))}
+        </Swiper>
       )}
     </div>
   );

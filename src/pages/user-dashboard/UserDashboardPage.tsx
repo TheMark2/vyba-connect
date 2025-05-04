@@ -1,436 +1,367 @@
-import React, { useState, useEffect } from 'react';
-import UserDashboardLayout from '@/components/dashboard/UserDashboardLayout';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Heart, MessageSquare, Bell, Search, Users, Music, Send, BellRing, UserCog, ArrowRight, AlertCircle} from 'lucide-react';
-import { supabase } from '@/integrations/supabase/client';
-import { useNavigate } from 'react-router-dom';
-import { toast } from 'sonner';
-import { Badge } from '@/components/ui/badge';
-import ArtistProfileCard from '@/components/ArtistProfileCard';
-import { useIsMobile } from '@/hooks/use-mobile';
-import {
-  Carousel,
-  CarouselContent,
-  CarouselItem,
-} from "@/components/ui/carousel";
-import { cn } from '@/lib/utils';
-import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 
+import React, { useState, useEffect } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { CalendarDays, Heart, MessageCircle, UserRound } from "lucide-react";
+import ArtistProfileCard from "@/components/ArtistProfileCard";
+import UserDashboardLayout from "@/components/dashboard/UserDashboardLayout";
+import { supabase } from "@/integrations/supabase/client";
+import { useAuth } from "@/contexts/AuthContext";
+import { toast } from "sonner";
+
+// Datos de ejemplo para artistas favoritos
+const favoriteArtists = [
+  {
+    id: "1",
+    name: "DJ Marcos",
+    type: "DJ",
+    description: "DJ especializado en bodas y eventos corporativos",
+    images: [
+      "/lovable-uploads/77591a97-10cd-4c8b-b768-5b17483c3d9f.png",
+      "/lovable-uploads/64cabbe3-ce62-4190-830d-0e5defd31a1b.png",
+      "/lovable-uploads/c89ee394-3c08-48f6-b69b-bddd81dffa8b.png",
+    ],
+    rating: 4.8,
+    priceRange: "450-550€",
+    isFavorite: true,
+  },
+  {
+    id: "2",
+    name: "Los Brillantes",
+    type: "Banda",
+    description: "Banda versátil para todo tipo de eventos",
+    images: [
+      "/lovable-uploads/b1d87308-8791-4bd4-bd43-e4f7cf7d9042.png",
+      "/lovable-uploads/d79d697f-5c21-443c-bc75-d988a2dbc770.png",
+      "/lovable-uploads/440a191c-d45b-4031-acbe-509e602e5d22.png",
+    ],
+    rating: 4.9,
+    priceRange: "600-800€",
+    isFavorite: true,
+  },
+];
+
+// Datos de ejemplo para conversaciones
+const conversations = [
+  {
+    id: "conv1",
+    artist: {
+      id: "1",
+      name: "DJ Marcos",
+      avatar: "/lovable-uploads/77591a97-10cd-4c8b-b768-5b17483c3d9f.png",
+    },
+    lastMessage: "Hola, ¿está disponible para el 15 de agosto?",
+    timestamp: "Hace 2 horas",
+    unread: true,
+  },
+  {
+    id: "conv2",
+    artist: {
+      id: "2",
+      name: "Los Brillantes",
+      avatar: "/lovable-uploads/b1d87308-8791-4bd4-bd43-e4f7cf7d9042.png",
+    },
+    lastMessage: "Gracias por la consulta. Puedo enviarle más información.",
+    timestamp: "Ayer",
+    unread: false,
+  },
+];
+
+// Datos de ejemplo para artistas recomendados
+const recommendedArtists = [
+  {
+    id: "3",
+    name: "Sara Soprano",
+    type: "Solista",
+    description: "Cantante lírica para ceremonias y eventos formales",
+    images: [
+      "/lovable-uploads/7e7c2282-785a-46fb-84b2-f7b14b762e64.png",
+      "/lovable-uploads/a3c6b43a-dd61-4889-ae77-cb1016e65371.png",
+      "/lovable-uploads/d79d697f-5c21-443c-bc75-d988a2dbc770.png",
+    ],
+    rating: 4.7,
+    priceRange: "350-450€",
+    isFavorite: false,
+  },
+  {
+    id: "4",
+    name: "DJ Ana",
+    type: "DJ",
+    description: "DJ versátil con repertorio internacional",
+    images: [
+      "/lovable-uploads/d79d697f-5c21-443c-bc75-d988a2dbc770.png",
+      "/lovable-uploads/7e7c2282-785a-46fb-84b2-f7b14b762e64.png",
+      "/lovable-uploads/440a191c-d45b-4031-acbe-509e602e5d22.png",
+    ],
+    rating: 4.9,
+    priceRange: "450-550€",
+    isFavorite: false,
+  },
+];
+
+// Componente principal del tablero de usuario
 const UserDashboardPage = () => {
+  const { user } = useAuth();
   const navigate = useNavigate();
-  const isMobile = useIsMobile();
+  const [activeTab, setActiveTab] = useState("overview");
+  const [recentFavorites, setRecentFavorites] = useState<any[]>([]);
+  const [userProfile, setUserProfile] = useState<any>(null);
   const [isLoading, setIsLoading] = useState(true);
-  const [userName, setUserName] = useState('');
-  const [showOnboardingAlert, setShowOnboardingAlert] = useState(false);
-  const [favoritesCount, setFavoritesCount] = useState(0);
-  const [messagesCount, setMessagesCount] = useState(0);
-  const [featuredArtists, setFeaturedArtists] = useState<any[]>([]);
-  const [windowWidth, setWindowWidth] = useState(window.innerWidth);
-  
-  // Punto de corte para activar el carrusel (992px = lg en Tailwind)
-  const CAROUSEL_BREAKPOINT = 1024;
-  // Punto de corte para pantallas pequeñas vs medianas
-  const MOBILE_BREAKPOINT = 640;
 
-  // Actualizar el ancho de la ventana cuando cambia el tamaño
   useEffect(() => {
-    const handleResize = () => {
-      setWindowWidth(window.innerWidth);
-    };
-    
-    window.addEventListener('resize', handleResize);
-    return () => window.removeEventListener('resize', handleResize);
-  }, []);
-  
-  // Determinar si se debe mostrar el carrusel basado en el ancho
-  const shouldShowCarousel = windowWidth < CAROUSEL_BREAKPOINT;
-  // Determinar si estamos en una pantalla móvil pequeña
-  const isSmallMobile = windowWidth < MOBILE_BREAKPOINT;
-
-  // Datos de ejemplo para artistas destacados
-  const mockFeaturedArtists = [
-    {
-      id: 1,
-      name: 'DJ Marcos',
-      type: 'DJ',
-      description: 'DJ con amplia experiencia en eventos y bodas',
-      images: ['/images/dj1.webp', '/images/dj4.webp', '/images/dj5.webp'],
-      rating: 4.8,
-      priceRange: '300€'
-    },
-    {
-      id: 2,
-      name: 'Laura Voz',
-      type: 'Cantante',
-      description: 'Cantante versátil especializada en música pop y jazz',
-      images: ['/images/dj2.webp', '/images/dj5.webp', '/images/dj6.webp'],
-      rating: 4.7,
-      priceRange: '450€'
-    },
-    {
-      id: 3,
-      name: 'Carlos Sax',
-      type: 'Saxofonista',
-      description: 'Saxofonista profesional con repertorio internacional',
-      images: ['/images/dj3.webp', '/images/dj6.webp', '/images/dj1.webp'],
-      rating: 4.9,
-      priceRange: '350€'
-    },
-    {
-      id: 4,
-      name: 'María Guitarra',
-      type: 'Guitarrista',
-      description: 'Guitarrista clásica y flamenca para eventos exclusivos',
-      images: ['/images/dj6.webp', '/images/dj2.webp', '/images/dj3.webp'],
-      rating: 4.6,
-      priceRange: '320€'
+    if (user) {
+      fetchUserProfile();
+      fetchFavoriteArtists();
     }
-  ];
+  }, [user]);
 
-  // Mock de mensajes recientes
-  const recentMessages = [
-    {
-      id: 1,
-      sender: 'DJ Marcos',
-      avatar: '/images/dj1.webp',
-      preview: 'Hola, gracias por contactarme...',
-      time: '10:30'
-    },
-    {
-      id: 2,
-      sender: 'Laura Voz',
-      avatar: '/images/dj2.webp',
-      preview: 'Tengo disponibilidad para...',
-      time: 'Ayer'
+  // Función para obtener el perfil del usuario
+  const fetchUserProfile = async () => {
+    try {
+      const { data, error } = await supabase
+        .from("profiles")
+        .select("*")
+        .eq("id", user?.id)
+        .single();
+
+      if (error) throw error;
+
+      setUserProfile(data || {
+        name: user?.user_metadata?.name || "Usuario",
+        email: user?.email || "",
+      });
+    } catch (error) {
+      console.error("Error al obtener perfil:", error);
+    } finally {
+      setIsLoading(false);
     }
-  ];
+  };
 
-  // Datos de resumen para el carrusel con rutas de navegación
-  const summaryCards = [
-    {
-      id: 1,
-      icon: <Heart className="h-6 w-6 text-vyba-navy" />,
-      title: "Favoritos",
-      content: `Tienes ${favoritesCount} favoritos`,
-      route: "/user-dashboard/favorites"
-    },
-    {
-      id: 2,
-      icon: <Send className="h-6 w-6 text-vyba-navy" />,
-      title: "Mensajes",
-      content: `Tienes ${messagesCount} mensajes`,
-      route: "/user-dashboard/messages"
-    },
-    {
-      id: 3,
-      icon: <BellRing className="h-6 w-6 text-vyba-navy" />,
-      title: "Notificaciones",
-      content: "Tienes 5 notificaciones",
-      route: "/user-dashboard/notifications"
-    }
-  ];
+  // Función para obtener los artistas favoritos del usuario
+  const fetchFavoriteArtists = async () => {
+    // En un escenario real, aquí iría la lógica para obtener los favoritos de Supabase
+    // Por ahora, usamos los datos de ejemplo
+    setRecentFavorites(favoriteArtists);
+  };
 
-  // Verificar si el usuario ha saltado el onboarding
-  useEffect(() => {
-    const checkOnboardingStatus = async () => {
-      try {
-        // 1. Obtener información del usuario desde Supabase
-        const { data: { user } } = await supabase.auth.getUser();
-        
-        if (!user) {
-          console.log('No hay usuario autenticado');
-          return;
-        }
-        
-        // 2. Verificar si el usuario ha saltado el onboarding en sus metadatos
-        const onboardingSkippedInMetadata = user.user_metadata?.onboarding_skipped === true;
-        
-        // 3. Si encontramos que el usuario ha saltado el onboarding en los metadatos,
-        // sincronizamos localStorage para mantener consistencia
-        if (onboardingSkippedInMetadata) {
-          localStorage.setItem('onboarding_skipped', 'true');
-        }
-        
-        // 4. También podemos verificar en localStorage por compatibilidad con código existente
-        const hasSkippedOnboardingLocal = localStorage.getItem('onboarding_skipped') === 'true';
-        const isFromRegistrationLocal = localStorage.getItem('is_from_registration') === 'true';
-        
-        // 5. Combinar todas las fuentes para determinar si mostrar la alerta
-        const shouldShowAlert = onboardingSkippedInMetadata || hasSkippedOnboardingLocal || isFromRegistrationLocal;
-        
-        // Registrar valores para depuración
-        console.log('Estado de onboarding:', {
-          metadatos: onboardingSkippedInMetadata,
-          localStorage: {
-            hasSkippedOnboarding: hasSkippedOnboardingLocal,
-            isFromRegistration: isFromRegistrationLocal,
-          },
-          mostrarAlerta: shouldShowAlert
-        });
-        
-        // Actualizar el estado para mostrar la alerta si es necesario
-        setShowOnboardingAlert(shouldShowAlert);
-        
-      } catch (error) {
-        console.error('Error al verificar estado de onboarding:', error);
-      }
-    };
-    
-    checkOnboardingStatus();
-  }, []);
-
-  // Obtener información del usuario
-  useEffect(() => {
-    const getUserInfo = async () => {
-      try {
-        setIsLoading(true);
-        const { data: { user } } = await supabase.auth.getUser();
-        
-        if (user) {
-          setUserName(user.user_metadata?.name || user.email?.split('@')[0] || 'Usuario');
-          
-          // Por ahora usamos datos simulados
-          setFavoritesCount(5);
-          setMessagesCount(2);
-          setFeaturedArtists(mockFeaturedArtists);
-        }
-      } catch (error) {
-        console.error('Error al cargar datos del usuario:', error);
-        toast.error('Error al cargar tus datos', {
-          description: 'Por favor, intenta refrescar la página'
-        });
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
-    getUserInfo();
-  }, []);
-
-  const handleArtistClick = (artistId: number) => {
+  // Manejador para hacer clic en un artista
+  const handleArtistClick = (artistId: string) => {
     navigate(`/artista/${artistId}`);
   };
 
-  const handleSummaryCardClick = (route: string) => {
-    navigate(route);
-  };
-  
-  const handleGoToOnboarding = () => {
-    // Al ir al onboarding, removemos la bandera de que se ha saltado
-    localStorage.removeItem('onboarding_skipped');
-    navigate('/user-onboarding');
+  // Obtener el nombre del usuario
+  const getUserName = () => {
+    if (userProfile?.name) return userProfile.name;
+    if (user?.user_metadata?.name) return user.user_metadata.name;
+    if (user?.email) return user.email.split("@")[0];
+    return "Usuario";
   };
 
-  // Determinar el tamaño de las tarjetas en el carrusel según el ancho de pantalla
-  const getSummaryCardSize = () => {
-    if (isSmallMobile) {
-      return 'basis-[76%] max-w-[76%]'; // Pantallas móviles pequeñas: una tarjeta con vista parcial de la siguiente
-    } else {
-      return 'basis-[42%] max-w-[42%]'; // Pantallas medianas: tarjetas más estrechas para ver más de la siguiente
-    }
+  // Obtener la inicial del usuario para el avatar
+  const getUserInitial = () => {
+    const name = getUserName();
+    return name.charAt(0).toUpperCase();
   };
-  
-  // Determinar el tamaño de las tarjetas de artistas en el carrusel según el ancho de pantalla
-  const getArtistCardSize = () => {
-    if (isSmallMobile) {
-      return 'basis-[76%] max-w-[76%]'; // Pantallas móviles pequeñas: una tarjeta con vista parcial de la siguiente
-    } else {
-      return 'basis-[42%] max-w-[42%]'; // Pantallas medianas: tarjetas más estrechas para ver más de la siguiente
-    }
+
+  // Redireccionar a la página de mensajes
+  const handleMessagesClick = () => {
+    navigate("/dashboard/mensajes");
+  };
+
+  // Redireccionar a la página de favoritos
+  const handleFavoritesClick = () => {
+    navigate("/dashboard/favoritos");
   };
 
   return (
     <UserDashboardLayout>
-      <div className="mt-16">
-        {/* Contenido con padding solo para la parte superior */}
-        <div className="container mx-auto py-8 px-4 md:px-8">
-          {/* Encabezado y saludo */}
-          <div>
-            <h1 className="text-4xl font-semibold mb-4">¡Buenas, {userName}!</h1>
-            
-            {/* Alerta de onboarding no completado - simplificada */}
-            {showOnboardingAlert && (
-              <Alert className="bg-vyba-gray mb-6 border-none rounded-xl">
-                <div className="flex justify-between items-center">
-                  <div className="flex items-center gap-4">
-                    <div className="flex items-center justify-center w-12 h-12 bg-[#C13515] rounded-full">
-                      <AlertCircle className="h-6 w-6 text-white" />
-                    </div>
-                    <div>
-                      <AlertTitle className="text-base font-medium mb-0 text-vyba-navy">Completa tu perfil</AlertTitle>
-                      <AlertDescription className="text-sm text-vyba-navy/80 font-figtree">
-                        ¡Personaliza tu experiencia! Añade tu foto de perfil y preferencias musicales para encontrar los mejores artistas.
-                      </AlertDescription>
-                    </div>
-                  </div>
-                  <Button 
-                    onClick={handleGoToOnboarding} 
-                    variant="terciary"
-                    className="whitespace-nowrap flex items-center gap-2"
-                  >
-                    Completar ahora
-                    <ArrowRight className="h-4 w-4" />
-                  </Button>
-                </div>
-              </Alert>
-            )}
-          </div>
-        </div>
+      <div className="p-6 space-y-6">
+        {/* Tarjeta de bienvenida */}
+        <Card>
+          <CardContent className="p-6">
+            <div className="flex items-center gap-4">
+              <Avatar className="h-16 w-16">
+                <AvatarImage
+                  src={userProfile?.avatar_url || ""}
+                  alt={getUserName()}
+                />
+                <AvatarFallback className="bg-black text-white text-xl">
+                  {getUserInitial()}
+                </AvatarFallback>
+              </Avatar>
+              <div>
+                <h1 className="text-2xl font-bold">¡Hola, {getUserName()}!</h1>
+                <p className="text-gray-500">
+                  Bienvenido a tu panel personal de Vyba Artists
+                </p>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
 
-        {/* Tarjetas de resumen - Sin padding horizontal en modo carrusel */}
-        {shouldShowCarousel ? (
-          // Vista de carrusel para pantallas pequeñas - Sin padding horizontal
-          <div className="mb-6 overflow-hidden">
-            <div className="container mx-auto px-4 md:px-8 mb-4">
-              <h2 className="text-2xl font-semibold">Resumen</h2>
-            </div>
-            <Carousel 
-              opts={{
-                align: "start",
-                loop: false,
-              }} 
-              className="w-full"
-            >
-              <CarouselContent className="ml-0 gap-2 pl-4 pr-4">
-                {summaryCards.map((card, index) => (
-                  <CarouselItem 
-                    key={card.id} 
-                    className={`pl-2 ${getSummaryCardSize()}`}
-                  >
-                    <Card 
-                      className={cn(
-                        "bg-vyba-gray shadow-none rounded-2xl border-none h-48 cursor-pointer transition-all duration-150",
-                        "active:scale-95 hover:bg-vyba-gray/80"
-                      )}
-                      onClick={() => handleSummaryCardClick(card.route)}
-                    >
-                      <CardContent className="p-8 flex flex-col justify-between items-start h-full">
-                        <div>
-                          {card.icon}
-                        </div>
-                        <div className="flex flex-col items-start">
-                          <p className="text-vyba-navy text-xl font-medium mb-1 font-semibold">{card.title}</p>
-                          <p className="text-base text-vyba-tertiary mb-0">{card.content}</p>
-                        </div>
-                      </CardContent>
-                    </Card>
-                  </CarouselItem>
-                ))}
-                {/* Elemento vacío para dar espacio al final */}
-                <CarouselItem className="pl-2 basis-4 min-w-[16px]"></CarouselItem>
-              </CarouselContent>
-            </Carousel>
-          </div>
-        ) : (
-          // Vista normal para pantallas grandes con padding
-          <div className="container mx-auto px-4 md:px-8 mb-8">
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-              {summaryCards.map((card) => (
-                <Card 
-                  key={card.id}
-                  className={cn(
-                    "bg-vyba-gray shadow-none rounded-2xl border-none cursor-pointer transition-all duration-150",
-                    "active:scale-95 hover:bg-vyba-gray/80"
-                  )}
-                  onClick={() => handleSummaryCardClick(card.route)}
-                >
-                  <CardContent className="p-8 flex flex-col justify-between items-start h-48">
-                    <div>
-                      {card.icon}
-                    </div>
-                    <div className="flex flex-col items-start">
-                      <p className="text-vyba-navy text-xl font-medium mb-1 font-semibold">{card.title}</p>
-                      <p className="text-base text-vyba-tertiary mb-0">{card.content}</p>
-                    </div>
-                  </CardContent>
-                </Card>
-              ))}
-            </div>
-          </div>
-        )}
+        {/* Pestañas principales */}
+        <Tabs defaultValue="overview" value={activeTab} onValueChange={setActiveTab}>
+          <TabsList className="grid grid-cols-3 mb-8">
+            <TabsTrigger value="overview">General</TabsTrigger>
+            <TabsTrigger value="favorites">Favoritos</TabsTrigger>
+            <TabsTrigger value="messages">Mensajes</TabsTrigger>
+          </TabsList>
 
-        {/* Artistas Destacados - Sin padding horizontal en modo carrusel */}
-        <div className="mt-8">
-          <div className="container mx-auto px-4 md:px-8 mb-4">
-            <div className="flex justify-between items-center">
-              <h2 className="text-3xl font-semibold">Artistas destacados</h2>
-              <Button variant="ghost" onClick={() => navigate('/artists')}>Ver todos</Button>
+          {/* Contenido de la pestaña General */}
+          <TabsContent value="overview" className="space-y-8">
+            {/* Tarjetas de acceso rápido */}
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              <Card className="cursor-pointer hover:shadow-md transition-all" onClick={() => navigate('/dashboard/perfil')}>
+                <CardContent className="p-6 flex flex-col items-center text-center">
+                  <UserRound className="h-12 w-12 text-black mb-4" />
+                  <CardTitle className="mb-2">Mi Perfil</CardTitle>
+                  <CardDescription>
+                    Actualiza tu información personal y preferencias
+                  </CardDescription>
+                </CardContent>
+              </Card>
+              
+              <Card className="cursor-pointer hover:shadow-md transition-all" onClick={handleFavoritesClick}>
+                <CardContent className="p-6 flex flex-col items-center text-center">
+                  <Heart className="h-12 w-12 text-black mb-4" />
+                  <CardTitle className="mb-2">Mis Favoritos</CardTitle>
+                  <CardDescription>
+                    {recentFavorites.length} artistas guardados
+                  </CardDescription>
+                </CardContent>
+              </Card>
+              
+              <Card className="cursor-pointer hover:shadow-md transition-all" onClick={handleMessagesClick}>
+                <CardContent className="p-6 flex flex-col items-center text-center">
+                  <MessageCircle className="h-12 w-12 text-black mb-4" />
+                  <CardTitle className="mb-2">Mis Mensajes</CardTitle>
+                  <CardDescription>
+                    {conversations.filter(c => c.unread).length} mensajes sin leer
+                  </CardDescription>
+                </CardContent>
+              </Card>
             </div>
-          </div>
-          
-          {shouldShowCarousel ? (
-            // Vista con carrusel para pantallas menores a lg (1024px) - Sin padding horizontal
-            <div className="mb-10 overflow-hidden">
-              <Carousel 
-                opts={{
-                  align: "start",
-                  loop: false,
-                }} 
-                className="w-full"
-              >
-                <CarouselContent className="ml-0 gap-2 pl-4 pr-4">
-                  {featuredArtists.map((artist, index) => (
-                    <CarouselItem 
-                      key={artist.id} 
-                      className={`pl-2 ${getArtistCardSize()}`}
-                    >
-                      <div className="h-full">
-                        <ArtistProfileCard
-                          name={artist.name}
-                          type={artist.type}
-                          description={artist.description}
-                          images={artist.images}
-                          rating={artist.rating}
-                          priceRange={artist.priceRange}
-                          onClick={() => handleArtistClick(artist.id)}
-                          isRecommended={artist.id === 3}
-                        />
-                      </div>
-                    </CarouselItem>
-                  ))}
-                  {/* Elemento vacío para dar espacio al final */}
-                  <CarouselItem className="pl-2 basis-4 min-w-[16px]"></CarouselItem>
-                </CarouselContent>
-              </Carousel>
-            </div>
-          ) : (
-            // Vista desktop en grid para pantallas lg (1024px) y superiores - Con padding
-            <div className="container mx-auto px-4 md:px-8">
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-                {featuredArtists.map((artist) => (
-                  <ArtistProfileCard
+
+            {/* Sección de favoritos recientes */}
+            <div className="space-y-4">
+              <div className="flex justify-between items-center">
+                <h2 className="text-xl font-bold">Favoritos recientes</h2>
+                <Button variant="ghost" onClick={handleFavoritesClick}>Ver todos</Button>
+              </div>
+              
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {recentFavorites.slice(0, 3).map((artist) => (
+                  <ArtistProfileCard 
                     key={artist.id}
+                    id={artist.id}
                     name={artist.name}
                     type={artist.type}
                     description={artist.description}
                     images={artist.images}
                     rating={artist.rating}
                     priceRange={artist.priceRange}
+                    isFavorite={artist.isFavorite}
                     onClick={() => handleArtistClick(artist.id)}
-                    isRecommended={artist.id === 3}
+                    onFavoriteToggle={() => {}}
                   />
                 ))}
               </div>
             </div>
-          )}
-        </div>
 
-        {/* Eventos - Con padding */}
-        <div className="container mx-auto px-4 md:px-8 mt-8 mb-8">
-          <div className="flex flex-col justify-start items-start mb-4 gap-4">
-            <div className="flex items-center gap-8 mb-4">
-              <h2 className="text-3xl font-semibold mb-0">Crea tus eventos y organízate mejor</h2>
-              <Badge className="bg-vyba-navy text-white px-4 py-2 rounded-full">Próximamente</Badge>
+            {/* Sección de artistas recomendados */}
+            <div className="space-y-4">
+              <div className="flex justify-between items-center">
+                <h2 className="text-xl font-bold">Recomendados para ti</h2>
+                <Button variant="ghost" onClick={() => navigate('/artistas')}>
+                  Ver más artistas
+                </Button>
+              </div>
+              
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {recommendedArtists.map((artist) => (
+                  <ArtistProfileCard 
+                    key={artist.id}
+                    id={artist.id}
+                    name={artist.name}
+                    type={artist.type}
+                    description={artist.description}
+                    images={artist.images}
+                    rating={artist.rating}
+                    priceRange={artist.priceRange}
+                    isFavorite={artist.isFavorite}
+                    onClick={() => handleArtistClick(artist.id)}
+                    onFavoriteToggle={() => {}}
+                  />
+                ))}
+              </div>
             </div>
-          </div>
-          <div className="bg-vyba-gray rounded-2xl w-full h-48 border-dashed border-2 border-vyba-tertiary">
+          </TabsContent>
 
-          </div>
-        </div>
+          {/* Contenido de la pestaña Favoritos */}
+          <TabsContent value="favorites" className="space-y-8">
+            <Button onClick={() => navigate('/dashboard/favoritos')}>
+              Ver todos mis favoritos
+            </Button>
+            
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {recentFavorites.map((artist) => (
+                <ArtistProfileCard 
+                  key={artist.id}
+                  id={artist.id}
+                  name={artist.name}
+                  type={artist.type}
+                  description={artist.description}
+                  images={artist.images}
+                  rating={artist.rating}
+                  priceRange={artist.priceRange}
+                  isFavorite={artist.isFavorite}
+                  onClick={() => handleArtistClick(artist.id)}
+                  onFavoriteToggle={() => {}}
+                />
+              ))}
+            </div>
+          </TabsContent>
+
+          {/* Contenido de la pestaña Mensajes */}
+          <TabsContent value="messages" className="space-y-6">
+            <Button onClick={() => navigate('/dashboard/mensajes')}>
+              Ver todos mis mensajes
+            </Button>
+            
+            <div className="space-y-4">
+              {conversations.map((conv) => (
+                <Card 
+                  key={conv.id} 
+                  className={`cursor-pointer hover:shadow-md transition-all ${conv.unread ? 'bg-gray-50' : ''}`}
+                  onClick={() => navigate(`/dashboard/mensajes/${conv.id}`)}
+                >
+                  <CardContent className="p-4">
+                    <div className="flex items-center gap-4">
+                      <Avatar>
+                        <AvatarImage src={conv.artist.avatar} alt={conv.artist.name} />
+                        <AvatarFallback>{conv.artist.name[0]}</AvatarFallback>
+                      </Avatar>
+                      <div className="flex-1">
+                        <div className="flex justify-between">
+                          <h3 className="font-medium">{conv.artist.name}</h3>
+                          <span className="text-sm text-gray-500">{conv.timestamp}</span>
+                        </div>
+                        <p className="text-sm text-gray-600 truncate">{conv.lastMessage}</p>
+                      </div>
+                      {conv.unread && <div className="w-3 h-3 bg-blue-500 rounded-full"></div>}
+                    </div>
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
+          </TabsContent>
+        </Tabs>
       </div>
     </UserDashboardLayout>
   );
 };
 
-export default UserDashboardPage; 
+export default UserDashboardPage;
