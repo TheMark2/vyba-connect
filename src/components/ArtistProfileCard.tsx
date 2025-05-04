@@ -419,6 +419,7 @@ const ArtistProfileCard = ({
         open={showFavoriteDialog} 
         onOpenChange={setShowFavoriteDialog} 
         artistName={name}
+        artistId={id || ''}
         onConfirm={toggleFavorite}
         isFavorite={favorite}
       />

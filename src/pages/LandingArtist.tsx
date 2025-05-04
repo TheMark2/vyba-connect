@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import { 
   Mic, 
   Star, 
@@ -113,13 +113,13 @@ const LandingArtist = () => {
     <div className="min-h-screen bg-white dark:bg-black">
       <nav className="fixed top-0 left-0 w-full bg-white/30 dark:bg-black z-50 backdrop-blur-xl px-4">
         <div className="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between">
-          <button onClick={() => navigate('/')} className="p-1">
+          <Link to='/' className="p-1">
             <img
               src="/lovable-uploads/logovybaartists.png"
               alt="Logo Vyba Artists"
               className="h-10 w-auto"
             />
-          </button>
+          </Link>
           <Button onClick={handleGetStarted}>Empezar ahora</Button>
         </div>
       </nav>

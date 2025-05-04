@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
-import { Heart, Plus, Loader2 } from "lucide-react";
+import { Heart, Plus, Loader2, FileHeart } from "lucide-react";
 import { toast } from "sonner";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -9,6 +9,10 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
 import { Skeleton } from "@/components/ui/skeleton";
+import { Form, FormControl, FormField, FormItem, FormMessage } from "@/components/ui/form";
+import { zodResolver } from '@hookform/resolvers/zod';
+import { useForm } from 'react-hook-form';
+import * as z from 'zod';
 
 // Definir la interfaz para las listas de favoritos
 interface FavoriteList {
@@ -16,7 +20,7 @@ interface FavoriteList {
   name: string;
   user_id: string;
   created_at: string;
-  image?: string;
+  description?: string | null;
   count?: number;
 }
 
@@ -24,14 +28,21 @@ interface FavoriteDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   artistName: string;
+  artistId: string;
   onConfirm: () => void;
   isFavorite: boolean;
 }
 
+// Esquema de validación para crear nueva lista
+const newListSchema = z.object({
+  name: z.string().min(1, 'El nombre de la lista es obligatorio')
+});
+
 const FavoriteDialog = ({ 
   open, 
   onOpenChange, 
-  artistName, 
+  artistName,
+  artistId,
   onConfirm, 
   isFavorite 
 }: FavoriteDialogProps) => {
@@ -39,152 +50,176 @@ const FavoriteDialog = ({
   const [step, setStep] = useState<'select' | 'create' | 'remove'>('select');
   const [favoriteLists, setFavoriteLists] = useState<FavoriteList[]>([]);
   const [isLoading, setIsLoading] = useState(false);
-  const [isFetchingLists, setIsFetchingLists] = useState(true);
+  const [isFetchingLists, setIsFetchingLists] = useState(false);
   const [newListName, setNewListName] = useState('');
-  
-  // Cargar las listas de favoritos del usuario
+  const [newListDescription, setNewListDescription] = useState('');
+
+  // Form para crear nueva lista
+  const form = useForm<z.infer<typeof newListSchema>>({
+    resolver: zodResolver(newListSchema),
+    defaultValues: {
+      name: ''
+    }
+  });
+
+  // Pre-cargar las listas cuando el componente se monta
   useEffect(() => {
-    if (open && user) {
+    if (user) {
       fetchFavoriteLists();
     }
-  }, [open, user]);
+  }, [user]);
   
-  // Determinar el paso inicial basado en si el artista ya es favorito
+  // Determinar el paso inicial basado en el estado actual
   useEffect(() => {
-    if (open) {
-      setStep(isFavorite ? 'remove' : 'select');
-      setNewListName('');
+    if (!open) return;
+
+    if (isFavorite) {
+      setStep('remove');
+    } else if (!isFetchingLists && favoriteLists.length === 0) {
+      setStep('create');
+    } else {
+      setStep('select');
     }
-  }, [open, isFavorite]);
-  
+    
+    form.reset();
+  }, [open, isFavorite, isFetchingLists, favoriteLists.length]);
+
   const fetchFavoriteLists = async () => {
     if (!user) return;
     
     try {
       setIsFetchingLists(true);
       
-      // Para pruebas, simulamos que tenemos listas de favoritos
-      // En una implementación real, esta consulta debe hacerse a una tabla real de "favorite_lists"
-      const mockLists = [
-        {
-          id: '1',
-          name: 'Mis artistas favoritos',
-          user_id: user.id,
-          created_at: new Date().toISOString(),
-          image: '/images/dj1.webp',
-          count: 5
-        },
-        {
-          id: '2',
-          name: 'DJs para eventos',
-          user_id: user.id,
-          created_at: new Date().toISOString(),
-          image: '/images/dj2.webp',
-          count: 3
-        },
-        {
-          id: '3',
-          name: 'Guitarristas',
-          user_id: user.id,
-          created_at: new Date().toISOString(),
-          image: '/images/dj3.webp',
-          count: 2
-        }
-      ];
-      
-      // Carga casi instantánea para mejor experiencia de usuario
-      setTimeout(() => {
-        setFavoriteLists(mockLists);
-        setIsFetchingLists(false);
-      }, 100);
-      
-      // En una implementación real, el código sería así:
-      /*
-      const { data, error } = await supabase
+      // Obtener las listas y sus conteos en una sola consulta
+      const { data: lists, error: listsError } = await supabase
         .from('favorite_lists')
-        .select('*, favorite_artists:favorite_artists(count)')
+        .select(`
+          *,
+          favorite_artists (count)
+        `)
         .eq('user_id', user.id)
         .order('created_at', { ascending: false });
       
-      if (error) throw error;
-      setFavoriteLists(data || []);
-      */
+      if (listsError) throw listsError;
       
+      // Formatear los datos
+      const formattedLists = (lists || []).map(list => ({
+        id: list.id,
+        name: list.name,
+        user_id: list.user_id,
+        created_at: list.created_at,
+        count: list.favorite_artists?.[0]?.count || 0
+      }));
+      
+      setFavoriteLists(formattedLists);
     } catch (error) {
       console.error('Error al cargar listas de favoritos:', error);
       toast.error('No se pudieron cargar tus listas de favoritos');
+    } finally {
       setIsFetchingLists(false);
     }
   };
   
-  const handleCreateNewList = async () => {
-    if (!user || !newListName.trim()) return;
+  const handleCreateNewList = async (values: z.infer<typeof newListSchema>) => {
+    if (!user) return;
     
     try {
       setIsLoading(true);
       
-      // Para pruebas, simulamos la creación de una nueva lista
-      const newList: FavoriteList = {
-        id: Date.now().toString(),
-        name: newListName.trim(),
-        user_id: user.id,
-        created_at: new Date().toISOString(),
-        image: '/images/dj4.webp',
-        count: 1
-      };
-      
-      // En una implementación real, el código sería así:
-      /*
-      const { data: newList, error } = await supabase
+      // Crear nueva lista
+      const { data: newList, error: listError } = await supabase
         .from('favorite_lists')
         .insert({
-          name: newListName.trim(),
+          name: values.name.trim(),
           user_id: user.id
         })
         .select()
         .single();
       
-      if (error) throw error;
-      */
+      if (listError) throw listError;
+      
+      // Añadir el artista a la nueva lista
+      const { error: artistError } = await supabase
+        .from('favorite_artists')
+        .insert({
+          list_id: newList.id,
+          user_id: user.id,
+          artist_id: artistId,
+          artist_name: artistName
+        });
+      
+      if (artistError) throw artistError;
       
       // Actualizar la lista local de favoritos
-      setFavoriteLists(prev => [newList, ...prev]);
+      setFavoriteLists(prev => [{
+        ...newList,
+        count: 1
+      }, ...prev]);
       
-      // Añadir el artista a la lista sin demora
-      addToFavoriteList(newList.id);
+      // Llamar a la función de éxito
+      onConfirm();
       
-      toast.success('Lista creada y artista añadido');
+      // Cerrar el diálogo
+      onOpenChange(false);
+      
+      toast.success('Lista creada y artista añadido', {
+        icon: "❤️",
+        position: "bottom-center",
+      });
+      
     } catch (error) {
       console.error('Error al crear lista:', error);
       toast.error('No se pudo crear la lista');
+    } finally {
       setIsLoading(false);
     }
   };
   
-  const handleListClick = (listId: string) => {
-    addToFavoriteList(listId);
-  };
-  
-  const addToFavoriteList = async (listId: string) => {
-    if (!user || !listId) return;
+  const handleListClick = async (listId: string) => {
+    if (!user) return;
     
     try {
-      // Para pruebas, simulamos la adición a favoritos
-      // En una implementación real, aquí guardaríamos en Supabase:
-      /*
+      setIsLoading(true);
+      
+      // Verificar si el artista ya está en esta lista específica
+      const { data: existingEntry, error: checkError } = await supabase
+        .from('favorite_artists')
+        .select('*')
+        .eq('list_id', listId)
+        .eq('user_id', user.id)
+        .eq('artist_id', artistId)
+        .single();
+      
+      if (checkError && checkError.code !== 'PGRST116') {
+        throw checkError;
+      }
+      
+      if (existingEntry) {
+        toast.error(`${artistName} ya está en esta lista`);
+        setIsLoading(false);
+        return;
+      }
+      
+      // Añadir el artista a la lista seleccionada
       const { error } = await supabase
         .from('favorite_artists')
         .insert({
           list_id: listId,
-          artist_id: artistId, // Necesitaríamos el ID del artista
           user_id: user.id,
-          artist_name: artistName // Opcional, para facilitar consultas
+          artist_id: artistId,
+          artist_name: artistName
         });
       
       if (error) throw error;
-      */
       
-      // Llamar a la función de éxito proporcionada por el componente padre
+      // Actualizar el conteo en la lista local
+      setFavoriteLists(prev => prev.map(list => 
+        list.id === listId 
+          ? { ...list, count: (list.count || 0) + 1 }
+          : list
+      ));
+      
+      // Llamar a la función de éxito
       onConfirm();
       
       // Cerrar el diálogo
@@ -198,88 +233,90 @@ const FavoriteDialog = ({
     } catch (error) {
       console.error('Error al añadir a favoritos:', error);
       toast.error('No se pudo añadir a favoritos');
+    } finally {
+      setIsLoading(false);
     }
   };
   
-  const handleRemoveFromFavorites = () => {
-    // Para pruebas, simulamos la eliminación de favoritos
-    // En una implementación real, aquí eliminaríamos de Supabase:
-    /*
-    const { error } = await supabase
-      .from('favorite_artists')
-      .delete()
-      .match({ 
-        user_id: user.id,
-        artist_id: artistId // Necesitaríamos el ID del artista
+  const handleRemoveFromFavorites = async () => {
+    if (!user) return;
+    
+    try {
+      setIsLoading(true);
+      
+      // Eliminar el artista de todas las listas
+      const { error } = await supabase
+        .from('favorite_artists')
+        .delete()
+        .match({ 
+          user_id: user.id,
+          artist_id: artistId
+        });
+      
+      if (error) throw error;
+      
+      // Llamar a la función de éxito
+      onConfirm();
+      
+      // Cerrar el diálogo
+      onOpenChange(false);
+      
+      toast.success(`${artistName} eliminado de favoritos`, {
+        icon: "👋",
+        position: "bottom-center",
       });
-    
-    if (error) throw error;
-    */
-    
-    // Llamar a la función de éxito proporcionada por el componente padre
-    onConfirm();
-    
-    // Cerrar el diálogo
-    onOpenChange(false);
-    
-    toast.success(`${artistName} eliminado de favoritos`, {
-      icon: "👋",
-      position: "bottom-center",
-    });
+      
+    } catch (error) {
+      console.error('Error al eliminar de favoritos:', error);
+      toast.error('No se pudo eliminar de favoritos');
+    } finally {
+      setIsLoading(false);
+    }
   };
   
-  // Renderizar skeletons para la carga
-  const renderSkeletons = () => (
-    <div className="grid grid-cols-2 gap-4 mt-4">
-      {[1, 2, 3, 4].map(item => (
-        <div key={item} className="overflow-hidden">
-          <Skeleton className="aspect-square w-full rounded-3xl bg-vyba-gray" />
-          <div className="py-2">
-            <Skeleton className="h-5 w-3/4 mb-1 bg-vyba-gray" />
-            <Skeleton className="h-4 w-1/2 bg-vyba-gray" />
-          </div>
-        </div>
-      ))}
-    </div>
-  );
-  
-  // Renderizar el paso de selección de lista
+  // Renderizar el paso de selección de lista con skeleton durante la carga
   const renderSelectStep = () => (
     <div className="flex flex-col py-4 px-4">
       <div className="w-full mb-4">
-        
         {isFetchingLists ? (
-          renderSkeletons()
+          <div className="grid grid-cols-2 gap-4 mt-4">
+            {[1, 2, 3, 4].map(item => (
+              <div key={item} className="overflow-hidden animate-pulse">
+                <div className="aspect-square w-full rounded-3xl bg-vyba-gray/50" />
+                <div className="py-2">
+                  <div className="h-5 w-3/4 mb-1 bg-vyba-gray/50 rounded" />
+                  <div className="h-4 w-1/2 bg-vyba-gray/50 rounded" />
+                </div>
+              </div>
+            ))}
+          </div>
         ) : favoriteLists.length > 0 ? (
           <div className="grid grid-cols-2 gap-4 mt-4">
             {favoriteLists.map(list => (
               <div 
                 key={list.id}
                 onClick={() => handleListClick(list.id)}
-                className="cursor-pointer overflow-hidden transition-all duration-300 ease-in-out"
+                className="cursor-pointer overflow-hidden transition-all duration-300 ease-in-out hover:opacity-80"
               >
-                <div className="relative aspect-square w-full overflow-hidden rounded-3xl">
-                  <img 
-                    src={list.image || '/images/placeholder.jpg'} 
-                    alt={list.name}
-                    className="w-full h-full object-cover"
-                  />
+                <div className="relative aspect-square w-full overflow-hidden rounded-3xl bg-vyba-gray flex items-center justify-center">
+                  <Heart className="w-12 h-12 text-vyba-navy" />
                 </div>
                 <div className="py-2">
                   <h4 className="font-medium text-base truncate">{list.name}</h4>
-                  <p className="text-sm text-vyba-tertiary mb-0">{list.count || 0} favoritos</p>
+                  <p className="text-sm text-vyba-tertiary mb-0">{list.count} favoritos</p>
                 </div>
               </div>
             ))}
           </div>
         ) : (
-          <div className="text-center py-12 bg-gray-50 rounded-md">
-            <p className="text-gray-500 mb-4">No tienes listas de favoritos</p>
+          <div className="text-center py-12 bg-vyba-gray rounded-xl">
+            <FileHeart className="h-12 w-12 mx-auto mb-4 stroke-[1.5]" />
+            <h3 className="text-xl font-medium mb-8">No tienes listas de favoritos</h3>
             <Button 
               variant="terciary" 
               onClick={() => setStep('create')}
             >
-              Crear tu primera lista
+              Crear mi primera lista
             </Button>
           </div>
         )}
@@ -289,41 +326,41 @@ const FavoriteDialog = ({
   
   // Renderizar el paso de creación de lista
   const renderCreateStep = () => (
-    <div className="flex flex-col py-4 px-4">
-      <div className="w-full mb-6">
-        <Label htmlFor="list-name" className="mb-2 block text-sm">Nombre de la lista</Label>
-        <Input
-          id="list-name"
-          value={newListName}
-          onChange={(e) => setNewListName(e.target.value)}
-          placeholder="Ej: Mis DJs favoritos"
-          className="w-full"
-        />
-      </div>
-      
-      <div className="flex gap-3 w-full">
-        <Button 
-          variant="secondary" 
-          className="flex-1"
-          onClick={() => setStep('select')}
-        >
-          Volver
-        </Button>
-        
-        <Button 
-          variant="terciary" 
-          className="flex-1"
-          onClick={handleCreateNewList}
-          disabled={!newListName.trim() || isLoading}
-        >
-          {isLoading ? (
-            <Loader2 className="h-4 w-4 animate-spin" />
-          ) : (
-            "Crear y añadir"
+    <Form {...form}>
+      <form onSubmit={form.handleSubmit(handleCreateNewList)} className="space-y-6 px-6">
+        <FormField
+          control={form.control}
+          name="name"
+          render={({ field }) => (
+            <FormItem>
+              <Label>Nombre de la lista</Label>
+              <FormControl>
+                <Input 
+                  placeholder="Ej: Mis DJs favoritos" 
+                  value={newListName}
+                  onChange={(e) => setNewListName(e.target.value)}
+                />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
           )}
-        </Button>
-      </div>
-    </div>
+        />
+        
+        <div className="flex justify-end gap-2">
+          <Button 
+            variant="terciary" 
+            type="submit"
+            disabled={!newListName.trim() || isLoading}
+          >
+            {isLoading ? (
+              <Loader2 className="h-4 w-4 animate-spin" />
+            ) : (
+              "Crear lista"
+            )}
+          </Button>
+        </div>
+      </form>
+    </Form>
   );
   
   // Renderizar el paso de eliminación de favoritos
@@ -346,8 +383,13 @@ const FavoriteDialog = ({
           variant="default" 
           className="flex-1 bg-red-500 hover:bg-red-600"
           onClick={handleRemoveFromFavorites}
+          disabled={isLoading}
         >
-          Quitar
+          {isLoading ? (
+            <Loader2 className="h-4 w-4 animate-spin" />
+          ) : (
+            "Quitar"
+          )}
         </Button>
       </div>
     </div>
@@ -356,8 +398,8 @@ const FavoriteDialog = ({
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-xl">
-        <DialogHeader>
-          <DialogTitle className="text-center px-4 mb-2">
+        <DialogHeader className="px-6 py-4">
+          <DialogTitle className="text-center">
             {step === 'remove' ? "Quitar de favoritos" : 
              step === 'create' ? "Crear lista de favoritos" : 
              "Añadir a favoritos"}
@@ -371,7 +413,7 @@ const FavoriteDialog = ({
         </div>
         
         {step === 'select' && (
-          <DialogFooter className="py-2 px-4">
+          <DialogFooter className="py-2 px-6">
             <Button 
               variant="terciary" 
               className="w-full flex items-center justify-center gap-2"

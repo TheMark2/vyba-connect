@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Link, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
@@ -47,13 +46,13 @@ const Navbar2 = () => {
                 <div className="max-w-[1800px] mx-auto py-5 flex items-center justify-between relative">
                     {/* Logo */}
                     <div className="flex items-center gap-8">
-                        <button onClick={() => navigate('/')} className="p-1">
+                        <Link to='/' className="p-1">
                             <img
                                 src="/lovable-uploads/logovyba.png"
                                 alt="Logo Vyba Artists"
                                 className="h-10 w-auto"
                             />
-                        </button>
+                        </Link>
                     </div>
 
                     {/* MiniSearchBar Centrally Positioned */}
@@ -64,7 +63,9 @@ const Navbar2 = () => {
                     {/* Buttons */}
                     <div className="flex items-center gap-4">
                         <div className="flex items-center -space-x-1">
-                            <Button variant="ghost" className="flex items-center gap-3" onClick={() => navigate('/auth')}>Hazte artista</Button>
+                            <Link to='/auth' className="text-sm font-medium text-vyba-tertiary hover:text-vyba-navy rounded-full px-6 py-3 transition-all duration-300 ease-in-out hover:bg-vyba-gray hover:no-underline">
+                                Hazte artista
+                            </Link>
                             <Button 
                                 variant="ghost" 
                                 className="flex items-center rounded-full p-4" 

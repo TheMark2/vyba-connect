@@ -16,6 +16,7 @@ import {
 } from "@/components/ui/carousel";
 import { cn } from '@/lib/utils';
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { Skeleton } from "@/components/ui/skeleton";
 
 const UserDashboardPage = () => {
   const navigate = useNavigate();
@@ -240,6 +241,40 @@ const UserDashboardPage = () => {
     }
   };
 
+  const renderSkeletons = () => (
+    <>
+      {/* Skeleton para las tarjetas de resumen */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
+        {[1, 2, 3].map((item) => (
+          <div key={item} className="bg-vyba-gray rounded-2xl p-8 h-48">
+            <Skeleton className="h-6 w-6 mb-16 bg-vyba-gray/50" />
+            <Skeleton className="h-6 w-32 mb-2 bg-vyba-gray/50" />
+            <Skeleton className="h-4 w-24 bg-vyba-gray/50" />
+          </div>
+        ))}
+      </div>
+
+      {/* Skeleton para los artistas destacados */}
+      <div className="mt-8">
+        <div className="flex justify-between items-center mb-4">
+          <Skeleton className="h-8 w-48 bg-vyba-gray" />
+          <Skeleton className="h-8 w-24 bg-vyba-gray" />
+        </div>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+          {[1, 2, 3, 4].map((item) => (
+            <div key={item} className="overflow-hidden">
+              <Skeleton className="aspect-square w-full rounded-3xl bg-vyba-gray" />
+              <div className="py-2">
+                <Skeleton className="h-5 w-3/4 mb-1 bg-vyba-gray" />
+                <Skeleton className="h-4 w-1/2 bg-vyba-gray" />
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </>
+  );
+
   return (
     <UserDashboardLayout>
       <div className="mt-16">
@@ -247,11 +282,10 @@ const UserDashboardPage = () => {
         <div className="container mx-auto py-8 px-4 md:px-8">
           {/* Encabezado y saludo */}
           <div>
-            <h1 className="text-4xl font-semibold mb-4">¡Buenas, {userName}!</h1>
+            <h1 className="text-4xl font-semibold mb-4">¡Buenas, {userName || 'Usuario'}!</h1>
             
-            {/* Alerta de onboarding no completado - simplificada */}
             {showOnboardingAlert && (
-              <Alert className="bg-vyba-gray mb-6 border-none rounded-xl">
+              <Alert className="bg-vyba-gray mb-2 border-none rounded-xl mt-8">
                 <div className="flex justify-between items-center">
                   <div className="flex items-center gap-4">
                     <div className="flex items-center justify-center w-12 h-12 bg-[#C13515] rounded-full">
@@ -278,34 +312,70 @@ const UserDashboardPage = () => {
           </div>
         </div>
 
-        {/* Tarjetas de resumen - Sin padding horizontal en modo carrusel */}
-        {shouldShowCarousel ? (
-          // Vista de carrusel para pantallas pequeñas - Sin padding horizontal
-          <div className="mb-6 overflow-hidden">
-            <div className="container mx-auto px-4 md:px-8 mb-4">
-              <h2 className="text-2xl font-semibold">Resumen</h2>
-            </div>
-            <Carousel 
-              opts={{
-                align: "start",
-                loop: false,
-              }} 
-              className="w-full"
-            >
-              <CarouselContent className="ml-0 gap-2 pl-4 pr-4">
-                {summaryCards.map((card, index) => (
-                  <CarouselItem 
-                    key={card.id} 
-                    className={`pl-2 ${getSummaryCardSize()}`}
-                  >
+        {isLoading ? (
+          <div className="container mx-auto px-4 md:px-8">
+            {renderSkeletons()}
+          </div>
+        ) : (
+          <>
+            {/* Tarjetas de resumen - Sin padding horizontal en modo carrusel */}
+            {shouldShowCarousel ? (
+              // Vista de carrusel para pantallas pequeñas - Sin padding horizontal
+              <div className="mb-6 overflow-hidden">
+                <div className="container mx-auto px-4 md:px-8 mb-4">
+                  <h2 className="text-2xl font-semibold">Resumen</h2>
+                </div>
+                <Carousel 
+                  opts={{
+                    align: "start",
+                    loop: false,
+                  }} 
+                  className="w-full"
+                >
+                  <CarouselContent className="ml-0 gap-2 pl-4 pr-4">
+                    {summaryCards.map((card, index) => (
+                      <CarouselItem 
+                        key={card.id} 
+                        className={`pl-2 ${getSummaryCardSize()}`}
+                      >
+                        <Card 
+                          className={cn(
+                            "bg-vyba-gray shadow-none rounded-2xl border-none h-48 cursor-pointer transition-all duration-150",
+                            "active:scale-95 hover:bg-vyba-gray/80"
+                          )}
+                          onClick={() => handleSummaryCardClick(card.route)}
+                        >
+                          <CardContent className="p-8 flex flex-col justify-between items-start h-full">
+                            <div>
+                              {card.icon}
+                            </div>
+                            <div className="flex flex-col items-start">
+                              <p className="text-vyba-navy text-xl font-medium mb-1 font-semibold">{card.title}</p>
+                              <p className="text-base text-vyba-tertiary mb-0">{card.content}</p>
+                            </div>
+                          </CardContent>
+                        </Card>
+                      </CarouselItem>
+                    ))}
+                    {/* Elemento vacío para dar espacio al final */}
+                    <CarouselItem className="pl-2 basis-4 min-w-[16px]"></CarouselItem>
+                  </CarouselContent>
+                </Carousel>
+              </div>
+            ) : (
+              // Vista normal para pantallas grandes con padding
+              <div className="container mx-auto px-4 md:px-8 mb-8">
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                  {summaryCards.map((card) => (
                     <Card 
+                      key={card.id}
                       className={cn(
-                        "bg-vyba-gray shadow-none rounded-2xl border-none h-48 cursor-pointer transition-all duration-150",
+                        "bg-vyba-gray shadow-none rounded-2xl border-none cursor-pointer transition-all duration-150",
                         "active:scale-95 hover:bg-vyba-gray/80"
                       )}
                       onClick={() => handleSummaryCardClick(card.route)}
                     >
-                      <CardContent className="p-8 flex flex-col justify-between items-start h-full">
+                      <CardContent className="p-8 flex flex-col justify-between items-start h-48">
                         <div>
                           {card.icon}
                         </div>
@@ -315,119 +385,91 @@ const UserDashboardPage = () => {
                         </div>
                       </CardContent>
                     </Card>
-                  </CarouselItem>
-                ))}
-                {/* Elemento vacío para dar espacio al final */}
-                <CarouselItem className="pl-2 basis-4 min-w-[16px]"></CarouselItem>
-              </CarouselContent>
-            </Carousel>
-          </div>
-        ) : (
-          // Vista normal para pantallas grandes con padding
-          <div className="container mx-auto px-4 md:px-8 mb-8">
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-              {summaryCards.map((card) => (
-                <Card 
-                  key={card.id}
-                  className={cn(
-                    "bg-vyba-gray shadow-none rounded-2xl border-none cursor-pointer transition-all duration-150",
-                    "active:scale-95 hover:bg-vyba-gray/80"
-                  )}
-                  onClick={() => handleSummaryCardClick(card.route)}
-                >
-                  <CardContent className="p-8 flex flex-col justify-between items-start h-48">
-                    <div>
-                      {card.icon}
-                    </div>
-                    <div className="flex flex-col items-start">
-                      <p className="text-vyba-navy text-xl font-medium mb-1 font-semibold">{card.title}</p>
-                      <p className="text-base text-vyba-tertiary mb-0">{card.content}</p>
-                    </div>
-                  </CardContent>
-                </Card>
-              ))}
-            </div>
-          </div>
-        )}
-
-        {/* Artistas Destacados - Sin padding horizontal en modo carrusel */}
-        <div className="mt-8">
-          <div className="container mx-auto px-4 md:px-8 mb-4">
-            <div className="flex justify-between items-center">
-              <h2 className="text-3xl font-semibold">Artistas destacados</h2>
-              <Button variant="ghost" onClick={() => navigate('/artists')}>Ver todos</Button>
-            </div>
-          </div>
-          
-          {shouldShowCarousel ? (
-            // Vista con carrusel para pantallas menores a lg (1024px) - Sin padding horizontal
-            <div className="mb-10 overflow-hidden">
-              <Carousel 
-                opts={{
-                  align: "start",
-                  loop: false,
-                }} 
-                className="w-full"
-              >
-                <CarouselContent className="ml-0 gap-2 pl-4 pr-4">
-                  {featuredArtists.map((artist, index) => (
-                    <CarouselItem 
-                      key={artist.id} 
-                      className={`pl-2 ${getArtistCardSize()}`}
-                    >
-                      <div className="h-full">
-                        <ArtistProfileCard
-                          name={artist.name}
-                          type={artist.type}
-                          description={artist.description}
-                          images={artist.images}
-                          rating={artist.rating}
-                          priceRange={artist.priceRange}
-                          onClick={() => handleArtistClick(artist.id)}
-                          isRecommended={artist.id === 3}
-                        />
-                      </div>
-                    </CarouselItem>
                   ))}
-                  {/* Elemento vacío para dar espacio al final */}
-                  <CarouselItem className="pl-2 basis-4 min-w-[16px]"></CarouselItem>
-                </CarouselContent>
-              </Carousel>
+                </div>
+              </div>
+            )}
+
+            {/* Artistas Destacados - Sin padding horizontal en modo carrusel */}
+            <div className="mt-8">
+              <div className="container mx-auto px-4 md:px-8 mb-4">
+                <div className="flex justify-between items-center">
+                  <h2 className="text-3xl font-semibold">Artistas destacados</h2>
+                  <Button variant="ghost" onClick={() => navigate('/artists')}>Ver todos</Button>
+                </div>
+              </div>
+              
+              {shouldShowCarousel ? (
+                // Vista con carrusel para pantallas menores a lg (1024px) - Sin padding horizontal
+                <div className="mb-10 overflow-hidden">
+                  <Carousel 
+                    opts={{
+                      align: "start",
+                      loop: false,
+                    }} 
+                    className="w-full"
+                  >
+                    <CarouselContent className="ml-0 gap-2 pl-4 pr-4">
+                      {featuredArtists.map((artist, index) => (
+                        <CarouselItem 
+                          key={artist.id} 
+                          className={`pl-2 ${getArtistCardSize()}`}
+                        >
+                          <div className="h-full">
+                            <ArtistProfileCard
+                              name={artist.name}
+                              type={artist.type}
+                              description={artist.description}
+                              images={artist.images}
+                              rating={artist.rating}
+                              priceRange={artist.priceRange}
+                              onClick={() => handleArtistClick(artist.id)}
+                              isRecommended={artist.id === 3}
+                            />
+                          </div>
+                        </CarouselItem>
+                      ))}
+                      {/* Elemento vacío para dar espacio al final */}
+                      <CarouselItem className="pl-2 basis-4 min-w-[16px]"></CarouselItem>
+                    </CarouselContent>
+                  </Carousel>
+                </div>
+              ) : (
+                // Vista desktop en grid para pantallas lg (1024px) y superiores - Con padding
+                <div className="container mx-auto px-4 md:px-8">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                    {featuredArtists.map((artist) => (
+                      <ArtistProfileCard
+                        key={artist.id}
+                        name={artist.name}
+                        type={artist.type}
+                        description={artist.description}
+                        images={artist.images}
+                        rating={artist.rating}
+                        priceRange={artist.priceRange}
+                        onClick={() => handleArtistClick(artist.id)}
+                        isRecommended={artist.id === 3}
+                      />
+                    ))}
+                  </div>
+                </div>
+              )}
             </div>
-          ) : (
-            // Vista desktop en grid para pantallas lg (1024px) y superiores - Con padding
-            <div className="container mx-auto px-4 md:px-8">
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-                {featuredArtists.map((artist) => (
-                  <ArtistProfileCard
-                    key={artist.id}
-                    name={artist.name}
-                    type={artist.type}
-                    description={artist.description}
-                    images={artist.images}
-                    rating={artist.rating}
-                    priceRange={artist.priceRange}
-                    onClick={() => handleArtistClick(artist.id)}
-                    isRecommended={artist.id === 3}
-                  />
-                ))}
+
+            {/* Eventos - Con padding */}
+            <div className="container mx-auto px-4 md:px-8 mt-8 mb-8">
+              <div className="flex flex-col justify-start items-start mb-4 gap-4">
+                <div className="flex items-center gap-8 mb-4">
+                  <h2 className="text-3xl font-semibold mb-0">Crea tus eventos y organízate mejor</h2>
+                  <Badge className="bg-vyba-navy text-white px-4 py-2 rounded-full">Próximamente</Badge>
+                </div>
+              </div>
+              <div className="bg-vyba-gray rounded-2xl w-full h-48 border-dashed border-2 border-vyba-tertiary">
+
               </div>
             </div>
-          )}
-        </div>
-
-        {/* Eventos - Con padding */}
-        <div className="container mx-auto px-4 md:px-8 mt-8 mb-8">
-          <div className="flex flex-col justify-start items-start mb-4 gap-4">
-            <div className="flex items-center gap-8 mb-4">
-              <h2 className="text-3xl font-semibold mb-0">Crea tus eventos y organízate mejor</h2>
-              <Badge className="bg-vyba-navy text-white px-4 py-2 rounded-full">Próximamente</Badge>
-            </div>
-          </div>
-          <div className="bg-vyba-gray rounded-2xl w-full h-48 border-dashed border-2 border-vyba-tertiary">
-
-          </div>
-        </div>
+          </>
+        )}
       </div>
     </UserDashboardLayout>
   );

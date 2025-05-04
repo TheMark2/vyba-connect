@@ -5,10 +5,11 @@ import { useAuth } from '@/contexts/AuthContext';
 import { supabase } from '@/integrations/supabase/client';
 import { Button } from '@/components/ui/button';
 import { Skeleton } from '@/components/ui/skeleton';
-import { Plus, Heart, ChevronLeft, X } from 'lucide-react';
+import { Plus, Heart, ChevronLeft, X, FileHeart, BookDashed } from 'lucide-react';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { toast } from 'sonner';
 import ArtistProfileCard from '@/components/ArtistProfileCard';
+import { Label } from '@/components/ui/label';
 import {
   Dialog,
   DialogContent,
@@ -87,8 +88,6 @@ const FavoritesPage = () => {
   const fetchFavoriteLists = async () => {
     if (!user) return;
     
-    setIsLoading(true);
-    
     try {
       // Obtener listas de favoritos del usuario
       const { data: listsData, error: listsError } = await supabase
@@ -105,39 +104,22 @@ const FavoritesPage = () => {
         return;
       }
       
-      // Para cada lista, obtener conteo y una imagen representativa
-      const enrichedLists = await Promise.all(listsData.map(async (list: any) => {
-        // Obtener los artistas favoritos para esta lista
-        const { data: favoritesData, error: favoritesError, count } = await supabase
+      // Obtener conteos en paralelo para todas las listas
+      const countsPromises = listsData.map(list => 
+        supabase
           .from('favorite_artists' as any)
-          .select('artist_id', { count: 'exact' })
+          .select('*', { count: 'exact' })
           .eq('list_id', list.id)
-          .eq('user_id', user.id);
-          
-        if (favoritesError) throw favoritesError;
-        
-        // Obtener la primera imagen para mostrar (si hay favoritos)
-        let image = '/images/placeholder-favorite.webp'; // Imagen por defecto
-        
-        if (favoritesData && favoritesData.length > 0) {
-          // Obtener detalles del primer artista para usar su imagen
-          const { data: artistData } = await supabase
-            .from('profiles')
-            .select('avatar_url')
-            .eq('id', (favoritesData as any)[0].artist_id)
-            .single();
-            
-          if (artistData && (artistData as any).avatar_url) {
-            image = (artistData as any).avatar_url;
-          }
-        }
-        
-        return {
-          id: list.id,
-          name: list.name,
-          image: image,
-          count: count || 0
-        };
+          .eq('user_id', user.id)
+      );
+      
+      const countsResults = await Promise.all(countsPromises);
+      
+      const enrichedLists = listsData.map((list: any, index) => ({
+        id: list.id,
+        name: list.name,
+        image: '/images/placeholder-favorite.webp',
+        count: countsResults[index].count || 0
       }));
       
       setFavoriteLists(enrichedLists);
@@ -154,41 +136,22 @@ const FavoritesPage = () => {
     if (!user) return;
     
     try {
-      // Obtener los IDs de artistas favoritos
       const { data: favoritesData, error: favoritesError } = await supabase
         .from('favorite_artists' as any)
-        .select('artist_id')
+        .select('artist_id, artist_name')
         .eq('list_id', listId)
         .eq('user_id', user.id);
         
       if (favoritesError) throw favoritesError;
       
-      if (!favoritesData || favoritesData.length === 0) {
-        return [];
-      }
-      
-      // Obtener detalles de los artistas
-      const artistIds = (favoritesData as any[]).map(fav => fav.artist_id);
-      
-      const { data: artistsData, error: artistsError } = await supabase
-        .from('profiles')
-        .select('id, name, type, description, images, rating, price_range')
-        .in('id', artistIds)
-        .eq('is_artist', true);
-        
-      if (artistsError) throw artistsError;
-      
-      if (!artistsData) return [];
-      
-      // Transformar datos al formato requerido
-      return (artistsData as any[]).map(artist => ({
-        id: artist.id,
-        name: artist.name || 'Artista',
-        type: artist.type || 'Músico',
-        description: artist.description || '',
-        images: artist.images || ['/images/placeholder-artist.webp'],
-        rating: artist.rating || 4.5,
-        priceRange: artist.price_range || '€€',
+      return (favoritesData || []).map((fav: any) => ({
+        id: fav.artist_id,
+        name: fav.artist_name || 'Artista',
+        type: 'Artista',
+        description: '',
+        images: ['/images/placeholder-artist.webp'],
+        rating: 4.5,
+        priceRange: '€€',
         isFavorite: true
       }));
     } catch (error) {
@@ -419,17 +382,14 @@ const FavoritesPage = () => {
           ))}
         </div>
       ) : (
-        <div className="text-center py-12 bg-gray-50 rounded-xl">
-          <Heart className="h-16 w-16 text-gray-300 mx-auto mb-4" />
-          <h3 className="text-xl font-medium mb-2">No tienes listas de favoritos</h3>
-          <p className="text-vyba-tertiary mb-6 max-w-md mx-auto">
-            Crea tu primera lista de favoritos para empezar a guardar artistas que te gusten
-          </p>
+        <div className="text-center py-12 bg-vyba-gray rounded-xl">
+          <FileHeart className="h-12 w-12 mx-auto mb-4 stroke-[1.5]" />
+          <h3 className="text-xl font-medium mb-8">No tienes listas de favoritos</h3>
           <Button 
             variant="terciary" 
             onClick={handleCreateList}
           >
-            Crear lista de favoritos
+            Crear mi primera lista
           </Button>
         </div>
       )}
@@ -437,17 +397,17 @@ const FavoritesPage = () => {
       {/* Diálogo de confirmación para eliminar lista */}
       <Dialog open={showDeleteDialog} onOpenChange={setShowDeleteDialog}>
         <DialogContent className="sm:max-w-md">
-          <DialogHeader>
-            <DialogTitle>Eliminar lista de favoritos</DialogTitle>
-            <DialogDescription>
+          <DialogHeader className="px-6 py-4">
+            <DialogTitle className="text-center">Eliminar lista de favoritos</DialogTitle>
+            <DialogDescription className="text-center">
               ¿Estás seguro de que quieres eliminar la lista "{listToDelete?.name}"?
               Esta acción no se puede deshacer.
             </DialogDescription>
           </DialogHeader>
-          <DialogFooter className="flex gap-2 sm:justify-start">
+          <DialogFooter className="flex gap-2 justify-between px-6">
             <Button 
               type="button" 
-              variant="outline" 
+              variant="secondary" 
               onClick={() => setShowDeleteDialog(false)}
             >
               Cancelar
@@ -455,6 +415,7 @@ const FavoritesPage = () => {
             <Button 
               type="button" 
               variant="destructive"
+              className="bg-[#C13515] hover:bg-[#C13515]/90 text-white"
               onClick={handleDeleteList}
             >
               Eliminar
@@ -465,22 +426,19 @@ const FavoritesPage = () => {
 
       {/* Diálogo para crear nueva lista */}
       <Dialog open={isCreatingList} onOpenChange={setIsCreatingList}>
-        <DialogContent className="sm:max-w-md">
+        <DialogContent className="sm:max-w-xl">
           <DialogHeader>
-            <DialogTitle>Crear lista de favoritos</DialogTitle>
-            <DialogDescription>
-              Dale un nombre a tu nueva lista de favoritos
-            </DialogDescription>
+            <DialogTitle className="text-center">Crear lista de favoritos</DialogTitle>
           </DialogHeader>
           
           <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmitNewList)} className="space-y-6">
+            <form onSubmit={form.handleSubmit(onSubmitNewList)} className="space-y-6 px-6">
               <FormField
                 control={form.control}
                 name="name"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Nombre de la lista</FormLabel>
+                    <Label>Nombre de la lista</Label>
                     <FormControl>
                       <Input placeholder="Ej: Mis DJs favoritos" {...field} />
                     </FormControl>
@@ -490,17 +448,7 @@ const FavoritesPage = () => {
               />
               
               <div className="flex justify-end gap-2">
-                <Button 
-                  type="button" 
-                  variant="outline" 
-                  onClick={() => {
-                    setIsCreatingList(false);
-                    form.reset();
-                  }}
-                >
-                  Cancelar
-                </Button>
-                <Button type="submit">Crear lista</Button>
+                <Button variant="terciary" type="submit">Crear lista</Button>
               </div>
             </form>
           </Form>
@@ -549,8 +497,15 @@ const FavoritesPage = () => {
             ))}
           </div>
         ) : (
-          <div className="text-center py-12 bg-gray-50 rounded-xl">
-            <p className="text-vyba-tertiary">No hay artistas en esta lista</p>
+          <div className="text-center py-12 bg-vyba-gray rounded-xl">
+            <BookDashed className="h-12 w-12 mx-auto mb-4 stroke-[1.5]" />
+            <h3 className="text-xl font-medium mb-8">No tienes artistas en esta lista</h3>
+            <Button 
+              variant="terciary" 
+              onClick={() => navigate('/')}
+            >
+              Explorar artistas
+            </Button>
           </div>
         )}
       </>
