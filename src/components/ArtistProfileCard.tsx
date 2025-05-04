@@ -1,4 +1,3 @@
-
 import React, { useState, useRef, useEffect, TouchEvent } from "react";
 import { Heart, ChevronLeft, ChevronRight, Star, Banknote } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
@@ -6,8 +5,11 @@ import { cn } from "@/lib/utils";
 import { toast } from "sonner";
 import { useIsMobile } from "@/hooks/use-mobile";
 import AuthDialog from "@/components/auth/authdialog";
+import FavoriteDialog from "@/components/FavoriteDialog";
+import { useAuth } from "@/contexts/AuthContext";
 
 interface ArtistProfileCardProps {
+  id?: string;
   name: string;
   type: string;
   description: string;
@@ -25,6 +27,7 @@ interface ArtistProfileCardProps {
 }
 
 const ArtistProfileCard = ({
+  id,
   name,
   type,
   description,
@@ -46,12 +49,13 @@ const ArtistProfileCard = ({
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [isDarkImage, setIsDarkImage] = useState(false);
   const [showLoginDialog, setShowLoginDialog] = useState(false);
+  const [showFavoriteDialog, setShowFavoriteDialog] = useState(false);
   const isMobile = useIsMobile();
   const lastClickTimeRef = useRef<number>(0);
   const touchStartX = useRef<number>(0);
   const touchEndX = useRef<number>(0);
   const isDragging = useRef<boolean>(false);
-  const isAuthenticated = false;
+  const { isAuthenticated } = useAuth();
 
   const handleFavoriteClick = (e: React.MouseEvent) => {
     e.stopPropagation();
@@ -75,7 +79,7 @@ const ArtistProfileCard = ({
     }, 800);
     
     if (isAuthenticated) {
-      toggleFavorite();
+      setShowFavoriteDialog(true);
     } else {
       setShowLoginDialog(true);
     }
@@ -85,16 +89,21 @@ const ArtistProfileCard = ({
     const newFavoriteState = !favorite;
     setFavorite(newFavoriteState);
     setIsAnimating(true);
-    toast.success(favorite ? "Eliminado de favoritos" : "Añadido a favoritos", {
-      icon: favorite ? "👋" : "❤️",
-      duration: 1500,
-      position: "bottom-center"
-    });
+    
     setTimeout(() => {
       setIsAnimating(false);
     }, 600);
+    
     if (onFavoriteToggle) {
       onFavoriteToggle();
+    }
+    
+    // Si estamos quitando de favoritos, no es necesario mostrar el diálogo
+    if (favorite && !newFavoriteState) {
+      toast.success(`${name} eliminado de favoritos`, {
+        icon: "👋",
+        position: "bottom-center",
+      });
     }
   };
 
@@ -103,7 +112,7 @@ const ArtistProfileCard = ({
     const timeSinceLastClick = currentTime - lastClickTimeRef.current;
     if (timeSinceLastClick < 300 && lastClickTimeRef.current !== 0) {
       if (isAuthenticated) {
-        toggleFavorite();
+        setShowFavoriteDialog(true);
       } else {
         setShowLoginDialog(true);
       }
@@ -406,6 +415,13 @@ const ArtistProfileCard = ({
       </div>
       
       <AuthDialog open={showLoginDialog} onOpenChange={setShowLoginDialog} />
+      <FavoriteDialog 
+        open={showFavoriteDialog} 
+        onOpenChange={setShowFavoriteDialog} 
+        artistName={name}
+        onConfirm={toggleFavorite}
+        isFavorite={favorite}
+      />
     </>;
 };
 

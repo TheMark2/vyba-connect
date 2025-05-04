@@ -37,6 +37,8 @@ import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
 import OnboardingCompletionHandler from '@/components/onboarding/OnboardingCompletionHandler';
 import { useAuth } from '@/contexts/AuthContext';
+import { ImageContainer } from '@/components/onboarding/OnboardingImagesHelper';
+import SelectedImagesStack from '@/components/onboarding/SelectedImagesStack';
 
 // Tipos de datos
 interface OnboardingData {
@@ -144,6 +146,8 @@ const UserOnboardingPage = () => {
     preferredArtistTypes: []
   });
   const [isSaving, setIsSaving] = useState(false);
+  const [isLocationConfirmed, setIsLocationConfirmed] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   const stepGroups: StepGroup[] = [
     {
@@ -175,17 +179,23 @@ const UserOnboardingPage = () => {
   };
 
   // Manejadores para cada paso
-  const handleProfilePhotoChange = async (photo: File | null) => {
+  const handleProfilePhotoChange = async (photo: File | null, photoUrl?: string | null) => {
+    console.log("UserOnboardingPage: Recibida foto de perfil:", photo?.name);
+    console.log("UserOnboardingPage: Recibida previsualización:", photoUrl ? "URL disponible" : "Sin URL");
+    
+    // Actualizar el archivo de foto
     updateOnboardingData('profilePhoto', photo);
-    if (photo) {
-      try {
-        const photoUrl = await fileToBase64(photo);
-        updateOnboardingData('profilePhotoUrl', photoUrl);
-      } catch (error) {
-        console.error('Error al convertir imagen a base64:', error);
-        toast.error('Error al procesar la imagen');
-      }
-    } else {
+    
+    // Si recibimos una URL de previsualización, usarla directamente
+    if (photoUrl) {
+      console.log("UserOnboardingPage: Actualizando profilePhotoUrl con la previsualización recibida");
+      updateOnboardingData('profilePhotoUrl', photoUrl);
+      return;
+    }
+    
+    // Si no hay foto y tampoco una URL predefinida, limpiar la URL
+    if (!photo && !onboardingData.profilePhotoUrl?.startsWith('/')) {
+      console.log("UserOnboardingPage: Limpiando profilePhotoUrl");
       updateOnboardingData('profilePhotoUrl', null);
     }
   };
@@ -196,6 +206,7 @@ const UserOnboardingPage = () => {
     city: string;
     province: string;
     formattedAddress: string;
+    confirmed: boolean;
   }) => {
     updateOnboardingData('city', locationData.city);
     updateOnboardingData('province', locationData.province);
@@ -204,6 +215,9 @@ const UserOnboardingPage = () => {
       lat: locationData.lat,
       lng: locationData.lng
     });
+    
+    // Actualizar estado de confirmación basado en la propiedad confirmed de locationData
+    setIsLocationConfirmed(locationData.confirmed);
     
     console.log("Ubicación seleccionada:", locationData);
   };
@@ -259,6 +273,7 @@ const UserOnboardingPage = () => {
 
   const handleConfirmExit = async () => {
     try {
+      setIsLoading(true);
       // Guardar los datos actuales en localStorage para poder retomarlos
       if (onboardingData.profilePhotoUrl) {
         localStorage.setItem('userOnboardingData', JSON.stringify({
@@ -267,18 +282,6 @@ const UserOnboardingPage = () => {
         }));
       }
       
-      setShowExitDialog(false);
-      navigate('/onboarding-complete');
-    } catch (error) {
-      console.error('Error al guardar datos temporales:', error);
-      toast.error('Error al guardar los datos');
-      setShowExitDialog(false);
-    }
-  };
-
-  const handleSkipOnboarding = async () => {
-    try {
-      setIsLoading(true);
       // Actualizar el estado del usuario para marcar que ha completado el onboarding
       const { data: { user } } = await supabase.auth.getUser();
       
@@ -293,9 +296,60 @@ const UserOnboardingPage = () => {
         }
       });
       
+      // Establecer bandera para mostrar el diálogo de bienvenida
+      localStorage.setItem('is_from_registration', 'true');
+      
       toast.success('¡Bienvenido a Vyba!');
       setShowExitDialog(false);
-      navigate('/onboarding-complete');
+      navigate('/user-dashboard');
+    } catch (error) {
+      console.error('Error al guardar datos temporales:', error);
+      toast.error('Error al guardar los datos');
+      setShowExitDialog(false);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleSkipOnboarding = async () => {
+    try {
+      setIsLoading(true);
+      // Actualizar el estado del usuario para marcar que ha completado el onboarding
+      const { data: { user } } = await supabase.auth.getUser();
+      
+      if (!user) {
+        throw new Error('Usuario no autenticado');
+      }
+      
+      // Verificar si este es el primer salto del onboarding para este usuario
+      const hasSkippedBefore = localStorage.getItem('has_skipped_onboarding') === 'true';
+      
+      // Actualizar metadatos para marcar el onboarding como completado
+      // y también indicar que el usuario ha saltado el onboarding
+      await supabase.auth.updateUser({
+        data: {
+          onboarding_completed: true,
+          onboarding_skipped: true // Indicar que se ha saltado en los metadatos del usuario
+        }
+      });
+      
+      // Establecer bandera para mostrar el diálogo de bienvenida SOLO si es la primera vez
+      if (!hasSkippedBefore) {
+        console.log('Primera vez que se salta el onboarding, se mostrará WelcomeDialog');
+        localStorage.setItem('is_from_registration', 'true');
+        // Marcar que ya ha saltado el onboarding para futuras referencias
+        localStorage.setItem('has_skipped_onboarding', 'true');
+      } else {
+        console.log('Ya había saltado el onboarding anteriormente, no se mostrará WelcomeDialog');
+      }
+      
+      // Establecer bandera que indica que el usuario ha saltado el onboarding
+      localStorage.setItem('onboarding_skipped', 'true');
+      console.log('Bandera onboarding_skipped establecida:', true);
+      
+      toast.success('¡Bienvenido a Vyba!');
+      setShowExitDialog(false);
+      navigate('/user-dashboard');
     } catch (error) {
       console.error('Error al omitir onboarding:', error);
       toast.error('Error al procesar tu solicitud');
@@ -304,162 +358,160 @@ const UserOnboardingPage = () => {
     }
   };
 
-  // Función actualizada para finalizar el onboarding y guardar en Supabase
+  // Manejar la finalización del onboarding
   const handleFinish = async () => {
-    setIsSaving(true);
-    
     try {
-      // 1. Preparar la URL de avatar
-      let avatarUrl = null;
-      let userId = null;
-      let userEmail = null;
-      let userName = "Usuario";
+      setIsSaving(true);
+      setError(null);
       
-      // Obtener el ID de usuario actual
-      const { data: userData } = await supabase.auth.getUser();
+      // 1. Verificar usuario autenticado
+      const { data: { user } } = await supabase.auth.getUser();
       
-      if (userData && userData.user) {
-        userId = userData.user.id;
-        userEmail = userData.user.email;
-        userName = userData.user.user_metadata?.name || userEmail?.split('@')[0] || "Usuario";
-      } else {
-        throw new Error("No se pudo obtener la información del usuario");
+      if (!user) {
+        throw new Error('Usuario no autenticado');
       }
       
-      // Subir la imagen si existe
+      // Verificar si el usuario había saltado previamente el onboarding
+      const wasOnboardingSkipped = user.user_metadata?.onboarding_skipped === true || 
+                                 localStorage.getItem('onboarding_skipped') === 'true';
+      
+      // Verificar si es la primera vez que completa el onboarding
+      const hasCompletedBefore = localStorage.getItem('has_completed_onboarding') === 'true';
+      
+      // 2. Preparar objeto con los datos a guardar
+      const userData: Record<string, any> = {
+        // Ubicación
+        location: onboardingData.location || '',
+        city: onboardingData.city || '',
+        province: onboardingData.province || '',
+        coordinates: onboardingData.coordinates || null,
+        // Preferencias musicales
+        favorite_genres: onboardingData.favoriteGenres || [],
+        preferred_artist_types: onboardingData.preferredArtistTypes || [],
+        // Importante: marcar el onboarding como completado
+        onboarding_completed: true,
+        // Eliminar la marca de onboarding saltado si existe
+        onboarding_skipped: null
+      };
+      
+      let avatarUrl = null;
+      
+      // 3. Si hay foto de perfil, subirla a Storage
       if (onboardingData.profilePhoto) {
-        try {
-          const fileExt = onboardingData.profilePhoto.name.split('.').pop();
-          const fileName = `${userId}-${Date.now()}.${fileExt}`;
+        const fileExt = onboardingData.profilePhoto.name.split('.').pop();
+        const fileName = `${user.id}-${Date.now()}.${fileExt}`;
+        
+        // Subir imagen a storage
+        const { error: uploadError, data } = await supabase.storage
+          .from('avatars')
+          .upload(fileName, onboardingData.profilePhoto, {
+            upsert: true
+          });
           
-          // Crear bucket si no existe (lo crea automáticamente si no existe)
-          try {
-            const { data: existingBucket } = await supabase.storage.getBucket('avatars');
-            if (!existingBucket) {
-              await supabase.storage.createBucket('avatars', {
-                public: true,
-                fileSizeLimit: 5 * 1024 * 1024, // 5MB
-              });
-            }
-          } catch (error) {
-            // El bucket probablemente no existe, intentamos crearlo
-            await supabase.storage.createBucket('avatars', {
-              public: true,
-              fileSizeLimit: 5 * 1024 * 1024, // 5MB
-            });
-          }
-          
-          // Subir la imagen
-          const { data: uploadData, error: uploadError } = await supabase.storage
-            .from('avatars')
-            .upload(fileName, onboardingData.profilePhoto);
-            
-          if (uploadError) throw uploadError;
-            
-          // Obtener la URL pública de la imagen subida
+        if (uploadError) {
+          console.error('Error al subir avatar:', uploadError);
+        } else {
+          // Obtener URL pública
           const { data: urlData } = supabase.storage
             .from('avatars')
             .getPublicUrl(fileName);
             
           if (urlData) {
             avatarUrl = urlData.publicUrl;
-            console.log("Avatar URL generada:", avatarUrl);
+            userData.avatar_url = avatarUrl;
           }
-        } catch (error) {
-          console.error("Error en el proceso de subida de imagen:", error);
-          // Continuar sin la imagen
         }
       } else if (onboardingData.profilePhotoUrl && onboardingData.profilePhotoUrl.startsWith('/')) {
-        // Si es una ruta de avatar predefinido, usarla directamente
         avatarUrl = onboardingData.profilePhotoUrl;
-        console.log("Usando avatar predefinido:", avatarUrl);
-      }
-
-      // 2. Crear objeto con los metadatos a actualizar
-      const userMetadata = {
-        avatar_url: avatarUrl,
-        name: userName,
-        location: onboardingData.location || "",
-        city: onboardingData.city || "",
-        province: onboardingData.province || "",
-        coordinates: onboardingData.coordinates || null,
-        favorite_genres: onboardingData.favoriteGenres || [],
-        preferred_artist_types: onboardingData.preferredArtistTypes || [],
-        onboarding_completed: true
-      };
-      
-      console.log("Datos del usuario que se guardarán:", userMetadata);
-
-      // 3. Actualizar metadatos del usuario
-      const { error: updateError } = await supabase.auth.updateUser({
-        data: userMetadata
-      });
-
-      if (updateError) {
-        console.error("Error al actualizar metadatos:", updateError);
-        throw updateError;
-      }
-
-      // 4. Guardar en la tabla de perfiles
-      try {
-        // Verificar si ya existe el perfil
-        const { data: existingProfile } = await supabase
-          .from('profiles')
-          .select('*')
-          .eq('id', userId)
-          .single();
+        userData.avatar_url = avatarUrl;
+      } else if (onboardingData.profilePhotoUrl && onboardingData.profilePhotoUrl.startsWith('data:')) {
+        try {
+          console.log("Procesando imagen en base64");
+          const response = await fetch(onboardingData.profilePhotoUrl);
+          const blob = await response.blob();
+          const fileName = `${user.id}-${Date.now()}`;
           
-        if (existingProfile) {
-          // Actualizar perfil existente
-          await supabase
-            .from('profiles')
-            .update({
-              full_name: userName,
-              avatar_url: avatarUrl,
-              city: onboardingData.city || "",
-              province: onboardingData.province || "",
-              location: onboardingData.location || "",
-              favorite_genres: onboardingData.favoriteGenres || [],
-              preferred_artist_types: onboardingData.preferredArtistTypes || [],
-              updated_at: new Date().toISOString()
-            })
-            .eq('id', userId);
-        } else {
-          // Crear nuevo perfil
-          await supabase
-            .from('profiles')
-            .insert({
-              id: userId,
-              email: userEmail,
-              full_name: userName,
-              avatar_url: avatarUrl,
-              city: onboardingData.city || "",
-              province: onboardingData.province || "",
-              location: onboardingData.location || "",
-              favorite_genres: onboardingData.favoriteGenres || [],
-              preferred_artist_types: onboardingData.preferredArtistTypes || [],
-              updated_at: new Date().toISOString()
-            });
+          // Subir la imagen
+          const { data: uploadData, error: uploadError } = await supabase.storage
+            .from("profiles")
+            .upload(fileName, blob);
+            
+          if (uploadError) {
+            console.error("Error al subir imagen de perfil:", uploadError);
+          } else if (uploadData) {
+            // Obtener la URL pública
+            const { data: urlData } = supabase.storage
+              .from("profiles")
+              .getPublicUrl(fileName);
+            
+            avatarUrl = urlData.publicUrl;
+            userData.avatar_url = avatarUrl;
+          }
+        } catch (error) {
+          console.error("Error al procesar imagen en base64:", error);
         }
-      } catch (error) {
-        console.error("Error al actualizar perfil en la base de datos:", error);
-        // No detener el flujo por esto
       }
-
-      // Actualizar el contexto de autenticación para reflejar los cambios
-      await reloadUserData();
-
-      // 5. Mostrar mensaje de éxito y redireccionar
+      
+      // 4. Actualizar metadatos del usuario
+      await supabase.auth.updateUser({
+        data: userData
+      });
+      
+      // 5. También actualizar o crear entrada en la tabla profiles
+      const { error: profileError } = await supabase
+        .from('profiles')
+        .upsert({
+          id: user.id,
+          email: user.email,
+          city: onboardingData.city || '',
+          province: onboardingData.province || '',
+          favorite_genres: onboardingData.favoriteGenres || [],
+          preferred_artist_types: onboardingData.preferredArtistTypes || [],
+          avatar_url: avatarUrl
+        });
+        
+      if (profileError) {
+        console.error('Error al actualizar perfil:', profileError);
+      }
+      
+      // 6. Lógica para mostrar el WelcomeDialog:
+      // - Si es la primera vez que completa el onboarding (registro normal): mostrar
+      // - Si había saltado el onboarding por primera vez: mostrar
+      // - Si ya había completado o saltado el onboarding antes: no mostrar
+      
+      if (!hasCompletedBefore) {
+        if (!wasOnboardingSkipped || localStorage.getItem('has_skipped_onboarding') !== 'true') {
+          // Primera vez completando el onboarding (flujo normal de registro)
+          console.log('Primera vez completando el onboarding, mostrando WelcomeDialog');
+          localStorage.setItem('is_from_registration', 'true');
+        } else if (localStorage.getItem('has_skipped_onboarding') === 'true') {
+          // Ya había saltado, pero es la primera vez que lo completa
+          console.log('Completando onboarding después de haberlo saltado por primera vez, mostrando WelcomeDialog');
+          localStorage.setItem('is_from_registration', 'true');
+        }
+        // Marcar que ya ha completado el onboarding para futuras referencias
+        localStorage.setItem('has_completed_onboarding', 'true');
+      } else {
+        console.log('Ya había completado el onboarding anteriormente, no mostrando WelcomeDialog');
+      }
+      
+      // Eliminar las banderas del localStorage que ya no son necesarias
+      localStorage.removeItem('onboarding_skipped');
+      
+      // Agregar logs para depuración
+      console.log('¿Mostrar WelcomeDialog?', localStorage.getItem('is_from_registration') === 'true');
+      
+      // 7. Redirigir al usuario al Dashboard
       toast.success('¡Perfil configurado correctamente!');
       
-      // Redirigir a la página de finalización
+      // Pequeña pausa para asegurar que localStorage se actualiza antes de la navegación
       setTimeout(() => {
-        navigate('/onboarding-complete', { replace: true });
-      }, 1000);
+        navigate('/user-dashboard');
+      }, 100);
       
     } catch (error) {
-      console.error('Error general:', error);
-      toast.error('Ha ocurrido un error. Por favor, inténtalo de nuevo.');
+      console.error('Error al finalizar onboarding:', error);
+      toast.error('Error al guardar tu perfil');
     } finally {
       setIsSaving(false);
     }
@@ -471,8 +523,8 @@ const UserOnboardingPage = () => {
       // La foto de perfil no es obligatoria
       return true;
     } else if (currentGroup === 1) {
-      // Ciudad y provincia son obligatorios
-      return !!(onboardingData.city && onboardingData.province);
+      // Ciudad y provincia son obligatorios, y la ubicación debe estar confirmada
+      return !!(onboardingData.city && onboardingData.province && isLocationConfirmed);
     } else if (currentGroup === 2) {
       // Al menos un género de música es obligatorio
       return onboardingData.favoriteGenres && onboardingData.favoriteGenres.length > 0;
@@ -488,7 +540,7 @@ const UserOnboardingPage = () => {
         return (
           <div className="space-y-8">
             <div>
-              <h2 className="text-4xl font-semibold mb-4">Tu imagen de perfil</h2>
+              <h2 className="text-4xl font-semibold mb-4">Foto de perfil</h2>
               <p className="text-lg text-vyba-tertiary">
                 Sube una foto de perfil o escoge algún avatar predefinido
               </p>
@@ -499,10 +551,17 @@ const UserOnboardingPage = () => {
               initialPhotoFile={onboardingData.profilePhoto}
             />
             <div className="grid grid-cols-6 md:grid-cols-10 gap-4 mt-12">
-              {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28].map((num) => (
+              {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28].map((num, index) => (
                 <div 
                   key={num}
-                  className="cursor-pointer relative transition-all duration-300 rounded-full overflow-hidden aspect-square"
+                  className={`
+                    cursor-pointer relative transition-all duration-300 
+                    rounded-full overflow-hidden aspect-square
+                    opacity-0 scale-90 animate-[scale-in_0.4s_ease-out_forwards]
+                  `}
+                  style={{
+                    animationDelay: `${index * 50}ms` // 50ms de retraso entre cada avatar
+                  }}
                   onClick={() => {
                     // Usar avatares predefinidos
                     updateOnboardingData('profilePhotoUrl', `/images/user-image/avatar${num}.webp`);
@@ -515,8 +574,8 @@ const UserOnboardingPage = () => {
                     className="w-full h-full object-cover" 
                   />
                   {onboardingData.profilePhotoUrl === `/images/user-image/avatar${num}.webp` && (
-                    <div className="absolute inset-0 bg-black/20 flex items-center justify-center">
-                      <Check className="text-white" />
+                    <div className="absolute inset-0 bg-black/20 flex items-center justify-center animate-[fade-in_0.2s_ease-out]">
+                      <Check className="text-white animate-[scale-in_0.3s_ease-out]" />
                     </div>
                   )}
                 </div>
@@ -539,6 +598,7 @@ const UserOnboardingPage = () => {
                 onLocationSelect={handleLocationSelect}
                 initialCity={onboardingData.city}
                 initialProvince={onboardingData.province}
+                onValidityChange={setIsLocationConfirmed}
               />
             </div>
           </div>
@@ -564,48 +624,106 @@ const UserOnboardingPage = () => {
                 Indica tus gustos para que podamos darte solo lo que te gusta
               </p>
             </div>
-            <div className="space-y-6">
-              <div className="space-y-4">
-                <h3 className="text-lg font-medium">Géneros musicales favoritos</h3>
-                <p className="text-sm text-vyba-tertiary">Selecciona todos los que te gusten</p>
-                <div className="grid grid-cols-3 gap-3">
-                  {musicGenres.map((genre) => (
-                    <div key={genre} className="flex items-center space-x-2">
-                      <Checkbox 
-                        id={`genre-${genre}`} 
-                        checked={(onboardingData.favoriteGenres || []).includes(genre)}
-                        onCheckedChange={() => handleGenreToggle(genre)}
-                      />
-                      <Label 
-                        htmlFor={`genre-${genre}`}
-                        className="text-sm cursor-pointer"
+            <div className="space-y-12">
+              <div className="space-y-6">
+                <div className="flex flex-col sm:flex-row sm:items-center gap-3">
+                  <h3 className="text-lg font-medium mb-0">Géneros musicales favoritos</h3>
+                  <SelectedImagesStack 
+                    items={onboardingData.favoriteGenres || []} 
+                    category="genres"
+                    className="ml-0 sm:ml-4 mt-2 sm:mt-0"
+                    maxVisible={4}
+                  />
+                </div>
+                <p className="text-sm text-vyba-tertiary mt-0">Selecciona todos los que te gusten</p>
+                <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
+                  {musicGenres.map((genre) => {
+                    const isSelected = (onboardingData.favoriteGenres || []).includes(genre);
+                    return (
+                      <div 
+                        key={genre} 
+                        className={cn(
+                          "flex flex-col items-center cursor-pointer transition-all duration-300 group",
+                          isSelected ? "scale-[1.02]" : ""
+                        )}
                       >
-                        {genre}
-                      </Label>
-                    </div>
-                  ))}
+                        <ImageContainer 
+                          category="genres"
+                          name={genre}
+                          isSelected={isSelected}
+                          onClick={() => handleGenreToggle(genre)}
+                        >
+                          <div 
+                            className={cn(
+                              "absolute inset-0 bg-black/40 flex items-center justify-center transition-opacity duration-300",
+                              isSelected ? "opacity-100" : "opacity-0 group-hover:opacity-30"
+                            )}
+                          >
+                            {isSelected && (
+                              <Check className="text-white h-8 w-8 transition-transform duration-300" />
+                            )}
+                          </div>
+                        </ImageContainer>
+                        <span className={cn(
+                          "text-sm font-medium text-center transition-colors duration-300",
+                          isSelected ? "text-vyba-navy" : "text-vyba-tertiary group-hover:text-vyba-navy"
+                        )}>
+                          {genre}
+                        </span>
+                      </div>
+                    );
+                  })}
                 </div>
               </div>
               
-              <div className="space-y-4">
-                <h3 className="text-lg font-medium">Tipos de artistas que te interesan</h3>
+              <div className="space-y-6">
+                <div className="flex flex-col sm:flex-row sm:items-center gap-3 mb-2">
+                  <h3 className="text-lg font-medium">Tipos de artistas que te interesan</h3>
+                  <SelectedImagesStack 
+                    items={onboardingData.preferredArtistTypes || []} 
+                    category="artists"
+                    className="ml-0 sm:ml-4 mt-2 sm:mt-0"
+                    maxVisible={4}
+                  />
+                </div>
                 <p className="text-sm text-vyba-tertiary">Selecciona todos los que te gusten</p>
-                <div className="grid grid-cols-3 gap-3">
-                  {artistTypes.map((type) => (
-                    <div key={type} className="flex items-center space-x-2">
-                      <Checkbox 
-                        id={`type-${type}`} 
-                        checked={(onboardingData.preferredArtistTypes || []).includes(type)}
-                        onCheckedChange={() => handleArtistTypeToggle(type)}
-                      />
-                      <Label 
-                        htmlFor={`type-${type}`}
-                        className="text-sm cursor-pointer"
+                <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
+                  {artistTypes.map((type) => {
+                    const isSelected = (onboardingData.preferredArtistTypes || []).includes(type);
+                    return (
+                      <div 
+                        key={type} 
+                        className={cn(
+                          "flex flex-col items-center cursor-pointer transition-all duration-300 group",
+                          isSelected ? "scale-[1.02]" : ""
+                        )}
                       >
-                        {type}
-                      </Label>
-                    </div>
-                  ))}
+                        <ImageContainer 
+                          category="artists"
+                          name={type}
+                          isSelected={isSelected}
+                          onClick={() => handleArtistTypeToggle(type)}
+                        >
+                          <div 
+                            className={cn(
+                              "absolute inset-0 bg-black/40 flex items-center justify-center transition-opacity duration-300",
+                              isSelected ? "opacity-100" : "opacity-0 group-hover:opacity-30"
+                            )}
+                          >
+                            {isSelected && (
+                              <Check className="text-white h-8 w-8 transition-transform duration-300" />
+                            )}
+                          </div>
+                        </ImageContainer>
+                        <span className={cn(
+                          "text-sm font-medium text-center transition-colors duration-300",
+                          isSelected ? "text-vyba-navy" : "text-vyba-tertiary group-hover:text-vyba-navy"
+                        )}>
+                          {type}
+                        </span>
+                      </div>
+                    );
+                  })}
                 </div>
               </div>
             </div>
@@ -625,7 +743,7 @@ const UserOnboardingPage = () => {
             <div className="flex justify-end">
               <Button
                 variant="secondary"
-                onClick={handleCancel}
+                onClick={handleSkipOnboarding}
                 className="text-vyba-tertiary hover:text-vyba-navy flex items-center gap-2"
               >
                 Saltar y entrar

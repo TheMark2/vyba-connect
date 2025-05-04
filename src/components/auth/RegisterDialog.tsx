@@ -286,6 +286,11 @@ const RegisterDialog = ({ open, onOpenChange, onSuccess }: RegisterDialogProps) 
         console.error("Error al iniciar sesión automáticamente:", signInError);
       }
 
+      // IMPORTANTE: Establecer la bandera para mostrar el diálogo de bienvenida
+      // Esto debe hacerse antes de la redirección para que el WelcomeDialog se muestre
+      console.log("Estableciendo bandera para el diálogo de bienvenida");
+      localStorage.setItem('is_from_registration', 'true');
+
       if (onSuccess) {
         onSuccess({ 
           fullName: `${data.name} ${data.lastName}`, 

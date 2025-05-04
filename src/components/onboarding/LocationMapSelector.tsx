@@ -14,15 +14,18 @@ interface LocationMapSelectorProps {
     city: string;
     province: string;
     formattedAddress: string;
+    confirmed: boolean;
   }) => void;
   initialCity?: string;
   initialProvince?: string;
+  onValidityChange?: (isValid: boolean) => void;
 }
 
 const LocationMapSelector = ({
   onLocationSelect,
   initialCity = '',
   initialProvince = '',
+  onValidityChange,
 }: LocationMapSelectorProps) => {
   const mapContainer = useRef<HTMLDivElement>(null);
   const map = useRef<mapboxgl.Map | null>(null);
@@ -35,12 +38,14 @@ const LocationMapSelector = ({
   const [searchResults, setSearchResults] = useState<any[]>([]);
   const [searching, setSearching] = useState(false);
   const [showResults, setShowResults] = useState(false);
+  const [locationConfirmed, setLocationConfirmed] = useState(false);
   const [selectedLocation, setSelectedLocation] = useState<{
     lat: number;
     lng: number;
     city: string;
     province: string;
     formattedAddress: string;
+    confirmed: boolean;
   } | null>(null);
 
   // Obtener el token de Mapbox desde Supabase
@@ -214,18 +219,19 @@ const LocationMapSelector = ({
                   ['exponential', 2], // Usamos exponencial para mejor ajuste
                   ['zoom'],
                   // zoom level : pixeles de radio (ajustados para representar ~1km)
-                  10, 15,   // A zoom 10 (muy alejado)
-                  12, 30,   // A zoom 12
-                  13, 50,   // A zoom 13
-                  14, 80,   // A zoom 14
-                  15, 160,  // A zoom 15
-                  16, 320,  // A zoom 16 (muy cercano)
+                  10, 30,   // A zoom 10 (muy alejado)
+                  12, 60,   // A zoom 12
+                  13, 100,  // A zoom 13
+                  14, 160,  // A zoom 14
+                  15, 320,  // A zoom 15
+                  16, 640,  // A zoom 16 (muy cercano)
                 ],
-                'circle-color': '#152361',
+                'circle-color': '#000000',
                 'circle-opacity': 0.15,
-                'circle-stroke-width': 1,
-                'circle-stroke-color': '#152361',
-                'circle-stroke-opacity': 0.3,
+                'circle-stroke-width': 3,
+                'circle-stroke-color': '#000000',
+                'circle-stroke-opacity': 0.6,
+                'circle-blur': 0,
               },
             });
             
@@ -238,8 +244,8 @@ const LocationMapSelector = ({
         const markerElement = document.createElement('div');
         markerElement.className = 'custom-marker';
         markerElement.innerHTML = `
-          <div style="width: 20px; height: 20px; border-radius: 50%; background-color: white; display: flex; align-items: center; justify-content: center; box-shadow: 0 0 0 2px #152361, 0 0 10px rgba(0,0,0,0.3);">
-            <div style="width: 10px; height: 10px; border-radius: 50%; background-color: #152361;"></div>
+          <div style="width: 20px; height: 20px; border-radius: 50%; background-color: white; display: flex; align-items: center; justify-content: center; box-shadow: 0 0 0 2px rgba(0,0,0,0.5), 0 2px 8px rgba(0,0,0,0.3);">
+            <div style="width: 8px; height: 8px; border-radius: 50%; background-color: #000000;"></div>
           </div>
         `;
         
@@ -375,9 +381,12 @@ const LocationMapSelector = ({
     if (!mapboxToken) return;
 
     setGeocoding(true);
+    // Resetear confirmación al cambiar de ubicación
+    setLocationConfirmed(false);
+    
     try {
       const response = await fetch(
-        `https://api.mapbox.com/geocoding/v5/mapbox.places/${lng},${lat}.json?access_token=${mapboxToken}&types=place,locality,district&country=es&language=es`
+        `https://api.mapbox.com/geocoding/v5/mapbox.places/${lng},${lat}.json?access_token=${mapboxToken}&types=place&country=es&language=es`
       );
       
       const data = await response.json();
@@ -406,7 +415,7 @@ const LocationMapSelector = ({
         }
 
         // Crear dirección formateada
-        formattedAddress = data.features[0].place_name || `${city}, ${province}`;
+        formattedAddress = `${city}, ${province}`;
         
         setSearchQuery(formattedAddress);
         const locationData = {
@@ -414,7 +423,8 @@ const LocationMapSelector = ({
           lng,
           city,
           province,
-          formattedAddress
+          formattedAddress,
+          confirmed: false
         };
 
         setSelectedLocation(locationData);
@@ -473,6 +483,8 @@ const LocationMapSelector = ({
   const selectPlace = async (place: any) => {
     setSearchQuery(place.place_name);
     setShowResults(false);
+    // Resetear confirmación al cambiar de ubicación
+    setLocationConfirmed(false);
     
     if (place.center && map.current && marker.current) {
       const [lng, lat] = place.center;
@@ -503,9 +515,26 @@ const LocationMapSelector = ({
 
   const handleConfirmLocation = () => {
     if (selectedLocation) {
-      onLocationSelect(selectedLocation);
+      // Actualizar el estado de confirmación
+      setLocationConfirmed(true);
+      
+      // Actualizar el objeto de ubicación seleccionada con el estado de confirmación
+      const confirmedLocation = {
+        ...selectedLocation,
+        confirmed: true
+      };
+      
+      setSelectedLocation(confirmedLocation);
+      onLocationSelect(confirmedLocation);
     }
   };
+
+  // Efecto para actualizar la validez del paso basado en si la ubicación está confirmada
+  useEffect(() => {
+    if (onValidityChange) {
+      onValidityChange(locationConfirmed);
+    }
+  }, [locationConfirmed, onValidityChange]);
 
   if (loading) {
     return (
@@ -544,18 +573,18 @@ const LocationMapSelector = ({
                 onChange={handleSearchChange}
                 onFocus={() => setShowResults(true)}
                 onBlur={() => setTimeout(() => setShowResults(false), 200)}
-                className="pl-10 bg-white shadow-md border-transparent focus:border-vyba-navy font-figtree"
+                className="pl-10 bg-white/20 backdrop-blur-3xl border-transparent focus:border-vyba-navy font-figtree placeholder:text-vyba-navy"
               />
               {showResults && searchResults.length > 0 && (
                 <div className="absolute z-20 w-full bg-white mt-1 rounded-md shadow-lg max-h-60 overflow-auto">
                   {searchResults.map((result) => (
                     <div
                       key={result.id}
-                      className="px-4 py-2 hover:bg-vyba-gray/20 cursor-pointer"
+                      className="px-4 py-3 hover:bg-vyba-gray/20 cursor-pointer"
                       onMouseDown={() => selectPlace(result)}
                     >
-                      <p className="font-medium font-figtree">{result.text}</p>
-                      <p className="text-sm text-vyba-tertiary font-figtree">{result.place_name}</p>
+                      <p className="font-medium font-figtree text-base text-vyba-navy mb-1">{result.text}</p>
+                      <p className="text-sm text-vyba-tertiary font-figtree mb-0">{result.place_name}</p>
                     </div>
                   ))}
                 </div>
@@ -590,7 +619,7 @@ const LocationMapSelector = ({
       </div>
 
       {selectedLocation && (
-        <div className="p-4 bg-vyba-gray/10 rounded-lg">
+        <div className="py-4 bg-vyba-gray/10 rounded-lg">
           <div className="flex items-start gap-3">
             <MapPin className="w-5 h-5 text-vyba-navy mt-0.5" />
             <div className="space-y-1 flex-1">
@@ -598,14 +627,14 @@ const LocationMapSelector = ({
               <p className="text-sm text-vyba-tertiary font-figtree">{selectedLocation.formattedAddress}</p>
             </div>
             <Button
-              size="sm"
-              variant="terciary"
+              size="default"
+              variant={locationConfirmed ? "secondary" : "terciary"}
               onClick={handleConfirmLocation}
-              disabled={geocoding}
+              disabled={geocoding || locationConfirmed}
               className="flex items-center gap-1 font-figtree"
             >
               {geocoding ? <Loader2 className="h-3 w-3 animate-spin" /> : <Check className="h-3 w-3" />}
-              <span>Confirmar</span>
+              <span>{locationConfirmed ? "Confirmado" : "Confirmar"}</span>
             </Button>
           </div>
         </div>

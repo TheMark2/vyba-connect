@@ -24,9 +24,11 @@ import Djs from './pages/artist-type/djs';
 import UserDashboardPage from './pages/user-dashboard/UserDashboardPage';
 import ProfilePage from './pages/user-dashboard/ProfilePage';
 import MessagesPage from './pages/user-dashboard/MessagesPage';
+import FavoritesPage from './pages/user-dashboard/FavoritesPage';
 import UserOnboardingPage from './pages/UserOnboardingPage';
 import OnboardingCompletePage from './pages/OnboardingCompletePage';
 import { supabase } from './integrations/supabase/client';
+import OnboardingCompletionHandler from './components/onboarding/OnboardingCompletionHandler';
 
 const RedirectToDashboard = () => {
   const navigate = useNavigate();
@@ -133,13 +135,16 @@ function App() {
           <Route path="/artist-type/djs" element={<Djs />} />
           
           {/* Rutas del dashboard de usuarios normales */}
-          <Route path="/user-dashboard" element={<UserDashboardPage />} />
-          <Route path="/user-dashboard/profile" element={<ProfilePage />} />
-          <Route path="/user-dashboard/messages" element={<MessagesPage />} />
+          <Route path="/user-dashboard" element={<><UserDashboardPage /><OnboardingCompletionHandler /></>} />
+          <Route path="/user-dashboard/profile" element={<><ProfilePage /><OnboardingCompletionHandler /></>} />
+          <Route path="/user-dashboard/messages" element={<><MessagesPage /><OnboardingCompletionHandler /></>} />
+          <Route path="/user-dashboard/favorites" element={<><FavoritesPage /><OnboardingCompletionHandler /></>} />
           
           <Route path="/register/artist" element={<ArtistOnboardingPage />} />
           <Route path="/user-onboarding" element={<UserOnboardingPage />} />
           <Route path="/onboarding-complete" element={<OnboardingCompletePage />} />
+          
+          <Route path="/favorites" element={<><FavoritesPage /><OnboardingCompletionHandler /></>} />
           
           <Route path="*" element={<NotFound />} />
         </Routes>

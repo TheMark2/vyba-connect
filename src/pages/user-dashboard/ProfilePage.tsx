@@ -1,5 +1,4 @@
-
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, Suspense } from 'react';
 import UserDashboardLayout from '@/components/dashboard/UserDashboardLayout';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -14,8 +13,51 @@ import { Badge } from "@/components/ui/badge";
 import { useAuth } from '@/contexts/AuthContext';
 import Image from '@/components/ui/image';
 
+// Componente para el esqueleto de carga
+const ProfileSkeleton = () => (
+  <div className="animate-pulse">
+    <div className="mb-8 flex justify-between items-center">
+      <div>
+        <div className="h-8 w-32 bg-gray-200 rounded mb-2"></div>
+        <div className="h-4 w-48 bg-gray-200 rounded"></div>
+      </div>
+      <div className="h-10 w-24 bg-gray-200 rounded"></div>
+    </div>
+    
+    <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+      <div className="col-span-1">
+        <div className="bg-white rounded-lg shadow p-6 flex flex-col items-center">
+          <div className="h-32 w-32 rounded-full bg-gray-200 mb-4"></div>
+          <div className="h-6 w-32 bg-gray-200 rounded mb-2"></div>
+          <div className="h-4 w-48 bg-gray-200 rounded mb-6"></div>
+          <div className="w-full space-y-3">
+            <div className="h-4 w-full bg-gray-200 rounded"></div>
+            <div className="h-4 w-full bg-gray-200 rounded"></div>
+          </div>
+        </div>
+      </div>
+      
+      <div className="col-span-1 md:col-span-2">
+        <div className="bg-white rounded-lg shadow mb-6">
+          <div className="p-6">
+            <div className="h-6 w-48 bg-gray-200 rounded mb-6"></div>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              {[...Array(6)].map((_, i) => (
+                <div key={i}>
+                  <div className="h-4 w-24 bg-gray-200 rounded mb-2"></div>
+                  <div className="h-8 w-full bg-gray-200 rounded"></div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+);
+
 const ProfilePage = () => {
-  const { reloadUserData } = useAuth();
+  const { user, reloadUserData } = useAuth();
   const [isLoading, setIsLoading] = useState(true);
   const [isSaving, setIsSaving] = useState(false);
   const [userData, setUserData] = useState({
@@ -36,58 +78,87 @@ const ProfilePage = () => {
   const [avatarUrl, setAvatarUrl] = useState('');
   const [avatarPreview, setAvatarPreview] = useState('');
 
+  // Carga inicial de datos de usuario - optimizada
   useEffect(() => {
     const fetchUserData = async () => {
       try {
-        setIsLoading(true);
-        const { data: { user } } = await supabase.auth.getUser();
-        
+        // Si ya tenemos el usuario en el contexto, usarlo directamente
         if (user) {
-          console.log('User metadata:', user.user_metadata);
+          const userMetadata = user.user_metadata || {};
           
-          // Obtener datos del perfil desde user_metadata
-          setUserData({
+          // Datos del perfil desde user_metadata
+          const profileData = {
             id: user.id,
             email: user.email || '',
-            name: user.user_metadata?.name || '',
-            phone: user.user_metadata?.phone || '',
-            address: user.user_metadata?.address || '',
-            city: user.user_metadata?.city || '',
-            province: user.user_metadata?.province || '',
-            bio: user.user_metadata?.bio || '',
-            favoriteGenres: user.user_metadata?.favorite_genres || [],
-            preferredArtistTypes: user.user_metadata?.preferred_artist_types || []
-          });
+            name: userMetadata.name || '',
+            phone: userMetadata.phone || '',
+            address: userMetadata.address || '',
+            city: userMetadata.city || '',
+            province: userMetadata.province || '',
+            bio: userMetadata.bio || '',
+            favoriteGenres: userMetadata.favorite_genres || [],
+            preferredArtistTypes: userMetadata.preferred_artist_types || []
+          };
           
-          setEditedData({
-            id: user.id,
-            email: user.email || '',
-            name: user.user_metadata?.name || '',
-            phone: user.user_metadata?.phone || '',
-            address: user.user_metadata?.address || '',
-            city: user.user_metadata?.city || '',
-            province: user.user_metadata?.province || '',
-            bio: user.user_metadata?.bio || '',
-            favoriteGenres: user.user_metadata?.favorite_genres || [],
-            preferredArtistTypes: user.user_metadata?.preferred_artist_types || []
-          });
+          setUserData(profileData);
+          setEditedData(profileData);
           
           // Obtener avatar si existe
-          if (user.user_metadata?.avatar_url) {
-            console.log('Avatar URL from metadata:', user.user_metadata.avatar_url);
-            setAvatarUrl(user.user_metadata.avatar_url);
+          if (userMetadata.avatar_url) {
+            setAvatarUrl(userMetadata.avatar_url);
           }
+          
+          setIsLoading(false);
+        } else {
+          // Si no tenemos el usuario en el contexto, obtenerlo de Supabase
+          const { data: { user: supabaseUser } } = await supabase.auth.getUser();
+          
+          if (supabaseUser) {
+            const userMetadata = supabaseUser.user_metadata || {};
+            
+            setUserData({
+              id: supabaseUser.id,
+              email: supabaseUser.email || '',
+              name: userMetadata.name || '',
+              phone: userMetadata.phone || '',
+              address: userMetadata.address || '',
+              city: userMetadata.city || '',
+              province: userMetadata.province || '',
+              bio: userMetadata.bio || '',
+              favoriteGenres: userMetadata.favorite_genres || [],
+              preferredArtistTypes: userMetadata.preferred_artist_types || []
+            });
+            
+            setEditedData({
+              id: supabaseUser.id,
+              email: supabaseUser.email || '',
+              name: userMetadata.name || '',
+              phone: userMetadata.phone || '',
+              address: userMetadata.address || '',
+              city: userMetadata.city || '',
+              province: userMetadata.province || '',
+              bio: userMetadata.bio || '',
+              favoriteGenres: userMetadata.favorite_genres || [],
+              preferredArtistTypes: userMetadata.preferred_artist_types || []
+            });
+            
+            // Obtener avatar si existe
+            if (userMetadata.avatar_url) {
+              setAvatarUrl(userMetadata.avatar_url);
+            }
+          }
+          
+          setIsLoading(false);
         }
       } catch (error) {
         console.error('Error al cargar datos del usuario:', error);
         toast.error('No se pudieron cargar tus datos');
-      } finally {
         setIsLoading(false);
       }
     };
 
     fetchUserData();
-  }, []);
+  }, [user]);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
@@ -200,11 +271,12 @@ const ProfilePage = () => {
     return userData.name?.charAt(0) || userData.email?.charAt(0) || 'U';
   };
 
+  // Renderizado condicional con esqueleto de carga
   if (isLoading) {
     return (
       <UserDashboardLayout>
-        <div className="flex justify-center items-center h-[calc(100vh-64px)]">
-          <Loader2 className="h-8 w-8 animate-spin text-vyba-navy" />
+        <div className="container mx-auto py-8 px-4 md:px-8">
+          <ProfileSkeleton />
         </div>
       </UserDashboardLayout>
     );
@@ -252,6 +324,7 @@ const ProfilePage = () => {
                     <AvatarImage 
                       src={avatarPreview || avatarUrl} 
                       alt={userData.name} 
+                      loading="lazy"
                     />
                     <AvatarFallback className="text-3xl bg-black text-white">
                       {getUserInitial()}
