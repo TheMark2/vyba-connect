@@ -9,6 +9,68 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
+      favorite_artists: {
+        Row: {
+          artist_id: string
+          artist_name: string
+          created_at: string | null
+          id: string
+          list_id: string
+          user_id: string
+        }
+        Insert: {
+          artist_id: string
+          artist_name: string
+          created_at?: string | null
+          id?: string
+          list_id: string
+          user_id: string
+        }
+        Update: {
+          artist_id?: string
+          artist_name?: string
+          created_at?: string | null
+          id?: string
+          list_id?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "favorite_artists_list_id_fkey"
+            columns: ["list_id"]
+            isOneToOne: false
+            referencedRelation: "favorite_lists"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      favorite_lists: {
+        Row: {
+          created_at: string | null
+          description: string | null
+          id: string
+          name: string
+          updated_at: string | null
+          user_id: string
+        }
+        Insert: {
+          created_at?: string | null
+          description?: string | null
+          id?: string
+          name: string
+          updated_at?: string | null
+          user_id: string
+        }
+        Update: {
+          created_at?: string | null
+          description?: string | null
+          id?: string
+          name?: string
+          updated_at?: string | null
+          user_id?: string
+        }
+        Relationships: []
+      }
       otp_codes: {
         Row: {
           code: string
@@ -46,13 +108,6 @@ export type Database = {
           name: string | null
           password_hash: string | null
           updated_at: string | null
-          avatar_url?: string | null
-          type?: string | null
-          description?: string | null
-          images?: string[] | null
-          rating?: number | null
-          price_range?: string | null
-          is_artist?: boolean | null
         }
         Insert: {
           birth_date?: string | null
@@ -63,13 +118,6 @@ export type Database = {
           name?: string | null
           password_hash?: string | null
           updated_at?: string | null
-          avatar_url?: string | null
-          type?: string | null
-          description?: string | null
-          images?: string[] | null
-          rating?: number | null
-          price_range?: string | null
-          is_artist?: boolean | null
         }
         Update: {
           birth_date?: string | null
@@ -80,92 +128,8 @@ export type Database = {
           name?: string | null
           password_hash?: string | null
           updated_at?: string | null
-          avatar_url?: string | null
-          type?: string | null
-          description?: string | null
-          images?: string[] | null
-          rating?: number | null
-          price_range?: string | null
-          is_artist?: boolean | null
         }
         Relationships: []
-      }
-      favorite_lists: {
-        Row: {
-          id: string
-          user_id: string
-          name: string
-          description: string | null
-          created_at: string
-          updated_at: string
-        }
-        Insert: {
-          id?: string
-          user_id: string
-          name: string
-          description?: string | null
-          created_at?: string
-          updated_at?: string
-        }
-        Update: {
-          id?: string
-          user_id?: string
-          name?: string
-          description?: string | null
-          created_at?: string
-          updated_at?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "favorite_lists_user_id_fkey"
-            columns: ["user_id"]
-            isOneToOne: false
-            referencedRelation: "users"
-            referencedColumns: ["id"]
-          }
-        ]
-      }
-      favorite_artists: {
-        Row: {
-          id: string
-          list_id: string
-          user_id: string
-          artist_id: string
-          artist_name: string
-          created_at: string
-        }
-        Insert: {
-          id?: string
-          list_id: string
-          user_id: string
-          artist_id: string
-          artist_name: string
-          created_at?: string
-        }
-        Update: {
-          id?: string
-          list_id?: string
-          user_id?: string
-          artist_id?: string
-          artist_name?: string
-          created_at?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "favorite_artists_list_id_fkey"
-            columns: ["list_id"]
-            isOneToOne: false
-            referencedRelation: "favorite_lists"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "favorite_artists_user_id_fkey"
-            columns: ["user_id"]
-            isOneToOne: false
-            referencedRelation: "users"
-            referencedColumns: ["id"]
-          }
-        ]
       }
     }
     Views: {
@@ -292,7 +256,4 @@ export const Constants = {
   public: {
     Enums: {},
   },
-} as const 
-Need to install the following packages:
-supabase@2.22.6
-Ok to proceed? (y) 
+} as const
