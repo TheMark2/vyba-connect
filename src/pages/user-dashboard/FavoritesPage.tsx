@@ -104,24 +104,31 @@ const FavoritesPage = () => {
         return;
       }
       
-      // Obtener conteos en paralelo para todas las listas
-      const countsPromises = listsData.map(async (list) => {
-        const { count, error } = await supabase
-          .from('favorite_artists')
-          .select('*', { count: 'exact', head: true })
-          .eq('list_id', list.id)
-          .eq('user_id', user.id);
-          
-        return { count: count || 0, error };
-      });
-      
-      const countsResults = await Promise.all(countsPromises);
-      
-      const enrichedLists = listsData.map((list: any, index) => ({
-        id: list.id,
-        name: list.name,
-        image: '/images/placeholder-favorite.webp',
-        count: countsResults[index].count || 0
+      // Corrección: Usar unnest() para obtener conteos precisos
+      const enrichedLists = await Promise.all(listsData.map(async (list) => {
+        try {
+          const { count, error } = await supabase
+            .from('favorite_artists')
+            .select('*', { count: 'exact', head: true })
+            .eq('list_id', list.id);
+            
+          if (error) throw error;
+            
+          return {
+            id: list.id,
+            name: list.name,
+            image: '/images/placeholder-favorite.webp',
+            count: count || 0
+          };
+        } catch (err) {
+          console.error(`Error al obtener conteo para lista ${list.id}:`, err);
+          return {
+            id: list.id,
+            name: list.name,
+            image: '/images/placeholder-favorite.webp',
+            count: 0
+          };
+        }
       }));
       
       setFavoriteLists(enrichedLists);
@@ -135,7 +142,7 @@ const FavoritesPage = () => {
 
   // Cargar artistas de una lista específica
   const fetchListArtists = async (listId: string) => {
-    if (!user) return;
+    if (!user) return [];
     
     try {
       const { data: favoritesData, error: favoritesError } = await supabase

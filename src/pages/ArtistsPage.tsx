@@ -1,5 +1,5 @@
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import ArtistProfileCard from "@/components/ArtistProfileCard";
 import Footer from "@/components/Footer";
 import { useIsMobile, useIsSmallMobile } from "@/hooks/use-mobile";
@@ -9,10 +9,10 @@ import { useAuth } from "@/contexts/AuthContext";
 import { toast } from "sonner";
 import FavoriteDialog from "@/components/FavoriteDialog";
 
-// Datos de ejemplo para los artistas
+// Datos de ejemplo para los artistas con IDs únicos garantizados
 export const artistsData = [
     {
-        id: "1",  // Mantengo este ID como estaba
+        id: "1",
         name: "Antonia Pedragosa",
         type: "DJ",
         description: "DJ para todo tipo de eventos",
@@ -26,8 +26,8 @@ export const artistsData = [
         isFavorite: false
     },
     {
-        id: "101",  // Cambiado para ser único
-        name: "Antonia Pedragosa",
+        id: "101",
+        name: "Antonia Morales",
         type: "DJ",
         description: "DJ para todo tipo de eventos",
         images: [
@@ -40,8 +40,8 @@ export const artistsData = [
         isFavorite: false
     },
     {
-        id: "102",  // Cambiado para ser único
-        name: "Antonia Pedragosa",
+        id: "102",
+        name: "Victoria Sánchez",
         type: "DJ",
         description: "DJ para todo tipo de eventos",
         images: [
@@ -54,8 +54,8 @@ export const artistsData = [
         isFavorite: false
     },
     {
-        id: "103",  // Cambiado para ser único
-        name: "Antonia Pedragosa",
+        id: "103",
+        name: "Clara Domínguez",
         type: "DJ",
         description: "DJ para todo tipo de eventos",
         images: [
@@ -68,8 +68,8 @@ export const artistsData = [
         isFavorite: false
     },
     {
-        id: "104",  // Cambiado para ser único
-        name: "Antonia Pedragosa",
+        id: "104",
+        name: "Lucía Fernández",
         type: "DJ",
         description: "DJ para todo tipo de eventos",
         images: [
@@ -82,8 +82,8 @@ export const artistsData = [
         isFavorite: false
     },
     {
-        id: "2",  // Este ya era único
-        name: "Antonia Pedragosa",
+        id: "2",
+        name: "Juan Martínez",
         type: "DJ",
         description: "DJ para todo tipo de eventos",
         images: [
@@ -96,8 +96,8 @@ export const artistsData = [
         isFavorite: false
     },
     {
-        id: "3",  // Este ya era único
-        name: "Antonia Pedragosa",
+        id: "3",
+        name: "María López",
         type: "DJ",
         description: "DJ para todo tipo de eventos",
         images: [
@@ -110,8 +110,8 @@ export const artistsData = [
         isFavorite: false
     },
     {
-        id: "4",  // Este ya era único
-        name: "Antonia Pedragosa",
+        id: "4",
+        name: "David García",
         type: "DJ",
         description: "DJ para todo tipo de eventos",
         images: [
@@ -124,7 +124,7 @@ export const artistsData = [
         isFavorite: false
     },
     {
-        id: "5",  // Este ya era único
+        id: "5",
         name: "Carlos Martínez",
         type: "Banda",
         description: "Banda para bodas y eventos privados",
@@ -138,7 +138,7 @@ export const artistsData = [
         isFavorite: false
     },
     {
-        id: "6",  // Este ya era único
+        id: "6",
         name: "Laura González",
         type: "Solista",
         description: "Cantante solista para ceremonias",
@@ -152,10 +152,10 @@ export const artistsData = [
         isFavorite: false
     },
     {
-        id: "7",  // Este ya era único
+        id: "7",
         name: "Miguel Torres",
         type: "Grupo",
-        description: "Grupo musical versatil para fiestas",
+        description: "Grupo musical versátil para fiestas",
         images: [
             "/lovable-uploads/7e7c2282-785a-46fb-84b2-f7b14b762e64.png",
             "/lovable-uploads/a3c6b43a-dd61-4889-ae77-cb1016e65371.png",
@@ -166,7 +166,7 @@ export const artistsData = [
         isFavorite: false
     },
     {
-        id: "8",  // Este ya era único
+        id: "8",
         name: "Andrea Vega",
         type: "Violinista",
         description: "Violinista para eventos elegantes",
@@ -184,9 +184,12 @@ export const artistsData = [
 const ArtistsPage = () => {
   const [artists, setArtists] = useState(artistsData);
   const [searchTerm, setSearchTerm] = useState("");
+  const [showFavoriteDialog, setShowFavoriteDialog] = useState(false);
+  const [selectedArtist, setSelectedArtist] = useState<typeof artistsData[0] | null>(null);
   const isMobile = useIsMobile();
   const isSmallMobile = useIsSmallMobile();
   const navigate = useNavigate();
+  const { user } = useAuth();
 
   const handleArtistClick = (artist: typeof artistsData[0]) => {
     console.log("Artista seleccionado:", artist);
@@ -194,13 +197,30 @@ const ArtistsPage = () => {
   };
 
   const handleFavoriteToggle = (artist: typeof artistsData[0]) => {
+    if (!user) {
+      toast.error("Inicia sesión para añadir favoritos", {
+        position: "bottom-center",
+      });
+      return;
+    }
+    
+    setSelectedArtist(artist);
+    setShowFavoriteDialog(true);
+  };
+
+  const handleFavoriteConfirm = () => {
+    if (!selectedArtist) return;
+    
+    // Actualizar el estado de favorito del artista seleccionado
     setArtists(prevArtists => 
       prevArtists.map(a => 
-        a.id === artist.id 
+        a.id === selectedArtist.id 
           ? { ...a, isFavorite: !a.isFavorite } 
           : a
       )
     );
+    
+    setSelectedArtist(null);
   };
 
   return (
@@ -210,16 +230,17 @@ const ArtistsPage = () => {
 
         <div className={`
           ${isSmallMobile
-            ? "grid grid-cols-1 gap-6" // Increased vertical gap from 4 to 6
+            ? "grid grid-cols-1 gap-6"
             : isMobile
-              ? "grid grid-cols-2 gap-8" // Increased vertical gap from 4 to 6
-              : "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 3xl:grid-cols-6 gap-6 mt-32" // Increased vertical gap from 4 to 6
+              ? "grid grid-cols-2 gap-8"
+              : "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 3xl:grid-cols-6 gap-6 mt-32"
           }
         `}>
           {artists.map(artist => (
             <ArtistProfileCard 
-              key={artist.id} 
-              name={artist.name} 
+              key={artist.id}
+              id={artist.id}
+              name={artist.name}
               type={artist.type} 
               description={artist.description} 
               images={artist.images} 
@@ -233,6 +254,19 @@ const ArtistsPage = () => {
           ))}
         </div>
       </div>
+      
+      {/* Diálogo de favoritos */}
+      {selectedArtist && (
+        <FavoriteDialog
+          open={showFavoriteDialog}
+          onOpenChange={setShowFavoriteDialog}
+          artistName={selectedArtist.name}
+          artistId={selectedArtist.id}
+          onConfirm={handleFavoriteConfirm}
+          isFavorite={selectedArtist.isFavorite}
+        />
+      )}
+      
       <Footer />
     </>
   );

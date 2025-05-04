@@ -190,10 +190,7 @@ const FavoriteDialog = ({
         .eq('artist_id', artistId)
         .single();
       
-      if (checkError && checkError.code !== 'PGRST116') {
-        throw checkError;
-      }
-      
+      // Corregido: Solo mostramos error si encontramos un artista con mismo ID en la misma lista
       if (existingEntry) {
         toast.error(`${artistName} ya está en esta lista`);
         setIsLoading(false);
@@ -210,7 +207,10 @@ const FavoriteDialog = ({
           artist_name: artistName
         });
       
-      if (error) throw error;
+      if (error) {
+        console.error('Error al añadir artista:', error);
+        throw error;
+      }
       
       // Actualizar el conteo en la lista local
       setFavoriteLists(prev => prev.map(list => 
@@ -337,8 +337,11 @@ const FavoriteDialog = ({
               <FormControl>
                 <Input 
                   placeholder="Ej: Mis DJs favoritos" 
-                  value={newListName}
-                  onChange={(e) => setNewListName(e.target.value)}
+                  {...field}
+                  onChange={(e) => {
+                    field.onChange(e);
+                    setNewListName(e.target.value);
+                  }}
                 />
               </FormControl>
               <FormMessage />
@@ -350,7 +353,7 @@ const FavoriteDialog = ({
           <Button 
             variant="terciary" 
             type="submit"
-            disabled={!newListName.trim() || isLoading}
+            disabled={!form.getValues().name.trim() || isLoading}
           >
             {isLoading ? (
               <Loader2 className="h-4 w-4 animate-spin" />
@@ -429,4 +432,4 @@ const FavoriteDialog = ({
   );
 };
 
-export default FavoriteDialog; 
+export default FavoriteDialog;
