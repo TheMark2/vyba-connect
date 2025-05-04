@@ -9,21 +9,17 @@ import FavoriteDialog from "@/components/FavoriteDialog";
 import { useAuth } from "@/contexts/AuthContext";
 
 interface ArtistProfileCardProps {
-  id?: string;
+  id: string; // Aseguramos que el ID es requerido para todos los artistas
   name: string;
   type: string;
   description: string;
   images: string[];
   rating: number;
   priceRange: string;
-  onFavoriteToggle?: () => void;
-  isFavorite?: boolean;
+  isFavorite: boolean;
+  onClick: () => void;
+  onFavoriteToggle: () => void;
   className?: string;
-  onClick?: () => void;
-  isRecommended?: boolean;
-  hideHeart?: boolean;
-  regularBadge?: boolean;
-  regularText?: boolean;
 }
 
 const ArtistProfileCard = ({
@@ -34,14 +30,10 @@ const ArtistProfileCard = ({
   images,
   rating,
   priceRange,
-  onFavoriteToggle,
-  isFavorite = false,
-  className,
+  isFavorite,
   onClick,
-  isRecommended = false,
-  hideHeart = false,
-  regularBadge = false,
-  regularText = false
+  onFavoriteToggle,
+  className
 }: ArtistProfileCardProps) => {
   const [favorite, setFavorite] = useState(isFavorite);
   const [isHovered, setIsHovered] = useState(false);

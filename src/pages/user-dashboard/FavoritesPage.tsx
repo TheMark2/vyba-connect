@@ -92,7 +92,7 @@ const FavoritesPage = () => {
     try {
       // Obtener listas de favoritos del usuario
       const { data: listsData, error: listsError } = await supabase
-        .from('favorite_lists' as any)
+        .from('favorite_lists')
         .select('*')
         .eq('user_id', user.id)
         .order('created_at', { ascending: false });
@@ -105,32 +105,19 @@ const FavoritesPage = () => {
         return;
       }
       
-      // Para cada lista, obtener conteo y una imagen representativa
+      // Para cada lista, obtener conteo de artistas
       const enrichedLists = await Promise.all(listsData.map(async (list: any) => {
         // Obtener los artistas favoritos para esta lista
         const { data: favoritesData, error: favoritesError, count } = await supabase
-          .from('favorite_artists' as any)
+          .from('favorite_artists')
           .select('artist_id', { count: 'exact' })
           .eq('list_id', list.id)
           .eq('user_id', user.id);
           
         if (favoritesError) throw favoritesError;
         
-        // Obtener la primera imagen para mostrar (si hay favoritos)
-        let image = '/images/placeholder-favorite.webp'; // Imagen por defecto
-        
-        if (favoritesData && favoritesData.length > 0) {
-          // Obtener detalles del primer artista para usar su imagen
-          const { data: artistData } = await supabase
-            .from('profiles')
-            .select('avatar_url')
-            .eq('id', (favoritesData as any)[0].artist_id)
-            .single();
-            
-          if (artistData && (artistData as any).avatar_url) {
-            image = (artistData as any).avatar_url;
-          }
-        }
+        // Imagen predeterminada para la lista
+        let image = '/images/placeholder-favorite.webp';
         
         return {
           id: list.id,
@@ -151,13 +138,13 @@ const FavoritesPage = () => {
 
   // Cargar artistas de una lista específica
   const fetchListArtists = async (listId: string) => {
-    if (!user) return;
+    if (!user) return [];
     
     try {
-      // Obtener los IDs de artistas favoritos
+      // Obtener los artistas favoritos de esta lista
       const { data: favoritesData, error: favoritesError } = await supabase
-        .from('favorite_artists' as any)
-        .select('artist_id')
+        .from('favorite_artists')
+        .select('artist_id, artist_name')
         .eq('list_id', listId)
         .eq('user_id', user.id);
         
@@ -167,28 +154,15 @@ const FavoritesPage = () => {
         return [];
       }
       
-      // Obtener detalles de los artistas
-      const artistIds = (favoritesData as any[]).map(fav => fav.artist_id);
-      
-      const { data: artistsData, error: artistsError } = await supabase
-        .from('profiles')
-        .select('id, name, type, description, images, rating, price_range')
-        .in('id', artistIds)
-        .eq('is_artist', true);
-        
-      if (artistsError) throw artistsError;
-      
-      if (!artistsData) return [];
-      
-      // Transformar datos al formato requerido
-      return (artistsData as any[]).map(artist => ({
-        id: artist.id,
-        name: artist.name || 'Artista',
-        type: artist.type || 'Músico',
-        description: artist.description || '',
-        images: artist.images || ['/images/placeholder-artist.webp'],
-        rating: artist.rating || 4.5,
-        priceRange: artist.price_range || '€€',
+      // Transformar datos al formato requerido para mostrar
+      return favoritesData.map((favorite: any) => ({
+        id: favorite.artist_id,
+        name: favorite.artist_name,
+        type: 'Artista', // Valor por defecto
+        description: '',
+        images: ['/images/placeholder-artist.webp'],
+        rating: 4.5,
+        priceRange: '€€',
         isFavorite: true
       }));
     } catch (error) {
@@ -208,7 +182,7 @@ const FavoritesPage = () => {
     try {
       // Crear nueva lista en la base de datos
       const { data, error } = await supabase
-        .from('favorite_lists' as any)
+        .from('favorite_lists')
         .insert({
           name: values.name,
           user_id: user.id
@@ -220,8 +194,8 @@ const FavoritesPage = () => {
       
       // Añadir la nueva lista al estado
       setFavoriteLists(prev => [{
-        id: (data as any).id,
-        name: (data as any).name,
+        id: data.id,
+        name: data.name,
         image: '/images/placeholder-favorite.webp',
         count: 0
       }, ...prev]);
@@ -263,7 +237,7 @@ const FavoritesPage = () => {
     try {
       // Eliminar de la base de datos
       const { error } = await supabase
-        .from('favorite_artists' as any)
+        .from('favorite_artists')
         .delete()
         .match({ 
           user_id: user.id,
@@ -273,7 +247,7 @@ const FavoritesPage = () => {
       
       if (error) throw error;
       
-      // Actualizar el estado local primero para una UI responsiva
+      // Actualizar el estado local
       setSelectedList(prevSelected => {
         if (!prevSelected) return null;
         
@@ -318,27 +292,16 @@ const FavoritesPage = () => {
     if (!listToDelete || !user) return;
     
     try {
-      // Primero eliminar todas las relaciones de favoritos
-      const { error: favoritesError } = await supabase
-        .from('favorite_artists' as any)
-        .delete()
-        .match({
-          user_id: user.id,
-          list_id: listToDelete.id
-        });
-        
-      if (favoritesError) throw favoritesError;
-      
-      // Después eliminar la lista
+      // Eliminar la lista (las relaciones se eliminan automáticamente por la restricción CASCADE)
       const { error } = await supabase
-        .from('favorite_lists' as any)
+        .from('favorite_lists')
         .delete()
         .eq('id', listToDelete.id)
         .eq('user_id', user.id);
         
       if (error) throw error;
       
-      // Actualizar el estado local para eliminar la lista
+      // Actualizar el estado local
       setFavoriteLists(prevLists => 
         prevLists.filter(list => list.id !== listToDelete.id)
       );
@@ -566,4 +529,4 @@ const FavoritesPage = () => {
   );
 };
 
-export default FavoritesPage; 
+export default FavoritesPage;
