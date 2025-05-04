@@ -91,7 +91,7 @@ const FavoritesPage = () => {
     try {
       // Obtener listas de favoritos del usuario
       const { data: listsData, error: listsError } = await supabase
-        .from('favorite_lists' as any)
+        .from('favorite_lists')
         .select('*')
         .eq('user_id', user.id)
         .order('created_at', { ascending: false });
@@ -105,13 +105,15 @@ const FavoritesPage = () => {
       }
       
       // Obtener conteos en paralelo para todas las listas
-      const countsPromises = listsData.map(list => 
-        supabase
-          .from('favorite_artists' as any)
-          .select('*', { count: 'exact' })
+      const countsPromises = listsData.map(async (list) => {
+        const { count, error } = await supabase
+          .from('favorite_artists')
+          .select('*', { count: 'exact', head: true })
           .eq('list_id', list.id)
-          .eq('user_id', user.id)
-      );
+          .eq('user_id', user.id);
+          
+        return { count: count || 0, error };
+      });
       
       const countsResults = await Promise.all(countsPromises);
       
@@ -137,7 +139,7 @@ const FavoritesPage = () => {
     
     try {
       const { data: favoritesData, error: favoritesError } = await supabase
-        .from('favorite_artists' as any)
+        .from('favorite_artists')
         .select('artist_id, artist_name')
         .eq('list_id', listId)
         .eq('user_id', user.id);
@@ -171,7 +173,7 @@ const FavoritesPage = () => {
     try {
       // Crear nueva lista en la base de datos
       const { data, error } = await supabase
-        .from('favorite_lists' as any)
+        .from('favorite_lists')
         .insert({
           name: values.name,
           user_id: user.id
@@ -226,7 +228,7 @@ const FavoritesPage = () => {
     try {
       // Eliminar de la base de datos
       const { error } = await supabase
-        .from('favorite_artists' as any)
+        .from('favorite_artists')
         .delete()
         .match({ 
           user_id: user.id,
@@ -283,7 +285,7 @@ const FavoritesPage = () => {
     try {
       // Primero eliminar todas las relaciones de favoritos
       const { error: favoritesError } = await supabase
-        .from('favorite_artists' as any)
+        .from('favorite_artists')
         .delete()
         .match({
           user_id: user.id,
@@ -294,7 +296,7 @@ const FavoritesPage = () => {
       
       // Después eliminar la lista
       const { error } = await supabase
-        .from('favorite_lists' as any)
+        .from('favorite_lists')
         .delete()
         .eq('id', listToDelete.id)
         .eq('user_id', user.id);
@@ -521,4 +523,4 @@ const FavoritesPage = () => {
   );
 };
 
-export default FavoritesPage; 
+export default FavoritesPage;
