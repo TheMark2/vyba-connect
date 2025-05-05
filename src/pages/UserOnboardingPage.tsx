@@ -452,26 +452,39 @@ const UserOnboardingPage = () => {
         }
       }
       
-      // 4. Actualizar metadatos del usuario
+      // 4. Actualizar metadatos del usuario solo con información relevante de autenticación
       await supabase.auth.updateUser({
-        data: userData
+        data: {
+          onboarding_completed: true,
+          onboarding_skipped: null
+        }
       });
       
-      // 5. También actualizar o crear entrada en la tabla profiles
+      // 5. Guardar toda la información del perfil en la tabla profiles
+      const profileData = {
+        id: user.id,
+        email: user.email,
+        name: user.user_metadata?.name,
+        city: onboardingData.city || '',
+        province: onboardingData.province || '',
+        location: onboardingData.location || '',
+        favorite_genres: onboardingData.favoriteGenres || [],
+        preferred_artist_types: onboardingData.preferredArtistTypes || [],
+        avatar_url: avatarUrl
+      };
+      
+      console.log('Datos a guardar en profiles:', profileData);
+      
       const { error: profileError } = await supabase
         .from('profiles')
-        .upsert({
-          id: user.id,
-          email: user.email,
-          city: onboardingData.city || '',
-          province: onboardingData.province || '',
-          favorite_genres: onboardingData.favoriteGenres || [],
-          preferred_artist_types: onboardingData.preferredArtistTypes || [],
-          avatar_url: avatarUrl
-        });
-        
+        .upsert(profileData);
+
       if (profileError) {
         console.error('Error al actualizar perfil:', profileError);
+        console.error('Detalles del error:', profileError.details);
+        console.error('Mensaje del error:', profileError.message);
+        toast.error('Error al guardar el perfil: ' + profileError.message);
+        return;
       }
       
       // 6. Lógica para mostrar el WelcomeDialog:

@@ -1,4 +1,3 @@
-
 export type Json =
   | string
   | number
@@ -122,8 +121,12 @@ export interface Database {
           id: string
           last_name: string | null
           name: string | null
-          password_hash: string | null
           updated_at: string | null
+          avatar_url: string | null
+          phone: string | null
+          location: string | null
+          favorite_genres: string[]
+          preferred_artist_types: string[]
         }
         Insert: {
           birth_date?: string | null
@@ -132,8 +135,12 @@ export interface Database {
           id: string
           last_name?: string | null
           name?: string | null
-          password_hash?: string | null
           updated_at?: string | null
+          avatar_url?: string | null
+          phone?: string | null
+          location?: string | null
+          favorite_genres?: string[]
+          preferred_artist_types?: string[]
         }
         Update: {
           birth_date?: string | null
@@ -142,8 +149,12 @@ export interface Database {
           id?: string
           last_name?: string | null
           name?: string | null
-          password_hash?: string | null
           updated_at?: string | null
+          avatar_url?: string | null
+          phone?: string | null
+          location?: string | null
+          favorite_genres?: string[]
+          preferred_artist_types?: string[]
         }
         Relationships: []
       }
