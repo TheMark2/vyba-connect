@@ -1,12 +1,17 @@
+
 import React, { useState, useEffect } from 'react';
 import UserDashboardLayout from '@/components/dashboard/UserDashboardLayout';
 import { useAuth } from '@/contexts/AuthContext';
 import { Badge } from '@/components/ui/badge';
 import { MapPin, Mail, Phone, ShieldX } from 'lucide-react';
 import { Separator } from '@/components/ui/separator';
+import { MUSIC_GENRES, MUSICIAN_TYPES } from '@/constants/music';
+
 const ProfilePage = () => {
   const { user, userName, avatarUrl } = useAuth();
   const [joinDate, setJoinDate] = useState<string>('');
+  const [favoriteGenres, setFavoriteGenres] = useState<string[]>([]);
+  const [preferredArtistTypes, setPreferredArtistTypes] = useState<string[]>([]);
 
   useEffect(() => {
     if (user?.created_at) {
@@ -14,6 +19,12 @@ const ProfilePage = () => {
       const month = date.toLocaleString('es-ES', { month: 'long' });
       const year = date.getFullYear();
       setJoinDate(`${month.charAt(0).toUpperCase() + month.slice(1)} del ${year}`);
+    }
+    
+    // Obtener géneros favoritos y tipos de artistas de los metadatos del usuario
+    if (user?.user_metadata) {
+      setFavoriteGenres(user.user_metadata.favorite_genres || []);
+      setPreferredArtistTypes(user.user_metadata.preferred_artist_types || []);
     }
   }, [user]);
 
@@ -110,46 +121,58 @@ const ProfilePage = () => {
                 <div>
                   <p className="text-base text-vyba-navy mb-3">Géneros favoritos</p>
                   <div className="flex items-center -space-x-12 py-12">
-                    <div className="w-40 h-60 rounded-lg bg-vyba-beige rotate-12">
-                      <img src="/images/generos/pop.png" alt="Pop" className="w-full h-full object-cover" />
-                    </div>
-                    <div className="w-40 h-60 rounded-lg bg-vyba-beige -rotate-12">
-                      <img src="/images/generos/reggaeton.png" alt="Reggaeton" className="w-full h-full object-cover" />
-                    </div>
-                    <div className="w-40 h-60 rounded-lg bg-vyba-beige rotate-12">
-                      <img src="/images/generos/rock.png" alt="Rock" className="w-full h-full object-cover" />
-                    </div>
-                    <div className="w-40 h-60 rounded-lg bg-vyba-beige rotate-">
-                      <img src="/images/generos/rock.png" alt="Rock" className="w-full h-full object-cover" />
-                    </div>
+                    {favoriteGenres.slice(0, 4).map((genre, index) => (
+                      <div 
+                        key={genre}
+                        className={`w-40 h-60 rounded-lg bg-vyba-beige ${index % 2 === 0 ? 'rotate-12' : '-rotate-12'}`}
+                      >
+                        <img 
+                          src={`/images/generos/${genre.toLowerCase()}.png`} 
+                          alt={genre} 
+                          className="w-full h-full object-cover"
+                          onError={(e) => {
+                            e.currentTarget.src = "/images/generos/pop.png"; // Imagen por defecto
+                          }}
+                        />
+                      </div>
+                    ))}
                   </div>
                   <div className="flex flex-wrap gap-2">
-                    <Badge variant="secondary">Pop</Badge>
-                    <Badge variant="secondary">Reggaeton</Badge>
+                    {favoriteGenres.map(genre => (
+                      <Badge key={genre} variant="secondary">{genre}</Badge>
+                    ))}
+                    {favoriteGenres.length === 0 && (
+                      <p className="text-vyba-tertiary">No has seleccionado géneros favoritos</p>
+                    )}
                   </div>
                 </div>
 
                 <div>
                   <p className="text-base text-vyba-navy mb-3">Tipos de artistas favoritos</p>
                   <div className="flex -space-x-8 py-4">
-                    <div className="w-24 h-24 rounded-full bg-vyba-beige border border-white border-4">
-                      <img src="/images/artistas/ed_sheeran.png" alt="Ed Sheeran" className="w-full h-full object-cover" />
-                    </div>
-                    <div className="w-24 h-24 rounded-full bg-vyba-beige border border-white border-4">
-                      <img src="/images/artistas/ed_sheeran.png" alt="Ed Sheeran" className="w-full h-full object-cover" />
-                    </div>
-                    <div className="w-24 h-24 rounded-full bg-vyba-beige border border-white border-4">
-                      <img src="/images/artistas/ed_sheeran.png" alt="Ed Sheeran" className="w-full h-full object-cover" />
-                    </div>
-                    <div className="w-24 h-24 rounded-full bg-vyba-beige border border-white border-4">
-                      <img src="/images/artistas/ed_sheeran.png" alt="Ed Sheeran" className="w-full h-full object-cover" />
-                    </div>
+                    {preferredArtistTypes.slice(0, 4).map((type) => (
+                      <div 
+                        key={type}
+                        className="w-24 h-24 rounded-full bg-vyba-beige border border-white border-4"
+                      >
+                        <img 
+                          src={`/images/artistas/${type.toLowerCase().replace(/ /g, '_')}.png`} 
+                          alt={type}
+                          className="w-full h-full object-cover" 
+                          onError={(e) => {
+                            e.currentTarget.src = "/images/artistas/ed_sheeran.png"; // Imagen por defecto
+                          }}
+                        />
+                      </div>
+                    ))}
                   </div>
                   <div className="flex flex-wrap gap-2">
-                    <Badge variant="secondary">Ed Sheeran</Badge>
-                    <Badge variant="secondary">Ed Sheeran</Badge>
-                    <Badge variant="secondary">Ed Sheeran</Badge>
-                    <Badge variant="secondary">Ed Sheeran</Badge>
+                    {preferredArtistTypes.map(type => (
+                      <Badge key={type} variant="secondary">{type}</Badge>
+                    ))}
+                    {preferredArtistTypes.length === 0 && (
+                      <p className="text-vyba-tertiary">No has seleccionado tipos de artistas favoritos</p>
+                    )}
                   </div>
                 </div>
               </div>
