@@ -1,523 +1,159 @@
-import React, { useState, useEffect, Suspense } from 'react';
+import React, { useState, useEffect } from 'react';
 import UserDashboardLayout from '@/components/dashboard/UserDashboardLayout';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Input } from '@/components/ui/input';
-import { Textarea } from '@/components/ui/textarea';
-import { Label } from '@/components/ui/label';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { Camera, Check, Loader2, PenLine, X } from 'lucide-react';
-import { supabase } from '@/integrations/supabase/client';
-import { toast } from 'sonner';
-import { Badge } from "@/components/ui/badge";
 import { useAuth } from '@/contexts/AuthContext';
-import Image from '@/components/ui/image';
-
-// Componente para el esqueleto de carga
-const ProfileSkeleton = () => (
-  <div className="animate-pulse">
-    <div className="mb-8 flex justify-between items-center">
-      <div>
-        <div className="h-8 w-32 bg-gray-200 rounded mb-2"></div>
-        <div className="h-4 w-48 bg-gray-200 rounded"></div>
-      </div>
-      <div className="h-10 w-24 bg-gray-200 rounded"></div>
-    </div>
-    
-    <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-      <div className="col-span-1">
-        <div className="bg-white rounded-lg shadow p-6 flex flex-col items-center">
-          <div className="h-32 w-32 rounded-full bg-gray-200 mb-4"></div>
-          <div className="h-6 w-32 bg-gray-200 rounded mb-2"></div>
-          <div className="h-4 w-48 bg-gray-200 rounded mb-6"></div>
-          <div className="w-full space-y-3">
-            <div className="h-4 w-full bg-gray-200 rounded"></div>
-            <div className="h-4 w-full bg-gray-200 rounded"></div>
-          </div>
-        </div>
-      </div>
-      
-      <div className="col-span-1 md:col-span-2">
-        <div className="bg-white rounded-lg shadow mb-6">
-          <div className="p-6">
-            <div className="h-6 w-48 bg-gray-200 rounded mb-6"></div>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              {[...Array(6)].map((_, i) => (
-                <div key={i}>
-                  <div className="h-4 w-24 bg-gray-200 rounded mb-2"></div>
-                  <div className="h-8 w-full bg-gray-200 rounded"></div>
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-);
-
+import { Badge } from '@/components/ui/badge';
+import { MapPin, Mail, Phone, ShieldX } from 'lucide-react';
+import { Separator } from '@/components/ui/separator';
 const ProfilePage = () => {
-  const { user, reloadUserData } = useAuth();
-  const [isLoading, setIsLoading] = useState(true);
-  const [isSaving, setIsSaving] = useState(false);
-  const [userData, setUserData] = useState({
-    id: '',
-    email: '',
-    name: '',
-    phone: '',
-    address: '',
-    city: '',
-    province: '',
-    bio: '',
-    favoriteGenres: [] as string[],
-    preferredArtistTypes: [] as string[]
-  });
-  const [isEditing, setIsEditing] = useState(false);
-  const [editedData, setEditedData] = useState({ ...userData });
-  const [avatarFile, setAvatarFile] = useState<File | null>(null);
-  const [avatarUrl, setAvatarUrl] = useState('');
-  const [avatarPreview, setAvatarPreview] = useState('');
+  const { user, userName, avatarUrl } = useAuth();
+  const [joinDate, setJoinDate] = useState<string>('');
 
-  // Carga inicial de datos de usuario - optimizada
   useEffect(() => {
-    const fetchUserData = async () => {
-      try {
-        // Si ya tenemos el usuario en el contexto, usarlo directamente
-        if (user) {
-          const userMetadata = user.user_metadata || {};
-          
-          // Datos del perfil desde user_metadata
-          const profileData = {
-            id: user.id,
-            email: user.email || '',
-            name: userMetadata.name || '',
-            phone: userMetadata.phone || '',
-            address: userMetadata.address || '',
-            city: userMetadata.city || '',
-            province: userMetadata.province || '',
-            bio: userMetadata.bio || '',
-            favoriteGenres: userMetadata.favorite_genres || [],
-            preferredArtistTypes: userMetadata.preferred_artist_types || []
-          };
-          
-          setUserData(profileData);
-          setEditedData(profileData);
-          
-          // Obtener avatar si existe
-          if (userMetadata.avatar_url) {
-            setAvatarUrl(userMetadata.avatar_url);
-          }
-          
-          setIsLoading(false);
-        } else {
-          // Si no tenemos el usuario en el contexto, obtenerlo de Supabase
-          const { data: { user: supabaseUser } } = await supabase.auth.getUser();
-          
-          if (supabaseUser) {
-            const userMetadata = supabaseUser.user_metadata || {};
-            
-            setUserData({
-              id: supabaseUser.id,
-              email: supabaseUser.email || '',
-              name: userMetadata.name || '',
-              phone: userMetadata.phone || '',
-              address: userMetadata.address || '',
-              city: userMetadata.city || '',
-              province: userMetadata.province || '',
-              bio: userMetadata.bio || '',
-              favoriteGenres: userMetadata.favorite_genres || [],
-              preferredArtistTypes: userMetadata.preferred_artist_types || []
-            });
-            
-            setEditedData({
-              id: supabaseUser.id,
-              email: supabaseUser.email || '',
-              name: userMetadata.name || '',
-              phone: userMetadata.phone || '',
-              address: userMetadata.address || '',
-              city: userMetadata.city || '',
-              province: userMetadata.province || '',
-              bio: userMetadata.bio || '',
-              favoriteGenres: userMetadata.favorite_genres || [],
-              preferredArtistTypes: userMetadata.preferred_artist_types || []
-            });
-            
-            // Obtener avatar si existe
-            if (userMetadata.avatar_url) {
-              setAvatarUrl(userMetadata.avatar_url);
-            }
-          }
-          
-          setIsLoading(false);
-        }
-      } catch (error) {
-        console.error('Error al cargar datos del usuario:', error);
-        toast.error('No se pudieron cargar tus datos');
-        setIsLoading(false);
-      }
-    };
-
-    fetchUserData();
+    if (user?.created_at) {
+      const date = new Date(user.created_at);
+      const month = date.toLocaleString('es-ES', { month: 'long' });
+      const year = date.getFullYear();
+      setJoinDate(`${month.charAt(0).toUpperCase() + month.slice(1)} del ${year}`);
+    }
   }, [user]);
-
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    const { name, value } = e.target;
-    setEditedData(prev => ({
-      ...prev,
-      [name]: value
-    }));
-  };
-
-  const handleAvatarChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files && e.target.files[0]) {
-      const file = e.target.files[0];
-      setAvatarFile(file);
-      
-      // Crear preview
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setAvatarPreview(reader.result as string);
-      };
-      reader.readAsDataURL(file);
-    }
-  };
-
-  const handleSaveProfile = async () => {
-    try {
-      setIsSaving(true);
-      
-      // Actualizar datos del perfil
-      const updateData: Record<string, any> = {
-        name: editedData.name,
-        phone: editedData.phone,
-        address: editedData.address,
-        city: editedData.city,
-        province: editedData.province,
-        bio: editedData.bio,
-        favorite_genres: editedData.favoriteGenres,
-        preferred_artist_types: editedData.preferredArtistTypes
-      };
-      
-      // 1. Si hay avatar nuevo, subirlo
-      if (avatarFile) {
-        const fileExt = avatarFile.name.split('.').pop();
-        const fileName = `${userData.id}-${Date.now()}.${fileExt}`;
-        
-        // Crear el bucket si no existe
-        const { data: bucketExists } = await supabase
-          .storage
-          .getBucket('avatars');
-          
-        if (!bucketExists) {
-          await supabase.storage.createBucket('avatars', {
-            public: true
-          });
-        }
-        
-        // Subir a storage
-        const { error: uploadError, data } = await supabase.storage
-          .from('avatars')
-          .upload(fileName, avatarFile, {
-            upsert: true
-          });
-          
-        if (uploadError) throw uploadError;
-        
-        // Obtener URL pública
-        const { data: urlData } = supabase.storage
-          .from('avatars')
-          .getPublicUrl(fileName);
-          
-        if (urlData) {
-          // Agregar URL a los datos a actualizar
-          updateData.avatar_url = urlData.publicUrl;
-          setAvatarUrl(urlData.publicUrl);
-        }
-      }
-      
-      // 2. Actualizar metadatos del usuario
-      const { error: updateError } = await supabase.auth.updateUser({
-        data: updateData
-      });
-      
-      if (updateError) throw updateError;
-      
-      // 3. Actualizar datos locales
-      setUserData(editedData);
-      setIsEditing(false);
-      setAvatarPreview('');
-      
-      // 4. Recargar datos del usuario para actualizar el contexto
-      await reloadUserData();
-      
-      toast.success('Perfil actualizado correctamente');
-      
-    } catch (error) {
-      console.error('Error al actualizar perfil:', error);
-      toast.error('Error al actualizar tu perfil');
-    } finally {
-      setIsSaving(false);
-    }
-  };
-
-  const handleCancelEdit = () => {
-    setIsEditing(false);
-    setEditedData({ ...userData });
-    setAvatarPreview('');
-    setAvatarFile(null);
-  };
-
-  const getUserInitial = () => {
-    return userData.name?.charAt(0) || userData.email?.charAt(0) || 'U';
-  };
-
-  // Renderizado condicional con esqueleto de carga
-  if (isLoading) {
-    return (
-      <UserDashboardLayout>
-        <div className="container mx-auto py-8 px-4 md:px-8">
-          <ProfileSkeleton />
-        </div>
-      </UserDashboardLayout>
-    );
-  }
 
   return (
     <UserDashboardLayout>
-      <div className="container mx-auto py-8 px-4 md:px-8">
-        <div className="mb-8 flex justify-between items-center">
-          <div>
-            <h1 className="text-3xl font-bold">Mi Perfil</h1>
-            <p className="text-vyba-tertiary">Gestiona tu información personal</p>
-          </div>
-          
-          {!isEditing ? (
-            <Button onClick={() => setIsEditing(true)}>
-              <PenLine className="h-4 w-4 mr-2" />
-              Editar perfil
-            </Button>
-          ) : (
-            <div className="flex gap-2">
-              <Button variant="outline" onClick={handleCancelEdit}>
-                <X className="h-4 w-4 mr-2" />
-                Cancelar
-              </Button>
-              <Button onClick={handleSaveProfile} disabled={isSaving}>
-                {isSaving ? (
-                  <Loader2 className="h-4 w-4 mr-2 animate-spin" />
-                ) : (
-                  <Check className="h-4 w-4 mr-2" />
-                )}
-                Guardar
-              </Button>
-            </div>
-          )}
-        </div>
+      <div className="container mx-auto px-6 py-12">
+        <h1 className="text-4xl font-semibold mb-8">Mi perfil</h1>
         
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-          {/* Columna izquierda - Avatar e info básica */}
-          <div className="col-span-1">
-            <Card>
-              <CardContent className="p-6 flex flex-col items-center">
-                <div className="relative">
-                  <Avatar className="h-32 w-32 mb-4">
-                    <AvatarImage 
-                      src={avatarPreview || avatarUrl} 
-                      alt={userData.name} 
-                      loading="lazy"
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-16">
+          {/* Columna izquierda - Solo tarjeta de perfil */}
+          <div>
+            <div className="bg-gray-50 rounded-3xl p-8">
+              <div className="flex items-start gap-6">
+                <div className="w-36 h-36 rounded-full overflow-hidden bg-vyba-beige">
+                  {avatarUrl ? (
+                    <img 
+                      src={avatarUrl} 
+                      alt={userName || 'Usuario'} 
+                      className="w-full h-full object-cover"
                     />
-                    <AvatarFallback className="text-3xl bg-black text-white">
-                      {getUserInitial()}
-                    </AvatarFallback>
-                  </Avatar>
-                  
-                  {isEditing && (
-                    <div className="absolute bottom-4 right-0">
-                      <Label htmlFor="avatar-upload" className="cursor-pointer">
-                        <div className="bg-vyba-navy text-white rounded-full p-2">
-                          <Camera className="h-5 w-5" />
-                        </div>
-                      </Label>
-                      <Input 
-                        id="avatar-upload"
-                        type="file"
-                        accept="image/*"
-                        className="hidden"
-                        onChange={handleAvatarChange}
-                      />
+                  ) : (
+                    <div className="w-full h-full flex items-center justify-center text-2xl font-semibold">
+                      {userName?.charAt(0).toUpperCase() || 'U'}
                     </div>
                   )}
                 </div>
-                
-                <h2 className="text-xl font-medium">{userData.name || 'Usuario'}</h2>
-                <p className="text-vyba-tertiary">{userData.email}</p>
-                
-                <div className="w-full mt-6 space-y-3">
-                  <div>
-                    <p className="text-sm text-vyba-tertiary">Miembro desde</p>
-                    <p>Mayo 2023</p>
-                  </div>
-                  <div>
-                    <p className="text-sm text-vyba-tertiary">Última conexión</p>
-                    <p>Hoy</p>
-                  </div>
+                <div>
+                  <h2 className="text-2xl font-semibold mb-0">{userName || 'Usuario'}</h2>
+                  <p className="text-vyba-tertiary mb-2">{user?.email}</p>
+                  <Badge variant="secondary" className="text-sm bg-red-100 gap-2 text-red-500">
+                    <ShieldX className="h-4 w-4 text-red-500" />
+                    Sin móvil
+                  </Badge>
                 </div>
-              </CardContent>
-            </Card>
+              </div>
+              <div className="mt-6">
+                <p className="text-base text-vyba-navy mb-2">
+                  Eres miembro desde
+                </p>
+                <p className="font-medium text-vyba-navy">
+                  {joinDate}
+                </p>
+              </div>
+            </div>
           </div>
-          
-          {/* Columna derecha - Info detallada */}
-          <div className="col-span-1 md:col-span-2">
-            <Card>
-              <CardHeader>
-                <CardTitle>Información personal</CardTitle>
-              </CardHeader>
-              <CardContent className="p-6">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  <div>
-                    <Label htmlFor="name">Nombre completo</Label>
-                    {isEditing ? (
-                      <Input 
-                        id="name"
-                        name="name"
-                        value={editedData.name}
-                        onChange={handleInputChange}
-                        className="mt-1"
-                      />
-                    ) : (
-                      <p className="mt-1">{userData.name || '-'}</p>
-                    )}
-                  </div>
-                  
-                  <div>
-                    <Label htmlFor="email">Email</Label>
-                    <p className="mt-1">{userData.email}</p>
-                  </div>
-                  
-                  <div>
-                    <Label htmlFor="phone">Teléfono</Label>
-                    {isEditing ? (
-                      <Input 
-                        id="phone"
-                        name="phone"
-                        value={editedData.phone}
-                        onChange={handleInputChange}
-                        className="mt-1"
-                      />
-                    ) : (
-                      <p className="mt-1">{userData.phone || '-'}</p>
-                    )}
-                  </div>
-                  
-                  <div>
-                    <Label htmlFor="city">Ciudad</Label>
-                    {isEditing ? (
-                      <Input 
-                        id="city"
-                        name="city"
-                        value={editedData.city}
-                        onChange={handleInputChange}
-                        className="mt-1"
-                      />
-                    ) : (
-                      <p className="mt-1">{userData.city || '-'}</p>
-                    )}
-                  </div>
-                  
-                  <div>
-                    <Label htmlFor="province">Provincia</Label>
-                    {isEditing ? (
-                      <Input 
-                        id="province"
-                        name="province"
-                        value={editedData.province}
-                        onChange={handleInputChange}
-                        className="mt-1"
-                      />
-                    ) : (
-                      <p className="mt-1">{userData.province || '-'}</p>
-                    )}
-                  </div>
-                  
-                  <div className="col-span-1 md:col-span-2">
-                    <Label htmlFor="address">Dirección</Label>
-                    {isEditing ? (
-                      <Input 
-                        id="address"
-                        name="address"
-                        value={editedData.address}
-                        onChange={handleInputChange}
-                        className="mt-1"
-                      />
-                    ) : (
-                      <p className="mt-1">{userData.address || '-'}</p>
-                    )}
-                  </div>
-                  
-                  <div className="col-span-1 md:col-span-2">
-                    <Label htmlFor="bio">Sobre mí</Label>
-                    {isEditing ? (
-                      <Textarea 
-                        id="bio"
-                        name="bio"
-                        value={editedData.bio}
-                        onChange={handleInputChange}
-                        className="mt-1"
-                        rows={4}
-                      />
-                    ) : (
-                      <p className="mt-1">{userData.bio || '-'}</p>
-                    )}
+
+          {/* Columna derecha - Resto de secciones */}
+          <div className="space-y-8">
+            {/* Información personal */}
+            <div>
+              <h3 className="text-2xl font-semibold mb-6">Información personal</h3>
+              
+              <div className="space-y-4">
+                <div>
+                  <p className="text-base text-vyba-navy mb-1">Email</p>
+                  <div className="flex items-center gap-2">
+                    <p className="font-medium text-vyba-navy">{user?.email}</p>
                   </div>
                 </div>
-              </CardContent>
-            </Card>
-            
-            {/* Mostrar información adicional del onboarding */}
-            <Card className="mt-6">
-              <CardHeader>
-                <CardTitle>Preferencias musicales</CardTitle>
-              </CardHeader>
-              <CardContent className="p-6">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  {userData.favoriteGenres && userData.favoriteGenres.length > 0 ? (
-                    <div>
-                      <Label className="block mb-2">Géneros favoritos</Label>
-                      <div className="flex flex-wrap gap-2">
-                        {userData.favoriteGenres.map((genre, index) => (
-                          <Badge key={index} variant="secondary" className="bg-vyba-gray text-vyba-navy">
-                            {genre}
-                          </Badge>
-                        ))}
-                      </div>
-                    </div>
-                  ) : (
-                    <div>
-                      <Label className="block mb-2">Géneros favoritos</Label>
-                      <p className="text-vyba-tertiary">No especificado</p>
-                    </div>
-                  )}
-                  
-                  {userData.preferredArtistTypes && userData.preferredArtistTypes.length > 0 ? (
-                    <div>
-                      <Label className="block mb-2">Tipos de artista preferidos</Label>
-                      <div className="flex flex-wrap gap-2">
-                        {userData.preferredArtistTypes.map((type, index) => (
-                          <Badge key={index} variant="secondary" className="bg-vyba-gray text-vyba-navy">
-                            {type}
-                          </Badge>
-                        ))}
-                      </div>
-                    </div>
-                  ) : (
-                    <div>
-                      <Label className="block mb-2">Tipos de artista preferidos</Label>
-                      <p className="text-vyba-tertiary">No especificado</p>
-                    </div>
-                  )}
+
+                <div>
+                  <p className="text-base text-vyba-navy mb-1">Móvil</p>
+                  <div className="flex items-center gap-2">
+                  <Badge variant="secondary" className="text-sm bg-red-100 gap-2 text-red-500">
+                    <ShieldX className="h-4 w-4 text-red-500" />
+                    Sin verificar
+                  </Badge>
+                  </div>
                 </div>
-              </CardContent>
-            </Card>
+              </div>
+            </div>
+
+            <Separator />
+
+            {/* Mapa de ubicación */}
+            <div>
+              <h3 className="text-2xl font-semibold mb-4">Ubicación</h3>
+              <div className="flex items-center gap-2">
+                <p className="font-medium text-vyba-navy mb-4">Sant Feliu de Codines, provincia de Barcelona</p>
+              </div>
+              <div className="aspect-[16/10] rounded-2xl overflow-hidden bg-vyba-beige">
+                {/* Aquí irá el componente de mapa */}
+                <div className="w-full h-full bg-[#1B4339]"></div>
+              </div>
+            </div>
+
+            <Separator />
+
+            {/* Preferencias musicales */}
+            <div>
+              <h3 className="text-2xl font-semibold mb-6">Tus preferencias musicales</h3>
+              
+              <div className="space-y-6">
+                <div>
+                  <p className="text-base text-vyba-navy mb-3">Géneros favoritos</p>
+                  <div className="flex items-center -space-x-12 py-12">
+                    <div className="w-40 h-60 rounded-lg bg-vyba-beige rotate-12">
+                      <img src="/images/generos/pop.png" alt="Pop" className="w-full h-full object-cover" />
+                    </div>
+                    <div className="w-40 h-60 rounded-lg bg-vyba-beige -rotate-12">
+                      <img src="/images/generos/reggaeton.png" alt="Reggaeton" className="w-full h-full object-cover" />
+                    </div>
+                    <div className="w-40 h-60 rounded-lg bg-vyba-beige rotate-12">
+                      <img src="/images/generos/rock.png" alt="Rock" className="w-full h-full object-cover" />
+                    </div>
+                    <div className="w-40 h-60 rounded-lg bg-vyba-beige rotate-">
+                      <img src="/images/generos/rock.png" alt="Rock" className="w-full h-full object-cover" />
+                    </div>
+                  </div>
+                  <div className="flex flex-wrap gap-2">
+                    <Badge variant="secondary">Pop</Badge>
+                    <Badge variant="secondary">Reggaeton</Badge>
+                  </div>
+                </div>
+
+                <div>
+                  <p className="text-base text-vyba-navy mb-3">Tipos de artistas favoritos</p>
+                  <div className="flex -space-x-8 py-4">
+                    <div className="w-24 h-24 rounded-full bg-vyba-beige border border-white border-4">
+                      <img src="/images/artistas/ed_sheeran.png" alt="Ed Sheeran" className="w-full h-full object-cover" />
+                    </div>
+                    <div className="w-24 h-24 rounded-full bg-vyba-beige border border-white border-4">
+                      <img src="/images/artistas/ed_sheeran.png" alt="Ed Sheeran" className="w-full h-full object-cover" />
+                    </div>
+                    <div className="w-24 h-24 rounded-full bg-vyba-beige border border-white border-4">
+                      <img src="/images/artistas/ed_sheeran.png" alt="Ed Sheeran" className="w-full h-full object-cover" />
+                    </div>
+                    <div className="w-24 h-24 rounded-full bg-vyba-beige border border-white border-4">
+                      <img src="/images/artistas/ed_sheeran.png" alt="Ed Sheeran" className="w-full h-full object-cover" />
+                    </div>
+                  </div>
+                  <div className="flex flex-wrap gap-2">
+                    <Badge variant="secondary">Ed Sheeran</Badge>
+                    <Badge variant="secondary">Ed Sheeran</Badge>
+                    <Badge variant="secondary">Ed Sheeran</Badge>
+                    <Badge variant="secondary">Ed Sheeran</Badge>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </div>

@@ -7,6 +7,7 @@ import { useIsMobile } from "@/hooks/use-mobile";
 import AuthDialog from "@/components/auth/authdialog";
 import FavoriteDialog from "@/components/FavoriteDialog";
 import { useAuth } from "@/contexts/AuthContext";
+import { Link } from 'react-router-dom';
 
 interface ArtistProfileCardProps {
   id?: string;
@@ -19,7 +20,7 @@ interface ArtistProfileCardProps {
   onFavoriteToggle?: () => void;
   isFavorite?: boolean;
   className?: string;
-  onClick?: () => void;
+  to?: string;
   isRecommended?: boolean;
   hideHeart?: boolean;
   regularBadge?: boolean;
@@ -37,7 +38,7 @@ const ArtistProfileCard = ({
   onFavoriteToggle,
   isFavorite = false,
   className,
-  onClick,
+  to,
   isRecommended = false,
   hideHeart = false,
   regularBadge = false,
@@ -117,8 +118,12 @@ const ArtistProfileCard = ({
         setShowLoginDialog(true);
       }
     } else {
-      if (onClick) {
-        onClick();
+      if (to) {
+        // If to is provided, use Link component
+        // Assuming Link component from react-router-dom
+        // Replace with actual Link component usage
+      } else if (onFavoriteToggle) {
+        onFavoriteToggle();
       }
     }
     lastClickTimeRef.current = currentTime;
@@ -265,165 +270,160 @@ const ArtistProfileCard = ({
     };
   }, [currentImageIndex, images]);
 
-  return <>
-      <div 
-        className={cn(
-          "flex flex-col overflow-hidden bg-transparent transition-all duration-300", 
-          className
-        )} 
-        onClick={handleCardClick} 
-        onMouseEnter={() => setIsHovered(true)} 
-        onMouseLeave={() => setIsHovered(false)} 
-        style={{
-          cursor: isHovered ? 'pointer' : 'default'
-        }}
-      >
-        <div className={cn("relative w-full overflow-hidden rounded-3xl", "aspect-[1.05/1]")}>
-          <div 
-            className="relative w-full h-full overflow-hidden" 
-            onTouchStart={handleTouchStart} 
-            onTouchMove={handleTouchMove} 
-            onTouchEnd={handleTouchEnd}
-          >
-            {images.map((image, index) => (
-              <div 
-                key={index} 
-                className="absolute inset-0 w-full h-full transition-transform duration-500 ease-in-out" 
-                style={{
-                  transform: `translateX(${(index - currentImageIndex) * 100}%)`,
-                  zIndex: index === currentImageIndex ? 1 : 0
-                }}
-              >
-                <img 
-                  src={image} 
-                  alt={`${name} - ${index + 1}`} 
-                  className={cn(
-                    "w-full h-full object-cover transition-transform duration-300", 
-                    isHovered ? "scale-105" : ""
-                  )} 
-                  draggable="false" 
-                  loading={index === 0 ? "eager" : "lazy"} 
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-black via-black/40 to-transparent opacity-60 pointer-events-none" />
-              </div>
-            ))}
-          </div>
-          
-          {images.length > 1 && <>
-            <button 
-              onClick={handlePrevImage} 
-              className={cn(
-                "absolute left-2 top-1/2 transform -translate-y-1/2 p-1.5 rounded-full opacity-90 hover:opacity-100 transition-all duration-300 z-10 w-7 h-7 flex items-center justify-center", 
-                isMobile ? "opacity-90" : isHovered ? "opacity-90" : "opacity-0", 
-                isDarkImage ? "bg-white/30 backdrop-blur-xl" : "bg-black/30 backdrop-blur-xl"
-              )} 
-              aria-label="Imagen anterior"
+  const CardContent = () => (
+    <div 
+      className={cn(
+        "group relative overflow-hidden rounded-3xl transition-all duration-300 ease-in-out",
+        className
+      )}
+      onClick={handleCardClick}
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
+    >
+      <div className={cn("relative w-full overflow-hidden rounded-3xl", "aspect-[1.05/1]")}>
+        <div 
+          className="relative w-full h-full overflow-hidden" 
+          onTouchStart={handleTouchStart} 
+          onTouchMove={handleTouchMove} 
+          onTouchEnd={handleTouchEnd}
+        >
+          {images.map((image, index) => (
+            <div 
+              key={index} 
+              className="absolute inset-0 w-full h-full transition-transform duration-500 ease-in-out" 
+              style={{
+                transform: `translateX(${(index - currentImageIndex) * 100}%)`,
+                zIndex: index === currentImageIndex ? 1 : 0
+              }}
             >
-              <ChevronLeft 
+              <img 
+                src={image} 
+                alt={`${name} - ${index + 1}`} 
                 className={cn(
-                  "h-5 w-5", 
-                  isDarkImage ? "text-white" : "text-white"
+                  "w-full h-full object-cover transition-transform duration-300", 
+                  isHovered ? "scale-105" : ""
                 )} 
+                draggable="false" 
+                loading={index === 0 ? "eager" : "lazy"} 
               />
-            </button>
-            <button 
-              onClick={handleNextImage} 
-              className={cn(
-                "absolute right-2 top-1/2 transform -translate-y-1/2 p-1.5 rounded-full opacity-90 hover:opacity-100 transition-all duration-300 z-10 w-7 h-7 flex items-center justify-center", 
-                isMobile ? "opacity-90" : isHovered ? "opacity-90" : "opacity-0", 
-                isDarkImage ? "bg-white/30 backdrop-blur-xl" : "bg-black/30 backdrop-blur-xl"
-              )} 
-              aria-label="Siguiente imagen"
-            >
-              <ChevronRight 
-                className={cn(
-                  "h-4 w-4", 
-                  isDarkImage ? "text-white" : "text-white"
-                )} 
-              />
-            </button>
-          </>}
-
-          {images.length > 1 && (
-            <div className="absolute bottom-3 left-1/2 transform -translate-x-1/2 flex gap-1.5 z-20">
-              {images.map((_, index) => (
-                <button 
-                  key={index} 
-                  className={cn(
-                    "w-1.5 h-1.5 rounded-full transition-all duration-300", 
-                    currentImageIndex === index ? "bg-white" : "bg-white/30 backdrop-blur-xl"
-                  )} 
-                  onClick={(e) => handleSlideChange(index, e)} 
-                  aria-label={`Ir a imagen ${index + 1}`} 
-                />
-              ))}
+              <div className="absolute inset-0 bg-gradient-to-t from-black via-black/40 to-transparent opacity-60 pointer-events-none" />
             </div>
-          )}
-          
-          {!hideHeart && isRecommended === false && (
-            <button 
-              onClick={handleFavoriteClick} 
-              className={cn(
-                "absolute top-2 right-2 z-10 backdrop-blur-xl rounded-full p-1.5 w-9 h-9 flex items-center justify-center transition-colors duration-300", 
-                isDarkImage ? "bg-white/30" : "bg-black/30"
-              )} 
-              aria-label={favorite ? "Quitar de favoritos" : "Añadir a favoritos"}
-            >
-              <Heart 
-                className={cn(
-                  "h-4 w-4 transition-all duration-300", 
-                  favorite ? "fill-black stroke-black" : "fill-transparent stroke-white"
-                )} 
-              />
-            </button>
-          )}
-          
-          <Badge 
-            variant="secondary" 
-            className={cn(
-              "absolute top-2 left-2 text-sm backdrop-blur-xl text-white z-10 px-4 py-1.5 dark:text-white rounded-full transition-colors duration-300 font-figtree", 
-              regularBadge || isRecommended ? "font-medium" : "font-medium",
-              isDarkImage ? "bg-white/30" : "bg-black/30"
-            )}
-          >
-            {type}
-          </Badge>
+          ))}
         </div>
         
-        {isRecommended ? (
-          <div className="pt-3 flex flex-col gap-1 bg-transparent">
-            <div className="flex justify-between items-center">
-              <h3 className="text-base font-normal text-vyba-navy font-figtree">{name}</h3>
-              <p className="text-base text-vyba-tertiary font-normal font-figtree">{priceRange}</p>
-            </div>
-          </div>
-        ) : (
-          <div className="pt-3 flex flex-col bg-transparent">
-            <div className="flex justify-between items-center">
-              <h3 className="text-base font-medium text-vyba-navy font-figtree">{name}</h3>
-              <div className="flex items-center gap-1">
-                <Star className="h-3 w-3 fill-black stroke-black dark:fill-white dark:stroke-white" />
-                <span className="text-base font-medium text-vyba-navy">{rating.toFixed(1)}</span>
-              </div>
-            </div>
-            <p className="text-base text-vyba-tertiary dark:text-gray-400 line-clamp-1 font-light mb-0 font-figtree mb-1">{description}</p>
-            <p className="text-base font-medium text-vyba-navy font-figtree flex items-center gap-2">
-              <span className="font-vyba-tertiary font-light">desde</span> {priceRange}
-            </p>
+        {images.length > 1 && <>
+          <button 
+            onClick={handlePrevImage} 
+            className={cn(
+              "absolute left-2 top-1/2 transform -translate-y-1/2 p-1.5 rounded-full opacity-90 hover:opacity-100 transition-all duration-300 z-10 w-7 h-7 flex items-center justify-center", 
+              isMobile ? "opacity-90" : isHovered ? "opacity-90" : "opacity-0", 
+              isDarkImage ? "bg-white/30 backdrop-blur-xl" : "bg-black/30 backdrop-blur-xl"
+            )} 
+            aria-label="Imagen anterior"
+          >
+            <ChevronLeft 
+              className={cn(
+                "h-5 w-5", 
+                isDarkImage ? "text-white" : "text-white"
+              )} 
+            />
+          </button>
+          <button 
+            onClick={handleNextImage} 
+            className={cn(
+              "absolute right-2 top-1/2 transform -translate-y-1/2 p-1.5 rounded-full opacity-90 hover:opacity-100 transition-all duration-300 z-10 w-7 h-7 flex items-center justify-center", 
+              isMobile ? "opacity-90" : isHovered ? "opacity-90" : "opacity-0", 
+              isDarkImage ? "bg-white/30 backdrop-blur-xl" : "bg-black/30 backdrop-blur-xl"
+            )} 
+            aria-label="Siguiente imagen"
+          >
+            <ChevronRight 
+              className={cn(
+                "h-4 w-4", 
+                isDarkImage ? "text-white" : "text-white"
+              )} 
+            />
+          </button>
+        </>}
+
+        {images.length > 1 && (
+          <div className="absolute bottom-3 left-1/2 transform -translate-x-1/2 flex gap-1.5 z-20">
+            {images.map((_, index) => (
+              <button 
+                key={index} 
+                className={cn(
+                  "w-1.5 h-1.5 rounded-full transition-all duration-300", 
+                  currentImageIndex === index ? "bg-white" : "bg-white/30 backdrop-blur-xl"
+                )} 
+                onClick={(e) => handleSlideChange(index, e)} 
+                aria-label={`Ir a imagen ${index + 1}`} 
+              />
+            ))}
           </div>
         )}
+        
+        {!hideHeart && isRecommended === false && (
+          <button 
+            onClick={handleFavoriteClick} 
+            className={cn(
+              "absolute top-2 right-2 z-10 backdrop-blur-xl rounded-full p-1.5 w-9 h-9 flex items-center justify-center transition-colors duration-300", 
+              isDarkImage ? "bg-white/30" : "bg-black/30"
+            )} 
+            aria-label={favorite ? "Quitar de favoritos" : "Añadir a favoritos"}
+          >
+            <Heart 
+              className={cn(
+                "h-4 w-4 transition-all duration-300", 
+                favorite ? "fill-black stroke-black" : "fill-transparent stroke-white"
+              )} 
+            />
+          </button>
+        )}
+        
+        <Badge 
+          variant="secondary" 
+          className={cn(
+            "absolute top-2 left-2 text-sm backdrop-blur-xl text-white z-10 px-4 py-1.5 dark:text-white rounded-full transition-colors duration-300 font-figtree", 
+            regularBadge || isRecommended ? "font-medium" : "font-medium",
+            isDarkImage ? "bg-white/30" : "bg-black/30"
+          )}
+        >
+          {type}
+        </Badge>
       </div>
       
-      <AuthDialog open={showLoginDialog} onOpenChange={setShowLoginDialog} />
-      <FavoriteDialog 
-        open={showFavoriteDialog} 
-        onOpenChange={setShowFavoriteDialog} 
-        artistName={name}
-        artistId={id || ''}
-        onConfirm={toggleFavorite}
-        isFavorite={favorite}
-      />
-    </>;
+      {isRecommended ? (
+        <div className="pt-3 flex flex-col gap-1 bg-transparent">
+          <div className="flex justify-between items-center">
+            <h3 className="text-base font-normal text-vyba-navy font-figtree">{name}</h3>
+            <p className="text-base text-vyba-tertiary font-normal font-figtree">{priceRange}</p>
+          </div>
+        </div>
+      ) : (
+        <div className="pt-3 flex flex-col bg-transparent">
+          <div className="flex justify-between items-center">
+            <h3 className="text-base font-medium text-vyba-navy font-figtree">{name}</h3>
+            <div className="flex items-center gap-1">
+              <Star className="h-3 w-3 fill-black stroke-black dark:fill-white dark:stroke-white" />
+              <span className="text-base font-medium text-vyba-navy">{rating.toFixed(1)}</span>
+            </div>
+          </div>
+          <p className="text-base text-vyba-tertiary dark:text-gray-400 line-clamp-1 font-light mb-0 font-figtree mb-1">{description}</p>
+          <p className="text-base font-medium text-vyba-navy font-figtree flex items-center gap-2">
+            <span className="font-vyba-tertiary font-light">desde</span> {priceRange}
+          </p>
+        </div>
+      )}
+    </div>
+  );
+
+  return to ? (
+    <Link to={to} className="block">
+      <CardContent />
+    </Link>
+  ) : (
+    <CardContent />
+  );
 };
 
 export default ArtistProfileCard;

@@ -391,7 +391,7 @@ const UserDashboardPage = () => {
             )}
 
             {/* Artistas Destacados - Sin padding horizontal en modo carrusel */}
-            <div className="mt-8">
+            <div className="mt-16">
               <div className="container mx-auto px-4 md:px-8 mb-4">
                 <div className="flex justify-between items-center">
                   <h2 className="text-3xl font-semibold">Artistas destacados</h2>
