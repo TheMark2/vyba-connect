@@ -100,33 +100,54 @@ export type Database = {
       }
       profiles: {
         Row: {
+          avatar_url: string | null
           birth_date: string | null
+          city: string | null
           created_at: string | null
           email: string
+          favorite_genres: string[] | null
           id: string
           last_name: string | null
+          location: string | null
           name: string | null
           password_hash: string | null
+          phone: string | null
+          preferred_artist_types: string[] | null
+          province: string | null
           updated_at: string | null
         }
         Insert: {
+          avatar_url?: string | null
           birth_date?: string | null
+          city?: string | null
           created_at?: string | null
           email: string
+          favorite_genres?: string[] | null
           id: string
           last_name?: string | null
+          location?: string | null
           name?: string | null
           password_hash?: string | null
+          phone?: string | null
+          preferred_artist_types?: string[] | null
+          province?: string | null
           updated_at?: string | null
         }
         Update: {
+          avatar_url?: string | null
           birth_date?: string | null
+          city?: string | null
           created_at?: string | null
           email?: string
+          favorite_genres?: string[] | null
           id?: string
           last_name?: string | null
+          location?: string | null
           name?: string | null
           password_hash?: string | null
+          phone?: string | null
+          preferred_artist_types?: string[] | null
+          province?: string | null
           updated_at?: string | null
         }
         Relationships: []

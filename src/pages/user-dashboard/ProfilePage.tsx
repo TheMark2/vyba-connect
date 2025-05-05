@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import UserDashboardLayout from '@/components/dashboard/UserDashboardLayout';
 import { useAuth } from '@/contexts/AuthContext';
@@ -68,7 +69,17 @@ const ProfilePage = () => {
 
         if (data) {
           console.log('Datos del perfil:', data);
-          setProfileData(data as Profile);
+          
+          // Crear datos simulados de coordenadas si no existen
+          let profileWithCoordinates = { ...data };
+          if (!profileWithCoordinates.coordinates) {
+            profileWithCoordinates.coordinates = {
+              lat: 40.4167754, // Madrid por defecto
+              lng: -3.7037902
+            };
+          }
+          
+          setProfileData(profileWithCoordinates as Profile);
         }
       } catch (error) {
         console.error('Error al cargar los datos del perfil:', error);
