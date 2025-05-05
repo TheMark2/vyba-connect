@@ -43,6 +43,7 @@ const ProfilePage = () => {
     preferred_artist_types: []
   });
   const [isLoading, setIsLoading] = useState(true);
+  const [locationCoordinates, setLocationCoordinates] = useState<{lat: number, lng: number} | null>(null);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -53,6 +54,60 @@ const ProfilePage = () => {
       setJoinDate(`${month.charAt(0).toUpperCase() + month.slice(1)} del ${year}`);
     }
   }, [user]);
+
+  // Geocodificar la dirección del usuario cuando cambie profileData
+  useEffect(() => {
+    const geocodeLocation = async () => {
+      if (!profileData?.city || !profileData?.province) return;
+      
+      try {
+        // Obtener el token de Mapbox desde la función de Supabase
+        const { data: tokenData, error: tokenError } = await supabase.functions.invoke('get-mapbox-token');
+        
+        if (tokenError) {
+          console.error('Error al obtener el token de Mapbox:', tokenError);
+          return;
+        }
+        
+        const mapboxToken = tokenData.token;
+        if (!mapboxToken) {
+          console.error('No se pudo obtener el token de Mapbox');
+          return;
+        }
+        
+        // Geocodificar la ubicación
+        const query = `${profileData.city}, ${profileData.province}, España`;
+        const response = await fetch(
+          `https://api.mapbox.com/geocoding/v5/mapbox.places/${encodeURIComponent(query)}.json?access_token=${mapboxToken}&country=es&limit=1`
+        );
+        
+        const data = await response.json();
+        
+        if (data.features && data.features.length > 0) {
+          const [lng, lat] = data.features[0].center;
+          setLocationCoordinates({ lat, lng });
+          
+          // Actualizar profileData con las coordenadas
+          setProfileData(prevData => {
+            if (!prevData) return null;
+            return {
+              ...prevData,
+              coordinates: { lat, lng }
+            };
+          });
+        } else {
+          // Si no hay resultados, usar coordenadas por defecto de Madrid
+          setLocationCoordinates({ lat: 40.4167754, lng: -3.7037902 });
+        }
+      } catch (error) {
+        console.error('Error al geocodificar la ubicación:', error);
+        // En caso de error, usar coordenadas por defecto
+        setLocationCoordinates({ lat: 40.4167754, lng: -3.7037902 });
+      }
+    };
+    
+    geocodeLocation();
+  }, [profileData?.city, profileData?.province]);
 
   useEffect(() => {
     const fetchProfileData = async () => {
@@ -69,17 +124,7 @@ const ProfilePage = () => {
 
         if (data) {
           console.log('Datos del perfil:', data);
-          
-          // Crear datos simulados de coordenadas si no existen
-          let profileWithCoordinates = { ...data };
-          if (!profileWithCoordinates.coordinates) {
-            profileWithCoordinates.coordinates = {
-              lat: 40.4167754, // Madrid por defecto
-              lng: -3.7037902
-            };
-          }
-          
-          setProfileData(profileWithCoordinates as Profile);
+          setProfileData(data as Profile);
         }
       } catch (error) {
         console.error('Error al cargar los datos del perfil:', error);
@@ -312,15 +357,15 @@ const ProfilePage = () => {
                 </p>
               </div>
               <div className="aspect-[16/10] rounded-2xl overflow-hidden">
-                {profileData?.coordinates ? (
+                {(locationCoordinates || (profileData?.coordinates)) ? (
                   <LocationMap 
-                    latitude={profileData.coordinates.lat}
-                    longitude={profileData.coordinates.lng}
+                    latitude={locationCoordinates?.lat || profileData?.coordinates?.lat || 40.4167754}
+                    longitude={locationCoordinates?.lng || profileData?.coordinates?.lng || -3.7037902}
                     radius={5}
                   />
                 ) : (
                   <div className="w-full h-full bg-vyba-beige flex items-center justify-center">
-                    <p className="text-vyba-tertiary">No hay ubicación disponible</p>
+                    <p className="text-vyba-tertiary">Cargando ubicación...</p>
                   </div>
                 )}
               </div>
