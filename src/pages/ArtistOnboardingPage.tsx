@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { OnboardingLayout } from '@/components/layouts/OnboardingLayout';
@@ -168,14 +167,7 @@ const ArtistOnboardingPage = () => {
     }));
   };
   
-  const handleArtistTypeSelect = (types: string[]) => {
-    if (types && types.length > 0) {
-      updateOnboardingData('artistType', types[0]); // Por ahora tomamos solo el primero
-    } else {
-      updateOnboardingData('artistType', undefined);
-    }
-  };
-  
+  const handleArtistTypeSelect = (type: string) => updateOnboardingData('artistType', type);
   const handleMusicGenresSelect = (genres: string[]) => updateOnboardingData('musicGenres', genres);
   
   const handleProfilePhotoChange = async (photo: File | null) => {
@@ -348,7 +340,7 @@ const ArtistOnboardingPage = () => {
                 </div>
                 <ArtistTypeStep 
                   onSelect={handleArtistTypeSelect} 
-                  initialValues={onboardingData.artistType ? [onboardingData.artistType] : []}
+                  initialValue={onboardingData.artistType}
                 />
               </div>
             );

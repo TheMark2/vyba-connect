@@ -103,36 +103,30 @@ export type Database = {
           birth_date: string | null
           created_at: string | null
           email: string
-          favorite_genres: string[] | null
           id: string
           last_name: string | null
           name: string | null
           password_hash: string | null
-          preferred_artist_types: string[] | null
           updated_at: string | null
         }
         Insert: {
           birth_date?: string | null
           created_at?: string | null
           email: string
-          favorite_genres?: string[] | null
           id: string
           last_name?: string | null
           name?: string | null
           password_hash?: string | null
-          preferred_artist_types?: string[] | null
           updated_at?: string | null
         }
         Update: {
           birth_date?: string | null
           created_at?: string | null
           email?: string
-          favorite_genres?: string[] | null
           id?: string
           last_name?: string | null
           name?: string | null
           password_hash?: string | null
-          preferred_artist_types?: string[] | null
           updated_at?: string | null
         }
         Relationships: []

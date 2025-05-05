@@ -1,5 +1,4 @@
-
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { 
   UploadCloud, 
@@ -173,48 +172,6 @@ const UserOnboardingPage = () => {
       totalSteps: 1
     }
   ];
-
-  // Cargar datos existentes al iniciar
-  useEffect(() => {
-    const loadExistingData = async () => {
-      try {
-        setIsLoading(true);
-        const { data: { user } } = await supabase.auth.getUser();
-        
-        if (user) {
-          // Cargar datos desde el usuario
-          const userData = user.user_metadata || {};
-          
-          // También intentar cargar desde la tabla profiles
-          const { data: profileData } = await supabase
-            .from('profiles')
-            .select('*')
-            .eq('id', user.id)
-            .single();
-            
-          console.log("Datos cargados del perfil:", profileData);
-          console.log("Datos cargados de auth.user:", userData);
-          
-          // Combinar datos, dando prioridad a profiles
-          setOnboardingData({
-            profilePhotoUrl: userData.avatar_url || '',
-            location: userData.location || '',
-            city: profileData?.city || userData.city || '',
-            province: profileData?.province || userData.province || '',
-            favoriteGenres: profileData?.favorite_genres || userData.favorite_genres || [],
-            preferredArtistTypes: profileData?.preferred_artist_types || userData.preferred_artist_types || [],
-            coordinates: userData.coordinates
-          });
-        }
-      } catch (error) {
-        console.error("Error al cargar datos existentes:", error);
-      } finally {
-        setIsLoading(false);
-      }
-    };
-    
-    loadExistingData();
-  }, []);
 
   // Actualizar datos del formulario
   const updateOnboardingData = (key: keyof OnboardingData, value: any) => {
@@ -496,22 +453,11 @@ const UserOnboardingPage = () => {
       }
       
       // 4. Actualizar metadatos del usuario
-      console.log("Guardando datos en auth.users:", userData);
       await supabase.auth.updateUser({
         data: userData
       });
       
       // 5. También actualizar o crear entrada en la tabla profiles
-      console.log("Guardando datos en profiles:", {
-        id: user.id,
-        email: user.email,
-        city: onboardingData.city || '',
-        province: onboardingData.province || '',
-        favorite_genres: onboardingData.favoriteGenres || [],
-        preferred_artist_types: onboardingData.preferredArtistTypes || [],
-        avatar_url: avatarUrl
-      });
-      
       const { error: profileError } = await supabase
         .from('profiles')
         .upsert({
@@ -526,7 +472,6 @@ const UserOnboardingPage = () => {
         
       if (profileError) {
         console.error('Error al actualizar perfil:', profileError);
-        throw profileError;
       }
       
       // 6. Lógica para mostrar el WelcomeDialog:
@@ -556,9 +501,6 @@ const UserOnboardingPage = () => {
       // Agregar logs para depuración
       console.log('¿Mostrar WelcomeDialog?', localStorage.getItem('is_from_registration') === 'true');
       
-      // Recargar los datos del usuario
-      await reloadUserData();
-      
       // 7. Redirigir al usuario al Dashboard
       toast.success('¡Perfil configurado correctamente!');
       
@@ -570,9 +512,6 @@ const UserOnboardingPage = () => {
     } catch (error) {
       console.error('Error al finalizar onboarding:', error);
       toast.error('Error al guardar tu perfil');
-      if (error instanceof Error) {
-        setError(error.message);
-      }
     } finally {
       setIsSaving(false);
     }
@@ -854,16 +793,9 @@ const UserOnboardingPage = () => {
                 <Button
                   variant="terciary"
                   onClick={handleNext}
-                  disabled={!canGoNext() || isSaving}
+                  disabled={!canGoNext()}
                 >
-                  {isSaving ? (
-                    <div className="flex items-center">
-                      <div className="animate-spin rounded-full h-4 w-4 border-t-2 border-b-2 border-white mr-2"></div>
-                      Guardando...
-                    </div>
-                  ) : (
-                    currentGroup === stepGroups.length - 1 ? 'Finalizar' : 'Siguiente'
-                  )}
+                  {currentGroup === stepGroups.length - 1 ? 'Finalizar' : 'Siguiente'}
                 </Button>
               </div>
             </div>

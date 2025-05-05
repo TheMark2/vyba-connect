@@ -1,5 +1,4 @@
-
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
@@ -7,8 +6,6 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Music, Plus, X } from 'lucide-react';
-import { supabase } from "@/integrations/supabase/client";
-import { toast } from "sonner";
 
 interface MusicGenresStepProps {
   onSelect: (genres: string[]) => void;
@@ -32,73 +29,14 @@ const MusicGenresStep: React.FC<MusicGenresStepProps> = ({ onSelect, initialValu
   const [showAddDialog, setShowAddDialog] = useState(false);
   const [newGenre, setNewGenre] = useState('');
   const [customGenres, setCustomGenres] = useState<Array<{ id: string; name: string; icon: JSX.Element }>>([]);
-  const [isSaving, setIsSaving] = useState(false);
 
-  useEffect(() => {
-    // Cargar géneros personalizados si existen en initialValues pero no están en defaultGenres
-    const loadCustomGenres = () => {
-      if (initialValues && initialValues.length > 0) {
-        const customGenresFromInitial = initialValues
-          .filter(genreId => !defaultGenres.some(defaultGenre => defaultGenre.id === genreId))
-          .map(genreId => ({
-            id: genreId,
-            name: genreId.charAt(0).toUpperCase() + genreId.slice(1).replace(/-/g, ' '),
-            icon: <Music className="w-6 h-6" />
-          }));
-        
-        if (customGenresFromInitial.length > 0) {
-          setCustomGenres(customGenresFromInitial);
-        }
-      }
-    };
-
-    loadCustomGenres();
-  }, [initialValues]);
-
-  const handleSelect = async (genreId: string) => {
-    let updatedGenres: string[];
-    
-    if (selectedGenres.includes(genreId)) {
-      updatedGenres = selectedGenres.filter(id => id !== genreId);
-    } else {
-      updatedGenres = [...selectedGenres, genreId];
-    }
+  const handleSelect = (genreId: string) => {
+    const updatedGenres = selectedGenres.includes(genreId)
+      ? selectedGenres.filter(id => id !== genreId)
+      : [...selectedGenres, genreId];
     
     setSelectedGenres(updatedGenres);
     onSelect(updatedGenres);
-    
-    // Intentar actualizar directamente en Supabase
-    try {
-      setIsSaving(true);
-      const { data: { user } } = await supabase.auth.getUser();
-      
-      if (user) {
-        // Actualizar en auth.users
-        await supabase.auth.updateUser({
-          data: {
-            favorite_genres: updatedGenres
-          }
-        });
-        
-        // También actualizar en profiles
-        const { error } = await supabase
-          .from('profiles')
-          .update({ 
-            favorite_genres: updatedGenres 
-          })
-          .eq('id', user.id);
-          
-        if (error) {
-          console.error('Error al actualizar géneros en profiles:', error);
-          toast.error('Error al guardar tus preferencias');
-        }
-      }
-    } catch (error) {
-      console.error('Error al guardar preferencias musicales:', error);
-      toast.error('Error al guardar tus preferencias');
-    } finally {
-      setIsSaving(false);
-    }
   };
 
   const handleMouseDown = (genreId: string) => {
@@ -109,7 +47,7 @@ const MusicGenresStep: React.FC<MusicGenresStepProps> = ({ onSelect, initialValu
     setActivePress(null);
   };
 
-  const handleAddGenre = async () => {
+  const handleAddGenre = () => {
     if (newGenre.trim()) {
       const genreId = newGenre.toLowerCase().replace(/\s+/g, '-');
       const newGenreObj = {
@@ -119,86 +57,17 @@ const MusicGenresStep: React.FC<MusicGenresStepProps> = ({ onSelect, initialValu
       };
       
       setCustomGenres(prev => [...prev, newGenreObj]);
-      const updatedGenres = [...selectedGenres, genreId];
-      setSelectedGenres(updatedGenres);
-      onSelect(updatedGenres);
-      
-      // También actualizar en Supabase
-      try {
-        setIsSaving(true);
-        const { data: { user } } = await supabase.auth.getUser();
-        
-        if (user) {
-          // Actualizar en auth.users
-          await supabase.auth.updateUser({
-            data: {
-              favorite_genres: updatedGenres
-            }
-          });
-          
-          // También actualizar en profiles
-          const { error } = await supabase
-            .from('profiles')
-            .update({ 
-              favorite_genres: updatedGenres 
-            })
-            .eq('id', user.id);
-            
-          if (error) {
-            console.error('Error al actualizar géneros en profiles:', error);
-            toast.error('Error al guardar tus preferencias');
-          }
-        }
-      } catch (error) {
-        console.error('Error al guardar preferencias musicales:', error);
-        toast.error('Error al guardar tus preferencias');
-      } finally {
-        setIsSaving(false);
-      }
-      
+      setSelectedGenres(prev => [...prev, genreId]);
+      onSelect([...selectedGenres, genreId]);
       setNewGenre('');
       setShowAddDialog(false);
     }
   };
 
-  const handleDeleteGenre = async (genreId: string) => {
+  const handleDeleteGenre = (genreId: string) => {
     setCustomGenres(prev => prev.filter(genre => genre.id !== genreId));
-    const updatedGenres = selectedGenres.filter(id => id !== genreId);
-    setSelectedGenres(updatedGenres);
-    onSelect(updatedGenres);
-    
-    // También actualizar en Supabase
-    try {
-      setIsSaving(true);
-      const { data: { user } } = await supabase.auth.getUser();
-      
-      if (user) {
-        // Actualizar en auth.users
-        await supabase.auth.updateUser({
-          data: {
-            favorite_genres: updatedGenres
-          }
-        });
-        
-        // También actualizar en profiles
-        const { error } = await supabase
-            .from('profiles')
-            .update({ 
-              favorite_genres: updatedGenres 
-            })
-            .eq('id', user.id);
-            
-        if (error) {
-          console.error('Error al actualizar géneros en profiles:', error);
-          toast.error('Error al guardar tus preferencias');
-        }
-      }
-    } catch (error) {
-      console.error('Error al eliminar género musical:', error);
-      toast.error('Error al guardar tus preferencias');
-    } finally {
-      setIsSaving(false);
-    }
+    setSelectedGenres(prev => prev.filter(id => id !== genreId));
+    onSelect(selectedGenres.filter(id => id !== genreId));
   };
 
   const allGenres = [...defaultGenres, ...customGenres];
@@ -219,8 +88,7 @@ const MusicGenresStep: React.FC<MusicGenresStepProps> = ({ onSelect, initialValu
                   selectedGenres.includes(genre.id)
                     ? "bg-vyba-gray text-vyba-navy font-medium bg-vyba-tertiary/20"
                     : "bg-vyba-gray text-vyba-tertiary hover:text-vyba-navy",
-                  activePress === genre.id ? "transform scale-95" : "",
-                  isSaving && "opacity-70 pointer-events-none"
+                  activePress === genre.id ? "transform scale-95" : ""
                 )}
                 onClick={() => handleSelect(genre.id)}
                 onMouseDown={() => handleMouseDown(genre.id)}
@@ -236,7 +104,6 @@ const MusicGenresStep: React.FC<MusicGenresStepProps> = ({ onSelect, initialValu
                       e.stopPropagation();
                       handleDeleteGenre(genre.id);
                     }}
-                    disabled={isSaving}
                   >
                     <X className="w-4 h-4" />
                   </button>
@@ -250,8 +117,7 @@ const MusicGenresStep: React.FC<MusicGenresStepProps> = ({ onSelect, initialValu
                 "flex flex-col items-start justify-center cursor-pointer transition-all duration-150",
                 "text-base font-medium px-8 py-6 rounded-xl gap-2",
                 "bg-vyba-gray text-vyba-tertiary hover:text-vyba-navy",
-                activePress === 'add' ? "transform scale-95" : "",
-                isSaving && "opacity-70 pointer-events-none"
+                activePress === 'add' ? "transform scale-95" : ""
               )}
               onClick={() => setShowAddDialog(true)}
               onMouseDown={() => handleMouseDown('add')}
@@ -287,7 +153,7 @@ const MusicGenresStep: React.FC<MusicGenresStepProps> = ({ onSelect, initialValu
               type="button" 
               className="w-full"
               onClick={handleAddGenre}
-              disabled={!newGenre.trim() || isSaving}
+              disabled={!newGenre.trim()}
             >
               Añadir género
             </Button>

@@ -1,4 +1,3 @@
-
 import React, { useState, useRef, useEffect, TouchEvent } from "react";
 import { Heart, ChevronLeft, ChevronRight, Star, Banknote } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
@@ -26,7 +25,6 @@ interface ArtistProfileCardProps {
   hideHeart?: boolean;
   regularBadge?: boolean;
   regularText?: boolean;
-  onClick?: () => void; // Añadiendo la propiedad onClick que falta
 }
 
 const ArtistProfileCard = ({
@@ -44,8 +42,7 @@ const ArtistProfileCard = ({
   isRecommended = false,
   hideHeart = false,
   regularBadge = false,
-  regularText = false,
-  onClick // Añadiendo onClick a los props desestructurados
+  regularText = false
 }: ArtistProfileCardProps) => {
   const [favorite, setFavorite] = useState(isFavorite);
   const [isHovered, setIsHovered] = useState(false);
@@ -121,8 +118,10 @@ const ArtistProfileCard = ({
         setShowLoginDialog(true);
       }
     } else {
-      if (onClick) {
-        onClick(); // Usar onClick si está proporcionado
+      if (to) {
+        // If to is provided, use Link component
+        // Assuming Link component from react-router-dom
+        // Replace with actual Link component usage
       } else if (onFavoriteToggle) {
         onFavoriteToggle();
       }
