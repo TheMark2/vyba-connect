@@ -83,15 +83,19 @@ const MusicGenresStep: React.FC<MusicGenresStepProps> = ({ onSelect, initialValu
         // También actualizar en profiles
         const { error } = await supabase
           .from('profiles')
-          .update({ favorite_genres: updatedGenres })
+          .update({ 
+            favorite_genres: updatedGenres 
+          })
           .eq('id', user.id);
           
         if (error) {
           console.error('Error al actualizar géneros en profiles:', error);
+          toast.error('Error al guardar tus preferencias');
         }
       }
     } catch (error) {
       console.error('Error al guardar preferencias musicales:', error);
+      toast.error('Error al guardar tus preferencias');
     } finally {
       setIsSaving(false);
     }
@@ -135,15 +139,19 @@ const MusicGenresStep: React.FC<MusicGenresStepProps> = ({ onSelect, initialValu
           // También actualizar en profiles
           const { error } = await supabase
             .from('profiles')
-            .update({ favorite_genres: updatedGenres })
+            .update({ 
+              favorite_genres: updatedGenres 
+            })
             .eq('id', user.id);
             
           if (error) {
             console.error('Error al actualizar géneros en profiles:', error);
+            toast.error('Error al guardar tus preferencias');
           }
         }
       } catch (error) {
         console.error('Error al guardar preferencias musicales:', error);
+        toast.error('Error al guardar tus preferencias');
       } finally {
         setIsSaving(false);
       }
@@ -174,16 +182,20 @@ const MusicGenresStep: React.FC<MusicGenresStepProps> = ({ onSelect, initialValu
         
         // También actualizar en profiles
         const { error } = await supabase
-          .from('profiles')
-          .update({ favorite_genres: updatedGenres })
-          .eq('id', user.id);
-          
+            .from('profiles')
+            .update({ 
+              favorite_genres: updatedGenres 
+            })
+            .eq('id', user.id);
+            
         if (error) {
           console.error('Error al actualizar géneros en profiles:', error);
+          toast.error('Error al guardar tus preferencias');
         }
       }
     } catch (error) {
       console.error('Error al eliminar género musical:', error);
+      toast.error('Error al guardar tus preferencias');
     } finally {
       setIsSaving(false);
     }

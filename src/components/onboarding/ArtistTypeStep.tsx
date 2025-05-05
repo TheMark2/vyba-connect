@@ -8,6 +8,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Music, Plus, X } from 'lucide-react';
 import { supabase } from "@/integrations/supabase/client";
+import { toast } from "sonner";
 
 interface ArtistTypeStepProps {
   onSelect: (types: string[]) => void;
@@ -82,15 +83,19 @@ const ArtistTypeStep: React.FC<ArtistTypeStepProps> = ({ onSelect, initialValues
         // También actualizar en profiles
         const { error } = await supabase
           .from('profiles')
-          .update({ preferred_artist_types: updatedTypes })
+          .update({ 
+            preferred_artist_types: updatedTypes 
+          })
           .eq('id', user.id);
           
         if (error) {
           console.error('Error al actualizar tipos de artistas en profiles:', error);
+          toast.error('Error al guardar tus preferencias');
         }
       }
     } catch (error) {
       console.error('Error al guardar tipos de artistas:', error);
+      toast.error('Error al guardar tus preferencias');
     } finally {
       setIsSaving(false);
     }
@@ -134,15 +139,19 @@ const ArtistTypeStep: React.FC<ArtistTypeStepProps> = ({ onSelect, initialValues
           // También actualizar en profiles
           const { error } = await supabase
             .from('profiles')
-            .update({ preferred_artist_types: updatedTypes })
+            .update({ 
+              preferred_artist_types: updatedTypes 
+            })
             .eq('id', user.id);
             
           if (error) {
             console.error('Error al actualizar tipos de artistas en profiles:', error);
+            toast.error('Error al guardar tus preferencias');
           }
         }
       } catch (error) {
         console.error('Error al guardar tipos de artistas:', error);
+        toast.error('Error al guardar tus preferencias');
       } finally {
         setIsSaving(false);
       }
@@ -174,15 +183,19 @@ const ArtistTypeStep: React.FC<ArtistTypeStepProps> = ({ onSelect, initialValues
         // También actualizar en profiles
         const { error } = await supabase
           .from('profiles')
-          .update({ preferred_artist_types: updatedTypes })
+          .update({ 
+            preferred_artist_types: updatedTypes 
+          })
           .eq('id', user.id);
           
         if (error) {
           console.error('Error al actualizar tipos de artistas en profiles:', error);
+          toast.error('Error al guardar tus preferencias');
         }
       }
     } catch (error) {
       console.error('Error al eliminar tipo de artista:', error);
+      toast.error('Error al guardar tus preferencias');
     } finally {
       setIsSaving(false);
     }
