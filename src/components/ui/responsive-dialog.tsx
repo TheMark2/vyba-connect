@@ -2,6 +2,8 @@ import React from "react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { BottomDrawer } from "@/components/ui/bottom-drawer";
 import { useIsMobile } from "@/hooks/use-mobile";
+import { Button } from "@/components/ui/button";
+import { ChevronLeft } from "lucide-react";
 
 interface ResponsiveDialogProps {
   open: boolean;
@@ -13,6 +15,8 @@ interface ResponsiveDialogProps {
   desktopClassName?: string;
   showCloseButton?: boolean;
   centerTitle?: boolean;
+  showBackButton?: boolean;
+  onBackButtonClick?: () => void;
 }
 
 /**
@@ -32,12 +36,24 @@ export function ResponsiveDialog({
   desktopClassName = "",
   showCloseButton = false,
   centerTitle = true,
+  showBackButton = true,
+  onBackButtonClick,
 }: ResponsiveDialogProps) {
   const isMobile = useIsMobile();
 
   // Función para manejar cambio de estado con limpieza común
   const handleOpenChange = (open: boolean) => {
     onOpenChange(open);
+  };
+  
+  // Función para manejar el clic en el botón de retroceso
+  const handleBackClick = () => {
+    if (onBackButtonClick) {
+      onBackButtonClick();
+    } else {
+      // Si no hay handler específico, simplemente cerrar el diálogo
+      onOpenChange(false);
+    }
   };
 
   if (isMobile) {
@@ -50,13 +66,24 @@ export function ResponsiveDialog({
         showCloseButton={showCloseButton}
       >
         <div className="flex flex-col h-full">
-          {title && (
-            <div className="flex items-center px-5 py-4 w-full">
-              <div className={`flex items-center ${centerTitle ? 'justify-center w-full' : ''}`}>
+          <div className="flex items-center px-5 py-4 w-full">
+            {showBackButton && (
+              <Button 
+                variant="ghost" 
+                size="icon" 
+                className="h-9 w-9 rounded-full p-0 mr-2" 
+                onClick={handleBackClick}
+              >
+                <ChevronLeft className="h-5 w-5" />
+                <span className="sr-only">Volver</span>
+              </Button>
+            )}
+            {title && (
+              <div className={`flex items-center ${centerTitle ? 'justify-center flex-1' : ''}`}>
                 <h2 className="text-2xl font-semibold">{title}</h2>
               </div>
-            </div>
-          )}
+            )}
+          </div>
           <div className="px-6 py-4 flex-1">
             {children}
           </div>
@@ -68,11 +95,24 @@ export function ResponsiveDialog({
   return (
     <Dialog open={open} onOpenChange={handleOpenChange}>
       <DialogContent className={`sm:max-w-lg ${className} ${desktopClassName}`}>
-        {title && (
-          <DialogHeader>
-            <DialogTitle className={centerTitle ? "text-center" : ""}>{title}</DialogTitle>
-          </DialogHeader>
-        )}
+        <div className="flex items-center mb-2">
+          {showBackButton && (
+            <Button 
+              variant="ghost" 
+              size="icon" 
+              className="h-9 w-9 rounded-full p-0 absolute left-4" 
+              onClick={handleBackClick}
+            >
+              <ChevronLeft className="h-5 w-5" />
+              <span className="sr-only">Volver</span>
+            </Button>
+          )}
+          {title && (
+            <DialogHeader className="w-full">
+              <DialogTitle className={centerTitle ? "text-center" : ""}>{title}</DialogTitle>
+            </DialogHeader>
+          )}
+        </div>
         <div className="py-4">
           {children}
         </div>

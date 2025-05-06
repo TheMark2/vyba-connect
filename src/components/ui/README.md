@@ -10,6 +10,7 @@ El componente `ResponsiveDialog` proporciona una interfaz adaptativa que muestra
 - Muestra un Dialog en escritorio y un BottomDrawer en móvil
 - Gestión unificada del estado abierto/cerrado
 - Soporte para títulos centrados o alineados a la izquierda
+- Botón de retroceso (chevron izquierdo) configurable
 - Clases CSS personalizables para móvil y escritorio
 
 ### Uso básico
@@ -56,6 +57,8 @@ function MyComponent() {
 | desktopClassName | string (opcional) | Clases CSS solo para escritorio |
 | showCloseButton | boolean (opcional) | Mostrar botón de cerrar (solo móvil) |
 | centerTitle | boolean (opcional) | Centrar el título (default: true) |
+| showBackButton | boolean (opcional) | Mostrar botón de retroceso (default: true) |
+| onBackButtonClick | () => void (opcional) | Función personalizada para el botón de retroceso |
 
 ### Ejemplos
 
@@ -85,7 +88,7 @@ function MyComponent() {
 </ResponsiveDialog>
 ```
 
-#### Con botón de cerrar en móvil
+#### Con botón de cerrar en móvil y sin botón de retroceso
 
 ```tsx
 <ResponsiveDialog
@@ -93,8 +96,26 @@ function MyComponent() {
   onOpenChange={setOpen}
   title="Título"
   showCloseButton={true}
+  showBackButton={false}
   centerTitle={false} // Alinear título a la izquierda
 >
   <div>Contenido con botón de cerrar en móvil</div>
+</ResponsiveDialog>
+```
+
+#### Con función personalizada para el botón de retroceso
+
+```tsx
+<ResponsiveDialog
+  open={open}
+  onOpenChange={setOpen}
+  title="Navegación personalizada"
+  onBackButtonClick={() => {
+    // Lógica personalizada antes de cerrar
+    console.log('Volviendo atrás...');
+    handleCustomBack();
+  }}
+>
+  <div>Este diálogo tiene un comportamiento personalizado para el botón de retroceso</div>
 </ResponsiveDialog>
 ``` 

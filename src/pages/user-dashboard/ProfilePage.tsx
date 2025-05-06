@@ -624,6 +624,12 @@ const ProfilePage = () => {
         }}
         title="Cambiar foto de perfil"
         centerTitle={true}
+        onBackButtonClick={() => {
+          setNewPhoto(null);
+          setNewPhotoUrl(null);
+          setPhotoPreview(null);
+          setShowPhotoDialog(false);
+        }}
       >
         <input
           type="file"

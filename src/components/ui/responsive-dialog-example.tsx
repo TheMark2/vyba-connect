@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { ResponsiveDialog } from '@/components/ui/responsive-dialog';
 import { useIsMobile } from '@/hooks/use-mobile';
+import { toast } from 'sonner';
 
 /**
  * Ejemplo de uso del componente ResponsiveDialog
@@ -9,7 +10,15 @@ import { useIsMobile } from '@/hooks/use-mobile';
  */
 export function ResponsiveDialogExample() {
   const [open, setOpen] = useState(false);
+  const [secondDialogOpen, setSecondDialogOpen] = useState(false);
   const isMobile = useIsMobile();
+
+  const handleBackClick = () => {
+    toast.info("Botón de retroceso presionado");
+    // Puedes implementar lógica personalizada aquí
+    // Por ejemplo, navegación entre pasos de un formulario
+    setOpen(false);
+  };
 
   return (
     <div className="p-6 space-y-4">
@@ -19,10 +28,17 @@ export function ResponsiveDialogExample() {
         Estás actualmente en {isMobile ? 'un dispositivo móvil' : 'un escritorio'}.
       </p>
 
-      <Button onClick={() => setOpen(true)}>
-        Abrir {isMobile ? 'Drawer' : 'Dialog'}
-      </Button>
+      <div className="flex gap-4">
+        <Button onClick={() => setOpen(true)}>
+          Diálogo estándar
+        </Button>
+        
+        <Button onClick={() => setSecondDialogOpen(true)} variant="outline">
+          Con retroceso personalizado
+        </Button>
+      </div>
 
+      {/* Diálogo estándar */}
       <ResponsiveDialog
         open={open}
         onOpenChange={setOpen}
@@ -37,13 +53,37 @@ export function ResponsiveDialogExample() {
           </p>
           
           <p>
-            Toda la lógica de gestión del estado y la interfaz responsiva está encapsulada
-            en el componente ResponsiveDialog, lo que facilita la implementación
-            de interfaces adaptativas.
+            El botón de retroceso (chevron izquierdo) está habilitado por defecto en la
+            esquina superior izquierda y cierra el diálogo cuando se presiona.
           </p>
 
           <div className="pt-4 flex justify-end">
             <Button onClick={() => setOpen(false)}>
+              Cerrar
+            </Button>
+          </div>
+        </div>
+      </ResponsiveDialog>
+
+      {/* Diálogo con función personalizada de retroceso */}
+      <ResponsiveDialog
+        open={secondDialogOpen}
+        onOpenChange={setSecondDialogOpen}
+        title="Retroceso personalizado"
+        onBackButtonClick={handleBackClick}
+      >
+        <div className="space-y-4">
+          <p>
+            En este ejemplo, el botón de retroceso tiene una función personalizada
+            que muestra una notificación antes de cerrar el diálogo.
+          </p>
+          
+          <p className="font-medium">
+            Haz clic en el botón de retroceso (chevron izquierdo) para ver el comportamiento personalizado.
+          </p>
+
+          <div className="pt-4 flex justify-end">
+            <Button onClick={() => setSecondDialogOpen(false)}>
               Cerrar
             </Button>
           </div>
