@@ -13,6 +13,7 @@ import { Form, FormControl, FormField, FormItem, FormMessage } from "@/component
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import * as z from 'zod';
+import { cachedQuery, paginatedQuery } from '@/integrations/supabase/config';
 
 // Definir la interfaz para las listas de favoritos
 interface FavoriteList {
@@ -90,28 +91,40 @@ const FavoriteDialog = ({
     try {
       setIsFetchingLists(true);
       
-      // Obtener las listas y sus conteos en una sola consulta
-      const { data: lists, error: listsError } = await supabase
-        .from('favorite_lists')
-        .select(`
-          *,
-          favorite_artists (count)
-        `)
-        .eq('user_id', user.id)
-        .order('created_at', { ascending: false });
+      // Usar la función de paginación con caché
+      const { data: listsData, error: listsError } = await cachedQuery(
+        `favorite_lists:${user.id}`,
+        () => paginatedQuery('favorite_lists', {
+          filters: { user_id: user.id },
+          orderBy: { column: 'created_at', ascending: false },
+          select: 'id, name, created_at'
+        })
+      );
       
       if (listsError) throw listsError;
       
-      // Formatear los datos
-      const formattedLists = (lists || []).map(list => ({
-        id: list.id,
-        name: list.name,
-        user_id: list.user_id,
-        created_at: list.created_at,
-        count: list.favorite_artists?.[0]?.count || 0
+      // Obtener los conteos usando la función get_artist_count
+      const enrichedLists = await Promise.all(listsData.data.map(async (list) => {
+        const { data: countData, error: countError } = await supabase
+          .rpc('get_artist_count', { list_id: list.id });
+          
+        if (countError) {
+          console.error(`Error al obtener conteo para lista ${list.id}:`, countError);
+          return {
+            id: list.id,
+            name: list.name,
+            count: 0
+          };
+        }
+        
+        return {
+          id: list.id,
+          name: list.name,
+          count: countData || 0
+        };
       }));
       
-      setFavoriteLists(formattedLists);
+      setFavoriteLists(enrichedLists);
     } catch (error) {
       console.error('Error al cargar listas de favoritos:', error);
       toast.error('No se pudieron cargar tus listas de favoritos');

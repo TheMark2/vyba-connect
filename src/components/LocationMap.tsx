@@ -8,9 +8,10 @@ interface LocationMapProps {
   latitude: number;
   longitude: number;
   radius?: number; // radio en kilómetros
+  location?: string;
 }
 
-const LocationMap: React.FC<LocationMapProps> = ({ latitude, longitude, radius = 5 }) => {
+const LocationMap: React.FC<LocationMapProps> = ({ latitude, longitude, radius = 5, location }) => {
   const mapContainer = useRef<HTMLDivElement>(null);
   const map = useRef<mapboxgl.Map | null>(null);
   const [mapboxToken, setMapboxToken] = useState<string>('');
@@ -68,17 +69,12 @@ const LocationMap: React.FC<LocationMapProps> = ({ latitude, longitude, radius =
       mapboxCanvas.appendChild(style);
     }
 
-    // Añadir controles de navegación
-    map.current.addControl(new mapboxgl.NavigationControl({
-      showCompass: false
-    }), 'bottom-right');
-
     // Crear un marcador minimalista personalizado
     const markerElement = document.createElement('div');
     markerElement.className = 'custom-marker';
     markerElement.innerHTML = `
-      <div style="width: 20px; height: 20px; border-radius: 50%; background-color: white; display: flex; align-items: center; justify-content: center; box-shadow: 0 0 0 2px rgba(0,0,0,0.5), 0 2px 8px rgba(0,0,0,0.3);">
-        <div style="width: 8px; height: 8px; border-radius: 50%; background-color: #000000;"></div>
+      <div style="width: 32px; height: 32px; border-radius: 50%; background-color: white; display: flex; align-items: center; justify-content: center; box-shadow: 0 2px 8px rgba(0,0,0,0.2);">
+        <svg  xmlns="http://www.w3.org/2000/svg"  width="20"  height="20"  viewBox="0 0 24 24"  fill="currentColor"  class="icon icon-tabler icons-tabler-filled icon-tabler-location"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M20.891 2.006l.106 -.006l.13 .008l.09 .016l.123 .035l.107 .046l.1 .057l.09 .067l.082 .075l.052 .059l.082 .116l.052 .096c.047 .1 .077 .206 .09 .316l.005 .106c0 .075 -.008 .149 -.024 .22l-.035 .123l-6.532 18.077a1.55 1.55 0 0 1 -1.409 .903a1.547 1.547 0 0 1 -1.329 -.747l-.065 -.127l-3.352 -6.702l-6.67 -3.336a1.55 1.55 0 0 1 -.898 -1.259l-.006 -.149c0 -.56 .301 -1.072 .841 -1.37l.14 -.07l18.017 -6.506l.106 -.03l.108 -.018z" /></svg>
       </div>
     `;
 
@@ -122,28 +118,41 @@ const LocationMap: React.FC<LocationMapProps> = ({ latitude, longitude, radius =
         }
       });
 
-      // Añadir el círculo de rango
+      // Añadir el círculo de rango con tamaño fijo en kilómetros
+      const radiusInMeters = 5000; // 5 kilómetros
+      const metersToPixels = (meters: number, lat: number, zoom: number) => {
+        return meters / (156543.03392 * Math.cos(lat * Math.PI / 180) / Math.pow(2, zoom));
+      };
+
       map.current.addLayer({
         id: 'radius',
         type: 'circle',
         source: 'radius',
         paint: {
-          'circle-radius': {
-            stops: [
-              [10, 30],   // A zoom 10 (muy alejado)
-              [12, 60],   // A zoom 12
-              [13, 100],  // A zoom 13
-              [14, 160],  // A zoom 14
-              [15, 320],  // A zoom 15
-              [16, 640],  // A zoom 16 (muy cercano)
-            ]
-          },
+          'circle-radius': metersToPixels(radiusInMeters, latitude, 12),
           'circle-color': '#000000',
-          'circle-opacity': 0.15,
-          'circle-stroke-width': 3,
-          'circle-stroke-color': '#000000',
-          'circle-stroke-opacity': 0.6,
-          'circle-blur': 0,
+          'circle-opacity': 0.1,
+        }
+      });
+
+      // Actualizar el radio cuando cambie el zoom
+      map.current.on('zoom', () => {
+        if (!map.current) return;
+        const currentZoom = map.current.getZoom();
+        map.current.setPaintProperty('radius', 'circle-radius', 
+          metersToPixels(radiusInMeters, latitude, currentZoom)
+        );
+      });
+
+      // Añadir la propiedad lat al source para poder usarla en el cálculo del radio
+      map.current.getSource('radius').setData({
+        type: 'Feature',
+        geometry: {
+          type: 'Point',
+          coordinates: [longitude, latitude]
+        },
+        properties: {
+          lat: latitude
         }
       });
     });
@@ -171,10 +180,23 @@ const LocationMap: React.FC<LocationMapProps> = ({ latitude, longitude, radius =
     );
   }
 
+  if (location === 'no especificada') {
+    return (
+      <div className="w-full h-full bg-vyba-beige flex items-center justify-center">
+        <p className="text-vyba-tertiary">No se ha especificado la ubicación</p>
+      </div>
+    );
+  }
+
   return (
     <div 
       ref={mapContainer} 
       className="w-full h-full rounded-2xl"
+      style={{
+        minHeight: '300px',
+        position: 'relative',
+        backgroundColor: '#F8F8F8'
+      }}
     />
   );
 };

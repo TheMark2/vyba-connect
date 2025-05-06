@@ -1,15 +1,19 @@
-
 import React, { useState, useEffect } from 'react';
 import UserDashboardLayout from '@/components/dashboard/UserDashboardLayout';
 import { useAuth } from '@/contexts/AuthContext';
 import { Badge } from '@/components/ui/badge';
-import { MapPin, Mail, Phone, ShieldX } from 'lucide-react';
+import { MapPin, Mail, Phone, ShieldX, Cog, FolderCog, NavigationOff, AlertCircle, Camera } from 'lucide-react';
 import { Separator } from '@/components/ui/separator';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
 import { Button } from '@/components/ui/button';
 import { useNavigate } from 'react-router-dom';
 import LocationMap from '@/components/LocationMap';
+import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import ProfilePhotoStep from '@/components/onboarding/ProfilePhotoStep';
+import DebugAvatarImage from '@/components/ui/DebugAvatarImage';
 
 interface Profile {
   id: string;
@@ -24,9 +28,9 @@ interface Profile {
   location: string | null;
   city: string | null;
   province: string | null;
-  coordinates: { lat: number; lng: number } | null;
   favorite_genres: string[];
   preferred_artist_types: string[];
+  onboarding_status: string | null;
 }
 
 interface MusicPreferences {
@@ -35,7 +39,7 @@ interface MusicPreferences {
 }
 
 const ProfilePage = () => {
-  const { user, userName, avatarUrl } = useAuth();
+  const { user, userName, avatarUrl, reloadUserData } = useAuth();
   const [joinDate, setJoinDate] = useState<string>('');
   const [profileData, setProfileData] = useState<Profile | null>(null);
   const [musicPreferences, setMusicPreferences] = useState<MusicPreferences>({
@@ -44,6 +48,9 @@ const ProfilePage = () => {
   });
   const [isLoading, setIsLoading] = useState(true);
   const [locationCoordinates, setLocationCoordinates] = useState<{lat: number, lng: number} | null>(null);
+  const [showPhotoDialog, setShowPhotoDialog] = useState(false);
+  const [newPhoto, setNewPhoto] = useState<File | null>(null);
+  const [newPhotoUrl, setNewPhotoUrl] = useState<string | null>(null);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -86,15 +93,6 @@ const ProfilePage = () => {
         if (data.features && data.features.length > 0) {
           const [lng, lat] = data.features[0].center;
           setLocationCoordinates({ lat, lng });
-          
-          // Actualizar profileData con las coordenadas
-          setProfileData(prevData => {
-            if (!prevData) return null;
-            return {
-              ...prevData,
-              coordinates: { lat, lng }
-            };
-          });
         } else {
           // Si no hay resultados, usar coordenadas por defecto de Madrid
           setLocationCoordinates({ lat: 40.4167754, lng: -3.7037902 });
@@ -205,8 +203,9 @@ const ProfilePage = () => {
 
     if (!musicPreferences.favorite_genres.length && !musicPreferences.preferred_artist_types.length) {
       return (
-        <div className="text-center py-8">
-          <p className="text-vyba-tertiary">No has seleccionado preferencias musicales aún.</p>
+        <div className="flex flex-col text-center bg-vyba-gray rounded-2xl p-8 items-center justify-center space-y-4">
+          <FolderCog className="h-8 w-8 text-vyba-navy" />
+          <p className="text-vyba-navy font-medium">No has seleccionado preferencias musicales aún.</p>
           <Button 
             variant="terciary"
             onClick={() => navigate('/user-onboarding')}
@@ -225,7 +224,7 @@ const ProfilePage = () => {
             <p className="text-base text-vyba-navy mb-3">Géneros favoritos</p>
             <div className="flex items-center -space-x-12 py-12">
               {musicPreferences.favorite_genres.map((genre, index) => (
-                <div key={genre} className={`w-40 h-60 rounded-lg bg-vyba-beige ${index % 2 === 0 ? 'rotate-12' : '-rotate-12'}`}>
+                <div key={genre} className={`w-40 h-60 rounded-lg bg-vyba-beige border border-white border-4 ${index % 2 === 0 ? 'rotate-12' : '-rotate-12'}`}>
                   <img 
                     src={`/images/generos/${genre.toLowerCase()}.png`} 
                     alt={genre} 
@@ -275,30 +274,142 @@ const ProfilePage = () => {
     );
   };
 
+  const handlePhotoChange = async (photo: File | null, photoUrl?: string | null) => {
+    setNewPhoto(photo);
+    setNewPhotoUrl(photoUrl || null);
+  };
+
+  const handleSavePhoto = async () => {
+    try {
+      if (!user) {
+        throw new Error('Usuario no autenticado');
+      }
+
+      let avatarUrl = newPhotoUrl;
+
+      // Si hay una nueva foto de perfil, subirla a Supabase Storage
+      if (newPhoto) {
+        const file = newPhoto;
+        const fileExt = file.name.split('.').pop();
+        const fileName = `${user.id}/${Date.now()}.${fileExt}`;
+        
+        console.log('Subiendo imagen al bucket useravatar:', fileName);
+        
+        // Subir la imagen al bucket 'useravatar'
+        const { data: uploadData, error: uploadError } = await supabase.storage
+          .from('useravatar')
+          .upload(fileName, file, {
+            cacheControl: '3600',
+            upsert: true
+          });
+
+        if (uploadError) {
+          console.error('Error al subir la imagen:', uploadError);
+          throw new Error('Error al subir la imagen de perfil');
+        }
+
+        console.log('Imagen subida correctamente:', uploadData);
+        
+        // Construir URL directamente - Más confiable que getPublicUrl
+        const supabaseUrl = import.meta.env.VITE_SUPABASE_URL || "https://zkucuolpubthcnsgjtso.supabase.co";
+        avatarUrl = `${supabaseUrl}/storage/v1/object/public/useravatar/${fileName}`;
+        
+        console.log('URL pública de la imagen:', avatarUrl);
+      }
+
+      // Si seleccionamos un avatar predefinido (que comienza con /)
+      if (newPhotoUrl && newPhotoUrl.startsWith('/')) {
+        avatarUrl = newPhotoUrl;
+        console.log('Usando avatar predefinido:', avatarUrl);
+      }
+
+      // Actualizar el perfil
+      console.log('Actualizando profile.avatar_url en Supabase:', avatarUrl);
+      const { error: updateError } = await supabase
+        .from('profiles')
+        .update({ avatar_url: avatarUrl })
+        .eq('id', user.id);
+
+      if (updateError) {
+        console.error('Error al actualizar el perfil:', updateError);
+        throw updateError;
+      }
+
+      // Actualizar los metadatos del usuario
+      console.log('Actualizando user.user_metadata.avatar_url en Supabase:', avatarUrl);
+      const { error: updateUserError } = await supabase.auth.updateUser({
+        data: { avatar_url: avatarUrl }
+      });
+
+      if (updateUserError) {
+        console.error('Error al actualizar metadatos del usuario:', updateUserError);
+        throw updateUserError;
+      }
+
+      // Recargar datos del usuario
+      await reloadUserData();
+      
+      toast.success('Foto de perfil actualizada');
+      setShowPhotoDialog(false);
+    } catch (error) {
+      console.error('Error al actualizar la foto de perfil:', error);
+      toast.error('Error al actualizar la foto de perfil');
+    }
+  };
+
   return (
     <UserDashboardLayout>
       <div className="container mx-auto px-6 py-12">
         <h1 className="text-4xl font-semibold mb-8">Mi perfil</h1>
         
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-16">
+        {/* Componente de depuración - Solo visible en desarrollo */}
+        {process.env.NODE_ENV === 'development' && (
+          <div className="mb-8 bg-yellow-50 p-4 rounded-lg border border-yellow-200">
+            <h2 className="text-xl font-medium mb-2">Debug de Avatar</h2>
+            <DebugAvatarImage src={avatarUrl} />
+          </div>
+        )}
+        
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 md:gap-16">
           {/* Columna izquierda - Solo tarjeta de perfil */}
           <div>
-            <div className="bg-gray-50 rounded-3xl p-8 sticky top-5">
+            <div className="bg-vyba-gray rounded-3xl p-8 sticky top-5">
               <div className="flex items-start gap-6">
-                <div className="w-36 h-36 rounded-full overflow-hidden bg-vyba-beige">
+                <div 
+                  className="w-36 h-36 rounded-full overflow-hidden bg-vyba-beige cursor-pointer relative group"
+                  onClick={() => setShowPhotoDialog(true)}
+                >
                   {avatarUrl ? (
-                    <img 
-                      src={avatarUrl} 
-                      alt={userName || 'Usuario'} 
-                      className="w-full h-full object-cover"
-                    />
+                    <>
+                      <img 
+                        src={avatarUrl} 
+                        alt={userName || 'Usuario'} 
+                        className="w-full h-full object-cover"
+                        onError={(e) => {
+                          console.error('Error al cargar la imagen:', avatarUrl);
+                          // Si falla la carga, mostrar inicial
+                          (e.target as HTMLImageElement).style.display = 'none';
+                          // Mostrar fallback con inicial
+                          const fallback = e.currentTarget.parentElement?.querySelector('.fallback-avatar');
+                          if (fallback) {
+                            fallback.classList.remove('hidden');
+                          }
+                        }}
+                      />
+                      <div className="fallback-avatar hidden w-full h-full flex items-center justify-center text-2xl font-semibold">
+                        {userName?.charAt(0).toUpperCase() || 'U'}
+                      </div>
+                    </>
                   ) : (
                     <div className="w-full h-full flex items-center justify-center text-2xl font-semibold">
                       {userName?.charAt(0).toUpperCase() || 'U'}
                     </div>
                   )}
+                  <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                    <Camera className="w-8 h-8 text-white" />
+                  </div>
                 </div>
-                <div>
+                <div className="flex flex-col justify-center">
                   <h2 className="text-2xl font-semibold mb-0">{userName || 'Usuario'}</h2>
                   <p className="text-vyba-tertiary mb-2">{user?.email}</p>
                   <Badge variant="secondary" className="text-sm bg-red-100 gap-2 text-red-500">
@@ -320,6 +431,21 @@ const ProfilePage = () => {
 
           {/* Columna derecha - Resto de secciones */}
           <div className="space-y-8">
+            {/* Alerta de perfil incompleto */}
+            {(profileData?.onboarding_status === 'pending' || profileData?.onboarding_status === 'skipped') && (
+              <Alert className="bg-vyba-gray border-none rounded-xl">
+                <div className="flex items-center gap-4">
+                  <div className="flex items-center justify-center shrink-0 w-12 h-12 bg-[#C13515] rounded-full">
+                    <AlertCircle className="h-6 w-6 text-white" />
+                  </div>
+                  <div className="flex justify-between w-full gap-2 items-center">
+                    <AlertTitle className="text-xl font-medium text-vyba-navy">Perfil incompleto</AlertTitle>
+                    <Button variant="terciary" onClick={() => navigate('/user-onboarding')}>Completar perfil</Button>
+                  </div>
+                </div>
+              </Alert>
+            )}
+
             {/* Información personal */}
             <div>
               <h3 className="text-2xl font-semibold mb-6">Información personal</h3>
@@ -353,19 +479,25 @@ const ProfilePage = () => {
                 <p className="font-medium text-vyba-navy mb-4">
                   {profileData?.city && profileData?.province 
                     ? `${profileData.city}, ${profileData.province}`
-                    : 'Ubicación no especificada'}
+                    : ''}
                 </p>
               </div>
-              <div className="aspect-[16/10] rounded-2xl overflow-hidden">
-                {(locationCoordinates || (profileData?.coordinates)) ? (
+              <div className="aspect-[16/10] rounded-2xl overflow-hidden bg-vyba-gray/10">
+                {profileData?.city && profileData?.province ? (
                   <LocationMap 
-                    latitude={locationCoordinates?.lat || profileData?.coordinates?.lat || 40.4167754}
-                    longitude={locationCoordinates?.lng || profileData?.coordinates?.lng || -3.7037902}
+                    latitude={locationCoordinates?.lat || 40.4167754}
+                    longitude={locationCoordinates?.lng || -3.7037902}
                     radius={5}
+                    location={`${profileData.city}, ${profileData.province}`}
                   />
                 ) : (
-                  <div className="w-full h-full bg-vyba-beige flex items-center justify-center">
-                    <p className="text-vyba-tertiary">Cargando ubicación...</p>
+                  <div className="w-full h-full bg-vyba-gray flex flex-col items-center justify-center space-y-6 p-8">
+                    <NavigationOff className="h-8 w-8 text-vyba-navy" />
+                    <div className="flex flex-col items-center space-y-2">
+                      <p className="text-vyba-navy font-medium text-lg">No se ha especificado la ubicación</p>
+                      <p className="text-vyba-navy text-sm text-center">La ubicación no es pública, solo se comparte con los artistas contactados, además no pedimos una ubicación exacta sino solo una ciudad</p>
+                    </div>
+                    <Button variant="terciary" onClick={() => navigate('/user-onboarding')}>Actualizar preferencias</Button>
                   </div>
                 )}
               </div>
@@ -381,6 +513,25 @@ const ProfilePage = () => {
           </div>
         </div>
       </div>
+
+      <Dialog open={showPhotoDialog} onOpenChange={setShowPhotoDialog}>
+        <DialogContent className="sm:max-w-xl">
+          <DialogHeader>
+            <DialogTitle className="text-center">Cambiar foto de perfil</DialogTitle>
+          </DialogHeader>
+          <div className="py-6">
+            <ProfilePhotoStep 
+              onPhotoChange={handlePhotoChange}
+              initialPhoto={avatarUrl || undefined}
+            />
+          </div>
+          <div className="flex justify-end gap-2 px-6">
+            <Button variant="terciary" onClick={handleSavePhoto} className="w-full">
+              Guardar cambios
+            </Button>
+          </div>
+        </DialogContent>
+      </Dialog>
     </UserDashboardLayout>
   );
 };

@@ -23,28 +23,28 @@ const ProfilePhotoStep: React.FC<ProfilePhotoStepProps> = ({
   const fileInputRef = useRef<HTMLInputElement>(null);
   const isMobile = useIsMobile();
 
-  // Asegurar que el bucket de avatars existe
+  // Asegurar que el bucket de useravatar existe
   useEffect(() => {
-    const createAvatarsBucketIfNeeded = async () => {
+    const createUserAvatarBucketIfNeeded = async () => {
       try {
         // Verificar si el bucket ya existe
         const { data: bucketExists } = await supabase
           .storage
-          .getBucket('avatars');
+          .getBucket('useravatar');
           
         // Si el bucket no existe, crearlo
         if (!bucketExists) {
-          await supabase.storage.createBucket('avatars', {
+          await supabase.storage.createBucket('useravatar', {
             public: true
           });
-          console.log('Bucket "avatars" creado');
+          console.log('Bucket "useravatar" creado');
         }
       } catch (error) {
         console.error('Error al verificar/crear el bucket de avatares:', error);
       }
     };
     
-    createAvatarsBucketIfNeeded();
+    createUserAvatarBucketIfNeeded();
   }, []);
 
   // Inicializar con la foto previa si existe
@@ -199,7 +199,19 @@ const ProfilePhotoStep: React.FC<ProfilePhotoStepProps> = ({
                 </div>
               ) : photoPreview ? (
                 <Avatar className="w-full h-full">
-                  <AvatarImage src={photoPreview} alt="Foto de perfil" className="object-cover" />
+                  <AvatarImage 
+                    src={photoPreview} 
+                    alt="Foto de perfil" 
+                    className="object-cover"
+                    onError={(e) => {
+                      console.error('Error al cargar la imagen previa:', photoPreview);
+                      // Cambiar el fallback a visible
+                      const fallback = e.currentTarget.parentElement?.querySelector('[data-radix-avatar-fallback]');
+                      if (fallback) {
+                        (fallback as HTMLElement).style.display = 'flex';
+                      }
+                    }} 
+                  />
                   <AvatarFallback className="text-4xl bg-black text-white">
                     <Plus className="w-10 h-10" />
                   </AvatarFallback>

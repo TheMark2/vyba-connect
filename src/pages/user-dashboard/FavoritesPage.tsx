@@ -30,6 +30,7 @@ import { Input } from '@/components/ui/input';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
+import { cachedQuery, paginatedQuery } from '@/integrations/supabase/config';
 
 // Define interfaces
 interface FavoriteList {
@@ -89,39 +90,32 @@ const FavoritesPage = () => {
     if (!user) return;
     
     try {
-      // Obtener listas de favoritos del usuario
-      const { data: listsData, error: listsError } = await supabase
-        .from('favorite_lists')
-        .select('*')
-        .eq('user_id', user.id)
-        .order('created_at', { ascending: false });
-        
+      setIsLoading(true);
+      
+      // Usar la función de paginación con caché
+      const { data: listsData, error: listsError } = await cachedQuery(
+        `favorite_lists:${user.id}`,
+        () => paginatedQuery('favorite_lists', {
+          filters: { user_id: user.id },
+          orderBy: { column: 'created_at', ascending: false },
+          select: 'id, name, created_at'
+        })
+      );
+      
       if (listsError) throw listsError;
       
-      if (!listsData || listsData.length === 0) {
+      if (!listsData?.data || listsData.data.length === 0) {
         setFavoriteLists([]);
-        setIsLoading(false);
         return;
       }
       
-      // Corrección: Usar unnest() para obtener conteos precisos
-      const enrichedLists = await Promise.all(listsData.map(async (list) => {
-        try {
-          const { count, error } = await supabase
-            .from('favorite_artists')
-            .select('*', { count: 'exact', head: true })
-            .eq('list_id', list.id);
-            
-          if (error) throw error;
-            
-          return {
-            id: list.id,
-            name: list.name,
-            image: '/images/placeholder-favorite.webp',
-            count: count || 0
-          };
-        } catch (err) {
-          console.error(`Error al obtener conteo para lista ${list.id}:`, err);
+      // Obtener los conteos usando la función get_artist_count
+      const enrichedLists = await Promise.all(listsData.data.map(async (list) => {
+        const { data: countData, error: countError } = await supabase
+          .rpc('get_artist_count', { list_id: list.id });
+          
+        if (countError) {
+          console.error(`Error al obtener conteo para lista ${list.id}:`, countError);
           return {
             id: list.id,
             name: list.name,
@@ -129,6 +123,13 @@ const FavoritesPage = () => {
             count: 0
           };
         }
+        
+        return {
+          id: list.id,
+          name: list.name,
+          image: '/images/placeholder-favorite.webp',
+          count: countData || 0
+        };
       }));
       
       setFavoriteLists(enrichedLists);

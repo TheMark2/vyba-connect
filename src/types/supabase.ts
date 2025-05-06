@@ -125,8 +125,11 @@ export interface Database {
           avatar_url: string | null
           phone: string | null
           location: string | null
+          city: string | null
+          province: string | null
           favorite_genres: string[]
           preferred_artist_types: string[]
+          onboarding_status: 'pending' | 'completed' | 'skipped'
         }
         Insert: {
           birth_date?: string | null
@@ -139,8 +142,11 @@ export interface Database {
           avatar_url?: string | null
           phone?: string | null
           location?: string | null
+          city?: string | null
+          province?: string | null
           favorite_genres?: string[]
           preferred_artist_types?: string[]
+          onboarding_status?: 'pending' | 'completed' | 'skipped'
         }
         Update: {
           birth_date?: string | null
@@ -153,8 +159,11 @@ export interface Database {
           avatar_url?: string | null
           phone?: string | null
           location?: string | null
+          city?: string | null
+          province?: string | null
           favorite_genres?: string[]
           preferred_artist_types?: string[]
+          onboarding_status?: 'pending' | 'completed' | 'skipped'
         }
         Relationships: []
       }
@@ -163,7 +172,12 @@ export interface Database {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      get_artist_count: {
+        Args: {
+          list_id: string
+        }
+        Returns: number
+      }
     }
     Enums: {
       [_ in never]: never

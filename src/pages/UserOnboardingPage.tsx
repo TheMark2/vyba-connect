@@ -60,6 +60,24 @@ interface StepGroup {
   totalSteps: number;
 }
 
+interface Profile {
+  id: string;
+  email: string;
+  name: string | null;
+  last_name: string | null;
+  birth_date: string | null;
+  created_at: string | null;
+  updated_at: string | null;
+  avatar_url: string | null;
+  phone: string | null;
+  location: string | null;
+  city: string | null;
+  province: string | null;
+  favorite_genres: string[];
+  preferred_artist_types: string[];
+  onboarding_status: 'pending' | 'completed' | 'skipped';
+}
+
 // Convertir archivo a base64
 const fileToBase64 = (file: File): Promise<string> => {
   return new Promise((resolve, reject) => {
@@ -292,7 +310,7 @@ const UserOnboardingPage = () => {
       // Actualizar metadatos para marcar el onboarding como completado
       await supabase.auth.updateUser({
         data: {
-          onboarding_completed: true
+          onboarding_status: 'completed'
         }
       });
       
@@ -321,31 +339,18 @@ const UserOnboardingPage = () => {
         throw new Error('Usuario no autenticado');
       }
       
-      // Verificar si este es el primer salto del onboarding para este usuario
-      const hasSkippedBefore = localStorage.getItem('has_skipped_onboarding') === 'true';
+      // Actualizar el perfil en la tabla profiles
+      const { error } = await supabase
+        .from('profiles')
+        .update({
+          onboarding_status: 'skipped'
+        })
+        .eq('id', user.id);
       
-      // Actualizar metadatos para marcar el onboarding como completado
-      // y también indicar que el usuario ha saltado el onboarding
-      await supabase.auth.updateUser({
-        data: {
-          onboarding_completed: true,
-          onboarding_skipped: true // Indicar que se ha saltado en los metadatos del usuario
-        }
-      });
+      if (error) throw error;
       
-      // Establecer bandera para mostrar el diálogo de bienvenida SOLO si es la primera vez
-      if (!hasSkippedBefore) {
-        console.log('Primera vez que se salta el onboarding, se mostrará WelcomeDialog');
-        localStorage.setItem('is_from_registration', 'true');
-        // Marcar que ya ha saltado el onboarding para futuras referencias
-        localStorage.setItem('has_skipped_onboarding', 'true');
-      } else {
-        console.log('Ya había saltado el onboarding anteriormente, no se mostrará WelcomeDialog');
-      }
-      
-      // Establecer bandera que indica que el usuario ha saltado el onboarding
-      localStorage.setItem('onboarding_skipped', 'true');
-      console.log('Bandera onboarding_skipped establecida:', true);
+      // Establecer bandera para mostrar el diálogo de bienvenida
+      localStorage.setItem('is_from_registration', 'true');
       
       toast.success('¡Bienvenido a Vyba!');
       setShowExitDialog(false);
@@ -370,157 +375,112 @@ const UserOnboardingPage = () => {
       if (!user) {
         throw new Error('Usuario no autenticado');
       }
+
+      let avatarUrl = onboardingData.profilePhotoUrl;
+
+      // Si hay una nueva foto de perfil, subirla a Supabase Storage
+      if (onboardingData.profilePhoto) {
+        const file = onboardingData.profilePhoto;
+        const fileExt = file.name.split('.').pop();
+        // Crear el nombre del archivo con el formato correcto para las políticas de seguridad
+        const fileName = `${user.id}/${Date.now()}.${fileExt}`;
+        
+        console.log('Subiendo imagen al bucket useravatar:', fileName);
+        
+        // Subir la imagen al bucket 'useravatar'
+        const { data: uploadData, error: uploadError } = await supabase.storage
+          .from('useravatar')
+          .upload(fileName, file, {
+            cacheControl: '3600',
+            upsert: true
+          });
+
+        if (uploadError) {
+          console.error('Error al subir la imagen:', uploadError);
+          throw new Error('Error al subir la imagen de perfil');
+        }
+
+        console.log('Imagen subida correctamente:', uploadData);
+        
+        // Construir URL directamente - Más confiable que getPublicUrl
+        const supabaseUrl = import.meta.env.VITE_SUPABASE_URL || "https://zkucuolpubthcnsgjtso.supabase.co";
+        avatarUrl = `${supabaseUrl}/storage/v1/object/public/useravatar/${fileName}`;
+        
+        console.log('URL pública de la imagen:', avatarUrl);
+      }
       
-      // Verificar si el usuario había saltado previamente el onboarding
-      const wasOnboardingSkipped = user.user_metadata?.onboarding_skipped === true || 
-                                 localStorage.getItem('onboarding_skipped') === 'true';
+      // Si seleccionamos un avatar predefinido (que comienza con /)
+      if (onboardingData.profilePhotoUrl && onboardingData.profilePhotoUrl.startsWith('/')) {
+        avatarUrl = onboardingData.profilePhotoUrl;
+        console.log('Usando avatar predefinido:', avatarUrl);
+      }
       
-      // Verificar si es la primera vez que completa el onboarding
-      const hasCompletedBefore = localStorage.getItem('has_completed_onboarding') === 'true';
-      
+      // 2. Obtener el perfil actual
+      const { data: profile, error: profileError } = await supabase
+        .from('profiles')
+        .select('*, onboarding_status')
+        .eq('id', user.id)
+        .single();
+
+      if (profileError) {
+        console.error('Error al obtener el perfil:', profileError);
+        throw new Error('Error al obtener el perfil');
+      }
+
       // 2. Preparar objeto con los datos a guardar
-      const userData: Record<string, any> = {
+      const profileData = {
+        id: user.id,
+        email: user.email,
+        // Avatar
+        avatar_url: avatarUrl || null,
         // Ubicación
         location: onboardingData.location || '',
         city: onboardingData.city || '',
         province: onboardingData.province || '',
-        coordinates: onboardingData.coordinates || null,
         // Preferencias musicales
         favorite_genres: onboardingData.favoriteGenres || [],
         preferred_artist_types: onboardingData.preferredArtistTypes || [],
         // Importante: marcar el onboarding como completado
-        onboarding_completed: true,
-        // Eliminar la marca de onboarding saltado si existe
-        onboarding_skipped: null
-      };
-      
-      let avatarUrl = null;
-      
-      // 3. Si hay foto de perfil, subirla a Storage
-      if (onboardingData.profilePhoto) {
-        const fileExt = onboardingData.profilePhoto.name.split('.').pop();
-        const fileName = `${user.id}-${Date.now()}.${fileExt}`;
-        
-        // Subir imagen a storage
-        const { error: uploadError, data } = await supabase.storage
-          .from('avatars')
-          .upload(fileName, onboardingData.profilePhoto, {
-            upsert: true
-          });
-          
-        if (uploadError) {
-          console.error('Error al subir avatar:', uploadError);
-        } else {
-          // Obtener URL pública
-          const { data: urlData } = supabase.storage
-            .from('avatars')
-            .getPublicUrl(fileName);
-            
-          if (urlData) {
-            avatarUrl = urlData.publicUrl;
-            userData.avatar_url = avatarUrl;
-          }
-        }
-      } else if (onboardingData.profilePhotoUrl && onboardingData.profilePhotoUrl.startsWith('/')) {
-        avatarUrl = onboardingData.profilePhotoUrl;
-        userData.avatar_url = avatarUrl;
-      } else if (onboardingData.profilePhotoUrl && onboardingData.profilePhotoUrl.startsWith('data:')) {
-        try {
-          console.log("Procesando imagen en base64");
-          const response = await fetch(onboardingData.profilePhotoUrl);
-          const blob = await response.blob();
-          const fileName = `${user.id}-${Date.now()}`;
-          
-          // Subir la imagen
-          const { data: uploadData, error: uploadError } = await supabase.storage
-            .from("profiles")
-            .upload(fileName, blob);
-            
-          if (uploadError) {
-            console.error("Error al subir imagen de perfil:", uploadError);
-          } else if (uploadData) {
-            // Obtener la URL pública
-            const { data: urlData } = supabase.storage
-              .from("profiles")
-              .getPublicUrl(fileName);
-            
-            avatarUrl = urlData.publicUrl;
-            userData.avatar_url = avatarUrl;
-          }
-        } catch (error) {
-          console.error("Error al procesar imagen en base64:", error);
-        }
-      }
-      
-      // 4. Actualizar metadatos del usuario solo con información relevante de autenticación
-      await supabase.auth.updateUser({
-        data: {
-          onboarding_completed: true,
-          onboarding_skipped: null
-        }
-      });
-      
-      // 5. Guardar toda la información del perfil en la tabla profiles
-      const profileData = {
-        id: user.id,
-        email: user.email,
-        name: user.user_metadata?.name,
-        city: onboardingData.city || '',
-        province: onboardingData.province || '',
-        location: onboardingData.location || '',
-        favorite_genres: onboardingData.favoriteGenres || [],
-        preferred_artist_types: onboardingData.preferredArtistTypes || [],
-        avatar_url: avatarUrl
+        onboarding_status: 'completed' as const
       };
       
       console.log('Datos a guardar en profiles:', profileData);
       
-      const { error: profileError } = await supabase
+      // Actualizar el perfil
+      const { error: upsertError } = await supabase
         .from('profiles')
-        .upsert(profileData);
+        .upsert(profileData, {
+          onConflict: 'id'
+        });
 
-      if (profileError) {
-        console.error('Error al actualizar perfil:', profileError);
-        console.error('Detalles del error:', profileError.details);
-        console.error('Mensaje del error:', profileError.message);
-        toast.error('Error al guardar el perfil: ' + profileError.message);
-        return;
+      if (upsertError) {
+        console.error('Error al guardar el perfil:', upsertError);
+        throw new Error('Error al guardar el perfil');
       }
-      
-      // 6. Lógica para mostrar el WelcomeDialog:
-      // - Si es la primera vez que completa el onboarding (registro normal): mostrar
-      // - Si había saltado el onboarding por primera vez: mostrar
-      // - Si ya había completado o saltado el onboarding antes: no mostrar
-      
-      if (!hasCompletedBefore) {
-        if (!wasOnboardingSkipped || localStorage.getItem('has_skipped_onboarding') !== 'true') {
-          // Primera vez completando el onboarding (flujo normal de registro)
-          console.log('Primera vez completando el onboarding, mostrando WelcomeDialog');
-          localStorage.setItem('is_from_registration', 'true');
-        } else if (localStorage.getItem('has_skipped_onboarding') === 'true') {
-          // Ya había saltado, pero es la primera vez que lo completa
-          console.log('Completando onboarding después de haberlo saltado por primera vez, mostrando WelcomeDialog');
-          localStorage.setItem('is_from_registration', 'true');
+
+      // Actualizar los metadatos del usuario
+      const { error: updateUserError } = await supabase.auth.updateUser({
+        data: {
+          avatar_url: avatarUrl,
+          onboarding_completed: true
         }
-        // Marcar que ya ha completado el onboarding para futuras referencias
-        localStorage.setItem('has_completed_onboarding', 'true');
-      } else {
-        console.log('Ya había completado el onboarding anteriormente, no mostrando WelcomeDialog');
+      });
+
+      if (updateUserError) {
+        console.error('Error al actualizar metadatos del usuario:', updateUserError);
+        throw new Error('Error al actualizar metadatos del usuario');
       }
-      
-      // Eliminar las banderas del localStorage que ya no son necesarias
-      localStorage.removeItem('onboarding_skipped');
-      
-      // Agregar logs para depuración
-      console.log('¿Mostrar WelcomeDialog?', localStorage.getItem('is_from_registration') === 'true');
-      
-      // 7. Redirigir al usuario al Dashboard
-      toast.success('¡Perfil configurado correctamente!');
-      
-      // Pequeña pausa para asegurar que localStorage se actualiza antes de la navegación
-      setTimeout(() => {
-        navigate('/user-dashboard');
-      }, 100);
+
+      // 3. Limpiar el estado de onboarding
+      localStorage.removeItem('onboardingData');
+      localStorage.removeItem('onboardingStep');
+      localStorage.removeItem('onboardingSkipped');
+
+      // 4. Recargar datos del usuario
+      await reloadUserData();
+
+      // 5. Redirigir al dashboard
+      navigate('/dashboard');
       
     } catch (error) {
       console.error('Error al finalizar onboarding:', error);

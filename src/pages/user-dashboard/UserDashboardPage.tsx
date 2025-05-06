@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import UserDashboardLayout from '@/components/dashboard/UserDashboardLayout';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Heart, MessageSquare, Bell, Search, Users, Music, Send, BellRing, UserCog, ArrowRight, AlertCircle} from 'lucide-react';
+import { Heart, MessageSquare, Bell, Search, Users, Music, Send, BellRing, UserCog, ArrowRight, AlertCircle, Star, Music2, Calendar, Sparkles, Guitar, Headphones, Mic2, Drum, Piano, Radio, ChevronRight } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
@@ -13,10 +13,16 @@ import {
   Carousel,
   CarouselContent,
   CarouselItem,
+  CarouselNext,
+  CarouselPrevious,
 } from "@/components/ui/carousel";
 import { cn } from '@/lib/utils';
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Skeleton } from "@/components/ui/skeleton";
+import { Swiper, SwiperSlide } from 'swiper/react';
+import 'swiper/css';
+import 'swiper/css/free-mode';
+import { FreeMode } from 'swiper/modules';
 
 const UserDashboardPage = () => {
   const navigate = useNavigate();
@@ -129,52 +135,67 @@ const UserDashboardPage = () => {
       title: "Notificaciones",
       content: "Tienes 5 notificaciones",
       route: "/user-dashboard/notifications"
+    },
+    {
+      id: 3,
+      icon: <Music2 className="h-6 w-6 text-vyba-navy" />,
+      title: "Todos los artistas",
+      content: "Ver todos los artistas",
+      route: "/artists"
     }
   ];
+
+  // Datos para los badges de artistas
+  const artistBadges = [
+    { id: 1, icon: <Guitar className="h-4 w-4" />, label: "Guitarrista" },
+    { id: 2, icon: <Users className="h-4 w-4" />, label: "Grupo de versiones" },
+    { id: 4, icon: <Piano className="h-4 w-4" />, label: "Pianista" },
+    { id: 5, icon: <Headphones className="h-4 w-4" />, label: "DJ" },
+    { id: 6, icon: <Drum className="h-4 w-4" />, label: "Baterista" },
+    { id: 7, icon: <Mic2 className="h-4 w-4" />, label: "Bajista" },
+    { id: 8, icon: <Music2 className="h-4 w-4" />, label: "Trompetista" },
+    { id: 9, icon: <Radio className="h-4 w-4" />, label: "Violinista" }
+  ];
+  
+  const [selectedBadge, setSelectedBadge] = useState<number | null>(null);
+  
+  const handleBadgeClick = (id: number) => {
+    setSelectedBadge(id === selectedBadge ? null : id);
+    // Aquí podríamos filtrar artistas por tipo o navegar a una búsqueda específica
+    navigate(`/search?type=${artistBadges.find(b => b.id === id)?.label || ''}`);
+  };
 
   // Verificar si el usuario ha saltado el onboarding
   useEffect(() => {
     const checkOnboardingStatus = async () => {
       try {
-        // 1. Obtener información del usuario desde Supabase
         const { data: { user } } = await supabase.auth.getUser();
         
         if (!user) {
-          console.log('No hay usuario autenticado');
+          console.error('No hay usuario autenticado');
           return;
         }
-        
-        // 2. Verificar si el usuario ha saltado el onboarding en sus metadatos
-        const onboardingSkippedInMetadata = user.user_metadata?.onboarding_skipped === true;
-        
-        // 3. Si encontramos que el usuario ha saltado el onboarding en los metadatos,
-        // sincronizamos localStorage para mantener consistencia
-        if (onboardingSkippedInMetadata) {
-          localStorage.setItem('onboarding_skipped', 'true');
+
+        // Obtener el estado del onboarding desde la tabla profiles
+        const { data: profileData, error: profileError } = await supabase
+          .from('profiles')
+          .select('onboarding_status')
+          .eq('id', user.id)
+          .single();
+
+        if (profileError) {
+          console.error('Error al obtener el estado del onboarding:', profileError);
+          return;
         }
-        
-        // 4. También podemos verificar en localStorage por compatibilidad con código existente
-        const hasSkippedOnboardingLocal = localStorage.getItem('onboarding_skipped') === 'true';
-        const isFromRegistrationLocal = localStorage.getItem('is_from_registration') === 'true';
-        
-        // 5. Combinar todas las fuentes para determinar si mostrar la alerta
-        const shouldShowAlert = onboardingSkippedInMetadata || hasSkippedOnboardingLocal || isFromRegistrationLocal;
-        
-        // Registrar valores para depuración
-        console.log('Estado de onboarding:', {
-          metadatos: onboardingSkippedInMetadata,
-          localStorage: {
-            hasSkippedOnboarding: hasSkippedOnboardingLocal,
-            isFromRegistration: isFromRegistrationLocal,
-          },
-          mostrarAlerta: shouldShowAlert
-        });
-        
-        // Actualizar el estado para mostrar la alerta si es necesario
-        setShowOnboardingAlert(shouldShowAlert);
-        
+
+        // Si el onboarding no está completado, mostrar la alerta
+        if (profileData.onboarding_status === 'pending' || profileData.onboarding_status === 'skipped') {
+          setShowOnboardingAlert(true);
+        } else {
+          setShowOnboardingAlert(false);
+        }
       } catch (error) {
-        console.error('Error al verificar estado de onboarding:', error);
+        console.error('Error al verificar el estado del onboarding:', error);
       }
     };
     
@@ -209,7 +230,7 @@ const UserDashboardPage = () => {
     getUserInfo();
   }, []);
 
-  const handleArtistClick = (artistId: number) => {
+  const handleArtistCardClick = (artistId: number) => {
     navigate(`/artista/${artistId}`);
   };
 
@@ -279,9 +300,9 @@ const UserDashboardPage = () => {
     <UserDashboardLayout>
       <div className="mt-16">
         {/* Contenido con padding solo para la parte superior */}
-        <div className="container mx-auto py-8 px-4 md:px-8">
+        <div className="container mx-auto py-8 px-0">
           {/* Encabezado y saludo */}
-          <div>
+          <div className="px-6 md:px-8">
             <h1 className="text-4xl font-semibold mb-4">¡Buenas, {userName || 'Usuario'}!</h1>
             
             {showOnboardingAlert && (
@@ -294,7 +315,7 @@ const UserDashboardPage = () => {
                     <div>
                       <AlertTitle className="text-base font-medium mb-0 text-vyba-navy">Completa tu perfil</AlertTitle>
                       <AlertDescription className="text-sm text-vyba-navy/80 font-figtree">
-                        ¡Personaliza tu experiencia! Añade tu foto de perfil y preferencias musicales para encontrar los mejores artistas.
+                        ¡Personaliza tu experiencia! Añade tu foto de perfil, ubicación y preferencias musicales para encontrar los mejores artistas.
                       </AlertDescription>
                     </div>
                   </div>
@@ -310,6 +331,40 @@ const UserDashboardPage = () => {
               </Alert>
             )}
           </div>
+          
+          {/* Badges de tipos de artistas con Swiper */}
+          <div className="my-6">
+            <div className="mb-2 flex items-center">
+              <h3 className="text-lg font-medium">Explora por tipo de artista</h3>
+              <ChevronRight className="h-4 w-4 ml-1 text-vyba-tertiary animate-pulse" />
+            </div>
+            <Swiper
+              spaceBetween={10}
+              slidesPerView={'auto'}
+              className="w-full badge-slider px-6 md:px-8"
+              centeredSlides={false}
+              grabCursor={true}
+              freeMode={true}
+              modules={[FreeMode]}
+            >
+              {artistBadges.map((badge) => (
+                <SwiperSlide key={badge.id} style={{ width: 'auto' }}>
+                  <button
+                    onClick={() => handleBadgeClick(badge.id)}
+                    className={cn(
+                      "rounded-md py-2 px-4 flex items-center gap-2 transition-all duration-200",
+                      selectedBadge === badge.id
+                        ? "bg-vyba-navy text-white" 
+                        : "bg-vyba-gray text-vyba-navy hover:bg-vyba-gray/80"
+                    )}
+                  >
+                    {badge.icon}
+                    <span className="text-sm font-medium">{badge.label}</span>
+                  </button>
+                </SwiperSlide>
+              ))}
+            </Swiper>
+          </div>
         </div>
 
         {isLoading ? (
@@ -321,51 +376,42 @@ const UserDashboardPage = () => {
             {/* Tarjetas de resumen - Sin padding horizontal en modo carrusel */}
             {shouldShowCarousel ? (
               // Vista de carrusel para pantallas pequeñas - Sin padding horizontal
-              <div className="mb-6 overflow-hidden">
-                <div className="container mx-auto px-4 md:px-8 mb-4">
-                  <h2 className="text-2xl font-semibold">Resumen</h2>
-                </div>
-                <Carousel 
-                  opts={{
-                    align: "start",
-                    loop: false,
-                  }} 
-                  className="w-full"
+              <div className="px-0 md:px-0 mb-8 overflow-hidden">
+                <Swiper
+                  spaceBetween={16}
+                  slidesPerView={'auto'}
+                  pagination={{ clickable: true }}
+                  grabCursor={true}
+                  className="px-6 md:px-8"
                 >
-                  <CarouselContent className="ml-0 gap-2 pl-4 pr-4">
-                    {summaryCards.map((card, index) => (
-                      <CarouselItem 
-                        key={card.id} 
-                        className={`pl-2 ${getSummaryCardSize()}`}
+                  {summaryCards.map((card) => (
+                    <SwiperSlide
+                      key={card.id}
+                      className={getSummaryCardSize() + " !w-[80%] md:!w-[60%] max-w-[400px] rounded-2xl"}
+                    >
+                      <Card
+                        className={cn(
+                          "bg-vyba-gray shadow-none rounded-2xl border-none cursor-pointer transition-all",
+                          "active:scale-95 hover:bg-vyba-gray/80"
+                        )}
+                        onClick={() => handleSummaryCardClick(card.route)}
                       >
-                        <Card 
-                          className={cn(
-                            "bg-vyba-gray shadow-none rounded-2xl border-none h-48 cursor-pointer transition-all duration-150",
-                            "active:scale-95 hover:bg-vyba-gray/80"
-                          )}
-                          onClick={() => handleSummaryCardClick(card.route)}
-                        >
-                          <CardContent className="p-8 flex flex-col justify-between items-start h-full">
-                            <div>
-                              {card.icon}
-                            </div>
-                            <div className="flex flex-col items-start">
-                              <p className="text-vyba-navy text-xl font-medium mb-1 font-semibold">{card.title}</p>
-                              <p className="text-base text-vyba-tertiary mb-0">{card.content}</p>
-                            </div>
-                          </CardContent>
-                        </Card>
-                      </CarouselItem>
-                    ))}
-                    {/* Elemento vacío para dar espacio al final */}
-                    <CarouselItem className="pl-2 basis-4 min-w-[16px]"></CarouselItem>
-                  </CarouselContent>
-                </Carousel>
+                        <CardContent className="p-8 flex flex-col justify-between items-start h-48">
+                          <div>{card.icon}</div>
+                          <div className="flex flex-col items-start">
+                            <p className="text-vyba-navy text-xl font-medium mb-1 font-semibold">{card.title}</p>
+                            <p className="text-base text-vyba-tertiary mb-0">{card.content}</p>
+                          </div>
+                        </CardContent>
+                      </Card>
+                    </SwiperSlide>
+                  ))}
+                </Swiper>
               </div>
             ) : (
               // Vista normal para pantallas grandes con padding
               <div className="container mx-auto px-4 md:px-8 mb-8">
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
                   {summaryCards.map((card) => (
                     <Card 
                       key={card.id}
@@ -423,7 +469,8 @@ const UserDashboardPage = () => {
                               images={artist.images}
                               rating={artist.rating}
                               priceRange={artist.priceRange}
-                              onClick={() => handleArtistClick(artist.id)}
+                              id={artist.id}
+                              to={`/artista/${artist.id}`}
                               isRecommended={artist.id === 3}
                             />
                           </div>
@@ -447,7 +494,8 @@ const UserDashboardPage = () => {
                         images={artist.images}
                         rating={artist.rating}
                         priceRange={artist.priceRange}
-                        onClick={() => handleArtistClick(artist.id)}
+                        id={artist.id}
+                        to={`/artista/${artist.id}`}
                         isRecommended={artist.id === 3}
                       />
                     ))}
