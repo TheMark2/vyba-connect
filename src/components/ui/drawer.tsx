@@ -25,27 +25,18 @@ const DrawerContent = React.forwardRef<
   <DrawerPrimitive.Content
     ref={ref} 
     className={cn(
-      "fixed inset-x-0 bottom-0 z-50 flex h-auto flex-col rounded-t-[10px] border bg-background pt-20 px-6",
+      "fixed inset-x-0 bottom-0 z-50 flex h-auto flex-col rounded-t-[10px] border bg-background px-6 py-6",
       "transform transition-transform duration-500 ease-in-out data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:slide-out-to-bottom data-[state=open]:slide-in-from-bottom",
       className
     )} 
     {...props}
   >
-    <div className="absolute top-3 left-0 right-0 mx-auto w-12 h-1.5 rounded-full bg-muted/80" />
-
-    {/* Mobile-only close button at the top */}
-    <div className="flex flex-col px-4 pt-4 items-start md:hidden">
-      <DrawerClose asChild>
-        <button className="p-2 hover:bg-vyba-gray rounded-full">
-          <ChevronLeft className="w-6 h-6" />
-        </button>
-      </DrawerClose>
-    </div>
-
+    {/* Eliminamos la barra superior y el botón de cerrar predeterminado */}
     {children}
   </DrawerPrimitive.Content>
 ));
 
+DrawerContent.displayName = DrawerPrimitive.Content.displayName;
 
 const DrawerHeader = ({
   className,

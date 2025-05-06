@@ -15,6 +15,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/u
 import ProfilePhotoStep from '@/components/onboarding/ProfilePhotoStep';
 import { useIsMobile } from "@/hooks/use-mobile";
 import { BottomDrawer } from "@/components/ui/bottom-drawer";
+import { ResponsiveDialog } from "@/components/ui/responsive-dialog";
 
 interface Profile {
   id: string;
@@ -611,234 +612,112 @@ const ProfilePage = () => {
       </div>
 
       {/* Diálogo de cambio de foto de perfil */}
-      {isMobile ? (
-        <BottomDrawer 
-          open={showPhotoDialog} 
-          onOpenChange={(open) => {
-            if (!open) {
-              setNewPhoto(null);
-              setNewPhotoUrl(null);
-              setPhotoPreview(null);
-            }
-            setShowPhotoDialog(open);
-          }}
-          className="px-0 pt-0 rounded-t-[32px] hide-drawer-bar [&_[role='dialog']]:!pt-0"
-          showOverlay={true}
-          showCloseButton={false}
-        >
-          <div className="flex flex-col h-full">
-            <div className="flex items-center px-5 py-2">
-              <div className="flex items-center">
-                <h2 className="text-2xl font-semibold ml-2">Cambiar foto de perfil</h2>
-              </div>
-            </div>
-
-            <div className="px-6 py-5 flex-1">
-              <input
-                type="file"
-                id="photo-upload"
-                ref={photoInputRef}
-                accept="image/jpeg,image/png,image/gif,image/webp,image/jpg"
-                onChange={handleFileInputChange}
-                className="hidden"
-              />
-              
-              {/* Selector de foto de perfil */}
-              <div className="flex flex-col items-center">
-                <div 
-                  className={`
-                    w-40 h-40 rounded-full 
-                    border-2 ${isPhotoUploading ? 'border-gray-300' : 'border-dashed border-gray-300 hover:border-vyba-navy'} 
-                    flex items-center justify-center
-                    ${photoPreview || newPhotoUrl || avatarUrl ? 'bg-transparent' : 'bg-[#F7F7F7]'}
-                    overflow-hidden cursor-pointer relative group
-                    transition-all
-                  `}
-                  onClick={() => photoInputRef.current?.click()}
-                >
-                  {isPhotoUploading ? (
-                    <div className="flex flex-col items-center gap-2">
-                      <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-black"></div>
-                      <span className="text-sm">Procesando...</span>
-                    </div>
-                  ) : photoPreview || newPhotoUrl ? (
-                    <Avatar className="w-full h-full">
-                      <AvatarImage 
-                        src={photoPreview || newPhotoUrl || ''} 
-                        alt="Vista previa" 
-                        className="object-cover"
-                        onError={(e) => {
-                          console.error('Error al cargar la imagen previa');
-                          // Cambiar el fallback a visible
-                          const fallback = e.currentTarget.parentElement?.querySelector('[data-radix-avatar-fallback]');
-                          if (fallback) {
-                            (fallback as HTMLElement).style.display = 'flex';
-                          }
-                        }} 
-                      />
-                      <AvatarFallback className="text-4xl bg-black text-white">
-                        <Plus className="w-10 h-10" />
-                      </AvatarFallback>
-                    </Avatar>
-                  ) : avatarUrl ? (
-                    <Avatar className="w-full h-full">
-                      <AvatarImage 
-                        src={`${avatarUrl}?t=${Date.now()}`} 
-                        alt="Foto actual" 
-                        className="object-cover"
-                        onError={(e) => {
-                          console.error('Error al cargar la imagen actual');
-                          // Cambiar el fallback a visible
-                          const fallback = e.currentTarget.parentElement?.querySelector('[data-radix-avatar-fallback]');
-                          if (fallback) {
-                            (fallback as HTMLElement).style.display = 'flex';
-                          }
-                        }} 
-                      />
-                      <AvatarFallback className="text-4xl bg-black text-white">
-                        <Plus className="w-10 h-10" />
-                      </AvatarFallback>
-                    </Avatar>
-                  ) : (
-                    <div className="flex flex-col items-center gap-2">
-                      <Upload className="w-10 h-10 text-gray-400 group-hover:text-gray-600 transition-all duration-300" />
-                      <span className="text-sm text-gray-500">Arrastra o haz clic</span>
-                    </div>
-                  )}
-                  
-                  <div className="absolute inset-0 bg-black/30 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
-                    <span className="text-white text-sm font-medium">Cambiar foto</span>
-                  </div>
-                </div>
-                
-                <div className="mt-6 text-sm text-gray-500">
-                  Formatos aceptados: JPG, PNG, GIF, WEBP (máx. 5MB)
-                </div>
-              </div>
-            </div>
-            
-            <div className="px-6 py-4 mt-auto">
-              <Button 
-                variant="terciary" 
-                onClick={handleSaveAvatar} 
-                className="w-full"
-                disabled={(!newPhoto && !newPhotoUrl) || isPhotoUploading}
-              >
-                Guardar cambios
-              </Button>
-            </div>
-          </div>
-        </BottomDrawer>
-      ) : (
-        <Dialog open={showPhotoDialog} onOpenChange={(open) => {
+      <ResponsiveDialog
+        open={showPhotoDialog}
+        onOpenChange={(open) => {
           if (!open) {
             setNewPhoto(null);
             setNewPhotoUrl(null);
             setPhotoPreview(null);
           }
           setShowPhotoDialog(open);
-        }}>
-          <DialogContent className="sm:max-w-lg">
-            <DialogHeader>
-              <DialogTitle className="text-center">Cambiar foto de perfil</DialogTitle>
-            </DialogHeader>
-            <div className="py-6">
-              <input
-                type="file"
-                id="photo-upload"
-                ref={photoInputRef}
-                accept="image/jpeg,image/png,image/gif,image/webp,image/jpg"
-                onChange={handleFileInputChange}
-                className="hidden"
-              />
-              
-              {/* Selector de foto de perfil */}
-              <div className="flex flex-col items-center space-y-4">
-                <div 
-                  className={`
-                    w-40 h-40 rounded-full 
-                    border-2 ${isPhotoUploading ? 'border-gray-300' : 'border-dashed border-gray-300 hover:border-vyba-navy'} 
-                    flex items-center justify-center
-                    ${photoPreview || newPhotoUrl || avatarUrl ? 'bg-transparent' : 'bg-[#F7F7F7]'}
-                    overflow-hidden cursor-pointer relative group
-                    transition-all
-                  `}
-                  onClick={() => photoInputRef.current?.click()}
-                >
-                  {isPhotoUploading ? (
-                    <div className="flex flex-col items-center gap-2">
-                      <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-black"></div>
-                      <span className="text-sm">Procesando...</span>
-                    </div>
-                  ) : photoPreview || newPhotoUrl ? (
-                    <Avatar className="w-full h-full">
-                      <AvatarImage 
-                        src={photoPreview || newPhotoUrl || ''} 
-                        alt="Vista previa" 
-                        className="object-cover"
-                        onError={(e) => {
-                          console.error('Error al cargar la imagen previa');
-                          // Cambiar el fallback a visible
-                          const fallback = e.currentTarget.parentElement?.querySelector('[data-radix-avatar-fallback]');
-                          if (fallback) {
-                            (fallback as HTMLElement).style.display = 'flex';
-                          }
-                        }} 
-                      />
-                      <AvatarFallback className="text-4xl bg-black text-white">
-                        <Plus className="w-10 h-10" />
-                      </AvatarFallback>
-                    </Avatar>
-                  ) : avatarUrl ? (
-                    <Avatar className="w-full h-full">
-                      <AvatarImage 
-                        src={`${avatarUrl}?t=${Date.now()}`} 
-                        alt="Foto actual" 
-                        className="object-cover"
-                        onError={(e) => {
-                          console.error('Error al cargar la imagen actual');
-                          // Cambiar el fallback a visible
-                          const fallback = e.currentTarget.parentElement?.querySelector('[data-radix-avatar-fallback]');
-                          if (fallback) {
-                            (fallback as HTMLElement).style.display = 'flex';
-                          }
-                        }} 
-                      />
-                      <AvatarFallback className="text-4xl bg-black text-white">
-                        <Plus className="w-10 h-10" />
-                      </AvatarFallback>
-                    </Avatar>
-                  ) : (
-                    <div className="flex flex-col items-center gap-2">
-                      <Upload className="w-10 h-10 text-gray-400 group-hover:text-gray-600 transition-all duration-300" />
-                      <span className="text-sm text-gray-500">Arrastra o haz clic</span>
-                    </div>
-                  )}
-                  
-                  <div className="absolute inset-0 bg-black/30 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
-                    <span className="text-white text-sm font-medium">Cambiar foto</span>
-                  </div>
-                </div>
-                
-                <div className="mt-2 text-sm text-gray-500">
-                  Formatos aceptados: JPG, PNG, GIF, WEBP (máx. 5MB)
-                </div>
+        }}
+        title="Cambiar foto de perfil"
+        centerTitle={true}
+      >
+        <input
+          type="file"
+          id="photo-upload"
+          ref={photoInputRef}
+          accept="image/jpeg,image/png,image/gif,image/webp,image/jpg"
+          onChange={handleFileInputChange}
+          className="hidden"
+        />
+        
+        {/* Selector de foto de perfil */}
+        <div className="flex flex-col items-center">
+          <div 
+            className={`
+              w-40 h-40 rounded-full 
+              border-2 ${isPhotoUploading ? 'border-gray-300' : 'border-dashed border-gray-300 hover:border-vyba-navy'} 
+              flex items-center justify-center
+              ${photoPreview || newPhotoUrl || avatarUrl ? 'bg-transparent' : 'bg-[#F7F7F7]'}
+              overflow-hidden cursor-pointer relative group
+              transition-all
+            `}
+            onClick={() => photoInputRef.current?.click()}
+          >
+            {isPhotoUploading ? (
+              <div className="flex flex-col items-center gap-2">
+                <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-black"></div>
+                <span className="text-sm">Procesando...</span>
               </div>
-            </div>
+            ) : photoPreview || newPhotoUrl ? (
+              <Avatar className="w-full h-full">
+                <AvatarImage 
+                  src={photoPreview || newPhotoUrl || ''} 
+                  alt="Vista previa" 
+                  className="object-cover"
+                  onError={(e) => {
+                    console.error('Error al cargar la imagen previa');
+                    // Cambiar el fallback a visible
+                    const fallback = e.currentTarget.parentElement?.querySelector('[data-radix-avatar-fallback]');
+                    if (fallback) {
+                      (fallback as HTMLElement).style.display = 'flex';
+                    }
+                  }} 
+                />
+                <AvatarFallback className="text-4xl bg-black text-white">
+                  <Plus className="w-10 h-10" />
+                </AvatarFallback>
+              </Avatar>
+            ) : avatarUrl ? (
+              <Avatar className="w-full h-full">
+                <AvatarImage 
+                  src={`${avatarUrl}?t=${Date.now()}`} 
+                  alt="Foto actual" 
+                  className="object-cover"
+                  onError={(e) => {
+                    console.error('Error al cargar la imagen actual');
+                    // Cambiar el fallback a visible
+                    const fallback = e.currentTarget.parentElement?.querySelector('[data-radix-avatar-fallback]');
+                    if (fallback) {
+                      (fallback as HTMLElement).style.display = 'flex';
+                    }
+                  }} 
+                />
+                <AvatarFallback className="text-4xl bg-black text-white">
+                  <Plus className="w-10 h-10" />
+                </AvatarFallback>
+              </Avatar>
+            ) : (
+              <div className="flex flex-col items-center gap-2">
+                <Upload className="w-10 h-10 text-gray-400 group-hover:text-gray-600 transition-all duration-300" />
+                <span className="text-sm text-gray-500">Arrastra o haz clic</span>
+              </div>
+            )}
             
-            <div className="flex justify-between gap-2 px-6 mt-4">
-              <Button 
-                variant="terciary" 
-                onClick={handleSaveAvatar} 
-                className="w-full"
-                disabled={(!newPhoto && !newPhotoUrl) || isPhotoUploading}
-              >
-                Guardar cambios
-              </Button>
+            <div className="absolute inset-0 bg-black/30 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+              <span className="text-white text-sm font-medium">Cambiar foto</span>
             </div>
-          </DialogContent>
-        </Dialog>
-      )}
+          </div>
+          
+          <div className="mt-6 text-sm text-gray-500">
+            Formatos aceptados: JPG, PNG, GIF, WEBP (máx. 5MB)
+          </div>
+        </div>
+        
+        <div className="mt-8">
+          <Button 
+            variant="terciary" 
+            onClick={handleSaveAvatar} 
+            className="w-full"
+            disabled={(!newPhoto && !newPhotoUrl) || isPhotoUploading}
+          >
+            Guardar cambios
+          </Button>
+        </div>
+      </ResponsiveDialog>
     </UserDashboardLayout>
   );
 };

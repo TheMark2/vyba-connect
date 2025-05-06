@@ -219,8 +219,6 @@
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
   }
   
-  /* Ocultar la barra superior del drawer */
-  .hide-drawer-bar [role="dialog"] > div:first-child {
-    display: none;
-  }
+  /* Nota: La barra superior del drawer ha sido eliminada del componente */
+  /* Se puede usar el componente ResponsiveDialog para interfaz adaptativa */
 }
