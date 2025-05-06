@@ -77,7 +77,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
             // Consulta a la tabla de perfiles
             const { data: profileData, error: profileError } = await supabase
               .from('profiles')
-              .select('name, last_name, email')
+              .select('name, last_name, email, avatar_url')
               .eq('id', data.user.id)
               .single();
             

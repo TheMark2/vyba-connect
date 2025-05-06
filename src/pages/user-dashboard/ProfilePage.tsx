@@ -1,8 +1,8 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import UserDashboardLayout from '@/components/dashboard/UserDashboardLayout';
 import { useAuth } from '@/contexts/AuthContext';
 import { Badge } from '@/components/ui/badge';
-import { MapPin, Mail, Phone, ShieldX, Cog, FolderCog, NavigationOff, AlertCircle, Camera } from 'lucide-react';
+import { MapPin, Mail, Phone, ShieldX, Cog, FolderCog, NavigationOff, AlertCircle, Camera, Check, Telescope, ChevronLeft, Plus, Upload } from 'lucide-react';
 import { Separator } from '@/components/ui/separator';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
@@ -13,7 +13,8 @@ import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import ProfilePhotoStep from '@/components/onboarding/ProfilePhotoStep';
-import DebugAvatarImage from '@/components/ui/DebugAvatarImage';
+import { useIsMobile } from "@/hooks/use-mobile";
+import { BottomDrawer } from "@/components/ui/bottom-drawer";
 
 interface Profile {
   id: string;
@@ -51,7 +52,11 @@ const ProfilePage = () => {
   const [showPhotoDialog, setShowPhotoDialog] = useState(false);
   const [newPhoto, setNewPhoto] = useState<File | null>(null);
   const [newPhotoUrl, setNewPhotoUrl] = useState<string | null>(null);
+  const photoInputRef = useRef<HTMLInputElement>(null);
+  const [isPhotoUploading, setIsPhotoUploading] = useState(false);
+  const [photoPreview, setPhotoPreview] = useState<string | null>(null);
   const navigate = useNavigate();
+  const isMobile = useIsMobile();
 
   useEffect(() => {
     if (user?.created_at) {
@@ -61,6 +66,26 @@ const ProfilePage = () => {
       setJoinDate(`${month.charAt(0).toUpperCase() + month.slice(1)} del ${year}`);
     }
   }, [user]);
+
+  // Sincronizar avatarUrl del contexto cuando cambie
+  useEffect(() => {
+    if (avatarUrl) {
+      console.log('ProfilePage: Actualizando avatarUrl desde el contexto de autenticación:', avatarUrl);
+      
+      // Pequeño hack para asegurar que la imagen se actualiza en el DOM
+      // incluso si la URL sigue siendo la misma (pero el contenido cambió)
+      setTimeout(() => {
+        const avatarImg = document.querySelector('.profile-avatar img') as HTMLImageElement;
+        if (avatarImg) {
+          // Forzar recarga añadiendo un parámetro de caché
+          const cacheBuster = `?t=${Date.now()}`;
+          const baseUrl = avatarUrl.split('?')[0]; // Eliminar cualquier parámetro existente
+          avatarImg.src = `${baseUrl}${cacheBuster}`;
+          console.log('ProfilePage: Imagen de avatar forzada a actualizar con:', avatarImg.src);
+        }
+      }, 100);
+    }
+  }, [avatarUrl]);
 
   // Geocodificar la dirección del usuario cuando cambie profileData
   useEffect(() => {
@@ -274,86 +299,165 @@ const ProfilePage = () => {
     );
   };
 
-  const handlePhotoChange = async (photo: File | null, photoUrl?: string | null) => {
-    setNewPhoto(photo);
-    setNewPhotoUrl(photoUrl || null);
+  // Función para manejar selección de archivos
+  const handleFileInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) {
+      console.log("No se seleccionó ningún archivo");
+      return;
+    }
+    
+    console.log("Archivo seleccionado:", file.name, file.type, file.size);
+    
+    // Validar tipo de archivo
+    const validTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/webp', 'image/jpg'];
+    if (!validTypes.includes(file.type)) {
+      toast.error("Tipo de archivo no válido", {
+        description: "Por favor, selecciona una imagen (JPG, PNG, GIF o WEBP)"
+      });
+      return;
+    }
+    
+    // Validar tamaño (5MB máximo)
+    if (file.size > 5 * 1024 * 1024) {
+      toast.error("Archivo demasiado grande", {
+        description: "La imagen no debe exceder los 5MB"
+      });
+      return;
+    }
+    
+    setIsPhotoUploading(true);
+    
+    // Crear preview
+    const reader = new FileReader();
+    reader.onloadend = () => {
+      const preview = reader.result as string;
+      console.log("Vista previa generada correctamente");
+      setPhotoPreview(preview);
+      setNewPhoto(file);
+      setNewPhotoUrl(preview);
+      setIsPhotoUploading(false);
+    };
+    
+    reader.onerror = (error) => {
+      console.error("Error al leer el archivo:", error);
+      toast.error("Error al leer el archivo", {
+        description: "No se pudo procesar la imagen seleccionada"
+      });
+      setIsPhotoUploading(false);
+    };
+    
+    reader.readAsDataURL(file);
+    
+    // Reiniciar input para permitir seleccionar el mismo archivo de nuevo
+    e.target.value = '';
   };
 
-  const handleSavePhoto = async () => {
+  // Función específica para subir la imagen
+  const uploadImageToSupabase = async (file: File, userId: string): Promise<string | null> => {
     try {
-      if (!user) {
-        throw new Error('Usuario no autenticado');
-      }
-
-      let avatarUrl = newPhotoUrl;
-
-      // Si hay una nueva foto de perfil, subirla a Supabase Storage
-      if (newPhoto) {
-        const file = newPhoto;
-        const fileExt = file.name.split('.').pop();
-        const fileName = `${user.id}/${Date.now()}.${fileExt}`;
-        
-        console.log('Subiendo imagen al bucket useravatar:', fileName);
-        
-        // Subir la imagen al bucket 'useravatar'
-        const { data: uploadData, error: uploadError } = await supabase.storage
-          .from('useravatar')
-          .upload(fileName, file, {
-            cacheControl: '3600',
-            upsert: true
-          });
-
-        if (uploadError) {
-          console.error('Error al subir la imagen:', uploadError);
-          throw new Error('Error al subir la imagen de perfil');
+      const fileExt = file.name.split('.').pop();
+      const fileName = `${userId}/${Date.now()}.${fileExt}`;
+      
+      // Intentar verificar/crear el bucket
+      try {
+        const { data: bucketExists } = await supabase.storage.getBucket('useravatar');
+        if (!bucketExists) {
+          await supabase.storage.createBucket('useravatar', { public: true });
         }
-
-        console.log('Imagen subida correctamente:', uploadData);
-        
-        // Construir URL directamente - Más confiable que getPublicUrl
-        const supabaseUrl = import.meta.env.VITE_SUPABASE_URL || "https://zkucuolpubthcnsgjtso.supabase.co";
-        avatarUrl = `${supabaseUrl}/storage/v1/object/public/useravatar/${fileName}`;
-        
-        console.log('URL pública de la imagen:', avatarUrl);
+      } catch (err) {
+        console.error("Error al verificar bucket:", err);
+        // Continuar de todos modos
       }
+      
+      // Subir la imagen
+      const { data, error } = await supabase.storage
+        .from('useravatar')
+        .upload(fileName, file, {
+          cacheControl: '3600',
+          upsert: true
+        });
+      
+      if (error) throw error;
+      
+      // Construir URL
+      const supabaseUrl = import.meta.env.VITE_SUPABASE_URL || "https://zkucuolpubthcnsgjtso.supabase.co";
+      return `${supabaseUrl}/storage/v1/object/public/useravatar/${fileName}`;
+    } catch (error) {
+      console.error("Error al subir imagen:", error);
+      return null;
+    }
+  };
 
-      // Si seleccionamos un avatar predefinido (que comienza con /)
-      if (newPhotoUrl && newPhotoUrl.startsWith('/')) {
-        avatarUrl = newPhotoUrl;
-        console.log('Usando avatar predefinido:', avatarUrl);
+  // Función para guardar cambios de avatar
+  const handleSaveAvatar = async () => {
+    if (!user) {
+      toast.error("No hay sesión activa");
+      return;
+    }
+    
+    setShowPhotoDialog(false);
+    const loadingToast = toast.loading("Actualizando foto de perfil...");
+    
+    try {
+      let finalAvatarUrl = newPhotoUrl;
+      
+      // Si hay un archivo de imagen, subirlo a Supabase
+      if (newPhoto) {
+        console.log("Subiendo nueva foto al servidor...", newPhoto.name);
+        const uploadedUrl = await uploadImageToSupabase(newPhoto, user.id);
+        if (!uploadedUrl) {
+          toast.dismiss(loadingToast);
+          toast.error("Error al subir la imagen");
+          return;
+        }
+        finalAvatarUrl = uploadedUrl;
+        console.log("Imagen subida correctamente:", finalAvatarUrl);
       }
-
-      // Actualizar el perfil
-      console.log('Actualizando profile.avatar_url en Supabase:', avatarUrl);
-      const { error: updateError } = await supabase
+      
+      if (!finalAvatarUrl) {
+        toast.dismiss(loadingToast);
+        toast.error("No hay imagen para actualizar");
+        return;
+      }
+      
+      console.log("Actualizando perfil con nueva URL:", finalAvatarUrl);
+      
+      // Actualizar perfil
+      const { error: profileError } = await supabase
         .from('profiles')
-        .update({ avatar_url: avatarUrl })
+        .update({ avatar_url: finalAvatarUrl })
         .eq('id', user.id);
-
-      if (updateError) {
-        console.error('Error al actualizar el perfil:', updateError);
-        throw updateError;
+      
+      if (profileError) {
+        console.error("Error al actualizar perfil:", profileError);
+        throw profileError;
       }
-
-      // Actualizar los metadatos del usuario
-      console.log('Actualizando user.user_metadata.avatar_url en Supabase:', avatarUrl);
-      const { error: updateUserError } = await supabase.auth.updateUser({
-        data: { avatar_url: avatarUrl }
+      
+      // Actualizar metadatos de usuario
+      const { error: userError } = await supabase.auth.updateUser({
+        data: { avatar_url: finalAvatarUrl }
       });
-
-      if (updateUserError) {
-        console.error('Error al actualizar metadatos del usuario:', updateUserError);
-        throw updateUserError;
+      
+      if (userError) {
+        console.error("Error al actualizar metadatos:", userError);
       }
-
-      // Recargar datos del usuario
+      
+      // Recargar datos
       await reloadUserData();
       
-      toast.success('Foto de perfil actualizada');
-      setShowPhotoDialog(false);
+      // Limpiar estados
+      setNewPhoto(null);
+      setNewPhotoUrl(null);
+      setPhotoPreview(null);
+      
+      toast.dismiss(loadingToast);
+      toast.success("Foto de perfil actualizada");
+      
     } catch (error) {
-      console.error('Error al actualizar la foto de perfil:', error);
-      toast.error('Error al actualizar la foto de perfil');
+      console.error("Error al guardar avatar:", error);
+      toast.dismiss(loadingToast);
+      toast.error("Error al actualizar la foto de perfil");
     }
   };
 
@@ -362,21 +466,13 @@ const ProfilePage = () => {
       <div className="container mx-auto px-6 py-12">
         <h1 className="text-4xl font-semibold mb-8">Mi perfil</h1>
         
-        {/* Componente de depuración - Solo visible en desarrollo */}
-        {process.env.NODE_ENV === 'development' && (
-          <div className="mb-8 bg-yellow-50 p-4 rounded-lg border border-yellow-200">
-            <h2 className="text-xl font-medium mb-2">Debug de Avatar</h2>
-            <DebugAvatarImage src={avatarUrl} />
-          </div>
-        )}
-        
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 md:gap-16">
           {/* Columna izquierda - Solo tarjeta de perfil */}
           <div>
             <div className="bg-vyba-gray rounded-3xl p-8 sticky top-5">
               <div className="flex items-start gap-6">
                 <div 
-                  className="w-36 h-36 rounded-full overflow-hidden bg-vyba-beige cursor-pointer relative group"
+                  className="w-36 h-36 rounded-full overflow-hidden bg-vyba-beige cursor-pointer relative group profile-avatar"
                   onClick={() => setShowPhotoDialog(true)}
                 >
                   {avatarUrl ? (
@@ -514,24 +610,235 @@ const ProfilePage = () => {
         </div>
       </div>
 
-      <Dialog open={showPhotoDialog} onOpenChange={setShowPhotoDialog}>
-        <DialogContent className="sm:max-w-xl">
-          <DialogHeader>
-            <DialogTitle className="text-center">Cambiar foto de perfil</DialogTitle>
-          </DialogHeader>
-          <div className="py-6">
-            <ProfilePhotoStep 
-              onPhotoChange={handlePhotoChange}
-              initialPhoto={avatarUrl || undefined}
-            />
+      {/* Diálogo de cambio de foto de perfil */}
+      {isMobile ? (
+        <BottomDrawer 
+          open={showPhotoDialog} 
+          onOpenChange={(open) => {
+            if (!open) {
+              setNewPhoto(null);
+              setNewPhotoUrl(null);
+              setPhotoPreview(null);
+            }
+            setShowPhotoDialog(open);
+          }}
+          className="px-0 pt-0 rounded-t-[32px] hide-drawer-bar [&_[role='dialog']]:!pt-0"
+          showOverlay={true}
+          showCloseButton={false}
+        >
+          <div className="flex flex-col h-full">
+            <div className="flex items-center px-5 py-2">
+              <div className="flex items-center">
+                <h2 className="text-2xl font-semibold ml-2">Cambiar foto de perfil</h2>
+              </div>
+            </div>
+
+            <div className="px-6 py-5 flex-1">
+              <input
+                type="file"
+                id="photo-upload"
+                ref={photoInputRef}
+                accept="image/jpeg,image/png,image/gif,image/webp,image/jpg"
+                onChange={handleFileInputChange}
+                className="hidden"
+              />
+              
+              {/* Selector de foto de perfil */}
+              <div className="flex flex-col items-center">
+                <div 
+                  className={`
+                    w-40 h-40 rounded-full 
+                    border-2 ${isPhotoUploading ? 'border-gray-300' : 'border-dashed border-gray-300 hover:border-vyba-navy'} 
+                    flex items-center justify-center
+                    ${photoPreview || newPhotoUrl || avatarUrl ? 'bg-transparent' : 'bg-[#F7F7F7]'}
+                    overflow-hidden cursor-pointer relative group
+                    transition-all
+                  `}
+                  onClick={() => photoInputRef.current?.click()}
+                >
+                  {isPhotoUploading ? (
+                    <div className="flex flex-col items-center gap-2">
+                      <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-black"></div>
+                      <span className="text-sm">Procesando...</span>
+                    </div>
+                  ) : photoPreview || newPhotoUrl ? (
+                    <Avatar className="w-full h-full">
+                      <AvatarImage 
+                        src={photoPreview || newPhotoUrl || ''} 
+                        alt="Vista previa" 
+                        className="object-cover"
+                        onError={(e) => {
+                          console.error('Error al cargar la imagen previa');
+                          // Cambiar el fallback a visible
+                          const fallback = e.currentTarget.parentElement?.querySelector('[data-radix-avatar-fallback]');
+                          if (fallback) {
+                            (fallback as HTMLElement).style.display = 'flex';
+                          }
+                        }} 
+                      />
+                      <AvatarFallback className="text-4xl bg-black text-white">
+                        <Plus className="w-10 h-10" />
+                      </AvatarFallback>
+                    </Avatar>
+                  ) : avatarUrl ? (
+                    <Avatar className="w-full h-full">
+                      <AvatarImage 
+                        src={`${avatarUrl}?t=${Date.now()}`} 
+                        alt="Foto actual" 
+                        className="object-cover"
+                        onError={(e) => {
+                          console.error('Error al cargar la imagen actual');
+                          // Cambiar el fallback a visible
+                          const fallback = e.currentTarget.parentElement?.querySelector('[data-radix-avatar-fallback]');
+                          if (fallback) {
+                            (fallback as HTMLElement).style.display = 'flex';
+                          }
+                        }} 
+                      />
+                      <AvatarFallback className="text-4xl bg-black text-white">
+                        <Plus className="w-10 h-10" />
+                      </AvatarFallback>
+                    </Avatar>
+                  ) : (
+                    <div className="flex flex-col items-center gap-2">
+                      <Upload className="w-10 h-10 text-gray-400 group-hover:text-gray-600 transition-all duration-300" />
+                      <span className="text-sm text-gray-500">Arrastra o haz clic</span>
+                    </div>
+                  )}
+                  
+                  <div className="absolute inset-0 bg-black/30 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                    <span className="text-white text-sm font-medium">Cambiar foto</span>
+                  </div>
+                </div>
+                
+                <div className="mt-6 text-sm text-gray-500">
+                  Formatos aceptados: JPG, PNG, GIF, WEBP (máx. 5MB)
+                </div>
+              </div>
+            </div>
+            
+            <div className="px-6 py-4 mt-auto">
+              <Button 
+                variant="terciary" 
+                onClick={handleSaveAvatar} 
+                className="w-full"
+                disabled={(!newPhoto && !newPhotoUrl) || isPhotoUploading}
+              >
+                Guardar cambios
+              </Button>
+            </div>
           </div>
-          <div className="flex justify-end gap-2 px-6">
-            <Button variant="terciary" onClick={handleSavePhoto} className="w-full">
-              Guardar cambios
-            </Button>
-          </div>
-        </DialogContent>
-      </Dialog>
+        </BottomDrawer>
+      ) : (
+        <Dialog open={showPhotoDialog} onOpenChange={(open) => {
+          if (!open) {
+            setNewPhoto(null);
+            setNewPhotoUrl(null);
+            setPhotoPreview(null);
+          }
+          setShowPhotoDialog(open);
+        }}>
+          <DialogContent className="sm:max-w-lg">
+            <DialogHeader>
+              <DialogTitle className="text-center">Cambiar foto de perfil</DialogTitle>
+            </DialogHeader>
+            <div className="py-6">
+              <input
+                type="file"
+                id="photo-upload"
+                ref={photoInputRef}
+                accept="image/jpeg,image/png,image/gif,image/webp,image/jpg"
+                onChange={handleFileInputChange}
+                className="hidden"
+              />
+              
+              {/* Selector de foto de perfil */}
+              <div className="flex flex-col items-center space-y-4">
+                <div 
+                  className={`
+                    w-40 h-40 rounded-full 
+                    border-2 ${isPhotoUploading ? 'border-gray-300' : 'border-dashed border-gray-300 hover:border-vyba-navy'} 
+                    flex items-center justify-center
+                    ${photoPreview || newPhotoUrl || avatarUrl ? 'bg-transparent' : 'bg-[#F7F7F7]'}
+                    overflow-hidden cursor-pointer relative group
+                    transition-all
+                  `}
+                  onClick={() => photoInputRef.current?.click()}
+                >
+                  {isPhotoUploading ? (
+                    <div className="flex flex-col items-center gap-2">
+                      <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-black"></div>
+                      <span className="text-sm">Procesando...</span>
+                    </div>
+                  ) : photoPreview || newPhotoUrl ? (
+                    <Avatar className="w-full h-full">
+                      <AvatarImage 
+                        src={photoPreview || newPhotoUrl || ''} 
+                        alt="Vista previa" 
+                        className="object-cover"
+                        onError={(e) => {
+                          console.error('Error al cargar la imagen previa');
+                          // Cambiar el fallback a visible
+                          const fallback = e.currentTarget.parentElement?.querySelector('[data-radix-avatar-fallback]');
+                          if (fallback) {
+                            (fallback as HTMLElement).style.display = 'flex';
+                          }
+                        }} 
+                      />
+                      <AvatarFallback className="text-4xl bg-black text-white">
+                        <Plus className="w-10 h-10" />
+                      </AvatarFallback>
+                    </Avatar>
+                  ) : avatarUrl ? (
+                    <Avatar className="w-full h-full">
+                      <AvatarImage 
+                        src={`${avatarUrl}?t=${Date.now()}`} 
+                        alt="Foto actual" 
+                        className="object-cover"
+                        onError={(e) => {
+                          console.error('Error al cargar la imagen actual');
+                          // Cambiar el fallback a visible
+                          const fallback = e.currentTarget.parentElement?.querySelector('[data-radix-avatar-fallback]');
+                          if (fallback) {
+                            (fallback as HTMLElement).style.display = 'flex';
+                          }
+                        }} 
+                      />
+                      <AvatarFallback className="text-4xl bg-black text-white">
+                        <Plus className="w-10 h-10" />
+                      </AvatarFallback>
+                    </Avatar>
+                  ) : (
+                    <div className="flex flex-col items-center gap-2">
+                      <Upload className="w-10 h-10 text-gray-400 group-hover:text-gray-600 transition-all duration-300" />
+                      <span className="text-sm text-gray-500">Arrastra o haz clic</span>
+                    </div>
+                  )}
+                  
+                  <div className="absolute inset-0 bg-black/30 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                    <span className="text-white text-sm font-medium">Cambiar foto</span>
+                  </div>
+                </div>
+                
+                <div className="mt-2 text-sm text-gray-500">
+                  Formatos aceptados: JPG, PNG, GIF, WEBP (máx. 5MB)
+                </div>
+              </div>
+            </div>
+            
+            <div className="flex justify-between gap-2 px-6 mt-4">
+              <Button 
+                variant="terciary" 
+                onClick={handleSaveAvatar} 
+                className="w-full"
+                disabled={(!newPhoto && !newPhotoUrl) || isPhotoUploading}
+              >
+                Guardar cambios
+              </Button>
+            </div>
+          </DialogContent>
+        </Dialog>
+      )}
     </UserDashboardLayout>
   );
 };

@@ -188,7 +188,7 @@ const ProfilePhotoStep: React.FC<ProfilePhotoStepProps> = ({
                 flex items-center justify-center
                 ${photoPreview ? 'bg-transparent' : 'bg-[#F7F7F7] dark:bg-vyba-dark-secondary/30'}
                 overflow-hidden cursor-pointer
-                transition-all duration-300
+                transition-all
               `} 
               onClick={!isLoading ? handleButtonClick : undefined}
             >

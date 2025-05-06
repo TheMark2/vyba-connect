@@ -218,4 +218,9 @@
   .badge-slider button {
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
   }
+  
+  /* Ocultar la barra superior del drawer */
+  .hide-drawer-bar [role="dialog"] > div:first-child {
+    display: none;
+  }
 }
