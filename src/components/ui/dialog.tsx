@@ -45,12 +45,12 @@ const DialogContent = React.forwardRef<
       {...props}
     >
       {showCloseButton && (
-        <div className="sticky top-0 z-10 pt-4 px-4 pb-2 bg-white sm:rounded-t-3xl">
-          <DialogPrimitive.Close className="hover:text-gray-500 transition-colors hover:bg-gray-100/80 p-2 rounded-full">
-            <X className="h-5 w-5" />
-            <span className="sr-only">Cerrar</span>
-          </DialogPrimitive.Close>
-        </div>
+      <div className="sticky top-0 z-10 pt-4 px-4 pb-2 bg-white sm:rounded-t-3xl">
+        <DialogPrimitive.Close className="hover:text-gray-500 transition-colors hover:bg-gray-100/80 p-2 rounded-full">
+          <X className="h-5 w-5" />
+          <span className="sr-only">Cerrar</span>
+        </DialogPrimitive.Close>
+      </div>
       )}
 
       {/* Usamos la clase contentClassName en lugar de px fijo */}
