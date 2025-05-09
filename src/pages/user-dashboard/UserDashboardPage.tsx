@@ -137,7 +137,7 @@ const UserDashboardPage = () => {
       route: "/user-dashboard/notifications"
     },
     {
-      id: 4,
+      id: 3,
       icon: <GalleryVerticalEnd className="h-6 w-6 text-vyba-navy" />,
       title: "Todos los artistas",
       content: "Ver todos los artistas",
@@ -359,7 +359,7 @@ const UserDashboardPage = () => {
       <main className="mt-8">
         <header className="container mx-auto py-4 px-0">
           <div className="px-6 md:px-8">
-            <h1 className="text-4xl font-bold">¡Buenas, {userName || 'Usuario'}!</h1>
+            <h1 className="text-4xl font-semibold">¡Buenas, {userName || 'Usuario'}!</h1>
           </div>
         </header>
 
@@ -451,18 +451,7 @@ const UserDashboardPage = () => {
                           onClick={() => handleSummaryCardClick(card.route)}
                         >
                           <CardContent className="p-8 flex flex-col justify-between items-start h-48">
-                            <div className="flex items-center justify-between w-full">
-                              <div aria-hidden="true">{card.icon}</div>
-                              {card.id !== 3 && (
-                                <div className="relative w-12 h-12">
-                                  <div className="absolute inset-0 flex items-center justify-center">
-                                    <div className="w-8 h-8 bg-[#E5E5E5] rotate-12 transform origin-center"></div>
-                                    <div className="w-8 h-8 bg-[#E5E5E5] -rotate-12 transform origin-center"></div>
-                                    <div className="w-6 h-6 bg-[#E5E5E5] rotate-45 transform origin-center"></div>
-                                  </div>
-                                </div>
-                              )}
-                            </div>
+                            <div aria-hidden="true">{card.icon}</div>
                             <div className="flex flex-col items-start">
                               <h3 className="text-vyba-navy text-xl font-medium mb-1 font-semibold">{card.title}</h3>
                               <p className="text-base text-vyba-tertiary mb-0">{card.content}</p>
@@ -486,36 +475,8 @@ const UserDashboardPage = () => {
                         onClick={() => handleSummaryCardClick(card.route)}
                       >
                         <CardContent className="p-8 flex flex-col justify-between items-start h-48">
-                          <div className="flex items-center justify-between w-full">
-                            <div aria-hidden="true">{card.icon}</div>
-                            {card.id !== 3 && (
-                              <div className="relative w-24 h-8">
-                                <div className="absolute inset-0 flex items-center justify-end -space-x-4">
-                                  {card.id === 2 ? (
-                                    // Círculos para mensajes
-                                    <>
-                                      <div className="w-8 h-8 bg-[#E5E5E5] rounded-full border border-vyba-gray"></div>
-                                      <div className="w-8 h-8 bg-[#E5E5E5] rounded-full border border-vyba-gray"></div>
-                                      <div className="w-8 h-8 bg-[#E5E5E5] rounded-full border border-vyba-gray"></div>
-                                    </>
-                                  ) : card.id === 4 ? (
-                                    // Cuadrados más largos para todos los artistas
-                                    <>
-                                      <div className="w-12 h-8 bg-[#E5E5E5] rotate-12 transform origin-center border border-vyba-gray rounded-sm"></div>
-                                      <div className="w-12 h-8 bg-[#E5E5E5] -rotate-12 transform origin-center border border-vyba-gray rounded-sm"></div>
-                                      <div className="w-10 h-8 bg-[#E5E5E5] rotate-45 transform origin-center border border-vyba-gray rounded-sm"></div>
-                                    </>
-                                  ) : (
-                                    // Cuadrados normales para favoritos
-                                    <>
-                                      <div className="w-8 h-8 bg-[#E5E5E5] rotate-12 transform origin-center border border-vyba-gray rounded-sm"></div>
-                                      <div className="w-8 h-8 bg-[#E5E5E5] -rotate-12 transform origin-center border border-vyba-gray rounded-sm"></div>
-                                      <div className="w-6 h-6 bg-[#E5E5E5] rotate-45 transform origin-center border border-vyba-gray rounded-sm"></div>
-                                    </>
-                                  )}
-                                </div>
-                              </div>
-                            )}
+                          <div aria-hidden="true">
+                            {card.icon}
                           </div>
                           <div className="flex flex-col items-start">
                             <h3 className="text-vyba-navy text-xl font-medium mb-1 font-semibold">{card.title}</h3>

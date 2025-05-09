@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import UserDashboardLayout from '@/components/dashboard/UserDashboardLayout';
 import { useAuth } from '@/contexts/AuthContext';
 import { Badge } from '@/components/ui/badge';
-import { MapPin, Mail, Phone, ShieldX, Cog, FolderCog, NavigationOff, AlertCircle, Camera, Check, Telescope, ChevronLeft, Plus, Upload, X } from 'lucide-react';
+import { MapPin, Mail, Phone, ShieldX, Cog, FolderCog, NavigationOff, AlertCircle, Camera, Check, Telescope, ChevronLeft, Plus, Upload } from 'lucide-react';
 import { Separator } from '@/components/ui/separator';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
@@ -16,7 +16,6 @@ import ProfilePhotoStep from '@/components/onboarding/ProfilePhotoStep';
 import { useIsMobile } from "@/hooks/use-mobile";
 import { BottomDrawer } from "@/components/ui/bottom-drawer";
 import { ResponsiveDialog } from "@/components/ui/responsive-dialog";
-import { PhoneVerificationDialog } from "@/components/artist-profile/PhoneVerificationDialog";
 
 interface Profile {
   id: string;
@@ -34,7 +33,6 @@ interface Profile {
   favorite_genres: string[];
   preferred_artist_types: string[];
   onboarding_status: string | null;
-  phone_verified: boolean;
 }
 
 interface MusicPreferences {
@@ -60,7 +58,6 @@ const ProfilePage = () => {
   const [photoPreview, setPhotoPreview] = useState<string | null>(null);
   const navigate = useNavigate();
   const isMobile = useIsMobile();
-  const [isVerificationDialogOpen, setIsVerificationDialogOpen] = useState(false);
 
   useEffect(() => {
     if (user?.created_at) {
@@ -474,7 +471,7 @@ const ProfilePage = () => {
           {/* Columna izquierda - Solo tarjeta de perfil */}
           <div>
             <div className="bg-vyba-gray rounded-3xl p-8 sticky top-5">
-              <div className="flex items-center gap-6">
+              <div className="flex items-start gap-6">
                 <div 
                   className="w-36 h-36 rounded-full overflow-hidden bg-vyba-beige cursor-pointer relative group profile-avatar"
                   onClick={() => setShowPhotoDialog(true)}
@@ -512,14 +509,10 @@ const ProfilePage = () => {
                 <div className="flex flex-col justify-center">
                   <h2 className="text-2xl font-semibold mb-0">{userName || 'Usuario'}</h2>
                   <p className="text-vyba-tertiary mb-2">{user?.email}</p>
-                  {profileData?.phone ? (
-                    <p className="text-base font-medium text-vyba-navy p-2 rounded-md bg-[#D9D9D9] w-fit">{profileData.phone}</p>
-                  ) : (
-                    <Badge variant="secondary" onClick={() => setIsVerificationDialogOpen(true)} className="text-sm bg-red-100 gap-2 text-red-500 hover:cursor-pointer hover:bg-red-50 transition-all w-fit">
-                      <ShieldX className="h-4 w-4 text-red-500" />
-                      Sin móvil
-                    </Badge>
-                  )}
+                  <Badge variant="secondary" className="text-sm bg-red-100 gap-2 text-red-500">
+                    <ShieldX className="h-4 w-4 text-red-500" />
+                    Sin móvil
+                  </Badge>
                 </div>
               </div>
               <div className="mt-6">
@@ -558,30 +551,17 @@ const ProfilePage = () => {
                 <div>
                   <p className="text-base text-vyba-navy mb-1">Email</p>
                   <div className="flex items-center gap-2">
-                    <p className="text-base font-medium text-vyba-navy">{user?.email}</p>
+                    <p className="font-medium text-vyba-navy">{user?.email}</p>
                   </div>
                 </div>
 
                 <div>
                   <p className="text-base text-vyba-navy mb-1">Móvil</p>
-                  <div className="flex items-center justify-between">
-                    <p className="text-base font-medium text-vyba-navy p-2 rounded-md bg-vyba-gray">{profileData?.phone || 'No especificado'}</p>
-                    {profileData?.phone && !profileData?.phone_verified && (
-                      <Badge 
-                        variant="destructive" 
-                        className="cursor-pointer bg-red-100 text-red-500 hover:bg-red-50 transition-all"
-                        onClick={() => setIsVerificationDialogOpen(true)}
-                      >
-                        <X className="h-3 w-3 mr-1" />
-                        Sin verificar
-                      </Badge>
-                    )}
-                    {profileData?.phone_verified && (
-                      <Badge variant="secondary" className="bg-green-100 text-green-800 hover:bg-green-100">
-                        <Check className="h-3 w-3 mr-1" />
-                        Verificado
-                      </Badge>
-                    )}
+                  <div className="flex items-center gap-2">
+                  <Badge variant="secondary" className="text-sm bg-red-100 gap-2 text-red-500">
+                    <ShieldX className="h-4 w-4 text-red-500" />
+                    Sin verificar
+                  </Badge>
                   </div>
                 </div>
               </div>
@@ -727,9 +707,13 @@ const ProfilePage = () => {
               <span className="text-white text-sm font-medium">Cambiar foto</span>
             </div>
           </div>
+          
+          <div className="mt-6 text-sm text-gray-500">
+            Formatos aceptados: JPG, PNG, GIF, WEBP (máx. 5MB)
+          </div>
         </div>
         
-        <div className="mt-8 px-6">
+        <div className="mt-8">
           <Button 
             variant="terciary" 
             onClick={handleSaveAvatar} 
@@ -740,13 +724,6 @@ const ProfilePage = () => {
           </Button>
         </div>
       </ResponsiveDialog>
-
-      {/* Diálogo de verificación de teléfono */}
-      <PhoneVerificationDialog
-        open={isVerificationDialogOpen}
-        onOpenChange={setIsVerificationDialogOpen}
-        userId={user?.id || ''}
-      />
     </UserDashboardLayout>
   );
 };

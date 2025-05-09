@@ -9,7 +9,6 @@ interface ResponsiveDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   title?: string;
-  description?: string;
   children: React.ReactNode;
   className?: string;
   mobileClassName?: string;
@@ -31,7 +30,6 @@ export function ResponsiveDialog({
   open,
   onOpenChange,
   title,
-  description,
   children,
   className = "",
   mobileClassName = "",
@@ -68,12 +66,12 @@ export function ResponsiveDialog({
         showCloseButton={showCloseButton}
       >
         <div className="flex flex-col h-full">
-          <div className="flex flex-col px-5 pt-4 pb-2">
+          <div className="flex items-center px-5 py-4 w-full">
             {showBackButton && (
               <Button 
                 variant="ghost" 
                 size="icon" 
-                className="h-9 w-9 rounded-full p-0 mb-2" 
+                className="h-9 w-9 rounded-full p-0 mr-2" 
                 onClick={handleBackClick}
               >
                 <ChevronLeft className="h-5 w-5" />
@@ -81,12 +79,9 @@ export function ResponsiveDialog({
               </Button>
             )}
             {title && (
-              <div className="flex items-center justify-center">
+              <div className={`flex items-center ${centerTitle ? 'justify-center flex-1' : ''}`}>
                 <h2 className="text-2xl font-semibold">{title}</h2>
               </div>
-            )}
-            {description && (
-              <p className="text-sm text-gray-500">{description}</p>
             )}
           </div>
           <div className="px-6 py-4 flex-1">
@@ -99,8 +94,19 @@ export function ResponsiveDialog({
 
   return (
     <Dialog open={open} onOpenChange={handleOpenChange}>
-      <DialogContent className={`sm:max-w-lg ${className} ${desktopClassName}`} showCloseButton={showBackButton}>
+      <DialogContent className={`sm:max-w-lg ${className} ${desktopClassName}`}>
         <div className="flex items-center mb-2">
+          {showBackButton && (
+            <Button 
+              variant="ghost" 
+              size="icon" 
+              className="h-9 w-9 rounded-full p-0 absolute left-4" 
+              onClick={handleBackClick}
+            >
+              <ChevronLeft className="h-5 w-5" />
+              <span className="sr-only">Volver</span>
+            </Button>
+          )}
           {title && (
             <DialogHeader className="w-full">
               <DialogTitle className={centerTitle ? "text-center" : ""}>{title}</DialogTitle>

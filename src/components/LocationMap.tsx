@@ -1,4 +1,3 @@
-
 import React, { useEffect, useRef, useState } from 'react';
 import mapboxgl from 'mapbox-gl';
 import 'mapbox-gl/dist/mapbox-gl.css';
@@ -145,21 +144,17 @@ const LocationMap: React.FC<LocationMapProps> = ({ latitude, longitude, radius =
         );
       });
 
-      // Corregido: Usar la API correcta de Mapbox GL para actualizar los datos de origen
-      const radiusSource = map.current.getSource('radius');
-      if (radiusSource && 'setData' in radiusSource) {
-        // Asegurarnos de que radiusSource tenga el método setData
-        (radiusSource as mapboxgl.GeoJSONSource).setData({
-          type: 'Feature',
-          geometry: {
-            type: 'Point',
-            coordinates: [longitude, latitude]
-          },
-          properties: {
-            lat: latitude
-          }
-        });
-      }
+      // Añadir la propiedad lat al source para poder usarla en el cálculo del radio
+      map.current.getSource('radius').setData({
+        type: 'Feature',
+        geometry: {
+          type: 'Point',
+          coordinates: [longitude, latitude]
+        },
+        properties: {
+          lat: latitude
+        }
+      });
     });
 
     return () => {
@@ -206,4 +201,4 @@ const LocationMap: React.FC<LocationMapProps> = ({ latitude, longitude, radius =
   );
 };
 
-export default LocationMap;
+export default LocationMap; 
