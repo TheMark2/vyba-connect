@@ -110,8 +110,12 @@ export type Database = {
           last_name: string | null
           location: string | null
           name: string | null
+          onboarding_status:
+            | Database["public"]["Enums"]["onboarding_status"]
+            | null
           password_hash: string | null
           phone: string | null
+          phone_verified: boolean
           preferred_artist_types: string[] | null
           province: string | null
           updated_at: string | null
@@ -127,8 +131,12 @@ export type Database = {
           last_name?: string | null
           location?: string | null
           name?: string | null
+          onboarding_status?:
+            | Database["public"]["Enums"]["onboarding_status"]
+            | null
           password_hash?: string | null
           phone?: string | null
+          phone_verified?: boolean
           preferred_artist_types?: string[] | null
           province?: string | null
           updated_at?: string | null
@@ -144,8 +152,12 @@ export type Database = {
           last_name?: string | null
           location?: string | null
           name?: string | null
+          onboarding_status?:
+            | Database["public"]["Enums"]["onboarding_status"]
+            | null
           password_hash?: string | null
           phone?: string | null
+          phone_verified?: boolean
           preferred_artist_types?: string[] | null
           province?: string | null
           updated_at?: string | null
@@ -160,7 +172,7 @@ export type Database = {
       [_ in never]: never
     }
     Enums: {
-      [_ in never]: never
+      onboarding_status: "pending" | "completed" | "skipped"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -275,6 +287,8 @@ export type CompositeTypes<
 
 export const Constants = {
   public: {
-    Enums: {},
+    Enums: {
+      onboarding_status: ["pending", "completed", "skipped"],
+    },
   },
 } as const
