@@ -1,6 +1,7 @@
+
 import type { Config } from "tailwindcss";
 
-const config: Config = {
+const config = {
   darkMode: ["class"],
   content: [
     "./pages/**/*.{ts,tsx}",
@@ -126,7 +127,6 @@ const config: Config = {
           '0%': { transform: 'translateX(-100%)' },
           '100%': { transform: 'translateX(100%)' },
         },
-        
       },
       animation: {
         marquee: "marquee 10s linear infinite",
@@ -154,6 +154,6 @@ const config: Config = {
     },
   },
   plugins: [require("tailwindcss-animate")],
-};
+} satisfies Config;
 
 export default config;

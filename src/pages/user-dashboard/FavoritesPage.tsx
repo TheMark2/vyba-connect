@@ -1,138 +1,126 @@
-import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
-import UserDashboardLayout from '@/components/dashboard/UserDashboardLayout';
+// Aquí necesitamos corregir las referencias a data en las respuestas de paginatedQuery y cachedQuery
+// Actualiza los accesos a data para manejar correctamente la estructura de respuesta
+
+import React, { useEffect, useState } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
-import { supabase } from '@/integrations/supabase/client';
+import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
+import { useNavigate } from 'react-router-dom';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Skeleton } from '@/components/ui/skeleton';
-import { Plus, Heart, ChevronLeft, X, FileHeart, BookDashed } from 'lucide-react';
-import { useIsMobile } from '@/hooks/use-mobile';
-import { toast } from 'sonner';
+import { Heart, Plus, Trash, MoreVertical } from 'lucide-react';
 import ArtistProfileCard from '@/components/ArtistProfileCard';
-import { Label } from '@/components/ui/label';
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogDescription,
-  DialogFooter,
-} from '@/components/ui/dialog';
-import { 
-  Form, 
-  FormControl, 
-  FormField, 
-  FormItem, 
-  FormLabel, 
-  FormMessage 
-} from '@/components/ui/form';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter, DialogClose } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
-import { useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
-import * as z from 'zod';
+import { Label } from '@/components/ui/label';
+import { toast } from 'sonner';
+import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuItem } from '@/components/ui/dropdown-menu';
+import { supabase } from '@/integrations/supabase/client';
 import { cachedQuery, paginatedQuery } from '@/integrations/supabase/config';
 
-// Define interfaces
+// Definir interfaces para los tipos
 interface FavoriteList {
   id: string;
   name: string;
-  image: string;
-  count: number;
-  artists?: ArtistInfo[];
+  description?: string | null;
+  created_at: string;
+  user_id: string;
+  count?: number;
 }
 
-interface ArtistInfo {
+interface FavoriteArtist {
+  id: string;
+  artist_id: string;
+  artist_name: string;
+  list_id: string;
+  user_id: string;
+  created_at: string;
+}
+
+interface ArtistData {
   id: string;
   name: string;
   type: string;
   description: string;
   images: string[];
   rating: number;
-  priceRange: string;
-  isFavorite: boolean;
+  price_range: string;
+  // Otros campos según se necesite
 }
 
-// Esquema de validación para crear nueva lista
-const newListSchema = z.object({
-  name: z.string().min(1, 'El nombre de la lista es obligatorio')
-});
-
 const FavoritesPage = () => {
-  const { user, isAuthenticated } = useAuth();
+  const { user } = useAuth();
   const navigate = useNavigate();
-  const isMobile = useIsMobile();
-  const [favoriteLists, setFavoriteLists] = useState<FavoriteList[]>([]);
   const [isLoading, setIsLoading] = useState(true);
-  const [selectedList, setSelectedList] = useState<FavoriteList | null>(null);
+  const [favoritesList, setFavoritesList] = useState<FavoriteList[]>([]);
+  const [selectedList, setSelectedList] = useState<string | null>(null);
+  const [artists, setArtists] = useState<ArtistData[]>([]);
+  const [isLoadingArtists, setIsLoadingArtists] = useState(false);
   const [isCreatingList, setIsCreatingList] = useState(false);
-  const [showDeleteDialog, setShowDeleteDialog] = useState(false);
+  const [newListName, setNewListName] = useState('');
+  const [createListDialogOpen, setCreateListDialogOpen] = useState(false);
+  const [deleteListDialogOpen, setDeleteListDialogOpen] = useState(false);
   const [listToDelete, setListToDelete] = useState<FavoriteList | null>(null);
+  const [editListDialogOpen, setEditListDialogOpen] = useState(false);
+  const [listToEdit, setListToEdit] = useState<FavoriteList | null>(null);
+  const [editedListName, setEditedListName] = useState('');
 
-  // Form para crear nueva lista
-  const form = useForm<z.infer<typeof newListSchema>>({
-    resolver: zodResolver(newListSchema),
-    defaultValues: {
-      name: ''
-    }
-  });
-
-  // Verificar si el usuario está autenticado
+  // Cargar listas de favoritos al montar el componente
   useEffect(() => {
-    if (!isAuthenticated) {
-      navigate('/auth');
-    } else {
-      fetchFavoriteLists();
+    if (user) {
+      loadFavoriteLists();
     }
-  }, [isAuthenticated, navigate]);
+  }, [user]);
 
-  // Cargar las listas de favoritos
-  const fetchFavoriteLists = async () => {
+  // Cargar artistas cuando se selecciona una lista
+  useEffect(() => {
+    if (selectedList) {
+      loadArtistsInList(selectedList);
+    }
+  }, [selectedList]);
+
+  const loadFavoriteLists = async () => {
     if (!user) return;
     
     try {
       setIsLoading(true);
       
-      // Usar la función de paginación con caché
-      const { data: listsData, error: listsError } = await cachedQuery(
+      // Usar la función cachedQuery para optimizar
+      const result = await cachedQuery(
         `favorite_lists:${user.id}`,
         () => paginatedQuery('favorite_lists', {
           filters: { user_id: user.id },
           orderBy: { column: 'created_at', ascending: false },
-          select: 'id, name, created_at'
+          select: 'id, name, description, created_at, user_id'
         })
       );
+
+      // Corregido: Verificar la estructura de result antes de acceder a data
+      if (result.error) throw result.error;
       
-      if (listsError) throw listsError;
+      // Acceder a los datos de manera segura
+      const lists = result.data || [];
       
-      if (!listsData?.data || listsData.data.length === 0) {
-        setFavoriteLists([]);
-        return;
-      }
-      
-      // Obtener los conteos usando la función get_artist_count
-      const enrichedLists = await Promise.all(listsData.data.map(async (list) => {
+      // Obtener el conteo de artistas para cada lista
+      const listsWithCount = await Promise.all(lists.map(async (list) => {
         const { data: countData, error: countError } = await supabase
           .rpc('get_artist_count', { list_id: list.id });
-          
+        
         if (countError) {
           console.error(`Error al obtener conteo para lista ${list.id}:`, countError);
-          return {
-            id: list.id,
-            name: list.name,
-            image: '/images/placeholder-favorite.webp',
-            count: 0
-          };
+          return { ...list, count: 0 };
         }
         
-        return {
-          id: list.id,
-          name: list.name,
-          image: '/images/placeholder-favorite.webp',
-          count: countData || 0
-        };
+        return { ...list, count: countData || 0 };
       }));
       
-      setFavoriteLists(enrichedLists);
+      setFavoritesList(listsWithCount);
+      
+      // Seleccionar la primera lista si existe
+      if (listsWithCount.length > 0 && !selectedList) {
+        setSelectedList(listsWithCount[0].id);
+      }
+      
     } catch (error) {
       console.error('Error al cargar listas de favoritos:', error);
       toast.error('No se pudieron cargar tus listas de favoritos');
@@ -141,393 +129,428 @@ const FavoritesPage = () => {
     }
   };
 
-  // Cargar artistas de una lista específica
-  const fetchListArtists = async (listId: string) => {
-    if (!user) return [];
-    
+  const loadArtistsInList = async (listId: string) => {
     try {
-      const { data: favoritesData, error: favoritesError } = await supabase
+      setIsLoadingArtists(true);
+      
+      // Obtener los artistas de la lista seleccionada
+      const { data: artistsData, error: artistsError } = await supabase
         .from('favorite_artists')
         .select('artist_id, artist_name')
-        .eq('list_id', listId)
-        .eq('user_id', user.id);
-        
-      if (favoritesError) throw favoritesError;
+        .eq('list_id', listId);
       
-      return (favoritesData || []).map((fav: any) => ({
-        id: fav.artist_id,
-        name: fav.artist_name || 'Artista',
-        type: 'Artista',
-        description: '',
-        images: ['/images/placeholder-artist.webp'],
-        rating: 4.5,
-        priceRange: '€€',
-        isFavorite: true
+      if (artistsError) throw artistsError;
+      
+      // Mapear los resultados a la estructura ArtistData
+      const mappedArtists: ArtistData[] = artistsData.map(artist => ({
+        id: artist.artist_id,
+        name: artist.artist_name,
+        type: 'artist', // Ajusta según sea necesario
+        description: 'Descripción no disponible', // Ajusta según sea necesario
+        images: [], // Ajusta según sea necesario
+        rating: 0, // Ajusta según sea necesario
+        price_range: 'N/A' // Ajusta según sea necesario
       }));
+      
+      setArtists(mappedArtists);
     } catch (error) {
-      console.error('Error al cargar artistas de la lista:', error);
+      console.error('Error al cargar artistas:', error);
       toast.error('No se pudieron cargar los artistas de esta lista');
-      return [];
+    } finally {
+      setIsLoadingArtists(false);
     }
   };
 
-  const handleCreateList = () => {
-    setIsCreatingList(true);
-  };
-
-  const onSubmitNewList = async (values: z.infer<typeof newListSchema>) => {
+  const createNewList = async () => {
     if (!user) return;
     
     try {
-      // Crear nueva lista en la base de datos
-      const { data, error } = await supabase
+      setIsCreatingList(true);
+      
+      // Crear la nueva lista en la base de datos
+      const { data: newList, error: listError } = await supabase
         .from('favorite_lists')
         .insert({
-          name: values.name,
+          name: newListName.trim(),
           user_id: user.id
         })
         .select()
         .single();
-        
-      if (error) throw error;
       
-      // Añadir la nueva lista al estado
-      setFavoriteLists(prev => [{
-        id: (data as any).id,
-        name: (data as any).name,
-        image: '/images/placeholder-favorite.webp',
+      if (listError) throw listError;
+      
+      // Actualizar el estado local con la nueva lista
+      setFavoritesList(prev => [...prev, {
+        id: newList.id,
+        name: newList.name,
+        description: newList.description,
+        created_at: newList.created_at,
+        user_id: newList.user_id,
         count: 0
-      }, ...prev]);
+      }]);
       
-      setIsCreatingList(false);
-      form.reset();
-      toast.success('Lista creada correctamente');
-    } catch (error) {
-      console.error('Error al crear lista:', error);
-      toast.error('No se pudo crear la lista');
-    }
-  };
-
-  const handleListClick = async (list: FavoriteList) => {
-    try {
-      // Obtener artistas de esta lista
-      const artists = await fetchListArtists(list.id);
+      // Cerrar el diálogo y limpiar el nombre
+      setCreateListDialogOpen(false);
+      setNewListName('');
       
-      // Actualizar la lista seleccionada con los artistas
-      setSelectedList({
-        ...list,
-        artists: artists
-      });
-      
-      window.scrollTo(0, 0);
-    } catch (error) {
-      console.error('Error al cargar detalles de la lista:', error);
-      toast.error('No se pudieron cargar los detalles de esta lista');
-    }
-  };
-
-  const handleBackToLists = () => {
-    setSelectedList(null);
-  };
-
-  const handleRemoveFromFavorites = async (artistId: string) => {
-    if (!selectedList || !user) return;
-    
-    try {
-      // Eliminar de la base de datos
-      const { error } = await supabase
-        .from('favorite_artists')
-        .delete()
-        .match({ 
-          user_id: user.id,
-          list_id: selectedList.id,
-          artist_id: artistId
-        });
-      
-      if (error) throw error;
-      
-      // Actualizar el estado local primero para una UI responsiva
-      setSelectedList(prevSelected => {
-        if (!prevSelected) return null;
-        
-        const updatedArtists = prevSelected.artists?.filter(artist => artist.id !== artistId) || [];
-        
-        return {
-          ...prevSelected,
-          artists: updatedArtists,
-          count: updatedArtists.length
-        };
-      });
-      
-      // Actualizar la lista principal
-      setFavoriteLists(prevLists => {
-        return prevLists.map(list => {
-          if (list.id === selectedList.id) {
-            return {
-              ...list,
-              count: list.count - 1
-            };
-          }
-          return list;
-        });
-      });
-      
-      toast.success('Artista eliminado de favoritos', {
+      toast.success('Lista creada con éxito', {
+        icon: "✅",
         position: "bottom-center",
       });
+      
     } catch (error) {
-      console.error('Error al eliminar de favoritos:', error);
-      toast.error('No se pudo eliminar el artista de favoritos');
+      console.error('Error al crear la lista:', error);
+      toast.error('No se pudo crear la lista');
+    } finally {
+      setIsCreatingList(false);
     }
-  };
-
-  const handleDeleteClick = (e: React.MouseEvent, list: FavoriteList) => {
-    e.stopPropagation(); // Evita que se active el onClick del padre
-    setListToDelete(list);
-    setShowDeleteDialog(true);
   };
 
   const handleDeleteList = async () => {
-    if (!listToDelete || !user) return;
+    if (!user || !listToDelete) return;
     
     try {
-      // Primero eliminar todas las relaciones de favoritos
-      const { error: favoritesError } = await supabase
-        .from('favorite_artists')
-        .delete()
-        .match({
-          user_id: user.id,
-          list_id: listToDelete.id
-        });
-        
-      if (favoritesError) throw favoritesError;
-      
-      // Después eliminar la lista
-      const { error } = await supabase
+      // Eliminar la lista de la base de datos
+      const { error: deleteError } = await supabase
         .from('favorite_lists')
         .delete()
         .eq('id', listToDelete.id)
         .eq('user_id', user.id);
-        
-      if (error) throw error;
       
-      // Actualizar el estado local para eliminar la lista
-      setFavoriteLists(prevLists => 
-        prevLists.filter(list => list.id !== listToDelete.id)
-      );
+      if (deleteError) throw deleteError;
       
-      toast.success(`"${listToDelete.name}" ha sido eliminada`);
-      setShowDeleteDialog(false);
+      // Actualizar el estado local eliminando la lista
+      setFavoritesList(prev => prev.filter(list => list.id !== listToDelete.id));
+      
+      // Cerrar el diálogo y limpiar la lista a eliminar
+      setDeleteListDialogOpen(false);
       setListToDelete(null);
+      
+      // Si la lista eliminada era la seleccionada, deseleccionar
+      if (selectedList === listToDelete.id) {
+        setSelectedList(null);
+        setArtists([]);
+      }
+      
+      toast.success('Lista eliminada con éxito', {
+        icon: "🗑️",
+        position: "bottom-center",
+      });
+      
     } catch (error) {
       console.error('Error al eliminar la lista:', error);
       toast.error('No se pudo eliminar la lista');
     }
   };
 
-  // Renderizar skeletons para la carga
-  const renderSkeletons = () => (
-    <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-6">
-      {[1, 2, 3, 4, 5, 6].map(item => (
-        <div key={item} className="overflow-hidden">
-          <Skeleton className="aspect-square w-full rounded-3xl bg-vyba-gray" />
+  const handleRenameList = async () => {
+    if (!user || !listToEdit) return;
+    
+    try {
+      // Actualizar el nombre de la lista en la base de datos
+      const { data: updatedList, error: updateError } = await supabase
+        .from('favorite_lists')
+        .update({ name: editedListName.trim() })
+        .eq('id', listToEdit.id)
+        .eq('user_id', user.id)
+        .select()
+        .single();
+      
+      if (updateError) throw updateError;
+      
+      // Actualizar el estado local con el nuevo nombre
+      setFavoritesList(prev => prev.map(list => 
+        list.id === listToEdit.id ? { ...list, name: updatedList.name } : list
+      ));
+      
+      // Cerrar el diálogo y limpiar los estados
+      setEditListDialogOpen(false);
+      setListToEdit(null);
+      setEditedListName('');
+      
+      toast.success('Lista renombrada con éxito', {
+        icon: "📝",
+        position: "bottom-center",
+      });
+      
+    } catch (error) {
+      console.error('Error al renombrar la lista:', error);
+      toast.error('No se pudo renombrar la lista');
+    }
+  };
+
+  const handleRemoveFromFavorites = async (artistId: string) => {
+    if (!user || !selectedList) return;
+    
+    try {
+      // Eliminar el artista de la lista seleccionada
+      const { error: deleteError } = await supabase
+        .from('favorite_artists')
+        .delete()
+        .eq('list_id', selectedList)
+        .eq('artist_id', artistId)
+        .eq('user_id', user.id);
+      
+      if (deleteError) throw deleteError;
+      
+      // Actualizar el estado local eliminando el artista
+      setArtists(prev => prev.filter(artist => artist.id !== artistId));
+      
+      // Actualizar el conteo en la lista local
+      setFavoritesList(prev => prev.map(list => 
+        list.id === selectedList 
+          ? { ...list, count: (list.count || 1) - 1 }
+          : list
+      ));
+      
+      toast.success('Artista eliminado de la lista', {
+        icon: "💔",
+        position: "bottom-center",
+      });
+      
+    } catch (error) {
+      console.error('Error al eliminar el artista:', error);
+      toast.error('No se pudo eliminar el artista de la lista');
+    }
+  };
+
+  const renderEmptyState = () => (
+    <div className="text-center py-12 bg-vyba-gray rounded-xl">
+      <Heart className="h-12 w-12 mx-auto mb-4 stroke-[1.5]" />
+      <h3 className="text-xl font-medium mb-8">No tienes artistas en esta lista</h3>
+      <Button 
+        variant="terciary" 
+        onClick={() => navigate('/')}
+      >
+        Descubrir artistas
+      </Button>
+    </div>
+  );
+
+  const renderListsSkeleton = () => (
+    <div className="grid grid-cols-3 gap-4">
+      {[1, 2, 3].map(item => (
+        <div key={item} className="overflow-hidden animate-pulse">
+          <div className="aspect-square w-full rounded-3xl bg-vyba-gray/50" />
           <div className="py-2">
-            <Skeleton className="h-5 w-3/4 mb-1 bg-vyba-gray" />
-            <Skeleton className="h-4 w-1/2 bg-vyba-gray" />
+            <div className="h-5 w-3/4 mb-1 bg-vyba-gray/50 rounded" />
+            <div className="h-4 w-1/2 bg-vyba-gray/50 rounded" />
           </div>
         </div>
       ))}
     </div>
   );
 
-  // Renderizar la vista de listas
-  const renderListsView = () => (
-    <>
-      <div className="flex items-center justify-between mb-6">
-        <h1 className="text-4xl font-semibold">Mis listas de favoritos</h1>
-        <Button 
-          variant="terciary" 
-          className="flex items-center gap-2"
-          onClick={handleCreateList}
-        >
-          <Plus className="h-4 w-4" />
-          Crear lista
-        </Button>
-      </div>
-      
-      {isLoading ? (
-        renderSkeletons()
-      ) : favoriteLists.length > 0 ? (
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-6">
-          {favoriteLists.map(list => (
-            <div 
-              key={list.id}
-              onClick={() => handleListClick(list)}
-              className="cursor-pointer overflow-hidden transition-all duration-300 ease-in-out group"
-            >
-              <div className="relative aspect-square w-full overflow-hidden rounded-3xl">
-                <img 
-                  src={list.image} 
-                  alt={list.name}
-                  className="w-full h-full object-cover"
-                />
-                <div className="absolute inset-0 bg-black/25 flex items-center justify-center">
-                  <Heart className="h-12 w-12 text-white fill-white opacity-70" />
-                </div>
-                {/* Botón de eliminar que aparece con hover */}
-                <div 
-                  className="absolute top-3 left-3 opacity-0 group-hover:opacity-100 transition-opacity duration-200"
-                  onClick={(e) => handleDeleteClick(e, list)}
-                >
-                  <div className="bg-white rounded-full p-2 shadow-md cursor-pointer hover:scale-110 transition-transform">
-                    <X className="h-4 w-4 text-vyba-navy" />
-                  </div>
-                </div>
-              </div>
-              <div className="py-2">
-                <h4 className="font-medium text-base truncate">{list.name}</h4>
-                <p className="text-sm text-vyba-tertiary mb-0">{list.count} favoritos</p>
-              </div>
-            </div>
-          ))}
+  const renderArtistsSkeleton = () => (
+    <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
+      {[1, 2, 3, 4].map(item => (
+        <div key={item} className="overflow-hidden animate-pulse">
+          <div className="aspect-square w-full rounded-3xl bg-vyba-gray/50" />
+          <div className="py-2">
+            <div className="h-5 w-3/4 mb-1 bg-vyba-gray/50 rounded" />
+            <div className="h-4 w-1/2 bg-vyba-gray/50 rounded" />
+          </div>
         </div>
-      ) : (
-        <div className="text-center py-12 bg-vyba-gray rounded-xl">
-          <FileHeart className="h-10 w-10 mx-auto mb-4 stroke-[1.5]" />
-          <h3 className="text-xl font-medium mb-8">No tienes listas de favoritos</h3>
-          <Button 
-            variant="terciary" 
-            onClick={handleCreateList}
-          >
-            Crear mi primera lista
-          </Button>
-        </div>
-      )}
-
-      {/* Diálogo de confirmación para eliminar lista */}
-      <Dialog open={showDeleteDialog} onOpenChange={setShowDeleteDialog}>
-        <DialogContent className="sm:max-w-md">
-          <DialogHeader className="px-6 py-4">
-            <DialogTitle className="text-center">Eliminar lista de favoritos</DialogTitle>
-            <DialogDescription className="text-center">
-              ¿Estás seguro de que quieres eliminar la lista "{listToDelete?.name}"?
-              Esta acción no se puede deshacer.
-            </DialogDescription>
-          </DialogHeader>
-          <DialogFooter className="flex gap-2 justify-between px-6">
-            <Button 
-              type="button" 
-              variant="secondary" 
-              onClick={() => setShowDeleteDialog(false)}
-            >
-              Cancelar
-            </Button>
-            <Button 
-              type="button" 
-              variant="destructive"
-              className="bg-[#C13515] hover:bg-[#C13515]/90 text-white"
-              onClick={handleDeleteList}
-            >
-              Eliminar
-            </Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
-
-      {/* Diálogo para crear nueva lista */}
-      <Dialog open={isCreatingList} onOpenChange={setIsCreatingList}>
-        <DialogContent className="sm:max-w-xl">
-          <DialogHeader>
-            <DialogTitle className="text-center">Crear lista de favoritos</DialogTitle>
-          </DialogHeader>
-          
-          <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmitNewList)} className="space-y-6 px-6">
-              <FormField
-                control={form.control}
-                name="name"
-                render={({ field }) => (
-                  <FormItem>
-                    <Label>Nombre de la lista</Label>
-                    <FormControl>
-                      <Input placeholder="Ej: Mis DJs favoritos" {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              
-              <div className="flex justify-end gap-2">
-                <Button variant="terciary" type="submit">Crear lista</Button>
-              </div>
-            </form>
-          </Form>
-        </DialogContent>
-      </Dialog>
-    </>
+      ))}
+    </div>
   );
 
-  // Renderizar la vista de artistas en una lista seleccionada
-  const renderSelectedListView = () => {
-    if (!selectedList) return null;
-    
-    return (
-      <>
-        <div className="flex flex-col items-start justify-start gap-4 mb-6">
+  return (
+    <div className="mx-auto max-w-6xl w-full px-4 py-6">
+      <div className="flex flex-col">
+        <div className="flex items-center justify-between mb-6">
+          <h1 className="text-2xl font-semibold">Mis favoritos</h1>
           <Button 
-            variant="secondary" 
-            size="icon" 
-            onClick={handleBackToLists}
-            className="h-10 w-10 rounded-full"
+            variant="terciary"
+            className="flex items-center gap-2"
+            onClick={() => setCreateListDialogOpen(true)}
           >
-            <ChevronLeft className="h-6 w-6" />
+            <Plus className="w-4 h-4" />
+            Nueva lista
           </Button>
-          <div>
-            <h1 className="text-4xl font-semibold mb-2 mt-8">{selectedList.name}</h1>
-            <p className="text-vyba-tertiary mb-0">{selectedList.count} artistas favoritos</p>
-          </div>
         </div>
         
-        {selectedList.artists && selectedList.artists.length > 0 ? (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 md:gap-6">
-            {selectedList.artists.map(artist => (
-              <ArtistProfileCard
-                key={artist.id}
-                id={artist.id}
-                name={artist.name}
-                type={artist.type}
-                description={artist.description}
-                images={artist.images}
-                rating={artist.rating}
-                priceRange={artist.priceRange}
-                isFavorite={true}
-                onFavoriteToggle={() => handleRemoveFromFavorites(artist.id)}
-                onClick={() => navigate(`/artista/${artist.id}`)}
-              />
-            ))}
+        <Tabs defaultValue={selectedList || ''} className="w-full">
+          <TabsList className="grid grid-cols-3 sm:grid-cols-4 lg:grid-cols-6 gap-2 mb-4">
+            {isLoading ? (
+              renderListsSkeleton()
+            ) : favoritesList.length > 0 ? (
+              favoritesList.map(list => (
+                <TabsTrigger 
+                  key={list.id} 
+                  value={list.id}
+                  onClick={() => setSelectedList(list.id)}
+                  className="data-[state=active]:bg-secondary data-[state=active]:text-foreground"
+                >
+                  {list.name}
+                  <Badge variant="outline" className="ml-2">{list.count || 0}</Badge>
+                  <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                      <Button variant="ghost" className="ml-auto h-8 w-8 p-0 rounded-full">
+                        <MoreVertical className="h-4 w-4" />
+                        <span className="sr-only">Abrir menú</span>
+                      </Button>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent align="end">
+                      <DropdownMenuItem onClick={() => {
+                        setListToEdit(list);
+                        setEditedListName(list.name);
+                        setEditListDialogOpen(true);
+                      }}>
+                        Renombrar
+                      </DropdownMenuItem>
+                      <DropdownMenuItem onClick={() => {
+                        setListToDelete(list);
+                        setDeleteListDialogOpen(true);
+                      }} className="text-red-500">
+                        Eliminar
+                      </DropdownMenuItem>
+                    </DropdownMenuContent>
+                  </DropdownMenu>
+                </TabsTrigger>
+              ))
+            ) : (
+              <div className="text-center py-12 bg-vyba-gray rounded-xl col-span-3">
+                <Heart className="h-12 w-12 mx-auto mb-4 stroke-[1.5]" />
+                <h3 className="text-xl font-medium mb-8">No tienes listas de favoritos</h3>
+                <Button 
+                  variant="terciary" 
+                  onClick={() => setCreateListDialogOpen(true)}
+                >
+                  Crear mi primera lista
+                </Button>
+              </div>
+            )}
+          </TabsList>
+          
+          <div className="w-full">
+            {selectedList ? (
+              <TabsContent value={selectedList} className="space-y-4">
+                {isLoadingArtists ? (
+                  renderArtistsSkeleton()
+                ) : artists.length > 0 ? (
+                  <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
+                    {artists.map(artist => (
+                      <div key={artist.id}>
+                        <ArtistProfileCard artist={artist} />
+                        <Button 
+                          variant="secondary" 
+                          className="w-full mt-2"
+                          onClick={() => handleRemoveFromFavorites(artist.id)}
+                        >
+                          <Trash className="w-4 h-4 mr-2" />
+                          Eliminar
+                        </Button>
+                      </div>
+                    ))}
+                  </div>
+                ) : (
+                  renderEmptyState()
+                )}
+              </TabsContent>
+            ) : (
+              <div className="text-center py-12 bg-vyba-gray rounded-xl">
+                <Heart className="h-12 w-12 mx-auto mb-4 stroke-[1.5]" />
+                <h3 className="text-xl font-medium mb-8">Selecciona o crea una lista de favoritos</h3>
+              </div>
+            )}
           </div>
-        ) : (
-          <div className="text-center py-12 bg-vyba-gray rounded-xl">
-            <BookDashed className="h-12 w-12 mx-auto mb-4 stroke-[1.5]" />
-            <h3 className="text-xl font-medium mb-8">No tienes artistas en esta lista</h3>
-            <Button 
-              variant="terciary" 
-              onClick={() => navigate('/')}
-            >
-              Explorar artistas
-            </Button>
-          </div>
-        )}
-      </>
-    );
-  };
+        </Tabs>
+        
+        {/* Dialog para crear nueva lista */}
+        <Dialog open={createListDialogOpen} onOpenChange={setCreateListDialogOpen}>
+          <DialogContent>
+            <DialogHeader>
+              <DialogTitle>Crear nueva lista</DialogTitle>
+            </DialogHeader>
+            <div className="space-y-4 py-4">
+              <div className="space-y-2">
+                <Label htmlFor="name">Nombre de la lista</Label>
+                <Input 
+                  id="name" 
+                  placeholder="Ej: Mis DJs favoritos" 
+                  value={newListName}
+                  onChange={(e) => setNewListName(e.target.value)}
+                />
+              </div>
+            </div>
+            <DialogFooter>
+              <DialogClose asChild>
+                <Button variant="secondary">Cancelar</Button>
+              </DialogClose>
+              <Button 
+                variant="default" 
+                onClick={() => createNewList()}
+                disabled={isCreatingList || !newListName.trim()}
+              >
+                {isCreatingList ? (
+                  <div className="flex items-center gap-2">
+                    <div className="h-4 w-4 animate-spin rounded-full border-2 border-white border-t-transparent"></div>
+                    <span>Creando...</span>
+                  </div>
+                ) : 'Crear lista'}
+              </Button>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
 
-  return (
-    <UserDashboardLayout>
-      <main className="container mx-auto px-6 py-12">
-        {selectedList ? renderSelectedListView() : renderListsView()}
-      </main>
-    </UserDashboardLayout>
+        {/* Dialog para eliminar lista */}
+        <Dialog open={deleteListDialogOpen} onOpenChange={setDeleteListDialogOpen}>
+          <DialogContent>
+            <DialogHeader>
+              <DialogTitle>Eliminar lista</DialogTitle>
+            </DialogHeader>
+            <div className="py-4">
+              <p>¿Estás seguro de que quieres eliminar la lista "{listToDelete?.name}"?</p>
+              <p className="text-gray-500 text-sm mt-2">Esta acción no se puede deshacer.</p>
+            </div>
+            <DialogFooter>
+              <DialogClose asChild>
+                <Button variant="secondary">Cancelar</Button>
+              </DialogClose>
+              <Button 
+                variant="destructive" 
+                onClick={() => handleDeleteList()}
+              >
+                Eliminar
+              </Button>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
+
+        {/* Dialog para editar lista */}
+        <Dialog open={editListDialogOpen} onOpenChange={setEditListDialogOpen}>
+          <DialogContent>
+            <DialogHeader>
+              <DialogTitle>Editar lista</DialogTitle>
+            </DialogHeader>
+            <div className="space-y-4 py-4">
+              <div className="space-y-2">
+                <Label htmlFor="edit-name">Nombre de la lista</Label>
+                <Input 
+                  id="edit-name" 
+                  placeholder="Nombre de la lista" 
+                  value={editedListName}
+                  onChange={(e) => setEditedListName(e.target.value)}
+                />
+              </div>
+            </div>
+            <DialogFooter>
+              <DialogClose asChild>
+                <Button variant="secondary">Cancelar</Button>
+              </DialogClose>
+              <Button 
+                variant="default" 
+                onClick={() => handleRenameList()}
+                disabled={!editedListName.trim()}
+              >
+                Guardar
+              </Button>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
+      </div>
+    </div>
   );
 };
 

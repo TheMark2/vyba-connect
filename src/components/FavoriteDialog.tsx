@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
@@ -92,7 +93,7 @@ const FavoriteDialog = ({
       setIsFetchingLists(true);
       
       // Usar la función de paginación con caché
-      const { data: listsData, error: listsError } = await cachedQuery(
+      const result = await cachedQuery(
         `favorite_lists:${user.id}`,
         () => paginatedQuery('favorite_lists', {
           filters: { user_id: user.id },
@@ -101,10 +102,13 @@ const FavoriteDialog = ({
         })
       );
       
-      if (listsError) throw listsError;
+      // Corregido: Verificar que result tenga la estructura esperada
+      if (result.error) throw result.error;
+      
+      const listsData = result.data?.data || [];
       
       // Obtener los conteos usando la función get_artist_count
-      const enrichedLists = await Promise.all(listsData.data.map(async (list) => {
+      const enrichedLists = await Promise.all(listsData.map(async (list) => {
         const { data: countData, error: countError } = await supabase
           .rpc('get_artist_count', { list_id: list.id });
           
