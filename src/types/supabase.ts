@@ -130,6 +130,7 @@ export interface Database {
           favorite_genres: string[]
           preferred_artist_types: string[]
           onboarding_status: 'pending' | 'completed' | 'skipped'
+          phone_verified: boolean
         }
         Insert: {
           birth_date?: string | null
@@ -147,6 +148,7 @@ export interface Database {
           favorite_genres?: string[]
           preferred_artist_types?: string[]
           onboarding_status?: 'pending' | 'completed' | 'skipped'
+          phone_verified?: boolean
         }
         Update: {
           birth_date?: string | null
@@ -164,6 +166,7 @@ export interface Database {
           favorite_genres?: string[]
           preferred_artist_types?: string[]
           onboarding_status?: 'pending' | 'completed' | 'skipped'
+          phone_verified?: boolean
         }
         Relationships: []
       }

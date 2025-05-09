@@ -29,6 +29,7 @@ import UserOnboardingPage from './pages/UserOnboardingPage';
 import OnboardingCompletePage from './pages/OnboardingCompletePage';
 import { supabase } from './integrations/supabase/client';
 import OnboardingCompletionHandler from './components/onboarding/OnboardingCompletionHandler';
+import ArtistPage from './components/artist-profile2/ArtistPage';
 
 const RedirectToDashboard = () => {
   const navigate = useNavigate();
@@ -122,7 +123,7 @@ function App() {
           <Route path="/artist-onboarding" element={<ArtistOnboardingPage />} />
           <Route path="/confirmation" element={<ConfirmationPage />} />
           <Route path="/landing-artist" element={<LandingArtist />} />
-          
+          <Route path="/artistpage" element={<ArtistPage />} />
           {/* Dashboard Routes */}
           <Route path="/dashboard" element={<DashboardLayout><Overview /></DashboardLayout>} />
           <Route path="/dashboard/profile" element={<DashboardLayout><Profile /></DashboardLayout>} />

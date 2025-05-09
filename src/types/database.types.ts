@@ -96,6 +96,7 @@ export interface Database {
           favorite_genres?: string[];
           preferred_artist_types?: string[];
           onboarding_status: 'pending' | 'completed' | 'skipped';
+          phone_verified: boolean;
         };
         Insert: {
           id: string;
@@ -113,6 +114,7 @@ export interface Database {
           favorite_genres?: string[];
           preferred_artist_types?: string[];
           onboarding_status?: 'pending' | 'completed' | 'skipped';
+          phone_verified?: boolean;
         };
         Update: {
           id?: string;
@@ -130,6 +132,7 @@ export interface Database {
           favorite_genres?: string[];
           preferred_artist_types?: string[];
           onboarding_status?: 'pending' | 'completed' | 'skipped';
+          phone_verified?: boolean;
         };
         Relationships: [
           {

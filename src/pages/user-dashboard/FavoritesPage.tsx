@@ -393,7 +393,7 @@ const FavoritesPage = () => {
         </div>
       ) : (
         <div className="text-center py-12 bg-vyba-gray rounded-xl">
-          <FileHeart className="h-12 w-12 mx-auto mb-4 stroke-[1.5]" />
+          <FileHeart className="h-10 w-10 mx-auto mb-4 stroke-[1.5]" />
           <h3 className="text-xl font-medium mb-8">No tienes listas de favoritos</h3>
           <Button 
             variant="terciary" 

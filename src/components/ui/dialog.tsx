@@ -27,12 +27,13 @@ DialogOverlay.displayName = DialogPrimitive.Overlay.displayName;
 interface DialogContentProps
   extends React.ComponentPropsWithoutRef<typeof DialogPrimitive.Content> {
   contentClassName?: string;
+  showCloseButton?: boolean;
 }
 
 const DialogContent = React.forwardRef<
   React.ElementRef<typeof DialogPrimitive.Content>,
   DialogContentProps
->(({ className, children, contentClassName, ...props }, ref) => (
+>(({ className, children, contentClassName, showCloseButton = false, ...props }, ref) => (
   <DialogPortal>
     <DialogOverlay />
     <DialogPrimitive.Content
@@ -43,12 +44,14 @@ const DialogContent = React.forwardRef<
       )}
       {...props}
     >
-      <div className="sticky top-0 z-10 pt-4 px-4 pb-2 bg-white sm:rounded-t-3xl">
-        <DialogPrimitive.Close className="hover:text-gray-500 transition-colors hover:bg-gray-100/80 p-2 rounded-full">
-          <X className="h-5 w-5" />
-          <span className="sr-only">Cerrar</span>
-        </DialogPrimitive.Close>
-      </div>
+      {showCloseButton && (
+        <div className="sticky top-0 z-10 pt-4 px-4 pb-2 bg-white sm:rounded-t-3xl">
+          <DialogPrimitive.Close className="hover:text-gray-500 transition-colors hover:bg-gray-100/80 p-2 rounded-full">
+            <X className="h-5 w-5" />
+            <span className="sr-only">Cerrar</span>
+          </DialogPrimitive.Close>
+        </div>
+      )}
 
       {/* Usamos la clase contentClassName en lugar de px fijo */}
       <div className={cn("pb-8", contentClassName)}>{children}</div>
