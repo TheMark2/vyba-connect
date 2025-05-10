@@ -3,8 +3,10 @@ import { useParams } from 'react-router-dom';
 import { cn } from "@/lib/utils";
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Navigation, Pagination, Autoplay } from 'swiper/modules';
-import { AudioLines, Earth, Image, Maximize, Video } from 'lucide-react';
+import { AudioLines, BaggageClaim, Calendar, Hourglass, Earth, Image, Maximize, Video, LampDesk, Monitor, Speaker, LandPlot, AudioWaveform, File, Wine, FileDown, Truck, LocateFixed, Forklift, TestTube } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
+import { HoverCard, HoverCardContent, HoverCardTrigger } from '@/components/ui/hover-card';
+import { Button } from '@/components/ui/button';
 // Importaciones de estilos Swiper
 import 'swiper/css';
 import 'swiper/css/navigation';
@@ -21,7 +23,8 @@ const ArtistPage = () => {
       image: '/lovable-uploads/7e7c2282-785a-46fb-84b2-f7b14b762e64.png',
       description: 'Descripción del artista',
       instagram: '@nombre_artista',
-      about: ' Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam, quos. Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam, quos. Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam, quos. Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam, quos. Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam, quos. Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam, quos.'
+      about: ' Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam, quos. Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam, quos. Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam, quos. Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam, quos. Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam, quos. Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam, quos.',
+      experience: ' Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam, quos. Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam, quos. Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam, quos. Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam, quos. Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam, quos. Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam, quos.'
     }
   ]
 
@@ -191,7 +194,208 @@ const ArtistPage = () => {
           <p className="text-base font-figtree">
             {ArtistReal[0].about}
           </p>
+          <h4 className="text-xl font-medium font-figtree mt-4">Tipos de eventos que suelo ofrecer</h4>
+          <div className="flex flex-row gap-2">
+            <Badge variant="default" className="bg-vyba-gray text-black rounded-md flex items-center gap-2 w-fit">
+                <AudioLines className="w-5 h-5" />
+            <p className="text-base font-medium text-black font-figtree">Reggaeton</p>
+            </Badge>
+            <Badge variant="default" className="bg-vyba-gray text-black rounded-md flex items-center gap-2 w-fit">
+                <AudioLines className="w-5 h-5" />
+            <p className="text-base font-medium text-black font-figtree">Rock</p>
+            </Badge>
+            <Badge variant="default" className="bg-vyba-gray text-black rounded-md flex items-center gap-2 w-fit">
+                <AudioLines className="w-5 h-5" />
+            <p className="text-base font-medium text-black font-figtree">Urbano</p>
+            </Badge>
+          </div>
+          <h4 className="text-xl font-medium font-figtree mt-4">Experiencia</h4>
+          <div className="flex flex-row gap-2">
+            <Badge variant="default" className="bg-vyba-gray text-black rounded-md flex items-center gap-2 w-fit">
+                <Calendar className="w-5 h-5" />
+            <p className="text-base font-medium text-black font-figtree">2024</p>
+            </Badge>
+            <Badge variant="default" className="bg-vyba-gray text-black rounded-md flex items-center gap-2 w-fit">
+                <Calendar className="w-5 h-5" />
+            <p className="text-base font-medium text-black font-figtree">2024</p>
+            </Badge>
+          </div>
+          <p className="text-base font-figtree">
+            {ArtistReal[0].experience}
+          </p>
         </div>
+        <h2 className="text-3xl font-bold font-figtree mt-8 mb-4">Montaje y transporte</h2>
+        <div className="flex flex-col">
+            <div className="flex flex-row gap-2 py-4">
+                <Badge variant="default" className="bg-vyba-gray text-black rounded-md flex items-center gap-2 w-fit pl-2 cursor-pointer group">
+                    <div className="h-12 w-12 bg-white rounded-sm flex items-center justify-center">
+                        <File className="w-5 h-5 group-hover:hidden" />
+                        <FileDown className="w-5 h-5 hidden group-hover:block" />
+                    </div>
+                    <div className="flex flex-col">
+                        <p className="text-base font-medium text-black font-figtree">Rider técnico</p>
+                        <p className="text-xs text-black font-figtree">Archivo PDF</p>
+                    </div>
+                </Badge>
+                <Badge variant="default" className="bg-vyba-gray text-black rounded-md flex items-center gap-2 w-fit pl-2 cursor-pointer group">
+                    <div className="h-12 w-12 bg-white rounded-sm flex items-center justify-center">
+                        <File className="w-5 h-5 group-hover:hidden" />
+                        <FileDown className="w-5 h-5 hidden group-hover:block" />
+                    </div>
+                    <div className="flex flex-col">
+                        <p className="text-base font-medium text-black font-figtree">Rider hospitalário</p>
+                        <p className="text-xs text-black font-figtree">Archivo PDF</p>
+                    </div>
+                </Badge>
+            </div>
+        </div>
+        <div className="grid grid-cols-2 gap-4">
+            <div className="bg-vyba-gray rounded-2xl p-6">
+                <h3 className="text-lg font-medium font-figtree">Montaje</h3>
+                <p className="text-base font-figtree my-4">Cuento con:</p>
+                <div className="flex flex-col gap-4">
+                    <div className="flex justify-between items-center border-b border-[#D9D9D9] pb-2">
+                        <div className="flex flex-col">
+                            <p className="text-base text-vyba-navy font-medium font-figtree">Equipo de sonido</p>
+                            <p className="text-sm font-figtree">El artista ha indicado que dispone de equipo de iluminación propio</p>
+                        </div>
+                        <AudioWaveform className="w-7 h-7" />
+                    </div>
+                    <div className="flex justify-between items-center border-b border-[#D9D9D9] pb-2">
+                        <div className="flex flex-col">
+                            <p className="text-base text-vyba-navy font-medium font-figtree">Equipo de iluminación</p>
+                            <p className="text-sm font-figtree">El artista ha indicado que dispone de equipo de iluminación propio</p>
+                        </div>
+                        <LampDesk className="w-7 h-7" />
+                    </div>
+                    <div className="flex justify-between items-center border-b border-[#D9D9D9] pb-2 gap-2">
+                        <div className="flex flex-col">
+                            <p className="text-base text-vyba-navy font-medium font-figtree">Visuales y pantallas</p>
+                            <p className="text-sm font-figtree">El artista ha indicado que dispone de equipo de iluminación propio</p>
+                        </div>
+                        <Monitor className="w-7 h-7" />
+                    </div>
+                    <div className="flex justify-between items-center border-b border-[#D9D9D9] pb-2 gap-2">
+                        <div className="flex flex-col">
+                            <p className="text-base text-vyba-navy font-medium font-figtree">Técnico de sonido</p>
+                            <p className="text-sm font-figtree">El artista ha indicado que dispone de equipo de iluminación propio</p>
+                        </div>
+                        <Speaker className="w-7 h-7" />
+                    </div>
+                </div>
+                <p className="font-figtree text-base mt-4 mb-4">Se requiere:</p>
+                <div className="flex flex-col gap-4">
+                    <div className="flex justify-between items-center border-b border-[#D9D9D9] pb-2">
+                        <div className="flex flex-col">
+                            <p className="text-base text-vyba-navy font-medium font-figtree">Espacio mínimo en escenario</p>
+                            <p className="text-sm font-figtree">El espacio mínimo en escenario se concretará directamente con el artista</p>
+                        </div>
+                        <LandPlot className="w-7 h-7" />
+                    </div>
+                    <div className="flex justify-between items-center border-b border-[#D9D9D9] pb-2 gap-2">
+                        <div className="flex flex-col">
+                            <p className="text-base text-vyba-navy font-medium font-figtree">Lo especificado en el rider técnico</p>
+                            <p className="text-sm font-figtree">La conexión eléctrica especial hace referencia a la corriente mayor a 220V</p>
+                        </div>
+                        <File className="w-7 h-7" />
+                    </div>
+                    <div className="flex justify-between items-center border-b border-[#D9D9D9] pb-2 gap-2">
+                        <div className="flex flex-col">
+                            <p className="text-base text-vyba-navy font-medium font-figtree">Lo especificado en el rider hospitalário</p>
+                            <p className="text-sm font-figtree">El artista ha indicado que dispone de equipo de iluminación propio</p>
+                        </div>
+                        <Wine className="w-7 h-7" />
+                    </div>
+                </div>
+                <div className="flex justify-between items-center gap-2">
+                    <p className="font-figtree text-base my-4">Tiempos:</p>
+                    <HoverCard openDelay={0} closeDelay={0}>
+                        <HoverCardTrigger asChild>
+                            <p className="text-xs text-vyba-navy font-medium font-figtree">Sobre los tiempos</p>
+                        </HoverCardTrigger>
+                        <HoverCardContent className="w-80">
+                            <div className="flex flex-col gap-2">
+                                <p className="text-base font-medium font-figtree text-white">Tiempos</p>
+                                <p className="text-sm font-figtree text-white">El número de minutos indicado es una media entre las diferentes magnitudes de eventos que se suelen ofrecer por el artista. Este tiempo puede variar en función de las necesidades específicas del artista y del evento.</p>
+                            </div>
+                        </HoverCardContent>
+                    </HoverCard>
+                </div>
+                <div className="grid grid-cols-2 gap-4">                    
+                    <div className="flex flex-row bg-white rounded-2xl overflow-hidden items-center my-4">
+                        <div className="flex flex-col p-4 space-y-2">
+                            <Badge variant="default" className="bg-vyba-gray text-black flex items-center gap-2 w-fit">
+                                <Hourglass className="w-5 h-5" />
+                                <p className="text-xs text-vyba-navy font-medium font-figtree">Tiempo de montaje</p>
+                            </Badge>
+                            <p className="text-base font-figtree p-2 bg-white rounded-md">Menos de 30 minutos</p>
+                        </div>
+                    </div> 
+                    <div className="flex flex-row bg-white rounded-2xl overflow-hidden items-center my-4">
+                        <div className="flex flex-col p-4 space-y-2">
+                            <Badge variant="default" className="bg-vyba-gray text-black flex items-center gap-2 w-fit">
+                                <TestTube className="w-5 h-5" />
+                                <p className="text-xs text-vyba-navy font-medium font-figtree">Prueba de sonido</p>
+                            </Badge>
+                            <p className="text-base font-figtree p-2 bg-white rounded-md">Menos de 30 minutos</p>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            <div className="bg-vyba-gray rounded-2xl p-6">
+                <h3 className="text-lg font-medium font-figtree">Transporte</h3>
+                <div className="grid grid-cols-5 bg-white rounded-2xl overflow-hidden items-center my-4">
+                    <div className="col-span-2 relative h-44">
+                        <img src="/lovable-uploads/scaled.png" alt="Transporte" className="w-full h-full object-cover" />
+                        <div className="bg-gradient-to-l from-white to-transparent w-full h-full absolute top-0 left-0"></div>
+                    </div>
+                    <div className="col-span-3 flex flex-col p-6 space-y-2">
+                        <Badge variant="default" className="bg-vyba-gray text-black flex items-center gap-2 w-fit">
+                            <LocateFixed className="w-5 h-5" />
+                            <p className="text-xs text-vyba-navy font-medium font-figtree">Rango de transporte</p>
+                        </Badge>
+                        <p className="text-base font-figtree">El artista ha indicado se desplaza a un máximo de 100km de distancia</p>
+                        <HoverCard openDelay={0} closeDelay={0}>
+                            <HoverCardTrigger asChild>
+                                <p className="text-xs text-vyba-navy font-medium font-figtree">Ver más sobre el rango de transporte</p>
+                            </HoverCardTrigger>
+                            <HoverCardContent className="w-80">
+                                <div className="flex flex-col gap-2">
+                                    <p className="text-base font-medium font-figtree text-white">Rango de transporte</p>
+                                    <p className="text-sm font-figtree text-white">El rango de transporte es una aproximación de la distancia que el artista está dispuesto a desplazarse para realizar el evento. Este rango puede variar en función de las necesidades específicas del artista y del evento.</p>
+                                </div>
+                            </HoverCardContent>
+                        </HoverCard>
+                    </div>
+                </div>
+                <p className="font-figtree text-base mt-4 mb-4">Se requiere:</p>
+                <div className="flex flex-col gap-4">
+                    <div className="flex justify-between items-center border-b border-[#D9D9D9] pb-2">
+                        <p className="text-base text-vyba-navy font-medium font-figtree">Espacio de carga y descarga</p>
+                        <Truck className="w-7 h-7" />
+                    </div>
+                    <div className="flex justify-between items-center border-b border-[#D9D9D9] pb-2">
+                        <div className="flex flex-col space-y-2">
+                            <p className="text-base text-vyba-navy font-medium font-figtree">Accesos especiales</p>
+                            <div className="flex flex-row gap-2">
+                                <Badge variant="default" className="bg-white text-black w-fit">
+                                    <p className="text-xs text-vyba-navy font-medium font-figtree">Rampa</p>
+                                </Badge>
+                                <Badge variant="default" className="bg-white text-black w-fit">
+                                    <p className="text-xs text-vyba-navy font-medium font-figtree">Montacargas</p>
+                                </Badge>
+                                <Badge variant="default" className="bg-white text-black w-fit">
+                                    <p className="text-xs text-vyba-navy font-medium font-figtree">Cercanía al escenario</p>
+                                </Badge>
+                            </div>
+                        </div>
+                        <Forklift className="w-7 h-7" />
+                    </div>
+                </div>
+            </div>
+        </div>
+        <h2 className="text-3xl font-bold font-figtree mt-8 mb-4">Formación e integrantes</h2>
       </div>
     </div>
   );
